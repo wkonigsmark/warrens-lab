@@ -77,6 +77,52 @@
     @keyframes blink {
       50% { opacity: 0; }
     }
+
+    /* Navigation Menu Styles */
+    .nav-menu {
+      margin-top: 2rem;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 1s ease-in, transform 1s ease-out;
+      display: flex; /* Use flex to layout items */
+      flex-direction: column; /* Stack them vertically like a DOS menu */
+      gap: 0.5rem;
+      align-items: center; /* Center the menu items */
+    }
+
+    .nav-menu.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .nav-link {
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: clamp(16px, 4vw, 24px);
+      padding: 5px 10px;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .nav-link:hover {
+      background-color: var(--text-color);
+      color: var(--bg-color);
+      box-shadow: 0 0 10px var(--glow-color);
+      cursor: pointer;
+    }
+
+    .nav-link::before {
+      content: ">";
+      position: absolute;
+      left: -15px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .nav-link:hover::before {
+      opacity: 1;
+    }
   </style>
 </head>
 
@@ -86,6 +132,13 @@
       <span id="text"></span>
       <span class="cursor"></span>
     </div>
+    
+    <nav id="main-nav" class="nav-menu">
+      <a href="ants-apples/" class="nav-link">ants-apples</a>
+      <a href="stencil/" class="nav-link">stencil</a>
+      <a href="world-cup/" class="nav-link">world-cup</a>
+      <a href="world-cup-2/" class="nav-link">world-cup-2</a>
+    </nav>
   </div>
 
   <script>
@@ -105,6 +158,13 @@
         textEl.textContent = TEXT.slice(0, i++);
         if (i <= TEXT.length) {
           setTimeout(type, randomDelay());
+        } else {
+          // Typing finished, show menu
+          setTimeout(() => {
+            document.getElementById("main-nav").classList.add("visible");
+            // Optional: Hide cursor after a while? Or keep blinking. 
+            // Keeping it blinking feels more like a waiting prompt.
+          }, 500);
         }
       }
 
