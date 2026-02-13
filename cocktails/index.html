@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cocktails - Burnmark Productions</title>
+  <!-- Link to Papa Parse CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+  <style>
+    /* Basic Page Reset & Theme */
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+
+    /* Overall container style */
+    .cocktail-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      padding: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Individual cocktail card */
+    .cocktail-card {
+      border: 1px solid #333;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background-color: #1e1e1e;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cocktail-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+      border-color: #444;
+    }
+
+    /* Cocktail image */
+    .cocktail-img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-bottom: 1px solid #333;
+    }
+
+    /* Cocktail title */
+    .cocktail-title {
+      font-size: 1.5em;
+      margin: 15px 15px 5px;
+      text-align: center;
+      color: #fff;
+    }
+
+    /* Cocktail ingredients and instructions */
+    .cocktail-ingredients,
+    .cocktail-instructions {
+      font-size: 0.95em;
+      margin: 10px 20px;
+      color: #ccc;
+      line-height: 1.6;
+    }
+
+    .cocktail-ingredients strong,
+    .cocktail-instructions strong {
+      color: #fff;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .cocktail-ingredients ul {
+      margin: 5px 0 0;
+      padding-left: 20px;
+      list-style-type: disc;
+    }
+
+    .cocktail-ingredients li {
+      margin: 3px 0;
+    }
+
+    /* Horizontal line separator */
+    .card-separator {
+      border: none;
+      border-top: 1px solid #333;
+      margin: 15px 20px;
+      width: calc(100% - 40px);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .cocktail-container {
+        grid-template-columns: 1fr;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div>
+    <h1>The First 9</h1>
+    <div id="cocktail-container" class="cocktail-container"></div>
+  </div>
+
+  <div>
+    <h1>More Cocktails</h1>
+    <div id="more-cocktail-container" class="cocktail-container"></div>
+  </div>
+
+  <script>
+    // Function to fetch and display cocktails
+    function fetchAndDisplayCocktails(url, containerId) {
+      fetch(url)
+        .then(response => response.text())
+        .then(csvData => {
+          // Parse CSV using Papa Parse
+          Papa.parse(csvData, {
+            header: true, // Treat the first row as a header
+            dynamicTyping: true, // Automatically convert numbers
+            skipEmptyLines: true, // Skip empty lines
+            complete: function (results) {
+              const cocktails = results.data;
+              const container = document.getElementById(containerId);
+
+              // Loop through the cocktails and create HTML elements for each one
+              cocktails.forEach(cocktail => {
+                // Destructure with default values to avoid errors
+                const { "img url": imgUrl, title, ingredients, instructions } = cocktail;
+
+                if (imgUrl && title) {
+                  // Create the cocktail card
+                  const card = document.createElement("div");
+                  card.classList.add("cocktail-card");
+
+                  // Add image
+                  const img = document.createElement("img");
+                  img.src = imgUrl;
+                  img.alt = title;
+                  img.classList.add("cocktail-img");
+                  // Fallback for broken images
+                  img.onerror = function () {
+                    this.src = 'https://via.placeholder.com/300x200?text=No+Image';
+                  };
+                  card.appendChild(img);
+
+                  // Add title
+                  const titleEl = document.createElement("h2");
+                  titleEl.classList.add("cocktail-title");
+                  titleEl.innerText = title;
+                  card.appendChild(titleEl);
+
+                  // Add ingredients as a list
+                  if (ingredients) {
+                    const ingredientsEl = document.createElement("div");
+                    ingredientsEl.classList.add("cocktail-ingredients");
+                    const ingredientList = document.createElement("ul");
+
+                    // Split ingredients by delimiter (e.g., |) or handle as single string
+                    const items = String(ingredients).split('|');
+                    items.forEach(item => {
+                      if (item.trim()) {
+                        const listItem = document.createElement("li");
+                        listItem.innerText = item.trim();
+                        ingredientList.appendChild(listItem);
+                      }
+                    });
+
+                    ingredientsEl.innerHTML = `<strong>Ingredients:</strong>`;
+                    ingredientsEl.appendChild(ingredientList);
+                    card.appendChild(ingredientsEl);
+                  }
+
+                  // Add separator
+                  const separator = document.createElement("hr");
+                  separator.classList.add("card-separator");
+                  card.appendChild(separator);
+
+                  // Add instructions
+                  if (instructions) {
+                    const instructionsEl = document.createElement("p");
+                    instructionsEl.classList.add("cocktail-instructions");
+                    instructionsEl.innerHTML = `<strong>Instructions:</strong> ${instructions}`;
+                    card.appendChild(instructionsEl);
+                  }
+
+                  // Append card to container
+                  container.appendChild(card);
+                }
+              });
+            }
+          });
+        })
+        .catch(error => {
+          console.error("Error fetching CSV data:", error);
+          const container = document.getElementById(containerId);
+          container.innerHTML = `<p style="color: red; text-align: center;">Error loading cocktails: ${error.message}.<br>If you are opening this file directly (file://), try running a local server or checking your internet connection.</p>`;
+        });
+    }
+
+    // Fetch and display the first feed
+    fetchAndDisplayCocktails(
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vRNxVPuElTxsKMcLcjIH1rH5D7iZXhQjw-lRygR7AXgV7QNqQzRRyuQf1JkirUJgqlYRmieuBUfnzRo/pub?gid=1622630669&single=true&output=csv",
+      "cocktail-container"
+    );
+
+    // Fetch and display the second feed
+    fetchAndDisplayCocktails(
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vRNxVPuElTxsKMcLcjIH1rH5D7iZXhQjw-lRygR7AXgV7QNqQzRRyuQf1JkirUJgqlYRmieuBUfnzRo/pub?gid=265485767&single=true&output=csv",
+      "more-cocktail-container"
+    );
+  </script>
+</body>
+
+</html>
