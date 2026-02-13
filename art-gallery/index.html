@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Gallery</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: #f4f4f4;
+      /* Added a light background for better contrast */
+    }
+
+    .menu {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .menu a {
+      color: #fff;
+      text-decoration: none;
+      padding: 5px 10px;
+      background-color: #555;
+      border-radius: 5px;
+      transition: background-color 0.2s;
+    }
+
+    .menu a:hover {
+      background-color: #777;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      /* Increased min-width for better visibility */
+      gap: 15px;
+      padding: 20px;
+    }
+
+    .gallery-item {
+      text-align: center;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      display: block;
+      /* Removes bottom space */
+    }
+
+    .gallery-item img:hover {
+      transform: scale(1.05);
+      /* Slightly reduced scale for subtler effect */
+    }
+
+    .gallery-item p {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    h2 {
+      padding: 20px;
+      margin: 0;
+      font-weight: bold;
+      color: #333;
+      /* Darker color for headings on light bg */
+      border-bottom: 2px solid #ddd;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 20px;
+      background-color: #222;
+      color: white;
+      margin: 0;
+    }
+
+    /* Media query for mobile */
+    @media (max-width: 768px) {
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Style for the back-to-top button */
+    #back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+      /* Hide by default */
+      z-index: 1001;
+    }
+
+    #back-to-top:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Image Gallery</h1>
+  <div class="menu" id="menu"></div>
+  <div id="gallery-container"></div>
+
+  <!-- Back to top button -->
+  <button id="back-to-top" onclick="scrollToTop()">Back to Top</button>
+
+  <script>
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQCO6dPZsGsk6Ivym0ypjSejef8Zc5pJn_8yT0eTjntBVrre6Re6vzcRsY5hwV9jQvyHRcnDM8bsOK_/pub?gid=1772542183&single=true&output=csv";
+    // const defaultThumbnail = "path/to/default-thumbnail.jpg"; // Commented out as not provided
+
+    async function fetchCsv() {
+      try {
+        const response = await fetch(csvUrl);
+        if (!response.ok) throw new Error("Failed to fetch CSV");
+        const csvText = await response.text();
+
+        // Parse CSV manually (splitting by new lines)
+        const rows = csvText.split("\n").map(row => row.trim()).filter(row => row);
+        const headers = rows[0].split(","); // Assuming first row is header if needed, but logic below uses strict indices
+
+        return rows.slice(1).map(row => {
+          // Handle potential commas within quotes if needed, 
+          // but simple split is used in provided code. 
+          // Regex for better CSV parsing: /,(?=(?:(?:[^"]*"){2})*[^"]*$)/
+          const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(col => col.replace(/^"|"$/g, '').trim());
+
+          return {
+            folderName: cols[0],
+            fileName: cols[1],
+            thumbnailUrl: cols[2],
+            imageUrl: cols[3]
+          };
+        });
+      } catch (error) {
+        console.error("Error fetching CSV:", error);
+        document.getElementById('gallery-container').innerHTML = `<p style='text-align:center; color:red;'>Error loading gallery: ${error.message}</p>`;
+        return [];
+      }
+    }
+
+    async function renderGallery() {
+      const data = await fetchCsv();
+
+      // Group data by folder
+      const groupedData = data.reduce((acc, item) => {
+        if (item.folderName && item.thumbnailUrl && item.imageUrl) {
+          if (!acc[item.folderName]) acc[item.folderName] = [];
+          acc[item.folderName].push(item);
+        }
+        return acc;
+      }, {});
+
+      const menu = document.getElementById("menu");
+      const galleryContainer = document.getElementById("gallery-container");
+
+      if (Object.keys(groupedData).length === 0) {
+        galleryContainer.innerHTML = "<p style='text-align:center; padding:20px;'>No images found or error loading data.</p>";
+        return;
+      }
+
+      Object.keys(groupedData).forEach(folder => {
+        // Add folder to menu
+        const menuItem = document.createElement("a");
+        menuItem.href = `#${folder.replace(/\s+/g, '-')}`; // Create ID-friendly anchor
+        menuItem.textContent = folder;
+        menu.appendChild(menuItem);
+
+        // Create folder section
+        const section = document.createElement("div");
+        section.id = folder.replace(/\s+/g, '-');
+        section.innerHTML = `<h2>${folder}</h2>`;
+
+        const gallery = document.createElement("div");
+        gallery.className = "gallery";
+
+        groupedData[folder].forEach(item => {
+          const galleryItem = document.createElement("div");
+          galleryItem.className = "gallery-item";
+
+          // Use a placeholder if thumbnail is missing? Code assumes it exists based on filter
+          const thumb = item.thumbnailUrl;
+
+          galleryItem.innerHTML = `
+                        <a href="${item.imageUrl}" target="_blank">
+                            <img src="${thumb}" alt="${item.fileName}" loading="lazy">
+                        </a>
+                        <p>${item.fileName.replace(/_/g, ' ')}</p>
+                    `;
+          gallery.appendChild(galleryItem);
+        });
+
+        section.appendChild(gallery);
+        galleryContainer.appendChild(section);
+      });
+    }
+
+    // Scroll to the top of the page when the button is clicked
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Show the back-to-top button when the user scrolls down
+    window.addEventListener('scroll', function () {
+      const button = document.getElementById("back-to-top");
+      if (window.scrollY > 300) {
+        button.style.display = "block";
+      } else {
+        button.style.display = "none";
+      }
+    });
+
+    renderGallery();
+  </script>
+</body>
+
+</html>
