@@ -1,0 +1,502 @@
+/* Light card on a dark site */
+#ants-apples-root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #fdfaf5;
+  color: #222;
+  padding: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+#ants-apples-root header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  color: #222;
+}
+
+#ants-apples-root .header-left {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+#ants-apples-root .status {
+  font-size: 0.8rem;
+  color: #333;
+  text-align: right;
+  line-height: 1.3;
+}
+
+#ants-apples-root .status-line {
+  white-space: nowrap;
+}
+
+#ants-grid-size-btn,
+#ants-music-toggle {
+  border: none;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  background: #ddd;
+  color: #222;
+  cursor: pointer;
+}
+
+#ants-music-toggle {
+  background: #f0e4ff;
+}
+
+#ants-grid-size-btn:active,
+#ants-music-toggle:active {
+  transform: scale(0.97);
+}
+
+#ants-apples-root main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #222;
+}
+
+#ants-apples-grid {
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+#ants-apples-grid td {
+  width: 56px;
+  height: 56px;
+  border: 1px solid #444;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 1.3rem;
+  user-select: none;
+  color: #222;
+  background: #ffffff;
+}
+
+#ants-apples-grid td.header {
+  background: #ffe9a9;
+  font-weight: 600;
+  color: #222;
+}
+
+#ants-apples-grid td.tile {
+  background: #ffffff;
+  cursor: pointer;
+}
+
+#ants-apples-grid td.tile.inactive {
+  cursor: default;
+  background: #f5f5f5;
+}
+
+#ants-apples-grid td.tile.pending {
+  background: #ffe66b;
+}
+
+#ants-apples-grid td.tile.correct {
+  background: #9be7a0;
+}
+
+#ants-apples-grid td.tile.incorrect {
+  background: #ff9b9b;
+}
+
+#ants-apples-root .controls {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+#ants-apples-root .btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: #333;
+  color: #fdfaf5;
+  cursor: pointer;
+}
+
+#ants-apples-root .btn.secondary {
+  background: #777;
+  color: #fdfaf5;
+}
+
+#ants-apples-root .btn:active {
+  transform: scale(0.97);
+}
+
+#ants-apples-root .message {
+  margin-top: 8px;
+  min-height: 20px;
+  font-size: 0.9rem;
+  color: #222;
+  text-align: center;
+}
+
+/* Helper calculator */
+#ants-helper {
+  width: 100%;
+  margin-top: 16px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #fff8e6;
+  border: 1px solid #e5cf99;
+}
+
+#ants-helper-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+#ants-helper-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ants-helper-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #333;
+}
+
+.ants-helper-label {
+  margin-bottom: 2px;
+}
+
+#ants-helper-first,
+#ants-helper-second {
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 1.1rem;
+  border: 1px solid #bbb;
+  background: #f2f4f7;
+  color: #222;
+}
+
+#ants-helper-op {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #222;
+}
+
+#ants-helper-visual {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+  font-size: 1.6rem;
+}
+
+#ants-helper-ants,
+#ants-helper-apples {
+  min-width: 40px;
+  text-align: center;
+}
+
+#ants-helper-apples {
+  line-height: 1.3;
+}
+
+#ants-helper-plus {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #222;
+}
+
+/* Keypad overlay */
+#ants-apples-keypad-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: none;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 9999;
+}
+
+#ants-apples-keypad {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border-radius: 16px 16px 0 0;
+  padding: 16px 16px 32px;
+  /* more padding, esp. bottom */
+  margin-bottom: 16px;
+  /* lift away from OS footer */
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.4);
+  color: #222;
+}
+
+#ants-apples-keypad-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: #222;
+}
+
+#ants-keypad-equation {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+#ants-apples-keypad-display {
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-align: right;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  min-height: 36px;
+  background: #fdfaf5;
+  color: #222;
+}
+
+#ants-apples-keypad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+#ants-apples-root .key {
+  border-radius: 10px;
+  padding: 8px 0;
+  border: 1px solid #555;
+  text-align: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  user-select: none;
+  background: #f5f5f5;
+  color: #222;
+}
+
+#ants-apples-root .key:active {
+  transform: scale(0.97);
+  background: #e0e0e0;
+}
+
+#ants-apples-keypad-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 4px;
+}
+
+#ants-apples-root .key.action {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Make the 0 key look like other digits */
+#ants-apples-root .key.action[data-action="zero"] {
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+/* CLEAR red, ENTER green */
+#ants-apples-root .key.action[data-action="clear"] {
+  background: #fde4e4;
+  border-color: #c62828;
+  color: #c62828;
+}
+
+#ants-apples-root .key.action[data-action="submit"] {
+  background: #e0f5e5;
+  border-color: #2e7d32;
+  color: #2e7d32;
+}
+
+@media (min-width: 480px) {
+  #ants-apples-grid td {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+/* Grid size + operation picker overlay */
+#ants-size-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+#ants-size-dialog {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px 18px 14px;
+  max-width: 340px;
+  width: 90%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  color: #222;
+}
+
+#ants-size-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+#ants-size-body {
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+}
+
+#ants-size-select {
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid #bbb;
+  padding: 6px 10px;
+  font-size: 0.95rem;
+  background: #f2f4f7;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+#ants-level-count-label {
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  margin-top: 4px;
+}
+
+#ants-level-count-input {
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid #bbb;
+  padding: 6px 10px;
+  font-size: 0.95rem;
+  background: #fdfdfd;
+  color: #222;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+#ants-op-title {
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+#ants-op-options {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+}
+
+#ants-op-options label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#ants-op-options input[type="radio"] {
+  transform: scale(1.1);
+}
+
+#ants-size-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+#ants-size-start-btn,
+#ants-size-cancel-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#ants-size-start-btn {
+  background: #333;
+  color: #fdfaf5;
+}
+
+#ants-size-cancel-btn {
+  background: #ddd;
+  color: #222;
+}
+
+#ants-size-start-btn:active,
+#ants-size-cancel-btn:active {
+  transform: scale(0.97);
+}
+
+/* Win overlay */
+#ants-win-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10001;
+}
+
+#ants-win-dialog {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px 20px 16px;
+  max-width: 340px;
+  width: 90%;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  color: #222;
+  text-align: center;
+}
+
+#ants-win-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+#ants-win-body {
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+
+#ants-win-actions {
+  display: flex;
+  justify-content: center;
+}
+
+#ants-win-play-again {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: #3b7c36;
+  color: #fdfaf5;
+  cursor: pointer;
+}
+
+#ants-win-play-again:active {
+  transform: scale(0.97);
+}
