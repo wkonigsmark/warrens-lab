@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Cup 2026 - Interactive Power Rankings</title>
+    <link rel="stylesheet" href="src/style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="bracket_lookup.js"></script>
+</head>
+
+<body>
+    <!-- Top Bar with Status and Main Action -->
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <div id="sync-status" class="sync-status">
+                <span class="status-dot">●</span>
+                <span class="status-text">Connecting...</span>
+            </div>
+            <div class="header-stack">
+                <h1 class="compact-title">⚽ World Cup 2026</h1>
+                <div id="kickoff-countdown" class="countdown-compact">
+                    <span id="days" class="count-num">00</span>d
+                    <span id="hours" class="count-num">00</span>h
+                    <span id="minutes" class="count-num">00</span>m
+                    <span id="seconds" class="count-num" style="opacity: 0.6;">00</span>s
+                </div>
+            </div>
+        </div>
+        <div class="top-bar-center">
+            <button id="visual-start-btn" class="hero-button">
+                SIMULATE
+            </button>
+            <!-- Spacebar hint tooltip -->
+            <div id="spacebar-hint" class="spacebar-hint">
+                ⌨️ Press <kbd>SPACEBAR</kbd> to simulate!
+            </div>
+        </div>
+        <div class="top-bar-right"></div>
+    </div>
+
+    <!-- Left Sidebar -->
+    <aside class="left-sidebar">
+        <!-- Group Grid (3x4) -->
+        <div class="group-grid-container">
+            <div class="section-label">GROUPS</div>
+            <div class="group-grid" id="group-grid">
+                <button class="group-btn active" data-group="all">ALL</button>
+                <!-- Group buttons will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container-sidebar">
+            <input type="text" id="search-input" placeholder="Search teams..." autocomplete="off">
+        </div>
+
+        <!-- Modeling Options Dropdown -->
+        <div class="modeling-options">
+            <button class="dropdown-toggle" id="options-toggle">
+                <span>⚙️ Modeling Options</span>
+                <span class="arrow">▼</span>
+            </button>
+            <div class="dropdown-menu" id="options-menu">
+                <!-- Stochasticity Slider -->
+                <div class="slider-container"
+                    style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 8px;">
+                    <label for="home-stoch-slider"
+                        style="display: flex; justify-content: space-between; color: #94a3b8; font-size: 0.8rem; font-weight: 700; margin-bottom: 8px;">
+                        <span>RANDOMNESS</span>
+                        <span id="home-stoch-value" style="color: #4fd1c5;">50%</span>
+                    </label>
+                    <input type="range" id="home-stoch-slider" min="0" max="1" step="0.01" value="0.5"
+                        style="width: 100%; cursor: pointer;">
+                    <div
+                        style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #64748b; margin-top: 4px;">
+                        <span>Predictable</span>
+                        <span>Chaos</span>
+                    </div>
+                </div>
+
+                <button id="simulate-btn" class="option-btn">
+                    <span class="option-icon">🎲</span>
+                    <span class="option-text">Full Simulation</span>
+                </button>
+                <button id="monte-carlo-btn" class="option-btn">
+                    <span class="option-icon">📊</span>
+                    <span class="option-text">Monte Carlo (1000x)</span>
+                </button>
+                <button id="download-btn" class="option-btn" style="opacity: 0.5; pointer-events: none;">
+                    <span class="option-icon">⬇️</span>
+                    <span class="option-text">Download Results</span>
+                </button>
+                <button id="open-schedule-btn" class="option-btn">
+                    <span class="option-icon">📅</span>
+                    <span class="option-text">Fixtures</span>
+                </button>
+                <button id="bracket-view-btn" class="option-btn">
+                    <span class="option-icon">🏆</span>
+                    <span class="option-text">Bracket View</span>
+                </button>
+            </div>
+        </div>
+
+    </aside>
+
+    <div id="bubble-chart">
+        <div class="loading">CALIBRATING SIMULATION...</div>
+    </div>
+
+    <!-- Bracket View Container -->
+    <div id="bracket-view" style="display: none; padding: 40px; overflow: auto; min-height: 800px;">
+        <div id="bracket-canvas" style="min-width: 1400px; position: relative;"></div>
+    </div>
+
+    <!-- Schedule Modal -->
+    <div id="schedule-modal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 900px; height: 85vh; display: flex; flex-direction: column;">
+            <button class="modal-close"
+                onclick="document.getElementById('schedule-modal').classList.remove('active')">&times;</button>
+            <div style="margin-bottom: 24px;">
+                <h2
+                    style="font-size: 2rem; margin-bottom: 16px; background: linear-gradient(135deg, #63b3ed, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    Tournament Schedule</h2>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <input type="text" id="schedule-search" placeholder="Search team, city, or venue..."
+                        style="flex: 1; min-width: 250px; padding: 10px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; outline: none;">
+                    <select id="schedule-sort"
+                        style="padding: 10px 16px; background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; outline: none; cursor: pointer;">
+                        <option value="date">Sort by Date</option>
+                        <option value="rank">Sort by Matchup Rank</option>
+                    </select>
+                </div>
+            </div>
+            <div id="schedule-list" style="flex: 1; overflow-y: auto; padding-right: 10px;">
+                <!-- Match cards will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Team Details -->
+    <div id="team-modal" class="modal-overlay">
+        <div class="modal-card">
+            <button class="modal-close"
+                onclick="document.getElementById('team-modal').classList.remove('active')">&times;</button>
+            <div class="team-header">
+                <div id="modal-flag" class="team-flag-large"></div>
+                <div class="team-title">
+                    <h2 id="modal-name">Team Name</h2>
+                    <span id="modal-group" class="group-badge">Group A</span>
+                </div>
+            </div>
+
+            <div id="modal-status-alert" class="status-alert">
+                ⚠️ THIS TEAM HAS NOT YET QUALIFIED
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-label">W-INDEX</div>
+                    <div id="modal-score" class="stat-value">--</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">RANK</div>
+                    <div id="modal-rank" class="stat-value">--</div>
+                </div>
+            </div>
+
+            <div class="schedule-section">
+                <h3>GROUP STAGE FIXTURES</h3>
+                <div id="modal-schedule"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monte Carlo Results Modal -->
+    <div id="mc-modal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 800px; height: 85vh; display: flex; flex-direction: column;">
+            <button class="modal-close"
+                onclick="document.getElementById('mc-modal').classList.remove('active')">&times;</button>
+            <div style="margin-bottom: 24px;">
+                <h2
+                    style="font-size: 2rem; margin-bottom: 8px; background: linear-gradient(135deg, #f687b3, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    Monte Carlo Results</h2>
+                <p style="color: #94a3b8; font-size: 0.9rem;">Aggregated results from 1,000 tournament simulations</p>
+
+                <div id="stochastic-control"
+                    style="margin-top: 20px; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 0.8rem; font-weight: 700; color: #94a3b8;">STOCHASTICITY: <span
+                                id="stoch-val-label" style="color: #f687b3;">50%</span></span>
+                        <span style="font-size: 0.7rem; color: #475569;">FAVORITES ↔ CHAOS</span>
+                    </div>
+                    <input type="range" id="stoch-slider" min="0" max="100" value="50"
+                        style="width: 100%; accent-color: #f687b3; cursor: pointer;">
+                    <button id="rerun-mc-btn" class="filter-btn"
+                        style="margin-top: 12px; width: 100%; border-color: #f687b3; color: #f687b3; padding: 12px 20px;">
+                        🎲 RE-RUN SIMULATION
+                    </button>
+                </div>
+            </div>
+            <div id="mc-results-list" style="flex: 1; overflow-y: auto; padding-right: 10px;">
+                <!-- Result rows will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="src/main.js?v=1.1"></script>
+</body>
+
+</html>
