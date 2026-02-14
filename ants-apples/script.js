@@ -6,7 +6,7 @@
     root.innerHTML = `
       <header>
         <div class="header-left">
-          <button id="ants-grid-size-btn" type="button">Grid Size</button>
+          <button id="ants-grid-size-btn" type="button">Settings</button>
           <button id="ants-music-toggle" type="button">Music: On</button>
         </div>
         <div class="status">
@@ -94,6 +94,14 @@
             </label>
           </div>
 
+          <div id="ants-helper-opt-title" style="font-size:0.85rem; margin-top:8px; margin-bottom:4px;">Learning Aids:</div>
+          <div id="ants-helper-options" style="font-size:0.85rem; margin-bottom:12px;">
+            <label style="display:flex; align-items:center; gap:6px;">
+              <input type="checkbox" id="ants-show-helper-toggle" checked>
+              Show Ants & Apples Helper
+            </label>
+          </div>
+
           <div id="ants-size-actions">
             <button id="ants-size-cancel-btn" type="button">Cancel</button>
             <button id="ants-size-start-btn" type="button">Start</button>
@@ -118,6 +126,7 @@
     let COLS = [];
     let MAX_LEVEL = 3; // user-chosen max levels
     let operation = 'add'; // 'add' or 'multiply'
+    let showHelper = true; // showAntsApplesHelper
 
     let currentLevel = 1;
     let activeTileEl = null;
@@ -135,6 +144,28 @@
     const musicEl = document.getElementById('ants-music');
     let musicEnabled = true;
 
+    /* Idle Timer (Parent-Friendly Auto-Off) */
+    let idleTimer = null;
+    const IDLE_LIMIT = 15000; // 15 seconds
+
+    function resetIdleTimer() {
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(autoStopMusic, IDLE_LIMIT);
+    }
+
+    function autoStopMusic() {
+      if (musicEnabled) {
+        pauseMusic();
+        musicEnabled = false;
+        updateMusicToggleLabel();
+        setMessage("Music paused due to inactivity.");
+      }
+    }
+
+    // Interaction Listeners (Reset idle timer on any activity)
+    window.addEventListener('pointerdown', resetIdleTimer, true);
+    window.addEventListener('keydown', resetIdleTimer, true);
+
     buildKeypadDigits();
     buildHelperControls();
     hookButtons();
@@ -145,6 +176,7 @@
     document.addEventListener('keydown', onKeyDown);
 
     updateMusicToggleLabel();
+    resetIdleTimer(); // Start the first idle countdown
 
     /* ---------- Grid + game setup ---------- */
 
@@ -281,6 +313,13 @@
       updateKeypadDisplay();
     }
 
+    function backspaceInput() {
+      if (currentInput.length > 0) {
+        currentInput = currentInput.slice(0, -1);
+        updateKeypadDisplay();
+      }
+    }
+
     function clearInput() {
       currentInput = '';
       updateKeypadDisplay();
@@ -323,7 +362,8 @@
 
         if (isLevelComplete()) {
           if (currentLevel < MAX_LEVEL) {
-            setMessage(`Level ${currentLevel} complete! Tap "Next Level" to continue.`);
+            setMessage(`Level ${currentLevel} complete! Get ready...`);
+            setTimeout(goToNextLevel, 1200);
           } else {
             // Game finished
             clearTimer();
@@ -444,20 +484,12 @@
       });
 
       document.getElementById('ants-next-btn').addEventListener('click', () => {
-        // Require current level to be fully solved
+        // Manual skip/next button
         if (!isLevelComplete()) {
           setMessage('Finish all the squares on this level before moving on.');
           return;
         }
-
-        if (currentLevel >= MAX_LEVEL) {
-          setMessage('You have completed all chosen levels!');
-          return;
-        }
-
-        currentLevel++;
-        setupLevel(currentLevel);
-        setMessage(`Welcome to Level ${currentLevel}.`);
+        goToNextLevel();
       });
 
       document.getElementById('ants-esc-btn').addEventListener('click', hideKeypad);
@@ -490,7 +522,9 @@
         openSizeDialog(false);
       });
 
-      document.getElementById('ants-size-start-btn').addEventListener('click', () => {
+      document.getElementById('ants-size-start-btn').addEventListener('click', startGameFromSettings);
+
+      function startGameFromSettings() {
         const size = parseInt(sizeSelect.value, 10) || 3;
         const maxTiles = size * size;
 
@@ -505,6 +539,27 @@
         if (isNaN(levelCount) || levelCount < 1) levelCount = 3;
         if (levelCount > maxTiles) levelCount = maxTiles;
 
+        showHelper = document.getElementById('ants-show-helper-toggle').checked;
+        const helperDiv = document.getElementById('ants-helper');
+
+        // Handle Pro Mode Visuals
+        const existingBadge = document.getElementById('ants-pro-badge');
+        if (existingBadge) existingBadge.remove();
+
+        if (helperDiv) {
+          if (showHelper) {
+            helperDiv.style.display = 'block';
+          } else {
+            helperDiv.style.display = 'none';
+            // Inject the Pro Badge
+            const badge = document.createElement('div');
+            badge.id = 'ants-pro-badge';
+            badge.className = 'pro-mode-badge';
+            badge.innerHTML = 'Pro Mode Active';
+            helperDiv.parentNode.insertBefore(badge, helperDiv.nextSibling);
+          }
+        }
+
         configureGrid(size, levelCount);
         closeSizeDialog();
 
@@ -512,7 +567,7 @@
         if (musicEnabled) {
           playMusic();
         }
-      });
+      }
 
       document.getElementById('ants-size-cancel-btn').addEventListener('click', () => {
         closeSizeDialog();
@@ -524,13 +579,15 @@
         }
       });
 
-      document.getElementById('ants-win-play-again').addEventListener('click', () => {
+      document.getElementById('ants-win-play-again').addEventListener('click', restartGameFromVictory);
+
+      function restartGameFromVictory() {
         hideWinOverlay();
         currentLevel = 1;
         resetTimerAndStreak();
         setupLevel(currentLevel);
         setMessage(`New game on a ${gridSize} × ${gridSize} grid. Levels: ${MAX_LEVEL}. Mode: ${operation === 'add' ? 'Addition' : 'Multiplication'}.`);
-      });
+      }
 
       document.getElementById('ants-win-backdrop').addEventListener('click', (e) => {
         if (e.target.id === 'ants-win-backdrop') {
@@ -607,6 +664,13 @@
         [arr[i], arr[j]] = [arr[j], arr[i]];
       }
       return arr;
+    }
+
+    function goToNextLevel() {
+      if (currentLevel >= MAX_LEVEL) return;
+      currentLevel++;
+      setupLevel(currentLevel);
+      setMessage(`Welcome to Level ${currentLevel}.`);
     }
 
     /* ---------- Grid size + op + level-count dialog ---------- */
@@ -699,18 +763,47 @@
     /* ---------- Keyboard shortcuts for keypad ---------- */
 
     function onKeyDown(e) {
-      const backdrop = document.getElementById('ants-apples-keypad-backdrop');
-      if (!backdrop) return;
+      // 1. Keypad
+      const keypadBackdrop = document.getElementById('ants-apples-keypad-backdrop');
+      if (keypadBackdrop && keypadBackdrop.style.display === 'flex') {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          hideKeypad();
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          submitInput();
+        } else if (e.key >= '0' && e.key <= '9') {
+          appendDigit(e.key);
+        } else if (e.key === 'Backspace' || e.key === 'Delete') {
+          backspaceInput();
+        }
+        return;
+      }
 
-      const isVisible = backdrop.style.display === 'flex';
-      if (!isVisible) return;
+      // 2. Settings
+      const sizeBackdrop = document.getElementById('ants-size-backdrop');
+      if (sizeBackdrop && sizeBackdrop.style.display === 'flex') {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          // The functions are scoped within initAntsApples and hoisted or defined
+          // We need to make sure they are accessible. They are now defined in hookButtons.
+          // To be safe, let's call the click on the button or ensure accessibility.
+          document.getElementById('ants-size-start-btn').click();
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          closeSizeDialog();
+        }
+        return;
+      }
 
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        hideKeypad();
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        submitInput();
+      // 3. Victory
+      const winBackdrop = document.getElementById('ants-win-backdrop');
+      if (winBackdrop && winBackdrop.style.display === 'flex') {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          document.getElementById('ants-win-play-again').click();
+        }
+        return;
       }
     }
 
@@ -742,11 +835,22 @@
 
     function showWinOverlay() {
       const backdrop = document.getElementById('ants-win-backdrop');
-      const body = document.getElementById('ants-win-body');
+      const titleEl = document.getElementById('ants-win-title');
+      const bodyEl = document.getElementById('ants-win-body');
       const timeText = formatTime(elapsedSeconds);
       const modeLabel = (operation === 'add') ? 'Addition' : 'Multiplication';
-      body.textContent =
-        `Congratulations! You completed Ants & Apples in ${timeText} in ${modeLabel} mode, playing ${MAX_LEVEL} level${MAX_LEVEL === 1 ? '' : 's'}, with a best streak of ${bestStreak} correct answers in a row!`;
+
+      if (!showHelper) {
+        titleEl.innerHTML = "🏆 PRO MODE CHAMPION! 🏆";
+        titleEl.className = "pro-victory-title";
+        bodyEl.innerHTML = `Spectacular! You solved all levels without the helper in ${timeText}.<br><span class="pro-victory-badge">Gold Mastery Earned</span>`;
+      } else {
+        titleEl.textContent = "Congratulations!";
+        titleEl.className = "";
+        bodyEl.textContent =
+          `Congratulations! You completed Ants & Apples in ${timeText} in ${modeLabel} mode, playing ${MAX_LEVEL} level${MAX_LEVEL === 1 ? '' : 's'}, with a best streak of ${bestStreak} correct answers in a row!`;
+      }
+
       backdrop.style.display = 'flex';
     }
 
