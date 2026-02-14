@@ -319,68 +319,67 @@
         }
 
         async function fetchRealData() {
-            if (!API_KEY) {
-                alert("No API Key found. Please check config.js");
-                return;
-            }
-
-            if (window.location.protocol === 'file:') {
-                console.warn("running on file:// protocol. Some browsers block API calls from local files. If this fails, try uploading to Netlify or running a local server.");
-            }
-
-            document.getElementById('status-text').textContent = "Connecting to market...";
+            document.getElementById('status-text').textContent = "Connecting to Yahoo Finance...";
 
             try {
-                // 1. Fetch History for Stats (Mean/Sigma) - Daily is free for SPY
-                const histResponse = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=SPY&apikey=${API_KEY}`);
-                const histData = await histResponse.json();
+                // Yahoo Finance 5-minute data for the last 5 days
+                const symbol = 'SPY';
+                const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=5m&range=5d`;
 
-                if (histData["Note"] || histData["Information"]) {
-                    const msg = histData["Note"] || histData["Information"];
-                    alert("Alpha Vantage Message: " + msg + "\n\nFalling back to simulation.");
-                    startSimulation();
-                    return;
+                // Using AllOrigins as a proxy to bypass CORS and bot detection
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(yahooUrl)}`;
+
+                const response = await fetch(proxyUrl);
+                const proxyData = await response.json();
+                const data = JSON.parse(proxyData.contents);
+
+                if (!data.chart || !data.chart.result) {
+                    throw new Error("Invalid Yahoo response");
                 }
 
-                const dailySeries = histData["Time Series (Daily)"];
-                if (!dailySeries) throw new Error("Could not fetch history - check API key");
+                const result = data.chart.result[0];
+                const timestamps = result.timestamp;
+                const quotes = result.indicators.quote[0].close;
 
-                // Get last 30 days for stats
-                const dates = Object.keys(dailySeries).slice(0, 30).reverse();
-                dataPoints = dates.map(d => parseFloat(dailySeries[d]["4. close"]));
-                labels = dates.map(d => d.split('-').slice(1).join('/')); // MM/DD
+                // Clean up null values often found in Yahoo data
+                dataPoints = [];
+                labels = [];
 
-                // 2. Fetch Current Price (Live Quote) - Global Quote is free
-                const quoteResponse = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=SPY&apikey=${API_KEY}`);
-                const quoteData = await quoteResponse.json();
-
-                const quote = quoteData["Global Quote"];
-                if (quote && quote["05. price"]) {
-                    currentPrice = parseFloat(quote["05. price"]);
-                    basePrice = parseFloat(quote["08. previous close"]);
-
-                    // Update stats with live price
-                    if (dataPoints.length > 0) {
-                        dataPoints[dataPoints.length - 1] = currentPrice;
+                for (let i = 0; i < timestamps.length; i++) {
+                    if (quotes[i] !== null) {
+                        const date = new Date(timestamps[i] * 1000);
+                        labels.push(date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                        dataPoints.push(quotes[i]);
                     }
                 }
 
+                // Slice to the last 100 points for a clean chart
+                const sliceCount = 100;
+                if (dataPoints.length > sliceCount) {
+                    dataPoints = dataPoints.slice(-sliceCount);
+                    labels = labels.slice(-sliceCount);
+                }
+
+                currentPrice = dataPoints[dataPoints.length - 1];
+                basePrice = dataPoints[0];
+
                 chart.data.labels = labels;
                 chart.data.datasets[0].data = dataPoints;
+                chart.data.datasets[0].label = 'S&P 500 (SPY) - 5m';
                 updateStats();
                 chart.update();
 
-                document.getElementById('status-text').textContent = "Live Feed: SPY (S&P 500 ETF)";
+                document.getElementById('status-text').textContent = "Live Yahoo Finance Feed (SPY)";
                 isRealData = true;
 
                 if (simulationInterval) clearInterval(simulationInterval);
 
-                // Refresh every 2 minutes
-                simulationInterval = setInterval(fetchRealData, 120000);
+                // Refresh every 5 minutes
+                simulationInterval = setInterval(fetchRealData, 300000);
 
             } catch (error) {
-                console.error("Error fetching data:", error);
-                alert("Failed to fetch real data. The Alpha Vantage free tier has restricted 'Intraday' data. We are now using 'Daily' + 'Global Quote' as a workaround.");
+                console.error("Error fetching Yahoo data:", error);
+                alert("Yahoo Finance is blocking this request (standard for local development). I highly recommend getting a free key from 'Twelve Data' for true 1-minute access, or deploying this to Netlify where Yahoo might be more lenient.");
                 startSimulation();
             }
         }
