@@ -851,10 +851,22 @@ function checkCoverage() {
 }
 
 function updateProgressDisplay() {
-    const el = document.getElementById('progressDisplay');
-    if (el) {
-        // Swapped order: Word X/Y • Round A/B
-        el.textContent = `Word ${GAME_STATE.completedWordsInRound + 1}/${GAME_STATE.wordsPerRound} • Round ${GAME_STATE.currentRound}/${GAME_STATE.roundsToWin}`;
+    const ratioEl = document.getElementById('progressRatio');
+    const mercury = document.getElementById('thermometerMercury');
+
+    // Calculate global progress
+    const totalWords = GAME_STATE.roundsToWin * GAME_STATE.wordsPerRound;
+    const completedWordsGlobal = ((GAME_STATE.currentRound - 1) * GAME_STATE.wordsPerRound) + GAME_STATE.completedWordsInRound;
+
+    // Percentage for mercury (0 to 100)
+    const percentage = totalWords > 0 ? (completedWordsGlobal / totalWords) * 100 : 0;
+
+    if (mercury) {
+        mercury.style.width = `${percentage}%`;
+    }
+
+    if (ratioEl) {
+        ratioEl.textContent = `Word ${GAME_STATE.completedWordsInRound + 1}/${GAME_STATE.wordsPerRound} • Round ${GAME_STATE.currentRound}/${GAME_STATE.roundsToWin}`;
     }
 }
 

@@ -325,6 +325,95 @@ body {
     pointer-events: none;
 }
 
+/* Game Progression - Mercurial Thermometer */
+.progress-section {
+    width: 100%;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.thermometer-container {
+    width: 100%;
+    max-width: 400px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 20px;
+    /* Room for the bulb */
+}
+
+.thermometer-bulb {
+    width: 36px;
+    height: 36px;
+    background: radial-gradient(circle at 30% 30%, #ff4d4d, #b30000);
+    border: 3px solid #fff;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    z-index: 5;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset -4px -4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.thermometer-tube {
+    flex-grow: 1;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 2px solid #fff;
+    border-radius: 0 20px 20px 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(2px);
+}
+
+.thermometer-mercury {
+    height: 100%;
+    width: 0%;
+    /* Dynamic */
+    background: linear-gradient(to bottom, #ff4d4d 0%, #cc0000 50%, #800000 100%);
+    border-radius: 0 10px 10px 0;
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+}
+
+/* Metallic Shine / Mercury Highlight */
+.thermometer-mercury::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 2px;
+}
+
+.progress-label {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #4a4a4a;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+/* Re-adjusting mobile spacing for the new section */
+@media (max-width: 768px) {
+    .progress-section {
+        margin-top: 10px;
+    }
+
+    .thermometer-container {
+        max-width: 280px;
+    }
+}
+
 .progress-display {
     font-family: 'Segoe UI', sans-serif;
     font-weight: bold;
