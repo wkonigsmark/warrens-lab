@@ -874,7 +874,17 @@ function updateProgressDisplay() {
 
     // Calculate global progress
     const totalWords = GAME_STATE.roundsToWin * GAME_STATE.wordsPerRound;
-    const completedWordsGlobal = ((GAME_STATE.currentRound - 1) * GAME_STATE.wordsPerRound) + GAME_STATE.completedWordsInRound;
+
+    // completedWordsGlobal now includes letter-level decimal progress
+    const completedWordsBase = ((GAME_STATE.currentRound - 1) * GAME_STATE.wordsPerRound) + GAME_STATE.completedWordsInRound;
+
+    // Add letter progress: fraction of the current word completed
+    let letterProgress = 0;
+    if (GAME_STATE.word && GAME_STATE.word.length > 0) {
+        letterProgress = GAME_STATE.letterIndex / GAME_STATE.word.length;
+    }
+
+    const completedWordsGlobal = completedWordsBase + letterProgress;
 
     // Percentage for mercury (0 to 100)
     const percentage = totalWords > 0 ? (completedWordsGlobal / totalWords) * 100 : 0;
@@ -907,6 +917,7 @@ function completeLetter() {
     GAME_STATE.completedLetters[GAME_STATE.letterIndex] = true;
     GAME_STATE.letterIndex++;
 
+    updateProgressDisplay();
     resetForNewLetter();
 
     if (GAME_STATE.letterIndex >= GAME_STATE.word.length) {
@@ -917,18 +928,20 @@ function completeLetter() {
 function completeWord() {
     GAME_STATE.completedWordsInRound++;
 
+    // Update display first so it reaches 100% before we return/finish
+    updateProgressDisplay();
+
     if (GAME_STATE.completedWordsInRound >= GAME_STATE.wordsPerRound) {
         // Round Complete
         GAME_STATE.completedWordsInRound = 0;
         GAME_STATE.currentRound++;
 
         if (GAME_STATE.currentRound > GAME_STATE.roundsToWin) {
-            finishGame();
+            setTimeout(finishGame, 400); // Small delay to let mercury reach 100%
             return;
         }
     }
 
-    updateProgressDisplay();
     startNewWord();
 }
 
