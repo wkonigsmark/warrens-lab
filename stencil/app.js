@@ -51,7 +51,7 @@ const LETTER_PATHS = {
     'E': [[[0.15, 0], [0.15, 1]], [[0.15, 0], [0.85, 0]], [[0.15, 0.5], [0.75, 0.5]], [[0.15, 1], [0.85, 1]]],
     'F': [[[0.15, 0], [0.15, 1]], [[0.15, 0], [0.85, 0]], [[0.15, 0.5], [0.75, 0.5]]],
     'G': [
-        [[0.85, 0.2], [0.7, 0.05], [0.5, 0], [0.3, 0.05], [0.15, 0.2], [0.1, 0.5], [0.15, 0.8], [0.3, 0.95], [0.5, 1], [0.7, 0.95], [0.9, 0.8]], 
+        [[0.85, 0.2], [0.7, 0.05], [0.5, 0], [0.3, 0.05], [0.15, 0.2], [0.1, 0.5], [0.15, 0.8], [0.3, 0.95], [0.5, 1], [0.7, 0.95], [0.9, 0.8]],
         [[0.9, 0.6], [0.6, 0.6]]
     ],
     'H': [[[0.2, 0], [0.2, 1]], [[0.8, 0], [0.8, 1]], [[0.2, 0.5], [0.8, 0.5]]],
@@ -566,7 +566,7 @@ function validateStroke() {
         currentTolerance *= 1.35; // 35% more forgiving for curves
     }
     if (TRICKY_LETTERS.includes(letter)) {
-        currentTolerance *= 1.5; // Additional boost for target tricky letters
+        currentTolerance *= 1.2; // Dialed back from 1.5x to 1.2x for better challenge
     }
 
     // 1. Is the stroke inside the Halo?
@@ -636,13 +636,13 @@ function checkCoverage() {
         currentTolerance *= 1.35;
     }
     if (TRICKY_LETTERS.includes(letter)) {
-        currentTolerance *= 1.5;
+        currentTolerance *= 1.2; // Dialed back from 1.5x
     }
 
-    // Use global threshold, but relax it for tricky letters
+    // Use global threshold
     let letterThreshold = CONFIG.completionThreshold;
     if (TRICKY_LETTERS.includes(letter)) {
-        letterThreshold = 0.30; // Only 30% coverage needed for troublesome letters
+        letterThreshold = 0.40; // Restored to 40% challenge level
     }
 
     // We must pass EVERY stroke in the letter
