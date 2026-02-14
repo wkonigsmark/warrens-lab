@@ -14,17 +14,18 @@
     <div class="container">
         <div class="controls">
             <div class="settings-group">
-                <label>Level:
-                    <select id="levelInput">
-                        <option value="level1">1 (Easy)</option>
-                        <option value="level2" selected>2 (Med)</option>
-                        <option value="level3">3 (Hard)</option>
-                        <option value="level4">4 (Expert)</option>
-                        <option value="all">Mix</option>
-                    </select>
-                </label>
-                <label>Words: <input type="number" id="wprInput" value="3" min="1" max="50"></label>
-                <label>Rounds: <input type="number" id="rtwInput" value="3" min="1" max="50"></label>
+                <div class="settings-item">
+                    <label>Level</label>
+                    <div id="levelWheel" class="wheel-picker"></div>
+                </div>
+                <div class="settings-item">
+                    <label>Words</label>
+                    <div id="wordsWheel" class="wheel-picker"></div>
+                </div>
+                <div class="settings-item">
+                    <label>Rounds</label>
+                    <div id="roundsWheel" class="wheel-picker"></div>
+                </div>
             </div>
             <div class="progress-display" id="progressDisplay">Round 1/3 • Word 1/3</div>
             <button id="clearBtn" class="clear-button">Clear</button>

@@ -51,8 +51,8 @@ const LETTER_PATHS = {
     'E': [[[0.15, 0], [0.15, 1]], [[0.15, 0], [0.85, 0]], [[0.15, 0.5], [0.75, 0.5]], [[0.15, 1], [0.85, 1]]],
     'F': [[[0.15, 0], [0.15, 1]], [[0.15, 0], [0.85, 0]], [[0.15, 0.5], [0.75, 0.5]]],
     'G': [
-        [[0.85, 0.2], [0.7, 0.05], [0.5, 0], [0.3, 0.05], [0.15, 0.2], [0.1, 0.5], [0.15, 0.8], [0.3, 0.95], [0.5, 1], [0.7, 0.95], [0.9, 0.8]],
-        [[0.9, 0.6], [0.6, 0.6]]
+        [[0.85, 0.2], [0.7, 0.05], [0.5, 0], [0.3, 0.05], [0.15, 0.2], [0.1, 0.5], [0.15, 0.8], [0.3, 0.95], [0.5, 1], [0.7, 0.95], [0.88, 0.8]],
+        [[0.88, 0.6], [0.6, 0.6]]
     ],
     'H': [[[0.2, 0], [0.2, 1]], [[0.8, 0], [0.8, 1]], [[0.2, 0.5], [0.8, 0.5]]],
     'I': [[[0.5, 0], [0.5, 1]], [[0.2, 0], [0.8, 0]], [[0.2, 1], [0.8, 1]]],
@@ -149,6 +149,102 @@ const GUIDES = {
     sky: 0.25
 };
 
+const DIFFICULTY_CONFIGS = {
+    'level1': { tolerance: 60, threshold: 0.35, label: "Pre-Beginner" },
+    'level2': { tolerance: 40, threshold: 0.50, label: "Beginner" },
+    'level3': { tolerance: 30, threshold: 0.60, label: "Hard" },
+    'level4': { tolerance: 20, threshold: 0.75, label: "Expert" },
+    'all': { tolerance: 40, threshold: 0.50, label: "Mixed" }
+};
+
+class WheelPicker {
+    constructor(container, items, initialIndex, onSelect) {
+        this.container = container;
+        this.items = items;
+        this.selectedIndex = initialIndex;
+        this.onSelect = onSelect;
+        this.rotation = initialIndex * -36; // 36 degrees per item (10 items ideally)
+        this.isDragging = false;
+        this.startY = 0;
+        this.startRotation = 0;
+        this.itemHeight = 40;
+        this.radius = 60; // radius of the cylinder
+
+        this.init();
+    }
+
+    init() {
+        this.container.innerHTML = `
+            <div class="wheel-picker-selection"></div>
+            <div class="wheel-strip"></div>
+        `;
+        this.strip = this.container.querySelector('.wheel-strip');
+
+        this.items.forEach((item, i) => {
+            const el = document.createElement('div');
+            el.className = 'wheel-item';
+            el.textContent = item.label || item;
+            // Place on cylinder
+            const angle = i * 36;
+            el.style.transform = `rotateX(${-angle}deg) translateZ(${this.radius}px)`;
+            this.strip.appendChild(el);
+        });
+
+        this.updateTransform();
+
+        // Events
+        const start = (e) => {
+            this.isDragging = true;
+            this.startY = e.touches ? e.touches[0].clientY : e.clientY;
+            this.startRotation = this.rotation;
+            this.strip.style.transition = 'none';
+        };
+
+        const move = (e) => {
+            if (!this.isDragging) return;
+            const y = e.touches ? e.touches[0].clientY : e.clientY;
+            const delta = y - this.startY;
+            this.rotation = this.startRotation + (delta / this.itemHeight) * 36;
+            this.updateTransform();
+        };
+
+        const end = () => {
+            if (!this.isDragging) return;
+            this.isDragging = false;
+            this.strip.style.transition = 'transform 0.3s ease-out';
+            // Snap to nearest 36deg
+            this.selectedIndex = Math.round(this.rotation / -36);
+            this.selectedIndex = Math.max(0, Math.min(this.items.length - 1, this.selectedIndex));
+            this.rotation = this.selectedIndex * -36;
+            this.updateTransform();
+
+            if (this.onSelect) this.onSelect(this.items[this.selectedIndex], this.selectedIndex);
+        };
+
+        this.container.addEventListener('mousedown', start);
+        window.addEventListener('mousemove', move);
+        window.addEventListener('mouseup', end);
+
+        this.container.addEventListener('touchstart', start, { passive: false });
+        window.addEventListener('touchmove', move, { passive: false });
+        window.addEventListener('touchend', end);
+    }
+
+    updateTransform() {
+        this.strip.style.transform = `translateZ(-${this.radius}px) rotateX(${this.rotation}deg)`;
+        // Highlight selected
+        const idx = Math.round(this.rotation / -36);
+        this.strip.querySelectorAll('.wheel-item').forEach((el, i) => {
+            el.classList.toggle('selected', i === idx);
+        });
+    }
+
+    getValue() {
+        const item = this.items[this.selectedIndex];
+        return item.value !== undefined ? item.value : item;
+    }
+}
+
 function init() {
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
@@ -166,24 +262,42 @@ function init() {
     document.getElementById('clearBtn').addEventListener('click', resetWord);
     document.getElementById('newWordBtn').addEventListener('click', forceNextWord);
 
-    // Settings Listeners
-    document.getElementById('wprInput').addEventListener('change', (e) => {
-        GAME_STATE.wordsPerRound = Math.min(50, Math.max(1, parseInt(e.target.value) || 3));
-        resetGame();
-    });
-    document.getElementById('rtwInput').addEventListener('change', (e) => {
-        GAME_STATE.roundsToWin = Math.min(50, Math.max(1, parseInt(e.target.value) || 3));
-        resetGame();
-    });
-
-    // Level Listener - Update word immediately if haven't started drawing?
-    // Or just let it take effect next word. 
-    // User expectation: Change level -> New word appears from that level if game hasn't really started.
-    document.getElementById('levelInput').addEventListener('change', () => {
-        if (!GAME_STATE.hasStarted) {
-            startNewWord(); // Reroll immediately if just waiting
-        }
-    });
+    // Wheel Pickers
+    GAME_STATE.wheels = {
+        level: new WheelPicker(
+            document.getElementById('levelWheel'),
+            [
+                { label: 'PB', value: 'level1' },
+                { label: 'BEG', value: 'level2' },
+                { label: 'HRD', value: 'level3' },
+                { label: 'EXP', value: 'level4' },
+                { label: 'MIX', value: 'all' }
+            ],
+            1, // Beginner default
+            () => {
+                applyDifficulty();
+                if (!GAME_STATE.hasStarted) startNewWord();
+            }
+        ),
+        words: new WheelPicker(
+            document.getElementById('wordsWheel'),
+            [1, 2, 3, 4, 5, 10, 15, 20],
+            2, // 3 words default
+            (val) => {
+                GAME_STATE.wordsPerRound = val;
+                resetGame();
+            }
+        ),
+        rounds: new WheelPicker(
+            document.getElementById('roundsWheel'),
+            [1, 2, 3, 4, 5, 10],
+            2, // 3 rounds default
+            (val) => {
+                GAME_STATE.roundsToWin = val;
+                resetGame();
+            }
+        )
+    };
 
     // Victory Modal
     // Note: Modal HTML might not be injected yet if full file rewrite didn't happen perfectly, but assuming it exists from Step 1.
@@ -197,17 +311,28 @@ function init() {
     requestAnimationFrame(gameLoop);
 }
 
+function applyDifficulty() {
+    if (!GAME_STATE.wheels) return;
+    const level = GAME_STATE.wheels.level.getValue();
+    const config = DIFFICULTY_CONFIGS[level] || DIFFICULTY_CONFIGS['level2'];
+
+    CONFIG.hitToleranceWidth = config.tolerance;
+    CONFIG.completionThreshold = config.threshold;
+
+    const indicator = document.querySelector('.level-indicator');
+    if (indicator) indicator.textContent = `Level: ${config.label}`;
+}
+
 function resetGame() {
     GAME_STATE.currentRound = 1;
     GAME_STATE.completedWordsInRound = 0;
     GAME_STATE.hasStarted = false;
     GAME_STATE.startTime = null;
 
-    // Grab inputs just in case
-    const wpr = document.getElementById('wprInput');
-    const rtw = document.getElementById('rtwInput');
-    if (wpr) GAME_STATE.wordsPerRound = parseInt(wpr.value);
-    if (rtw) GAME_STATE.roundsToWin = parseInt(rtw.value);
+    if (GAME_STATE.wheels) {
+        GAME_STATE.wordsPerRound = GAME_STATE.wheels.words.getValue();
+        GAME_STATE.roundsToWin = GAME_STATE.wheels.rounds.getValue();
+    }
 
     updateProgressDisplay();
     startNewWord();
@@ -215,8 +340,7 @@ function resetGame() {
 
 function startNewWord() {
     // 1. Determine eligible words
-    const levelSelect = document.getElementById('levelInput');
-    const selectedLevel = levelSelect ? levelSelect.value : 'all';
+    const selectedLevel = GAME_STATE.wheels ? GAME_STATE.wheels.level.getValue() : 'all';
 
     let eligibleWords = [];
     if (selectedLevel === 'all' || !WORD_BANKS[selectedLevel]) {
@@ -659,7 +783,17 @@ function checkCoverage() {
         hitCtx.scale(dpr, dpr);
         hitCtx.lineCap = 'round';
         hitCtx.lineJoin = 'round';
-        hitCtx.lineWidth = currentTolerance;
+
+        // SPECIAL FIX FOR 'A' CROSSBAR:
+        // If the segment is very short relative to tolerance (like A crossbar),
+        // we use a narrower check halo to prevent intersections from "clogging" the check.
+        let checkTolerance = currentTolerance;
+        const segLen = Math.sqrt(Math.pow(strokeSegment[0][0] - strokeSegment[1][0], 2) + Math.pow(strokeSegment[0][1] - strokeSegment[1][1], 2));
+        if (segLen < 0.4) {
+            checkTolerance = Math.min(currentTolerance, 25); // Tighten for small connectors
+        }
+
+        hitCtx.lineWidth = checkTolerance;
         hitCtx.strokeStyle = 'red';
 
         hitCtx.beginPath();
@@ -698,8 +832,8 @@ function checkCoverage() {
         hitCtx.scale(dpr, dpr);
         hitCtx.globalCompositeOperation = 'source-in';
         hitCtx.strokeStyle = 'blue';
-        // User paint is thinner
-        hitCtx.lineWidth = currentTolerance * 0.5;
+        // User paint check is relative to the check halo
+        hitCtx.lineWidth = checkTolerance * 0.8;
         hitCtx.lineCap = 'round';
         hitCtx.lineJoin = 'round';
 
