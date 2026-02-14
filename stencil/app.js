@@ -928,9 +928,6 @@ function completeLetter() {
 function completeWord() {
     GAME_STATE.completedWordsInRound++;
 
-    // Update display first so it reaches 100% before we return/finish
-    updateProgressDisplay();
-
     if (GAME_STATE.completedWordsInRound >= GAME_STATE.wordsPerRound) {
         // Round Complete
         GAME_STATE.completedWordsInRound = 0;
