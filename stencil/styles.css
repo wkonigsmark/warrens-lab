@@ -110,6 +110,8 @@ body {
 
 .guides-column {
     width: 60px;
+    flex-shrink: 0;
+    /* Prevent column from being squashed in portrait */
     background: rgba(255, 255, 255, 0.3);
     border-right: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
@@ -144,7 +146,15 @@ body {
     }
 
     #drawingCanvas {
-        height: calc(100vh - 150px);
+        height: min(600px, calc(100vh - 200px));
+    }
+
+    .guides-column {
+        width: 45px;
+    }
+
+    .guide-icon {
+        font-size: 18px;
     }
 
     .controls {

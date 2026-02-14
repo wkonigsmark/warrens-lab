@@ -854,6 +854,7 @@ function updateProgressDisplay() {
 }
 
 function completeLetter() {
+    playLockSound();
     GAME_STATE.completedLetters[GAME_STATE.letterIndex] = true;
     GAME_STATE.letterIndex++;
 
@@ -899,3 +900,38 @@ function finishGame() {
 }
 
 window.addEventListener('load', init);
+// Subtle "Deadbolt" Sound Synthesizer
+function playLockSound() {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+
+        // Two-part "clink-clack" sound
+        const playClick = (delay, freq, vol) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = 'square'; // Mechanical feel
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+            osc.frequency.exponentialRampToValueAtTime(10, ctx.currentTime + delay + 0.05);
+
+            gain.gain.setValueAtTime(vol, ctx.currentTime + delay);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + delay + 0.05);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.start(ctx.currentTime + delay);
+            osc.stop(ctx.currentTime + delay + 0.05);
+        };
+
+        // First click (bolt sliding)
+        playClick(0, 800, 0.05);
+        // Second click (bolt locking)
+        playClick(0.06, 400, 0.08);
+
+    } catch (e) {
+        // Silently fail if audio blocked
+    }
+}
