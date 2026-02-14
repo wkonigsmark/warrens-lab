@@ -1402,6 +1402,16 @@
             initChart();
             startSimulationMode();
             updateSignalBox();
+
+            // Modal Accessibility: Close on ESC key
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') hideEdu();
+            });
+
+            // Modal Accessibility: Close on clicking overlay
+            document.getElementById('edu-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'edu-modal') hideEdu();
+            });
         };
     </script>
 </body>
