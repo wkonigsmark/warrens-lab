@@ -22,6 +22,7 @@ const GAME_STATE = {
 
 // Curve Tolerance Boost
 const CURVED_LETTERS = ['B', 'C', 'D', 'G', 'J', 'O', 'P', 'Q', 'R', 'S', 'U'];
+const TRICKY_LETTERS = ['J', 'U', 'E', 'G', 'I'];
 
 // Helper to generate smooth arcs
 function generateArc(centerX, centerY, radiusX, radiusY, startAngle, endAngle, steps = 12) {
@@ -49,7 +50,10 @@ const LETTER_PATHS = {
     ],
     'E': [[[0.15, 0], [0.15, 1]], [[0.15, 0], [0.85, 0]], [[0.15, 0.5], [0.75, 0.5]], [[0.15, 1], [0.85, 1]]],
     'F': [[[0.15, 0], [0.15, 1]], [[0.15, 0], [0.85, 0]], [[0.15, 0.5], [0.75, 0.5]]],
-    'G': [[[0.85, 0.2], [0.7, 0.05], [0.5, 0], [0.3, 0.05], [0.15, 0.2], [0.1, 0.5], [0.15, 0.8], [0.3, 0.95], [0.5, 1], [0.7, 0.95], [0.9, 0.8], [0.9, 0.6], [0.6, 0.6]]],
+    'G': [
+        [[0.85, 0.2], [0.7, 0.05], [0.5, 0], [0.3, 0.05], [0.15, 0.2], [0.1, 0.5], [0.15, 0.8], [0.3, 0.95], [0.5, 1], [0.7, 0.95], [0.9, 0.8]], 
+        [[0.9, 0.6], [0.6, 0.6]]
+    ],
     'H': [[[0.2, 0], [0.2, 1]], [[0.8, 0], [0.8, 1]], [[0.2, 0.5], [0.8, 0.5]]],
     'I': [[[0.5, 0], [0.5, 1]], [[0.2, 0], [0.8, 0]], [[0.2, 1], [0.8, 1]]],
     'J': [
@@ -561,6 +565,9 @@ function validateStroke() {
     if (CURVED_LETTERS.includes(letter)) {
         currentTolerance *= 1.35; // 35% more forgiving for curves
     }
+    if (TRICKY_LETTERS.includes(letter)) {
+        currentTolerance *= 1.5; // Additional boost for target tricky letters
+    }
 
     // 1. Is the stroke inside the Halo?
     // We check this by drawing the halo on hitCanvas and checking overlap
@@ -623,14 +630,23 @@ function checkCoverage() {
     const s = CONFIG.letterSize;
     const w = s * 0.7;
 
-    // Dynamic Tolerance Boost for Curves
+    // Dynamic Tolerance Boost
     let currentTolerance = CONFIG.hitToleranceWidth;
     if (CURVED_LETTERS.includes(letter)) {
         currentTolerance *= 1.35;
     }
+    if (TRICKY_LETTERS.includes(letter)) {
+        currentTolerance *= 1.5;
+    }
+
+    // Use global threshold, but relax it for tricky letters
+    let letterThreshold = CONFIG.completionThreshold;
+    if (TRICKY_LETTERS.includes(letter)) {
+        letterThreshold = 0.30; // Only 30% coverage needed for troublesome letters
+    }
 
     // We must pass EVERY stroke in the letter
-    const STROKE_THRESHOLD = 0.50;
+    const STROKE_THRESHOLD = letterThreshold;
     let allStrokesPassed = true;
 
     for (let i = 0; i < path.length; i++) {
