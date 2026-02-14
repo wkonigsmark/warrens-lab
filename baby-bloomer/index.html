@@ -322,9 +322,9 @@
             document.getElementById('status-text').textContent = "Connecting to Yahoo Finance...";
 
             try {
-                // Yahoo Finance 5-minute data for the last 5 days
-                const symbol = 'SPY';
-                const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=5m&range=5d`;
+                // S&P 500 Index (^GSPC) instead of the SPY ETF
+                const symbol = '^GSPC';
+                const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=5m&range=5d&includePrePost=false`;
 
                 // Using AllOrigins as a proxy to bypass CORS and bot detection
                 const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(yahooUrl)}`;
@@ -338,8 +338,12 @@
                 }
 
                 const result = data.chart.result[0];
+                const meta = result.meta;
                 const timestamps = result.timestamp;
                 const quotes = result.indicators.quote[0].close;
+
+                // Official previous close for accurate daily change
+                basePrice = meta.chartPreviousClose || quotes[0];
 
                 // Clean up null values often found in Yahoo data
                 dataPoints = [];
@@ -361,15 +365,14 @@
                 }
 
                 currentPrice = dataPoints[dataPoints.length - 1];
-                basePrice = dataPoints[0];
 
                 chart.data.labels = labels;
                 chart.data.datasets[0].data = dataPoints;
-                chart.data.datasets[0].label = 'S&P 500 (SPY) - 5m';
+                chart.data.datasets[0].label = 'S&P 500 Index (^GSPC)';
                 updateStats();
                 chart.update();
 
-                document.getElementById('status-text').textContent = "Live Yahoo Finance Feed (SPY)";
+                document.getElementById('status-text').textContent = "Live Yahoo Finance Feed (^GSPC)";
                 isRealData = true;
 
                 if (simulationInterval) clearInterval(simulationInterval);
@@ -379,7 +382,7 @@
 
             } catch (error) {
                 console.error("Error fetching Yahoo data:", error);
-                alert("Yahoo Finance is blocking this request (standard for local development). I highly recommend getting a free key from 'Twelve Data' for true 1-minute access, or deploying this to Netlify where Yahoo might be more lenient.");
+                alert("Failed to fetch Index data. Falling back to simulation.");
                 startSimulation();
             }
         }
