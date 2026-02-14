@@ -341,9 +341,6 @@
                 const timestamps = result.timestamp;
                 const quotes = result.indicators.quote[0].close;
 
-                // CRITICAL: Use the official market previous close for the % change calculation
-                basePrice = meta.regularMarketPreviousClose;
-
                 // Map the full day's data
                 dataPoints = [];
                 labels = [];
@@ -356,8 +353,19 @@
                     }
                 }
 
-                // Show the full day's trend (No slicing)
+                if (dataPoints.length === 0) throw new Error("No data points found");
+
+                // Show the full day's trend
                 currentPrice = dataPoints[dataPoints.length - 1];
+
+                // CRITICAL: Use the official market previous close for the % change calculation
+                // Adding multiple fallbacks to prevent NaN if one field is missing
+                basePrice = meta.regularMarketPreviousClose || meta.chartPreviousClose || dataPoints[0];
+
+                if (!basePrice || isNaN(basePrice)) {
+                    console.warn("Could not find a valid basePrice for change calculation. Using current price as fallback.");
+                    basePrice = currentPrice;
+                }
 
                 chart.data.labels = labels;
                 chart.data.datasets[0].data = dataPoints;
