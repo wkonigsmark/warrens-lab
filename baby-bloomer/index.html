@@ -565,6 +565,9 @@
                     <span id="status-text"
                         style="font-size: 0.65rem; color: var(--accent-blue); font-family: 'JetBrains Mono', monospace; opacity: 0.8;">Simulated
                         Feed</span>
+                    <span id="status-note"
+                        style="font-size: 0.6rem; color: var(--text-secondary); opacity: 0; transition: opacity 0.5s;">(Initial
+                        handshake may take a moment)</span>
                 </div>
                 <span id="terminal-v">Intelligence Terminal // Equities Mode</span>
             </div>
@@ -988,8 +991,10 @@
 
         async function fetchAllData() {
             const status = document.getElementById('status-text');
+            const note = document.getElementById('status-note');
             status.textContent = "Live Stream: Connecting...";
             status.style.color = "var(--accent-blue)";
+            note.style.opacity = "0.5";
 
             const allSymbols = [
                 ...EQUIPMENT.equities,
@@ -1004,6 +1009,7 @@
 
             status.textContent = "Live Stream: Active";
             status.style.color = "var(--accent-green)";
+            note.style.opacity = "0";
             isRealData = true;
             document.getElementById('toggle-source-btn').textContent = "Simulation Mode";
             document.getElementById('toggle-source-btn').classList.add('active-source');
