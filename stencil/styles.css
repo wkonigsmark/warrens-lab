@@ -89,7 +89,7 @@ body {
 }
 
 .canvas-wrapper {
-    position: relative;
+    display: flex;
     background: #f5f1e8;
     border-radius: 15px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
@@ -106,6 +106,27 @@ body {
             transparent 2px,
             rgba(139, 119, 101, 0.03) 2px,
             rgba(139, 119, 101, 0.03) 4px);
+}
+
+.guides-column {
+    width: 60px;
+    background: rgba(255, 255, 255, 0.3);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 0;
+    position: relative;
+    pointer-events: none;
+}
+
+.guide-icon {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    opacity: 0.6;
+    filter: grayscale(0.2);
 }
 
 #drawingCanvas {

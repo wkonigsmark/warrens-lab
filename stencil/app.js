@@ -52,7 +52,7 @@ const LETTER_PATHS = {
     'F': [[[0.15, 0], [0.15, 1]], [[0.15, 0], [0.85, 0]], [[0.15, 0.5], [0.75, 0.5]]],
     'G': [
         [[0.85, 0.2], [0.7, 0.05], [0.5, 0], [0.3, 0.05], [0.15, 0.2], [0.1, 0.5], [0.15, 0.8], [0.3, 0.95], [0.5, 1], [0.7, 0.95], [0.88, 0.8]],
-        [[0.88, 0.6], [0.6, 0.6]]
+        [[0.88, 0.8], [0.88, 0.6], [0.6, 0.6]]
     ],
     'H': [[[0.2, 0], [0.2, 1]], [[0.8, 0], [0.8, 1]], [[0.2, 0.5], [0.8, 0.5]]],
     'I': [[[0.5, 0], [0.5, 1]], [[0.2, 0], [0.8, 0]], [[0.2, 1], [0.8, 1]]],
@@ -143,10 +143,10 @@ const CONFIG = {
 };
 
 const GUIDES = {
-    worm: 0.85,
-    grass: 0.65,
-    plane: 0.45,
-    sky: 0.25
+    sky: 0.15,
+    plane: 0.35,
+    grass: 0.55,
+    worm: 0.75
 };
 
 const DIFFICULTY_CONFIGS = {
@@ -365,13 +365,13 @@ function calculateLayout() {
     const canvasWidth = rect.width;
 
     // Logic coordinates
-    const top = GUIDES.sky * canvasHeight;
-    const bottom = GUIDES.grass * canvasHeight;
-    const h = bottom - top;
+    const skyY = GUIDES.sky * canvasHeight;
+    const grassY = GUIDES.grass * canvasHeight;
+    const h = grassY - skyY;
 
     // Initial Standard Size
     let size = h;
-    let padding = 15; // Tighter padding logic
+    let padding = 15;
 
     // Check width constraint - Reduced from 0.9 to 0.8 for safe margins with thick halos
     const maxW = canvasWidth * 0.80;
@@ -379,9 +379,7 @@ function calculateLayout() {
     const count = GAME_STATE.word.length;
 
     if (count > 0) {
-        // Calculate theoretical width
         let totalW = (size * aspect + padding) * count - padding;
-
         if (totalW > maxW) {
             const scale = maxW / totalW;
             size *= scale;
@@ -391,16 +389,31 @@ function calculateLayout() {
 
     CONFIG.letterSize = size;
     CONFIG.letterPadding = padding;
-    // Align bottom of letter to grass line
-    CONFIG.baseline = bottom - size;
+
+    // CENTER VERTICALLY between sky and grass if word scaled down significantly
+    // But usually we want uppercase to hit the sky line.
+    const actualBase = grassY - size;
+    CONFIG.baseline = grassY - size;
 
     // Calculate final width and center
     const w = CONFIG.letterSize * aspect;
     const finalTotalW = (w + CONFIG.letterPadding) * count - CONFIG.letterPadding;
-
     CONFIG.startX = (canvasWidth - finalTotalW) / 2;
 
+    // Update Icon positions in the column
+    updateIconPositions(canvasHeight);
+
     calculateTargetArea();
+}
+
+function updateIconPositions(canvasHeight) {
+    const icons = document.querySelectorAll('.guide-icon');
+    if (icons.length < 4) return;
+
+    icons[0].style.top = (GUIDES.sky * canvasHeight) + 'px';
+    icons[1].style.top = (GUIDES.plane * canvasHeight) + 'px';
+    icons[2].style.top = (GUIDES.grass * canvasHeight) + 'px';
+    icons[3].style.top = (GUIDES.worm * canvasHeight) + 'px';
 }
 
 function calculateTargetArea() {
@@ -469,22 +482,38 @@ function drawGuideLines() {
 
     ctx.save();
     ctx.lineWidth = 1;
-    ctx.strokeStyle = CONFIG.guideColor;
 
-    [GUIDES.sky, GUIDES.grass, GUIDES.worm].forEach(y => {
-        ctx.beginPath();
-        ctx.moveTo(0, height * y);
-        ctx.lineTo(width, height * y);
-        ctx.stroke();
-    });
+    // Sky Line (Blue)
+    ctx.strokeStyle = 'rgba(74, 144, 226, 0.4)';
+    ctx.beginPath();
+    ctx.moveTo(0, height * GUIDES.sky);
+    ctx.lineTo(width, height * GUIDES.sky);
+    ctx.stroke();
 
-    // Plane (dashed)
+    // Plane Line (Grey Dashed)
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
     ctx.beginPath();
     ctx.setLineDash([8, 8]);
     ctx.moveTo(0, height * GUIDES.plane);
     ctx.lineTo(width, height * GUIDES.plane);
     ctx.stroke();
     ctx.setLineDash([]);
+
+    // Grass Line (Thick Green)
+    ctx.strokeStyle = 'rgba(126, 211, 33, 0.6)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, height * GUIDES.grass);
+    ctx.lineTo(width, height * GUIDES.grass);
+    ctx.stroke();
+
+    // Worm Line (Brown)
+    ctx.strokeStyle = 'rgba(139, 119, 101, 0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, height * GUIDES.worm);
+    ctx.lineTo(width, height * GUIDES.worm);
+    ctx.stroke();
 
     ctx.restore();
 }
