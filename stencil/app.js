@@ -467,11 +467,16 @@ function getLetterX(index) {
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
 
+    drawFadingStrokes();
     drawGuideLines();
     drawWordPaths();
     drawCurrentLetterStrokes();
-    drawFadingStrokes();
     drawCurrentStroke();
+
+    // Directional Beacon (PB Stage Only)
+    if (SETTINGS.level === 'level1') {
+        drawStartBeacon();
+    }
 
     requestAnimationFrame(gameLoop);
 }
@@ -934,4 +939,44 @@ function playLockSound() {
     } catch (e) {
         // Silently fail if audio blocked
     }
+}
+// Directional Beacon Synthesizer
+function drawStartBeacon() {
+    const letter = GAME_STATE.word[GAME_STATE.letterIndex];
+    if (!letter || !LETTER_PATHS[letter]) return;
+
+    const path = LETTER_PATHS[letter];
+    const lx = getLetterX(GAME_STATE.letterIndex);
+    const ly = CONFIG.baseline;
+    const s = CONFIG.letterSize;
+    const w = s * 0.7;
+
+    // 1. Find the first incomplete stroke
+    // We can't strictly know if a stroke is done without checking coverage,
+    // so we'll look at GAME_STATE.currentLetterStrokes vs LETTER_PATHS length.
+    const currentStrokeIdx = Math.min(GAME_STATE.currentLetterStrokes.length, path.length - 1);
+
+    // Get the start point of that stroke
+    const startPt = path[currentStrokeIdx][0];
+    const px = lx + startPt[0] * w;
+    const py = ly + startPt[1] * s;
+
+    // 2. Pulsing Animation
+    const time = Date.now() / 1000;
+    const pulse = (Math.sin(time * 6) + 1) / 2; // 0 to 1
+    const radius = 10 + pulse * 15;
+    const opacity = 0.2 + pulse * 0.4;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(px, py, radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(118, 75, 162, ${opacity})`; // Match theme purple
+    ctx.fill();
+
+    // Core dot
+    ctx.beginPath();
+    ctx.arc(px, py, 6, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(118, 75, 162, 0.8)`;
+    ctx.fill();
+    ctx.restore();
 }
