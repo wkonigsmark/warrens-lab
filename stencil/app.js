@@ -217,8 +217,26 @@ function init() {
         resetGame();
     });
 
-    resetGame();
+    // Initial Sync of SETTINGS to UI
+    syncSettingsToUI();
+
+    startNewWord();
     requestAnimationFrame(gameLoop);
+}
+
+function syncSettingsToUI() {
+    const levelBtn = document.getElementById('levelBtn');
+    const wordsBtn = document.getElementById('wordsBtn');
+    const roundsBtn = document.getElementById('roundsBtn');
+
+    if (levelBtn) {
+        const levelOpt = SETTING_OPTIONS.level.options.find(o => o.value === SETTINGS.level);
+        levelBtn.textContent = levelOpt ? levelOpt.short : 'BEG';
+    }
+    if (wordsBtn) wordsBtn.textContent = SETTINGS.words;
+    if (roundsBtn) roundsBtn.textContent = SETTINGS.rounds;
+
+    applyDifficulty();
 }
 
 function applyDifficulty() {
@@ -774,8 +792,8 @@ function checkCoverage() {
         // we use a narrower check halo to prevent intersections from "clogging" the check.
         let checkTolerance = currentTolerance;
         const segLen = Math.sqrt(Math.pow(strokeSegment[0][0] - strokeSegment[1][0], 2) + Math.pow(strokeSegment[0][1] - strokeSegment[1][1], 2));
-        if (segLen < 0.45) {
-            checkTolerance = Math.min(currentTolerance, 15); // Tighten further for 'A' crossbar
+        if (segLen < 0.65) {
+            checkTolerance = Math.min(currentTolerance, 15); // Tighten for 'A' and 'H' crossbars
         }
 
         hitCtx.lineWidth = checkTolerance;
@@ -862,7 +880,16 @@ function updateProgressDisplay() {
     const percentage = totalWords > 0 ? (completedWordsGlobal / totalWords) * 100 : 0;
 
     if (mercury) {
-        mercury.style.width = `${percentage}%`;
+        const currentWidth = mercury.style.width;
+        const newWidth = `${percentage}%`;
+
+        if (currentWidth !== newWidth) {
+            mercury.style.width = newWidth;
+            // Trigger splash
+            mercury.classList.remove('splash');
+            void mercury.offsetWidth; // Trigger reflow
+            mercury.classList.add('splash');
+        }
     }
 
     if (ratioEl) {

@@ -349,7 +349,7 @@ body {
 .thermometer-bulb {
     width: 36px;
     height: 36px;
-    background: radial-gradient(circle at 30% 30%, #ff4d4d, #b30000);
+    background: radial-gradient(circle at 30% 30%, #f0f0f0, #adb5bd, #6c757d);
     border: 3px solid #fff;
     border-radius: 50%;
     position: absolute;
@@ -374,11 +374,32 @@ body {
     height: 100%;
     width: 0%;
     /* Dynamic */
-    background: linear-gradient(to bottom, #ff4d4d 0%, #cc0000 50%, #800000 100%);
+    background: linear-gradient(to bottom, #f8f9fa 0%, #ced4da 50%, #adb5bd 100%);
     border-radius: 0 10px 10px 0;
     transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
-    box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+
+/* Splash Animation */
+.thermometer-mercury.splash {
+    animation: mercury-splash 0.5s ease-out;
+}
+
+@keyframes mercury-splash {
+    0% {
+        filter: brightness(1) contrast(1);
+    }
+
+    50% {
+        filter: brightness(1.4) contrast(1.2);
+        transform: scaleY(1.1);
+    }
+
+    100% {
+        filter: brightness(1) contrast(1);
+        transform: scaleY(1);
+    }
 }
 
 /* Metallic Shine / Mercury Highlight */
