@@ -192,42 +192,44 @@ class WheelPicker {
 
         this.updateTransform();
 
-        // Events
+        // Unified Pointer Events
         const start = (e) => {
             this.isDragging = true;
-            this.startY = e.touches ? e.touches[0].clientY : e.clientY;
+            this.startY = e.clientY;
             this.startRotation = this.rotation;
             this.strip.style.transition = 'none';
+            this.container.setPointerCapture(e.pointerId);
         };
 
         const move = (e) => {
             if (!this.isDragging) return;
-            const y = e.touches ? e.touches[0].clientY : e.clientY;
-            const delta = y - this.startY;
+            const delta = e.clientY - this.startY;
+            // Sensitivity adjustment for smooth dragging
             this.rotation = this.startRotation + (delta / this.itemHeight) * 36;
             this.updateTransform();
         };
 
-        const end = () => {
+        const end = (e) => {
             if (!this.isDragging) return;
             this.isDragging = false;
-            this.strip.style.transition = 'transform 0.3s ease-out';
-            // Snap to nearest 36deg
+            this.container.releasePointerCapture(e.pointerId);
+
+            this.strip.style.transition = 'transform 0.3s cubic-bezier(0.2, 0, 0.2, 1)';
+
+            // Calculate nearest index based on rotation (each item is 36 degrees)
             this.selectedIndex = Math.round(this.rotation / -36);
             this.selectedIndex = Math.max(0, Math.min(this.items.length - 1, this.selectedIndex));
+
             this.rotation = this.selectedIndex * -36;
             this.updateTransform();
 
             if (this.onSelect) this.onSelect(this.items[this.selectedIndex], this.selectedIndex);
         };
 
-        this.container.addEventListener('mousedown', start);
-        window.addEventListener('mousemove', move);
-        window.addEventListener('mouseup', end);
-
-        this.container.addEventListener('touchstart', start, { passive: false });
-        window.addEventListener('touchmove', move, { passive: false });
-        window.addEventListener('touchend', end);
+        this.container.addEventListener('pointerdown', start);
+        this.container.addEventListener('pointermove', move);
+        this.container.addEventListener('pointerup', end);
+        this.container.addEventListener('pointercancel', end);
     }
 
     updateTransform() {
@@ -422,8 +424,8 @@ function calculateLayout() {
     let size = h;
     let padding = 15; // Tighter padding logic
 
-    // Check width constraint
-    const maxW = canvasWidth * 0.90;
+    // Check width constraint - Reduced from 0.9 to 0.8 for safe margins with thick halos
+    const maxW = canvasWidth * 0.80;
     const aspect = 0.7;
     const count = GAME_STATE.word.length;
 
@@ -789,8 +791,8 @@ function checkCoverage() {
         // we use a narrower check halo to prevent intersections from "clogging" the check.
         let checkTolerance = currentTolerance;
         const segLen = Math.sqrt(Math.pow(strokeSegment[0][0] - strokeSegment[1][0], 2) + Math.pow(strokeSegment[0][1] - strokeSegment[1][1], 2));
-        if (segLen < 0.4) {
-            checkTolerance = Math.min(currentTolerance, 25); // Tighten for small connectors
+        if (segLen < 0.45) {
+            checkTolerance = Math.min(currentTolerance, 15); // Tighten further for 'A' crossbar
         }
 
         hitCtx.lineWidth = checkTolerance;
