@@ -157,95 +157,32 @@ const DIFFICULTY_CONFIGS = {
     'all': { tolerance: 40, threshold: 0.50, label: "Mixed" }
 };
 
-class WheelPicker {
-    constructor(container, items, initialIndex, onSelect) {
-        this.container = container;
-        this.items = items;
-        this.selectedIndex = initialIndex;
-        this.onSelect = onSelect;
-        this.rotation = initialIndex * -36; // 36 degrees per item (10 items ideally)
-        this.isDragging = false;
-        this.startY = 0;
-        this.startRotation = 0;
-        this.itemHeight = 40;
-        this.radius = 60; // radius of the cylinder
-
-        this.init();
+const SETTING_OPTIONS = {
+    level: {
+        title: "Difficulty Level",
+        options: [
+            { label: 'Pre-Beginner', value: 'level1', short: 'PB' },
+            { label: 'Beginner', value: 'level2', short: 'BEG' },
+            { label: 'Hard', value: 'level3', short: 'HRD' },
+            { label: 'Expert', value: 'level4', short: 'EXP' },
+            { label: 'All Mixed', value: 'all', short: 'MIX' }
+        ]
+    },
+    words: {
+        title: "Words Per Round",
+        options: [1, 2, 3, 4, 5, 10, 15, 20].map(v => ({ label: v.toString(), value: v, short: v.toString() }))
+    },
+    rounds: {
+        title: "Rounds To Win",
+        options: [1, 2, 3, 4, 5, 10].map(v => ({ label: v.toString(), value: v, short: v.toString() }))
     }
+};
 
-    init() {
-        this.container.innerHTML = `
-            <div class="wheel-picker-selection"></div>
-            <div class="wheel-strip"></div>
-        `;
-        this.strip = this.container.querySelector('.wheel-strip');
-
-        this.items.forEach((item, i) => {
-            const el = document.createElement('div');
-            el.className = 'wheel-item';
-            el.textContent = item.label || item;
-            // Place on cylinder
-            const angle = i * 36;
-            el.style.transform = `rotateX(${-angle}deg) translateZ(${this.radius}px)`;
-            this.strip.appendChild(el);
-        });
-
-        this.updateTransform();
-
-        // Unified Pointer Events
-        const start = (e) => {
-            this.isDragging = true;
-            this.startY = e.clientY;
-            this.startRotation = this.rotation;
-            this.strip.style.transition = 'none';
-            this.container.setPointerCapture(e.pointerId);
-        };
-
-        const move = (e) => {
-            if (!this.isDragging) return;
-            const delta = e.clientY - this.startY;
-            // Sensitivity adjustment for smooth dragging
-            this.rotation = this.startRotation + (delta / this.itemHeight) * 36;
-            this.updateTransform();
-        };
-
-        const end = (e) => {
-            if (!this.isDragging) return;
-            this.isDragging = false;
-            this.container.releasePointerCapture(e.pointerId);
-
-            this.strip.style.transition = 'transform 0.3s cubic-bezier(0.2, 0, 0.2, 1)';
-
-            // Calculate nearest index based on rotation (each item is 36 degrees)
-            this.selectedIndex = Math.round(this.rotation / -36);
-            this.selectedIndex = Math.max(0, Math.min(this.items.length - 1, this.selectedIndex));
-
-            this.rotation = this.selectedIndex * -36;
-            this.updateTransform();
-
-            if (this.onSelect) this.onSelect(this.items[this.selectedIndex], this.selectedIndex);
-        };
-
-        this.container.addEventListener('pointerdown', start);
-        this.container.addEventListener('pointermove', move);
-        this.container.addEventListener('pointerup', end);
-        this.container.addEventListener('pointercancel', end);
-    }
-
-    updateTransform() {
-        this.strip.style.transform = `translateZ(-${this.radius}px) rotateX(${this.rotation}deg)`;
-        // Highlight selected
-        const idx = Math.round(this.rotation / -36);
-        this.strip.querySelectorAll('.wheel-item').forEach((el, i) => {
-            el.classList.toggle('selected', i === idx);
-        });
-    }
-
-    getValue() {
-        const item = this.items[this.selectedIndex];
-        return item.value !== undefined ? item.value : item;
-    }
-}
+const SETTINGS = {
+    level: 'level2',
+    words: 3,
+    rounds: 3
+};
 
 function init() {
     window.addEventListener('resize', resizeCanvas);
@@ -264,42 +201,13 @@ function init() {
     document.getElementById('clearBtn').addEventListener('click', resetWord);
     document.getElementById('newWordBtn').addEventListener('click', forceNextWord);
 
-    // Wheel Pickers
-    GAME_STATE.wheels = {
-        level: new WheelPicker(
-            document.getElementById('levelWheel'),
-            [
-                { label: 'PB', value: 'level1' },
-                { label: 'BEG', value: 'level2' },
-                { label: 'HRD', value: 'level3' },
-                { label: 'EXP', value: 'level4' },
-                { label: 'MIX', value: 'all' }
-            ],
-            1, // Beginner default
-            () => {
-                applyDifficulty();
-                if (!GAME_STATE.hasStarted) startNewWord();
-            }
-        ),
-        words: new WheelPicker(
-            document.getElementById('wordsWheel'),
-            [1, 2, 3, 4, 5, 10, 15, 20],
-            2, // 3 words default
-            (val) => {
-                GAME_STATE.wordsPerRound = val;
-                resetGame();
-            }
-        ),
-        rounds: new WheelPicker(
-            document.getElementById('roundsWheel'),
-            [1, 2, 3, 4, 5, 10],
-            2, // 3 rounds default
-            (val) => {
-                GAME_STATE.roundsToWin = val;
-                resetGame();
-            }
-        )
-    };
+    // Setting Button Listeners
+    document.getElementById('levelBtn').addEventListener('click', () => showSettingsOverlay('level'));
+    document.getElementById('wordsBtn').addEventListener('click', () => showSettingsOverlay('words'));
+    document.getElementById('roundsBtn').addEventListener('click', () => showSettingsOverlay('rounds'));
+    document.getElementById('closeOverlay').addEventListener('click', hideSettingsOverlay);
+
+    applyDifficulty(); // Initial apply
 
     // Victory Modal
     // Note: Modal HTML might not be injected yet if full file rewrite didn't happen perfectly, but assuming it exists from Step 1.
@@ -314,8 +222,7 @@ function init() {
 }
 
 function applyDifficulty() {
-    if (!GAME_STATE.wheels) return;
-    const level = GAME_STATE.wheels.level.getValue();
+    const level = SETTINGS.level;
     const config = DIFFICULTY_CONFIGS[level] || DIFFICULTY_CONFIGS['level2'];
 
     CONFIG.hitToleranceWidth = config.tolerance;
@@ -325,16 +232,58 @@ function applyDifficulty() {
     if (indicator) indicator.textContent = `Level: ${config.label}`;
 }
 
+function showSettingsOverlay(type) {
+    const data = SETTING_OPTIONS[type];
+    const overlay = document.getElementById('settingsOverlay');
+    const title = document.getElementById('overlayTitle');
+    const grid = document.getElementById('overlayGrid');
+
+    title.textContent = data.title;
+    grid.innerHTML = '';
+
+    data.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        if (SETTINGS[type] === opt.value) btn.classList.add('active');
+        btn.textContent = opt.label;
+        btn.onclick = () => {
+            selectSetting(type, opt);
+        };
+        grid.appendChild(btn);
+    });
+
+    overlay.classList.remove('hidden');
+}
+
+function hideSettingsOverlay() {
+    document.getElementById('settingsOverlay').classList.add('hidden');
+}
+
+function selectSetting(type, opt) {
+    SETTINGS[type] = opt.value;
+
+    // Update labels on main UI
+    const btn = document.getElementById(`${type}Btn`);
+    if (btn) btn.textContent = opt.short;
+
+    hideSettingsOverlay();
+
+    if (type === 'level') {
+        applyDifficulty();
+        if (!GAME_STATE.hasStarted) startNewWord();
+    } else {
+        resetGame();
+    }
+}
+
 function resetGame() {
     GAME_STATE.currentRound = 1;
     GAME_STATE.completedWordsInRound = 0;
     GAME_STATE.hasStarted = false;
     GAME_STATE.startTime = null;
 
-    if (GAME_STATE.wheels) {
-        GAME_STATE.wordsPerRound = GAME_STATE.wheels.words.getValue();
-        GAME_STATE.roundsToWin = GAME_STATE.wheels.rounds.getValue();
-    }
+    GAME_STATE.wordsPerRound = SETTINGS.words;
+    GAME_STATE.roundsToWin = SETTINGS.rounds;
 
     updateProgressDisplay();
     startNewWord();
@@ -342,7 +291,7 @@ function resetGame() {
 
 function startNewWord() {
     // 1. Determine eligible words
-    const selectedLevel = GAME_STATE.wheels ? GAME_STATE.wheels.level.getValue() : 'all';
+    const selectedLevel = SETTINGS.level;
 
     let eligibleWords = [];
     if (selectedLevel === 'all' || !WORD_BANKS[selectedLevel]) {

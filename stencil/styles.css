@@ -181,89 +181,117 @@ body {
     letter-spacing: 1px;
 }
 
-/* 3D Wheel Picker Styles */
-.wheel-picker {
-    width: 100px;
-    height: 120px;
+/* Setting Buttons */
+.setting-val {
     background: #fff;
+    border: 2px solid #764ba2;
+    color: #764ba2;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 10px 20px;
     border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-    perspective: 1000px;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05);
-    cursor: grab;
-    touch-action: none;
+    cursor: pointer;
+    min-width: 80px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-.wheel-picker:active {
-    cursor: grabbing;
+.setting-val:active {
+    background: #764ba2;
+    color: #fff;
+    transform: scale(0.95);
 }
 
-/* The spinning strip */
-.wheel-strip {
-    position: absolute;
+/* Settings Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 40px;
-    /* Base height for one item */
-    top: 40px;
-    /* Center offset */
-    transform-style: preserve-3d;
-    transition: transform 0.1s ease-out;
-}
-
-.wheel-item {
-    position: absolute;
-    width: 100%;
-    height: 40px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
-    font-weight: 600;
+    z-index: 2000;
+    transition: opacity 0.3s;
+}
+
+.overlay.hidden {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.overlay-content {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 25px;
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.4);
+}
+
+#overlayTitle {
+    margin-bottom: 2rem;
+    color: #2c3e50;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    margin-bottom: 2rem;
+}
+
+.option-btn {
+    background: #f8f9ff;
+    border: 2px solid #b5c1fb;
     color: #333;
-    backface-visibility: hidden;
-    user-select: none;
+    padding: 20px 10px;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-.wheel-item.selected {
-    color: #764ba2;
-    font-size: 18px;
+.option-btn:active {
+    background: #764ba2;
+    border-color: #764ba2;
+    color: white;
+    transform: scale(0.9);
 }
 
-/* Gradients for 3D depth */
-.wheel-picker::before,
-.wheel-picker::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 45px;
-    z-index: 2;
+.option-btn.active {
+    background: #764ba2;
+    color: white;
+    border-color: #764ba2;
+}
+
+.close-overlay {
+    background: #eee;
+    border: none;
+    color: #666;
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.version-tag {
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    font-family: monospace;
     pointer-events: none;
-}
-
-.wheel-picker::before {
-    top: 0;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
-}
-
-.wheel-picker::after {
-    bottom: 0;
-    background: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
-}
-
-/* Center selection indicator */
-.wheel-picker-selection {
-    position: absolute;
-    top: 40px;
-    left: 0;
-    width: 100%;
-    height: 40px;
-    border-top: 1px solid rgba(118, 75, 162, 0.2);
-    border-bottom: 1px solid rgba(118, 75, 162, 0.2);
-    background: rgba(118, 75, 162, 0.05);
-    pointer-events: none;
-    z-index: 1;
 }
 
 .progress-display {
