@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baby Bloomer | Intelligence Terminal</title>
+    <meta name="description"
+        content="A premium financial dashboard for monitoring major market indices with deep statistical insights.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #05070a;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+            --text-primary: #f3f4f6;
+            --text-secondary: #6b7280;
+            --glass-blur: blur(20px);
+            --header-h: 68px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 1rem;
+            background-image: radial-gradient(circle at 50% 0%, #111827 0%, #05070a 100%);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: var(--header-h);
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 0.75rem;
+        }
+
+        .brand h1 {
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: -0.01em;
+            background: linear-gradient(to right, #ffffff, #9ca3af);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand span {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+        }
+
+        .global-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .toggle-group {
+            display: flex;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 2px;
+        }
+
+        .toggle-group button {
+            border: none;
+            background: transparent;
+            padding: 0.4rem 1rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-radius: 6px;
+        }
+
+        .toggle-group button.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-sep {
+            width: 1px;
+            height: 20px;
+            background: var(--card-border);
+            margin: 0 0.5rem;
+        }
+
+        button {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            backdrop-filter: var(--glass-blur);
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        button.active-source {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        /* Market Pulse & Sectors Grid */
+        .market-pulse,
+        .sectors-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.4rem;
+            flex-grow: 1;
+            max-width: 600px;
+        }
+
+        .pulse-card,
+        .sector-heat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 0.5rem 0.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+            min-height: 50px;
+        }
+
+        .pulse-card .pct,
+        .sector-heat-card .pct {
+            font-size: 0.6rem;
+            font-weight: 700;
+        }
+
+        .pulse-card:hover,
+        .sector-heat-card:hover,
+        .pulse-card.active,
+        .sector-heat-card.active {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.25rem;
+            z-index: 1;
+            position: relative;
+        }
+
+        .symbol {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+
+        .price {
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            z-index: 1;
+            position: relative;
+        }
+
+        .sparkline-container {
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 25px;
+            opacity: 0.3;
+        }
+
+        .sparkline-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Sectors Heatmap Grid */
+        .sectors-grid {
+            /* Inherits from above */
+        }
+
+        .sector-heat-card {
+            padding: 0.75rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .sector-heat-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .sector-heat-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+
+        .sector-heat-val {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .sector-heat-alpha {
+            font-size: 0.65rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .pulse-info .label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .pulse-info .price {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .pulse-change {
+            text-align: right;
+        }
+
+        .pulse-change .pct {
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Signal Box Styles */
+        .signal-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 0.5rem;
+        }
+
+        .signal-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-blue);
+            margin-bottom: 0.75rem;
+        }
+
+        .signal-content {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+
+        .signal-impact {
+            margin-top: 0.75rem;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-card {
+            background: #0a0c10;
+            border: 1px solid var(--card-border);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--accent-blue);
+        }
+
+        .modal-body {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .modal-body h4 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+
+        .info-trigger {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid var(--text-secondary);
+            color: var(--text-secondary);
+            font-size: 9px;
+            cursor: pointer;
+            margin-left: 0.4rem;
+            transition: all 0.2s;
+            vertical-align: middle;
+        }
+
+        .info-trigger:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        /* Main Analysis View */
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 1rem;
+            margin-top: 1rem;
+            align-items: start;
+        }
+
+        .chart-section {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 1.25rem;
+            min-height: 550px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 2rem;
+        }
+
+        .target-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            min-width: 250px;
+        }
+
+        .target-price {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            font-size: 2.75rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+        }
+
+        .target-label-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .target-label-row h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .target-change {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .chart-container {
+            height: 400px;
+            width: 100%;
+        }
+
+        .stats-sidebar {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            width: 320px;
+            align-content: start;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.2s;
+        }
+
+        .stat-label {
+            display: flex;
+            align-items: center;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.35rem;
+            font-weight: 500;
+        }
+
+        .positive {
+            color: var(--accent-green);
+        }
+
+        .negative {
+            color: var(--accent-red);
+        }
+
+        .last-packet {
+            margin-top: 1.5rem;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            padding-top: 1rem;
+            border-top: 1px solid var(--card-border);
+            text-align: right;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            box-shadow: 0 0 8px var(--accent-green);
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-main {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                height: 320px;
+            }
+
+            .market-pulse {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                height: auto;
+                gap: 1rem;
+                align-items: flex-start;
+                padding-bottom: 1.5rem;
+            }
+
+            .global-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="brand">
+                <div style="display: flex; align-items: baseline; gap: 0.5rem;">
+                    <h1>BABY BLOOMER</h1>
+                    <span id="status-text"
+                        style="font-size: 0.65rem; color: var(--accent-blue); font-family: 'JetBrains Mono', monospace; opacity: 0.8;">Simulated
+                        Feed</span>
+                </div>
+                <span id="terminal-v">Intelligence Terminal // Equities Mode</span>
+            </div>
+            <div class="global-controls">
+                <div class="toggle-group">
+                    <button id="p-equities" class="active" onclick="setPerspective('equities')">EQUITIES</button>
+                    <button id="p-sectors" onclick="setPerspective('sectors')">SECTORS</button>
+                    <button id="p-rates" onclick="setPerspective('rates')">RATES & BONDS</button>
+                </div>
+                <div class="btn-sep"></div>
+                <button id="toggle-source-btn" onclick="toggleSource()">Go Live</button>
+                <button onclick="resetAll()">Reset</button>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <section class="chart-section">
+                <div class="chart-header">
+                    <div class="target-info">
+                        <div class="target-price" id="active-price">
+                            <span style="font-size: 2.75rem; font-weight: 800;">0.00</span>
+                            <span class="target-change positive" id="active-change"
+                                style="font-size: 0.9rem;">+0.00%</span>
+                        </div>
+                        <div class="target-label-row">
+                            <h2 id="active-symbol-label"
+                                style="font-size: 1rem; color: var(--text-secondary); text-transform: uppercase;">S&P
+                                500 Index</h2>
+                            <span class="info-trigger" onclick="showEdu('chart_logic')">?</span>
+                        </div>
+                    </div>
+
+                    <div style="flex-grow: 1; display: flex; justify-content: flex-end;">
+                        <section class="market-pulse" id="market-pulse">
+                            <!-- Pulse Cards -->
+                        </section>
+
+                        <section class="sectors-grid" id="sectors-grid" style="display: none;">
+                            <!-- Sector Heatmap -->
+                        </section>
+                    </div>
+                </div>
+
+                <div class="chart-container" style="flex-grow: 1; min-height: 400px;">
+                    <canvas id="mainChart"></canvas>
+                </div>
+
+                <div class="last-packet" id="last-update">Last Packet: --:--:--</div>
+            </section>
+
+            <aside class="stats-sidebar">
+                <div class="stat-card">
+                    <div class="stat-label">
+                        Sigma (Volatility)
+                        <span class="info-trigger" onclick="showEdu('sigma')">?</span>
+                    </div>
+                    <div class="stat-value" id="sigma-val">0.000%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span id="multiple-label">Multiple (P/μ)</span>
+                        <span class="info-trigger" onclick="showEdu('multiple')">?</span>
+                    </div>
+                    <div class="stat-value" id="multiple-val">1.0000x</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span id="mean-label">Rolling Mean</span>
+                        <span class="info-trigger" onclick="showEdu('mean')">?</span>
+                    </div>
+                    <div class="stat-value" id="mean-val">0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">
+                        Market Regime
+                        <span class="info-trigger" onclick="showEdu('regime')">?</span>
+                    </div>
+                    <div class="stat-value" id="market-regime" style="font-size: 0.9rem;">Neutral</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span id="extra-label">Spread / Delta</span>
+                        <span class="info-trigger" onclick="showEdu('extra')">?</span>
+                    </div>
+                    <div class="stat-value" id="extra-val" style="font-size: 0.95rem;">--</div>
+                </div>
+
+                <div class="signal-box">
+                    <div class="signal-header">
+                        <span class="dot"
+                            style="background: var(--accent-blue); box-shadow: 0 0 8px var(--accent-blue);"></span>
+                        Signal & Context
+                    </div>
+                    <div class="signal-content" id="signal-text">
+                        Analyzing cross-asset relationships...
+                    </div>
+                    <div class="signal-impact" id="signal-impact">
+                        Waiting for data confluence.
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- Educational Modal -->
+    <div class="modal-overlay" id="edu-modal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="hideEdu()">&times;</button>
+            <div id="modal-content">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const EQUIPMENT = {
+            equities: [
+                { symbol: '^GSPC', label: 'S&P 500', base: 5000 },
+                { symbol: '^IXIC', label: 'Nasdaq 100', base: 16000 },
+                { symbol: '^DJI', label: 'Dow Jones', base: 38000 },
+                { symbol: '^RUT', label: 'Russell 2000', base: 2000 }
+            ],
+            rates: [
+                { symbol: '^TNX', label: '10Y Yield', base: 4.25, isYield: true },
+                { symbol: '^TYX', label: '30Y Yield', base: 4.40, isYield: true },
+                { symbol: '^FVX', label: '5Y Yield', base: 4.15, isYield: true },
+                { symbol: 'DX-Y.NYB', label: 'US Dollar Index', base: 104 }
+            ],
+            sectors: [
+                { symbol: 'XLK', label: 'Technology', base: 200 },
+                { symbol: 'XLF', label: 'Financials', base: 40 },
+                { symbol: 'XLV', label: 'Healthcare', base: 140 },
+                { symbol: 'XLY', label: 'Discretionary', base: 180 },
+                { symbol: 'XLC', label: 'Communication', base: 75 },
+                { symbol: 'XLI', label: 'Industrials', base: 120 },
+                { symbol: 'XLP', label: 'Staples', base: 70 },
+                { symbol: 'XLE', label: 'Energy', base: 85 },
+                { symbol: 'XLU', label: 'Utilities', base: 65 },
+                { symbol: 'XLRE', label: 'Real Estate', base: 40 },
+                { symbol: 'XLB', label: 'Materials', base: 80 }
+            ]
+        };
+
+        let activePerspective = 'equities';
+        let activeIndex = EQUIPMENT.equities[0];
+        let state = {}; // Stores { symbol: { dataPoints, labels, currentPrice, basePrice } }
+        let chart;
+        let isRealData = false;
+        let updateInterval;
+
+        // Initialize state for all possible symbols
+        [...EQUIPMENT.equities, ...EQUIPMENT.rates, ...EQUIPMENT.sectors].forEach(idx => {
+            state[idx.symbol] = {
+                dataPoints: [],
+                labels: [],
+                currentPrice: idx.base,
+                basePrice: idx.base
+            };
+        });
+
+        function setPerspective(p) {
+            activePerspective = p;
+            activeIndex = EQUIPMENT[p][0];
+
+            // Toggle UI Buttons
+            document.querySelectorAll('.toggle-group button').forEach(b => b.classList.remove('active'));
+            document.getElementById(`p-${p}`).classList.add('active');
+
+            document.getElementById('terminal-v').textContent = `Intelligence Terminal // ${p.charAt(0).toUpperCase() + p.slice(1)} Mode`;
+
+            // Update labels and visibility
+            const pulse = document.getElementById('market-pulse');
+            const sectors = document.getElementById('sectors-grid');
+
+            if (p === 'rates') {
+                document.getElementById('multiple-label').textContent = 'Yield Multiple (Y/μ)';
+                document.getElementById('mean-label').textContent = 'Rolling Yield Mean';
+                pulse.style.display = 'grid';
+                sectors.style.display = 'none';
+            } else if (p === 'sectors') {
+                document.getElementById('multiple-label').textContent = 'Alpha (Rel Strategy)';
+                document.getElementById('mean-label').textContent = 'Sector Peer Mean';
+                pulse.style.display = 'none';
+                sectors.style.display = 'grid';
+            } else {
+                document.getElementById('multiple-label').textContent = 'Price Multiple (P/μ)';
+                document.getElementById('mean-label').textContent = 'Rolling Price Mean';
+                pulse.style.display = 'grid';
+                sectors.style.display = 'none';
+            }
+
+            initUI();
+            switchIndex(activeIndex);
+        }
+
+        function initUI() {
+            const pulse = document.getElementById('market-pulse');
+            const sectorGrid = document.getElementById('sectors-grid');
+
+            pulse.innerHTML = '';
+            sectorGrid.innerHTML = '';
+
+            EQUIPMENT[activePerspective].forEach(idx => {
+                const s = state[idx.symbol];
+                const diff = s.currentPrice - s.basePrice;
+                const pct = (diff / s.basePrice * 100).toFixed(2);
+
+                const card = document.createElement('div');
+                card.className = `${activePerspective === 'sectors' ? 'sector-heat-card' : 'pulse-card'} ${idx.symbol === activeIndex.symbol ? 'active' : ''}`;
+                card.onclick = () => switchIndex(idx);
+
+                card.innerHTML = `
+                    <div class="label-row">
+                        <span class="symbol">${idx.label}</span>
+                        <span class="pct ${pct >= 0 ? 'positive' : 'negative'}">${pct}%</span>
+                    </div>
+                    <div class="price">${formatVal(s.currentPrice, idx)}</div>
+                    <div class="sparkline-container">
+                        <canvas id="spark-${idx.symbol.replace(/[^^A-Z0-9]/g, '')}" class="sparkline-canvas"></canvas>
+                    </div>
+                `;
+
+                if (activePerspective === 'sectors') sectorGrid.appendChild(card);
+                else pulse.appendChild(card);
+
+                // Draw Sparkline
+                setTimeout(() => drawSparkline(`spark-${idx.symbol.replace(/[^^A-Z0-9]/g, '')}`, s.dataPoints), 0);
+            });
+        }
+
+        function drawSparkline(canvasId, data) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas || data.length < 2) return;
+
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = canvas.offsetWidth * dpr;
+            canvas.height = canvas.offsetHeight * dpr;
+            ctx.scale(dpr, dpr);
+
+            const width = canvas.offsetWidth;
+            const height = canvas.offsetHeight;
+
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const range = max - min || 1;
+
+            ctx.clearRect(0, 0, width, height);
+            ctx.beginPath();
+            ctx.lineWidth = 1.5;
+
+            const color = data[data.length - 1] >= data[0] ? '#10b981' : '#ef4444';
+            ctx.strokeStyle = color;
+
+            data.forEach((val, i) => {
+                const x = (i / (data.length - 1)) * width;
+                const y = height - ((val - min) / range) * height;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+
+            ctx.stroke();
+
+            // Subtle fill
+            ctx.lineTo(width, height);
+            ctx.lineTo(0, height);
+            ctx.fillStyle = color + '15';
+            ctx.fill();
+        }
+
+        function switchIndex(idx) {
+            activeIndex = idx;
+            // document.querySelectorAll('.pulse-card').forEach(c => c.classList.remove('active')); // Removed as initUI handles active state
+            const s = state[activeIndex.symbol]; // Ensure 's' is defined for the active index
+            if (!s) return;
+
+            chart.data.labels = s.labels;
+            chart.data.datasets[0].data = s.dataPoints;
+            chart.data.datasets[0].label = activeIndex.label;
+
+            document.getElementById('active-symbol-label').textContent = idx.label;
+
+            // Set chart color based on mode
+            if (activePerspective === 'rates') {
+                chart.data.datasets[0].borderColor = '#3b82f6';
+                chart.data.datasets[0].backgroundColor = (context) => {
+                    const ctx = context.chart.ctx;
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                    gradient.addColorStop(0, 'rgba(59, 130, 246, 0.1)');
+                    gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+                    return gradient;
+                };
+            } else if (activePerspective === 'sectors') {
+                chart.data.datasets[0].borderColor = '#a855f7'; // Purple for sectors
+                chart.data.datasets[0].backgroundColor = (context) => {
+                    const ctx = context.chart.ctx;
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                    gradient.addColorStop(0, 'rgba(168, 85, 247, 0.1)');
+                    gradient.addColorStop(1, 'rgba(168, 85, 247, 0)');
+                    return gradient;
+                };
+            } else {
+                chart.data.datasets[0].borderColor = '#10b981';
+                chart.data.datasets[0].backgroundColor = (context) => {
+                    const ctx = context.chart.ctx;
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                    gradient.addColorStop(0, 'rgba(16, 185, 129, 0.1)');
+                    gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
+                    return gradient;
+                };
+            }
+
+            updateStats();
+            chart.update('none');
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: activeIndex.label,
+                        data: [],
+                        borderColor: '#10b981',
+                        borderWidth: 1.5,
+                        pointRadius: 0,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: '#0a0c10',
+                            borderColor: 'rgba(255,255,255,0.08)',
+                            borderWidth: 1,
+                            titleFont: { family: 'JetBrains Mono', size: 10 },
+                            bodyFont: { family: 'JetBrains Mono', size: 12 },
+                            padding: 10
+                        }
+                    },
+                    scales: {
+                        y: {
+                            position: 'right',
+                            grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                            ticks: {
+                                color: '#4b5563',
+                                font: { size: 9, family: 'JetBrains Mono' },
+                                callback: val => activeIndex.isYield ? val.toFixed(3) + '%' : val.toLocaleString()
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                color: '#4b5563',
+                                font: { size: 9, family: 'JetBrains Mono' },
+                                maxRotation: 0,
+                                autoSkip: true,
+                                maxTicksLimit: 8
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        const fetchSymbol = async (idx) => {
+            const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(idx.symbol)}?interval=2m&range=1d&includePrePost=false`;
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(yahooUrl)}`;
+
+            try {
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error(`Proxy error: ${response.status}`);
+                const proxyData = await response.json();
+
+                if (!proxyData || !proxyData.contents) throw new Error("Empty proxy response");
+
+                let data;
+                try {
+                    data = JSON.parse(proxyData.contents);
+                } catch (e) {
+                    throw new Error("Malformed JSON from Yahoo");
+                }
+
+                if (!data || !data.chart || !data.chart.result) throw new Error("Invalid Chart Data");
+
+                const res = data.chart.result[0];
+                const meta = res.meta;
+                const timestamps = res.timestamp || [];
+                const quotes = res.indicators.quote[0].close || [];
+
+                const pts = [];
+                const lbls = [];
+                quotes.forEach((q, i) => {
+                    if (q !== null && q !== undefined) {
+                        pts.push(q);
+                        lbls.push(new Date(timestamps[i] * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                    }
+                });
+
+                if (pts.length > 0) {
+                    state[idx.symbol] = {
+                        dataPoints: pts,
+                        labels: lbls,
+                        currentPrice: pts[pts.length - 1],
+                        basePrice: meta.regularMarketPreviousClose || meta.chartPreviousClose || pts[0]
+                    };
+                }
+            } catch (e) {
+                console.error(`Error fetching ${idx.symbol}:`, e.message);
+            }
+        };
+
+        async function fetchAllData() {
+            const status = document.getElementById('status-text');
+            status.textContent = "Live Stream: Connecting...";
+            status.style.color = "var(--accent-blue)";
+
+            const allSymbols = [
+                ...EQUIPMENT.equities,
+                ...EQUIPMENT.rates,
+                ...EQUIPMENT.sectors
+            ];
+
+            // Use individual await to ensure robustness
+            for (const sym of allSymbols) {
+                await fetchSymbol(sym);
+            }
+
+            status.textContent = "Live Stream: Active";
+            status.style.color = "var(--accent-green)";
+            isRealData = true;
+            document.getElementById('toggle-source-btn').textContent = "Simulation Mode";
+            document.getElementById('toggle-source-btn').classList.add('active-source');
+
+            updateUI();
+            switchIndex(activeIndex);
+        }
+        function updateSimulation() {
+            [...EQUIPMENT.equities, ...EQUIPMENT.rates, ...EQUIPMENT.sectors].forEach(idx => {
+                const s = state[idx.symbol];
+                const scale = idx.isYield ? 0.005 : (idx.base * 0.0005);
+                const drift = (Math.random() - 0.498) * scale;
+                s.currentPrice += drift;
+
+                const now = new Date();
+                s.labels.push(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                s.dataPoints.push(s.currentPrice);
+
+                if (s.dataPoints.length > 200) {
+                    s.labels.shift();
+                    s.dataPoints.shift();
+                }
+            });
+
+            updateUI();
+            const s = state[activeIndex.symbol];
+            chart.data.labels = s.labels;
+            chart.data.datasets[0].data = s.dataPoints;
+            chart.update('none');
+            updateStats();
+        }
+
+        function formatVal(val, idx) {
+            if (idx.isYield) return val.toFixed(3) + '%';
+            return val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function updateUI() {
+            // Update the sidebar pulse list or heatmap
+            initUI();
+
+            // Update main view
+            const s = state[activeIndex.symbol];
+            if (!s) return;
+
+            document.getElementById('active-price').children[0].textContent = formatVal(s.currentPrice, activeIndex);
+
+            const diff = s.currentPrice - s.basePrice;
+            const pct = (diff / s.basePrice * 100).toFixed(2);
+            const mainChange = document.getElementById('active-change');
+
+            if (activePerspective === 'sectors') {
+                const spy = state['^GSPC'];
+                const spyPct = ((spy.currentPrice - spy.basePrice) / spy.basePrice * 100);
+                const alpha = (pct - spyPct).toFixed(2);
+                mainChange.textContent = `${pct >= 0 ? '+' : ''}${pct}% (Alpha: ${alpha >= 0 ? '+' : ''}${alpha}%)`;
+            } else if (activeIndex.isYield) {
+                const bps = (diff * 100).toFixed(1);
+                mainChange.textContent = `${bps >= 0 ? '+' : ''}${bps} bps (${pct >= 0 ? '+' : ''}${pct}%)`;
+            } else {
+                mainChange.textContent = `${diff >= 0 ? '+' : ''}${diff.toFixed(2)} (${pct >= 0 ? '+' : ''}${pct}%)`;
+            }
+            mainChange.className = `target-change ${pct >= 0 ? 'positive' : 'negative'}`;
+
+            document.getElementById('last-update').textContent = `Last Packet: ${new Date().toLocaleTimeString()}`;
+
+            updateStats();
+        }
+        function updateStats() {
+            const s = state[activeIndex.symbol];
+            const data = s.dataPoints;
+            if (!data.length) return;
+
+            const n = data.length;
+            const mean = data.reduce((a, b) => a + b, 0) / n;
+            const variance = data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / n;
+            const sigma = Math.sqrt(variance);
+            const multiple = s.currentPrice / mean;
+
+            document.getElementById('mean-val').textContent = formatVal(mean, activeIndex);
+            document.getElementById('sigma-val').textContent = (sigma / mean * 100).toFixed(4) + '%';
+            const multipleVal = document.getElementById('multiple-val');
+            if (activePerspective === 'sectors') {
+                const spy = state['^GSPC'];
+                const pct = (s.currentPrice - s.basePrice) / s.basePrice * 100;
+                const spyPct = (spy.currentPrice - spy.basePrice) / spy.basePrice * 100;
+                const alpha = (pct - spyPct).toFixed(2);
+                multipleVal.textContent = `${alpha >= 0 ? '+' : ''}${alpha}%`;
+                multipleVal.className = `stat-value ${alpha < 0 ? 'negative' : 'positive'}`;
+            } else {
+                multipleVal.textContent = multiple.toFixed(4) + 'x';
+            }
+
+            const regime = document.getElementById('market-regime');
+            const threshold = activeIndex.isYield ? 1.0005 : 1.001;
+
+            if (multiple > threshold) { regime.textContent = 'Bullish / Expanding'; regime.className = 'stat-value positive'; }
+            else if (multiple < (1 / threshold)) { regime.textContent = 'Bearish / Contracting'; regime.className = 'stat-value negative'; }
+            else { regime.textContent = 'Stable / Neutral'; regime.className = 'stat-value'; }
+
+            // Extra context card (Spread)
+            const extraLabel = document.getElementById('extra-label');
+            const extraVal = document.getElementById('extra-val');
+
+            if (activePerspective === 'rates') {
+                const yield10 = state['^TNX'].currentPrice;
+                const yield5 = state['^FVX'].currentPrice;
+                const spread = (yield10 - yield5).toFixed(3);
+                extraLabel.textContent = '10Y - 5Y Spread';
+                extraVal.textContent = `${spread}%`;
+                extraVal.className = `stat-value ${spread < 0 ? 'negative' : 'positive'}`;
+            } else {
+                extraLabel.textContent = 'Price Delta (μ)';
+                const delta = (s.currentPrice - mean).toFixed(2);
+                extraVal.textContent = delta;
+                extraVal.className = `stat-value ${delta < 0 ? 'negative' : 'positive'}`;
+            }
+
+            updateSignalBox();
+        }
+
+        const EDU_CONTENT = {
+            sigma: {
+                title: "Sigma (Volatility)",
+                body: `
+                    <p>Sigma measures "The Market's Nervousness." It calculates how much a price deviates from its average.</p>
+                    <h4>Why it matters</h4>
+                    <p>High Sigma means huge swings. For a trader, this means higher risk but also more opportunity for profit if you catch the direction correctly.</p>
+                    <h4>What to look for</h4>
+                    <p>When Sigma spikes, it usually indicates a break in the trend—either a panic sell or a FOMO rally.</p>
+                `
+            },
+            multiple: {
+                title: "The Multiple (P/μ)",
+                body: `
+                    <p>This is "Price vs. Average." We calculate the rolling average (μ) of recent prices and see where we are relative to that line.</p>
+                    <h4>The Math</h4>
+                    <p>A Multiple of 1.05 means the price is 5% above its recent average. 0.95 means it's 5% below.</p>
+                    <h4>The Trade</h4>
+                    <p>Professionals use this to see if a stock is 'overextended.' If the multiple gets too high, the price often 'reverts to the mean' (falls back to the average).</p>
+                `
+            },
+            mean: {
+                title: "Rolling Mean (μ)",
+                body: `
+                    <p>The "Center of Gravity" for the asset. It filters out the noise of every second to show you the true trend.</p>
+                    <h4>Why it matters</h4>
+                    <p>Usually, long-term bonds pay more than short-term bonds (positive spread). If this goes negative (Inversion), it's the #1 historical warning of a coming recession.</p>
+                `
+            },
+            regime: {
+                title: "Market Regime",
+                body: `
+                    <p>This classifies the overall mood into three buckets based on the Multiple.</p>
+                    <ul>
+                        <li><strong>Expanding:</strong> Bullish momentum. Buyers are in control.</li>
+                        <li><strong>Contracting:</strong> Bearish momentum. Sellers are winning.</li>
+                        <li><strong>Neutral:</strong> Range-bound. The market is waiting for news.</li>
+                    </ul>
+                `
+            },
+            extra: {
+                title: "Spreads & Alpha",
+                body: `
+                    <p><strong>In Equities:</strong> The Multiple (P/μ) is price vs average.</p>
+                    <p><strong>In Sectors:</strong> Alpha measures "Relative Strength" against the S&P 500.</p>
+                    <h4>Alpha Math</h4>
+                    <p>Formula: (Sector % Change - S&P 500 % Change). If Alpha is +2.0%, that sector is beating the market by 2% today.</p>
+                    <p><strong>In Rates:</strong> The 10Y-5Y Spread is the "Confidence Check."</p>
+                `
+            },
+            sectors: {
+                title: "Sector Rotation",
+                body: `
+                    <p>Smart money moves in clusters called Sectors. There are 11 major ones in the GICS system.</p>
+                    <h4>Risk-On vs Risk-Off</h4>
+                    <ul>
+                        <li><strong>Growth Leadership:</strong> When Tech (XLK) and Discretionary (XLY) lead, the market is confident.</li>
+                        <li><strong>Defensive Clusters:</strong> When Utilities (XLU) and Staples (XLP) lead, traders are fearful and seeking steady dividends.</li>
+                    </ul>
+                `
+            }
+        };
+
+        function showEdu(key) {
+            // Check for sector-specific triggers or generic ones
+            const content = EDU_CONTENT[key] || EDU_CONTENT['sectors'];
+            document.getElementById('modal-content').innerHTML = `
+                <h3 class="modal-title">${content.title}</h3>
+                <div class="modal-body">${content.body}</div>
+            `;
+            document.getElementById('edu-modal').style.display = 'flex';
+        }
+
+        function hideEdu() {
+            document.getElementById('edu-modal').style.display = 'none';
+        }
+
+        function updateSignalBox() {
+            const spy = state['^GSPC'];
+            const tnx = state['^TNX'];
+            const dxy = state['DX-Y.NYB'];
+
+            let signal = "Markets are currently balanced. No high-conviction cross-asset signals detected.";
+            let impact = "Continue monitoring established trends.";
+
+            const spyChange = (spy.currentPrice - spy.basePrice) / spy.basePrice;
+            const tnxChange = (tnx.currentPrice - tnx.basePrice) / tnx.basePrice;
+            const dxyChange = (dxy.currentPrice - dxy.basePrice) / dxy.basePrice;
+
+            if (tnxChange > 0.01 && spyChange < -0.005) {
+                signal = "<b>Yield Pressure Detected.</b> Rising Treasury yields are making stocks less attractive, pulling capital out of equities.";
+                impact = "Bearish for Tech/Growth stocks (XLK) which are sensitive to interest rates.";
+            } else if (activePerspective === 'sectors') {
+                const xlk = (state['XLK'].currentPrice - state['XLK'].basePrice) / state['XLK'].basePrice;
+                const xlu = (state['XLU'].currentPrice - state['XLU'].basePrice) / state['XLU'].basePrice;
+                if (xlu > xlk) {
+                    signal = "<b>Defensive Rotation.</b> Utilities (XLU) are outperforming Technology (XLK). Traders are moving to safety.";
+                    impact = "Suggests decreasing risk appetite and potential volatility ahead.";
+                } else {
+                    signal = "<b>Growth Leadership.</b> Technology and Discretionary sectors are leading the market rally.";
+                    impact = "Risk-On environment. Focus on momentum and high-beta names.";
+                }
+            } else if (dxyChange > 0.005 && tnxChange > 0.005) {
+                signal = "<b>Flight to Quality.</b> Both the Dollar and Yields are rising. Global investors are parking cash in US assets.";
+                impact = "Strongly Bearish for International markets and Commodities (Gold/Oil).";
+            } else if (spyChange > 0.005 && tnxChange < -0.005) {
+                signal = "<b>Goldilocks Environment.</b> Falling yields and rising stocks suggest a cooling economy without a recession fear.";
+                impact = "Bullish for high-growth sectors and consumer discretionary.";
+            } else if (tnx.currentPrice < state['^FVX'].currentPrice) {
+                signal = "<b>Curve Inversion Alert.</b> Short-term yields are higher than long-term yields.";
+                impact = "Historically the most reliable indicator of an upcoming economic recession.";
+            }
+
+            document.getElementById('signal-text').innerHTML = signal;
+            document.getElementById('signal-impact').textContent = impact;
+        }
+
+        function toggleSource() {
+            if (isRealData) {
+                isRealData = false;
+                document.getElementById('toggle-source-btn').textContent = "Go Live";
+                document.getElementById('toggle-source-btn').classList.remove('active-source');
+                document.getElementById('status-text').textContent = "Simulated Feed";
+                startSimulationMode();
+            } else {
+                fetchAllData();
+            }
+        }
+
+        function resetAll() {
+            [...EQUIPMENT.equities, ...EQUIPMENT.rates, ...EQUIPMENT.sectors].forEach(idx => {
+                state[idx.symbol] = {
+                    dataPoints: [],
+                    labels: [],
+                    currentPrice: idx.base,
+                    basePrice: idx.base
+                };
+            });
+            isRealData = false;
+            if (!isRealData) {
+                document.getElementById('toggle-source-btn').textContent = "Go Live";
+                document.getElementById('toggle-source-btn').classList.remove('active-source');
+            }
+            initUI();
+            initChart();
+            startSimulationMode();
+        }
+
+        function startSimulationMode() {
+            if (updateInterval) clearInterval(updateInterval);
+            // Pre-fill some data if empty
+            [...EQUIPMENT.equities, ...EQUIPMENT.rates].forEach(idx => {
+                if (state[idx.symbol].dataPoints.length === 0) {
+                    const s = state[idx.symbol];
+                    for (let i = 0; i < 60; i++) {
+                        const scale = idx.isYield ? 0.005 : (idx.base * 0.001);
+                        s.currentPrice += (Math.random() - 0.5) * scale;
+                        s.dataPoints.push(s.currentPrice);
+                        s.labels.push(new Date(Date.now() - (60 - i) * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                    }
+                }
+            });
+            updateInterval = setInterval(updateSimulation, 2000);
+        }
+
+        window.onload = () => {
+            initUI();
+            initChart();
+            startSimulationMode();
+            updateSignalBox();
+        };
+    </script>
+</body>
+
+</html>
