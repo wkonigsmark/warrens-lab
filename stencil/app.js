@@ -220,7 +220,7 @@ function init() {
     // Initial Sync of SETTINGS to UI
     syncSettingsToUI();
 
-    startNewWord();
+    resetGame();
     requestAnimationFrame(gameLoop);
 }
 
@@ -882,9 +882,14 @@ function updateProgressDisplay() {
     if (mercury) {
         const currentWidth = mercury.style.width;
         const newWidth = `${percentage}%`;
+        const bulb = document.getElementById('thermometerBulb');
 
         if (currentWidth !== newWidth) {
             mercury.style.width = newWidth;
+            if (bulb) {
+                // We add a slight offset to stay within the tube's visuals
+                bulb.style.left = `calc(20px + ${percentage}%)`;
+            }
             // Trigger splash
             mercury.classList.remove('splash');
             void mercury.offsetWidth; // Trigger reflow
