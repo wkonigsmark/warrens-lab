@@ -322,11 +322,10 @@
             document.getElementById('status-text').textContent = "Connecting to Yahoo Finance...";
 
             try {
-                // S&P 500 Index (^GSPC) instead of the SPY ETF
+                // S&P 500 Index (^GSPC) - 1 day range with 2-minute intervals
                 const symbol = '^GSPC';
-                const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=5m&range=5d&includePrePost=false`;
+                const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=2m&range=1d&includePrePost=false`;
 
-                // Using AllOrigins as a proxy to bypass CORS and bot detection
                 const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(yahooUrl)}`;
 
                 const response = await fetch(proxyUrl);
@@ -342,10 +341,10 @@
                 const timestamps = result.timestamp;
                 const quotes = result.indicators.quote[0].close;
 
-                // Official previous close for accurate daily change
-                basePrice = meta.chartPreviousClose || quotes[0];
+                // CRITICAL: Use the official market previous close for the % change calculation
+                basePrice = meta.regularMarketPreviousClose;
 
-                // Clean up null values often found in Yahoo data
+                // Map the full day's data
                 dataPoints = [];
                 labels = [];
 
@@ -357,32 +356,24 @@
                     }
                 }
 
-                // Slice to the last 100 points for a clean chart
-                const sliceCount = 100;
-                if (dataPoints.length > sliceCount) {
-                    dataPoints = dataPoints.slice(-sliceCount);
-                    labels = labels.slice(-sliceCount);
-                }
-
+                // Show the full day's trend (No slicing)
                 currentPrice = dataPoints[dataPoints.length - 1];
 
                 chart.data.labels = labels;
                 chart.data.datasets[0].data = dataPoints;
-                chart.data.datasets[0].label = 'S&P 500 Index (^GSPC)';
+                chart.data.datasets[0].label = 'S&P 500 Index Today (^GSPC)';
                 updateStats();
                 chart.update();
 
-                document.getElementById('status-text').textContent = "Live Yahoo Finance Feed (^GSPC)";
+                document.getElementById('status-text').textContent = "Live Feed: S&P 500 Today";
                 isRealData = true;
 
                 if (simulationInterval) clearInterval(simulationInterval);
-
-                // Refresh every 5 minutes
-                simulationInterval = setInterval(fetchRealData, 300000);
+                simulationInterval = setInterval(fetchRealData, 120000); // Update every 2 mins
 
             } catch (error) {
                 console.error("Error fetching Yahoo data:", error);
-                alert("Failed to fetch Index data. Falling back to simulation.");
+                alert("Failed to fetch intraday data. Markets might be closed or connection throttled.");
                 startSimulation();
             }
         }
@@ -391,16 +382,22 @@
             const n = dataPoints.length;
             if (n === 0) return;
 
+            // 1. Mean (Current trend mean)
             const mean = dataPoints.reduce((a, b) => a + b, 0) / n;
+
+            // 2. Volatility (Sigma)
             const squareDiffs = dataPoints.map(value => Math.pow(value - mean, 2));
             const avgSquareDiff = squareDiffs.reduce((a, b) => a + b, 0) / n;
             const stdDev = Math.sqrt(avgSquareDiff);
 
+            // 3. UI Updates
             document.getElementById('current-price').children[0].textContent = currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-            const percentChange = ((currentPrice - basePrice) / basePrice * 100).toFixed(2);
+            const pointsChange = (currentPrice - basePrice);
+            const percentChange = (pointsChange / basePrice * 100).toFixed(2);
+
             const changeEl = document.getElementById('price-change');
-            changeEl.textContent = (percentChange >= 0 ? '+' : '') + percentChange + '%';
+            changeEl.textContent = (pointsChange >= 0 ? '+' : '') + pointsChange.toFixed(2) + ' (' + (percentChange >= 0 ? '+' : '') + percentChange + '%)';
             changeEl.className = 'index-change ' + (percentChange >= 0 ? 'positive' : 'negative');
 
             document.getElementById('mean-val').textContent = mean.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -410,11 +407,11 @@
             document.getElementById('multiple-val').textContent = multipleVal.toFixed(4) + 'x';
 
             const regimeEl = document.getElementById('market-regime');
-            if (multipleVal > 1.005) {
-                regimeEl.textContent = 'Overextended (Bullish)';
+            if (multipleVal > 1.002) {
+                regimeEl.textContent = 'Intraday High (Bullish)';
                 regimeEl.style.color = 'var(--accent-green)';
-            } else if (multipleVal < 0.995) {
-                regimeEl.textContent = 'Reverted (Bearish)';
+            } else if (multipleVal < 0.998) {
+                regimeEl.textContent = 'Intraday Low (Bearish)';
                 regimeEl.style.color = 'var(--accent-red)';
             } else {
                 regimeEl.textContent = 'Stable / Neutral';
