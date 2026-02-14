@@ -596,7 +596,7 @@
                             <h2 id="active-symbol-label"
                                 style="font-size: 1rem; color: var(--text-secondary); text-transform: uppercase;">S&P
                                 500 Index</h2>
-                            <span class="info-trigger" onclick="showEdu('chart_logic')">?</span>
+                            <span class="info-trigger" onclick="showEdu(activeIndex.symbol)">?</span>
                         </div>
                     </div>
 
@@ -1132,74 +1132,175 @@
         }
 
         const EDU_CONTENT = {
-            sigma: {
-                title: "Sigma (Volatility)",
+            // Stats
+            sigma: { title: "Sigma (Volatility)", body: "<p>Sigma measures 'Market Nervousness.' Higher sigma means bigger swings and higher risk/reward.</p>" },
+            multiple: { title: "The Multiple (P/μ)", body: "<p>The ratio of current Price to the Rolling Mean. >1.0 means overextended; <1.0 means potentially oversold.</p>" },
+            mean: { title: "Rolling Mean (μ)", body: "<p>The asset's center of gravity. It filters noise to reveal the true underlying trend.</p>" },
+            regime: { title: "Market Regime", body: "<p>Classification of momentum: Expanding (Bullish), Contracting (Bearish), or Neutral.</p>" },
+
+            // Equities
+            '^GSPC': {
+                title: "S&P 500 Index",
                 body: `
-                    <p>Sigma measures "The Market's Nervousness." It calculates how much a price deviates from its average.</p>
+                    <p>The "US Market Benchmark." It tracks 500 of the largest companies representing ~80% of available market value.</p>
                     <h4>Why it matters</h4>
-                    <p>High Sigma means huge swings. For a trader, this means higher risk but also more opportunity for profit if you catch the direction correctly.</p>
-                    <h4>What to look for</h4>
-                    <p>When Sigma spikes, it usually indicates a break in the trend—either a panic sell or a FOMO rally.</p>
+                    <p>When you hear "the market is up," people usually mean the S&P 500. It is the gold standard for institutional performance.</p>
                 `
             },
-            multiple: {
-                title: "The Multiple (P/μ)",
+            '^IXIC': {
+                title: "Nasdaq 100 Index",
                 body: `
-                    <p>This is "Price vs. Average." We calculate the rolling average (μ) of recent prices and see where we are relative to that line.</p>
-                    <h4>The Math</h4>
-                    <p>A Multiple of 1.05 means the price is 5% above its recent average. 0.95 means it's 5% below.</p>
-                    <h4>The Trade</h4>
-                    <p>Professionals use this to see if a stock is 'overextended.' If the multiple gets too high, the price often 'reverts to the mean' (falls back to the average).</p>
+                    <p>The "Innovation Hub." Concentrated in high-growth technology, biotechnology, and retail companies.</p>
+                    <h4>The Composition</h4>
+                    <p>Dominated by "The Mag 7" (Apple, Microsoft, Nvidia, etc.). It is highly sensitive to interest rates and productivity shifts.</p>
                 `
             },
-            mean: {
-                title: "Rolling Mean (μ)",
+            '^DJI': {
+                title: "Dow Jones Industrial Average",
                 body: `
-                    <p>The "Center of Gravity" for the asset. It filters out the noise of every second to show you the true trend.</p>
+                    <p>The "Blue Chip Tracker." 30 massive, mature companies representing the backbone of the American economy.</p>
+                    <h4>Unique Logic</h4>
+                    <p>Unlike other indexes, the Dow is <i>price-weighted</i>. The higher a company's stock price, the more influence it has on the index.</p>
+                `
+            },
+            '^RUT': {
+                title: "Russell 2000 Index",
+                body: `
+                    <p>The "Main Street Pulse." Tracks 2,000 smaller companies that are more focused on the domestic US economy.</p>
                     <h4>Why it matters</h4>
-                    <p>Usually, long-term bonds pay more than short-term bonds (positive spread). If this goes negative (Inversion), it's the #1 historical warning of a coming recession.</p>
+                    <p>Small caps are the "canary in the coal mine." They are often the first to feel a recession and the first to rally in a recovery.</p>
                 `
             },
-            regime: {
-                title: "Market Regime",
+
+            // Rates
+            '^TNX': {
+                title: "10Y Treasury Yield",
                 body: `
-                    <p>This classifies the overall mood into three buckets based on the Multiple.</p>
-                    <ul>
-                        <li><strong>Expanding:</strong> Bullish momentum. Buyers are in control.</li>
-                        <li><strong>Contracting:</strong> Bearish momentum. Sellers are winning.</li>
-                        <li><strong>Neutral:</strong> Range-bound. The market is waiting for news.</li>
-                    </ul>
+                    <p>The "Global Price of Money." This yields influences everything from mortgage rates to corporate borrowing costs.</p>
+                    <h4>The Inverse Rule</h4>
+                    <p>When yields rise, stock valuations (especially tech) often fall, as future earnings are "discounted" at a higher rate.</p>
                 `
             },
-            extra: {
-                title: "Spreads & Alpha",
+            '^TYX': {
+                title: "30Y Treasury Yield",
                 body: `
-                    <p><strong>In Equities:</strong> The Multiple (P/μ) is price vs average.</p>
-                    <p><strong>In Sectors:</strong> Alpha measures "Relative Strength" against the S&P 500.</p>
-                    <h4>Alpha Math</h4>
-                    <p>Formula: (Sector % Change - S&P 500 % Change). If Alpha is +2.0%, that sector is beating the market by 2% today.</p>
-                    <p><strong>In Rates:</strong> The 10Y-5Y Spread is the "Confidence Check."</p>
+                    <p>The "Long Lens." Reflects the market's long-term outlook on inflation and secular economic growth.</p>
+                    <h4>Why it matters</h4>
+                    <p>A "steepening" curve (30Y rising faster than 10Y) suggests the market is pricing in a future growth boom.</p>
                 `
             },
-            sectors: {
-                title: "Sector Rotation",
+            '^FVX': {
+                title: "5Y Treasury Yield",
                 body: `
-                    <p>Smart money moves in clusters called Sectors. There are 11 major ones in the GICS system.</p>
-                    <h4>Risk-On vs Risk-Off</h4>
-                    <ul>
-                        <li><strong>Growth Leadership:</strong> When Tech (XLK) and Discretionary (XLY) lead, the market is confident.</li>
-                        <li><strong>Defensive Clusters:</strong> When Utilities (XLU) and Staples (XLP) lead, traders are fearful and seeking steady dividends.</li>
-                    </ul>
+                    <p>The "Belly of the Curve." This is the most sensitive area to Federal Reserve policy shifts over the medium term.</p>
+                `
+            },
+            'DX-Y.NYB': {
+                title: "US Dollar Index (DXY)",
+                body: `
+                    <p>The "Global Safety Valve." Measures the USD against a basket of currencies like the Euro and Yen.</p>
+                    <h4>The Logic</h4>
+                    <p>A strong dollar acts as a "tightening" force on global liquidity. It often puts downward pressure on Gold and Oil.</p>
+                `
+            },
+
+            // Sectors
+            'XLK': {
+                title: "Technology (XLK)",
+                body: `
+                    <p>The Productivity Sector. Software, Hardware, and Semi-conductors.</p>
+                    <h4>The Story</h4>
+                    <p>This is the engine of the modern economy. It leads during periods of low interest rates and high innovation cycles.</p>
+                `
+            },
+            'XLF': {
+                title: "Financials (XLF)",
+                body: `
+                    <p>The Banking Backbone. Credit, Insurance, and Capital Markets.</p>
+                    <h4>The Story</h4>
+                    <p>Banks thrive when interest rate spreads widen. This sector is the ultimate proxy for lending health and credit demand.</p>
+                `
+            },
+            'XLV': {
+                title: "Healthcare (XLV)",
+                body: `
+                    <p>The Defensive Growth Play. Pharmaceuticals and Biotech.</p>
+                    <h4>The Story</h4>
+                    <p>Healthcare is a "non-discretionary" spend. People need medicine regardless of the economic cycle, making this a steady performer.</p>
+                `
+            },
+            'XLY': {
+                title: "Consumer Discretionary (XLY)",
+                body: `
+                    <p>The "Wants" Sector. Retail, Travel, and Automakers.</p>
+                    <h4>The Story</h4>
+                    <p>When consumers feel rich (rising stocks/homes), they spend here. It is a high-conviction "Risk-On" bet.</p>
+                `
+            },
+            'XLC': {
+                title: "Communication (XLC)",
+                body: `
+                    <p>The Digital Connection. Social Media and Advertising.</p>
+                    <h4>The Story</h4>
+                    <p>A hybrid of tech growth and cyclical advertising revenue. Think Alphabet and Meta.</p>
+                `
+            },
+            'XLI': {
+                title: "Industrials (XLI)",
+                body: `
+                    <p>The "Real" Economy. Boeing, Caterpillar, and Logistics.</p>
+                    <h4>The Story</h4>
+                    <p>This sector builds the physical world. It rallies when infrastructure spending and global trade are accelerating.</p>
+                `
+            },
+            'XLP': {
+                title: "Consumer Staples (XLP)",
+                body: `
+                    <p>The Grocery Basket. Essentials like soap, food, and household goods.</p>
+                    <h4>The Story</h4>
+                    <p>The ultimate defensive cluster. It outperforms when the economy is "contracting" as consumers cut luxury spending but keep the essentials.</p>
+                `
+            },
+            'XLE': {
+                title: "Energy (XLE)",
+                body: `
+                    <p>The Power Source. Oil, Gas, and Refineries.</p>
+                    <h4>The Story</h4>
+                    <p>Deeply cyclical and tied to crude oil prices. Acts as a natural hedge against inflation.</p>
+                `
+            },
+            'XLU': {
+                title: "Utilities (XLU)",
+                body: `
+                    <p>The Dividend Fortress. Water, Gas, and Electric providers.</p>
+                    <h4>The Story</h4>
+                    <p>The most bond-like sector. Investors move here for safety and dividends when they expect the market to crash.</p>
+                `
+            },
+            'XLRE': {
+                title: "Real Estate (XLRE)",
+                body: `
+                    <p>The Physical Frontier. REITs and Property Management.</p>
+                    <h4>The Story</h4>
+                    <p>Income-focused and extremely sensitive to interest rates due to mortgage and financing costs.</p>
+                `
+            },
+            'XLB': {
+                title: "Materials (XLB)",
+                body: `
+                    <p>The Foundation. Chemicals, Mining, and Steel.</p>
+                    <h4>The Story</h4>
+                    <p>An "early cycle" indicator. Demand for steel and copper picks up months before the rest of the economy starts to booom.</p>
                 `
             }
         };
 
         function showEdu(key) {
-            // Check for sector-specific triggers or generic ones
+            // Check for symbol-specific content, then stats, then default to generic sectors
             const content = EDU_CONTENT[key] || EDU_CONTENT['sectors'];
             document.getElementById('modal-content').innerHTML = `
-                <h3 class="modal-title">${content.title}</h3>
-                <div class="modal-body">${content.body}</div>
+                <h3 class="modal-title" style="color: var(--accent-blue); margin-bottom: 1rem;">${content.title}</h3>
+                <div class="modal-body" style="line-height: 1.6;">${content.body}</div>
             `;
             document.getElementById('edu-modal').style.display = 'flex';
         }
