@@ -296,7 +296,7 @@ function renderCart() {
     `}
     <div class="print-only">
       <h2>Master Shopping List</h2>
-      <ul>${masterList.map(ing => `<li>${ing.amount} ${ing.unit} ${ing.item}</li>`).join('')}</ul>
+      <ul>${Object.values(masterList).flat().map(ing => `<li>${ing.amount} ${ing.unit} ${ing.item}</li>`).join('')}</ul>
       <h2>Schedule</h2>
       ${state.plan.map(p => `<div><strong>${p.date || ''} - ${p.meal || ''}:</strong> ${RECIPES.find(r => r.id === p.id).name}</div>`).join('')}
     </div>
