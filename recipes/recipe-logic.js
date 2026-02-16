@@ -199,7 +199,7 @@ function renderDetail() {
 
 function aggregateIngredients() {
   const CATEGORY_MAP = {
-    'all-purpose flour': 'Pantry', 'baking powder': 'Pantry', 'salt': 'Pantry', 'sugar': 'Pantry', 'milk': 'Dairy', 'egg': 'Dairy', 'eggs': 'Dairy', 'melted butter': 'Dairy', 'butter': 'Dairy', 'vanilla extract': 'Pantry', 'cheddar cheese': 'Dairy', 'cheese': 'Dairy', 'plain Greek yogurt': 'Dairy', 'Greek yogurt': 'Dairy', 'honey': 'Pantry', 'granola': 'Pantry', 'blueberries': 'Produce', 'banana': 'Produce', 'grapes': 'Produce', 'strawberry jelly': 'Pantry', 'grape jelly': 'Pantry', 'jelly': 'Pantry', 'creamy peanut butter': 'Pantry', 'peanut butter': 'Pantry', 'hummus': 'Deli', 'pita bread': 'Bread', 'cucumber sticks': 'Produce', 'carrot sticks': 'Produce', 'rotini or penne pasta': 'Pantry', 'parmesan cheese': 'Dairy', 'broccoli florets': 'Produce', 'olive oil': 'Pantry', 'lemon juice': 'Produce', 'small flour tortillas': 'Pantry', 'tortilla': 'Pantry', 'canned refried beans': 'Pantry', 'guacamole': 'Produce', 'thick-cut bread': 'Bread', 'bread': 'Bread', 'cinnamon': 'Pantry', 'maple syrup': 'Pantry', 'string cheese': 'Dairy', 'strawberries': 'Produce', 'cheese puffs': 'Pantry', 'pretzels': 'Pantry', 'popcorn': 'Pantry', 'ground beef': 'Meat', 'taco seasoning': 'Pantry', 'lettuce': 'Produce', 'heavy whipping cream': 'Dairy', 'shiitake mushrooms': 'Produce', 'garlic': 'Produce', 'red pepper flakes': 'Pantry', 'lemon': 'Produce', 'penne': 'Pantry'
+    'all-purpose flour': 'Pantry', 'flour': 'Pantry', 'baking powder': 'Pantry', 'salt': 'Pantry', 'sugar': 'Pantry', 'milk': 'Dairy', 'egg': 'Dairy', 'eggs': 'Dairy', 'melted butter': 'Dairy', 'butter': 'Dairy', 'vanilla extract': 'Pantry', 'cheddar cheese': 'Dairy', 'cheese': 'Dairy', 'plain Greek yogurt': 'Dairy', 'Greek yogurt': 'Dairy', 'honey': 'Pantry', 'granola': 'Pantry', 'blueberries': 'Produce', 'banana': 'Produce', 'grapes': 'Produce', 'strawberry jelly': 'Pantry', 'grape jelly': 'Pantry', 'jelly': 'Pantry', 'creamy peanut butter': 'Pantry', 'peanut butter': 'Pantry', 'hummus': 'Deli', 'pita bread': 'Bread', 'cucumber sticks': 'Produce', 'carrot sticks': 'Produce', 'rotini or penne pasta': 'Pantry', 'pasta': 'Pantry', 'parmesan cheese': 'Dairy', 'broccoli florets': 'Produce', 'olive oil': 'Pantry', 'lemon juice': 'Produce', 'small flour tortillas': 'Pantry', 'tortilla': 'Pantry', 'canned_refried_beans': 'Pantry', 'guacamole': 'Produce', 'thick-cut bread': 'Bread', 'bread': 'Bread', 'cinnamon': 'Pantry', 'maple syrup': 'Pantry', 'string cheese': 'Dairy', 'strawberries': 'Produce', 'cheese puffs': 'Pantry', 'pretzels': 'Pantry', 'popcorn': 'Pantry', 'ground beef': 'Meat', 'taco seasoning': 'Pantry', 'lettuce': 'Produce', 'heavy whipping cream': 'Dairy', 'shiitake mushrooms': 'Produce', 'garlic': 'Produce', 'red pepper flakes': 'Pantry', 'lemon': 'Produce', 'penne': 'Pantry'
   };
 
   const CONSOLIDATION_MAP = {
@@ -310,12 +310,13 @@ function renderCart() {
               <h4 class="category-name">${cat}</h4>
               <ul class="shopping-bullets">
                 ${ings.map(ing => {
-    const key = `${ing.item}|${ing.unit}`.toLowerCase();
+    const key = `${ing.item}|${ing.unit}`.toLowerCase().trim();
     const isChecked = state.checkedIngredients[key];
+    const safeKey = key.replace(/'/g, "\\'");
     return `
-                  <li class="shopping-li ${isChecked ? 'checked' : ''}" onclick="window.toggleIngredient('${key}')">
-                    <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation()">
-                    ${ing.item} - <strong>${ing.amount} ${ing.unit}</strong>
+                  <li class="shopping-li ${isChecked ? 'checked' : ''}" onclick="window.toggleIngredient('${safeKey}')">
+                    <input type="checkbox" ${isChecked ? 'checked' : ''} style="pointer-events: none;">
+                    <span>${ing.item} - <strong>${ing.amount} ${ing.unit}</strong></span>
                   </li>
                 `;
   }).join('')}
