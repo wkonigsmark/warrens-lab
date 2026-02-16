@@ -439,7 +439,7 @@ function renderCart() {
       </section>
       <section>
         <h3>⏳ Meal Sequence</h3>
-        <p class="instruction-note">Drag recipes to reorder the sequence.</p>
+        <p class="instruction-note">Sequence is updated automatically as you drag.</p>
         <div class="cart-items" id="draggable-list">
           ${state.plan.map((item, index) => {
     const recipe = RECIPES.find(r => r.id === item.id);
@@ -497,43 +497,69 @@ window.toggleSelect = (id) => {
   render();
 };
 window.updatePlanItem = (index, key, value) => { state.plan[index][key] = value; };
+
+// Shared Reordering Logic
+function moveItem(from, to) {
+  if (from === to) return;
+  const moved = state.plan.splice(from, 1)[0];
+  state.plan.splice(to, 0, moved);
+  render();
+}
+
 // Drag & Drop (Mouse)
 let dragSourceIndex = null;
 window.onDragStart = (e) => {
-  dragSourceIndex = e.target.closest('.draggable').dataset.index;
+  dragSourceIndex = parseInt(e.target.closest('.draggable').dataset.index);
   e.dataTransfer.effectAllowed = 'move';
 };
 window.onDragOver = (e) => {
   e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-};
-window.onDrop = (e) => {
-  const targetIndex = e.target.closest('.draggable').dataset.index;
-  if (dragSourceIndex !== null && dragSourceIndex !== targetIndex) {
-    const moved = state.plan.splice(dragSourceIndex, 1)[0];
-    state.plan.splice(targetIndex, 0, moved);
-    render();
+  const target = e.target.closest('.draggable');
+  if (target && dragSourceIndex !== null) {
+    const targetIndex = parseInt(target.dataset.index);
+    if (dragSourceIndex !== targetIndex) {
+      moveItem(dragSourceIndex, targetIndex);
+      dragSourceIndex = targetIndex; // Update source during hover
+    }
   }
 };
+window.onDrop = (e) => { e.preventDefault(); dragSourceIndex = null; };
 
 // Drag & Drop (Touch/Mobile)
 let touchSourceIndex = null;
 let touchStartY = 0;
+let lastTargetIndex = null;
 
 window.onTouchStart = (e) => {
   const draggable = e.target.closest('.draggable');
-  touchSourceIndex = draggable.dataset.index;
+  touchSourceIndex = parseInt(draggable.dataset.index);
+  lastTargetIndex = touchSourceIndex;
   touchStartY = e.touches[0].clientY;
   draggable.classList.add('dragging');
 };
 
 window.onTouchMove = (e) => {
-  e.preventDefault(); // Prevent scrolling while dragging
+  e.preventDefault();
   const touchY = e.touches[0].clientY;
   const draggable = e.target.closest('.draggable');
   const deltaY = touchY - touchStartY;
+
   draggable.style.transform = `translateY(${deltaY}px)`;
   draggable.style.zIndex = "1000";
+
+  // Real-time swapping logic
+  const elements = document.elementsFromPoint(e.touches[0].clientX, touchY);
+  const target = elements.find(el => el.classList.contains('draggable') && el !== draggable);
+
+  if (target) {
+    const targetIndex = parseInt(target.dataset.index);
+    if (targetIndex !== lastTargetIndex) {
+      // Find indices in CURRENT state
+      const currentSource = state.plan.findIndex((_, idx) => idx === lastTargetIndex);
+      moveItem(lastTargetIndex, targetIndex);
+      lastTargetIndex = targetIndex;
+    }
+  }
 };
 
 window.onTouchEnd = (e) => {
@@ -541,18 +567,10 @@ window.onTouchEnd = (e) => {
   draggable.classList.remove('dragging');
   draggable.style.transform = '';
   draggable.style.zIndex = "";
-
-  const touchY = e.changedTouches[0].clientY;
-  const elements = document.elementsFromPoint(e.changedTouches[0].clientX, touchY);
-  const target = elements.find(el => el.classList.contains('draggable') && el !== draggable);
-
-  if (target) {
-    const targetIndex = target.dataset.index;
-    const moved = state.plan.splice(touchSourceIndex, 1)[0];
-    state.plan.splice(targetIndex, 0, moved);
-    render();
-  }
+  touchSourceIndex = null;
+  lastTargetIndex = null;
 };
+
 window.shareRecipe = (id) => {
   const url = `${window.location.origin}${window.location.pathname}#${id}`;
   navigator.clipboard.writeText(url).then(() => alert('Copied!'));
