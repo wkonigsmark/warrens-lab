@@ -198,7 +198,7 @@ function renderDetail() {
 
 function aggregateIngredients() {
   const CATEGORY_MAP = {
-    'all-purpose flour': 'Pantry', 'baking powder': 'Pantry', 'salt': 'Pantry', 'sugar': 'Pantry', 'milk': 'Dairy', 'egg': 'Dairy', 'eggs': 'Dairy', 'melted butter': 'Dairy', 'butter': 'Dairy', 'vanilla extract': 'Pantry', 'cheddar cheese': 'Dairy', 'cheese': 'Dairy', 'plain Greek yogurt': 'Dairy', 'Greek yogurt': 'Dairy', 'honey': 'Pantry', 'granola': 'Pantry', 'blueberries': 'Produce', 'banana': 'Produce', 'grapes': 'Produce', 'strawberry jelly': 'Pantry', 'grape jelly': 'Pantry', 'jelly': 'Pantry', 'creamy peanut butter': 'Pantry', 'peanut butter': 'Pantry', 'hummus': 'Deli', 'pita bread': 'Bread', 'cucumber sticks': 'Produce', 'carrot sticks': 'Produce', 'rotini or penne pasta': 'Pantry', 'parmesan cheese': 'Dairy', 'broccoli florets': 'Produce', 'olive oil': 'Pantry', 'lemon juice': 'Produce', 'small flour tortillas': 'Pantry', 'tortilla': 'Pantry', 'canned refried beans': 'Pantry', 'guacamole': 'Produce', 'thick-cut bread': 'Bread', 'bread': 'Bread', 'cinnamon': 'Pantry', 'maple syrup': 'Pantry', 'string cheese': 'Dairy', 'strawberries': 'Produce', 'cheese puffs': 'Pantry', 'pretzels': 'Pantry', 'popcorn': 'Pantry'
+    'all-purpose flour': 'Pantry', 'baking powder': 'Pantry', 'salt': 'Pantry', 'sugar': 'Pantry', 'milk': 'Dairy', 'egg': 'Dairy', 'eggs': 'Dairy', 'melted butter': 'Dairy', 'butter': 'Dairy', 'vanilla extract': 'Pantry', 'cheddar cheese': 'Dairy', 'cheese': 'Dairy', 'plain Greek yogurt': 'Dairy', 'Greek yogurt': 'Dairy', 'honey': 'Pantry', 'granola': 'Pantry', 'blueberries': 'Produce', 'banana': 'Produce', 'grapes': 'Produce', 'strawberry jelly': 'Pantry', 'grape jelly': 'Pantry', 'jelly': 'Pantry', 'creamy peanut butter': 'Pantry', 'peanut butter': 'Pantry', 'hummus': 'Deli', 'pita bread': 'Bread', 'cucumber sticks': 'Produce', 'carrot sticks': 'Produce', 'rotini or penne pasta': 'Pantry', 'parmesan cheese': 'Dairy', 'broccoli florets': 'Produce', 'olive oil': 'Pantry', 'lemon juice': 'Produce', 'small flour tortillas': 'Pantry', 'tortilla': 'Pantry', 'canned refried beans': 'Pantry', 'guacamole': 'Produce', 'thick-cut bread': 'Bread', 'bread': 'Bread', 'cinnamon': 'Pantry', 'maple syrup': 'Pantry', 'string cheese': 'Dairy', 'strawberries': 'Produce', 'cheese puffs': 'Pantry', 'pretzels': 'Pantry', 'popcorn': 'Pantry', 'ground beef': 'Meat', 'taco seasoning': 'Pantry', 'lettuce': 'Produce', 'heavy whipping cream': 'Dairy', 'shiitake mushrooms': 'Produce', 'garlic': 'Produce', 'red pepper flakes': 'Pantry', 'lemon': 'Produce', 'penne': 'Pantry'
   };
 
   const master = {};
@@ -233,7 +233,10 @@ function renderCart() {
   dom.detailView.innerHTML = `
     <div class="detail-header">
       <button class="back-btn" onclick="window.backToList()">← Back</button>
-      <button class="action-btn print-btn" onclick="window.print()">🖨️ Export PDF</button>
+      <div class="detail-actions">
+        <button class="action-btn share-btn" style="background: #fee2e2; color: #dc2626;" onclick="window.clearPlan()">🗑️ Clear All</button>
+        <button class="action-btn print-btn" onclick="window.print()">🖨️ Export PDF</button>
+      </div>
     </div>
     <h1 class="recipe-title">Plan Summary</h1>
     <p class="description">Sequence your meals and review the aggregated shopping list.</p>
@@ -317,6 +320,12 @@ window.toggleSelect = (id) => {
   render();
 };
 window.updatePlanItem = (index, key, value) => { state.plan[index][key] = value; };
+window.clearPlan = () => {
+  if (confirm("Clear the entire plan?")) {
+    state.plan = [];
+    render();
+  }
+};
 
 // Shared Reordering Logic
 function moveItem(from, to) {

@@ -14,15 +14,15 @@
 
 <body>
     <div class="app-container">
+        <div class="top-bar">
+            <a href="../" class="home-link">← Home</a>
+            <button id="cart-btn" class="cart-btn" onclick="window.goToCart()">
+                🛒 Plan (<span id="cart-count">0</span>)
+            </button>
+        </div>
         <!-- List View -->
         <div id="list-view">
             <header>
-                <div class="top-bar">
-                    <a href="../" class="home-link">← Home</a>
-                    <button id="cart-btn" class="cart-btn" onclick="window.goToCart()">
-                        🛒 Plan (<span id="cart-count">0</span>)
-                    </button>
-                </div>
                 <h1>Recipes</h1>
                 <div class="search-container">
                     <input type="text" id="search-input" placeholder="Search by name or ingredient..."
@@ -44,8 +44,8 @@
     </div>
 
     <!-- Scripts -->
-    <script src="recipes.js"></script>
-    <script src="recipe-logic.js?v=2"></script>
+    <script src="recipes.js?v=3"></script>
+    <script src="recipe-logic.js?v=3"></script>
 </body>
 
 </html>

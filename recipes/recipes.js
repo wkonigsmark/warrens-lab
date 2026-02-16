@@ -50,7 +50,7 @@ const RAW_RECIPES = [
     },
     {
         id: 'omelette',
-        name: "WWF Omelette (Warren's World Famous)",
+        name: "Cheese Omelette",
         type: ['Breakfast', 'Lunch'],
         description: "Family-certified fluffy omelette with build-and-fold technique.",
         ingredients: [
@@ -76,7 +76,7 @@ const RAW_RECIPES = [
     },
     {
         id: 'french-toast',
-        name: 'WWF French Toast (The Special)',
+        name: 'French Toast',
         type: ['Breakfast'],
         description: 'Simple, dependable, and feels special. Infused with cinnamon and vanilla.',
         ingredients: [
@@ -118,46 +118,6 @@ const RAW_RECIPES = [
         upgrades: ["Add a sprinkle of chia seeds or flax seeds for extra fiber."]
     },
     {
-        id: 'pb-j',
-        name: 'Classic PB&J (Crust-Off Option)',
-        type: ['Lunch'],
-        description: 'The golden standard of school-day lunches. Simple and dependable.',
-        ingredients: [
-            { item: 'sandwich bread', amount: '2', unit: 'slices' },
-            { item: 'creamy peanut butter', amount: '2', unit: 'tablespoons' },
-            { item: 'grape or strawberry jelly', amount: '1', unit: 'tablespoon' },
-            { item: 'fruit on the side (grapes/strawberries)', amount: '', unit: '' }
-        ],
-        instructions: [
-            "Spread peanut butter evenly on one slice of bread.",
-            "Spread jelly on the other slice.",
-            "Press the slices together.",
-            "Cut off the crusts if requested, and slice into fun shapes (triangles or squares).",
-            "Serve with a handful of fresh grapes or strawberries."
-        ],
-        upgrades: ["Swap bread for a tortilla to make a PB&J roll-up."]
-    },
-    {
-        id: 'hummus-pita',
-        name: 'Hummus & Pita Dipper',
-        type: ['Lunch'],
-        description: 'A cold, fresh platter that kids love to assemble and dip.',
-        ingredients: [
-            { item: 'hummus', amount: '0.5', unit: 'cup' },
-            { item: 'pita bread', amount: '1', unit: 'pocket' },
-            { item: 'cucumber sticks', amount: '4', unit: '' },
-            { item: 'carrot sticks', amount: '4', unit: '' },
-            { item: 'grapes', amount: '6', unit: '' }
-        ],
-        instructions: [
-            "Cut the pita bread into triangles.",
-            "Place a scoop of hummus in the center of a plate.",
-            "Arrange pita, cucumber, carrots, and grapes in sections around the hummus.",
-            "Encourage dipping each item into the hummus."
-        ],
-        upgrades: ["Add a small dollop of guacamole for extra dipping variety."]
-    },
-    {
         id: 'buttered-noodles',
         name: 'Buttered Noodles (Kid Gold Standard)',
         type: ['Dinner'],
@@ -175,50 +135,33 @@ const RAW_RECIPES = [
             "Toss with butter and parmesan cheese until every noodle is coated and glossy.",
             "Serve warm in a favorite bowl."
         ],
-        upgrades: ["Add a side of 'Broccoli Stars' for a balanced plate."]
-    },
-    {
-        id: 'broccoli-stars',
-        name: 'Roasted Broccoli Stars',
-        type: ['Dinner', 'Side'],
-        description: 'Simple, crispy roasted broccoli that actually tastes like a snack.',
-        ingredients: [
-            { item: 'broccoli florets', amount: '2', unit: 'cups' },
-            { item: 'olive oil', amount: '1', unit: 'tablespoon' },
-            { item: 'salt', amount: '', unit: 'to taste' },
-            { item: 'lemon juice', amount: '', unit: 'optional' }
-        ],
-        instructions: [
-            "Preheat oven to 400°F.",
-            "Toss broccoli florets in a bowl with olive oil and a pinch of salt.",
-            "Spread on a baking sheet and roast for 15-18 mins until the tips are crispy.",
-            "Finish with a squeeze of lemon juice or a dust of parmesan."
-        ],
-        upgrades: ["Serve with a small side of chicken tenders for a full meal."]
+        upgrades: ["Add a side of broccoli or cucumber sticks."]
     },
     {
         id: 'bean-tacos',
-        name: 'Simple Bean & Cheese Tacos',
+        name: 'Simple Ground Beef Tacos',
         type: ['Dinner', 'Lunch'],
-        description: 'Bland but delicious. Protein-packed and zero spice.',
+        description: 'Easy, seasoned ground beef tacos that the whole family loves.',
         ingredients: [
-            { item: 'small flour tortillas', amount: '2', unit: '' },
-            { item: 'canned refried beans (no spice)', amount: '0.5', unit: 'cup' },
-            { item: 'shredded cheddar cheese', amount: '0.25', unit: 'cup' },
+            { item: 'ground beef', amount: '1', unit: 'lb' },
+            { item: 'taco seasoning', amount: '1', unit: 'packet' },
+            { item: 'small flour tortillas', amount: '8', unit: '' },
+            { item: 'shredded cheddar cheese', amount: '1', unit: 'cup' },
+            { item: 'shredded lettuce', amount: '1', unit: 'cup' },
             { item: 'guacamole', amount: '', unit: 'side' }
         ],
         instructions: [
-            "Warm the refried beans in a small bowl (microwave or stovetop).",
-            "Slightly warm the tortillas in a dry pan.",
-            "Spread a layer of beans down the center of each tortilla.",
-            "Sprinkle generously with cheese.",
-            "Fold over and serve with a side of mild guacamole for dipping."
+            "Brown the ground beef in a skillet over medium-high heat until no longer pink. Drain excess fat.",
+            "Add taco seasoning and a splash of water. Simmer for 5 minutes.",
+            "Warm the tortillas in a dry pan or microwave.",
+            "Assemble tacos with beef, cheese, lettuce, and guacamole.",
+            "Serve warm."
         ],
         upgrades: ["Add a spoonful of plain Greek yogurt as a 'sour cream' substitute."]
     },
     {
         id: 'scrambled-soldiers',
-        name: 'WWF Scrambled Eggs & Toast Soldiers',
+        name: "Ballard's Scrambled Eggs & Toast",
         type: ['Breakfast', 'Lunch'],
         description: 'Soft-scrambled perfection with buttery dipping strips.',
         ingredients: [
@@ -371,6 +314,32 @@ const RAW_RECIPES = [
             "Box it up with cucumber sticks on the side for a refreshing crunch."
         ],
         upgrades: ["Add finely chopped broccoli stars for extra nutrition."]
+    },
+    {
+        id: 'lemon-cream-pasta',
+        name: 'Lemon Cream Pasta',
+        type: ['Dinner'],
+        description: 'A bright, creamy, and zesty pasta dish that comes together in the time it takes to boil water.',
+        ingredients: [
+            { item: 'penne or favorite pasta', amount: '1', unit: 'lb' },
+            { item: 'heavy whipping cream', amount: '1', unit: 'cup' },
+            { item: 'parmesan cheese', amount: '0.5', unit: 'cup' },
+            { item: 'lemon', amount: '1', unit: 'whole' },
+            { item: 'shiitake mushrooms', amount: '4', unit: 'oz (optional)' },
+            { item: 'garlic', amount: '2', unit: 'cloves (optional)' },
+            { item: 'broccoli florets', amount: '1', unit: 'cup (optional)' },
+            { item: 'red pepper flakes', amount: '0.5', unit: 'teaspoon' },
+            { item: 'salt', amount: '', unit: 'to taste' }
+        ],
+        instructions: [
+            "Boil pasta in salted water until al dente.",
+            "Optional: Sauté mushrooms and garlic in a separate pan, or roast broccoli until crispy.",
+            "In a large skillet, heat the heavy cream and parmesan over medium-low heat. Squeeze in an entire lemon's juice.",
+            "Stir actively to prevent burning until the sauce begins to thicken.",
+            "Toss in the cooked pasta and vegetables. Season with red pepper flakes and salt.",
+            "Stir well to coat every noodle in the lemon cream sauce and serve immediately."
+        ],
+        upgrades: ["Add grilled chicken or shrimp for extra protein.", "Top with fresh parsley for a burst of color."]
     }
 ];
 
