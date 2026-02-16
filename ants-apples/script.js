@@ -4,6 +4,9 @@
     if (!root) return;
 
     root.innerHTML = `
+      <div class="banner-container">
+        <img id="ants-banner" src="assets/ants_apples_.webp" alt="Ants & Apples">
+      </div>
       <header>
         <div class="header-left">
           <button id="ants-grid-size-btn" type="button">Settings</button>
@@ -146,7 +149,7 @@
 
     /* Idle Timer (Parent-Friendly Auto-Off) */
     let idleTimer = null;
-    const IDLE_LIMIT = 15000; // 15 seconds
+    const IDLE_LIMIT = 30000; // 30 seconds
 
     function resetIdleTimer() {
       if (idleTimer) clearTimeout(idleTimer);

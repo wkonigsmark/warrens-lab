@@ -9,6 +9,20 @@
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   position: relative;
+  overflow: hidden;
+  /* Background clipping */
+}
+
+.banner-container {
+  margin: -16px -16px 16px -16px;
+  /* Flush with top and sides */
+  line-height: 0;
+}
+
+#ants-banner {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 #ants-apples-root header {
