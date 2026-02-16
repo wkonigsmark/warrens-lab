@@ -119,7 +119,7 @@ const RAW_RECIPES = [
     },
     {
         id: 'buttered-noodles',
-        name: 'Buttered Noodles (Kid Gold Standard)',
+        name: 'Buttered Noodles',
         type: ['Dinner'],
         description: 'The ultimate comfort meal. High-visibility, low-drama.',
         ingredients: [
@@ -200,7 +200,7 @@ const RAW_RECIPES = [
     {
         id: 'spaghetti-carbonara',
         name: 'Quick Spaghetti Carbonara',
-        type: ['Dinner'],
+        type: ['Dinner', 'Rome', 'Roma'],
         description: 'A creamy, peppery Italian classic that comes together in 15 minutes.',
         ingredients: [
             { item: 'spaghetti', amount: '1', unit: 'lb' },
@@ -340,6 +340,311 @@ const RAW_RECIPES = [
             "Stir well to coat every noodle in the lemon cream sauce and serve immediately."
         ],
         upgrades: ["Add grilled chicken or shrimp for extra protein.", "Top with fresh parsley for a burst of color."]
+    },
+    {
+        id: 'crispy-cast-iron-cod',
+        name: 'Crispy Cast Iron Cod with Lemon-Garlic Butter',
+        type: ['Dinner'],
+        description: 'A restaurant-quality technique for perfectly crispy crust and buttery, flaky inside. Searing in cast iron and finishing in the oven is the key.',
+        ingredients: [
+            { item: 'cod fillets', amount: '4', unit: '(approx 6oz each)' },
+            { item: 'all-purpose flour', amount: '0.25', unit: 'cup' },
+            { item: 'garlic powder', amount: '1', unit: 'teaspoon' },
+            { item: 'paprika', amount: '0.5', unit: 'teaspoon' },
+            { item: 'butter', amount: '4', unit: 'tablespoons' },
+            { item: 'olive oil', amount: '1', unit: 'tablespoon' },
+            { item: 'garlic', amount: '3', unit: 'cloves, minced' },
+            { item: 'lemon', amount: '1', unit: 'halved' },
+            { item: 'fresh parsley', amount: '1', unit: 'tablespoon, chopped' },
+            { item: 'salt & black pepper', amount: '', unit: 'to taste' }
+        ],
+        instructions: [
+            "Preheat oven to 400°F (200°C).",
+            "Pat cod fillets VERY dry with paper towels (moisture is the enemy of crispy). Season both sides with salt and pepper.",
+            "In a shallow dish, mix flour, garlic powder, and paprika. Lightly dredge the fillets, shaking off all excess so it's a very thin coating.",
+            "Heat olive oil and 1 tbsp butter in a large cast iron skillet over medium-high heat until shimmering.",
+            "Place cod in skillet. Sear undisturbed for 2-3 minutes until a golden-brown crust forms. Carefully flip the fillets.",
+            "Immediately transfer the skillet to the oven. Bake for 4-6 minutes until clear and flaky.",
+            "Remove skillet (careful, it's hot!). Move fish to a plate. In the same hot pan, melt the remaining 3 tbsp butter.",
+            "Sauté minced garlic for 30 seconds. Squeeze in lemon juice and stir in parsley. Spoon this golden sauce over the crispy fish and serve immediately."
+        ],
+        upgrades: ["Serve over a bed of sautéed spinach or with roasted asparagus.", "Add a pinch of red pepper flakes to the butter sauce for a tiny kick."]
+    },
+    {
+        id: 'wwf-quinoa',
+        name: "WWF Quinoa",
+        type: ['Lunch', 'Side', 'Dinner'],
+        description: 'A healthy, protein-packed powerhouse with a unique toasted depth and bright lemon finish. Great for meal prep!',
+        ingredients: [
+            { item: 'quinoa', amount: '1', unit: 'cup (washed)' },
+            { item: 'avocado oil or olive oil', amount: '2', unit: 'tablespoons' },
+            { item: 'broth (chicken, beef, or veg)', amount: '1', unit: 'cup' },
+            { item: 'water', amount: '1', unit: 'cup' },
+            { item: 'lemon', amount: '1', unit: 'whole' },
+            { item: 'artichoke hearts', amount: '1', unit: 'can (chopped)' },
+            { item: 'corn', amount: '0.5', unit: 'cup' },
+            { item: 'ground beef', amount: '0.5', unit: 'lb (optional)' },
+            { item: 'onion powder', amount: '1', unit: 'teaspoon' },
+            { item: 'cardamom', amount: '0.5', unit: 'teaspoon' },
+            { item: 'salt', amount: '', unit: 'to taste' }
+        ],
+        instructions: [
+            "Drizzle avocado or olive oil into a pan over medium heat.",
+            "Add 1 cup of washed quinoa and another drizzle of oil. Stir and toast the grains for 30-60 seconds until fragrant.",
+            "Add 1 cup of broth and seasonings (salt, onion powder, cardamom). Stir well.",
+            "Add another cup of water (maintaining a 2:1 liquid-to-grain ratio). Bring to a boil while actively stirring.",
+            "Reduce heat to low and cover. Let cook for 10-13 minutes.",
+            "Quinoa is done when germs have emerged from the grains and liquid is mostly (but not completely) gone.",
+            "Squeeze one whole lemon into the pot and stir. (Tip: if grains are sticking, add a splash of water to help release them).",
+            "Stir in chopped artichoke hearts and corn. Add browned ground beef here if you want a protein boost.",
+            "Serve hot for dinner or cold for a healthy office lunch!"
+        ],
+        upgrades: ["Add crumbled feta cheese for a salty tang.", "Toss in some fresh baby spinach at the end for extra greens."]
+    },
+    {
+        id: 'no-cilantro-street-corn-quinoa',
+        name: 'No-Cilantro Street Corn Quinoa Salad',
+        type: ['Lunch', 'Side'],
+        description: 'A vibrant, Mexican-inspired salad with all the creamy, zesty flavors of street corn—but modified with fresh parsley and scallions to be 100% cilantro-free.',
+        ingredients: [
+            { item: 'quinoa', amount: '1', unit: 'cup (cooked and cooled)' },
+            { item: 'corn', amount: '2', unit: 'cups (roasted or canned)' },
+            { item: 'black beans', amount: '1', unit: 'can (rinsed)' },
+            { item: 'red bell pepper', amount: '1', unit: 'diced' },
+            { item: 'red onion', amount: '0.25', unit: 'cup, finely diced' },
+            { item: 'fresh parsley', amount: '0.5', unit: 'cup, chopped' },
+            { item: 'scallions', amount: '3', unit: 'sliced' },
+            { item: 'feta cheese or queso fresco', amount: '0.5', unit: 'cup' },
+            { item: 'greek yogurt or mayo', amount: '0.25', unit: 'cup' },
+            { item: 'lime juice', amount: '2', unit: 'tablespoons' },
+            { item: 'chili powder', amount: '1', unit: 'teaspoon' },
+            { item: 'cumin', amount: '0.5', unit: 'teaspoon' },
+            { item: 'salt & pepper', amount: '', unit: 'to taste' }
+        ],
+        instructions: [
+            "In a large bowl, combine the cooked/cooled quinoa, corn, black beans, red bell pepper, and red onion.",
+            "Add the freshly chopped parsley and sliced scallions (these provide the brightness without the cilantro soap-taste).",
+            "In a small jar or bowl, whisk together the greek yogurt (or mayo), lime juice, chili powder, and cumin to create the creamy dressing.",
+            "Pour the dressing over the salad and toss well to coat.",
+            "Gently fold in the crumbled feta or queso fresco.",
+            "Taste and season with additional salt and pepper as needed.",
+            "Serve immediately or refrigerate for at least 30 minutes to let the flavors meld. Perfect for a refreshing lunch!"
+        ],
+        upgrades: ["Add diced avocado right before serving for extra creaminess.", "Stir in some tajin seasoning for a spicy-lime kick."]
+    },
+    {
+        id: 'smashed-parmesan-sprouts',
+        name: 'Extra-Crispy Smashed Parmesan Sprouts',
+        type: ['Side'],
+        description: 'The ultimate crunch. By smashing the sprouts, you create a huge surface area that caramelizes into a salty, cheesy crisp.',
+        ingredients: [
+            { item: 'brussels sprouts', amount: '1', unit: 'lb' },
+            { item: 'parmesan cheese', amount: '0.5', unit: 'cup, finely grated' },
+            { item: 'olive oil', amount: '2', unit: 'tablespoons' },
+            { item: 'garlic powder', amount: '1', unit: 'teaspoon' },
+            { item: 'salt & black pepper', amount: '', unit: 'to taste' }
+        ],
+        instructions: [
+            "Boil a pot of salted water. Add trimmed Brussels sprouts and cook for 8-10 minutes until tender but not mushy. Drain and pat very dry.",
+            "Preheat oven to 425°F (220°C). Line a baking sheet with parchment paper.",
+            "Place sprouts on the sheet. Use the bottom of a heavy glass or mason jar to gently but firmly press each sprout until it's flattened into a disk.",
+            "Drizzle with olive oil and sprinkle with garlic powder, salt, and pepper.",
+            "Roast for 15 minutes. Remove from oven and sprinkle generously with parmesan cheese.",
+            "Return to the oven for another 5-10 minutes until the cheese is golden and the edges are incredibly crispy.",
+            "Serve immediately while hot and crunchy!"
+        ],
+        upgrades: ["Drizzle with a little truffle oil for a fancy finish.", "Top with toasted pine nuts for extra texture."]
+    },
+    {
+        id: 'cast-iron-brussels-sprouts',
+        name: 'Cast Iron Seared Brussels Sprouts',
+        type: ['Side'],
+        description: 'A faster, intensely flavorful method. Searing face-down in a hot skillet creates a deep, dark caramelization.',
+        ingredients: [
+            { item: 'brussels sprouts', amount: '1', unit: 'lb (halved lengthwise)' },
+            { item: 'bacon or pancetta', amount: '4', unit: 'slices, chopped' },
+            { item: 'balsamic glaze', amount: '2', unit: 'tablespoons' },
+            { item: 'honey', amount: '1', unit: 'tablespoon' },
+            { item: 'lemon juice', amount: '1', unit: 'teaspoon' },
+            { item: 'salt & black pepper', amount: '', unit: 'to taste' }
+        ],
+        instructions: [
+            "In a large cast iron skillet over medium heat, cook chopped bacon until crispy. Remove bacon with a slotted spoon, leaving the fat in the pan.",
+            "Increase heat to medium-high. Place Brussels sprouts cut-side down in the hot bacon fat. Do not crowd the pan.",
+            "Sear undisturbed for 3-5 minutes until the bottoms are dark golden-brown (almost charred).",
+            "Give the pan a stir and cook for another 2-3 minutes until tender-crisp.",
+            "Whisk together balsamic glaze, honey, and lemon juice. Pour over the sprouts and toss to coat.",
+            "Cook for 1 more minute until the glaze is sticky and bubbling.",
+            "Stir the crispy bacon back in and serve hot."
+        ],
+        upgrades: ["Add dried cranberries for a sweet contrast.", "Sprinkle with red pepper flakes if you like a little heat."]
+    },
+    {
+        id: 'cacio-e-pepe',
+        name: 'Authentic Cacio e Pepe',
+        type: ['Dinner', 'Rome', 'Roma'],
+        description: 'The minimalist Roman masterpiece. Just cheese and pepper, emulsified into a creamy, silk-like sauce.',
+        ingredients: [
+            { item: 'spaghetti or tonnarelli', amount: '1', unit: 'lb' },
+            { item: 'pecorino romano', amount: '1.5', unit: 'cups, finely grated' },
+            { item: 'black peppercorns', amount: '1', unit: 'tablespoon, whole' },
+            { item: 'salt', amount: '', unit: 'for pasta water' }
+        ],
+        instructions: [
+            "Boil pasta in a large pot of lightly salted water until al dente.",
+            "While pasta cooks, toast whole black peppercorns in a dry skillet until fragrant, then coarsely grind them.",
+            "In a large bowl, whisk the ground pepper with a ladle of the hot pasta water.",
+            "Slowly whisk in the Pecorino Romano to form a smooth, thick paste.",
+            "Drain pasta (reserve more water!). Toss pasta into the bowl with the cheese paste, stirring vigorously.",
+            "Add splashes of pasta water as you toss until the sauce is glossy and perfectly emulsified."
+        ],
+        upgrades: ["Add a tiny squeeze of lemon at the end for brightness.", "Ensure the pasta water isn't boiling hot when adding cheese to prevent clumping."]
+    },
+    {
+        id: 'pasta-amatriciana',
+        name: 'Classic Bucatini all\'Amatriciana',
+        type: ['Dinner', 'Rome', 'Roma'],
+        description: 'A rich, fiery tomato-based Roman classic centered around crispy guanciale.',
+        ingredients: [
+            { item: 'bucatini or spaghetti', amount: '1', unit: 'lb' },
+            { item: 'guanciale or pancetta', amount: '5', unit: 'oz, sliced' },
+            { item: 'peeled plum tomatoes', amount: '1', unit: 'can (14oz), hand-crushed' },
+            { item: 'pecorino romano', amount: '0.5', unit: 'cup, grated' },
+            { item: 'dry chili flakes', amount: '0.5', unit: 'teaspoon' },
+            { item: 'white wine', amount: '0.25', unit: 'cup' },
+            { item: 'salt & pepper', amount: '', unit: 'to taste' }
+        ],
+        instructions: [
+            "Cook guanciale in a large skillet over medium heat until crispy and fat is rendered. Remove guanciale and set aside.",
+            "Add chili flakes to the fat in the pan. Deglaze with white wine and cook until reduced by half.",
+            "Add crushed tomatoes and simmer for 15 minutes until thickened.",
+            "Boil pasta in salted water until just before al dente.",
+            "Add pasta and crispy guanciale to the tomato sauce. Toss for 2 minutes with a splash of pasta water.",
+            "Remove from heat, stir in Pecorino Romano, and serve hot."
+        ],
+        upgrades: ["Sauté a small red onion in the fat for a non-traditional but sweet depth.", "Finish with a drizzle of high-quality olive oil."]
+    },
+    {
+        id: 'pasta-gricia',
+        name: 'Pasta alla Gricia',
+        type: ['Dinner', 'Rome', 'Roma'],
+        description: 'Often called "white Amatriciana," this is the ancient ancestor of the Roman pasta family.',
+        ingredients: [
+            { item: 'rigatoni or mezzemaniche', amount: '1', unit: 'lb' },
+            { item: 'guanciale', amount: '6', unit: 'oz, sliced' },
+            { item: 'pecorino romano', amount: '1', unit: 'cup, grated' },
+            { item: 'fresh cracked black pepper', amount: '1', unit: 'teaspoon' },
+            { item: 'salt', amount: '', unit: 'for pasta water' }
+        ],
+        instructions: [
+            "Boil rigatoni in salted water until al dente.",
+            "Cook guanciale in a large skillet over medium heat until golden and crispy. Remove guanciale, leaving fat behind.",
+            "Add black pepper to the fat and a ladle of starchy pasta water to create an emulsion.",
+            "Add drained pasta to the skillet and toss vigorously to coat.",
+            "Remove from heat, gradually stir in Pecorino Romano and the crispy guanciale, adding pasta water until creamy.",
+            "Serve immediately with an extra dusting of cheese."
+        ],
+        upgrades: ["Serve with a crisp Frascati white wine.", "Use Mezze Maniche pasta for the most authentic Roman shape."]
+    },
+    {
+        id: 'kid-lunch-classic',
+        name: 'Kid Lunch: The Classic',
+        type: ['Lunch', 'Kid'],
+        description: 'A balanced, simple, and predictable win for school lunches. Everything is separately packed and soft for easy eating.',
+        ingredients: [
+            { item: 'greek yogurt cup', amount: '1', unit: 'individual size' },
+            { item: 'string cheese', amount: '1', unit: 'stick' },
+            { item: 'Z Bar', amount: '1', unit: 'bar' },
+            { item: 'applesauce pouch', amount: '1', unit: 'pouch' },
+            { item: 'strawberries', amount: '0.5', unit: 'cup, sliced' }
+        ],
+        instructions: [
+            "Pack the Greek yogurt cup with a separate spoon.",
+            "Include the string cheese (ensure it's easy to peel).",
+            "Add the Z Bar and applesauce pouch.",
+            "Slice the strawberries and pack them in a small, separate container.",
+            "Ensure everything is packed in separate compartments to avoid mixing textures."
+        ],
+        upgrades: ["Add a small ice pack to keep the yogurt and cheese fresh."]
+    },
+    {
+        id: 'kid-lunch-protein',
+        name: 'Kid Lunch: Protein Boost',
+        type: ['Lunch', 'Kid'],
+        description: 'A slight variation on the classic, swapping cheese for turkey roll-ups for a higher protein count while keeping the same feel.',
+        ingredients: [
+            { item: 'greek yogurt cup', amount: '1', unit: 'individual size' },
+            { item: 'turkey deli meat', amount: '2', unit: 'slices (rolled up)' },
+            { item: 'Z Bar', amount: '1', unit: 'bar' },
+            { item: 'applesauce pouch', amount: '1', unit: 'pouch' },
+            { item: 'blueberries', amount: '0.5', unit: 'cup' }
+        ],
+        instructions: [
+            "Roll the turkey slices tightly into 'cigar' shapes for easy finger-food eating.",
+            "Pack with the Greek yogurt, Z Bar, and applesauce pouch.",
+            "Substitute strawberries for blueberries for a small but manageable change.",
+            "Pack items separately as per the standard template."
+        ],
+        upgrades: ["Add a thin slice of mild cheese inside the turkey roll-ups if preferred."]
+    },
+    {
+        id: 'kid-lunch-crunch',
+        name: 'Kid Lunch: Crunch Version',
+        type: ['Lunch', 'Kid'],
+        description: 'Keeps the core favorite items but adds a small portion of crunchy texture for variety.',
+        ingredients: [
+            { item: 'greek yogurt cup', amount: '1', unit: 'individual size' },
+            { item: 'string cheese', amount: '1', unit: 'stick' },
+            { item: 'Z Bar', amount: '1', unit: 'bar' },
+            { item: 'applesauce pouch', amount: '1', unit: 'pouch' },
+            { item: 'strawberries', amount: '0.5', unit: 'cup, sliced' },
+            { item: 'pretzels or crackers', amount: '1', unit: 'small handful' }
+        ],
+        instructions: [
+            "Pack the core classic items: yogurt, string cheese, Z Bar, and applesauce.",
+            "Add a small handful of pretzels or crackers in a separate, dry compartment to keep them crunchy.",
+            "Pack sliced strawberries in their own container."
+        ],
+        upgrades: ["Choose 'fish' shaped crackers for a fun extra touch."]
+    },
+    {
+        id: 'kid-lunch-dairy-swap',
+        name: 'Kid Lunch: Dairy Swap',
+        type: ['Lunch', 'Kid'],
+        description: 'Rotates the main dairy component from yogurt to cottage cheese while maintaining the exact same layout.',
+        ingredients: [
+            { item: 'cottage cheese cup', amount: '1', unit: 'individual size' },
+            { item: 'string cheese', amount: '1', unit: 'stick' },
+            { item: 'Z Bar', amount: '1', unit: 'bar' },
+            { item: 'applesauce pouch', amount: '1', unit: 'pouch' },
+            { item: 'strawberries', amount: '0.5', unit: 'cup, sliced' }
+        ],
+        instructions: [
+            "Swap the usual yogurt cup for an individual cottage cheese cup.",
+            "Pack with the familiar string cheese, Z Bar, and applesauce.",
+            "Add the standard container of sliced strawberries.",
+            "The layout remains identical to keep it predictable and 'safe'."
+        ],
+        upgrades: ["Sprinkle a tiny bit of cinnamon on the cottage cheese if he likes it."]
+    },
+    {
+        id: 'kid-lunch-sandwich',
+        name: 'Kid Lunch: Sandwich Light',
+        type: ['Lunch', 'Kid'],
+        description: 'For days when a slightly bigger meal is needed, using a familiar half-sandwich while keeping the side favorites.',
+        ingredients: [
+            { item: 'bread', amount: '1', unit: 'slice' },
+            { item: 'peanut butter', amount: '1', unit: 'tablespoon' },
+            { item: 'string cheese', amount: '1', unit: 'stick' },
+            { item: 'applesauce pouch', amount: '1', unit: 'pouch' },
+            { item: 'strawberries', amount: '0.5', unit: 'cup, sliced' }
+        ],
+        instructions: [
+            "Make a half peanut butter sandwich (one slice folded or cut in half).",
+            "Pack with the favorite string cheese, applesauce, and strawberries.",
+            "This keeps the meal familiar but introduces a more substantial carb source."
+        ],
+        upgrades: ["Add a thin layer of jam or honey if preferred, or keep it 'dry' PB for a cleaner eat."]
     }
 ];
 
