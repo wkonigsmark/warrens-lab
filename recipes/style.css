@@ -183,12 +183,99 @@ h1 {
     margin-bottom: 8px;
 }
 
-.cart-item-header h3 {
-    margin: 0;
+/* Master List Styling */
+.master-list-title {
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.master-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+.master-item {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.item-name {
+    font-weight: 500;
+}
+
+.item-total {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+/* Draggable Items & Scheduling */
+.draggable {
+    cursor: grab;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.draggable:active {
+    cursor: grabbing;
+    transform: scale(1.02);
+}
+
+.drag-handle {
+    font-size: 1.5rem;
+    color: #ced4da;
+    cursor: grab;
+}
+
+.cart-item-header {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.cart-item-info {
+    flex-grow: 1;
+}
+
+.cart-item-info h3 {
+    margin: 0 0 8px 0;
     border: none;
     padding: 0;
     text-transform: none;
-    color: var(--text-main);
+    font-size: 1.1rem;
+}
+
+.meal-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.meal-controls input,
+.meal-controls select {
+    padding: 6px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    outline: none;
+}
+
+.meal-controls input:focus,
+.meal-controls select:focus {
+    border-color: var(--accent);
+}
+
+.instruction-note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 16px;
 }
 
 .remove-btn {
