@@ -316,6 +316,61 @@ const RAW_RECIPES = [
             "Finish with a squeeze of fresh lemon."
         ],
         upgrades: ["Add baby potatoes to the pan 15 minutes before the salmon."]
+    },
+    {
+        id: 'rainbow-bento',
+        name: 'Rainbow Bento Box',
+        type: ['Lunch'],
+        description: 'A colorful, no-cook lunch box with a balance of protein and crunch.',
+        ingredients: [
+            { item: 'mozz string cheese', amount: '1', unit: 'stick' },
+            { item: 'strawberries', amount: '4', unit: 'sliced' },
+            { item: 'grapes', amount: '6', unit: '' },
+            { item: 'pretzels', amount: '1', unit: 'handful' }
+        ],
+        instructions: [
+            "Slice the strawberries and wash the grapes.",
+            "Peel the string cheese into 'threads' or keep whole.",
+            "Place items into separate compartments of a lunch box.",
+            "Add a small handful of crunchy pretzels for texture."
+        ],
+        upgrades: ["Add a dip of Greek yogurt and honey for the fruit."]
+    },
+    {
+        id: 'snack-pack-lunch',
+        name: "Crunch & Munch Snack Pack",
+        type: ['Lunch'],
+        description: 'Perfect for grazing. Low pressure, high fun.',
+        ingredients: [
+            { item: 'popcorn', amount: '1', unit: 'small bag' },
+            { item: 'cheese puffs', amount: '1', unit: 'handful' },
+            { item: 'greek yogurt', amount: '1', unit: 'pot' },
+            { item: 'pretzels', amount: '1', unit: 'handful' }
+        ],
+        instructions: [
+            "Divide the savory snacks (popcorn, puffs, pretzels) into small bags or boxes.",
+            "Keep the yogurt cold until mealtime.",
+            "A great option for quick lunch breaks."
+        ],
+        upgrades: ["Mix some honey into the yogurt for a sweet treat."]
+    },
+    {
+        id: 'cold-pasta-salad',
+        name: 'Simple Cold Pasta Salad',
+        type: ['Lunch', 'Side'],
+        description: 'A reliable leftover-friendly lunch that stays good in a bag.',
+        ingredients: [
+            { item: 'cooked pasta', amount: '1', unit: 'cup' },
+            { item: 'olive oil', amount: '1', unit: 'teaspoon' },
+            { item: 'parmesan cheese', amount: '1', unit: 'tablespoon' },
+            { item: 'cucumber sticks', amount: '4', unit: '' }
+        ],
+        instructions: [
+            "Toss cold pasta with olive oil and parmesan cheese.",
+            "Add a pinch of salt if needed.",
+            "Box it up with cucumber sticks on the side for a refreshing crunch."
+        ],
+        upgrades: ["Add finely chopped broccoli stars for extra nutrition."]
     }
 ];
 
