@@ -50,18 +50,50 @@ h1 {
     background: white;
     z-index: 1000;
     padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    /* Slight separation for sticky */
 }
 
-.home-link {
+.nav-left,
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-back-btn {
+    background: var(--text-main);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav-back-btn:active {
+    transform: scale(0.95);
+}
+
+.home-link-subtle {
     text-decoration: none;
     color: var(--text-muted);
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: color 0.2s;
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.6;
+    transition: opacity 0.2s;
 }
 
-.home-link:hover {
+.home-link-subtle:hover {
+    opacity: 1;
     color: var(--accent);
+}
+
+.hidden {
+    display: none !important;
 }
 
 .cart-btn {
@@ -358,17 +390,42 @@ h1 {
     display: none;
 }
 
+/* Print Optimizations */
 @media print {
     body {
-        background: white;
+        background: white !important;
+        color: black !important;
     }
 
-    .back-btn,
-    .action-btn,
-    .remove-btn,
-    .search-container,
+    .app-container {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        min-height: auto !important;
+    }
+
+    /* Hide everything except the print-only container */
     .top-bar,
-    .tag-list {
+    .category-filters,
+    .search-container,
+    .detail-header-v2,
+    .recipe-title,
+    .description,
+    .select-btn,
+    .print-btn,
+    .share-btn,
+    .instruction-note,
+    .remove-btn,
+    .meal-controls,
+    .drag-handle,
+    .cart-items,
+    .master-list-container,
+    section:not(.print-section),
+    .back-btn,
+    .home-link-subtle,
+    .nav-left,
+    .nav-right,
+    header {
         display: none !important;
     }
 
@@ -376,23 +433,87 @@ h1 {
         display: block !important;
     }
 
-    .recipe-title {
-        margin-top: 40px;
+    .print-main-title {
+        font-size: 24pt;
+        margin-bottom: 5pt;
+        border-bottom: 2pt solid #000;
     }
 
-    .cart-items {
-        display: none;
+    .print-date {
+        font-size: 10pt;
+        color: #666;
+        margin-bottom: 20pt;
     }
 
-    .procurement-list {
-        margin-top: 40px;
+    .print-sec-title {
+        font-size: 18pt;
+        margin-top: 20pt;
+        border-bottom: 1pt solid #ccc;
+        padding-bottom: 5pt;
+    }
+
+    .print-schedule-item {
+        margin-bottom: 8pt;
+        font-size: 11pt;
+    }
+
+    .print-cat-name {
+        font-size: 14pt;
+        margin: 15pt 0 5pt 0;
+        background: #f0f0f0;
+        padding: 4pt;
+    }
+
+    .print-shopping-list {
+        margin: 0;
+        padding-left: 20pt;
+    }
+
+    .print-shopping-list li {
+        margin-bottom: 4pt;
+        font-size: 10pt;
+        list-style-type: square;
+    }
+
+    .print-page-break {
+        page-break-before: always;
     }
 
     .print-recipe-block {
+        margin-top: 20pt;
         page-break-inside: avoid;
-        margin-bottom: 30px;
-        border-top: 1px solid #000;
-        padding-top: 20px;
+    }
+
+    .print-recipe-block h3 {
+        font-size: 16pt;
+        margin-bottom: 5pt;
+        color: #ff6b6b;
+    }
+
+    .print-recipe-cols {
+        display: flex;
+        gap: 20pt;
+        margin-top: 10pt;
+    }
+
+    .print-ingredients {
+        flex: 1;
+    }
+
+    .print-instructions {
+        flex: 2;
+    }
+
+    .print-recipe-block h4 {
+        font-size: 12pt;
+        margin-bottom: 5pt;
+        border-bottom: 0.5pt solid #eee;
+    }
+
+    .print-divider {
+        border: none;
+        border-top: 1pt dashed #ccc;
+        margin: 20pt 0;
     }
 }
 

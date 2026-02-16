@@ -15,39 +15,61 @@ const dom = {
   detailView: document.getElementById('detail-view'),
   listView: document.getElementById('list-view'),
   cartBtn: document.getElementById('cart-btn'),
-  cartCount: document.getElementById('cart-count')
+  cartCount: document.getElementById('cart-count'),
+  backBtn: document.getElementById('back-btn')
 };
 
+let isInitialized = false;
+
 function init() {
+  if (isInitialized) return;
+  isInitialized = true;
+
   RECIPES = window.RECIPES_DATA || [];
-  const hash = window.location.hash.substring(1);
-  if (hash === 'cart') state.view = 'cart';
-  else if (hash) {
-    const found = RECIPES.find(r => r.id === hash);
-    if (found) { state.currentRecipe = found; state.view = 'detail'; }
-  }
-  render();
-  renderFilters();
+
+  // Search handling
   if (dom.searchInput) {
     dom.searchInput.addEventListener('input', (e) => {
-      state.searchTerm = e.target.value.toLowerCase();
+      state.searchTerm = (e.target.value || '').toLowerCase();
       render();
     });
   }
+
+  // Routing
   window.addEventListener('hashchange', () => {
-    const newHash = window.location.hash.substring(1);
-    handleRoute(newHash);
+    const rawHash = window.location.hash || '';
+    const cleanHash = rawHash.replace(/^#/, '');
+    handleRoute(cleanHash);
   });
+
+  // Initial Route
+  const initialHash = (window.location.hash || '').replace(/^#/, '');
+  handleRoute(initialHash);
+  renderFilters();
 }
 
 function handleRoute(hash) {
-  if (hash === 'cart') state.view = 'cart';
-  else if (!hash) { state.view = 'list'; state.currentRecipe = null; }
-  else {
-    const found = RECIPES.find(r => r.id === hash);
-    if (found) { state.currentRecipe = found; state.view = 'detail'; }
+  // Normalize hash
+  const target = (hash || '').trim();
+
+  if (target === 'cart') {
+    state.view = 'cart';
+    state.currentRecipe = null;
+  } else if (!target) {
+    state.view = 'list';
+    state.currentRecipe = null;
+  } else {
+    const found = RECIPES.find(r => r.id === target);
+    if (found) {
+      state.currentRecipe = found;
+      state.view = 'detail';
+    } else {
+      state.view = 'list';
+      state.currentRecipe = null;
+    }
   }
   render();
+  window.scrollTo(0, 0);
 }
 
 function render() {
@@ -64,6 +86,11 @@ function render() {
     if (dom.listView) dom.listView.classList.add('hidden');
     if (dom.detailView) dom.detailView.classList.remove('hidden');
     renderCart();
+  }
+
+  // Handle global Back button visibility
+  if (dom.backBtn) {
+    dom.backBtn.classList.toggle('hidden', state.view === 'list');
   }
 }
 
@@ -158,8 +185,7 @@ function renderDetail() {
   if (!recipe || !dom.detailView) return;
   const isSelected = state.plan.some(p => p.id === recipe.id);
   dom.detailView.innerHTML = `
-    <div class="detail-header">
-      <button class="back-btn" onclick="window.backToList()">← Back</button>
+    <div class="detail-header-v2">
       <div class="detail-actions">
         <button class="action-btn share-btn" onclick="window.shareRecipe('${recipe.id}')">🔗 Share</button>
         <button class="action-btn select-btn ${isSelected ? 'active' : ''}" onclick="window.toggleSelect('${recipe.id}')">
@@ -194,7 +220,6 @@ function renderDetail() {
     </section>
     ${recipe.upgrades.length ? `<section><h3>Upgrades & Tips</h3>${recipe.upgrades.map(n => `<div class="note-box">${n}</div>`).join('')}</section>` : ''}
   `;
-  window.scrollTo(0, 0);
 }
 
 function aggregateIngredients() {
@@ -204,41 +229,48 @@ function aggregateIngredients() {
 
   const CONSOLIDATION_MAP = {
     'eggs': 'egg', 'melted butter': 'butter', 'unsalted butter': 'butter',
-    'penne': 'pasta', 'rotini': 'pasta', 'all-purpose flour': 'flour'
+    'penne': 'pasta', 'rotini': 'pasta', 'all-purpose flour': 'flour',
+    'sea salt': 'salt', 'kosher salt': 'salt'
   };
 
   const master = {};
   state.plan.forEach(p => {
     const recipe = RECIPES.find(r => r.id === p.id);
-    if (recipe) {
-      recipe.ingredients.forEach(ing => {
-        let name = ing.item.toLowerCase().trim();
-        let unit = ing.unit.toLowerCase().trim();
+    if (!recipe) return;
 
-        // Canonicalize name
-        for (const [key, val] of Object.entries(CONSOLIDATION_MAP)) {
-          if (name.includes(key)) { name = val; break; }
-        }
+    recipe.ingredients.forEach(ing => {
+      let name = (ing.item || '').toLowerCase().trim();
+      let unit = (ing.unit || '').toLowerCase().trim();
+      if (!name) return;
 
-        // Group salt variants
-        if (name === 'salt') unit = unit.includes('teaspoon') ? 'teaspoon' : '';
-        // Group eggs (ignore 'large', etc)
-        if (name === 'egg') unit = '';
+      // Canonicalize name
+      for (const [key, val] of Object.entries(CONSOLIDATION_MAP)) {
+        if (name.includes(key)) { name = val; break; }
+      }
 
-        const category = Object.keys(CATEGORY_MAP).find(key => name.includes(key) || ing.item.toLowerCase().includes(key))
-          ? CATEGORY_MAP[Object.keys(CATEGORY_MAP).find(key => name.includes(key) || ing.item.toLowerCase().includes(key))]
-          : 'Other';
+      // Group salt variants
+      if (name === 'salt') unit = unit.includes('teaspoon') ? 'teaspoon' : '';
+      // Group eggs (ignore 'large', etc)
+      if (name === 'egg') unit = '';
 
-        const aggregationKey = `${name}|${unit}`;
-        if (!master[aggregationKey]) {
-          master[aggregationKey] = { item: name, unit: unit, amount: 0, category };
-        }
+      // Consolidate units
+      if (unit.includes('teaspoon') || unit === 'tsp') unit = 'tsp';
+      if (unit.includes('tablespoon') || unit === 'tbsp') unit = 'tbsp';
+      if (unit.includes('cup')) unit = 'cup';
+      if (unit === 'lb' || unit === 'lbs' || unit === 'pound' || unit === 'pounds') unit = 'lb';
 
-        const val = parseFloat(ing.amount);
-        if (!isNaN(val)) master[aggregationKey].amount += val;
-        else if (!master[aggregationKey].amount) master[aggregationKey].amount = ing.amount;
-      });
-    }
+      const categoryKey = Object.keys(CATEGORY_MAP).find(key => name.includes(key) || (ing.item || '').toLowerCase().includes(key));
+      const category = categoryKey ? CATEGORY_MAP[categoryKey] : 'Other';
+
+      const aggregationKey = `${name}|${unit}`;
+      if (!master[aggregationKey]) {
+        master[aggregationKey] = { item: name, unit: unit, amount: 0, category };
+      }
+
+      const val = parseFloat(ing.amount);
+      if (!isNaN(val)) master[aggregationKey].amount += val;
+      else if (!master[aggregationKey].amount) master[aggregationKey].amount = ing.amount;
+    });
   });
 
   // Group by category for rendering
@@ -253,8 +285,7 @@ function aggregateIngredients() {
 function renderCart() {
   const masterList = aggregateIngredients();
   dom.detailView.innerHTML = `
-    <div class="detail-header">
-      <button class="back-btn" onclick="window.backToList()">← Back</button>
+    <div class="detail-header-v2">
       <div class="detail-actions">
         <button class="action-btn share-btn" style="background: #e1f5fe; color: #0288d1;" onclick="window.shareNeededItems()">📤 Share Needed</button>
         <button class="action-btn share-btn" style="background: #fee2e2; color: #dc2626;" onclick="window.clearPlan()">🗑️ Clear All</button>
@@ -327,10 +358,66 @@ function renderCart() {
       </section>
     `}
     <div class="print-only">
-      <h2>Schedule</h2>
-      ${state.plan.map(p => `<div><strong>${p.date || ''} - ${p.meal || ''}:</strong> ${RECIPES.find(r => r.id === p.id).name}</div>`).join('')}
-      <h2>Master Shopping List</h2>
-      <ul>${Object.values(masterList).flat().map(ing => `<li>${ing.amount} ${ing.unit} ${ing.item}</li>`).join('')}</ul>
+      <h1 class="print-main-title">Kitchen Sync | Meal Plan & Grocery List</h1>
+      <p class="print-date">Generated on ${new Date().toLocaleDateString()}</p>
+
+      <section class="print-section">
+        <h2 class="print-sec-title">⏳ Meal Schedule</h2>
+        <div class="print-schedule">
+          ${state.plan.map(p => {
+    const r = RECIPES.find(recipe => recipe.id === p.id);
+    return r ? `<div class="print-schedule-item"><strong>${p.date || 'TBD'} - ${p.meal || 'Meal'}:</strong> ${r.name}</div>` : '';
+  }).join('')}
+        </div>
+      </section>
+
+      <section class="print-section">
+        <h2 class="print-sec-title">📦 Needed Shopping Items</h2>
+        ${Object.entries(masterList).map(([cat, ings]) => {
+    const needed = ings.filter(ing => !state.checkedIngredients[`${ing.item}|${ing.unit}`.toLowerCase().trim()]);
+    if (needed.length === 0) return '';
+    return `
+            <div class="print-cat-group">
+              <h3 class="print-cat-name">${cat}</h3>
+              <ul class="print-shopping-list">
+                ${needed.map(ing => `<li>${ing.item} (${ing.amount} ${ing.unit})</li>`).join('')}
+              </ul>
+            </div>
+          `;
+  }).join('')}
+      </section>
+
+      <div class="print-page-break"></div>
+
+      <section class="print-section">
+        <h2 class="print-sec-title">👨‍🍳 Cooking Instructions</h2>
+        ${[...new Set(state.plan.map(p => p.id))].map(id => {
+    const r = RECIPES.find(recipe => recipe.id === id);
+    if (!r) return '';
+    return `
+            <div class="print-recipe-block">
+              <h3>${r.name}</h3>
+              <p><em>${r.description}</em></p>
+              
+              <div class="print-recipe-cols">
+                <div class="print-ingredients">
+                  <h4>Ingredients</h4>
+                  <ul>
+                    ${r.ingredients.map(i => `<li>${i.item} (${i.amount} ${i.unit})</li>`).join('')}
+                  </ul>
+                </div>
+                <div class="print-instructions">
+                  <h4>Instructions</h4>
+                  <ol>
+                    ${r.instructions.map(step => `<li>${step}</li>`).join('')}
+                  </ol>
+                </div>
+              </div>
+              <hr class="print-divider">
+            </div>
+          `;
+  }).join('')}
+      </section>
     </div>
   `;
 }
@@ -362,11 +449,21 @@ window.toggleIngredient = (key) => {
 };
 window.shareNeededItems = () => {
   const masterList = aggregateIngredients();
-  let text = "🛒 Needed Grocery Items:\n\n";
+
+  // Get unique recipe names from the plan
+  const recipeNames = [...new Set(state.plan.map(p => {
+    const r = RECIPES.find(recipe => recipe.id === p.id);
+    return r ? r.name : null;
+  }).filter(Boolean))];
+
+  let text = "🍽️ Upcoming Meals:\n";
+  recipeNames.forEach(name => text += `- ${name}\n`);
+  text += "\n🛒 Needed Grocery Items:\n\n";
+
   let hasItems = false;
 
   Object.entries(masterList).forEach(([cat, ings]) => {
-    const needed = ings.filter(ing => !state.checkedIngredients[`${ing.item}|${ing.unit}`.toLowerCase()]);
+    const needed = ings.filter(ing => !state.checkedIngredients[`${ing.item}|${ing.unit}`.toLowerCase().trim()]);
     if (needed.length > 0) {
       hasItems = true;
       text += `[${cat}]\n`;
@@ -377,12 +474,12 @@ window.shareNeededItems = () => {
     }
   });
 
-  if (!hasItems) {
-    alert("Everything is checked off! (or your plan is empty)");
+  if (!hasItems && recipeNames.length === 0) {
+    alert("Plan is empty!");
     return;
   }
 
-  navigator.clipboard.writeText(text.trim()).then(() => alert('Needed items copied to clipboard!'));
+  navigator.clipboard.writeText(text.trim()).then(() => alert('Meal plan & needed items copied to clipboard!'));
 };
 
 // Shared Reordering Logic

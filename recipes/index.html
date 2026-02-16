@@ -15,10 +15,15 @@
 <body>
     <div class="app-container">
         <div class="top-bar">
-            <a href="../" class="home-link">← Home</a>
-            <button id="cart-btn" class="cart-btn" onclick="window.goToCart()">
-                🛒 Plan (<span id="cart-count">0</span>)
-            </button>
+            <div class="nav-left">
+                <button id="back-btn" class="nav-back-btn hidden" onclick="window.backToList()">← Back</button>
+            </div>
+            <div class="nav-right">
+                <a href="../" class="home-link-subtle">Exit to Studio</a>
+                <button id="cart-btn" class="cart-btn" onclick="window.goToCart()">
+                    🛒 Plan (<span id="cart-count">0</span>)
+                </button>
+            </div>
         </div>
         <!-- List View -->
         <div id="list-view">
