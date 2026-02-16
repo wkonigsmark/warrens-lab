@@ -795,6 +795,14 @@
         let chart;
         let isRealData = false;
         let updateInterval;
+        let lastPulseTime = 0;
+        const baselineSignals = [
+            { desk: "GS STRATEGY", text: "Cross-asset correlation matrices remain within normal parameters.", impact: "No immediate structural shifts detected." },
+            { desk: "MS RATES", text: "Treasury auction results coming in line with expectations.", impact: "Duration supply being absorbed; yield floor potentially forming." },
+            { desk: "BLOOMBERG", text: "Global capital flows continuing to favor US-denominated assets.", impact: "Strong USD (DXY) remains the primary macro anchor." },
+            { desk: "GS STRATEGY", text: "Monitoring sector momentum for signs of distribution.", impact: "Broad market breadth remains healthy." },
+            { desk: "MS RATES", text: "Fed swap markets pricing in a stable terminal rate for now.", impact: "Volatility on the front end of the curve is muted." }
+        ];
 
         // Initialize state for all possible symbols
         [...EQUIPMENT.equities, ...EQUIPMENT.rates, ...EQUIPMENT.sectors].forEach(idx => {
@@ -1021,7 +1029,7 @@
         }
 
         const fetchSymbol = async (idx) => {
-            const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(idx.symbol)}?interval=2m&range=1d&includePrePost=false`;
+            const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(idx.symbol)}?interval=2min&range=1d&includePrePost=false`;
             const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(yahooUrl)}`;
 
             try {
@@ -1029,16 +1037,21 @@
                 if (!response.ok) throw new Error(`Proxy error: ${response.status}`);
                 const proxyData = await response.json();
 
-                if (!proxyData || !proxyData.contents) throw new Error("Empty proxy response");
+                if (!proxyData || !proxyData.contents) throw new Error("Empty proxy response from AllOrigins");
 
                 let data;
                 try {
                     data = JSON.parse(proxyData.contents);
                 } catch (e) {
-                    throw new Error("Malformed JSON from Yahoo");
+                    throw new Error("Malformed JSON from Yahoo/Proxy");
                 }
 
-                if (!data || !data.chart || !data.chart.result) throw new Error("Invalid Chart Data");
+                if (!data || !data.chart || !data.chart.result) {
+                    if (data.chart && data.chart.error) {
+                        throw new Error(`Yahoo Finance Error: ${data.chart.error.description}`);
+                    }
+                    throw new Error("Invalid Chart Data structure");
+                }
 
                 const res = data.chart.result[0];
                 const meta = res.meta;
@@ -1061,9 +1074,12 @@
                         currentPrice: pts[pts.length - 1],
                         basePrice: meta.regularMarketPreviousClose || meta.chartPreviousClose || pts[0]
                     };
+                    return true;
                 }
+                return false;
             } catch (e) {
-                console.error(`Error fetching ${idx.symbol}:`, e.message);
+                console.error(`[Connectivity] Error fetching ${idx.symbol}:`, e.message);
+                return false;
             }
         };
 
@@ -1080,20 +1096,29 @@
                 ...EQUIPMENT.sectors
             ];
 
+            let successCount = 0;
             // Use individual await to ensure robustness
             for (const sym of allSymbols) {
-                await fetchSymbol(sym);
+                const ok = await fetchSymbol(sym);
+                if (ok) successCount++;
             }
 
-            status.textContent = "Live Stream: Active";
-            status.style.color = "var(--accent-green)";
-            note.style.opacity = "0";
-            isRealData = true;
-            document.getElementById('toggle-source-btn').textContent = "Simulation Mode";
-            document.getElementById('toggle-source-btn').classList.add('active-source');
-
-            updateUI();
-            switchIndex(activeIndex);
+            if (successCount > 0) {
+                status.textContent = "Live Stream: Active";
+                status.style.color = "var(--accent-green)";
+                note.style.opacity = "0";
+                isRealData = true;
+                document.getElementById('toggle-source-btn').textContent = "Simulation Mode";
+                document.getElementById('toggle-source-btn').classList.add('active-source');
+                updateUI();
+                switchIndex(activeIndex);
+            } else {
+                status.textContent = "Live Stream: Connection Failed";
+                status.style.color = "var(--accent-red)";
+                note.textContent = "(Check browser console for details)";
+                note.style.opacity = "0.8";
+                setTimeout(() => { if (!isRealData) toggleSource(); }, 3000); // Fallback to sim
+            }
         }
         function updateSimulation() {
             [...EQUIPMENT.equities, ...EQUIPMENT.rates, ...EQUIPMENT.sectors].forEach(idx => {
@@ -1113,6 +1138,7 @@
             });
 
             updateUI();
+            updateSignalBox();
             const s = state[activeIndex.symbol];
             chart.data.labels = s.labels;
             chart.data.datasets[0].data = s.dataPoints;
@@ -1388,12 +1414,11 @@
         }
 
         let lastSignalKey = "";
-
         function pushToFeed(desk, text, impact) {
             const container = document.getElementById('terminal-feed-container');
+            if (!container) return;
             const time = new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-            // Create a unique key to prevent spamming the same message
             const signalKey = `${desk}:${text}`;
             if (signalKey === lastSignalKey) return;
             lastSignalKey = signalKey;
@@ -1415,11 +1440,7 @@
             `;
 
             container.prepend(item);
-
-            // Housekeeping: Keep only last 20 messages
-            while (container.children.length > 20) {
-                container.lastElementChild.remove();
-            }
+            while (container.children.length > 20) container.lastElementChild.remove();
         }
 
         function updateSignalBox() {
@@ -1433,35 +1454,33 @@
             const tnxChange = (tnx.currentPrice - tnx.basePrice) / tnx.basePrice;
             const dxyChange = (dxy.currentPrice - dxy.basePrice) / dxy.basePrice;
 
-            // MS RATES DESK
-            if (tnxChange > 0.01) {
-                pushToFeed("MS RATES", "Yield Pressure intensifying on the long end.", "Bearish for duration-sensitive growth stocks (XLK).");
+            let signalTriggered = false;
+
+            if (Math.abs(tnxChange) > 0.005) {
+                pushToFeed("MS RATES", tnxChange > 0 ? "Yield Pressure intensifying on the long end." : "Yield compression detected as safe-haven bids increase.", tnxChange > 0 ? "Bearish for duration-sensitive growth stocks (XLK)." : "Bullish for treasuries and high-dividend sectors.");
+                signalTriggered = true;
             } else if (tnx.currentPrice < state['^FVX'].currentPrice) {
                 pushToFeed("MS RATES", "Yield Curve Inversion deepening (5Y > 10Y).", "Institutional desks bracing for potential recessionary feedback.");
+                signalTriggered = true;
             }
 
-            // GS STRATEGY DESK
-            if (spyChange > 0.01) {
-                pushToFeed("GS STRATEGY", "Momentum breakout confirmed in broad equities.", "Expect continued 'Risk-On' flows unless yields spike.");
-            } else if (spyChange < -0.01) {
-                pushToFeed("GS STRATEGY", "Equity liquidation detected across major indices.", "Flight to safety potentially starting; monitoring DXY.");
+            if (Math.abs(spyChange) > 0.005) {
+                pushToFeed("GS STRATEGY", spyChange > 0 ? "Momentum breakout confirmed in broad equities." : "Equity liquidation detected across major indices.", spyChange > 0 ? "Expect continued 'Risk-On' flows unless yields spike." : "Flight to safety potentially starting; monitoring DXY.");
+                signalTriggered = true;
             }
 
-            // BLOOMBERG ALERTS
-            if (dxyChange > 0.008) {
-                pushToFeed("BLOOMBERG", "U.S. Dollar Index (DXY) showing significant strength.", "Potential headwind for multinational earnings and gold.");
+            if (Math.abs(dxyChange) > 0.004) {
+                pushToFeed("BLOOMBERG", dxyChange > 0 ? "U.S. Dollar Index (DXY) showing significant strength." : "Dollar weakness accelerating on global trade headlines.", dxyChange > 0 ? "Potential headwind for multinationals." : "Provides breathing room for EM debt and Gold.");
+                signalTriggered = true;
             }
 
-            // SECTOR SPECIFIC (If in sector view)
-            if (activePerspective === 'sectors') {
-                const xlk = (state['XLK'].currentPrice - state['XLK'].basePrice) / state['XLK'].basePrice;
-                const xlu = (state['XLU'].currentPrice - state['XLU'].basePrice) / state['XLU'].basePrice;
-                if (xlu > xlk) {
-                    pushToFeed("GS STRATEGY", "Defensive rotation: Utilities (XLU) outperforming Tech.", "Suggests institutional distribution; reducing risk exposure.");
-                }
+            const now = Date.now();
+            if (!signalTriggered && (now - lastPulseTime > 20000)) {
+                const randomPulse = baselineSignals[Math.floor(Math.random() * baselineSignals.length)];
+                pushToFeed(randomPulse.desk, randomPulse.text, randomPulse.impact);
+                lastPulseTime = now;
             }
         }
-
         function toggleSource() {
             if (isRealData) {
                 isRealData = false;
