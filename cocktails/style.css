@@ -1,0 +1,200 @@
+:root {
+    --bg-color: #0a0a0b;
+    --card-bg: #161618;
+    --text-primary: #f0f0f2;
+    --text-secondary: #a1a1aa;
+    --accent: #d4d4d8;
+    --accent-glow: rgba(212, 212, 212, 0.1);
+    --border: #27272a;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+}
+
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* Intro Section */
+.intro-container {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.main-title {
+    font-size: 3.5rem;
+    font-weight: 200;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    text-transform: lowercase;
+    background: linear-gradient(to right, #ffffff, #a1a1aa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.intro-text {
+    max-width: 700px;
+    margin: 0 auto 20px;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+}
+
+/* Search Bar */
+.search-wrapper {
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+    margin-bottom: 60px;
+    display: flex;
+    justify-content: center;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 500px;
+    padding: 16px 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: #fff;
+    font-size: 1.1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #52525b;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 0 4px var(--accent-glow);
+}
+
+/* Results Grid */
+.cocktail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 32px;
+}
+
+.cocktail-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+}
+
+.cocktail-card:hover {
+    transform: translateY(-8px);
+    border-color: #3f3f46;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.cocktail-img-wrapper {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    position: relative;
+    background: #111;
+}
+
+.cocktail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.cocktail-card:hover .cocktail-img {
+    transform: scale(1.05);
+}
+
+.card-content {
+    padding: 24px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.cocktail-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0 0 16px;
+    color: #fff;
+}
+
+.section-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    display: block;
+}
+
+.ingredients-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px;
+}
+
+.ingredients-list li {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    padding-left: 18px;
+    position: relative;
+}
+
+.ingredients-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 4px;
+    height: 4px;
+    background: #3f3f46;
+    border-radius: 50%;
+}
+
+.divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 0 24px;
+}
+
+.instructions-text {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    grid-column: 1 / -1;
+    padding: 60px;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 640px) {
+    .main-title {
+        font-size: 2.5rem;
+    }
+
+    .cocktail-grid {
+        grid-template-columns: 1fr;
+    }
+}
