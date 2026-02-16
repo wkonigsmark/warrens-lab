@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Sync | Easy Access Recipes</title>
+    <!-- Modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- List View -->
+        <div id="list-view">
+            <header>
+                <h1>Recipes</h1>
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Search by name or ingredient..."
+                        autocomplete="off">
+                </div>
+            </header>
+            <div id="recipe-list" class="recipe-list">
+                <!-- Recipes will be injected here -->
+            </div>
+        </div>
+
+        <!-- Detail View -->
+        <div id="detail-view" class="detail-view hidden">
+            <!-- Recipe detail will be injected here -->
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="recipe-logic.js?v=2"></script>
+</body>
+
+</html>
