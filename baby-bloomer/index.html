@@ -280,37 +280,111 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Signal Box Styles */
-        .signal-box {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
-            border: 1px dashed rgba(255, 255, 255, 0.15);
-            padding: 1rem;
+        /* Terminal Feed Styles */
+        .terminal-feed {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
+            height: 320px;
+            display: flex;
+            flex-direction: column;
             margin-top: 0.5rem;
+            overflow: hidden;
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .signal-header {
+        .feed-header {
+            padding: 0.6rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .feed-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            scrollbar-width: thin;
+        }
+
+        .feed-item {
+            font-size: 0.75rem;
+            line-height: 1.4;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .feed-item:last-child {
+            border-bottom: none;
+        }
+
+        .feed-meta {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--accent-blue);
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.25rem;
+            font-size: 0.6rem;
         }
 
-        .signal-content {
-            font-size: 0.85rem;
-            line-height: 1.5;
+        .feed-time {
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+
+        .feed-desk {
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+
+        /* Persona Styles */
+        .desk-gs {
+            color: #facc15;
+        }
+
+        /* Gold Alpha */
+        .desk-ms {
+            color: #60a5fa;
+        }
+
+        /* Fixed Income Blue */
+        .desk-bbg {
+            color: #ef4444;
+        }
+
+        /* Alert Red */
+
+        .feed-text {
             color: var(--text-primary);
         }
 
-        .signal-impact {
-            margin-top: 0.75rem;
+        .feed-impact {
+            margin-top: 0.25rem;
             font-size: 0.65rem;
             color: var(--text-secondary);
             font-style: italic;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Modal Styles */
@@ -655,17 +729,21 @@
                     <div class="stat-value" id="extra-val" style="font-size: 0.95rem;">--</div>
                 </div>
 
-                <div class="signal-box">
-                    <div class="signal-header">
-                        <span class="dot"
-                            style="background: var(--accent-blue); box-shadow: 0 0 8px var(--accent-blue);"></span>
-                        Signal & Context
+                <div class="terminal-feed">
+                    <div class="feed-header">
+                        <span>Intelligence Feed // Live</span>
+                        <span id="feed-count">08 Desks Active</span>
                     </div>
-                    <div class="signal-content" id="signal-text">
-                        Analyzing cross-asset relationships...
-                    </div>
-                    <div class="signal-impact" id="signal-impact">
-                        Waiting for data confluence.
+                    <div class="feed-container" id="terminal-feed-container">
+                        <!-- Items injected via JS -->
+                        <div class="feed-item">
+                            <div class="feed-meta">
+                                <span class="feed-time">12:00:00</span>
+                                <span class="feed-desk desk-bbg">SYSTEM</span>
+                            </div>
+                            <div class="feed-text">Initializing analyst sub-routines...</div>
+                            <div class="feed-impact">Synchronizing cross-asset matrices.</div>
+                        </div>
                     </div>
                 </div>
             </aside>
@@ -1309,44 +1387,79 @@
             document.getElementById('edu-modal').style.display = 'none';
         }
 
+        let lastSignalKey = "";
+
+        function pushToFeed(desk, text, impact) {
+            const container = document.getElementById('terminal-feed-container');
+            const time = new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+            // Create a unique key to prevent spamming the same message
+            const signalKey = `${desk}:${text}`;
+            if (signalKey === lastSignalKey) return;
+            lastSignalKey = signalKey;
+
+            const item = document.createElement('div');
+            item.className = 'feed-item';
+
+            let deskClass = 'desk-bbg';
+            if (desk === 'GS STRATEGY') deskClass = 'desk-gs';
+            if (desk === 'MS RATES') deskClass = 'desk-ms';
+
+            item.innerHTML = `
+                <div class="feed-meta">
+                    <span class="feed-time">${time}</span>
+                    <span class="feed-desk ${deskClass}">${desk}</span>
+                </div>
+                <div class="feed-text">${text}</div>
+                <div class="feed-impact">${impact}</div>
+            `;
+
+            container.prepend(item);
+
+            // Housekeeping: Keep only last 20 messages
+            while (container.children.length > 20) {
+                container.lastElementChild.remove();
+            }
+        }
+
         function updateSignalBox() {
             const spy = state['^GSPC'];
             const tnx = state['^TNX'];
             const dxy = state['DX-Y.NYB'];
 
-            let signal = "Markets are currently balanced. No high-conviction cross-asset signals detected.";
-            let impact = "Continue monitoring established trends.";
+            if (!spy || !tnx || !dxy) return;
 
             const spyChange = (spy.currentPrice - spy.basePrice) / spy.basePrice;
             const tnxChange = (tnx.currentPrice - tnx.basePrice) / tnx.basePrice;
             const dxyChange = (dxy.currentPrice - dxy.basePrice) / dxy.basePrice;
 
-            if (tnxChange > 0.01 && spyChange < -0.005) {
-                signal = "<b>Yield Pressure Detected.</b> Rising Treasury yields are making stocks less attractive, pulling capital out of equities.";
-                impact = "Bearish for Tech/Growth stocks (XLK) which are sensitive to interest rates.";
-            } else if (activePerspective === 'sectors') {
+            // MS RATES DESK
+            if (tnxChange > 0.01) {
+                pushToFeed("MS RATES", "Yield Pressure intensifying on the long end.", "Bearish for duration-sensitive growth stocks (XLK).");
+            } else if (tnx.currentPrice < state['^FVX'].currentPrice) {
+                pushToFeed("MS RATES", "Yield Curve Inversion deepening (5Y > 10Y).", "Institutional desks bracing for potential recessionary feedback.");
+            }
+
+            // GS STRATEGY DESK
+            if (spyChange > 0.01) {
+                pushToFeed("GS STRATEGY", "Momentum breakout confirmed in broad equities.", "Expect continued 'Risk-On' flows unless yields spike.");
+            } else if (spyChange < -0.01) {
+                pushToFeed("GS STRATEGY", "Equity liquidation detected across major indices.", "Flight to safety potentially starting; monitoring DXY.");
+            }
+
+            // BLOOMBERG ALERTS
+            if (dxyChange > 0.008) {
+                pushToFeed("BLOOMBERG", "U.S. Dollar Index (DXY) showing significant strength.", "Potential headwind for multinational earnings and gold.");
+            }
+
+            // SECTOR SPECIFIC (If in sector view)
+            if (activePerspective === 'sectors') {
                 const xlk = (state['XLK'].currentPrice - state['XLK'].basePrice) / state['XLK'].basePrice;
                 const xlu = (state['XLU'].currentPrice - state['XLU'].basePrice) / state['XLU'].basePrice;
                 if (xlu > xlk) {
-                    signal = "<b>Defensive Rotation.</b> Utilities (XLU) are outperforming Technology (XLK). Traders are moving to safety.";
-                    impact = "Suggests decreasing risk appetite and potential volatility ahead.";
-                } else {
-                    signal = "<b>Growth Leadership.</b> Technology and Discretionary sectors are leading the market rally.";
-                    impact = "Risk-On environment. Focus on momentum and high-beta names.";
+                    pushToFeed("GS STRATEGY", "Defensive rotation: Utilities (XLU) outperforming Tech.", "Suggests institutional distribution; reducing risk exposure.");
                 }
-            } else if (dxyChange > 0.005 && tnxChange > 0.005) {
-                signal = "<b>Flight to Quality.</b> Both the Dollar and Yields are rising. Global investors are parking cash in US assets.";
-                impact = "Strongly Bearish for International markets and Commodities (Gold/Oil).";
-            } else if (spyChange > 0.005 && tnxChange < -0.005) {
-                signal = "<b>Goldilocks Environment.</b> Falling yields and rising stocks suggest a cooling economy without a recession fear.";
-                impact = "Bullish for high-growth sectors and consumer discretionary.";
-            } else if (tnx.currentPrice < state['^FVX'].currentPrice) {
-                signal = "<b>Curve Inversion Alert.</b> Short-term yields are higher than long-term yields.";
-                impact = "Historically the most reliable indicator of an upcoming economic recession.";
             }
-
-            document.getElementById('signal-text').innerHTML = signal;
-            document.getElementById('signal-impact').textContent = impact;
         }
 
         function toggleSource() {
