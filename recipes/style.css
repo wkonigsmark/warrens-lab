@@ -218,26 +218,19 @@ h1 {
     font-weight: 800;
 }
 
-.master-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+.shopping-bullets {
+    margin: 0;
+    padding-left: 1.2rem;
+    list-style-type: disc;
 }
 
-.master-item {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #dee2e6;
+.shopping-bullets li {
+    margin-bottom: 6px;
+    font-size: 0.95rem;
 }
 
-.item-name {
-    font-weight: 500;
-}
-
-.item-total {
+.shopping-bullets li strong {
     color: var(--accent);
-    font-weight: 700;
 }
 
 /* Draggable Items & Scheduling */

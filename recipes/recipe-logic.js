@@ -242,24 +242,6 @@ function renderCart() {
     <p class="description">Sequence your meals and review the aggregated shopping list.</p>
     ${state.plan.length === 0 ? '<p>No recipes selected yet.</p>' : `
       <section>
-        <h3 class="master-list-title">📦 Master Shopping List</h3>
-        <div class="master-list-container">
-          ${Object.entries(masterList).map(([cat, ings]) => `
-            <div class="category-group">
-              <h4 class="category-name">${cat}</h4>
-              <div class="master-list">
-                ${ings.map(ing => `
-                  <div class="master-item">
-                    <span class="item-name">${ing.item}</span>
-                    <span class="item-total">${ing.amount} ${ing.unit}</span>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      </section>
-      <section>
         <h3>⏳ Meal Sequence</h3>
         <p class="instruction-note">Sequence is updated automatically as you drag.</p>
         <div class="cart-items" id="draggable-list">
@@ -296,12 +278,28 @@ function renderCart() {
   }).join('')}
         </div>
       </section>
+
+      <section>
+        <h3 class="master-list-title">📦 Master Shopping List</h3>
+        <div class="master-list-container">
+          ${Object.entries(masterList).map(([cat, ings]) => `
+            <div class="category-group">
+              <h4 class="category-name">${cat}</h4>
+              <ul class="shopping-bullets">
+                ${ings.map(ing => `
+                  <li>${ing.item} - <strong>${ing.amount} ${ing.unit}</strong></li>
+                `).join('')}
+              </ul>
+            </div>
+          `).join('')}
+        </div>
+      </section>
     `}
     <div class="print-only">
-      <h2>Master Shopping List</h2>
-      <ul>${Object.values(masterList).flat().map(ing => `<li>${ing.amount} ${ing.unit} ${ing.item}</li>`).join('')}</ul>
       <h2>Schedule</h2>
       ${state.plan.map(p => `<div><strong>${p.date || ''} - ${p.meal || ''}:</strong> ${RECIPES.find(r => r.id === p.id).name}</div>`).join('')}
+      <h2>Master Shopping List</h2>
+      <ul>${Object.values(masterList).flat().map(ing => `<li>${ing.amount} ${ing.unit} ${ing.item}</li>`).join('')}</ul>
     </div>
   `;
 }
