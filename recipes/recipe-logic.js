@@ -439,11 +439,20 @@ function renderCart() {
       </section>
       <section>
         <h3>⏳ Meal Sequence</h3>
+        <p class="instruction-note">Drag recipes to reorder the sequence.</p>
         <div class="cart-items" id="draggable-list">
           ${state.plan.map((item, index) => {
     const recipe = RECIPES.find(r => r.id === item.id);
     return `
-              <div class="cart-item draggable" draggable="true" data-index="${index}" ondragstart="window.onDragStart(event)" ondragover="window.onDragOver(event)" ondrop="window.onDrop(event)">
+              <div class="cart-item draggable" 
+                   draggable="true" 
+                   data-index="${index}" 
+                   ondragstart="window.onDragStart(event)" 
+                   ondragover="window.onDragOver(event)" 
+                   ondrop="window.onDrop(event)"
+                   ontouchstart="window.onTouchStart(event)"
+                   ontouchmove="window.onTouchMove(event)"
+                   ontouchend="window.onTouchEnd(event)">
                 <div class="cart-item-header">
                   <div class="drag-handle">☰</div>
                   <div class="cart-item-info">
@@ -488,13 +497,58 @@ window.toggleSelect = (id) => {
   render();
 };
 window.updatePlanItem = (index, key, value) => { state.plan[index][key] = value; };
+// Drag & Drop (Mouse)
 let dragSourceIndex = null;
-window.onDragStart = (e) => { dragSourceIndex = e.target.closest('.draggable').dataset.index; e.dataTransfer.effectAllowed = 'move'; };
-window.onDragOver = (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; };
+window.onDragStart = (e) => {
+  dragSourceIndex = e.target.closest('.draggable').dataset.index;
+  e.dataTransfer.effectAllowed = 'move';
+};
+window.onDragOver = (e) => {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+};
 window.onDrop = (e) => {
   const targetIndex = e.target.closest('.draggable').dataset.index;
-  if (dragSourceIndex !== targetIndex) {
+  if (dragSourceIndex !== null && dragSourceIndex !== targetIndex) {
     const moved = state.plan.splice(dragSourceIndex, 1)[0];
+    state.plan.splice(targetIndex, 0, moved);
+    render();
+  }
+};
+
+// Drag & Drop (Touch/Mobile)
+let touchSourceIndex = null;
+let touchStartY = 0;
+
+window.onTouchStart = (e) => {
+  const draggable = e.target.closest('.draggable');
+  touchSourceIndex = draggable.dataset.index;
+  touchStartY = e.touches[0].clientY;
+  draggable.classList.add('dragging');
+};
+
+window.onTouchMove = (e) => {
+  e.preventDefault(); // Prevent scrolling while dragging
+  const touchY = e.touches[0].clientY;
+  const draggable = e.target.closest('.draggable');
+  const deltaY = touchY - touchStartY;
+  draggable.style.transform = `translateY(${deltaY}px)`;
+  draggable.style.zIndex = "1000";
+};
+
+window.onTouchEnd = (e) => {
+  const draggable = e.target.closest('.draggable');
+  draggable.classList.remove('dragging');
+  draggable.style.transform = '';
+  draggable.style.zIndex = "";
+
+  const touchY = e.changedTouches[0].clientY;
+  const elements = document.elementsFromPoint(e.changedTouches[0].clientX, touchY);
+  const target = elements.find(el => el.classList.contains('draggable') && el !== draggable);
+
+  if (target) {
+    const targetIndex = target.dataset.index;
+    const moved = state.plan.splice(touchSourceIndex, 1)[0];
     state.plan.splice(targetIndex, 0, moved);
     render();
   }
