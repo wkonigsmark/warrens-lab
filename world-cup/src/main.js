@@ -41,10 +41,7 @@ const statusEl = document.getElementById('sync-status');
 
 function getRadius(w) {
     const val = parseFloat(w) || 0;
-    const isMobile = window.innerWidth < 600;
-    const base = isMobile ? 10 : 14;
-    const scale = isMobile ? 25 : 38;
-    return base + (val / 100) * scale;
+    return 14 + (val / 100) * 38;
 }
 
 function startCountdown() {
@@ -435,7 +432,6 @@ function syncVisuals() {
 
     nodes.forEach(n => {
         n.isEliminated = n.eliminatedIn <= visualStep;
-        const isMobile = window.innerWidth < 600;
 
         // Ensure final 4 are NEVER eliminated in showdown or finale
         if (visualStep >= 5) {
@@ -455,18 +451,21 @@ function syncVisuals() {
             const b = findInBracket(n.name);
             if (b) {
                 n.isEliminated = false;
+                // Updated Mapping for Sequential Bracket Logic
+                // Left Side: 73, 74, 75, 76, 77, 78, 79, 80
+                // Right Side: 81, 82, 83, 84, 85, 86, 87, 88
                 const leftMatches = [73, 74, 75, 76, 77, 78, 79, 80];
                 const rightMatches = [81, 82, 83, 84, 85, 86, 87, 88];
                 let col = leftMatches.includes(b.id) ? 0 : 1;
                 let row = (col === 0 ? leftMatches : rightMatches).indexOf(b.id);
 
-                const spacingX = isMobile ? w * 0.7 : w * 0.55;
-                const spacingY = isMobile ? 65 : 100; // Increased spacingY for desktop if needed? No, 90 was fine
+                const spacingX = w * 0.55;
+                const spacingY = 90;
                 const marginX = (w - spacingX) / 2;
-                const teamOffset = (b.side === 0 ? -1 * (isMobile ? 25 : 45) : (isMobile ? 25 : 45));
+                const teamOffset = (b.side === 0 ? -45 : 45);
 
                 n.targetFx = marginX + (col * spacingX) + teamOffset;
-                n.targetFy = (isMobile ? 80 : 120) + (row * (isMobile ? 65 : 90));
+                n.targetFy = 120 + (row * spacingY);
             } else {
                 n.isEliminated = true;
             }
@@ -480,8 +479,11 @@ function syncVisuals() {
             if (currentMatch) {
                 n.isEliminated = false;
                 const stageMatches = {
+                    // R16: Left (89-92), Right (93-96)
                     2: { left: [89, 90, 91, 92], right: [93, 94, 95, 96] },
+                    // QF: Left (97, 98), Right (99, 100)
                     3: { left: [97, 98], right: [99, 100] },
+                    // SF: Left (101), Right (102)
                     4: { left: [101], right: [102] }
                 };
                 const currentStage = stageMatches[visualStep];
@@ -494,51 +496,59 @@ function syncVisuals() {
                 }
 
                 if (col !== -1) {
-                    const spacingX = isMobile ? w * 0.7 : w * 0.5;
+                    const spacingX = w * 0.5;
                     const marginX = (w - spacingX) / 2;
-                    const spacingY = (isMobile ? 90 : 120) + (visualStep * 20);
-                    const teamOffset = (currentMatch.t1 === n.name) ? -1 * (isMobile ? 30 : 40) : (isMobile ? 30 : 40);
+                    const spacingY = 120 + (visualStep * 20);
+                    const teamOffset = (currentMatch.t1 === n.name) ? -40 : 40;
 
                     n.targetFx = marginX + (col * spacingX) + teamOffset;
-                    n.targetFy = (isMobile ? 120 : 150) + (row * spacingY);
+                    n.targetFy = 150 + (row * spacingY);
                 } else {
+                    console.warn(`Match ${currentMatch.id} not found in step ${visualStep} layout`);
                     n.isEliminated = true;
                 }
             } else {
                 n.isEliminated = true;
             }
         }
-        else if (visualStep === 5) { // SHOWDOWN
-            const offset = isMobile ? 60 : 100;
+        else if (visualStep === 5) { // SHOWDOWN - 3rd place match + final preview
             if (n.name === championshipWinner || n.name === finalLoser) {
-                n.targetFx = (n.name === championshipWinner) ? (w / 2 - offset) : (w / 2 + offset);
-                n.targetFy = isMobile ? 140 : 180;
+                // Championship finalists - positioned prominently
+                n.targetFx = (n.name === championshipWinner) ? (w / 2 - 100) : (w / 2 + 100);
+                n.targetFy = 180;
                 n.isEliminated = false;
                 n.isSideStage = false;
             } else if (n.name === thirdPlaceWinner || n.name === thirdPlaceLoser) {
-                n.targetFx = (n.name === thirdPlaceWinner) ? (w / 2 - offset) : (w / 2 + offset);
-                n.targetFy = isMobile ? 300 : 380;
+                // 3rd place match teams - positioned below but visible
+                n.targetFx = (n.name === thirdPlaceWinner) ? (w / 2 - 100) : (w / 2 + 100);
+                n.targetFy = 380;
                 n.isEliminated = false;
                 n.isSideStage = false;
             } else {
                 n.isEliminated = true;
             }
-        } else if (visualStep === 6) { // FINALE
+        } else if (visualStep === 6) { // FINALE - champion celebration
             if (n.name === championshipWinner) {
+                // Champion - top of podium, center
                 n.targetFx = w / 2;
-                n.targetFy = isMobile ? 120 : 180;
+                n.targetFy = 180;
                 n.isEliminated = false;
                 n.isSideStage = false;
             } else if (n.name === finalLoser) {
+                // Runner-up - below champion, center (silver medal)
                 n.targetFx = w / 2;
-                n.targetFy = isMobile ? 280 : 360;
+                n.targetFy = 360;
                 n.isEliminated = false;
-                n.isSideStage = false;
+                n.isSideStage = false; // Keep visible on podium
             } else if (n.name === thirdPlaceWinner) {
+                // 3rd place - below runner-up, center (bronze medal)
                 n.targetFx = w / 2;
-                n.targetFy = isMobile ? 400 : 520;
+                n.targetFy = 520;
                 n.isEliminated = false;
-                n.isSideStage = false;
+                n.isSideStage = false; // Keep visible on podium
+            } else if (n.name === thirdPlaceLoser) {
+                // 4th place - eliminated (not shown)
+                n.isEliminated = true;
             } else {
                 n.isEliminated = true;
             }
@@ -558,37 +568,34 @@ function syncVisuals() {
 
     nodeSelection.transition().duration(800)
         .style('width', d => {
-            const isMobile = window.innerWidth < 600;
-            const m = isMobile ? 0.7 : 1;
-            if (d.isChampion && visualStep === 6) return `${d.radius * 4.5 * m}px`;
-            if ((d.name === championshipWinner || d.name === finalLoser) && visualStep === 5) return `${d.radius * 3 * m}px`;
+            if (d.isChampion && visualStep === 6) return `${d.radius * 4.5}px`;
+            if ((d.name === championshipWinner || d.name === finalLoser) && visualStep === 5) return `${d.radius * 3}px`;
             if (d.isSideStage) {
-                if (d.name === thirdPlaceWinner || d.name === thirdPlaceLoser) return `${d.radius * 2.5 * m}px`;
-                return `${d.radius * 1.2 * m}px`;
+                if (d.name === thirdPlaceWinner || d.name === thirdPlaceLoser) return `${d.radius * 2.5}px`;
+                return `${d.radius * 1.2}px`;
             }
-            if ((d.name === thirdPlaceWinner || d.name === thirdPlaceLoser) && visualStep === 5) return `${d.radius * 2.5 * m}px`;
+            if ((d.name === thirdPlaceWinner || d.name === thirdPlaceLoser) && visualStep === 5) return `${d.radius * 2.5}px`;
             return `${d.radius * 2}px`;
         })
         .style('height', d => {
-            const isMobile = window.innerWidth < 600;
-            const m = isMobile ? 0.7 : 1;
-            if (d.isChampion && visualStep === 6) return `${d.radius * 4.5 * m}px`;
-            if ((d.name === championshipWinner || d.name === finalLoser) && visualStep === 5) return `${d.radius * 3 * m}px`;
+            if (d.isChampion && visualStep === 6) return `${d.radius * 4.5}px`;
+            if ((d.name === championshipWinner || d.name === finalLoser) && visualStep === 5) return `${d.radius * 3}px`;
             if (d.isSideStage) {
-                if (d.name === thirdPlaceWinner || d.name === thirdPlaceLoser) return `${d.radius * 2.5 * m}px`;
-                return `${d.radius * 1.2 * m}px`;
+                if (d.name === thirdPlaceWinner || d.name === thirdPlaceLoser) return `${d.radius * 2.5}px`;
+                return `${d.radius * 1.2}px`;
             }
-            if ((d.name === thirdPlaceWinner || d.name === thirdPlaceLoser) && visualStep === 5) return `${d.radius * 2.5 * m}px`;
+            if ((d.name === thirdPlaceWinner || d.name === thirdPlaceLoser) && visualStep === 5) return `${d.radius * 2.5}px`;
             return `${d.radius * 2}px`;
         })
         .style('opacity', d => {
             if (d.name === championshipWinner) return 1;
             if (visualStep === 6) {
-                if (d.name === finalLoser) return 0.9;
-                if (d.name === thirdPlaceWinner) return 0.85;
+                // FINALE podium - clear visibility hierarchy
+                if (d.name === finalLoser) return 0.9; // Runner-up
+                if (d.name === thirdPlaceWinner) return 0.85; // 3rd place
             }
             if (d.name === finalLoser || d.name === thirdPlaceWinner || d.name === thirdPlaceLoser) {
-                return (visualStep === 5) ? 1 : 0.75;
+                return (visualStep === 5) ? 1 : 0.75; // Full opacity in Showdown
             }
             if (d.isSideStage) return 0.7;
             return d.isEliminated ? 0 : 1;
@@ -734,30 +741,6 @@ async function init() {
         dropdownMenu.classList.toggle('open');
         dropdownToggle.classList.toggle('active');
     };
-
-    // Sidebar toggle logic for mobile
-    const menuToggle = document.getElementById('menu-toggle');
-    const sidebar = document.querySelector('.left-sidebar');
-    if (menuToggle && sidebar) {
-        menuToggle.onclick = (e) => {
-            e.stopPropagation();
-            sidebar.classList.toggle('active');
-        };
-
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', (e) => {
-            if (window.innerWidth < 600 && sidebar.classList.contains('active') && !sidebar.contains(e.target)) {
-                sidebar.classList.remove('active');
-            }
-        });
-
-        // Close sidebar when an option is clicked on mobile
-        sidebar.addEventListener('click', (e) => {
-            if (window.innerWidth < 600 && (e.target.closest('.option-btn') || e.target.closest('.group-btn'))) {
-                setTimeout(() => sidebar.classList.remove('active'), 200);
-            }
-        });
-    }
 
     document.getElementById('open-schedule-btn').onclick = () => {
         document.getElementById('schedule-modal').classList.add('active');
