@@ -5,7 +5,8 @@ const state = {
   currentRecipe: null,
   searchTerm: '',
   plan: [],
-  activeCategory: 'All'
+  activeCategory: 'All',
+  checkedIngredients: {} // item-key -> boolean
 };
 
 const dom = {
@@ -201,25 +202,46 @@ function aggregateIngredients() {
     'all-purpose flour': 'Pantry', 'baking powder': 'Pantry', 'salt': 'Pantry', 'sugar': 'Pantry', 'milk': 'Dairy', 'egg': 'Dairy', 'eggs': 'Dairy', 'melted butter': 'Dairy', 'butter': 'Dairy', 'vanilla extract': 'Pantry', 'cheddar cheese': 'Dairy', 'cheese': 'Dairy', 'plain Greek yogurt': 'Dairy', 'Greek yogurt': 'Dairy', 'honey': 'Pantry', 'granola': 'Pantry', 'blueberries': 'Produce', 'banana': 'Produce', 'grapes': 'Produce', 'strawberry jelly': 'Pantry', 'grape jelly': 'Pantry', 'jelly': 'Pantry', 'creamy peanut butter': 'Pantry', 'peanut butter': 'Pantry', 'hummus': 'Deli', 'pita bread': 'Bread', 'cucumber sticks': 'Produce', 'carrot sticks': 'Produce', 'rotini or penne pasta': 'Pantry', 'parmesan cheese': 'Dairy', 'broccoli florets': 'Produce', 'olive oil': 'Pantry', 'lemon juice': 'Produce', 'small flour tortillas': 'Pantry', 'tortilla': 'Pantry', 'canned refried beans': 'Pantry', 'guacamole': 'Produce', 'thick-cut bread': 'Bread', 'bread': 'Bread', 'cinnamon': 'Pantry', 'maple syrup': 'Pantry', 'string cheese': 'Dairy', 'strawberries': 'Produce', 'cheese puffs': 'Pantry', 'pretzels': 'Pantry', 'popcorn': 'Pantry', 'ground beef': 'Meat', 'taco seasoning': 'Pantry', 'lettuce': 'Produce', 'heavy whipping cream': 'Dairy', 'shiitake mushrooms': 'Produce', 'garlic': 'Produce', 'red pepper flakes': 'Pantry', 'lemon': 'Produce', 'penne': 'Pantry'
   };
 
+  const CONSOLIDATION_MAP = {
+    'eggs': 'egg', 'melted butter': 'butter', 'unsalted butter': 'butter',
+    'penne': 'pasta', 'rotini': 'pasta', 'all-purpose flour': 'flour'
+  };
+
   const master = {};
   state.plan.forEach(p => {
     const recipe = RECIPES.find(r => r.id === p.id);
     if (recipe) {
       recipe.ingredients.forEach(ing => {
-        const itemName = ing.item.toLowerCase().trim();
-        const category = Object.keys(CATEGORY_MAP).find(key => itemName.includes(key))
-          ? CATEGORY_MAP[Object.keys(CATEGORY_MAP).find(key => itemName.includes(key))]
+        let name = ing.item.toLowerCase().trim();
+        let unit = ing.unit.toLowerCase().trim();
+
+        // Canonicalize name
+        for (const [key, val] of Object.entries(CONSOLIDATION_MAP)) {
+          if (name.includes(key)) { name = val; break; }
+        }
+
+        // Group salt variants
+        if (name === 'salt') unit = unit.includes('teaspoon') ? 'teaspoon' : '';
+        // Group eggs (ignore 'large', etc)
+        if (name === 'egg') unit = '';
+
+        const category = Object.keys(CATEGORY_MAP).find(key => name.includes(key) || ing.item.toLowerCase().includes(key))
+          ? CATEGORY_MAP[Object.keys(CATEGORY_MAP).find(key => name.includes(key) || ing.item.toLowerCase().includes(key))]
           : 'Other';
-        const key = `${itemName}|${ing.unit.toLowerCase().trim()}`;
-        if (!master[key]) master[key] = { item: ing.item, unit: ing.unit, amount: 0, category };
+
+        const aggregationKey = `${name}|${unit}`;
+        if (!master[aggregationKey]) {
+          master[aggregationKey] = { item: name, unit: unit, amount: 0, category };
+        }
+
         const val = parseFloat(ing.amount);
-        if (!isNaN(val)) master[key].amount += val;
-        else if (!master[key].amount) master[key].amount = ing.amount;
+        if (!isNaN(val)) master[aggregationKey].amount += val;
+        else if (!master[aggregationKey].amount) master[aggregationKey].amount = ing.amount;
       });
     }
   });
 
-  // Group by category
+  // Group by category for rendering
   const grouped = {};
   Object.values(master).forEach(ing => {
     if (!grouped[ing.category]) grouped[ing.category] = [];
@@ -234,6 +256,7 @@ function renderCart() {
     <div class="detail-header">
       <button class="back-btn" onclick="window.backToList()">← Back</button>
       <div class="detail-actions">
+        <button class="action-btn share-btn" style="background: #e1f5fe; color: #0288d1;" onclick="window.shareNeededItems()">📤 Share Needed</button>
         <button class="action-btn share-btn" style="background: #fee2e2; color: #dc2626;" onclick="window.clearPlan()">🗑️ Clear All</button>
         <button class="action-btn print-btn" onclick="window.print()">🖨️ Export PDF</button>
       </div>
@@ -286,9 +309,16 @@ function renderCart() {
             <div class="category-group">
               <h4 class="category-name">${cat}</h4>
               <ul class="shopping-bullets">
-                ${ings.map(ing => `
-                  <li>${ing.item} - <strong>${ing.amount} ${ing.unit}</strong></li>
-                `).join('')}
+                ${ings.map(ing => {
+    const key = `${ing.item}|${ing.unit}`.toLowerCase();
+    const isChecked = state.checkedIngredients[key];
+    return `
+                  <li class="shopping-li ${isChecked ? 'checked' : ''}" onclick="window.toggleIngredient('${key}')">
+                    <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation()">
+                    ${ing.item} - <strong>${ing.amount} ${ing.unit}</strong>
+                  </li>
+                `;
+  }).join('')}
               </ul>
             </div>
           `).join('')}
@@ -321,8 +351,37 @@ window.updatePlanItem = (index, key, value) => { state.plan[index][key] = value;
 window.clearPlan = () => {
   if (confirm("Clear the entire plan?")) {
     state.plan = [];
+    state.checkedIngredients = {};
     render();
   }
+};
+window.toggleIngredient = (key) => {
+  state.checkedIngredients[key] = !state.checkedIngredients[key];
+  render();
+};
+window.shareNeededItems = () => {
+  const masterList = aggregateIngredients();
+  let text = "🛒 Needed Grocery Items:\n\n";
+  let hasItems = false;
+
+  Object.entries(masterList).forEach(([cat, ings]) => {
+    const needed = ings.filter(ing => !state.checkedIngredients[`${ing.item}|${ing.unit}`.toLowerCase()]);
+    if (needed.length > 0) {
+      hasItems = true;
+      text += `[${cat}]\n`;
+      needed.forEach(ing => {
+        text += `- ${ing.item} (${ing.amount} ${ing.unit})\n`;
+      });
+      text += "\n";
+    }
+  });
+
+  if (!hasItems) {
+    alert("Everything is checked off! (or your plan is empty)");
+    return;
+  }
+
+  navigator.clipboard.writeText(text.trim()).then(() => alert('Needed items copied to clipboard!'));
 };
 
 // Shared Reordering Logic
