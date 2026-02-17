@@ -149,6 +149,33 @@
             gap: 0.4rem;
             flex-grow: 1;
             max-width: 600px;
+            max-height: 500px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 0.25rem;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+        }
+
+        .market-pulse::-webkit-scrollbar,
+        .sectors-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .market-pulse::-webkit-scrollbar-track,
+        .sectors-grid::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .market-pulse::-webkit-scrollbar-thumb,
+        .sectors-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
+        .market-pulse::-webkit-scrollbar-thumb:hover,
+        .sectors-grid::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .pulse-card,
@@ -254,6 +281,127 @@
         .sector-heat-alpha {
             font-size: 0.65rem;
             font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Drill-Down Industry Cards */
+        .sector-heat-card {
+            position: relative;
+        }
+
+        .sector-heat-card.has-industries::after {
+            content: '›';
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            transition: transform 0.3s;
+        }
+
+        /* Add Position Button on Cards */
+        .card-add-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 18px;
+            height: 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s;
+            opacity: 0;
+        }
+
+        .pulse-card:hover .card-add-btn,
+        .sector-heat-card:hover .card-add-btn,
+        .industry-card:hover .card-add-btn {
+            opacity: 1;
+        }
+
+        .card-add-btn:hover {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .sector-heat-card.has-industries.expanded::after {
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        .industry-drill-down {
+            grid-column: 1 / -1;
+            display: none;
+            gap: 0.4rem;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-top: -0.4rem;
+            animation: expandDown 0.3s ease-out;
+        }
+
+        .industry-drill-down.visible {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        }
+
+        @keyframes expandDown {
+            from {
+                opacity: 0;
+                transform: scaleY(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scaleY(1);
+            }
+        }
+
+        .industry-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 6px;
+            padding: 0.5rem 0.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            position: relative;
+        }
+
+        .industry-card:hover,
+        .industry-card.active {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .industry-label {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+
+        .industry-price {
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .industry-pct {
+            font-size: 0.6rem;
+            font-weight: 600;
         }
 
         .pulse-info .label {
@@ -599,6 +747,315 @@
             box-shadow: 0 0 8px var(--accent-green);
         }
 
+        /* Portfolio Panel */
+        .portfolio-panel {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .portfolio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .portfolio-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .portfolio-reset {
+            font-size: 0.65rem;
+            color: var(--accent-red);
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .portfolio-reset:hover {
+            opacity: 1;
+        }
+
+        .portfolio-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .portfolio-stat {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 0.5rem;
+        }
+
+        .portfolio-stat-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .portfolio-stat-value {
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .portfolio-stat-value.large {
+            font-size: 1.2rem;
+        }
+
+        .positions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .position-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            padding: 0.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .position-card:hover {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .position-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.4rem;
+        }
+
+        .position-symbol {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .position-close {
+            font-size: 0.7rem;
+            color: var(--accent-red);
+            opacity: 0.6;
+            cursor: pointer;
+            padding: 0.2rem 0.4rem;
+            transition: opacity 0.2s;
+        }
+
+        .position-close:hover {
+            opacity: 1;
+        }
+
+        .position-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.4rem;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+        }
+
+        .position-detail {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .position-detail-label {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.7;
+        }
+
+        .position-detail-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            margin-top: 0.1rem;
+        }
+
+        .position-pnl {
+            grid-column: 1 / -1;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 0.2rem;
+            padding-top: 0.4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .add-position-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 6px;
+            color: var(--accent-blue);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.75rem;
+        }
+
+        .add-position-btn:hover {
+            background: rgba(59, 130, 246, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .empty-portfolio {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        /* Add Position Modal */
+        .add-position-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-position-modal.visible {
+            display: flex;
+        }
+
+        .add-position-content {
+            background: #0a0c10;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 1.5rem;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .side-toggle {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .side-option {
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .side-option.active {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn-primary {
+            background: var(--accent-blue);
+            border: none;
+            color: #fff;
+        }
+
+        .modal-btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .modal-btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-secondary);
+        }
+
+        .modal-btn-secondary:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
         @media (max-width: 1024px) {
             .dashboard-main {
                 grid-template-columns: 1fr;
@@ -650,6 +1107,8 @@
                     <button id="p-equities" class="active" onclick="setPerspective('equities')">EQUITIES</button>
                     <button id="p-sectors" onclick="setPerspective('sectors')">SECTORS</button>
                     <button id="p-rates" onclick="setPerspective('rates')">RATES & BONDS</button>
+                    <button id="p-commodities" onclick="setPerspective('commodities')">COMMODITIES</button>
+                    <button id="p-currencies" onclick="setPerspective('currencies')">CURRENCIES</button>
                 </div>
                 <div class="btn-sep"></div>
                 <button id="toggle-source-btn" onclick="toggleSource()">Go Live</button>
@@ -746,8 +1205,80 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Portfolio Panel -->
+                <div class="portfolio-panel">
+                    <div class="portfolio-header">
+                        <span class="portfolio-title">Paper Portfolio</span>
+                        <span class="portfolio-reset" onclick="resetPortfolio()">Reset</span>
+                    </div>
+
+                    <div class="portfolio-summary">
+                        <div class="portfolio-stat">
+                            <div class="portfolio-stat-label">Total Value</div>
+                            <div class="portfolio-stat-value large" id="portfolio-total-value">$100,000</div>
+                        </div>
+                        <div class="portfolio-stat">
+                            <div class="portfolio-stat-label">Cash</div>
+                            <div class="portfolio-stat-value" id="portfolio-cash">$100,000</div>
+                        </div>
+                        <div class="portfolio-stat">
+                            <div class="portfolio-stat-label">Total P&L</div>
+                            <div class="portfolio-stat-value positive" id="portfolio-pnl">$0.00</div>
+                        </div>
+                        <div class="portfolio-stat">
+                            <div class="portfolio-stat-label">Return</div>
+                            <div class="portfolio-stat-value positive" id="portfolio-return">0.00%</div>
+                        </div>
+                    </div>
+
+                    <div id="positions-container">
+                        <div class="empty-portfolio">
+                            No positions yet.<br>Click "Add Position" to start trading.
+                        </div>
+                    </div>
+
+                    <button class="add-position-btn" onclick="openAddPositionModal()">+ Add Position</button>
+                </div>
             </aside>
         </main>
+    </div>
+
+    <!-- Add Position Modal -->
+    <div class="add-position-modal" id="add-position-modal">
+        <div class="add-position-content">
+            <div class="modal-title">Add Position</div>
+
+            <div class="form-group">
+                <label class="form-label">Symbol</label>
+                <select class="form-select" id="position-symbol">
+                    <option value="">Select a symbol...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Quantity (Shares)</label>
+                <input type="number" class="form-input" id="position-quantity" placeholder="100" min="1">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Side</label>
+                <div class="side-toggle">
+                    <div class="side-option active" id="side-long" onclick="selectSide('long')">Long</div>
+                    <div class="side-option" id="side-short" onclick="selectSide('short')">Short</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="portfolio-stat-label">Estimated Cost</div>
+                <div class="portfolio-stat-value" id="estimated-cost">$0.00</div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-secondary" onclick="closeAddPositionModal()">Cancel</button>
+                <button class="modal-btn modal-btn-primary" onclick="confirmAddPosition()">Add Position</button>
+            </div>
+        </div>
     </div>
 
     <!-- Educational Modal -->
@@ -763,10 +1294,29 @@
     <script>
         const EQUIPMENT = {
             equities: [
+                // US Large Cap
                 { symbol: '^GSPC', label: 'S&P 500', base: 5000 },
-                { symbol: '^IXIC', label: 'Nasdaq 100', base: 16000 },
+                { symbol: '^IXIC', label: 'Nasdaq Composite', base: 16000 },
                 { symbol: '^DJI', label: 'Dow Jones', base: 38000 },
-                { symbol: '^RUT', label: 'Russell 2000', base: 2000 }
+                { symbol: '^RUT', label: 'Russell 2000', base: 2000 },
+                // US Mid/Small Cap
+                { symbol: '^MID', label: 'S&P 400 MidCap', base: 2800 },
+                { symbol: '^SML', label: 'S&P 600 SmallCap', base: 1300 },
+                { symbol: '^W5000', label: 'Wilshire 5000', base: 45000 },
+                { symbol: '^NYA', label: 'NYSE Composite', base: 17500 },
+                // Alternative Weighting
+                { symbol: 'RSP', label: 'S&P Equal Weight', base: 165 },
+                // International
+                { symbol: '^FTSE', label: 'FTSE 100 (UK)', base: 7500 },
+                { symbol: '^GDAXI', label: 'DAX (Germany)', base: 17000 },
+                { symbol: '^FCHI', label: 'CAC 40 (France)', base: 7400 },
+                { symbol: '^N225', label: 'Nikkei 225 (Japan)', base: 37000 },
+                { symbol: '^HSI', label: 'Hang Seng (HK)', base: 17000 },
+                { symbol: '000001.SS', label: 'Shanghai Comp', base: 3000 },
+                { symbol: 'EEM', label: 'MSCI Emerging Mkts', base: 40 },
+                { symbol: 'URTH', label: 'MSCI World', base: 140 },
+                // Volatility
+                { symbol: 'VIX', label: 'Volatility Index', base: 15 }
             ],
             rates: [
                 { symbol: '^TNX', label: '10Y Yield', base: 4.25, isYield: true },
@@ -786,12 +1336,135 @@
                 { symbol: 'XLU', label: 'Utilities', base: 65 },
                 { symbol: 'XLRE', label: 'Real Estate', base: 40 },
                 { symbol: 'XLB', label: 'Materials', base: 80 }
+            ],
+            commodities: [
+                { symbol: 'GLD', label: 'Gold', base: 180 },
+                { symbol: 'SLV', label: 'Silver', base: 22 },
+                { symbol: 'USO', label: 'Crude Oil', base: 70 },
+                { symbol: 'UNG', label: 'Natural Gas', base: 8 },
+                { symbol: 'COPX', label: 'Copper', base: 45 }
+            ],
+            currencies: [
+                { symbol: 'EURUSD', label: 'EUR/USD', base: 1.08, isCurrency: true },
+                { symbol: 'GBPUSD', label: 'GBP/USD', base: 1.26, isCurrency: true },
+                { symbol: 'USDJPY', label: 'USD/JPY', base: 150, isCurrency: true },
+                { symbol: 'USDCHF', label: 'USD/CHF', base: 0.88, isCurrency: true }
+            ],
+            industries: {
+                'XLK': [ // Technology
+                    { symbol: 'SOXX', label: 'Semiconductors', base: 220, parentSector: 'XLK' },
+                    { symbol: 'IGV', label: 'Software', base: 400, parentSector: 'XLK' },
+                    { symbol: 'HACK', label: 'Cybersecurity', base: 55, parentSector: 'XLK' }
+                ],
+                'XLF': [ // Financials
+                    { symbol: 'KBE', label: 'Banks', base: 50, parentSector: 'XLF' },
+                    { symbol: 'KIE', label: 'Insurance', base: 80, parentSector: 'XLF' },
+                    { symbol: 'VNQ', label: 'REITs', base: 85, parentSector: 'XLF' }
+                ],
+                'XLV': [ // Healthcare
+                    { symbol: 'IBB', label: 'Biotech', base: 130, parentSector: 'XLV' },
+                    { symbol: 'IHE', label: 'Pharmaceuticals', base: 280, parentSector: 'XLV' },
+                    { symbol: 'IHI', label: 'Medical Devices', base: 300, parentSector: 'XLV' }
+                ],
+                'XLY': [ // Consumer Discretionary
+                    { symbol: 'XRT', label: 'Retail', base: 65, parentSector: 'XLY' },
+                    { symbol: 'XHB', label: 'Homebuilders', base: 95, parentSector: 'XLY' },
+                    { symbol: 'CARZ', label: 'Autos', base: 45, parentSector: 'XLY' }
+                ],
+                'XLC': [ // Communication
+                    { symbol: 'FDN', label: 'Internet/Social', base: 200, parentSector: 'XLC' },
+                    { symbol: 'VOX', label: 'Telecom', base: 90, parentSector: 'XLC' }
+                ],
+                'XLI': [ // Industrials
+                    { symbol: 'ITA', label: 'Aerospace/Defense', base: 140, parentSector: 'XLI' },
+                    { symbol: 'IYT', label: 'Transportation', base: 65, parentSector: 'XLI' },
+                    { symbol: 'PKB', label: 'Construction', base: 40, parentSector: 'XLI' }
+                ],
+                'XLP': [ // Consumer Staples
+                    { symbol: 'PBJ', label: 'Food & Beverage', base: 40, parentSector: 'XLP' },
+                    { symbol: 'IYK', label: 'Household Products', base: 180, parentSector: 'XLP' }
+                ],
+                'XLE': [ // Energy
+                    { symbol: 'XOP', label: 'Oil & Gas Exploration', base: 130, parentSector: 'XLE' },
+                    { symbol: 'OIH', label: 'Oil Services', base: 280, parentSector: 'XLE' },
+                    { symbol: 'ICLN', label: 'Clean Energy', base: 20, parentSector: 'XLE' }
+                ],
+                'XLU': [ // Utilities
+                    { symbol: 'IDU', label: 'Electric Utilities', base: 110, parentSector: 'XLU' },
+                    { symbol: 'PHO', label: 'Water Utilities', base: 55, parentSector: 'XLU' }
+                ],
+                'XLRE': [ // Real Estate
+                    { symbol: 'REZ', label: 'Residential REITs', base: 70, parentSector: 'XLRE' },
+                    { symbol: 'KBWY', label: 'Commercial REITs', base: 30, parentSector: 'XLRE' }
+                ],
+                'XLB': [ // Materials
+                    { symbol: 'XME', label: 'Metals & Mining', base: 60, parentSector: 'XLB' },
+                    { symbol: 'SLX', label: 'Steel', base: 65, parentSector: 'XLB' }
+                ]
+            },
+            stocks: [
+                // Technology
+                { symbol: 'AAPL', label: 'Apple Inc.', base: 180, sector: 'XLK' },
+                { symbol: 'MSFT', label: 'Microsoft Corp.', base: 420, sector: 'XLK' },
+                { symbol: 'NVDA', label: 'NVIDIA Corp.', base: 880, sector: 'XLK' },
+                { symbol: 'GOOGL', label: 'Alphabet Inc.', base: 145, sector: 'XLK' },
+                { symbol: 'META', label: 'Meta Platforms', base: 485, sector: 'XLC' },
+                { symbol: 'AMZN', label: 'Amazon.com Inc.', base: 175, sector: 'XLY' },
+                { symbol: 'TSLA', label: 'Tesla Inc.', base: 250, sector: 'XLY' },
+                { symbol: 'AMD', label: 'Advanced Micro Devices', base: 165, sector: 'XLK' },
+                { symbol: 'INTC', label: 'Intel Corp.', base: 22, sector: 'XLK' },
+                { symbol: 'CRM', label: 'Salesforce Inc.', base: 280, sector: 'XLK' },
+                // Financials
+                { symbol: 'JPM', label: 'JPMorgan Chase', base: 195, sector: 'XLF' },
+                { symbol: 'BAC', label: 'Bank of America', base: 38, sector: 'XLF' },
+                { symbol: 'GS', label: 'Goldman Sachs', base: 450, sector: 'XLF' },
+                { symbol: 'MS', label: 'Morgan Stanley', base: 105, sector: 'XLF' },
+                { symbol: 'WFC', label: 'Wells Fargo', base: 58, sector: 'XLF' },
+                { symbol: 'BRK-B', label: 'Berkshire Hathaway', base: 420, sector: 'XLF' },
+                { symbol: 'V', label: 'Visa Inc.', base: 280, sector: 'XLF' },
+                // Healthcare
+                { symbol: 'JNJ', label: 'Johnson & Johnson', base: 160, sector: 'XLV' },
+                { symbol: 'UNH', label: 'UnitedHealth Group', base: 520, sector: 'XLV' },
+                { symbol: 'PFE', label: 'Pfizer Inc.', base: 28, sector: 'XLV' },
+                { symbol: 'ABBV', label: 'AbbVie Inc.', base: 175, sector: 'XLV' },
+                { symbol: 'LLY', label: 'Eli Lilly', base: 780, sector: 'XLV' },
+                { symbol: 'MRK', label: 'Merck & Co.', base: 100, sector: 'XLV' },
+                // Energy
+                { symbol: 'XOM', label: 'Exxon Mobil', base: 110, sector: 'XLE' },
+                { symbol: 'CVX', label: 'Chevron Corp.', base: 155, sector: 'XLE' },
+                { symbol: 'COP', label: 'ConocoPhillips', base: 110, sector: 'XLE' },
+                { symbol: 'SLB', label: 'Schlumberger', base: 45, sector: 'XLE' },
+                // Consumer
+                { symbol: 'WMT', label: 'Walmart Inc.', base: 68, sector: 'XLP' },
+                { symbol: 'PG', label: 'Procter & Gamble', base: 165, sector: 'XLP' },
+                { symbol: 'KO', label: 'Coca-Cola Co.', base: 62, sector: 'XLP' },
+                { symbol: 'PEP', label: 'PepsiCo Inc.', base: 170, sector: 'XLP' },
+                { symbol: 'COST', label: 'Costco Wholesale', base: 850, sector: 'XLP' },
+                { symbol: 'NKE', label: 'Nike Inc.', base: 85, sector: 'XLY' },
+                { symbol: 'HD', label: 'Home Depot', base: 380, sector: 'XLY' },
+                { symbol: 'MCD', label: "McDonald's Corp.", base: 295, sector: 'XLY' },
+                // Industrials
+                { symbol: 'BA', label: 'Boeing Co.', base: 175, sector: 'XLI' },
+                { symbol: 'CAT', label: 'Caterpillar Inc.', base: 350, sector: 'XLI' },
+                { symbol: 'GE', label: 'General Electric', base: 165, sector: 'XLI' },
+                { symbol: 'UPS', label: 'United Parcel Service', base: 130, sector: 'XLI' }
             ]
         };
+
 
         let activePerspective = 'equities';
         let activeIndex = EQUIPMENT.equities[0];
         let state = {}; // Stores { symbol: { dataPoints, labels, currentPrice, basePrice } }
+        let expandedSector = null; // Track which sector is currently expanded
+
+        // Portfolio State
+        let portfolio = {
+            cash: 100000,
+            startingCapital: 100000,
+            positions: [], // { id, symbol, label, quantity, entryPrice, entryTime, side: 'long'|'short', sector }
+            nextPositionId: 1
+        };
+
         let chart;
         let isRealData = false;
         let updateInterval;
@@ -804,8 +1477,9 @@
             { desk: "MS RATES", text: "Fed swap markets pricing in a stable terminal rate for now.", impact: "Volatility on the front end of the curve is muted." }
         ];
 
-        // Initialize state for all possible symbols
-        [...EQUIPMENT.equities, ...EQUIPMENT.rates, ...EQUIPMENT.sectors].forEach(idx => {
+        // Initialize state for all possible symbols including industries and stocks
+        const allIndustries = Object.values(EQUIPMENT.industries).flat();
+        [...EQUIPMENT.equities, ...EQUIPMENT.rates, ...EQUIPMENT.sectors, ...EQUIPMENT.commodities, ...EQUIPMENT.currencies, ...allIndustries, ...EQUIPMENT.stocks].forEach(idx => {
             state[idx.symbol] = {
                 dataPoints: [],
                 labels: [],
@@ -813,6 +1487,38 @@
                 basePrice: idx.base
             };
         });
+
+        // Load portfolio from localStorage
+        function loadPortfolio() {
+            const saved = localStorage.getItem('babyBloomerPortfolio');
+            if (saved) {
+                try {
+                    portfolio = JSON.parse(saved);
+                } catch (e) {
+                    console.error('Failed to load portfolio:', e);
+                }
+            }
+            updatePortfolioUI();
+        }
+
+        // Save portfolio to localStorage
+        function savePortfolio() {
+            localStorage.setItem('babyBloomerPortfolio', JSON.stringify(portfolio));
+        }
+
+        // Reset portfolio
+        function resetPortfolio() {
+            if (confirm('Reset portfolio to $100,000 and close all positions?')) {
+                portfolio = {
+                    cash: 100000,
+                    startingCapital: 100000,
+                    positions: [],
+                    nextPositionId: 1
+                };
+                savePortfolio();
+                updatePortfolioUI();
+            }
+        }
 
         function setPerspective(p) {
             activePerspective = p;
@@ -838,6 +1544,16 @@
                 document.getElementById('mean-label').textContent = 'Sector Peer Mean';
                 pulse.style.display = 'none';
                 sectors.style.display = 'grid';
+            } else if (p === 'commodities') {
+                document.getElementById('multiple-label').textContent = 'Price Multiple (P/μ)';
+                document.getElementById('mean-label').textContent = 'Rolling Commodity Mean';
+                pulse.style.display = 'grid';
+                sectors.style.display = 'none';
+            } else if (p === 'currencies') {
+                document.getElementById('multiple-label').textContent = 'FX Multiple (Rate/μ)';
+                document.getElementById('mean-label').textContent = 'Rolling FX Mean';
+                pulse.style.display = 'grid';
+                sectors.style.display = 'none';
             } else {
                 document.getElementById('multiple-label').textContent = 'Price Multiple (P/μ)';
                 document.getElementById('mean-label').textContent = 'Rolling Price Mean';
@@ -856,16 +1572,27 @@
             pulse.innerHTML = '';
             sectorGrid.innerHTML = '';
 
-            EQUIPMENT[activePerspective].forEach(idx => {
+            EQUIPMENT[activePerspective].forEach((idx, index) => {
                 const s = state[idx.symbol];
                 const diff = s.currentPrice - s.basePrice;
                 const pct = (diff / s.basePrice * 100).toFixed(2);
 
                 const card = document.createElement('div');
-                card.className = `${activePerspective === 'sectors' ? 'sector-heat-card' : 'pulse-card'} ${idx.symbol === activeIndex.symbol ? 'active' : ''}`;
-                card.onclick = () => switchIndex(idx);
+                const hasIndustries = activePerspective === 'sectors' && EQUIPMENT.industries[idx.symbol];
+                card.className = `${activePerspective === 'sectors' ? 'sector-heat-card' : 'pulse-card'} ${idx.symbol === activeIndex.symbol ? 'active' : ''} ${hasIndustries ? 'has-industries' : ''} ${expandedSector === idx.symbol ? 'expanded' : ''}`;
+
+                // For sectors with industries, clicking toggles drill-down
+                if (hasIndustries) {
+                    card.onclick = (e) => {
+                        e.stopPropagation();
+                        toggleSectorDrillDown(idx.symbol);
+                    };
+                } else {
+                    card.onclick = () => switchIndex(idx);
+                }
 
                 card.innerHTML = `
+                    <div class="card-add-btn" onclick="openAddPositionModal('${idx.symbol}'); event.stopPropagation();">+</div>
                     <div class="label-row">
                         <span class="symbol">${idx.label}</span>
                         <span class="pct ${pct >= 0 ? 'positive' : 'negative'}">${pct}%</span>
@@ -881,7 +1608,46 @@
 
                 // Draw Sparkline
                 setTimeout(() => drawSparkline(`spark-${idx.symbol.replace(/[^^A-Z0-9]/g, '')}`, s.dataPoints), 0);
+
+                // Add drill-down panel if this sector is expanded
+                if (hasIndustries && expandedSector === idx.symbol) {
+                    const drillDown = document.createElement('div');
+                    drillDown.className = 'industry-drill-down visible';
+
+                    EQUIPMENT.industries[idx.symbol].forEach(industry => {
+                        const indState = state[industry.symbol];
+                        const indDiff = indState.currentPrice - indState.basePrice;
+                        const indPct = (indDiff / indState.basePrice * 100).toFixed(2);
+
+                        const industryCard = document.createElement('div');
+                        industryCard.className = `industry-card ${industry.symbol === activeIndex.symbol ? 'active' : ''}`;
+                        industryCard.onclick = (e) => {
+                            e.stopPropagation();
+                            switchIndex(industry);
+                        };
+
+                        industryCard.innerHTML = `
+                            <div class="card-add-btn" onclick="openAddPositionModal('${industry.symbol}'); event.stopPropagation();">+</div>
+                            <div class="industry-label">${industry.label}</div>
+                            <div class="industry-price">${formatVal(indState.currentPrice, industry)}</div>
+                            <div class="industry-pct ${indPct >= 0 ? 'positive' : 'negative'}">${indPct >= 0 ? '+' : ''}${indPct}%</div>
+                        `;
+
+                        drillDown.appendChild(industryCard);
+                    });
+
+                    sectorGrid.appendChild(drillDown);
+                }
             });
+        }
+
+        function toggleSectorDrillDown(sectorSymbol) {
+            if (expandedSector === sectorSymbol) {
+                expandedSector = null;
+            } else {
+                expandedSector = sectorSymbol;
+            }
+            initUI();
         }
 
         function drawSparkline(canvasId, data) {
@@ -934,7 +1700,15 @@
             chart.data.datasets[0].data = s.dataPoints;
             chart.data.datasets[0].label = activeIndex.label;
 
-            document.getElementById('active-symbol-label').textContent = idx.label;
+            // Show breadcrumb for industries
+            let labelText = idx.label;
+            if (idx.parentSector) {
+                const parentSectorObj = EQUIPMENT.sectors.find(s => s.symbol === idx.parentSector);
+                if (parentSectorObj) {
+                    labelText = `${parentSectorObj.label} › ${idx.label}`;
+                }
+            }
+            document.getElementById('active-symbol-label').textContent = labelText;
 
             // Set chart color based on mode
             if (activePerspective === 'rates') {
@@ -1029,8 +1803,8 @@
         }
 
         const fetchSymbol = async (idx) => {
-            const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(idx.symbol)}?interval=2min&range=1d&includePrePost=false`;
-            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(yahooUrl)}`;
+            const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${idx.symbol}?interval=2min&range=1d&includePrePost=false`;
+            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(yahooUrl)}`;
 
             try {
                 const response = await fetch(proxyUrl);
@@ -1085,7 +1859,9 @@
             const allSymbols = [
                 ...EQUIPMENT.equities,
                 ...EQUIPMENT.rates,
-                ...EQUIPMENT.sectors
+                ...EQUIPMENT.sectors,
+                ...EQUIPMENT.commodities,
+                ...EQUIPMENT.currencies
             ];
 
             let successCount = 0;
@@ -1115,7 +1891,7 @@
             }
         }
         function updateSimulation() {
-            [...EQUIPMENT.equities, ...EQUIPMENT.rates, ...EQUIPMENT.sectors].forEach(idx => {
+            [...EQUIPMENT.equities, ...EQUIPMENT.rates, ...EQUIPMENT.sectors, ...EQUIPMENT.commodities, ...EQUIPMENT.currencies].forEach(idx => {
                 const s = state[idx.symbol];
                 const scale = idx.isYield ? 0.005 : (idx.base * 0.0005);
                 const drift = (Math.random() - 0.498) * scale;
@@ -1141,6 +1917,7 @@
         }
 
         function formatVal(val, idx) {
+            if (idx.isCurrency) return val.toFixed(4);
             if (idx.isYield) return val.toFixed(3) + '%';
             return val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
@@ -1246,11 +2023,11 @@
                 `
             },
             '^IXIC': {
-                title: "Nasdaq 100 Index",
+                title: "Nasdaq Composite Index",
                 body: `
                     <p>The "Innovation Hub." Concentrated in high-growth technology, biotechnology, and retail companies.</p>
                     <h4>The Composition</h4>
-                    <p>Dominated by "The Mag 7" (Apple, Microsoft, Nvidia, etc.). It is highly sensitive to interest rates and productivity shifts.</p>
+                    <p>Includes all stocks listed on the Nasdaq exchange (~3,000 companies). Dominated by tech giants like Apple, Microsoft, and Nvidia.</p>
                 `
             },
             '^DJI': {
@@ -1267,6 +2044,118 @@
                     <p>The "Main Street Pulse." Tracks 2,000 smaller companies that are more focused on the domestic US economy.</p>
                     <h4>Why it matters</h4>
                     <p>Small caps are the "canary in the coal mine." They are often the first to feel a recession and the first to rally in a recovery.</p>
+                `
+            },
+            '^MID': {
+                title: "S&P 400 MidCap Index",
+                body: `
+                    <p>The "Goldilocks Zone." Tracks 400 mid-sized companies that balance growth potential with operational stability.</p>
+                    <h4>Why it matters</h4>
+                    <p>Mid-caps often outperform both large and small caps over long periods, offering a sweet spot of risk and reward.</p>
+                `
+            },
+            '^SML': {
+                title: "S&P 600 SmallCap Index",
+                body: `
+                    <p>The "Pure Small Cap Play." Focuses on 600 smaller US companies with stricter profitability requirements than Russell 2000.</p>
+                    <h4>Why it matters</h4>
+                    <p>More quality-focused than other small cap indexes, requiring positive earnings over the trailing year.</p>
+                `
+            },
+            '^W5000': {
+                title: "Wilshire 5000 Total Market Index",
+                body: `
+                    <p>The "Total US Market." Represents virtually every publicly traded company in the United States.</p>
+                    <h4>Why it matters</h4>
+                    <p>The broadest measure of US equity market performance, capturing large, mid, and small cap stocks.</p>
+                `
+            },
+            '^NYA': {
+                title: "NYSE Composite Index",
+                body: `
+                    <p>The "Original Exchange Tracker." Includes all common stocks listed on the New York Stock Exchange.</p>
+                    <h4>Why it matters</h4>
+                    <p>Provides a comprehensive view of NYSE-listed companies, traditionally more value-oriented than Nasdaq.</p>
+                `
+            },
+            'RSP': {
+                title: "S&P 500 Equal Weight Index",
+                body: `
+                    <p>The "Democratic S&P." Each of the 500 companies gets equal weighting, unlike the cap-weighted S&P 500.</p>
+                    <h4>Why it matters</h4>
+                    <p>Reduces concentration risk from mega-cap tech. Outperforms when market breadth is strong and smaller stocks rally.</p>
+                `
+            },
+            '^FTSE': {
+                title: "FTSE 100 Index (UK)",
+                body: `
+                    <p>The "London Benchmark." Tracks the 100 largest companies listed on the London Stock Exchange.</p>
+                    <h4>Why it matters</h4>
+                    <p>Heavily weighted toward financials, energy, and consumer goods. A key indicator of European economic health.</p>
+                `
+            },
+            '^GDAXI': {
+                title: "DAX Index (Germany)",
+                body: `
+                    <p>The "European Engine." Germany's premier stock index tracking 40 major companies including BMW, Siemens, and SAP.</p>
+                    <h4>Why it matters</h4>
+                    <p>Germany is Europe's largest economy. The DAX is highly sensitive to global manufacturing and export demand.</p>
+                `
+            },
+            '^FCHI': {
+                title: "CAC 40 Index (France)",
+                body: `
+                    <p>The "Parisian Elite." Tracks 40 of the largest French companies including LVMH, L'Oréal, and TotalEnergies.</p>
+                    <h4>Why it matters</h4>
+                    <p>Heavy exposure to luxury goods and energy. A barometer for European consumer confidence and global luxury demand.</p>
+                `
+            },
+            '^N225': {
+                title: "Nikkei 225 Index (Japan)",
+                body: `
+                    <p>The "Tokyo Titan." Japan's most-watched index, tracking 225 large companies including Toyota, Sony, and SoftBank.</p>
+                    <h4>Why it matters</h4>
+                    <p>Price-weighted like the Dow. Highly sensitive to yen strength and global technology demand.</p>
+                `
+            },
+            '^HSI': {
+                title: "Hang Seng Index (Hong Kong)",
+                body: `
+                    <p>The "China Gateway." Tracks major companies listed in Hong Kong, including many Chinese tech giants.</p>
+                    <h4>Why it matters</h4>
+                    <p>A key proxy for Chinese economic growth and Asian market sentiment. Sensitive to US-China relations.</p>
+                `
+            },
+            '000001.SS': {
+                title: "Shanghai Composite Index",
+                body: `
+                    <p>The "Mainland Pulse." Tracks all stocks listed on the Shanghai Stock Exchange, China's primary market.</p>
+                    <h4>Why it matters</h4>
+                    <p>Direct exposure to China's domestic economy. Heavily influenced by government policy and capital controls.</p>
+                `
+            },
+            'EEM': {
+                title: "MSCI Emerging Markets ETF",
+                body: `
+                    <p>The "Global Growth Bet." Provides exposure to emerging market equities across Asia, Latin America, and Eastern Europe.</p>
+                    <h4>Why it matters</h4>
+                    <p>High growth potential but higher volatility. Sensitive to dollar strength, commodity prices, and global risk appetite.</p>
+                `
+            },
+            'URTH': {
+                title: "MSCI World Index ETF",
+                body: `
+                    <p>The "Developed Markets Portfolio." Tracks large and mid-cap stocks across 23 developed countries.</p>
+                    <h4>Why it matters</h4>
+                    <p>Provides diversified global equity exposure. Heavily weighted toward US stocks (~70%) but includes Europe, Japan, and others.</p>
+                `
+            },
+            'VIX': {
+                title: "CBOE Volatility Index",
+                body: `
+                    <p>The "Fear Gauge." Measures expected 30-day volatility based on S&P 500 options pricing.</p>
+                    <h4>Why it matters</h4>
+                    <p>Spikes during market stress. VIX above 20 signals elevated fear; below 15 suggests complacency.</p>
                 `
             },
 
@@ -1488,7 +2377,7 @@
         }
 
         function resetAll() {
-            [...EQUIPMENT.equities, ...EQUIPMENT.rates, ...EQUIPMENT.sectors].forEach(idx => {
+            [...EQUIPMENT.equities, ...EQUIPMENT.rates, ...EQUIPMENT.sectors, ...EQUIPMENT.commodities, ...EQUIPMENT.currencies].forEach(idx => {
                 state[idx.symbol] = {
                     dataPoints: [],
                     labels: [],
@@ -1528,17 +2417,247 @@
             initChart();
             startSimulationMode();
             updateSignalBox();
+            loadPortfolio();
+            populateSymbolDropdown();
 
             // Modal Accessibility: Close on ESC key
             window.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') hideEdu();
+                if (e.key === 'Escape') {
+                    hideEdu();
+                    closeAddPositionModal();
+                }
             });
 
             // Modal Accessibility: Close on clicking overlay
             document.getElementById('edu-modal').addEventListener('click', (e) => {
                 if (e.target.id === 'edu-modal') hideEdu();
             });
+
+            document.getElementById('add-position-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'add-position-modal') closeAddPositionModal();
+            });
+
+            // Update estimated cost when inputs change
+            document.getElementById('position-symbol').addEventListener('change', updateEstimatedCost);
+            document.getElementById('position-quantity').addEventListener('input', updateEstimatedCost);
         };
+
+        // Portfolio Management Functions
+        let selectedSide = 'long';
+
+        function populateSymbolDropdown() {
+            const select = document.getElementById('position-symbol');
+            const allSymbols = [
+                { group: 'Indexes', items: EQUIPMENT.equities },
+                { group: 'Sectors', items: EQUIPMENT.sectors },
+                { group: 'Industries', items: Object.values(EQUIPMENT.industries).flat() },
+                { group: 'Stocks', items: EQUIPMENT.stocks }
+            ];
+
+            allSymbols.forEach(group => {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = group.group;
+                group.items.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.symbol;
+                    option.textContent = `${item.symbol} - ${item.label}`;
+                    optgroup.appendChild(option);
+                });
+                select.appendChild(optgroup);
+            });
+        }
+
+        function selectSide(side) {
+            selectedSide = side;
+            document.getElementById('side-long').classList.toggle('active', side === 'long');
+            document.getElementById('side-short').classList.toggle('active', side === 'short');
+        }
+
+        function updateEstimatedCost() {
+            const symbol = document.getElementById('position-symbol').value;
+            const quantity = parseInt(document.getElementById('position-quantity').value) || 0;
+
+            if (symbol && quantity > 0 && state[symbol]) {
+                const cost = state[symbol].currentPrice * quantity;
+                document.getElementById('estimated-cost').textContent = `$${cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            } else {
+                document.getElementById('estimated-cost').textContent = '$0.00';
+            }
+        }
+
+        function openAddPositionModal(symbol = null) {
+            document.getElementById('add-position-modal').classList.add('visible');
+            if (symbol) {
+                const select = document.getElementById('position-symbol');
+                select.value = symbol;
+                updateEstimatedCost();
+            }
+        }
+
+        function closeAddPositionModal() {
+            document.getElementById('add-position-modal').classList.remove('visible');
+            document.getElementById('position-symbol').value = '';
+            document.getElementById('position-quantity').value = '';
+            selectedSide = 'long';
+            selectSide('long');
+            updateEstimatedCost();
+        }
+
+        function confirmAddPosition() {
+            const symbol = document.getElementById('position-symbol').value;
+            const quantity = parseInt(document.getElementById('position-quantity').value) || 0;
+
+            if (!symbol || quantity <= 0) {
+                alert('Please select a symbol and enter a valid quantity.');
+                return;
+            }
+
+            const symbolData = [...EQUIPMENT.equities, ...EQUIPMENT.sectors, ...Object.values(EQUIPMENT.industries).flat(), ...EQUIPMENT.stocks]
+                .find(s => s.symbol === symbol);
+
+            if (!symbolData || !state[symbol]) {
+                alert('Invalid symbol selected.');
+                return;
+            }
+
+            const entryPrice = state[symbol].currentPrice;
+            const cost = entryPrice * quantity;
+
+            if (cost > portfolio.cash) {
+                alert(`Insufficient cash. You have $${portfolio.cash.toLocaleString()} but need $${cost.toLocaleString()}.`);
+                return;
+            }
+
+            // Check for existing position with same symbol and side
+            const existingPos = portfolio.positions.find(p => p.symbol === symbol && p.side === selectedSide);
+
+            if (existingPos) {
+                // Consolidate with weighted average price
+                const totalCost = (existingPos.quantity * existingPos.entryPrice) + (quantity * entryPrice);
+                const newQuantity = existingPos.quantity + quantity;
+                existingPos.entryPrice = totalCost / newQuantity;
+                existingPos.quantity = newQuantity;
+            } else {
+                // Add new position
+                portfolio.positions.push({
+                    id: portfolio.nextPositionId++,
+                    symbol: symbol,
+                    label: symbolData.label,
+                    quantity: quantity,
+                    entryPrice: entryPrice,
+                    entryTime: new Date().toISOString(),
+                    side: selectedSide,
+                    sector: symbolData.sector || null
+                });
+            }
+
+            portfolio.cash -= cost;
+            savePortfolio();
+            updatePortfolioUI();
+            closeAddPositionModal();
+        }
+
+        function closePosition(positionId) {
+            const position = portfolio.positions.find(p => p.id === positionId);
+            if (!position) return;
+
+            const currentPrice = state[position.symbol].currentPrice;
+            const pnl = calculatePositionPnL(position, currentPrice);
+            const proceeds = (position.entryPrice * position.quantity) + pnl;
+
+            portfolio.cash += proceeds;
+            portfolio.positions = portfolio.positions.filter(p => p.id !== positionId);
+
+            savePortfolio();
+            updatePortfolioUI();
+        }
+
+        function calculatePositionPnL(position, currentPrice) {
+            const priceDiff = currentPrice - position.entryPrice;
+            const multiplier = position.side === 'long' ? 1 : -1;
+            return priceDiff * position.quantity * multiplier;
+        }
+
+        function updatePortfolioUI() {
+            let totalPositionValue = 0;
+            let totalPnL = 0;
+
+            // Update positions list
+            const container = document.getElementById('positions-container');
+
+            if (portfolio.positions.length === 0) {
+                container.innerHTML = '<div class="empty-portfolio">No positions yet.<br>Click "Add Position" to start trading.</div>';
+            } else {
+                const positionsList = document.createElement('div');
+                positionsList.className = 'positions-list';
+
+                portfolio.positions.forEach(position => {
+                    const currentPrice = state[position.symbol].currentPrice;
+                    const pnl = calculatePositionPnL(position, currentPrice);
+                    const pnlPct = (pnl / (position.entryPrice * position.quantity)) * 100;
+                    const positionValue = (position.entryPrice * position.quantity) + pnl;
+
+                    totalPositionValue += positionValue;
+                    totalPnL += pnl;
+
+                    const card = document.createElement('div');
+                    card.className = 'position-card';
+                    card.onclick = () => {
+                        const symbolData = [...EQUIPMENT.equities, ...EQUIPMENT.sectors, ...Object.values(EQUIPMENT.industries).flat(), ...EQUIPMENT.stocks]
+                            .find(s => s.symbol === position.symbol);
+                        if (symbolData) switchIndex(symbolData);
+                    };
+
+                    card.innerHTML = `
+                        <div class="position-header">
+                            <span class="position-symbol">${position.symbol} ${position.side === 'short' ? '(SHORT)' : ''}</span>
+                            <span class="position-close" onclick="event.stopPropagation(); closePosition(${position.id})">✕</span>
+                        </div>
+                        <div class="position-details">
+                            <div class="position-detail">
+                                <span class="position-detail-label">Qty</span>
+                                <span class="position-detail-value">${position.quantity}</span>
+                            </div>
+                            <div class="position-detail">
+                                <span class="position-detail-label">Entry</span>
+                                <span class="position-detail-value">$${position.entryPrice.toFixed(2)}</span>
+                            </div>
+                            <div class="position-detail">
+                                <span class="position-detail-label">Current</span>
+                                <span class="position-detail-value">$${currentPrice.toFixed(2)}</span>
+                            </div>
+                            <div class="position-detail">
+                                <span class="position-detail-label">Value</span>
+                                <span class="position-detail-value">$${positionValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                            </div>
+                            <div class="position-pnl ${pnl >= 0 ? 'positive' : 'negative'}">
+                                P&L: $${pnl.toFixed(2)} (${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(2)}%)
+                            </div>
+                        </div>
+                    `;
+
+                    positionsList.appendChild(card);
+                });
+
+                container.innerHTML = '';
+                container.appendChild(positionsList);
+            }
+
+            // Update summary
+            const totalValue = portfolio.cash + totalPositionValue;
+            const totalReturn = ((totalValue - portfolio.startingCapital) / portfolio.startingCapital) * 100;
+
+            document.getElementById('portfolio-total-value').textContent = `$${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('portfolio-cash').textContent = `$${portfolio.cash.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+            const pnlEl = document.getElementById('portfolio-pnl');
+            pnlEl.textContent = `$${totalPnL.toFixed(2)}`;
+            pnlEl.className = `portfolio-stat-value ${totalPnL >= 0 ? 'positive' : 'negative'}`;
+
+            const returnEl = document.getElementById('portfolio-return');
+            returnEl.textContent = `${totalReturn >= 0 ? '+' : ''}${totalReturn.toFixed(2)}%`;
+            returnEl.className = `portfolio-stat-value ${totalReturn >= 0 ? 'positive' : 'negative'}`;
+        }
     </script>
 </body>
 
