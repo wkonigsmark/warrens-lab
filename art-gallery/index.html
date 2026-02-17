@@ -4,139 +4,302 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Gallery</title>
+  <title>The Gallery | Warren's Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      background-color: #f4f4f4;
-      /* Added a light background for better contrast */
+    :root {
+      --bg-color: #0f0f11;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      --accent-color: #6366f1;
+      /* Indigo */
+      --glass-bg: rgba(15, 15, 17, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.05);
     }
 
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-color);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Header / Nav */
     .menu {
-      background-color: #333;
-      color: #fff;
-      padding: 10px;
       position: sticky;
       top: 0;
       z-index: 1000;
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 1rem 2rem;
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 1rem;
       justify-content: center;
+      align-items: center;
+    }
+
+    .menu-title {
+      width: 100%;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
     }
 
     .menu a {
-      color: #fff;
+      color: var(--text-secondary);
       text-decoration: none;
-      padding: 5px 10px;
-      background-color: #555;
-      border-radius: 5px;
-      transition: background-color 0.2s;
+      padding: 0.5rem 1rem;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      border: 1px solid transparent;
     }
 
     .menu a:hover {
-      background-color: #777;
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
     }
 
+    .menu a.active {
+      background: var(--accent-color);
+      color: white;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+    }
+
+    /* Container */
+    #gallery-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Section */
+    .gallery-section {
+      margin-bottom: 4rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text-primary);
+      display: inline-block;
+    }
+
+    /* Grid */
     .gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      /* Increased min-width for better visibility */
-      gap: 15px;
-      padding: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
     }
 
+    /* Card */
     .gallery-item {
-      text-align: center;
-      background: white;
-      padding: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .img-container {
+      width: 100%;
+      height: 250px;
+      /* Fixed height for uniformity */
       border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.2);
+      margin-bottom: 1rem;
+      position: relative;
     }
 
     .gallery-item img {
       width: 100%;
-      height: auto;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: transform 0.2s;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
       display: block;
-      /* Removes bottom space */
     }
 
-    .gallery-item img:hover {
+    .gallery-item:hover img {
       transform: scale(1.05);
-      /* Slightly reduced scale for subtler effect */
     }
 
     .gallery-item p {
-      margin-top: 10px;
-      font-size: 0.9em;
-      color: #555;
-    }
-
-    h2 {
-      padding: 20px;
       margin: 0;
-      font-weight: bold;
-      color: #333;
-      /* Darker color for headings on light bg */
-      border-bottom: 2px solid #ddd;
-      margin-bottom: 10px;
-    }
-
-    h1 {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 400;
       text-align: center;
-      padding: 20px;
-      background-color: #222;
-      color: white;
-      margin: 0;
     }
 
-    /* Media query for mobile */
-    @media (max-width: 768px) {
-      .gallery {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    /* Fullscreen Overlay fallback */
+    .gallery-item a {
+      display: block;
+      text-decoration: none;
     }
 
-    /* Style for the back-to-top button */
+    /* Loading & Error */
+    #loading {
+      text-align: center;
+      padding: 4rem;
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .error-message {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 8px;
+      color: #f87171;
+      max-width: 600px;
+      margin: 2rem auto;
+    }
+
+    /* Back to Top */
     #back-to-top {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 10px 20px;
-      background-color: #333;
+      bottom: 2rem;
+      right: 2rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--accent-color);
       color: white;
       border: none;
-      border-radius: 5px;
-      font-size: 16px;
       cursor: pointer;
-      display: none;
-      /* Hide by default */
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      pointer-events: none;
       z-index: 1001;
     }
 
+    #back-to-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
     #back-to-top:hover {
-      background-color: #555;
+      transform: translateY(-2px);
+      background: #4f46e5;
+    }
+
+    @media (max-width: 768px) {
+      .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .img-container {
+        height: 180px;
+      }
+
+      .menu {
+        padding: 1rem;
+      }
     }
   </style>
 </head>
 
 <body>
-  <h1>Image Gallery</h1>
-  <div class="menu" id="menu"></div>
+  <nav class="menu" id="menu">
+    <div class="menu-title">THE GALLERY</div>
+    <!-- Menu items will be injected here -->
+  </nav>
+
+  <div id="loading">Loading artwork...</div>
   <div id="gallery-container"></div>
 
-  <!-- Back to top button -->
-  <button id="back-to-top" onclick="scrollToTop()">Back to Top</button>
+  <button id="back-to-top" onclick="scrollToTop()">↑</button>
 
   <script>
     const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQCO6dPZsGsk6Ivym0ypjSejef8Zc5pJn_8yT0eTjntBVrre6Re6vzcRsY5hwV9jQvyHRcnDM8bsOK_/pub?gid=1772542183&single=true&output=csv";
-    // const defaultThumbnail = "path/to/default-thumbnail.jpg"; // Commented out as not provided
+
+    // Fallback data in case CSV is empty or fails
+    const mockData = [
+      {
+        folderName: 'Abstract Series',
+        fileName: 'Ethereal Waves',
+        thumbnailUrl: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?auto=format&fit=crop&q=80&w=600',
+        imageUrl: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?auto=format&fit=crop&q=80&w=1600'
+      },
+      {
+        folderName: 'Abstract Series',
+        fileName: 'Golden Hour flows',
+        thumbnailUrl: 'https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&q=80&w=600',
+        imageUrl: 'https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&q=80&w=1600'
+      },
+      {
+        folderName: 'Modern Architecture',
+        fileName: 'Geometric Blue',
+        thumbnailUrl: 'https://images.unsplash.com/photo-1515405295579-ba7f9f92f4b3?auto=format&fit=crop&q=80&w=600',
+        imageUrl: 'https://images.unsplash.com/photo-1515405295579-ba7f9f92f4b3?auto=format&fit=crop&q=80&w=1600'
+      },
+      {
+        folderName: 'Modern Architecture',
+        fileName: 'Urban Lines',
+        thumbnailUrl: 'https://images.unsplash.com/photo-1486744360530-ca98492d03ec?auto=format&fit=crop&q=80&w=600',
+        imageUrl: 'https://images.unsplash.com/photo-1486744360530-ca98492d03ec?auto=format&fit=crop&q=80&w=1600'
+      },
+      {
+        folderName: 'Digital Scapes',
+        fileName: 'Neon Cyberpunk',
+        thumbnailUrl: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=600',
+        imageUrl: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=1600'
+      }
+    ];
 
     async function fetchCsv() {
       try {
@@ -144,36 +307,43 @@
         if (!response.ok) throw new Error("Failed to fetch CSV");
         const csvText = await response.text();
 
-        // Parse CSV manually (splitting by new lines)
         const rows = csvText.split("\n").map(row => row.trim()).filter(row => row);
-        const headers = rows[0].split(","); // Assuming first row is header if needed, but logic below uses strict indices
 
-        return rows.slice(1).map(row => {
-          // Handle potential commas within quotes if needed, 
-          // but simple split is used in provided code. 
-          // Regex for better CSV parsing: /,(?=(?:(?:[^"]*"){2})*[^"]*$)/
+        // Skip header if it exists and looks like a header
+        const startIndex = rows[0].toLowerCase().includes("folder") ? 1 : 0;
+
+        return rows.slice(startIndex).map(row => {
+          // Simple split, handles basic CSV. For complex CSVs with commas in values, a better parser is needed.
           const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(col => col.replace(/^"|"$/g, '').trim());
 
           return {
-            folderName: cols[0],
-            fileName: cols[1],
+            folderName: cols[0] || 'Uncategorized',
+            fileName: cols[1] || 'Untitled',
             thumbnailUrl: cols[2],
             imageUrl: cols[3]
           };
         });
       } catch (error) {
-        console.error("Error fetching CSV:", error);
-        document.getElementById('gallery-container').innerHTML = `<p style='text-align:center; color:red;'>Error loading gallery: ${error.message}</p>`;
+        console.warn("CSV Fetch failed, using mock data:", error);
         return [];
       }
     }
 
     async function renderGallery() {
-      const data = await fetchCsv();
+      let data = await fetchCsv();
+      let isMock = false;
+
+      // Use mock data if CSV is empty
+      if (data.length === 0) {
+        data = mockData;
+        isMock = true;
+      }
+
+      document.getElementById('loading').style.display = 'none';
 
       // Group data by folder
       const groupedData = data.reduce((acc, item) => {
-        if (item.folderName && item.thumbnailUrl && item.imageUrl) {
+        if (item.thumbnailUrl && item.imageUrl) {
           if (!acc[item.folderName]) acc[item.folderName] = [];
           acc[item.folderName].push(item);
         }
@@ -184,20 +354,31 @@
       const galleryContainer = document.getElementById("gallery-container");
 
       if (Object.keys(groupedData).length === 0) {
-        galleryContainer.innerHTML = "<p style='text-align:center; padding:20px;'>No images found or error loading data.</p>";
+        galleryContainer.innerHTML = "<div class='error-message'><p>No valid images found in the dataset.</p></div>";
         return;
       }
 
+      // If we are showing mock data, add a notice
+      if (isMock) {
+        const notice = document.createElement('div');
+        notice.style.cssText = 'text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9rem; font-style: italic;';
+        notice.innerHTML = 'Displaying demo content. <br>Populate the Google Sheet to see your own images.';
+        galleryContainer.prepend(notice);
+      }
+
       Object.keys(groupedData).forEach(folder => {
+        const folderId = folder.replace(/\s+/g, '-').toLowerCase();
+
         // Add folder to menu
         const menuItem = document.createElement("a");
-        menuItem.href = `#${folder.replace(/\s+/g, '-')}`; // Create ID-friendly anchor
+        menuItem.href = `#${folderId}`;
         menuItem.textContent = folder;
         menu.appendChild(menuItem);
 
         // Create folder section
         const section = document.createElement("div");
-        section.id = folder.replace(/\s+/g, '-');
+        section.className = 'gallery-section';
+        section.id = folderId;
         section.innerHTML = `<h2>${folder}</h2>`;
 
         const gallery = document.createElement("div");
@@ -207,35 +388,43 @@
           const galleryItem = document.createElement("div");
           galleryItem.className = "gallery-item";
 
-          // Use a placeholder if thumbnail is missing? Code assumes it exists based on filter
-          const thumb = item.thumbnailUrl;
-
           galleryItem.innerHTML = `
-                        <a href="${item.imageUrl}" target="_blank">
-                            <img src="${thumb}" alt="${item.fileName}" loading="lazy">
-                        </a>
-                        <p>${item.fileName.replace(/_/g, ' ')}</p>
-                    `;
+                <a href="${item.imageUrl}" target="_blank">
+                    <div class="img-container">
+                        <img src="${item.thumbnailUrl}" alt="${item.fileName}" loading="lazy">
+                    </div>
+                    <p>${item.fileName.replace(/_/g, ' ')}</p>
+                </a>
+            `;
           gallery.appendChild(galleryItem);
         });
 
         section.appendChild(gallery);
         galleryContainer.appendChild(section);
       });
+
+      // Smooth scroll for nav links
+      document.querySelectorAll('.menu a').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          document.querySelector(targetId).scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      });
     }
 
-    // Scroll to the top of the page when the button is clicked
     function scrollToTop() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Show the back-to-top button when the user scrolls down
     window.addEventListener('scroll', function () {
       const button = document.getElementById("back-to-top");
       if (window.scrollY > 300) {
-        button.style.display = "block";
+        button.classList.add('visible');
       } else {
-        button.style.display = "none";
+        button.classList.remove('visible');
       }
     });
 
