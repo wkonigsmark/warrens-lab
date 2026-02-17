@@ -1030,21 +1030,12 @@
 
         const fetchSymbol = async (idx) => {
             const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(idx.symbol)}?interval=2min&range=1d&includePrePost=false`;
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(yahooUrl)}`;
+            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(yahooUrl)}`;
 
             try {
                 const response = await fetch(proxyUrl);
                 if (!response.ok) throw new Error(`Proxy error: ${response.status}`);
-                const proxyData = await response.json();
-
-                if (!proxyData || !proxyData.contents) throw new Error("Empty proxy response from AllOrigins");
-
-                let data;
-                try {
-                    data = JSON.parse(proxyData.contents);
-                } catch (e) {
-                    throw new Error("Malformed JSON from Yahoo/Proxy");
-                }
+                const data = await response.json();
 
                 if (!data || !data.chart || !data.chart.result) {
                     if (data.chart && data.chart.error) {
@@ -1089,6 +1080,7 @@
             status.textContent = "Live Stream: Connecting...";
             status.style.color = "var(--accent-blue)";
             note.style.opacity = "0.5";
+            pushToFeed("SYSTEM", "Initiating handshake with external proxy...", "Requesting CORS-cleared socket to Yahoo Finance.");
 
             const allSymbols = [
                 ...EQUIPMENT.equities,
@@ -1110,6 +1102,7 @@
                 isRealData = true;
                 document.getElementById('toggle-source-btn').textContent = "Simulation Mode";
                 document.getElementById('toggle-source-btn').classList.add('active-source');
+                pushToFeed("SYSTEM", "Live Connectivity Established.", `Synchronized ${successCount}/${allSymbols.length} market assets.`);
                 updateUI();
                 switchIndex(activeIndex);
             } else {
@@ -1117,6 +1110,7 @@
                 status.style.color = "var(--accent-red)";
                 note.textContent = "(Check browser console for details)";
                 note.style.opacity = "0.8";
+                pushToFeed("BLOOMBERG", "External data pipe failed.", "Handshake rejection detected. Falling back to simulation.");
                 setTimeout(() => { if (!isRealData) toggleSource(); }, 3000); // Fallback to sim
             }
         }
