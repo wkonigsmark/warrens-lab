@@ -523,3 +523,61 @@ body {
         transform: scale(1);
     }
 }
+
+/* Vocabulary Modal Styles */
+.vocab-content {
+    width: 600px;
+    max-width: 95%;
+}
+
+.vocab-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.vocab-option {
+    background: #f8f9ff;
+    border: 3px solid #b5c1fb;
+    border-radius: 15px;
+    width: 120px;
+    height: 120px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+}
+
+.vocab-option svg {
+    width: 100%;
+    height: 100%;
+}
+
+.vocab-option:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.vocab-option.correct {
+    border-color: #a8e063;
+    background: #e8f5e9;
+    transform: scale(1.1);
+}
+
+.vocab-option.incorrect {
+    border-color: #ff6b6b;
+    background: #ffebee;
+    animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    50% { transform: translateX(10px); }
+    75% { transform: translateX(-10px); }
+}

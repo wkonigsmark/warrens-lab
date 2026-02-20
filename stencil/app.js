@@ -103,6 +103,37 @@ const LETTER_PATHS = {
     'Z': [[[0.15, 0], [0.85, 0]], [[0.85, 0], [0.15, 1]], [[0.15, 1], [0.85, 1]]]
 };
 
+const LOWERCASE_PATHS = {
+    'a': [generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI), [[0.85, 0.5], [0.85, 1]]],
+    'b': [[[0.15, 0], [0.15, 1]], generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI)],
+    'c': [[[0.85, 0.6], [0.7, 0.55], [0.5, 0.5], [0.3, 0.55], [0.15, 0.75], [0.3, 0.95], [0.5, 1.0], [0.7, 0.95], [0.85, 0.9]]],
+    'd': [[[0.85, 0], [0.85, 1]], generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI)],
+    'e': [[[0.15, 0.75], [0.85, 0.75]], [[0.85, 0.75], [0.7, 0.55], [0.5, 0.5], [0.25, 0.6], [0.15, 0.8], [0.25, 0.95], [0.5, 1], [0.8, 0.9]]],
+    'f': [[[0.7, 0.1], [0.5, 0.0], [0.3, 0.1], [0.3, 1]], [[0.1, 0.5], [0.6, 0.5]]],
+    'g': [generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI), [[0.85, 0.6], [0.85, 1.3]], generateArc(0.55, 1.3, 0.3, 0.2, 0, Math.PI)],
+    'h': [[[0.15, 0], [0.15, 1]], generateArc(0.45, 0.75, 0.3, 0.25, Math.PI, 2 * Math.PI), [[0.75, 0.75], [0.75, 1]]],
+    'i': [[[0.5, 0.5], [0.5, 1]], [[0.5, 0.25], [0.5, 0.27]]],
+    'j': [[[0.5, 0.5], [0.5, 1.3]], generateArc(0.35, 1.3, 0.15, 0.2, 0, Math.PI), [[0.5, 0.25], [0.5, 0.27]]],
+    'k': [[[0.15, 0], [0.15, 1]], [[0.8, 0.5], [0.15, 0.75]], [[0.25, 0.7], [0.8, 1]]],
+    'l': [[[0.5, 0], [0.5, 1]]],
+    'm': [[[0.15, 0.5], [0.15, 1]], generateArc(0.35, 0.75, 0.2, 0.25, Math.PI, 2 * Math.PI), [[0.55, 0.75], [0.55, 1]], generateArc(0.75, 0.75, 0.2, 0.25, Math.PI, 2 * Math.PI), [[0.95, 0.75], [0.95, 1]]],
+    'n': [[[0.2, 0.5], [0.2, 1]], generateArc(0.5, 0.75, 0.3, 0.25, Math.PI, 2 * Math.PI), [[0.8, 0.75], [0.8, 1]]],
+    'o': [generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI, 24)],
+    'p': [[[0.15, 0.5], [0.15, 1.5]], generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI)],
+    'q': [generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI), [[0.85, 0.5], [0.85, 1.5]]],
+    'r': [[[0.2, 0.5], [0.2, 1]], generateArc(0.45, 0.75, 0.25, 0.25, Math.PI, 1.5 * Math.PI)],
+    's': [[[0.85, 0.6], [0.75, 0.52], [0.5, 0.5], [0.3, 0.55], [0.3, 0.65], [0.5, 0.75], [0.75, 0.85], [0.8, 0.95], [0.5, 1], [0.2, 0.9]]],
+    't': [[[0.5, 0.1], [0.5, 0.9], [0.6, 1.0], [0.8, 1.0]], [[0.2, 0.5], [0.8, 0.5]]],
+    'u': [[[0.2, 0.5], [0.2, 0.8]], generateArc(0.5, 0.8, 0.3, 0.2, Math.PI, 0), [[0.8, 0.5], [0.8, 1]]],
+    'v': [[[0.2, 0.5], [0.5, 1]], [[0.5, 1], [0.8, 0.5]]],
+    'w': [[[0.1, 0.5], [0.3, 1]], [[0.3, 1], [0.5, 0.75]], [[0.5, 0.75], [0.7, 1]], [[0.7, 1], [0.9, 0.5]]],
+    'x': [[[0.2, 0.5], [0.8, 1]], [[0.8, 0.5], [0.2, 1]]],
+    'y': [[[0.15, 0.5], [0.5, 0.9]], [[0.85, 0.5], [0.35, 1.5]]],
+    'z': [[[0.15, 0.5], [0.85, 0.5]], [[0.85, 0.5], [0.15, 1]], [[0.15, 1], [0.85, 1]]]
+};
+
+Object.assign(LETTER_PATHS, LOWERCASE_PATHS);
+
 // Educational "Sight Words" (Dolch List + Common Nouns)
 // Grouped roughly by Length/Difficulty for potential leveling
 const WORD_BANKS = {
@@ -119,6 +150,21 @@ const VALID_WORDS = [
     ...WORD_BANKS.level3,
     ...WORD_BANKS.level4
 ].filter(w => w.split('').every(c => LETTER_PATHS[c])); // Safety filter
+
+const VOCABULARY_IMAGES = {
+    'CAT': `<svg viewBox="0 0 100 100"><path d="M20 80 L20 40 L10 20 L40 40 L60 40 L90 20 L80 40 L80 80 Z" fill="#2c3e50"/></svg>`,
+    'DOG': `<svg viewBox="0 0 100 100"><path d="M30 80 L30 50 L10 50 L10 30 L40 20 L60 20 L90 30 L90 50 L70 50 L70 80 Z" fill="#2c3e50"/></svg>`,
+    'TREE': `<svg viewBox="0 0 100 100"><rect x="40" y="50" width="20" height="40" fill="#2c3e50"/><circle cx="50" cy="35" r="25" fill="#2c3e50"/></svg>`,
+    'SUN': `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#2c3e50"/><path d="M50 10 L50 20 M50 80 L50 90 M10 50 L20 50 M80 50 L90 50 M22 22 L29 29 M78 78 L71 71 M22 78 L29 71 M78 22 L71 29" stroke="#2c3e50" stroke-width="6" stroke-linecap="round"/></svg>`,
+    'CAR': `<svg viewBox="0 0 100 100"><path d="M20 60 L20 40 L35 25 L65 25 L80 40 L80 60 Z" fill="#2c3e50"/><circle cx="35" cy="65" r="10" fill="#2c3e50"/><circle cx="65" cy="65" r="10" fill="#2c3e50"/></svg>`,
+    'BUG': `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="25" fill="#2c3e50"/><path d="M50 10 L50 25 M30 80 L40 70 M70 80 L60 70" stroke="#2c3e50" stroke-width="4"/><circle cx="50" cy="20" r="10" fill="#2c3e50"/></svg>`,
+    'BAT': `<svg viewBox="0 0 100 100"><path d="M50 40 C 30 20 10 30 10 50 C 30 50 40 40 50 60 C 60 40 70 50 90 50 C 90 30 70 20 50 40 Z" fill="#2c3e50"/></svg>`,
+    'BED': `<svg viewBox="0 0 100 100"><rect x="10" y="40" width="10" height="40" fill="#2c3e50"/><rect x="80" y="50" width="10" height="30" fill="#2c3e50"/><rect x="20" y="50" width="60" height="20" fill="#2c3e50"/><rect x="25" y="40" width="20" height="10" fill="#2c3e50" rx="5"/></svg>`,
+    'HAT': `<svg viewBox="0 0 100 100"><rect x="30" y="30" width="40" height="40" fill="#2c3e50"/><path d="M10 70 L90 70" stroke="#2c3e50" stroke-width="15" stroke-linecap="round"/></svg>`,
+    'CUP': `<svg viewBox="0 0 100 100"><path d="M30 20 L70 20 L60 70 L40 70 Z" fill="#2c3e50"/><path d="M70 30 A 15 15 0 0 1 70 60" fill="none" stroke="#2c3e50" stroke-width="8"/></svg>`,
+    'COW': `<svg viewBox="0 0 100 100"><rect x="30" y="30" width="40" height="40" fill="#2c3e50" rx="10"/><circle cx="20" cy="20" r="10" fill="#2c3e50"/><circle cx="80" cy="20" r="10" fill="#2c3e50"/><rect x="40" y="50" width="20" height="10" fill="#fff" rx="5"/></svg>`,
+    'BOX': `<svg viewBox="0 0 100 100"><rect x="20" y="40" width="60" height="50" fill="#2c3e50"/><rect x="15" y="20" width="70" height="20" fill="#2c3e50"/></svg>`
+};
 
 // Configuration
 const CONFIG = {
@@ -158,6 +204,13 @@ const DIFFICULTY_CONFIGS = {
 };
 
 const SETTING_OPTIONS = {
+    mode: {
+        title: "Game Mode",
+        options: [
+            { label: 'Spelling', value: 'spelling', short: 'SPL' },
+            { label: 'Vocabulary', value: 'vocabulary', short: 'VOC' }
+        ]
+    },
     level: {
         title: "Difficulty Level",
         options: [
@@ -179,6 +232,7 @@ const SETTING_OPTIONS = {
 };
 
 const SETTINGS = {
+    mode: 'spelling',
     level: 'level2',
     words: 3,
     rounds: 3
@@ -202,10 +256,14 @@ function init() {
     document.getElementById('newWordBtn').addEventListener('click', forceNextWord);
 
     // Setting Button Listeners
-    document.getElementById('levelBtn').addEventListener('click', () => showSettingsOverlay('level'));
-    document.getElementById('wordsBtn').addEventListener('click', () => showSettingsOverlay('words'));
-    document.getElementById('roundsBtn').addEventListener('click', () => showSettingsOverlay('rounds'));
-    document.getElementById('closeOverlay').addEventListener('click', hideSettingsOverlay);
+    // Add touchstart to ensure early capture on tablets before modal messes with event propagation
+    ['click', 'touchstart'].forEach(evt => {
+        document.getElementById('modeBtn').addEventListener(evt, (e) => { e.preventDefault(); showSettingsOverlay('mode'); });
+        document.getElementById('levelBtn').addEventListener(evt, (e) => { e.preventDefault(); showSettingsOverlay('level'); });
+        document.getElementById('wordsBtn').addEventListener(evt, (e) => { e.preventDefault(); showSettingsOverlay('words'); });
+        document.getElementById('roundsBtn').addEventListener(evt, (e) => { e.preventDefault(); showSettingsOverlay('rounds'); });
+        document.getElementById('closeOverlay').addEventListener(evt, (e) => { e.preventDefault(); hideSettingsOverlay(); });
+    });
 
     applyDifficulty(); // Initial apply
 
@@ -225,10 +283,15 @@ function init() {
 }
 
 function syncSettingsToUI() {
+    const modeBtn = document.getElementById('modeBtn');
     const levelBtn = document.getElementById('levelBtn');
     const wordsBtn = document.getElementById('wordsBtn');
     const roundsBtn = document.getElementById('roundsBtn');
 
+    if (modeBtn) {
+        const modeOpt = SETTING_OPTIONS.mode.options.find(o => o.value === SETTINGS.mode);
+        modeBtn.textContent = modeOpt ? modeOpt.short : 'SPL';
+    }
     if (levelBtn) {
         const levelOpt = SETTING_OPTIONS.level.options.find(o => o.value === SETTINGS.level);
         levelBtn.textContent = levelOpt ? levelOpt.short : 'BEG';
@@ -264,7 +327,12 @@ function showSettingsOverlay(type) {
         btn.className = 'option-btn';
         if (SETTINGS[type] === opt.value) btn.classList.add('active');
         btn.textContent = opt.label;
-        btn.onclick = () => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            selectSetting(type, opt);
+        };
+        btn.ontouchstart = (e) => {
+            e.preventDefault();
             selectSetting(type, opt);
         };
         grid.appendChild(btn);
@@ -288,8 +356,9 @@ function selectSetting(type, opt) {
 
     if (type === 'level') {
         applyDifficulty();
-        if (!GAME_STATE.hasStarted) startNewWord();
+        if (!GAME_STATE.hasStarted) startNewWord(); // Safe to change mid-word if not started
     } else {
+        // Mode, words, or rounds changed - Force a hard reset of current progress
         resetGame();
     }
 }
@@ -312,7 +381,9 @@ function startNewWord() {
     const selectedLevel = SETTINGS.level;
 
     let eligibleWords = [];
-    if (selectedLevel === 'all' || !WORD_BANKS[selectedLevel]) {
+    if (SETTINGS.mode === 'vocabulary') {
+        eligibleWords = Object.keys(VOCABULARY_IMAGES);
+    } else if (selectedLevel === 'all' || !WORD_BANKS[selectedLevel]) {
         eligibleWords = VALID_WORDS;
     } else {
         eligibleWords = WORD_BANKS[selectedLevel];
@@ -332,6 +403,10 @@ function startNewWord() {
         }
     } else {
         newWord = eligibleWords[0];
+    }
+
+    if (['level3', 'level4'].includes(selectedLevel)) {
+        newWord = newWord.toLowerCase();
     }
 
     GAME_STATE.word = newWord;
@@ -921,7 +996,11 @@ function completeLetter() {
     resetForNewLetter();
 
     if (GAME_STATE.letterIndex >= GAME_STATE.word.length) {
-        setTimeout(completeWord, 800);
+        if (SETTINGS.mode === 'vocabulary') {
+            setTimeout(showVocabularyTest, 800);
+        } else {
+            setTimeout(completeWord, 800);
+        }
     }
 }
 
@@ -1033,4 +1112,64 @@ function drawStartBeacon() {
     ctx.fillStyle = `rgba(118, 75, 162, 0.8)`;
     ctx.fill();
     ctx.restore();
+}
+
+// Vocabulary Feature
+function showVocabularyTest() {
+    const word = GAME_STATE.word;
+    const vocabModal = document.getElementById('vocabModal');
+    const vocabImages = document.getElementById('vocabImages');
+
+    // Clear previous images
+    vocabImages.innerHTML = '';
+
+    // Get distractors
+    const allWords = Object.keys(VOCABULARY_IMAGES);
+    const distractors = allWords.filter(w => w !== word);
+
+    // Shuffle distractors
+    for (let i = distractors.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [distractors[i], distractors[j]] = [distractors[j], distractors[i]];
+    }
+
+    // Select 2 or 3 distractors for a total of 3 or 4 choices
+    const numChoices = Math.min(4, allWords.length);
+    const selectedWords = [word, ...distractors.slice(0, numChoices - 1)];
+
+    // Shuffle selected words
+    for (let i = selectedWords.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [selectedWords[i], selectedWords[j]] = [selectedWords[j], selectedWords[i]];
+    }
+
+    // Create elements
+    selectedWords.forEach(w => {
+        const btn = document.createElement('button');
+        btn.className = 'vocab-option';
+        btn.innerHTML = VOCABULARY_IMAGES[w];
+        btn.onclick = () => handleVocabSelection(w, word, btn);
+        vocabImages.appendChild(btn);
+    });
+
+    // Show modal
+    vocabModal.classList.remove('hidden');
+}
+
+function handleVocabSelection(selectedWord, correctWord, btnElement) {
+    if (selectedWord === correctWord) {
+        // Success
+        btnElement.classList.add('correct');
+        playLockSound();
+        setTimeout(() => {
+            document.getElementById('vocabModal').classList.add('hidden');
+            completeWord();
+        }, 800);
+    } else {
+        // Incorrect
+        btnElement.classList.add('incorrect');
+        setTimeout(() => {
+            btnElement.classList.remove('incorrect');
+        }, 400); // Wait for shake animation to finish
+    }
 }
