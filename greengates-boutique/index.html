@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greengates Financial Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- PapaParse for robust CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Navigation (Mobile friendly) -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <img id="sidebar-logo" src="assets/gg-boutique.png" alt="Green Gates" class="logo-image">
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-view="dashboard"><i class="ph ph-squares-four"></i> Dashboard</li>
+                <li data-view="uncategorized">
+                    <i class="ph ph-warning-circle"></i> Needs Review
+                    <span id="uncategorized-badge" class="badge hidden">0</span>
+                </li>
+                <li data-view="transactions"><i class="ph ph-receipt"></i> Transactions</li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-titles">
+                    <h1 id="page-title">Greengates Business</h1>
+                    <p class="subtitle">Financial overview & P&L</p>
+                </div>
+                <!-- Filters Container -->
+                <div class="filters-container">
+                    <!-- Business vs Family Toggle -->
+                    <div class="entity-toggle-container">
+                        <div class="entity-toggle">
+                            <input type="radio" id="toggle-business" name="entity" value="business" checked>
+                            <label for="toggle-business"><i class="ph ph-briefcase"></i> Greengates</label>
+
+                            <input type="radio" id="toggle-family" name="entity" value="family">
+                            <label for="toggle-family"><i class="ph ph-house"></i> Family</label>
+                        </div>
+                    </div>
+
+                    <!-- Date Range Filter -->
+                    <div class="date-filter-container">
+                        <select id="date-preset" class="date-preset-select">
+                            <option value="custom">Custom Range</option>
+                            <option value="mtd">Month To Date</option>
+                            <option value="ytd">Year To Date</option>
+                            <option value="last-year">Last Year</option>
+                            <option value="lytd">Last Year to Date</option>
+                            <option value="2-years-ago">2 Years Ago</option>
+                            <option value="2-years-ago-td">2 Years Ago to Date</option>
+                            <option value="all-time">All Time</option>
+                        </select>
+                        <div class="date-input-group">
+                            <label for="start-date">From:</label>
+                            <input type="date" id="start-date">
+                        </div>
+                        <div class="date-input-group">
+                            <label for="end-date">To:</label>
+                            <input type="date" id="end-date">
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="loader" id="loader">
+                <div class="spinner"></div>
+                <p>Syncing transactions...</p>
+            </div>
+
+            <!-- Dashboard View -->
+            <div id="view-dashboard" class="view active">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon inflow"><i class="ph ph-currency-dollar"></i></div>
+                        <div class="kpi-details">
+                            <h3>Revenue</h3>
+                            <p id="kpi-revenue" class="value">$0.00</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon net"><i class="ph ph-chart-bar"></i></div>
+                        <div class="kpi-details">
+                            <h3>Gross Profit</h3>
+                            <p id="kpi-gross" class="value">$0.00</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card highlight">
+                        <div class="kpi-icon outflow"><i class="ph ph-scales"></i></div>
+                        <div class="kpi-details">
+                            <h3>Net Operating Income</h3>
+                            <p id="kpi-net" class="value">$0.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Income Chart -->
+                <div class="panel chart-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h2 id="chart-title">Monthly Income</h2>
+                            <p class="chart-subtitle" id="chart-subtitle">Loading...</p>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="income-chart"></canvas>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- P&L Statement -->
+                    <div class="panel pnl-panel">
+                        <div class="panel-header">
+                            <h2>P&amp;L Statement</h2>
+                            <div class="pnl-mode-toggle" id="business-pnl-toggle">
+                                <input type="radio" id="pnl-boutique" name="pnl-mode" value="boutique" checked>
+                                <label for="pnl-boutique">Boutique</label>
+                                <input type="radio" id="pnl-overall" name="pnl-mode" value="overall">
+                                <label for="pnl-overall">Overall</label>
+                            </div>
+                            <div class="pnl-mode-toggle hidden" id="family-pnl-toggle">
+                                <input type="radio" id="pnl-family" name="pnl-family-mode" value="family" checked>
+                                <label for="pnl-family">Family</label>
+                                <input type="radio" id="pnl-bmi" name="pnl-family-mode" value="bmi">
+                                <label for="pnl-bmi">BMI</label>
+                            </div>
+                        </div>
+                        <div class="panel-content" id="pnl-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Recent Transactions -->
+                    <div class="panel recent-transactions">
+                        <div class="panel-header">
+                            <h2>Recent Transactions</h2>
+                            <button class="btn-text" onclick="switchView('transactions')">View All</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-tbody">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Uncategorized View -->
+            <div id="view-uncategorized" class="view hidden">
+                <div class="panel">
+                    <div class="panel-header warning-header">
+                        <div>
+                            <h2><i class="ph-fill ph-warning"></i> Action Required: Missing Categories</h2>
+                            <p>These transactions need to be categorized in your Tiller sheet to reflect on the P&amp;L.
+                            </p>
+                        </div>
+                        <button id="copy-uncategorized-btn" class="copy-btn">
+                            <i class="ph ph-clipboard-text"></i> Copy to Clipboard
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>Account</th>
+                                </tr>
+                            </thead>
+                            <tbody id="uncategorized-tbody">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions View -->
+            <div id="view-transactions" class="view hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>All Transactions</h2>
+                        <div class="search-box">
+                            <i class="ph ph-magnifying-glass"></i>
+                            <input type="text" id="search-transactions" placeholder="Search description...">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Account</th>
+                                    <th class="align-right">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="all-transactions-tbody">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
