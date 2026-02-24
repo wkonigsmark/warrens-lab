@@ -283,6 +283,25 @@ function applyDatePreset(preset) {
             start = new Date(y, 0, 1);
             end = today;
             break;
+        case 'last-365':
+            // Rolling 365 days back from today
+            start = new Date(today);
+            start.setDate(start.getDate() - 365);
+            end = today;
+            break;
+        case 'ttm': {
+            // Trailing 12 complete months — exclude current month
+            // End: last day of previous month
+            const ttmEnd = new Date(y, m, 0); // day 0 of current month = last day of prev month
+            // Start: 1st of month 12 months before ttmEnd's month
+            const ttmStartMonth = ttmEnd.getMonth() - 11; // may be negative
+            const ttmStartYear = ttmEnd.getFullYear() + Math.floor(ttmStartMonth / 12);
+            const ttmStartMonthNorm = ((ttmStartMonth % 12) + 12) % 12;
+            const ttmStart = new Date(ttmStartYear, ttmStartMonthNorm, 1);
+            start = ttmStart;
+            end = ttmEnd;
+            break;
+        }
         case 'last-year':
             start = new Date(y - 1, 0, 1);
             end = new Date(y - 1, 11, 31);
