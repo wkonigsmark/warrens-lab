@@ -104,6 +104,7 @@ const FAMILY_PNL_SCHEMA = {
         { type: 'line', category: 'Paycheck', label: 'Paycheck', sign: 1, isIncome: true },
         { type: 'line', category: 'Interest Accrued', label: 'Interest Accrued', sign: 1, isIncome: true },
         { type: 'line', category: 'Wageworks Reimbursement', label: 'Wageworks Reimbursement', sign: 1, isIncome: true },
+        { type: 'line', category: 'Household Misc Income', label: 'Misc Income', sign: 1, isIncome: true },
         { type: 'subtotal', label: 'Total Income' },
 
         { type: 'section', label: 'Essential Expenses' },
@@ -476,11 +477,19 @@ function processData(txData, bsData) {
         let cat = item['Category'] ? item['Category'].trim() : '';
 
         // Apply Income Split Mapping
+        const rawAccount = item['Account'] ? item['Account'].trim() : '';
+        const isBurnmarkChecking = rawAccount.toLowerCase().includes('burnmark') && rawAccount.toLowerCase().includes('checking');
+
         if (cat === 'burnmark Income') {
             if (lowercaseDesc.includes('lightspeed')) {
+                // POS income always goes to Burnmark Boutique regardless of account
                 cat = 'burnmark Boutique Income';
-            } else {
+            } else if (isBurnmarkChecking) {
+                // Art income deposited into Burnmark Checking = business art income
                 cat = 'burnmark Art Income';
+            } else {
+                // Art income deposited elsewhere = family misc income
+                cat = 'Household Misc Income';
             }
         }
 
