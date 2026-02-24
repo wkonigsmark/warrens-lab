@@ -331,19 +331,24 @@ function setupEventListeners() {
             const businessToggle = document.getElementById('business-pnl-toggle');
             const familyToggle = document.getElementById('family-pnl-toggle');
 
-            // update title and logo, show correct P&L sub-toggle
-            const titleEl = document.getElementById('page-title');
+            // Always update the sidebar logo on toggle
+            if (currentAccountFilter === 'business') {
+                sidebarLogo.src = 'assets/gg-boutique.png';
+                sidebarLogo.alt = 'Green Gates';
+            } else {
+                sidebarLogo.src = 'assets/house-konigsmark.png';
+                sidebarLogo.alt = 'Family';
+            }
+
+            // Update title and P&L sub-toggle visibility only when on dashboard
             if (activeView === 'dashboard') {
+                const titleEl = document.getElementById('page-title');
                 if (currentAccountFilter === 'business') {
                     titleEl.textContent = 'Greengates Business';
-                    sidebarLogo.src = 'assets/gg-boutique.png';
-                    sidebarLogo.alt = 'Green Gates';
                     businessToggle.classList.remove('hidden');
                     familyToggle.classList.add('hidden');
                 } else {
                     titleEl.textContent = 'Family Finances';
-                    sidebarLogo.src = 'assets/house-konigsmark.png';
-                    sidebarLogo.alt = 'Family';
                     businessToggle.classList.add('hidden');
                     familyToggle.classList.remove('hidden');
                 }
