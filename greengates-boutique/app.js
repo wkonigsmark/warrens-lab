@@ -1,5 +1,5 @@
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8E5_1hM-ujhknGpkSX2zPno8Oikg_c3aMTo5TaUpCUeFWkx5Dp0IYAPYkAvt1_TjEd0dOzzHXnWMT/pub?gid=1256593101&single=true&output=csv";
-
+const BALANCE_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8E5_1hM-ujhknGpkSX2zPno8Oikg_c3aMTo5TaUpCUeFWkx5Dp0IYAPYkAvt1_TjEd0dOzzHXnWMT/pub?gid=398321353&single=true&output=csv";
 // Category Override Logic Maps
 const ART_COGS_KEYWORDS = [
     "Sagebrook",
@@ -20,6 +20,7 @@ const ART_COGS_KEYWORDS = [
 
 // App State
 let allTransactions = [];
+let allBalances = [];
 let filteredTransactions = [];
 let activeView = 'dashboard';
 let currentAccountFilter = 'business';
@@ -169,7 +170,8 @@ const loader = document.getElementById('loader');
 const viewDashboard = document.getElementById('view-dashboard');
 const viewUncategorized = document.getElementById('view-uncategorized');
 const viewTransactions = document.getElementById('view-transactions');
-const navLinks = document.querySelectorAll('.nav-links li');
+const viewBalances = document.getElementById('view-balances');
+const navLinks = document.querySelectorAll('.nav-links li[data-view]');
 const entityRadios = document.querySelectorAll('input[name="entity"]');
 const startDateInput = document.getElementById('start-date');
 const endDateInput = document.getElementById('end-date');
@@ -192,8 +194,25 @@ const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
-        minimumFractionDigits: 2
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
     }).format(amount);
+};
+
+const formatCurrencyAbbreviated = (amount, decimalsForMillions = 1) => {
+    let isNeg = amount < 0;
+    let abs = Math.abs(amount);
+    let str = "";
+    if (abs >= 1000000) {
+        let val = (abs / 1000000).toFixed(decimalsForMillions);
+        if (decimalsForMillions === 1) val = val.replace(/\.0$/, '');
+        str = '$' + val + 'm';
+    } else if (abs >= 1000) {
+        str = '$' + (abs / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+    } else {
+        str = '$' + abs.toFixed(0);
+    }
+    return isNeg ? '-' + str : str;
 };
 
 // Parse raw amount string like " ($394.86)" or "$1,031.76 " into float
@@ -396,12 +415,14 @@ function switchView(viewName) {
     viewDashboard.classList.toggle('hidden', viewName !== 'dashboard');
     viewUncategorized.classList.toggle('hidden', viewName !== 'uncategorized');
     viewTransactions.classList.toggle('hidden', viewName !== 'transactions');
+    viewBalances.classList.toggle('hidden', viewName !== 'balances');
 
     // Update title
     const titles = {
         'dashboard': 'Dashboard',
         'uncategorized': 'Needs Review',
-        'transactions': 'All Transactions'
+        'transactions': 'All Transactions',
+        'balances': 'Balance Sheet'
     };
     document.getElementById('page-title').textContent = titles[viewName];
 }
@@ -411,25 +432,39 @@ function loadData() {
     loader.style.display = 'flex';
     viewDashboard.classList.add('hidden');
 
-    Papa.parse(SHEET_URL, {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        complete: function (results) {
-            processData(results.data);
-            loader.style.display = 'none';
-            viewDashboard.classList.remove('hidden');
-        },
-        error: function (err) {
-            console.error("Error fetching CSV:", err);
-            loader.innerHTML = `<p style="color:var(--danger)">Failed to load data. Please check the spreadsheet link.</p>`;
-        }
+    Promise.all([
+        new Promise((resolve, reject) => {
+            Papa.parse(SHEET_URL, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: resolve,
+                error: reject
+            });
+        }),
+        new Promise((resolve, reject) => {
+            Papa.parse(BALANCE_SHEET_URL, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: resolve,
+                error: reject
+            });
+        })
+    ]).then(([txResults, bsResults]) => {
+        processData(txResults.data, bsResults.data);
+        loader.style.display = 'none';
+        viewDashboard.classList.remove('hidden');
+    }).catch(err => {
+        console.error("Error fetching CSV:", err);
+        loader.innerHTML = `<p style="color:var(--danger)">Failed to load data. Please check the spreadsheet link.</p>`;
     });
 }
+const normalizeAccountName = (acc) => (acc || '').replace(/\s*\(xxxx[a-z0-9]+\)\s*$/i, '').trim().toLowerCase();
 
-function processData(data) {
+function processData(txData, bsData) {
     // Cleaning and formatting the raw data
-    allTransactions = data.map(item => {
+    allTransactions = txData.map(item => {
         // Parse date for proper filtering
         let pDate = null;
         if (item['Date']) {
@@ -464,6 +499,17 @@ function processData(data) {
             account: item['Account'] ? item['Account'].trim() : 'Unknown'
         };
     }).filter(item => item.date && item.description); // filter out empty rows
+
+    // Parse Balance Sheet
+    allBalances = (bsData || []).map(item => {
+        return {
+            account: item['Account'] || '',
+            name: normalizeAccountName(item['Account']),
+            updated: item['Updated'] || '',
+            amount: parseAmount(item['Amount']),
+            type: item['Balance Sheet'] || ''
+        };
+    }).filter(item => item.account !== '');
 
     // Initialize filter state from DOM
     const checkedRadio = document.querySelector('input[name="entity"]:checked');
@@ -624,6 +670,13 @@ function updateDashboard() {
             !BALANCE_SHEET_CATEGORIES.has(t.category);
     });
     renderRecentTransactions(dashboardTransactions);
+
+    // Render Balance Sheet and Liquid Cash Chart (Family View Only or Always)
+    // To keep it clean, we'll render it if currentAccountFilter is 'family' or just show it all the time.
+    // The user asked for "a clear section of the dashboard" so we can just render it.
+    renderBalanceSheet();
+    renderCashChart();
+    renderRetirementChart();
 }
 
 // Helper: build a category totals object from filteredTransactions using a predicate
@@ -651,28 +704,76 @@ const CHART_META = {
     }
 };
 
-function buildMonthlyIncome(schema) {
+function buildMonthlyMetrics(schema) {
     // Collect all income category names from the active schema
     const incomeCategories = new Set(
         schema.filter(row => row.isIncome).map(row => row.category)
     );
+    const allLineCategories = new Set(
+        schema.filter(row => row.type === 'line').map(row => row.category)
+    );
 
-    const monthly = {};
+    const monthlyIncome = {};
+    const monthlyNet = {};
+    let minDate = null;
+    let maxDate = null;
+
     filteredTransactions.forEach(t => {
-        if (!incomeCategories.has(t.category)) return;
         if (!t.parsedDate) return;
+
+        // We only care about transactions that match the current schema's categories
+        if (!allLineCategories.has(t.category)) return;
+
+        const timestamp = t.parsedDate.getTime();
+        if (!minDate || timestamp < minDate.getTime()) minDate = new Date(timestamp);
+        if (!maxDate || timestamp > maxDate.getTime()) maxDate = new Date(timestamp);
+
         const key = `${t.parsedDate.getFullYear()}-${String(t.parsedDate.getMonth() + 1).padStart(2, '0')}`;
-        if (!monthly[key]) monthly[key] = 0;
-        monthly[key] += t.amount;
+
+        // Track Net Profit
+        if (!monthlyNet[key]) monthlyNet[key] = 0;
+        monthlyNet[key] += t.amount;
+
+        // Track Income ONLY
+        if (incomeCategories.has(t.category)) {
+            if (!monthlyIncome[key]) monthlyIncome[key] = 0;
+            monthlyIncome[key] += t.amount;
+        }
     });
 
-    const sortedKeys = Object.keys(monthly).sort();
+    const sortedKeys = [];
+    if (minDate && maxDate) {
+        let curr = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+        const end = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
+        while (curr <= end) {
+            sortedKeys.push(`${curr.getFullYear()}-${String(curr.getMonth() + 1).padStart(2, '0')}`);
+            curr.setMonth(curr.getMonth() + 1);
+        }
+    }
+
+    const movingAvgs = [];
+    const incomes = [];
+
+    sortedKeys.forEach((key, index) => {
+        incomes.push(monthlyIncome[key] || 0);
+        let sum = 0;
+        let count = 0;
+        // Average over last 6 months (up to 6)
+        for (let i = Math.max(0, index - 5); i <= index; i++) {
+            sum += monthlyIncome[sortedKeys[i]] || 0;
+            count++;
+        }
+        movingAvgs.push(sum / count);
+    });
+
     return {
         labels: sortedKeys.map(k => {
             const [yr, mo] = k.split('-');
             return new Date(yr, mo - 1).toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
         }),
-        values: sortedKeys.map(k => monthly[k])
+        incomes,
+        movingAvgs,
+        latestMA: movingAvgs.length > 0 ? movingAvgs[movingAvgs.length - 1] : 0
     };
 }
 
@@ -681,13 +782,20 @@ function renderIncomeChart(schema) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
-    const { labels, values } = buildMonthlyIncome(schema);
+    const { labels, incomes, movingAvgs, latestMA } = buildMonthlyMetrics(schema);
 
     // Dynamic chart title/subtitle
     const mode = currentAccountFilter === 'business' ? pnlMode : familyPnlMode;
     const meta = CHART_META[currentAccountFilter][mode];
     document.getElementById('chart-title').textContent = meta.title;
     document.getElementById('chart-subtitle').textContent = meta.subtitle;
+
+    // Dynamic KPI Update
+    const kpiDisplay = document.getElementById('chart-kpi-value');
+    if (kpiDisplay) {
+        kpiDisplay.textContent = formatCurrency(latestMA);
+        kpiDisplay.className = 'value ' + (latestMA >= 0 ? 'positive' : 'negative');
+    }
 
     // Gradient fill
     const makeGradient = (chartCtx, chartArea) => {
@@ -699,7 +807,7 @@ function renderIncomeChart(schema) {
 
     const datasetConfig = {
         label: 'Income',
-        data: values,
+        data: incomes,
         borderColor: '#3fb950',
         backgroundColor: (context) => {
             const chart = context.chart;
@@ -714,19 +822,36 @@ function renderIncomeChart(schema) {
         pointBorderColor: 'transparent',
         tension: 0.4,
         fill: true,
+        order: 2
+    };
+
+    const maDatasetConfig = {
+        label: '6mo MA Revenue',
+        data: movingAvgs,
+        borderColor: '#e2b340',
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        pointBackgroundColor: '#e2b340',
+        pointBorderColor: 'transparent',
+        tension: 0.4,
+        borderDash: [5, 5],
+        fill: false,
+        order: 1
     };
 
     if (chartInstance) {
-        // Smooth update — no full re-create
+        // Smooth update
         chartInstance.data.labels = labels;
-        chartInstance.data.datasets[0].data = values;
+        chartInstance.data.datasets = [datasetConfig, maDatasetConfig];
         chartInstance.update('active');
         return;
     }
 
     chartInstance = new Chart(ctx, {
         type: 'line',
-        data: { labels, datasets: [datasetConfig] },
+        data: { labels, datasets: [datasetConfig, maDatasetConfig] },
         options: {
             responsive: true,
             maintainAspectRatio: false,
@@ -741,7 +866,7 @@ function renderIncomeChart(schema) {
                     bodyColor: '#e6edf3',
                     padding: 10,
                     callbacks: {
-                        label: (ctx) => '  ' + formatCurrency(ctx.raw)
+                        label: (ctx) => ' ' + ctx.dataset.label + ': ' + formatCurrency(ctx.raw)
                     }
                 }
             },
@@ -895,7 +1020,10 @@ function renderAllTransactions(searchTerm = '') {
 
     let displayList = filteredTransactions;
     if (searchTerm) {
-        displayList = displayList.filter(t => t.description.toLowerCase().includes(searchTerm));
+        displayList = displayList.filter(t =>
+            t.description.toLowerCase().includes(searchTerm) ||
+            (t.category && t.category.toLowerCase().includes(searchTerm))
+        );
     }
 
     displayList.forEach(t => {
@@ -916,6 +1044,481 @@ function renderAllTransactions(searchTerm = '') {
         tbody.appendChild(tr);
     });
 }
+window.toggleBsSection = function (sectionClass, toggleElement) {
+    toggleElement.classList.toggle('expanded');
+    const rows = document.querySelectorAll('.' + sectionClass);
+    rows.forEach(row => {
+        row.classList.toggle('bs-hidden');
+    });
+};
 
-// Start app
-document.addEventListener('DOMContentLoaded', init);
+function renderBalanceSheet() {
+    const container = document.getElementById('balance-sheet-container');
+    const bsDateEl = document.getElementById('bs-date');
+    if (!container || !bsDateEl) return;
+
+    let totalLiquid = 0;
+
+    // Sort balances by amount descending 
+    let sortedBalances = [...allBalances].sort((a, b) => b.amount - a.amount);
+
+    // Group into Assets and Liabilities
+    let assets = sortedBalances.filter(a => a.type === 'Asset' && !a.name.includes('retirement') && !a.name.includes('ira') && !a.name.includes('401k') && !a.name.includes('accumulation plan') && !a.name.includes('rsu'));
+    let retirement = sortedBalances.filter(a => a.type === 'Asset' && (a.name.includes('retirement') || a.name.includes('ira') || a.name.includes('401k') || a.name.includes('accumulation plan') || a.name.includes('rsu')));
+    let liabilities = sortedBalances.filter(a => a.type === 'Liability');
+
+    let totalAssets = assets.reduce((sum, a) => sum + a.amount, 0);
+    let totalRetirement = retirement.reduce((sum, a) => sum + a.amount, 0);
+    let totalLiabilities = liabilities.reduce((sum, a) => sum + a.amount, 0);
+
+    // Family Equity
+    let familyEquity = (totalAssets + totalRetirement) - totalLiabilities;
+
+    // Grab the latest 'Updated' datestring
+    let latestUpdate = allBalances.length > 0 ? allBalances[0].updated : 'N/A';
+    bsDateEl.textContent = `As of ${latestUpdate}`;
+
+    let html = `
+        <table class="pnl-table" style="border-collapse: collapse; width: 100%;">
+            <tbody>
+    `;
+
+    // 1. Total Liquid Assets
+    html += `
+        <tr class="pnl-row-subtotal bs-toggle" onclick="toggleBsSection('bs-liquid', this)">
+            <td><i class="ph-fill ph-caret-right bs-icon"></i> Total Liquid Assets</td>
+            <td class="pnl-positive align-right">${formatCurrency(totalAssets)}</td>
+        </tr>
+    `;
+
+    assets.forEach(a => {
+        let isLiquid = a.name.includes('checking') || a.name.includes('savings');
+        if (isLiquid) totalLiquid += a.amount;
+
+        let label = a.account;
+        if (isLiquid) label += ' <span style="font-size:10px; color:var(--text-muted);">(Liquid)</span>';
+
+        html += `
+            <tr class="pnl-row-line bs-detail-row bs-hidden bs-liquid">
+                <td>${label}</td>
+                <td class="align-right ${a.amount >= 0 ? 'pnl-positive' : 'pnl-negative'}">${formatCurrency(a.amount)}</td>
+            </tr>
+        `;
+    });
+
+    // 2. Total Liabilities
+    html += `
+        <tr class="pnl-row-subtotal bs-toggle" onclick="toggleBsSection('bs-liab', this)">
+            <td><i class="ph-fill ph-caret-right bs-icon"></i> Total Liabilities</td>
+            <td class="pnl-negative align-right">${formatCurrency(totalLiabilities)}</td>
+        </tr>
+    `;
+
+    liabilities.forEach(a => {
+        html += `
+            <tr class="pnl-row-line bs-detail-row bs-hidden bs-liab">
+                <td>${a.account}</td>
+                <td class="align-right pnl-negative">${formatCurrency(a.amount)}</td>
+            </tr>
+        `;
+    });
+
+    // 3. Cash Available
+    let cashAvailable = totalAssets - totalLiabilities;
+    html += `
+        <tr class="pnl-row-total" style="background:var(--bg-surface-hover);">
+            <td>Cash Available</td>
+            <td class="align-right ${cashAvailable >= 0 ? 'pnl-positive' : 'pnl-negative'}">${formatCurrency(cashAvailable)}</td>
+        </tr>
+    `;
+
+    // 4. Total Retirement Assets
+    html += `
+        <tr class="pnl-row-subtotal bs-toggle" onclick="toggleBsSection('bs-ret', this)">
+            <td><i class="ph-fill ph-caret-right bs-icon"></i> Total Retirement</td>
+            <td class="pnl-positive align-right">${formatCurrency(totalRetirement)}</td>
+        </tr>
+    `;
+
+    retirement.forEach(a => {
+        html += `
+            <tr class="pnl-row-line bs-detail-row bs-hidden bs-ret">
+                <td>${a.account}</td>
+                <td class="align-right pnl-positive">${formatCurrency(a.amount)}</td>
+            </tr>
+        `;
+    });
+
+    // 5. Family Equity
+    html += `
+        <tr class="pnl-row-total" style="background:var(--bg-main); border-top:2px solid var(--border-color);">
+            <td>Family Equity</td>
+            <td class="align-right ${familyEquity >= 0 ? 'pnl-positive' : 'pnl-neutral'}">${formatCurrency(familyEquity)}</td>
+        </tr>
+    `;
+
+    html += `</tbody></table>`;
+    container.innerHTML = html;
+}
+
+let cashChartInstance = null;
+
+function renderCashChart() {
+    const canvas = document.getElementById('cash-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    // 1. Compute History
+    const liquidBalances = allBalances.filter(b =>
+        b.type === 'Asset' && (b.name.includes('checking') || b.name.includes('savings'))
+    );
+    let currentCash = liquidBalances.reduce((sum, b) => sum + b.amount, 0);
+
+    const validNames = new Set(liquidBalances.map(b => b.name));
+
+    const dailyNet = {};
+    allTransactions.forEach(t => {
+        if (!t.parsedDate || !t.account) return;
+        const txAcc = normalizeAccountName(t.account);
+        if (validNames.has(txAcc)) {
+            const dStr = formatDate(t.parsedDate);
+            if (!dailyNet[dStr]) dailyNet[dStr] = 0;
+            // Transactions are exactly the net change on the account.
+            // Pos = income/deposit, Neg = expense/withdrawal.
+            dailyNet[dStr] += t.amount;
+        }
+    });
+
+    let historyLabels = [];
+    let historyData = [];
+
+    // Go back 365 days (1 year) for better historical perspective
+    let d = new Date();
+    let runningBalance = currentCash;
+    let endTs = d.getTime();
+    let startTs = d.getTime() - (365 * 24 * 60 * 60 * 1000);
+
+    let backwardData = [];
+    let backwardLabels = [];
+
+    let currentDate = new Date(endTs);
+    while (currentDate.getTime() >= startTs) {
+        let dStr = formatDate(currentDate);
+
+        backwardLabels.push(currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+        backwardData.push(runningBalance);
+
+        // Before yesterday, balance was currentBalance - yesterday_transactions
+        if (dailyNet[dStr]) {
+            runningBalance -= dailyNet[dStr];
+        }
+
+        currentDate.setDate(currentDate.getDate() - 1);
+    }
+
+    // Reverse for ascending time order
+    historyLabels = backwardLabels.reverse();
+    historyData = backwardData.reverse();
+
+    // Update KPI
+    const cashKpi = document.getElementById('liquid-cash-kpi');
+    if (cashKpi) {
+        cashKpi.textContent = formatCurrencyAbbreviated(currentCash);
+        cashKpi.className = 'value ' + (currentCash >= 0 ? 'positive' : 'negative');
+    }
+
+    // Chart Configuration
+    const makeGradient = (chartCtx, chartArea) => {
+        const grad = chartCtx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+        grad.addColorStop(0, 'rgba(63,185,80,0.4)');
+        grad.addColorStop(1, 'rgba(63,185,80,0)');
+        return grad;
+    };
+
+    const dsConfig = {
+        label: 'Total Liquid Cash',
+        data: historyData,
+        borderColor: '#3fb950',
+        backgroundColor: (context) => {
+            const chart = context.chart;
+            const { ctx: c, chartArea } = chart;
+            if (!chartArea) return 'transparent';
+            return makeGradient(c, chartArea);
+        },
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        pointBackgroundColor: '#3fb950',
+        pointBorderColor: 'transparent',
+        tension: 0.1,
+        fill: true,
+    };
+
+    if (cashChartInstance) {
+        cashChartInstance.data.labels = historyLabels;
+        cashChartInstance.data.datasets = [dsConfig];
+        cashChartInstance.update('active');
+        return;
+    }
+
+    cashChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: historyLabels,
+            datasets: [dsConfig]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(13, 17, 23, 0.9)',
+                    titleColor: '#e6edf3',
+                    bodyColor: '#e6edf3',
+                    borderColor: '#30363d',
+                    borderWidth: 1,
+                    padding: 12,
+                    callbacks: {
+                        label: function (context) {
+                            return ' Cash: ' + formatCurrency(context.raw);
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    grid: { color: '#30363d', drawBorder: false },
+                    ticks: {
+                        color: '#6e7681',
+                        callback: (value) => {
+                            return formatCurrencyAbbreviated(value);
+                        }
+                    }
+                },
+                x: {
+                    grid: { display: false, drawBorder: false },
+                    ticks: { color: '#6e7681', maxTicksLimit: 6 }
+                }
+            }
+        }
+    });
+}
+
+let retirementChartInstance = null;
+
+function renderRetirementChart() {
+    const canvas = document.getElementById('retirement-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    // 1. Compute History
+    const retirementBalances = allBalances.filter(b =>
+        b.type === 'Asset' && (b.name.includes('retirement') || b.name.includes('ira') || b.name.includes('401k') || b.name.includes('accumulation plan') || b.name.includes('rsu'))
+    );
+    let currentRetirement = retirementBalances.reduce((sum, b) => sum + b.amount, 0);
+
+    const validNames = new Set(retirementBalances.map(b => b.name));
+
+    const dailyNet = {};
+    allTransactions.forEach(t => {
+        if (!t.parsedDate || !t.account) return;
+        const txAcc = normalizeAccountName(t.account);
+        if (validNames.has(txAcc)) {
+            const dStr = formatDate(t.parsedDate);
+            if (!dailyNet[dStr]) dailyNet[dStr] = 0;
+            // Transactions are exactly the net change on the account.
+            // Pos = income/deposit, Neg = expense/withdrawal.
+            dailyNet[dStr] += t.amount;
+        }
+    });
+
+    let historyLabels = [];
+    let historyData = [];
+
+    // Go back 365 days (1 year) for better historical perspective
+    let d = new Date();
+    let runningBalance = currentRetirement;
+    let endTs = d.getTime();
+    let startTs = d.getTime() - (365 * 24 * 60 * 60 * 1000);
+
+    let backwardData = [];
+    let backwardLabels = [];
+
+    let currentDate = new Date(endTs);
+    while (currentDate.getTime() >= startTs) {
+        let dStr = formatDate(currentDate);
+
+        backwardLabels.push(currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+        backwardData.push(runningBalance);
+
+        // Before yesterday, balance was currentBalance - yesterday_transactions
+        if (dailyNet[dStr]) {
+            runningBalance -= dailyNet[dStr];
+        }
+
+        currentDate.setDate(currentDate.getDate() - 1);
+    }
+
+    // Reverse for ascending time order
+    historyLabels = backwardLabels.reverse();
+    historyData = backwardData.reverse();
+
+    // Update KPI
+    const retKpi = document.getElementById('retirement-kpi');
+    if (retKpi) {
+        retKpi.textContent = formatCurrencyAbbreviated(currentRetirement, 2);
+        retKpi.className = 'value ' + (currentRetirement >= 0 ? 'positive' : 'negative');
+    }
+
+    // Chart Configuration
+    const makeGradient = (chartCtx, chartArea) => {
+        const grad = chartCtx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+        grad.addColorStop(0, 'rgba(139,92,246,0.4)'); // purple
+        grad.addColorStop(1, 'rgba(139,92,246,0)');
+        return grad;
+    };
+
+    const dsConfig = {
+        label: 'Total Retirement Assets',
+        data: historyData,
+        borderColor: '#8b5cf6',
+        backgroundColor: (context) => {
+            const chart = context.chart;
+            const { ctx: c, chartArea } = chart;
+            if (!chartArea) return 'transparent';
+            return makeGradient(c, chartArea);
+        },
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        pointBackgroundColor: '#8b5cf6',
+        pointBorderColor: 'transparent',
+        tension: 0.1,
+        fill: true,
+    };
+
+    if (retirementChartInstance) {
+        retirementChartInstance.data.labels = historyLabels;
+        retirementChartInstance.data.datasets = [dsConfig];
+        retirementChartInstance.update('active');
+        return;
+    }
+
+    retirementChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: historyLabels,
+            datasets: [dsConfig]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(13, 17, 23, 0.9)',
+                    titleColor: '#e6edf3',
+                    bodyColor: '#e6edf3',
+                    borderColor: '#30363d',
+                    borderWidth: 1,
+                    padding: 12,
+                    callbacks: {
+                        label: function (context) {
+                            return ' Balance: ' + formatCurrency(context.raw);
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    grid: { color: '#30363d', drawBorder: false },
+                    ticks: {
+                        color: '#6e7681',
+                        callback: (value) => {
+                            return formatCurrencyAbbreviated(value, 2);
+                        }
+                    }
+                },
+                x: {
+                    grid: { display: false, drawBorder: false },
+                    ticks: { color: '#6e7681', maxTicksLimit: 6 }
+                }
+            }
+        }
+    });
+}
+
+// Auth gate — runs before app init
+document.addEventListener('DOMContentLoaded', () => {
+    const loginScreen = document.getElementById('login-screen');
+    const appContainer = document.getElementById('app-container');
+    const loginBtn = document.getElementById('login-btn');
+    const loginBtnText = document.getElementById('login-btn-text');
+    const loginPassword = document.getElementById('login-password');
+    const loginError = document.getElementById('login-error');
+
+    function revealApp() {
+        loginScreen.style.opacity = '0';
+        loginScreen.style.transition = 'opacity 0.4s ease';
+        setTimeout(() => {
+            loginScreen.style.display = 'none';
+            appContainer.style.display = '';
+            init();
+        }, 400);
+    }
+
+    // If already authenticated this session, skip login
+    if (isAuthenticated()) {
+        loginScreen.style.display = 'none';
+        appContainer.style.display = '';
+        init();
+        return;
+    }
+
+    // Login button click handler
+    async function attemptLogin() {
+        const password = loginPassword.value;
+        if (!password) return;
+
+        loginBtnText.textContent = 'VERIFYING...';
+        loginBtn.disabled = true;
+        loginError.textContent = '';
+
+        try {
+            const valid = await verifyPassword(password);
+            if (valid) {
+                setAuthenticated();
+                revealApp();
+            } else {
+                loginError.textContent = 'Incorrect passphrase. Access denied.';
+                loginPassword.value = '';
+                loginPassword.focus();
+                // Shake animation
+                loginPassword.closest('.login-input-group').classList.add('shake');
+                setTimeout(() => loginPassword.closest('.login-input-group').classList.remove('shake'), 500);
+            }
+        } catch (e) {
+            loginError.textContent = 'Authentication error. Please try again.';
+        }
+
+        loginBtnText.textContent = 'ACCESS DASHBOARD';
+        loginBtn.disabled = false;
+    }
+
+    loginBtn.addEventListener('click', attemptLogin);
+    loginPassword.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') attemptLogin();
+    });
+    loginPassword.focus();
+});
