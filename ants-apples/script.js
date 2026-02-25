@@ -25,7 +25,6 @@
         <table id="ants-apples-grid"></table>
         <div class="controls">
           <button class="btn secondary" id="ants-reset-btn">Reset Game</button>
-          <button class="btn" id="ants-next-btn">Next Level</button>
         </div>
         <div class="message" id="ants-message"></div>
 
@@ -95,7 +94,12 @@
               <input type="radio" name="ants-op" value="multiply">
               Multiplication (×)
             </label>
+            <label>
+              <input type="radio" name="ants-op" value="divide">
+              Division (÷)
+            </label>
           </div>
+          <div id="ants-divide-note" style="display:none; font-size:0.78rem; color:#888; margin-top:4px;">Division mode: grid capped at 5×5 for whole-number results.</div>
 
           <div id="ants-helper-opt-title" style="font-size:0.85rem; margin-top:8px; margin-bottom:4px;">Learning Aids:</div>
           <div id="ants-helper-options" style="font-size:0.85rem; margin-bottom:12px;">
@@ -128,7 +132,7 @@
     let ROWS = [];
     let COLS = [];
     let MAX_LEVEL = 3; // user-chosen max levels
-    let operation = 'add'; // 'add' or 'multiply'
+    let operation = 'add'; // 'add', 'multiply', or 'divide'
     let showHelper = true; // showAntsApplesHelper
 
     let currentLevel = 1;
@@ -184,19 +188,37 @@
     /* ---------- Grid + game setup ---------- */
 
     function configureGrid(size, levelCount) {
-      size = Math.max(3, Math.min(9, size || 3));
+      size = parseInt(size, 10) || 3;
+      if (operation === 'divide') {
+        size = Math.max(3, Math.min(5, size));
+        if (size === 3) {
+          ROWS = [4, 8, 12];
+          COLS = [1, 2, 4];
+        } else if (size === 4) {
+          ROWS = [4, 8, 12, 16];
+          COLS = [1, 2, 4, 8];
+        } else if (size === 5) {
+          ROWS = [4, 8, 12, 16, 24];
+          COLS = [1, 2, 4, 8, 12];
+        }
+      } else {
+        size = Math.max(3, Math.min(9, size));
+        ROWS = Array.from({ length: size }, (_, i) => i + 1);
+        COLS = Array.from({ length: size }, (_, i) => i + 1);
+      }
       gridSize = size;
-      ROWS = Array.from({ length: size }, (_, i) => i + 1);
-      COLS = Array.from({ length: size }, (_, i) => i + 1);
 
-      const maxTiles = size * size;
+      // Count playable (non-embargoed) tiles
+      let playableCount = 0;
+      ROWS.forEach(r => {
+        COLS.forEach(c => {
+          if (operation !== 'divide' || r % c === 0) playableCount++;
+        });
+      });
+
       let desiredLevels = parseInt(levelCount, 10);
-      if (isNaN(desiredLevels) || desiredLevels < 1) {
-        desiredLevels = 3; // default to 3
-      }
-      if (desiredLevels > maxTiles) {
-        desiredLevels = maxTiles;
-      }
+      if (isNaN(desiredLevels) || desiredLevels < 1) desiredLevels = 3;
+      if (desiredLevels > playableCount) desiredLevels = playableCount;
       MAX_LEVEL = desiredLevels;
 
       currentLevel = 1;
@@ -208,8 +230,8 @@
 
       buildGrid();
       setupLevel(currentLevel);
-      setMessage(`Grid: ${size} × ${size} · Levels: ${MAX_LEVEL} · Mode: ${operation === 'add' ? 'Addition' : 'Multiplication'}.`);
-      updateHelperDisplay(); // make sure helper shows correct operator/visual
+      setMessage(`Grid: ${size} × ${size} · Levels: ${MAX_LEVEL} · Mode: ${opLabel()}.`);
+      updateHelperSelects();
     }
 
     function buildGrid() {
@@ -219,7 +241,7 @@
       const headerRow = document.createElement('tr');
       const corner = document.createElement('td');
       corner.className = 'header';
-      corner.textContent = (operation === 'add') ? '+' : '×';
+      corner.textContent = (operation === 'add') ? '+' : (operation === 'multiply') ? '×' : '÷';
       headerRow.appendChild(corner);
 
       COLS.forEach(colVal => {
@@ -245,7 +267,14 @@
           td.dataset.col = (colIndex + 1).toString();
           td.dataset.active = 'false';
           td.dataset.status = 'inactive';
-          td.addEventListener('click', () => onTileClick(td));
+
+          if (operation === 'divide' && rowVal % colVal !== 0) {
+            td.classList.add('embargoed');
+            td.textContent = 'X';
+            td.dataset.embargoed = 'true';
+          } else {
+            td.addEventListener('click', () => onTileClick(td));
+          }
           tr.appendChild(td);
         });
 
@@ -256,7 +285,7 @@
     function setupLevel(level) {
       document.getElementById('ants-level-label').textContent = level.toString();
 
-      const tiles = root.querySelectorAll('.tile');
+      const tiles = Array.from(root.querySelectorAll('.tile')).filter(t => t.dataset.embargoed !== 'true');
       tiles.forEach(tile => {
         tile.textContent = '';
         tile.className = 'tile inactive';
@@ -264,7 +293,7 @@
         tile.dataset.status = 'inactive';
       });
 
-      const tileArray = Array.from(tiles);
+      const tileArray = [...tiles];
       shuffleArray(tileArray);
       const activeTiles = tileArray.slice(0, level);
 
@@ -311,7 +340,7 @@
     }
 
     function appendDigit(d) {
-      if (currentInput.length >= 2) return;
+      if (currentInput.length >= 3) return;
       currentInput += d;
       updateKeypadDisplay();
     }
@@ -344,9 +373,9 @@
       const guess = parseInt(currentInput, 10);
       const rowIdx = parseInt(activeTileEl.dataset.row, 10) - 1;
       const colIdx = parseInt(activeTileEl.dataset.col, 10) - 1;
-      const a = ROWS[rowIdx];
-      const b = COLS[colIdx];
-      const correctAnswer = (operation === 'add') ? (a + b) : (a * b);
+      const a = ROWS[rowIdx]; // dividend
+      const b = COLS[colIdx]; // divisor
+      const correctAnswer = (operation === 'add') ? (a + b) : (operation === 'multiply') ? (a * b) : (a / b);
 
       activeTileEl.textContent = guess.toString();
 
@@ -367,6 +396,7 @@
           if (currentLevel < MAX_LEVEL) {
             setMessage(`Level ${currentLevel} complete! Get ready...`);
             setTimeout(goToNextLevel, 1200);
+            hideKeypad();
           } else {
             // Game finished
             clearTimer();
@@ -392,27 +422,63 @@
     function buildHelperControls() {
       const firstSelect = document.getElementById('ants-helper-first');
       const secondSelect = document.getElementById('ants-helper-second');
+      if (!firstSelect || !secondSelect) return;
+
+      firstSelect.addEventListener('change', updateHelperDisplay);
+      secondSelect.addEventListener('change', updateHelperDisplay);
+
+      updateHelperSelects();
+    }
+
+    function updateHelperSelects() {
+      const firstSelect = document.getElementById('ants-helper-first');
+      const secondSelect = document.getElementById('ants-helper-second');
+      if (!firstSelect || !secondSelect) return;
+
+      const currentFirstVal = firstSelect.value;
+      const currentSecondVal = secondSelect.value;
 
       firstSelect.innerHTML = '';
       secondSelect.innerHTML = '';
 
-      for (let i = 0; i <= 9; i++) {
-        const opt1 = document.createElement('option');
-        opt1.value = i.toString();
-        opt1.textContent = i.toString();
-        firstSelect.appendChild(opt1);
+      let firstOptions = [];
+      let secondOptions = [];
 
-        const opt2 = document.createElement('option');
-        opt2.value = i.toString();
-        opt2.textContent = i.toString();
-        secondSelect.appendChild(opt2);
+      if (operation === 'divide') {
+        firstOptions = [4, 8, 12, 16, 24];
+        secondOptions = [1, 2, 4, 8, 12];
+      } else {
+        // For add/multiply, 0-10 covers all possible header values (up to 9x9 grid)
+        firstOptions = Array.from({ length: 11 }, (_, i) => i);
+        secondOptions = Array.from({ length: 11 }, (_, i) => i);
       }
 
-      firstSelect.value = '1';
-      secondSelect.value = '1';
+      firstOptions.forEach(val => {
+        const opt = document.createElement('option');
+        opt.value = val.toString();
+        opt.textContent = val.toString();
+        firstSelect.appendChild(opt);
+      });
 
-      firstSelect.addEventListener('change', updateHelperDisplay);
-      secondSelect.addEventListener('change', updateHelperDisplay);
+      secondOptions.forEach(val => {
+        const opt = document.createElement('option');
+        opt.value = val.toString();
+        opt.textContent = val.toString();
+        secondSelect.appendChild(opt);
+      });
+
+      // Restore previously selected values if they still exist in the new operation's set
+      if (currentFirstVal && Array.from(firstSelect.options).some(o => o.value === currentFirstVal)) {
+        firstSelect.value = currentFirstVal;
+      } else if (firstOptions.length > 0) {
+        firstSelect.value = firstOptions[0].toString();
+      }
+
+      if (currentSecondVal && Array.from(secondSelect.options).some(o => o.value === currentSecondVal)) {
+        secondSelect.value = currentSecondVal;
+      } else if (secondOptions.length > 0) {
+        secondSelect.value = secondOptions[0].toString();
+      }
 
       updateHelperDisplay();
     }
@@ -446,6 +512,29 @@
       applesDiv.textContent = '';
       antsDiv.innerHTML = '';
       applesDiv.innerHTML = '';
+      const visual = document.getElementById('ants-helper-visual');
+      visual.style.flexDirection = 'row';
+      visual.style.alignItems = 'flex-start';
+      plusEl.style.display = 'block';
+      antsDiv.style.marginBottom = '0';
+
+      // Dynamic font size calculation to prevent overflow
+      let fontSize = 1.6; // Default
+      if (operation === 'divide') {
+        if (second >= 12) fontSize = 0.95;
+        else if (second >= 10) fontSize = 1.1;
+        else if (second >= 8) fontSize = 1.3;
+        else if (second >= 6) fontSize = 1.5;
+      } else if (operation === 'multiply') {
+        if (second >= 10) fontSize = 1.1;
+        else if (second >= 8) fontSize = 1.3;
+      } else if (operation === 'add') {
+        const total = (first || 0) + (second || 0);
+        if (total >= 20) fontSize = 0.9;
+        else if (total >= 16) fontSize = 1.1;
+        else if (total >= 12) fontSize = 1.3;
+      }
+      visual.style.fontSize = `${fontSize}rem`;
 
       if (operation === 'add') {
         // Addition mode: simple rows of ants + apples
@@ -458,10 +547,10 @@
         if (second > 0) {
           applesDiv.textContent = Array(second).fill(appleEmoji).join(' ');
         }
-      } else {
+      } else if (operation === 'multiply') {
         // Multiplication mode: array of apples (rows × columns)
         opSymbolEl.textContent = '×';
-        plusEl.textContent = '×';
+        plusEl.textContent = '=';
 
         if (first > 0 && second > 0) {
           let html = '';
@@ -472,6 +561,48 @@
           antsDiv.textContent = `${first} × ${second}`;
         } else if (first > 0 || second > 0) {
           antsDiv.textContent = `${first} × ${second}`;
+        }
+      } else {
+        // Division mode: Move equation to its own line above the visualization
+        visual.style.flexDirection = 'column';
+        visual.style.alignItems = 'center';
+        plusEl.style.display = 'none'; // Equation is self-contained in antsDiv
+
+        const dividend = first;
+        const divisor = second;
+
+        if (dividend > 0 && divisor > 0) {
+          const quotient = Math.round(dividend / divisor);
+          antsDiv.textContent = `${dividend} ÷ ${divisor} = `;
+          antsDiv.style.marginBottom = '10px';
+
+          // Geometric alignment logic
+          let gridCols = Math.ceil(Math.sqrt(quotient));
+          // If divisor is large (8+), keep columns low to avoid overflow (max 2 or 3)
+          if (divisor >= 8) {
+            gridCols = quotient <= 3 ? quotient : 2;
+          } else if (divisor >= 4) {
+            gridCols = Math.min(gridCols, 3);
+          }
+
+          // Specific overrides for "nice" layouts
+          if (quotient === 6) gridCols = 3;
+          if (quotient === 4) gridCols = 2;
+          if (quotient === 9) gridCols = 3;
+
+          applesDiv.style.display = 'grid';
+          applesDiv.style.gridTemplateColumns = `repeat(${gridCols}, auto)`;
+          applesDiv.style.justifyContent = 'center';
+          applesDiv.style.gap = '8px';
+
+          let html = '';
+          for (let g = 0; g < quotient; g++) {
+            html += `<span style="display:inline-block; padding:4px 6px; border:1px dashed #aaa; border-radius:6px; white-space: nowrap;">${Array(divisor).fill(appleEmoji).join(' ')}</span>`;
+          }
+          applesDiv.innerHTML = html;
+        } else {
+          antsDiv.textContent = `${dividend} ÷ ${divisor}`;
+          applesDiv.style.display = 'block';
         }
       }
     }
@@ -484,15 +615,6 @@
         resetTimerAndStreak();
         setupLevel(currentLevel);
         setMessage(`Game reset. Back to Level 1 on a ${gridSize} × ${gridSize} grid.`);
-      });
-
-      document.getElementById('ants-next-btn').addEventListener('click', () => {
-        // Manual skip/next button
-        if (!isLevelComplete()) {
-          setMessage('Finish all the squares on this level before moving on.');
-          return;
-        }
-        goToNextLevel();
       });
 
       document.getElementById('ants-esc-btn').addEventListener('click', hideKeypad);
@@ -509,17 +631,63 @@
 
       function updateLevelInputBounds() {
         const sizeVal = parseInt(sizeSelect.value, 10) || 3;
-        const maxTiles = sizeVal * sizeVal;
-        levelCountInput.max = String(maxTiles);
-        levelCountMaxLabel.textContent = String(maxTiles);
+        const opVal = Array.from(document.querySelectorAll('input[name="ants-op"]')).find(r => r.checked)?.value || 'add';
+
+        // Restrict size options for division
+        Array.from(sizeSelect.options).forEach(opt => {
+          const val = parseInt(opt.value, 10);
+          if (opVal === 'divide') {
+            if (val > 5) {
+              opt.disabled = true;
+              opt.style.display = 'none';
+            } else {
+              opt.disabled = false;
+              opt.style.display = 'block';
+            }
+          } else {
+            opt.disabled = false;
+            opt.style.display = 'block';
+          }
+        });
+
+        // If current selection is invalid, reset to 5
+        if (opVal === 'divide' && sizeVal > 5) {
+          sizeSelect.value = '5';
+        }
+
+        // Calculate actual playable max tiles
+        let playableCount = 0;
+        let tempRows = [], tempCols = [];
+        const finalSize = parseInt(sizeSelect.value, 10);
+
+        if (opVal === 'divide') {
+          if (finalSize === 3) { tempRows = [4, 8, 12]; tempCols = [1, 2, 4]; }
+          else if (finalSize === 4) { tempRows = [4, 8, 12, 16]; tempCols = [1, 2, 4, 8]; }
+          else if (finalSize === 5) { tempRows = [4, 8, 12, 16, 24]; tempCols = [1, 2, 4, 8, 12]; }
+        } else {
+          tempRows = Array.from({ length: finalSize }, (_, i) => i + 1);
+          tempCols = Array.from({ length: finalSize }, (_, i) => i + 1);
+        }
+
+        tempRows.forEach(r => {
+          tempCols.forEach(c => {
+            if (opVal !== 'divide' || r % c === 0) playableCount++;
+          });
+        });
+
+        levelCountInput.max = String(playableCount);
+        levelCountMaxLabel.textContent = String(playableCount);
 
         const currentVal = parseInt(levelCountInput.value, 10);
-        if (isNaN(currentVal) || currentVal < 1 || currentVal > maxTiles) {
-          levelCountInput.value = String(Math.min(MAX_LEVEL, maxTiles));
+        if (isNaN(currentVal) || currentVal < 1 || currentVal > playableCount) {
+          levelCountInput.value = String(Math.min(MAX_LEVEL, playableCount));
         }
       }
 
       sizeSelect.addEventListener('change', updateLevelInputBounds);
+      document.querySelectorAll('input[name="ants-op"]').forEach(r => {
+        r.addEventListener('change', updateLevelInputBounds);
+      });
 
       document.getElementById('ants-grid-size-btn').addEventListener('click', () => {
         openSizeDialog(false);
@@ -534,9 +702,15 @@
         const opRadios = document.querySelectorAll('input[name="ants-op"]');
         opRadios.forEach(r => {
           if (r.checked) {
-            operation = r.value; // 'add' or 'multiply'
+            operation = r.value; // 'add', 'multiply', or 'divide'
           }
         });
+
+        // Division: enforce max 5×5
+        if (operation === 'divide' && size > 5) {
+          sizeSelect.value = '5';
+          size = 5;
+        }
 
         let levelCount = parseInt(levelCountInput.value, 10);
         if (isNaN(levelCount) || levelCount < 1) levelCount = 3;
@@ -589,7 +763,7 @@
         currentLevel = 1;
         resetTimerAndStreak();
         setupLevel(currentLevel);
-        setMessage(`New game on a ${gridSize} × ${gridSize} grid. Levels: ${MAX_LEVEL}. Mode: ${operation === 'add' ? 'Addition' : 'Multiplication'}.`);
+        setMessage(`New game on a ${gridSize} × ${gridSize} grid. Levels: ${MAX_LEVEL}. Mode: ${opLabel()}.`);
       }
 
       document.getElementById('ants-win-backdrop').addEventListener('click', (e) => {
@@ -611,6 +785,15 @@
           updateMusicToggleLabel();
         });
       }
+
+      // Wire divide note toggle — show hint when Division is selected
+      const opRadioEls = document.querySelectorAll('input[name="ants-op"]');
+      const divideNote = document.getElementById('ants-divide-note');
+      opRadioEls.forEach(r => {
+        r.addEventListener('change', () => {
+          if (divideNote) divideNote.style.display = r.value === 'divide' && r.checked ? 'block' : 'none';
+        });
+      });
 
       // Initialize bounds the first time
       updateLevelInputBounds();
@@ -635,13 +818,13 @@
 
       const rowIdx = parseInt(tile.dataset.row, 10) - 1;
       const colIdx = parseInt(tile.dataset.col, 10) - 1;
-      const a = ROWS[rowIdx];
-      const b = COLS[colIdx];
+      const a = ROWS[rowIdx]; // quotient (hidden row value)
+      const b = COLS[colIdx]; // divisor (visible col value)
 
       // Show equation at top of keypad
       const eq = document.getElementById('ants-keypad-equation');
       if (eq) {
-        const symbol = (operation === 'add') ? '+' : '×';
+        let symbol = (operation === 'add') ? '+' : (operation === 'multiply') ? '×' : '÷';
         eq.textContent = `${a} ${symbol} ${b}`;
       }
 
@@ -659,6 +842,12 @@
 
     function setMessage(msg) {
       document.getElementById('ants-message').textContent = msg || '';
+    }
+
+    function opLabel() {
+      if (operation === 'add') return 'Addition';
+      if (operation === 'multiply') return 'Multiplication';
+      return 'Division';
     }
 
     function shuffleArray(arr) {
@@ -841,7 +1030,7 @@
       const titleEl = document.getElementById('ants-win-title');
       const bodyEl = document.getElementById('ants-win-body');
       const timeText = formatTime(elapsedSeconds);
-      const modeLabel = (operation === 'add') ? 'Addition' : 'Multiplication';
+      const modeLabel = opLabel();
 
       if (!showHelper) {
         titleEl.innerHTML = "🏆 PRO MODE CHAMPION! 🏆";

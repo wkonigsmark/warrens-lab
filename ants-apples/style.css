@@ -110,6 +110,13 @@
   background: #f5f5f5;
 }
 
+#ants-apples-grid td.tile.embargoed {
+  cursor: not-allowed;
+  background: #ececec;
+  color: #bbb;
+  font-weight: normal;
+}
+
 #ants-apples-grid td.tile.pending {
   background: #ffe66b;
 }
