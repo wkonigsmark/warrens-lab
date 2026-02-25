@@ -714,6 +714,45 @@ const RAW_RECIPES = [
             "Bake for 15-18 minutes until well-risen and golden."
         ],
         upgrades: ["Top with a fried egg and a slice of bacon for a premium breakfast sandwich."]
+    },
+    {
+        id: 'iceberg-chopped-salad',
+        name: 'Iceberg Chopped Salad',
+        type: ['Lunch', 'Side', 'Dinner'],
+        description: 'Crisp, creamy, bright, and extra crunchy with skillet-grilled Ballard Special croutons.',
+        ingredients: [
+            { item: '— FOR THE SALAD —', amount: '', unit: '' },
+            { item: 'iceberg lettuce', amount: '', unit: 'chopped' },
+            { item: 'purple onion', amount: '0.5', unit: 'thinly sliced' },
+            { item: 'cucumber', amount: '', unit: 'sliced or diced' },
+            { item: 'corn', amount: '', unit: 'fresh or cooked kernels' },
+            { item: 'avocado', amount: '1', unit: 'diced' },
+            { item: 'parmesan', amount: '', unit: 'freshly grated or shaved' },
+            { item: 'salt, pepper & oregano', amount: '', unit: 'to taste' },
+            { item: '— FOR THE DRESSING —', amount: '', unit: '' },
+            { item: 'garlic', amount: '1', unit: 'clove, minced' },
+            { item: 'lemon', amount: '1', unit: 'juice + zest (optional)' },
+            { item: 'olive oil', amount: '', unit: 'good quality, to taste' },
+            { item: 'white vinegar', amount: '', unit: 'splash' },
+            { item: 'salt & pepper', amount: '', unit: 'to taste' },
+            { item: 'oregano', amount: '', unit: 'light sprinkle' },
+            { item: '— BALLARD SPECIAL CROUTONS —', amount: '', unit: '' },
+            { item: 'rustic bread', amount: '', unit: 'cubed' },
+            { item: 'olive oil', amount: '', unit: 'for skillet' },
+            { item: 'salt', amount: '', unit: 'pinch' }
+        ],
+        instructions: [
+            "Make the Ballard Special Croutons: Heat a skillet over medium heat and add a drizzle of olive oil. Add bread cubes and a pinch of salt. Toast, stirring occasionally, until golden and crisp all around (about 5–7 minutes). Set aside to cool.",
+            "Combine the salad: In a large bowl, add chopped iceberg lettuce, cucumber, corn, purple onion, and diced avocado. Sprinkle Parmesan over the top.",
+            "Make the dressing: In a small bowl, whisk together minced garlic, lemon juice (and zest if using), olive oil, white vinegar, oregano, salt, and pepper until emulsified. Taste and adjust seasoning — you want it bright and balanced.",
+            "Toss and serve: Pour the dressing over the salad and gently toss to combine. Add the Ballard Special croutons just before serving so they stay crunchy.",
+            "Finish with an extra crack of black pepper and more Parmesan if you like."
+        ],
+        upgrades: [
+            "Pair with grilled chicken or steak to make it a main course.",
+            "Croutons can be made ahead and stored airtight for up to a day.",
+            "Extra acid? Add a little more lemon juice for lift."
+        ]
     }
 ];
 
