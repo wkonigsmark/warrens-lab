@@ -2,18 +2,184 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ants & Apples</title>
-  <meta name="description" content="A fun math game involving ants and apples.">
-  <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐜</text></svg>">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Burnmark Productions</title>
+
+  <style>
+    /* ----------------------------------------------------------
+       PERFECT DOS VGA 437 — Local Font
+    ---------------------------------------------------------- */
+    @font-face {
+      font-family: "Perfect DOS VGA 437";
+      src: url("fonts/PerfectDOSVGA437.woff2") format("woff2");
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg-color: #000000;
+      --text-color: #33ff33;
+      --glow-color: rgba(51, 255, 51, 0.18);
+
+      --font-stack: "Perfect DOS VGA 437",
+        ui-monospace, SFMono-Regular, Menlo, Monaco,
+        Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+
+      color: var(--text-color);
+      font-family: var(--font-stack);
+
+      overflow: hidden;
+
+      -webkit-font-smoothing: none;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeSpeed;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .tty {
+      font-size: clamp(18px, 6vw, 40px);
+      line-height: 1.2;
+      text-shadow: 0 0 10px var(--glow-color);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 1.5em;
+      letter-spacing: 0;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 0.7ch;
+      height: 1.05em;
+      margin-left: 0.15ch;
+      background: currentColor;
+      animation: blink 0.9s steps(1, end) infinite;
+      box-shadow: 0 0 10px var(--glow-color);
+      vertical-align: middle;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* Navigation Menu Styles */
+    .nav-menu {
+      margin-top: 2rem;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 1s ease-in, transform 1s ease-out;
+      display: flex;
+      /* Use flex to layout items */
+      flex-direction: column;
+      /* Stack them vertically like a DOS menu */
+      gap: 0.5rem;
+      align-items: center;
+      /* Center the menu items */
+    }
+
+    .nav-menu.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .nav-link {
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: clamp(16px, 4vw, 24px);
+      padding: 5px 10px;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .nav-link:hover {
+      background-color: var(--text-color);
+      color: var(--bg-color);
+      box-shadow: 0 0 10px var(--glow-color);
+      cursor: pointer;
+    }
+
+    .nav-link::before {
+      content: ">";
+      position: absolute;
+      left: -15px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .nav-link:hover::before {
+      opacity: 1;
+    }
+  </style>
 </head>
 
 <body>
-  <div id="ants-apples-root"></div>
-  <script src="script.js"></script>
+  <div class="hero">
+    <div class="tty">
+      <span id="text"></span>
+      <span class="cursor"></span>
+    </div>
+
+    <nav id="main-nav" class="nav-menu">
+      <a href="ants-apples/" class="nav-link">ants-apples</a>
+      <a href="stencil/" class="nav-link">stencil</a>
+      <a href="world-cup/" class="nav-link">world-cup</a>
+      <a href="world-cup-2/" class="nav-link">world-cup-2</a>
+      <a href="cocktails/" class="nav-link">cocktails</a>
+      <a href="recipes/" class="nav-link">recipes</a>
+      <a href="art-gallery/" class="nav-link">art-gallery</a>
+    </nav>
+  </div>
+
+  <script>
+    (function () {
+      const TEXT = "Burnmark Productions, a Creative Space...";
+      const textEl = document.getElementById("text");
+
+      let i = 0;
+      const minDelay = 55;
+      const maxDelay = 110;
+
+      function randomDelay() {
+        return Math.floor(minDelay + Math.random() * (maxDelay - minDelay));
+      }
+
+      function type() {
+        textEl.textContent = TEXT.slice(0, i++);
+        if (i <= TEXT.length) {
+          setTimeout(type, randomDelay());
+        } else {
+          // Typing finished, show menu
+          setTimeout(() => {
+            document.getElementById("main-nav").classList.add("visible");
+            // Optional: Hide cursor after a while? Or keep blinking. 
+            // Keeping it blinking feels more like a waiting prompt.
+          }, 500);
+        }
+      }
+
+      setTimeout(type, 450);
+    })();
+  </script>
 </body>
 
 </html>
