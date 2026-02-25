@@ -52,22 +52,34 @@ function handleRoute(hash) {
   // Normalize hash
   const target = (hash || '').trim();
 
+  let pageTitle = "Kitchen Sync";
+
   if (target === 'cart') {
     state.view = 'cart';
     state.currentRecipe = null;
+    pageTitle = "Kitchen Sync | My Plan";
   } else if (!target) {
     state.view = 'list';
     state.currentRecipe = null;
+    pageTitle = "Kitchen Sync";
   } else {
     const found = RECIPES.find(r => r.id === target);
     if (found) {
       state.currentRecipe = found;
       state.view = 'detail';
+      pageTitle = `Kitchen Sync | ${found.name}`;
     } else {
       state.view = 'list';
       state.currentRecipe = null;
+      pageTitle = "Kitchen Sync";
     }
   }
+
+  // Update DOM Title and OG Meta Tag for link previews
+  document.title = pageTitle;
+  const ogTitle = document.getElementById('og-title');
+  if (ogTitle) ogTitle.setAttribute('content', pageTitle);
+
   render();
   window.scrollTo(0, 0);
 }
