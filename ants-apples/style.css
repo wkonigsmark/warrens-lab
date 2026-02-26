@@ -51,7 +51,8 @@
 }
 
 #ants-grid-size-btn,
-#ants-music-toggle {
+#ants-music-toggle,
+#ants-print-worksheet {
   border: none;
   border-radius: 999px;
   padding: 4px 10px;
@@ -65,8 +66,15 @@
   background: #f0e4ff;
 }
 
+#ants-print-worksheet {
+  background: #e0f5e5;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
 #ants-grid-size-btn:active,
-#ants-music-toggle:active {
+#ants-music-toggle:active,
+#ants-print-worksheet:active {
   transform: scale(0.97);
 }
 
