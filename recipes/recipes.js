@@ -753,6 +753,123 @@ const RAW_RECIPES = [
             "Croutons can be made ahead and stored airtight for up to a day.",
             "Extra acid? Add a little more lemon juice for lift."
         ]
+    },
+    {
+        id: 'cheeseburger-pasta',
+        name: 'Cheeseburger Pasta',
+        type: ['Lunch', 'Dinner'],
+        description: 'A creamy, kid-approved skillet meal that tastes like a cheeseburger in pasta form.',
+        ingredients: [
+            { item: 'ground beef', amount: '1', unit: 'lb' },
+            { item: 'small pasta (shells or elbows)', amount: '12', unit: 'oz' },
+            { item: 'butter', amount: '2', unit: 'tbsp' },
+            { item: 'milk', amount: '0.5', unit: 'cup' },
+            { item: 'shredded mild cheddar', amount: '1.5-2', unit: 'cups' },
+            { item: 'salt', amount: '1', unit: 'tsp' }
+        ],
+        instructions: [
+            "Bring a large pot of salted water to a boil. Cook pasta until al dente. Drain and set aside.",
+            "In a large skillet over medium heat, cook ground beef until fully browned.",
+            "Drain excess fat from the beef.",
+            "Reduce heat to low. Add butter and let it melt into the beef.",
+            "Stir in milk and shredded cheese. Mix until smooth and creamy.",
+            "Add cooked pasta and stir to combine. Taste and adjust salt.",
+            "Serve warm with a small sprinkle of extra cheese on top if desired."
+        ],
+        upgrades: ["Sneaky Veg: Add 0.5 cup very finely grated carrot during the last 3-4 mins of browning the beef."]
+    },
+    {
+        id: 'chicken-parm-sliders',
+        name: 'Chicken Parm Sliders (Kid Version)',
+        type: ['Lunch', 'Dinner'],
+        description: 'Small, crispy, and cheesy — a miniature take on a classic comfort food.',
+        ingredients: [
+            { item: 'chicken breasts, sliced thin', amount: '2', unit: 'large' },
+            { item: 'salt', amount: '', unit: 'to taste' },
+            { item: 'all-purpose flour', amount: '0.5', unit: 'cup' },
+            { item: 'egg, beaten', amount: '1', unit: '' },
+            { item: 'breadcrumbs', amount: '1', unit: 'cup' },
+            { item: 'olive oil', amount: '', unit: 'for cooking' },
+            { item: 'marinara sauce', amount: '0.5-0.75', unit: 'cup' },
+            { item: 'shredded mozzarella', amount: '1', unit: 'cup' },
+            { item: 'brioche or slider buns', amount: '6', unit: '' }
+        ],
+        instructions: [
+            "Season chicken lightly with salt.",
+            "Set up breading station: Bowl 1 (flour), Bowl 2 (beaten egg), Bowl 3 (breadcrumbs).",
+            "Dredge chicken in flour, dip in egg, then coat in breadcrumbs.",
+            "Heat olive oil in skillet over medium heat. Cook chicken 3–4 minutes per side until golden and cooked through.",
+            "Preheat oven to 375°F (190°C).",
+            "Place cooked chicken on a baking sheet. Spoon a thin layer of marinara on top. Add mozzarella.",
+            "Bake 5–7 minutes until cheese melts.",
+            "Place on slider buns and serve warm."
+        ],
+        upgrades: ["Add a leaf of fresh basil under the cheese for an 'adult version'."]
+    },
+    {
+        id: 'simple-meatballs',
+        name: 'Simple Meatballs',
+        type: ['Dinner'],
+        description: 'A dependable meatball base that is perfect for pairing with noodles or rice.',
+        ingredients: [
+            { item: 'ground beef', amount: '1', unit: 'lb' },
+            { item: 'egg', amount: '1', unit: '' },
+            { item: 'breadcrumbs', amount: '0.5', unit: 'cup' },
+            { item: 'salt', amount: '1', unit: 'tsp' },
+            { item: 'milk', amount: '2', unit: 'tbsp' },
+            { item: 'olive oil', amount: '1', unit: 'tbsp' }
+        ],
+        instructions: [
+            "Preheat oven to 400°F (200°C).",
+            "In a bowl, combine beef, egg, breadcrumbs, salt, and milk. Mix gently (do not overwork).",
+            "Roll into golf-ball sized meatballs.",
+            "Place on lined baking sheet and brush lightly with olive oil.",
+            "Bake 18–20 minutes until cooked through.",
+            "Serve with buttered noodles (pasta + butter + salt) or white rice."
+        ],
+        upgrades: ["Dipping Fun: Serve with warm marinara on the side for dipping."]
+    },
+    {
+        id: 'mild-chicken-quesadillas',
+        name: 'Mild Chicken Quesadillas',
+        type: ['Lunch', 'Dinner'],
+        description: 'Simple, mild, and fast — the ultimate reliable lunch or quick dinner.',
+        ingredients: [
+            { item: 'cooked shredded chicken', amount: '2', unit: 'cups' },
+            { item: 'shredded mild cheddar', amount: '1.5', unit: 'cups' },
+            { item: 'flour tortillas', amount: '4', unit: 'large' },
+            { item: 'butter or olive oil', amount: '', unit: 'for pan' }
+        ],
+        instructions: [
+            "Heat a skillet over medium heat.",
+            "Lightly butter one side of a tortilla.",
+            "Place tortilla butter-side down in the skillet.",
+            "Sprinkle cheese evenly over half (or full) tortilla, add a thin layer of chicken, then more cheese.",
+            "Top with a second tortilla (butter side up) or fold in half.",
+            "Cook 2–3 minutes per side until golden and cheese is fully melted.",
+            "Slice into triangles."
+        ],
+        upgrades: ["Serve with sour cream, rice, or fresh fruit on the side."]
+    },
+    {
+        id: 'upgraded-buttered-pasta',
+        name: 'Upgraded Buttered Pasta',
+        type: ['Lunch', 'Dinner'],
+        description: 'The basic family staple, leveled up with real Parmesan and optional flavor bumps.',
+        ingredients: [
+            { item: 'pasta', amount: '12', unit: 'oz' },
+            { item: 'butter', amount: '3', unit: 'tbsp' },
+            { item: 'freshly grated Parmesan', amount: '0.5', unit: 'cup' },
+            { item: 'salt', amount: '0.5', unit: 'tsp' }
+        ],
+        instructions: [
+            "Boil pasta in salted water until al dente. Reserve ¼ cup pasta water before draining.",
+            "Return hot pasta to the pot.",
+            "Add butter and stir until melted.",
+            "Stir in Parmesan and salt. Add a splash of reserved pasta water if needed to create a light, creamy sauce.",
+            "Serve immediately."
+        ],
+        upgrades: ["Brightness: Add a tiny pinch of lemon zest.", "Garlic Kick: Add 1 small minced garlic clove (cook briefly in butter first).", "Protein Boost: Stir in 1 cup of shredded chicken."]
     }
 ];
 
