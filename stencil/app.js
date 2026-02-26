@@ -134,41 +134,32 @@ const LOWERCASE_PATHS = {
 
 Object.assign(LETTER_PATHS, LOWERCASE_PATHS);
 
-// Educational "Sight Words" (Dolch List + Common Nouns)
-// Grouped roughly by Length/Difficulty for potential leveling
+// --- STENCIL CERTIFIED WORD ASSETS ---
+// These are the words that have verified .png icons in /assets
+const STENCIL_CERTIFIED = [
+    'APPLE', 'BALL', 'BAT', 'BEE', 'BOOK', 'BUS', 'CAR', 'CAT', 'CRAB', 'CUP',
+    'DOG', 'DUCK', 'FISH', 'FLOWER', 'FROG', 'HAT', 'HORSE', 'LION', 'MOON',
+    'ROBOT', 'ROCKET', 'SHIP', 'SOCK', 'STAR', 'SUN', 'TRAIN', 'TREE', 'WHALE'
+];
+
+// Automatically build VOCABULARY_IMAGES
+const VOCABULARY_IMAGES = {};
+STENCIL_CERTIFIED.forEach(word => {
+    const fileName = word.toLowerCase();
+    VOCABULARY_IMAGES[word] = `<img src="assets/${fileName}.png" alt="${word}">`;
+});
+
+// Automatically build WORD_BANKS based on difficulty (word length)
 const WORD_BANKS = {
-    level1: ["A", "I", "GO", "UP", "ME", "MY", "NO", "IS", "IT", "IN", "ON", "HE", "WE", "SO", "DO", "AT", "AM", "BE", "AS", "BY", "OR", "OF", "AN", "IF"],
-    level2: ["THE", "AND", "YOU", "SEE", "CAN", "BIG", "RED", "RUN", "ONE", "TWO", "BLUE", "HAS", "NOT", "FOR", "GET", "YES", "DID", "EAT", "NEW", "SAW", "SAY", "SHE", "HIM", "HER", "HIS", "HAD", "LET", "MAY", "WAY", "WHO", "BUT", "ALL", "ANY", "ARE", "BOY", "BUY", "CAT", "COW", "DOG", "EGG", "FUN", "JOY", "KEY", "MAN", "MOM", "DAD"],
-    level3: ["LOOK", "PLAY", "JUMP", "HELP", "WITH", "THAT", "THIS", "THEY", "WILL", "LIKE", "VOTE", "MAKE", "GOOD", "INTO", "WANT", "HAVE", "WENT", "RIDE", "SOON", "CAME", "FOUR", "FIVE", "NINE", "MUST", "WELL", "ATE", "SAY", "RAN", "NOW", "OUR", "OUT", "TOO", "USE", "WARM", "WASH", "WALK"],
-    level4: ["WHERE", "LITTLE", "THREE", "SEVEN", "YELLOW", "FUNNY", "PLEASE", "PRETTY", "WHITE", "BLACK", "BROWN", "THERE", "UNDER", "ROUND", "AGAIN", "THANK", "SMILE", "THINK", "BRING", "CARRY", "SMALL", "FOUND", "LIGHT", "NEVER", "TODAY", "START", "LAUGH", "EIGHT", "ABOUT"]
+    level1: STENCIL_CERTIFIED.filter(w => w.length === 3), // e.g. CAT, DOG (Base)
+    level2: STENCIL_CERTIFIED.filter(w => w.length === 4), // e.g. BALL, FISH (Beginner)
+    level3: STENCIL_CERTIFIED.filter(w => w.length === 5), // e.g. APPLE, TRAIN (Intermediate)
+    level4: STENCIL_CERTIFIED.filter(w => w.length >= 6),  // e.g. FLOWER, ROCKET (Advanced)
+    all: STENCIL_CERTIFIED
 };
 
-// Flatten for default usage, but keep structure available for complexity logic
-const VALID_WORDS = [
-    ...WORD_BANKS.level1,
-    ...WORD_BANKS.level2,
-    ...WORD_BANKS.level3,
-    ...WORD_BANKS.level4
-].filter(w => w.split('').every(c => LETTER_PATHS[c])); // Safety filter
-
-const VOCABULARY_IMAGES = {
-    'BALL': `<img src="assets/ball.png" alt="BALL">`,
-    'BAT': `<img src="assets/bat.png" alt="BAT">`,
-    'BOOK': `<img src="assets/book.png" alt="BOOK">`,
-    'CAR': `<img src="assets/car.png" alt="CAR">`,
-    'CAT': `<img src="assets/cat.png" alt="CAT">`,
-    'CRAB': `<img src="assets/crab.png" alt="CRAB">`,
-    'CUP': `<img src="assets/cup.png" alt="CUP">`,
-    'DOG': `<img src="assets/dog.png" alt="DOG">`,
-    'DUCK': `<img src="assets/duck.png" alt="DUCK">`,
-    'FISH': `<img src="assets/fish.png" alt="FISH">`,
-    'FROG': `<img src="assets/frog.png" alt="FROG">`,
-    'HAT': `<img src="assets/hat.png" alt="HAT">`,
-    'SOCK': `<img src="assets/sock.png" alt="SOCK">`,
-    'STAR': `<img src="assets/star.png" alt="STAR">`,
-    'SUN': `<img src="assets/sun.png" alt="SUN">`,
-    'TREE': `<img src="assets/tree.png" alt="TREE">`
-};
+// Flatten for default usage
+const VALID_WORDS = STENCIL_CERTIFIED.filter(w => w.split('').every(c => LETTER_PATHS[c]));
 
 // Configuration
 const CONFIG = {
@@ -383,14 +374,18 @@ function resetGame() {
 function startNewWord() {
     // 1. Determine eligible words
     const selectedLevel = SETTINGS.level;
+    const isVocab = SETTINGS.mode === 'vocabulary';
 
     let eligibleWords = [];
-    if (SETTINGS.mode === 'vocabulary') {
-        eligibleWords = Object.keys(VOCABULARY_IMAGES);
-    } else if (selectedLevel === 'all' || !WORD_BANKS[selectedLevel]) {
-        eligibleWords = VALID_WORDS;
+    const levelWords = (selectedLevel === 'all' || !WORD_BANKS[selectedLevel]) ? VALID_WORDS : WORD_BANKS[selectedLevel];
+
+    if (isVocab) {
+        // Filter the level-appropriate words to only those that have icons
+        eligibleWords = levelWords.filter(w => VOCABULARY_IMAGES[w.toUpperCase()]);
+        // If no overlap (unlikely now with unified bank), fallback to levelWords
+        if (eligibleWords.length === 0) eligibleWords = levelWords;
     } else {
-        eligibleWords = WORD_BANKS[selectedLevel];
+        eligibleWords = levelWords;
     }
 
     // Safety check
@@ -398,10 +393,11 @@ function startNewWord() {
 
     // 2. Pick a new word (different from current if possible)
     let newWord = GAME_STATE.word;
-    // Allow repeat if only 1 word available (unlikely)
+    // Allow repeat if only 1 word available
     if (eligibleWords.length > 1) {
         let attempts = 0;
-        while (newWord === GAME_STATE.word && attempts < 10) {
+        let lastWord = GAME_STATE.word.toUpperCase();
+        while (newWord.toUpperCase() === lastWord && attempts < 10) {
             newWord = eligibleWords[Math.floor(Math.random() * eligibleWords.length)];
             attempts++;
         }
