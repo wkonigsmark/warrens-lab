@@ -137,9 +137,9 @@ Object.assign(LETTER_PATHS, LOWERCASE_PATHS);
 // --- STENCIL CERTIFIED WORD ASSETS ---
 // These are the words that have verified .png icons in /assets
 const STENCIL_CERTIFIED = [
-    'APPLE', 'BALL', 'BAT', 'BEE', 'BOOK', 'BUS', 'CAR', 'CAT', 'CRAB', 'CUP',
-    'DOG', 'DUCK', 'FISH', 'FLOWER', 'FROG', 'HAT', 'HORSE', 'LION', 'MOON',
-    'ROBOT', 'ROCKET', 'SHIP', 'SOCK', 'STAR', 'SUN', 'TRAIN', 'TREE', 'WHALE'
+    'APPLE', 'BALL', 'BAT', 'BEE', 'BOOK', 'BUS', 'CAKE', 'CAR', 'CAT', 'CRAB', 'CUP',
+    'DOG', 'DRUM', 'DUCK', 'FISH', 'FLOWER', 'FROG', 'HAT', 'HORSE', 'LION', 'MOON',
+    'OWL', 'PEAR', 'ROBOT', 'ROCKET', 'SHIP', 'SOCK', 'STAR', 'SUN', 'TRAIN', 'TREE', 'WHALE'
 ];
 
 // Automatically build VOCABULARY_IMAGES
@@ -1116,16 +1116,26 @@ function drawStartBeacon() {
 
 // Vocabulary Feature
 function showVocabularyTest() {
-    const word = GAME_STATE.word;
+    // 1. Normalize the target word to uppercase for reliable dictionary lookup
+    const wordBase = (GAME_STATE.word || '').toUpperCase();
     const vocabModal = document.getElementById('vocabModal');
     const vocabImages = document.getElementById('vocabImages');
+
+    if (!vocabModal || !vocabImages) return;
 
     // Clear previous images
     vocabImages.innerHTML = '';
 
-    // Get distractors
-    const allWords = Object.keys(VOCABULARY_IMAGES);
-    const distractors = allWords.filter(w => w !== word);
+    // 2. Identify all possible words with mapped images
+    const allAssetKeys = Object.keys(VOCABULARY_IMAGES);
+
+    // 3. Ensure the correct word is actually in the bank
+    if (!VOCABULARY_IMAGES[wordBase]) {
+        console.warn(`Stencil Error: No image mapped for "${wordBase}". Please check STENCIL_CERTIFIED list and assets folder.`);
+    }
+
+    // 4. Gather distractors (all other words)
+    const distractors = allAssetKeys.filter(w => w !== wordBase);
 
     // Shuffle distractors
     for (let i = distractors.length - 1; i > 0; i--) {
@@ -1133,34 +1143,45 @@ function showVocabularyTest() {
         [distractors[i], distractors[j]] = [distractors[j], distractors[i]];
     }
 
-    // Select 2 or 3 distractors for a total of 3 or 4 choices
-    const numChoices = Math.min(4, allWords.length);
-    const selectedWords = [word, ...distractors.slice(0, numChoices - 1)];
+    // 5. Build final choice array (Correct Word + up to 3 distractors)
+    const numChoices = Math.min(4, allAssetKeys.length);
+    const selectedWords = [wordBase, ...distractors.slice(0, numChoices - 1)];
 
-    // Shuffle selected words
+    // Final shuffle so the correct answer isn't always first
     for (let i = selectedWords.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [selectedWords[i], selectedWords[j]] = [selectedWords[j], selectedWords[i]];
     }
 
-    // Create elements
+    // 6. Create selection buttons
     selectedWords.forEach(w => {
         const btn = document.createElement('button');
         btn.className = 'vocab-option';
-        btn.innerHTML = VOCABULARY_IMAGES[w];
-        btn.onclick = () => handleVocabSelection(w, word, btn);
+
+        // Safety fallback: If dictionary lookup fails, show a descriptive label instead of "undefined"
+        const imgHtml = VOCABULARY_IMAGES[w];
+        if (imgHtml) {
+            btn.innerHTML = imgHtml;
+        } else {
+            btn.innerHTML = `<div class="missing-asset">?<span>${w}</span></div>`;
+            console.error(`Vocabulary choice error: Missing asset for "${w}"`);
+        }
+
+        btn.onclick = () => handleVocabSelection(w, wordBase, btn);
         vocabImages.appendChild(btn);
     });
 
-    // Set target word explicitly in the box
-    document.getElementById('vocabTargetWord').textContent = word.toUpperCase();
+    // Populate the target word text
+    const targetLabel = document.getElementById('vocabTargetWord');
+    if (targetLabel) targetLabel.textContent = wordBase;
 
-    // Show modal
+    // Show the modal
     vocabModal.classList.remove('hidden');
 }
 
 function handleVocabSelection(selectedWord, correctWord, btnElement) {
-    if (selectedWord === correctWord) {
+    // Normalizing both to uppercase for safety
+    if (selectedWord.toUpperCase() === correctWord.toUpperCase()) {
         // Success
         btnElement.classList.add('correct');
         playLockSound();
