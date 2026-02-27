@@ -1232,7 +1232,18 @@
     ];
 
     function openWorksheet(problems, metaLines) {
-      const selectedAnts = [...ANT_ASSETS].sort(() => 0.5 - Math.random()).slice(0, 3);
+      let selectedAnts = [];
+
+      // 10% chance for the "Math Master" easter egg image
+      if (Math.random() < 0.10) {
+        selectedAnts.push('math_master.png');
+        const others = [...ANT_ASSETS].sort(() => 0.5 - Math.random()).slice(0, 2);
+        selectedAnts.push(...others);
+        selectedAnts.sort(() => 0.5 - Math.random()); // Randomize position
+      } else {
+        selectedAnts = [...ANT_ASSETS].sort(() => 0.5 - Math.random()).slice(0, 3);
+      }
+
       const win = window.open('', '_blank');
       if (!win) {
         alert("Please allow popups to print.");
