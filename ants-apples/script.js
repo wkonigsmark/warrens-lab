@@ -1062,6 +1062,15 @@
     function printWorksheet() {
       const opSymbol = (operation === 'add') ? '+' : (operation === 'multiply') ? '×' : '÷';
       const problems = [];
+      const antImages = [
+        'ant_jazz_hands.png', 'ants_apple_cart.png', 'ants_apple_hoist.png',
+        'ants_basket_apple.png', 'ants_behind_apple.png', 'ants_celebration.png',
+        'ants_chalkboard.png', 'ants_glasses.png', 'ants_grad.png',
+        'ants_homework.png', 'ants_pencil.png', 'ants_pencil_3.png'
+      ];
+
+      // Shuffle and pick 3 random ants
+      const selectedAnts = [...antImages].sort(() => 0.5 - Math.random()).slice(0, 3);
 
       ROWS.forEach(r => {
         COLS.forEach(c => {
@@ -1080,44 +1089,146 @@
         return;
       }
 
+      // Base URL to ensure assets load in the new window
+      const baseUrl = window.location.href.split('index.html')[0];
+
       win.document.write(`
         <!DOCTYPE html>
         <html>
         <head>
-          <title>Ants & Apples Worksheet</title>
+          <base href="${baseUrl}">
+          <title> </title> <!-- Empty title helps hide center header -->
           <style>
-            body { font-family: sans-serif; padding: 40px; color: #222; }
-            h1 { text-align: center; margin-bottom: 30px; color: #333; }
-            .meta { margin-bottom: 20px; font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 10px; }
-            .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin-top: 30px; }
-            .problem { font-size: 1.8rem; padding: 15px; border-bottom: 1px dashed #ccc; }
-            .footer { margin-top: 50px; text-align: center; font-size: 0.9rem; color: #888; border-top: 1px solid #eee; padding-top: 20px; }
+            @page { 
+              size: landscape; 
+              margin: 0; /* This is the key to hiding browser headers/footers */
+            }
+            body { 
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+              margin: 0; 
+              padding: 0;
+              color: #222;
+              background: #fff;
+            }
+            .page-container {
+              padding: 1in;
+              min-height: 100vh;
+              box-sizing: border-box;
+              display: flex;
+              flex-direction: column;
+              position: relative;
+              border: 15px solid #333; /* Thick border for "coloring book" feel */
+              margin: 0;
+            }
+            .worksheet-header {
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+              margin-bottom: 30px;
+              border-bottom: 3px solid #333;
+              padding-bottom: 20px;
+            }
+            .header-image-container {
+              flex: 1;
+              text-align: left;
+            }
+            .header-logo {
+              max-width: 280px;
+              height: auto;
+              display: block;
+            }
+            h1 { 
+              margin: 0; 
+              font-size: 2.2rem;
+              text-transform: uppercase;
+              letter-spacing: 2px;
+            }
+            .meta { 
+              display: flex; 
+              flex-direction: column;
+              align-items: flex-end;
+              gap: 8px;
+              font-weight: bold; 
+              font-size: 1.1rem;
+              text-align: right;
+            }
+            .grid { 
+              display: grid; 
+              grid-template-columns: repeat(3, 1fr); 
+              gap: 25px; 
+              flex-grow: 1;
+            }
+            .problem { 
+              font-size: 1.8rem; 
+              padding: 15px 5px; 
+              white-space: nowrap; 
+            }
+            .coloring-section {
+              margin-top: 30px;
+              display: flex;
+              justify-content: space-around;
+              align-items: flex-end;
+              flex-grow: 0.5;
+            }
+            .ant-illustration {
+              max-width: 180px;
+              max-height: 150px;
+              height: auto;
+              opacity: 0.9;
+              filter: grayscale(1); /* Keep it coloring-friendly */
+            }
+            .footer { 
+              margin-top: 15px; 
+              display: flex;
+              justify-content: space-between;
+              font-size: 0.75rem; 
+              color: #888;
+            }
+            .no-print { 
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              z-index: 1000;
+            }
             @media print {
               .no-print { display: none; }
-              body { padding: 20px; }
+              .page-container { border-color: #000; }
             }
           </style>
         </head>
         <body>
-          <div class="no-print" style="margin-bottom: 20px; text-align: right;">
-            <button onclick="window.print()" style="padding: 10px 20px; background: #333; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Print PDF</button>
+          <div class="no-print">
+            <button onclick="window.print()" style="padding: 12px 24px; background: #2e7d32; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">Print / Save PDF</button>
           </div>
-          <h1>Ants & Apples Worksheet</h1>
-          <div class="meta">
-            Grid: ${gridSize}x${gridSize} &nbsp;|&nbsp; Operation: ${opLabel()} (${opSymbol})
+          <div class="page-container">
+            <header class="worksheet-header">
+              <div class="header-image-container">
+                <img src="assets/ants-apples-text.png" 
+                     class="header-logo" 
+                     alt="Ants & Apples" 
+                     onerror="this.style.display='none'; document.getElementById('fallback-title').style.display='block';">
+                <h1 id="fallback-title" style="display:none;">Ants & Apples</h1>
+              </div>
+
+              <div class="meta">
+                <span>Name: ______________________</span>
+                <span>Date: ___________</span>
+                <span style="margin-top: 12px;">Grid: ${gridSize}x${gridSize}</span>
+                <span>Operator: ${opSymbol}</span>
+              </div>
+            </header>
+            <div class="grid">
+              ${problems.map(p => `<div class="problem">${p} ________</div>`).join('')}
+            </div>
+            
+            <div class="coloring-section">
+              ${selectedAnts.map(img => `<img src="assets/coloring-template-ants/${img}" class="ant-illustration" alt="Ant Art">`).join('')}
+            </div>
+
+            <div class="footer">
+              <span>Ants & Apples Math Master · Page 1/1</span>
+            </div>
           </div>
-          <div class="grid">
-            ${problems.map(p => `<div class="problem">${p} ________</div>`).join('')}
-          </div>
-          <div class="footer">
-            Generated by Ants & Apples Math Master
-          </div>
-          <script>
-            // Auto-trigger print dialog
-            window.onload = function() {
-              // window.print();
-            };
-          </script>
         </body>
         </html>
       `);
