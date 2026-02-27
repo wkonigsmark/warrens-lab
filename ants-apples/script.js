@@ -1080,8 +1080,9 @@
         });
       });
 
-      // Shuffle problems to make it a real worksheet
+      // Shuffle and pick 12 random problems
       shuffleArray(problems);
+      const selectedProblems = problems.slice(0, 12);
 
       const win = window.open('', '_blank');
       if (!win) {
@@ -1100,8 +1101,7 @@
           <title> </title> <!-- Empty title helps hide center header -->
           <style>
             @page { 
-              size: landscape; 
-              margin: 0; /* This is the key to hiding browser headers/footers */
+              margin: 0; /* Helps hide browser headers/footers */
             }
             body { 
               font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -1111,13 +1111,12 @@
               background: #fff;
             }
             .page-container {
-              padding: 1in;
+              padding: 0.5in; /* Safe area but closer to edge for "full bleed" feel */
               min-height: 100vh;
               box-sizing: border-box;
               display: flex;
               flex-direction: column;
               position: relative;
-              border: 15px solid #333; /* Thick border for "coloring book" feel */
               margin: 0;
             }
             .worksheet-header {
@@ -1154,28 +1153,33 @@
             }
             .grid { 
               display: grid; 
-              grid-template-columns: repeat(3, 1fr); 
-              gap: 25px; 
-              flex-grow: 1;
+              grid-template-columns: repeat(6, 1fr); 
+              gap: 20px; 
+              flex-grow: 0;
+              align-content: start;
+              margin-top: 20px;
             }
             .problem { 
-              font-size: 1.8rem; 
-              padding: 15px 5px; 
+              font-size: 1.5rem; 
+              padding: 12px 2px; 
               white-space: nowrap; 
+              text-align: center;
+              border-bottom: 2px dashed #ececec; /* Light guide */
             }
             .coloring-section {
-              margin-top: 30px;
+              margin-top: 20px;
               display: flex;
               justify-content: space-around;
               align-items: flex-end;
-              flex-grow: 0.5;
+              flex-grow: 1; /* Expand to fill space */
+              padding-bottom: 20px;
             }
             .ant-illustration {
-              max-width: 180px;
-              max-height: 150px;
+              max-width: 250px;
+              max-height: 250px;
               height: auto;
               opacity: 0.9;
-              filter: grayscale(1); /* Keep it coloring-friendly */
+              filter: grayscale(1);
             }
             .footer { 
               margin-top: 15px; 
@@ -1192,7 +1196,6 @@
             }
             @media print {
               .no-print { display: none; }
-              .page-container { border-color: #000; }
             }
           </style>
         </head>
@@ -1218,7 +1221,7 @@
               </div>
             </header>
             <div class="grid">
-              ${problems.map(p => `<div class="problem">${p} ________</div>`).join('')}
+              ${selectedProblems.map(p => `<div class="problem">${p} ____</div>`).join('')}
             </div>
             
             <div class="coloring-section">
