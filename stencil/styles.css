@@ -23,16 +23,17 @@ body {
 
 .banner-container {
     width: 100%;
-    margin-bottom: 5px;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0px;
+    padding: 10px 0;
 }
 
 .banner-img {
-    width: 100%;
+    max-width: 280px;
     height: auto;
     display: block;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .container {
