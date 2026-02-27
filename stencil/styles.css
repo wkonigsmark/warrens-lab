@@ -6,7 +6,9 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: #f9f6f0;
+    background-image: radial-gradient(#dcdcdc 0.5px, transparent 0.5px);
+    background-size: 15px 15px;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -17,6 +19,20 @@ body {
     -webkit-user-select: none;
     user-select: none;
     -webkit-touch-callout: none;
+}
+
+.banner-container {
+    width: 100%;
+    margin-bottom: 5px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.banner-img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 .container {
@@ -31,14 +47,15 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
     padding: 15px 25px;
     border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 .clear-button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4458be 0%, #2f3e8b 100%);
     color: white;
     border: none;
     padding: 12px 30px;
@@ -47,7 +64,7 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 15px rgba(68, 88, 190, 0.3);
 }
 
 .clear-button:hover {
@@ -56,7 +73,7 @@ body {
 }
 
 .new-word-button {
-    background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
+    background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
     color: white;
     border: none;
     padding: 12px 30px;
@@ -65,7 +82,7 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(86, 171, 47, 0.4);
+    box-shadow: 0 4px 15px rgba(241, 196, 15, 0.3);
 }
 
 .new-word-button:hover {
@@ -85,7 +102,7 @@ body {
 .level-indicator {
     font-size: 18px;
     font-weight: 600;
-    color: #667eea;
+    color: #2c3e50;
 }
 
 .canvas-wrapper {
@@ -178,18 +195,6 @@ body {
     }
 }
 
-/* New Controls Layout */
-.controls {
-    display: flex !important;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 15px 25px;
-    border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
 
 .settings-group {
     display: flex;
@@ -207,7 +212,7 @@ body {
 .settings-item label {
     font-size: 14px;
     font-weight: bold;
-    color: #764ba2;
+    color: #2c3e50;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -215,8 +220,8 @@ body {
 /* Setting Buttons */
 .setting-val {
     background: #fff;
-    border: 2px solid #764ba2;
-    color: #764ba2;
+    border: 2px solid #2c3e50;
+    color: #2c3e50;
     font-size: 1.2rem;
     font-weight: bold;
     padding: 10px 20px;
@@ -228,7 +233,7 @@ body {
 }
 
 .setting-val:active {
-    background: #764ba2;
+    background: #2c3e50;
     color: #fff;
     transform: scale(0.95);
 }
@@ -293,16 +298,16 @@ body {
 }
 
 .option-btn:active {
-    background: #764ba2;
-    border-color: #764ba2;
+    background: #2c3e50;
+    border-color: #2c3e50;
     color: white;
     transform: scale(0.9);
 }
 
 .option-btn.active {
-    background: #764ba2;
+    background: #2c3e50;
     color: white;
-    border-color: #764ba2;
+    border-color: #2c3e50;
 }
 
 .close-overlay {
@@ -483,7 +488,7 @@ body {
 }
 
 .modal-content h2 {
-    color: #667eea;
+    color: #1a1a2e;
     margin-bottom: 1rem;
     font-size: 2rem;
 }
@@ -496,7 +501,7 @@ body {
 }
 
 #playAgainBtn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1a1a2e 0%, #2c3e50 100%);
     color: white;
     border: none;
     padding: 15px 30px;
@@ -530,7 +535,7 @@ body {
 }
 
 #vocabModal .vocab-content {
-    border: 5px solid #764ba2;
+    border: 5px solid #2c3e50;
     padding: 2.5rem;
     width: 600px;
     max-width: 95%;
@@ -540,7 +545,7 @@ body {
 #vocabModal h2 {
     font-size: 1.8rem;
     margin-bottom: 0.2rem;
-    color: #764ba2;
+    color: #2c3e50;
 }
 
 .vocab-target-word {
@@ -618,4 +623,22 @@ body {
     75% {
         transform: translateX(-10px);
     }
+}
+
+.missing-asset {
+    font-family: inherit;
+    font-weight: 800;
+    color: #b5c1fb;
+    font-size: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.missing-asset span {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #2c3e50;
+    margin-top: 5px;
 }
