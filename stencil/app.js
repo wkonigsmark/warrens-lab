@@ -139,7 +139,9 @@ Object.assign(LETTER_PATHS, LOWERCASE_PATHS);
 const STENCIL_CERTIFIED = [
     'APPLE', 'BALL', 'BAT', 'BEE', 'BOOK', 'BUS', 'CAKE', 'CAR', 'CAT', 'CRAB', 'CUP',
     'DOG', 'DRUM', 'DUCK', 'FISH', 'FLOWER', 'FROG', 'HAT', 'HORSE', 'LION', 'MOON',
-    'OWL', 'PEAR', 'ROBOT', 'ROCKET', 'SHIP', 'SOCK', 'STAR', 'SUN', 'TRAIN', 'TREE', 'WHALE'
+    'OWL', 'PEAR', 'ROBOT', 'ROCKET', 'SHIP', 'SOCK', 'STAR', 'SUN', 'TRAIN', 'TREE', 'WHALE',
+    'KITE', 'CLOUD', 'SNAIL', 'PIANO', 'FIRE', 'CROWN', 'FOX', 'GIFT', 'BELL', 'KEY', 'LEAF',
+    'FAN', 'MAP', 'RING'
 ];
 
 // Automatically build VOCABULARY_IMAGES
