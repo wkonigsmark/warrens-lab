@@ -1080,9 +1080,17 @@
         });
       });
 
-      // Shuffle and pick 12 random problems
-      shuffleArray(problems);
-      const selectedProblems = problems.slice(0, 12);
+      // Ensure we have exactly 12 problems by repeating if necessary (e.g. for 3x3 grid)
+      const selectedProblems = [];
+      if (problems.length > 0) {
+        // Shuffle the unique list first
+        shuffleArray(problems);
+        for (let i = 0; i < 12; i++) {
+          selectedProblems.push(problems[i % problems.length]);
+        }
+        // Shuffle the final 12 so duplicates are randomized
+        shuffleArray(selectedProblems);
+      }
 
       const win = window.open('', '_blank');
       if (!win) {
