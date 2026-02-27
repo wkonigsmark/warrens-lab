@@ -12,14 +12,7 @@
           <button id="ants-grid-size-btn" type="button">Settings</button>
           <button id="ants-music-toggle" type="button">Music: On</button>
           <button id="ants-print-worksheet" type="button">Print Worksheet</button>
-        </div>
-        <div class="status">
-          <div class="status-line">
-            Level: <span id="ants-level-label">1</span> / <span id="ants-level-max">3</span>
-          </div>
-          <div class="status-line">
-            Time: <span id="ants-timer">0:00</span> · Streak: <span id="ants-streak-current">0</span>
-          </div>
+          <button id="ants-build-worksheet" type="button">Build Worksheet</button>
         </div>
       </header>
       <main>
@@ -28,6 +21,14 @@
           <button class="btn secondary" id="ants-reset-btn">Reset Game</button>
         </div>
         <div class="message" id="ants-message"></div>
+        <div class="status">
+          <div class="status-line">
+            Level: <span id="ants-level-label">1</span> / <span id="ants-level-max">3</span>
+          </div>
+          <div class="status-line">
+            Time: <span id="ants-timer">0:00</span> · Streak: <span id="ants-streak-current">0</span>
+          </div>
+        </div>
 
         <div id="ants-helper">
           <div id="ants-helper-title">Helper Calculator</div>
@@ -123,6 +124,53 @@
           <div id="ants-win-body"></div>
           <div id="ants-win-actions">
             <button id="ants-win-play-again" type="button">Play Again</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Builder Modal -->
+      <div id="ants-build-backdrop">
+        <div id="ants-build-dialog">
+          <div id="ants-build-title">Build Custom Worksheet</div>
+          <div id="ants-build-body">
+            <div class="build-row">
+              <label>Number Range (1):</label>
+              <div class="range-group">
+                <input type="number" id="build-min1" value="1" min="0"> to 
+                <input type="number" id="build-max1" value="10" min="0">
+              </div>
+            </div>
+            <div class="build-row">
+              <label>Number Range (2):</label>
+              <div class="range-group">
+                <input type="number" id="build-min2" value="1" min="0"> to 
+                <input type="number" id="build-max2" value="10" min="0">
+              </div>
+            </div>
+            <div class="build-row">
+              <label>Operator:</label>
+              <select id="build-op">
+                <option value="add">Addition (+)</option>
+                <option value="subtract">Subtraction (-)</option>
+                <option value="multiply">Multiplication (×)</option>
+                <option value="divide">Division (÷)</option>
+              </select>
+            </div>
+            <div class="build-row">
+              <label>Answer Logic:</label>
+              <select id="build-precision">
+                <option value="whole">Whole Numbers (Default)</option>
+                <option value="decimal1">1-Point Decimal (e.g. 1.1, 1.2)</option>
+                <option value="quartile">Quartile Decimals (.25, .50, .75)</option>
+                <option value="eighth">Eighth Decimals (.125, .250, .375...)</option>
+                <option value="decimal2">2-Point Decimal (e.g. 2.15)</option>
+                <option value="decimal3">3+ Point Decimal (e.g. 2.149)</option>
+              </select>
+            </div>
+          </div>
+          <div id="ants-build-actions">
+            <button id="ants-build-cancel-btn" type="button">Cancel</button>
+            <button id="ants-build-generate-btn" type="button">Build & Print</button>
           </div>
         </div>
       </div>
@@ -793,6 +841,31 @@
         printBtn.addEventListener('click', printWorksheet);
       }
 
+      // Build Worksheet
+      const buildBtn = document.getElementById('ants-build-worksheet');
+      if (buildBtn) {
+        buildBtn.addEventListener('click', showBuildOverlay);
+      }
+
+      document.getElementById('build-min1').addEventListener('change', (e) => {
+        const min = parseInt(e.target.value, 10);
+        const max = parseInt(document.getElementById('build-max1').value, 10);
+        if (min > max) document.getElementById('build-max1').value = min;
+      });
+
+      document.getElementById('build-min2').addEventListener('change', (e) => {
+        const min = parseInt(e.target.value, 10);
+        const max = parseInt(document.getElementById('build-max2').value, 10);
+        if (min > max) document.getElementById('build-max2').value = min;
+      });
+
+      document.getElementById('ants-build-cancel-btn').addEventListener('click', hideBuildOverlay);
+      document.getElementById('ants-build-generate-btn').addEventListener('click', generateCustomWorksheet);
+
+      document.getElementById('ants-build-backdrop').addEventListener('click', (e) => {
+        if (e.target.id === 'ants-build-backdrop') hideBuildOverlay();
+      });
+
       // Wire divide note toggle — show hint when Division is selected
       const opRadioEls = document.querySelectorAll('input[name="ants-op"]');
       const divideNote = document.getElementById('ants-divide-note');
@@ -1057,48 +1130,115 @@
       document.getElementById('ants-win-backdrop').style.display = 'none';
     }
 
+    /* ---------- Worksheet Builder ---------- */
+
+    function showBuildOverlay() {
+      document.getElementById('ants-build-backdrop').style.display = 'flex';
+    }
+
+    function hideBuildOverlay() {
+      document.getElementById('ants-build-backdrop').style.display = 'none';
+    }
+
+    function generateCustomWorksheet() {
+      const min1 = parseFloat(document.getElementById('build-min1').value) || 0;
+      const max1 = parseFloat(document.getElementById('build-max1').value) || 10;
+      const min2 = parseFloat(document.getElementById('build-min2').value) || 0;
+      const max2 = parseFloat(document.getElementById('build-max2').value) || 10;
+      const op = document.getElementById('build-op').value;
+      const precision = document.getElementById('build-precision').value;
+
+      const opSymbol = (op === 'add') ? '+' : (op === 'subtract') ? '-' : (op === 'multiply') ? '×' : '÷';
+      const problems = [];
+
+      function getRandom(min, max, prec) {
+        if (prec === 'whole') {
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        } else if (prec === 'decimal1') {
+          const steps = (max - min) / 0.1;
+          const val = (Math.floor(Math.random() * (steps + 1)) * 0.1) + min;
+          return parseFloat(val.toFixed(1));
+        } else if (prec === 'quartile') {
+          const steps = (max - min) / 0.25;
+          const val = (Math.floor(Math.random() * (steps + 1)) * 0.25) + min;
+          return parseFloat(val.toFixed(2));
+        } else if (prec === 'eighth') {
+          const steps = (max - min) / 0.125;
+          const val = (Math.floor(Math.random() * (steps + 1)) * 0.125) + min;
+          return parseFloat(val.toFixed(3));
+        } else {
+          const places = (prec === 'decimal2') ? 2 : 3;
+          const val = Math.random() * (max - min) + min;
+          return parseFloat(val.toFixed(places));
+        }
+      }
+
+      for (let i = 0; i < 12; i++) {
+        let a = getRandom(min1, max1, precision);
+        let b = getRandom(min2, max2, precision);
+
+        // Sanity check for subtraction (no negative results for kids usually, but we'll allow it if they set it)
+        // Sanity check for division (no divide by zero)
+        if (op === 'divide' && b === 0) b = 1;
+
+        problems.push(`${a} ${opSymbol} ${b} = `);
+      }
+
+      const opName = (op === 'add') ? 'Addition' : (op === 'subtract') ? 'Subtraction' : (op === 'multiply') ? 'Multiplication' : 'Division';
+      const metaLines = [
+        `Operation: ${opName} (${opSymbol})`,
+        `Logic: ${precision.toUpperCase()}`
+      ];
+
+      hideBuildOverlay();
+      openWorksheet(problems, metaLines);
+    }
+
     /* ---------- Worksheet Print ---------- */
 
     function printWorksheet() {
       const opSymbol = (operation === 'add') ? '+' : (operation === 'multiply') ? '×' : '÷';
-      const problems = [];
-      const antImages = [
-        'ant_jazz_hands.png', 'ants_apple_cart.png', 'ants_apple_hoist.png',
-        'ants_basket_apple.png', 'ants_behind_apple.png', 'ants_celebration.png',
-        'ants_chalkboard.png', 'ants_glasses.png', 'ants_grad.png',
-        'ants_homework.png', 'ants_pencil.png', 'ants_pencil_3.png'
-      ];
-
-      // Shuffle and pick 3 random ants
-      const selectedAnts = [...antImages].sort(() => 0.5 - Math.random()).slice(0, 3);
+      const availableProblems = [];
 
       ROWS.forEach(r => {
         COLS.forEach(c => {
           if (operation !== 'divide' || r % c === 0) {
-            problems.push(`${r} ${opSymbol} ${c} = `);
+            availableProblems.push(`${r} ${opSymbol} ${c} = `);
           }
         });
       });
 
-      // Ensure we have exactly 12 problems by repeating if necessary (e.g. for 3x3 grid)
       const selectedProblems = [];
-      if (problems.length > 0) {
-        // Shuffle the unique list first
-        shuffleArray(problems);
+      if (availableProblems.length > 0) {
+        shuffleArray(availableProblems);
         for (let i = 0; i < 12; i++) {
-          selectedProblems.push(problems[i % problems.length]);
+          selectedProblems.push(availableProblems[i % availableProblems.length]);
         }
-        // Shuffle the final 12 so duplicates are randomized
         shuffleArray(selectedProblems);
       }
 
+      const metaLines = [
+        `Operation: ${opLabel()} (${opSymbol})`
+      ];
+
+      openWorksheet(selectedProblems, metaLines);
+    }
+
+    const ANT_ASSETS = [
+      'ant_jazz_hands.png', 'ants_apple_cart.png', 'ants_apple_hoist.png',
+      'ants_basket_apple.png', 'ants_behind_apple.png', 'ants_celebration.png',
+      'ants_chalkboard.png', 'ants_glasses.png', 'ants_grad.png',
+      'ants_homework.png', 'ants_pencil.png', 'ants_pencil_3.png'
+    ];
+
+    function openWorksheet(problems, metaLines) {
+      const selectedAnts = [...ANT_ASSETS].sort(() => 0.5 - Math.random()).slice(0, 3);
       const win = window.open('', '_blank');
       if (!win) {
-        alert("Please allow popups to print the worksheet.");
+        alert("Please allow popups to print.");
         return;
       }
 
-      // Base URL to ensure assets load in the new window
       const baseUrl = window.location.href.split('index.html')[0];
 
       win.document.write(`
@@ -1135,44 +1275,57 @@
               border-bottom: 3px solid #333;
               padding-bottom: 20px;
             }
-            .header-image-container {
-              flex: 1;
+            .header-left {
+              flex: 0 0 210px;
               text-align: left;
             }
             .header-logo {
-              max-width: 280px;
+              max-width: 210px;
               height: auto;
               display: block;
             }
-            h1 { 
-              margin: 0; 
-              font-size: 2.2rem;
-              text-transform: uppercase;
-              letter-spacing: 2px;
+            .header-center {
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: flex-start;
+              gap: 8px;
+              font-weight: bold;
+              font-size: 1.1rem;
+              text-align: center;
             }
-            .meta { 
-              display: flex; 
+            .header-right {
+              flex: 0 0 auto;
+              display: flex;
               flex-direction: column;
               align-items: flex-end;
               gap: 8px;
-              font-weight: bold; 
+              font-weight: bold;
               font-size: 1.1rem;
               text-align: right;
+            }
+            h1 { 
+              margin: 0; 
+              font-size: 1.8rem;
+              text-transform: uppercase;
+              letter-spacing: 2px;
             }
             .grid { 
               display: grid; 
               grid-template-columns: repeat(6, 1fr); 
-              gap: 20px; 
+              gap: 15px; 
               flex-grow: 0;
               align-content: start;
               margin-top: 20px;
+              width: 100%;
             }
             .problem { 
-              font-size: 1.5rem; 
+              font-size: 1.3rem; 
               padding: 12px 2px; 
               white-space: nowrap; 
               text-align: center;
-              border-bottom: 2px dashed #ececec; /* Light guide */
+              border-bottom: 2px dashed #f0f0f0; /* Subtle but clear guide */
             }
             .coloring-section {
               margin-top: 20px;
@@ -1183,8 +1336,8 @@
               padding-bottom: 20px;
             }
             .ant-illustration {
-              max-width: 250px;
-              max-height: 250px;
+              max-width: 320px;
+              max-height: 320px;
               height: auto;
               opacity: 0.9;
               filter: grayscale(1);
@@ -1213,7 +1366,7 @@
           </div>
           <div class="page-container">
             <header class="worksheet-header">
-              <div class="header-image-container">
+              <div class="header-left">
                 <img src="assets/ants-apples-text.png" 
                      class="header-logo" 
                      alt="Ants & Apples" 
@@ -1221,15 +1374,17 @@
                 <h1 id="fallback-title" style="display:none;">Ants & Apples</h1>
               </div>
 
-              <div class="meta">
+              <div class="header-center">
+                ${metaLines.map(line => `<span>${line}</span>`).join('')}
+              </div>
+
+              <div class="header-right">
                 <span>Name: ______________________</span>
                 <span>Date: ___________</span>
-                <span style="margin-top: 12px;">Grid: ${gridSize}x${gridSize}</span>
-                <span>Operator: ${opSymbol}</span>
               </div>
             </header>
             <div class="grid">
-              ${selectedProblems.map(p => `<div class="problem">${p} ____</div>`).join('')}
+              ${problems.map(p => `<div class="problem">${p.trim()} ___</div>`).join('')}
             </div>
             
             <div class="coloring-section">
