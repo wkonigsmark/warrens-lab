@@ -51,7 +51,8 @@ body {
     backdrop-filter: blur(10px);
     padding: 20px 30px;
     border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    position: relative;
 }
 
 .controls-row {
@@ -62,7 +63,7 @@ body {
 
 .top-row {
     justify-content: flex-start;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
     padding-bottom: 15px;
     margin-bottom: 5px;
     position: relative;
@@ -146,22 +147,32 @@ body {
     box-shadow: 0 6px 20px rgba(22, 160, 133, 0.5);
 }
 
+.draw-print {
+    background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+    box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
+}
+
+.draw-print:hover {
+    box-shadow: 0 6px 20px rgba(142, 68, 173, 0.5);
+}
+
 .word-display {
     display: none;
     /* Hidden used for internal logic or debug if needed */
 }
 
 .level-indicator {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 800;
     color: #2c3e50;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-left: 15px;
     text-align: right;
-    max-width: 120px;
     line-height: 1.2;
     opacity: 0.8;
+    position: absolute;
+    right: 30px;
+    top: 25px;
 }
 
 .canvas-wrapper {
@@ -274,7 +285,7 @@ body {
 /* Setting Buttons */
 .setting-val {
     background: #fff;
-    border: 2px solid #2c3e50;
+    border: 1.5px solid rgba(44, 62, 80, 0.2);
     color: #2c3e50;
     font-size: 1.2rem;
     font-weight: bold;
@@ -810,6 +821,56 @@ body {
         color: rgba(0, 0, 0, 0.1);
         padding-left: 10px;
         white-space: nowrap;
+    }
+
+    /* Draw & Write Specifics */
+    .large-name-field {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        font-size: 32px;
+        font-weight: 600;
+        margin-bottom: 50px;
+        width: 100%;
+    }
+
+    .large-name-field span {
+        border-bottom: 2px solid #000;
+        display: inline-block;
+        width: 400px;
+        margin-left: 10px;
+    }
+
+    .draw-box {
+        width: 100%;
+        height: 500px;
+        border: 3px solid #000;
+        margin-bottom: 60px;
+    }
+
+    .guides-container {
+        margin-top: 40px;
+    }
+
+    .trace-row.no-text {
+        height: 60px;
+        margin-bottom: 40px;
+    }
+
+    .guide-icons-print {
+        position: absolute;
+        left: -40px;
+        top: -6px;
+        /* Offset to center emojis on lines */
+        bottom: -14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        font-size: 20px;
+        line-height: 1;
+    }
+
+    .short-row {
+        margin-left: 60px;
+        width: calc(100% - 60px) !important;
     }
 }
 

@@ -290,6 +290,7 @@ function init() {
     document.getElementById('clearBtn').addEventListener('click', resetWord);
     document.getElementById('newWordBtn').addEventListener('click', forceNextWord);
     document.getElementById('printBtn').addEventListener('click', printWorksheet);
+    document.getElementById('printDrawBtn').addEventListener('click', printDrawWriteWorksheet);
 
     // Setting Button Listeners
     // Add touchstart to ensure early capture on tablets before modal messes with event propagation
@@ -1290,5 +1291,47 @@ function printWorksheet() {
     `;
 
     // 3. Trigger print
+    window.print();
+}
+
+function printDrawWriteWorksheet() {
+    let printContainer = document.getElementById('printableWorksheet');
+    if (!printContainer) {
+        printContainer = document.createElement('div');
+        printContainer.id = 'printableWorksheet';
+        document.body.appendChild(printContainer);
+    }
+
+    printContainer.innerHTML = `
+        <div class="large-name-field">Name: <span></span></div>
+        <div class="draw-box"></div>
+        <div class="guides-container">
+            <div class="trace-row no-text short-row">
+                <div class="guide-icons-print">
+                    <span style="position: absolute; top: -6px;">☀️</span>
+                    <span style="position: absolute; top: 14px;">✈️</span>
+                    <span style="position: absolute; top: 34px;">🌱</span>
+                    <span style="position: absolute; top: 54px;">🪱</span>
+                </div>
+                <div class="trace-guide sky"></div>
+                <div class="trace-guide plane"></div>
+                <div class="trace-guide grass"></div>
+                <div class="trace-guide worm"></div>
+            </div>
+            <div class="trace-row no-text short-row">
+                <div class="guide-icons-print">
+                    <span style="position: absolute; top: -6px;">☀️</span>
+                    <span style="position: absolute; top: 14px;">✈️</span>
+                    <span style="position: absolute; top: 34px;">🌱</span>
+                    <span style="position: absolute; top: 54px;">🪱</span>
+                </div>
+                <div class="trace-guide sky"></div>
+                <div class="trace-guide plane"></div>
+                <div class="trace-guide grass"></div>
+                <div class="trace-guide worm"></div>
+            </div>
+        </div>
+    `;
+
     window.print();
 }
