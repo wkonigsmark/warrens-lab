@@ -174,11 +174,16 @@ Object.assign(LETTER_PATHS, NUMERIC_PATHS);
 // --- STENCIL CERTIFIED WORD ASSETS ---
 // These are the words that have verified .png icons in /assets
 const STENCIL_CERTIFIED = [
-    'APPLE', 'BALL', 'BAT', 'BEE', 'BOOK', 'BUS', 'CAKE', 'CAR', 'CAT', 'CRAB', 'CUP',
-    'DOG', 'DRUM', 'DUCK', 'FISH', 'FLOWER', 'FROG', 'HAT', 'HORSE', 'LION', 'MOON',
-    'OWL', 'PEAR', 'ROBOT', 'ROCKET', 'SHIP', 'SOCK', 'STAR', 'SUN', 'TRAIN', 'TREE', 'WHALE',
-    'KITE', 'CLOUD', 'SNAIL', 'PIANO', 'FIRE', 'CROWN', 'FOX', 'GIFT', 'BELL', 'KEY', 'LEAF',
-    'FAN', 'MAP', 'RING'
+    'ANT', 'APPLE', 'BALL', 'BAT', 'BATH', 'BATTERY', 'BEE', 'BELL', 'BIKE', 'BOOK',
+    'BREAD', 'BRUSH', 'BUS', 'CAKE', 'CAMEL', 'CAMERA', 'CANDY', 'CAR', 'CARROT', 'CAT',
+    'CHAIR', 'CHEESE', 'CHERRIES', 'CLOCK', 'CLOUD', 'COOKIE', 'CRAB', 'CROWN', 'CUP',
+    'CUPCAKE', 'DICE', 'DOG', 'DRUM', 'DUCK', 'EGG', 'ELEPHANT', 'FAN', 'FIRE', 'FISH',
+    'FLOWER', 'FORK', 'FOX', 'FROG', 'GHOST', 'GIFT', 'GRAPES', 'HAMMER', 'HAND', 'HAT',
+    'HEART', 'HOOK', 'HORSE', 'HOUSE', 'KEY', 'KITE', 'LAMB', 'LAMP', 'LEAF', 'LION',
+    'LOCK', 'MAP', 'MASK', 'MITTS', 'MOON', 'MOUSE', 'OWL', 'PANTS', 'PEAR', 'PENCIL',
+    'PENGUIN', 'PIANO', 'PIZZA', 'PLANE', 'PLANT', 'RAIN', 'RING', 'ROBOT', 'ROCKET',
+    'SCISSORS', 'SHIP', 'SHOE', 'SLED', 'SNAIL', 'SNOW', 'SOCK', 'SPIDER', 'SPOON', 'STAR',
+    'SUN', 'TENT', 'TOOTH', 'TRAIN', 'TREE', 'TRUCK', 'WATCH', 'WAVE', 'WHALE', 'ZEBRA'
 ];
 
 // Automatically build VOCABULARY_IMAGES
