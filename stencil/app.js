@@ -103,6 +103,41 @@ const LETTER_PATHS = {
     'Z': [[[0.15, 0], [0.85, 0]], [[0.85, 0], [0.15, 1]], [[0.15, 1], [0.85, 1]]]
 };
 
+const NUMERIC_PATHS = {
+    '0': [generateArc(0.5, 0.5, 0.4, 0.5, -Math.PI / 2, 1.5 * Math.PI, 24)],
+    '1': [[[0.5, 0], [0.5, 1]], [[0.3, 0.2], [0.5, 0]]],
+    '2': [
+        [[0.15, 0.2], [0.25, 0.05], [0.5, 0], [0.75, 0.05], [0.85, 0.2], [0.85, 0.5], [0.15, 1]],
+        [[0.15, 1], [0.85, 1]]
+    ],
+    '3': [
+        // Top semi-circle
+        generateArc(0.45, 0.3, 0.35, 0.28, -Math.PI * 0.8, Math.PI * 0.4, 15),
+        // Bottom semi-circle (open)
+        generateArc(0.45, 0.72, 0.45, 0.3, -Math.PI * 0.4, Math.PI * 0.7, 15)
+    ],
+    '4': [[[0.8, 0], [0.8, 1]], [[0.8, 0], [0.15, 0.65]], [[0.1, 0.65], [0.95, 0.65]]],
+    '5': [
+        [[0.8, 0], [0.2, 0]],        // Top bar
+        [[0.2, 0], [0.2, 0.4]],      // Stem
+        generateArc(0.5, 0.7, 0.4, 0.3, -Math.PI * 0.9, Math.PI * 0.3, 20) // Open bowl
+    ],
+    '6': [
+        // One continuous organic path for 6
+        [[0.85, 0], [0.5, 0.05], [0.2, 0.25], [0.15, 0.6], [0.2, 0.9], [0.5, 1.0], [0.85, 0.85], [0.85, 0.55], [0.5, 0.4], [0.15, 0.6]]
+    ],
+    '7': [[[0.15, 0], [0.85, 0]], [[0.85, 0], [0.4, 1]]],
+    '8': [
+        // Single continuous infinity/figure-8 loop
+        [[0.5, 0.45], [0.3, 0.3], [0.25, 0.15], [0.5, 0], [0.75, 0.15], [0.7, 0.3], [0.5, 0.45], [0.3, 0.6], [0.2, 0.8], [0.5, 1], [0.8, 0.8], [0.7, 0.6], [0.5, 0.45]]
+    ],
+    '9': [
+        generateArc(0.5, 0.3, 0.35, 0.3, 0, 2 * Math.PI, 24),
+        [[0.9, 0.3], [0.9, 1]]
+    ]
+};
+
+
 const LOWERCASE_PATHS = {
     'a': [generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI), [[0.85, 0.5], [0.85, 1]]],
     'b': [[[0.15, 0], [0.15, 1]], generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI)],
@@ -133,6 +168,7 @@ const LOWERCASE_PATHS = {
 };
 
 Object.assign(LETTER_PATHS, LOWERCASE_PATHS);
+Object.assign(LETTER_PATHS, NUMERIC_PATHS);
 
 // --- STENCIL CERTIFIED WORD ASSETS ---
 // These are the words that have verified .png icons in /assets
@@ -205,7 +241,8 @@ const SETTING_OPTIONS = {
         title: "Game Mode",
         options: [
             { label: 'Spelling', value: 'spelling', short: 'SPL' },
-            { label: 'Vocabulary', value: 'vocabulary', short: 'VOC' }
+            { label: 'Vocabulary', value: 'vocabulary', short: 'VOC' },
+            { label: 'Numbers', value: 'numbers', short: 'NUM' }
         ]
     },
     level: {
@@ -251,6 +288,7 @@ function init() {
 
     document.getElementById('clearBtn').addEventListener('click', resetWord);
     document.getElementById('newWordBtn').addEventListener('click', forceNextWord);
+    document.getElementById('printBtn').addEventListener('click', printWorksheet);
 
     // Setting Button Listeners
     // Add touchstart to ensure early capture on tablets before modal messes with event propagation
@@ -295,6 +333,11 @@ function syncSettingsToUI() {
     }
     if (wordsBtn) wordsBtn.textContent = SETTINGS.words;
     if (roundsBtn) roundsBtn.textContent = SETTINGS.rounds;
+
+    const newWordBtn = document.getElementById('newWordBtn');
+    if (newWordBtn) {
+        newWordBtn.textContent = SETTINGS.mode === 'numbers' ? 'New Number' : 'New Word';
+    }
 
     applyDifficulty();
 }
@@ -344,20 +387,9 @@ function hideSettingsOverlay() {
 
 function selectSetting(type, opt) {
     SETTINGS[type] = opt.value;
-
-    // Update labels on main UI
-    const btn = document.getElementById(`${type}Btn`);
-    if (btn) btn.textContent = opt.short;
-
     hideSettingsOverlay();
-
-    if (type === 'level') {
-        applyDifficulty();
-        if (!GAME_STATE.hasStarted) startNewWord(); // Safe to change mid-word if not started
-    } else {
-        // Mode, words, or rounds changed - Force a hard reset of current progress
-        resetGame();
-    }
+    syncSettingsToUI(); // Force update all UI labels and buttons
+    resetGame();
 }
 
 function resetGame() {
@@ -377,16 +409,22 @@ function startNewWord() {
     // 1. Determine eligible words
     const selectedLevel = SETTINGS.level;
     const isVocab = SETTINGS.mode === 'vocabulary';
+    const isNumbers = SETTINGS.mode === 'numbers';
 
     let eligibleWords = [];
-    const levelWords = (selectedLevel === 'all' || !WORD_BANKS[selectedLevel]) ? VALID_WORDS : WORD_BANKS[selectedLevel];
 
-    if (isVocab) {
+    if (isNumbers) {
+        // Generate a random number between 0 and 999
+        const randomNum = Math.floor(Math.random() * 1000);
+        eligibleWords = [randomNum.toString()];
+    } else if (isVocab) {
+        const levelWords = (selectedLevel === 'all' || !WORD_BANKS[selectedLevel]) ? VALID_WORDS : WORD_BANKS[selectedLevel];
         // Filter the level-appropriate words to only those that have icons
         eligibleWords = levelWords.filter(w => VOCABULARY_IMAGES[w.toUpperCase()]);
         // If no overlap (unlikely now with unified bank), fallback to levelWords
         if (eligibleWords.length === 0) eligibleWords = levelWords;
     } else {
+        const levelWords = (selectedLevel === 'all' || !WORD_BANKS[selectedLevel]) ? VALID_WORDS : WORD_BANKS[selectedLevel];
         eligibleWords = levelWords;
     }
 
@@ -1198,4 +1236,58 @@ function handleVocabSelection(selectedWord, correctWord, btnElement) {
             btnElement.classList.remove('incorrect');
         }, 400); // Wait for shake animation to finish
     }
+}
+
+function printWorksheet() {
+    // 1. Create a print-only container if it doesn't exist
+    let printContainer = document.getElementById('printableWorksheet');
+    if (!printContainer) {
+        printContainer = document.createElement('div');
+        printContainer.id = 'printableWorksheet';
+        document.body.appendChild(printContainer);
+    }
+
+    // 2. Build the worksheet content
+    const today = new Date().toLocaleDateString();
+    printContainer.innerHTML = `
+        <div class="worksheet-header">
+            <div class="header-left">
+                <img src="assets/banner/stencil.png" class="worksheet-logo">
+            </div>
+            <div class="header-right">
+                <div class="meta-item">Name: ______________________</div>
+                <div class="meta-item">Date: ${today}</div>
+            </div>
+        </div>
+        <hr class="worksheet-divider">
+        <div class="worksheet-content">
+            
+            <div class="trace-row">
+                <div class="trace-guide sky"></div>
+                <div class="trace-guide plane"></div>
+                <div class="trace-guide grass"></div>
+                <div class="trace-guide worm"></div>
+                <div class="trace-text">MY NAME IS</div>
+            </div>
+
+            <div class="trace-row">
+                <div class="trace-guide sky"></div>
+                <div class="trace-guide plane"></div>
+                <div class="trace-guide grass"></div>
+                <div class="trace-guide worm"></div>
+                <div class="trace-text">I AM LEARNING TO WRITE.</div>
+            </div>
+
+            <div class="trace-row">
+                <div class="trace-guide sky"></div>
+                <div class="trace-guide plane"></div>
+                <div class="trace-guide grass"></div>
+                <div class="trace-guide worm"></div>
+                <div class="trace-text"></div>
+            </div>
+        </div>
+    `;
+
+    // 3. Trigger print
+    window.print();
 }
