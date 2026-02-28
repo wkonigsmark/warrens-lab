@@ -341,6 +341,12 @@ function syncSettingsToUI() {
         newWordBtn.textContent = SETTINGS.mode === 'numbers' ? 'New Number' : 'New Word';
     }
 
+    const modeIndicator = document.querySelector('.mode-indicator');
+    if (modeIndicator) {
+        const modeOpt = SETTING_OPTIONS.mode.options.find(o => o.value === SETTINGS.mode);
+        modeIndicator.textContent = `Mode: ${modeOpt ? modeOpt.label : 'Vocabulary'}`;
+    }
+
     applyDifficulty();
 }
 
