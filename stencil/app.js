@@ -157,7 +157,7 @@ const LOWERCASE_PATHS = {
     'o': [generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI, 24)],
     'p': [[[0.15, 0.5], [0.15, 1.5]], generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI)],
     'q': [generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI), [[0.85, 0.5], [0.85, 1.5]]],
-    'r': [[[0.2, 0.5], [0.2, 1]], generateArc(0.45, 0.75, 0.25, 0.25, Math.PI, 1.5 * Math.PI)],
+    'r': [[[0.2, 0.5], [0.2, 1]], generateArc(0.6, 0.75, 0.4, 0.25, Math.PI, 1.7 * Math.PI)],
     's': [[[0.85, 0.6], [0.75, 0.52], [0.5, 0.5], [0.3, 0.55], [0.3, 0.65], [0.5, 0.75], [0.75, 0.85], [0.8, 0.95], [0.5, 1], [0.2, 0.9]]],
     't': [[[0.5, 0.1], [0.5, 0.9], [0.6, 1.0], [0.8, 1.0]], [[0.2, 0.5], [0.8, 0.5]]],
     'u': [[[0.2, 0.5], [0.2, 0.8]], generateArc(0.5, 0.8, 0.3, 0.2, Math.PI, 0), [[0.8, 0.5], [0.8, 1]]],
@@ -175,15 +175,16 @@ Object.assign(LETTER_PATHS, NUMERIC_PATHS);
 // These are the words that have verified .png icons in /assets
 const STENCIL_CERTIFIED = [
     'ANT', 'APPLE', 'BALL', 'BAT', 'BATH', 'BATTERY', 'BEE', 'BELL', 'BIKE', 'BOOK',
-    'BREAD', 'BRUSH', 'BUS', 'CAKE', 'CAMEL', 'CAMERA', 'CANDY', 'CAR', 'CARROT', 'CAT',
-    'CHAIR', 'CHEESE', 'CHERRIES', 'CLOCK', 'CLOUD', 'COOKIE', 'CRAB', 'CROWN', 'CUP',
-    'CUPCAKE', 'DICE', 'DOG', 'DRUM', 'DUCK', 'EGG', 'ELEPHANT', 'FAN', 'FIRE', 'FISH',
-    'FLOWER', 'FORK', 'FOX', 'FROG', 'GHOST', 'GIFT', 'GRAPES', 'HAMMER', 'HAND', 'HAT',
-    'HEART', 'HOOK', 'HORSE', 'HOUSE', 'KEY', 'KITE', 'LAMB', 'LAMP', 'LEAF', 'LION',
-    'LOCK', 'MAP', 'MASK', 'MITTS', 'MOON', 'MOUSE', 'OWL', 'PANTS', 'PEAR', 'PENCIL',
-    'PENGUIN', 'PIANO', 'PIZZA', 'PLANE', 'PLANT', 'RAIN', 'RING', 'ROBOT', 'ROCKET',
-    'SCISSORS', 'SHIP', 'SHOE', 'SLED', 'SNAIL', 'SNOW', 'SOCK', 'SPIDER', 'SPOON', 'STAR',
-    'SUN', 'TENT', 'TOOTH', 'TRAIN', 'TREE', 'TRUCK', 'WATCH', 'WAVE', 'WHALE', 'ZEBRA'
+    'BOWLING', 'BREAD', 'BRUSH', 'BUS', 'CAKE', 'CAMEL', 'CAMERA', 'CANDY', 'CAR',
+    'CARROT', 'CAT', 'CHAIR', 'CHEESE', 'CHERRIES', 'CLOCK', 'CLOUD', 'COOKIE', 'CRAB',
+    'CROWN', 'CUP', 'CUPCAKE', 'DICE', 'DOG', 'DRUM', 'DUCK', 'EGG', 'ELEPHANT', 'FAN',
+    'FIRE', 'FISH', 'FLOWER', 'FORK', 'FOX', 'FROG', 'GHOST', 'GIFT', 'GRAPES', 'HAMMER',
+    'HAND', 'HAT', 'HEART', 'HOOK', 'HORN', 'HORSE', 'HOUSE', 'KEY', 'KITE', 'LAMB',
+    'LAMP', 'LEAF', 'LION', 'LOCK', 'MAP', 'MASK', 'MITTS', 'MOON', 'MOUSE', 'OWL',
+    'PANTS', 'PEAR', 'PENCIL', 'PENGUIN', 'PIANO', 'PIG', 'PIZZA', 'PLANE', 'PLANT',
+    'RAIN', 'RING', 'ROBOT', 'ROCKET', 'SCISSORS', 'SHIP', 'SHOE', 'SLED', 'SNAIL',
+    'SNOW', 'SOCK', 'SPIDER', 'SPOON', 'STAR', 'SUN', 'TENT', 'TOOTH', 'TRAIN', 'TREE',
+    'TRUCK', 'VIOLIN', 'WATCH', 'WAVE', 'WHALE', 'ZEBRA'
 ];
 
 // Automatically build VOCABULARY_IMAGES
