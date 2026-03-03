@@ -216,6 +216,15 @@ body {
     box-shadow: 0 6px 20px rgba(243, 156, 18, 0.5);
 }
 
+.independent-print {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+}
+
+.independent-print:hover {
+    box-shadow: 0 6px 20px rgba(44, 62, 80, 0.5);
+}
+
 .word-display {
     display: none;
     /* Hidden used for internal logic or debug if needed */

@@ -323,6 +323,9 @@ function init() {
     
     const printVocabBtn = document.getElementById('printVocabBtn');
     if (printVocabBtn) printVocabBtn.addEventListener('click', printVocabWorksheet);
+    
+    const printIndyBtn = document.getElementById('printIndependentBtn');
+    if (printIndyBtn) printIndyBtn.addEventListener('click', printIndependentWorksheet);
 
     // Setting Button Listeners
     // Add touchstart to ensure early capture on tablets before modal messes with event propagation
@@ -1509,6 +1512,104 @@ function printVocabWorksheet() {
         } else {
             img.addEventListener('load', checkAllLoaded);
             img.addEventListener('error', checkAllLoaded); // Still count as "loaded" so we don't hang
+        }
+    });
+}
+
+/**
+ * GENERATE INDEPENDENT SPELLING WORKSHEET (Worksheet 3)
+ * Features one large picture per row + blank guidelines for independent spelling
+ */
+function printIndependentWorksheet() {
+    let printContainer = document.getElementById('printableWorksheet');
+    if (!printContainer) {
+        printContainer = document.createElement('div');
+        printContainer.id = 'printableWorksheet';
+        document.body.appendChild(printContainer);
+    }
+
+    // 1. Pick 4 random words based on CURRENT LEVEL
+    const currentBank = WORD_BANKS[SETTINGS.level] || WORD_BANKS.all;
+    const candidates = currentBank.filter(w => VOCABULARY_IMAGES[w]);
+    const finalCandidates = candidates.length >= 4 ? candidates : STENCIL_CERTIFIED;
+    const shuffled = [...finalCandidates].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 4);
+
+    let rowsHtml = '';
+    selected.forEach(word => {
+        // Hide guides on Expert level (level4)
+        const showGuides = SETTINGS.level !== 'level4';
+        const guideHtml = showGuides ? `
+            <div class="vocab-quiz-mini-guides">
+                <span>☀️</span>
+                <span>✈️</span>
+                <span>🌱</span>
+                <span>🪱</span>
+            </div>
+        ` : '<div style="flex: 0 0 25px;"></div>';
+
+        const fileName = word.toLowerCase();
+        const imgSrc = `assets/${fileName}.png`;
+
+        rowsHtml += `
+            <div class="vocab-quiz-row" style="justify-content: flex-start;">
+                ${guideHtml}
+                <div class="vocab-quiz-word-box" style="flex: 1; margin-right: 40px;">
+                    <div class="trace-guide sky" style="top: 0;"></div>
+                    <div class="trace-guide plane" style="top: 33%;"></div>
+                    <div class="trace-guide grass" style="top: 66%;"></div>
+                    <div class="trace-guide worm" style="top: 100%;"></div>
+                    <!-- Blank lines for independent writing (No stencil) -->
+                </div>
+                <div class="vocab-quiz-options" style="justify-content: flex-end; flex: 0 0 100px;">
+                    <div class="vocab-quiz-option" style="margin: 0; padding: 0;">
+                        <img src="${imgSrc}" alt="${word}" class="quiz-image" style="width: 100px; height: 100px; border: none; background: transparent;">
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    const levelLabel = DIFFICULTY_LABELS[SETTINGS.level] || 'Custom';
+    printContainer.innerHTML = `
+        <div class="worksheet-header">
+            <img src="assets/banner/stencil.png" class="worksheet-logo">
+            <div class="header-right">
+                <div class="meta-item"><strong>Independent Spelling</strong></div>
+                <div class="meta-item">Level: ${levelLabel}</div>
+                <div class="meta-item">Date: __________ Name: ____________</div>
+            </div>
+        </div>
+        <div class="vocab-quiz-content">
+            ${rowsHtml}
+        </div>
+    `;
+
+    // Wait for images to load before printing
+    const images = printContainer.querySelectorAll('img');
+    let loadedCount = 0;
+    const totalImages = images.length;
+
+    if (totalImages === 0) {
+        window.print();
+        return;
+    }
+
+    const checkAllLoaded = () => {
+        loadedCount++;
+        if (loadedCount >= totalImages) {
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        }
+    };
+
+    images.forEach(img => {
+        if (img.complete) {
+            checkAllLoaded();
+        } else {
+            img.addEventListener('load', checkAllLoaded);
+            img.addEventListener('error', checkAllLoaded);
         }
     });
 }
