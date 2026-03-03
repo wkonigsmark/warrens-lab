@@ -13,10 +13,11 @@
 <body>
     <div class="container">
         <div class="controls">
-            <div class="controls-row top-row">
+            <div class="controls-row top-row" style="position: relative;">
                 <div class="branding-section">
                     <img src="assets/banner/stencil.png" alt="Stencil" class="brand-logo">
                 </div>
+                <!-- Row 1: Word Counters / Settings -->
                 <div class="settings-group">
                     <div class="settings-item">
                         <label>Mode</label>
@@ -35,8 +36,24 @@
                         <button id="roundsBtn" class="setting-val">3</button>
                     </div>
                 </div>
+                
+                <!-- Expanded Meta Metadata (Moved to Top Right) -->
+                <div class="meta-info" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2;">
+                    <span class="level-indicator">Level: Pre-Beginner</span>
+                    <span class="mode-indicator">Mode: Vocabulary</span>
+                </div>
             </div>
 
+            <!-- Row 2: Print/Worksheet (Centered & Subtle) -->
+            <div class="controls-row middle-row">
+                <div class="print-group">
+                    <button id="printBtn" class="print-button">Worksheet</button>
+                    <button id="printDrawBtn" class="print-button draw-print">Draw & Write</button>
+                    <button id="printVocabBtn" class="print-button vocab-print">Vocab Quiz</button>
+                </div>
+            </div>
+
+            <!-- Row 3: Core Progress & Gameplay -->
             <div class="controls-row bottom-row">
                 <div class="progress-section">
                     <div class="thermometer-container">
@@ -46,17 +63,13 @@
                             <div class="mercury-highlights"></div>
                         </div>
                     </div>
-                    <div id="progressRatio" class="progress-label">Word 1/3 • Round 1/3</div>
+                    <div class="status-meta-row">
+                        <div id="progressRatio" class="progress-label">Word 1/3 • Round 1/3</div>
+                    </div>
                 </div>
                 <div class="action-group">
                     <button id="clearBtn" class="clear-button">Clear</button>
                     <button id="newWordBtn" class="new-word-button">New Word</button>
-                    <button id="printBtn" class="print-button">Worksheet</button>
-                    <button id="printDrawBtn" class="print-button draw-print">Draw & Write</button>
-                    <div class="header-meta">
-                        <div class="level-indicator">Level: Beginner</div>
-                        <div class="mode-indicator">Mode: Vocabulary</div>
-                    </div>
                 </div>
             </div>
             <div class="word-display" id="wordDisplay"></div>

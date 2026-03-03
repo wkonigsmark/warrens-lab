@@ -140,13 +140,13 @@ const NUMERIC_PATHS = {
 
 
 const LOWERCASE_PATHS = {
-    'a': [generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI), [[0.85, 0.5], [0.85, 1]]],
-    'b': [[[0.15, 0], [0.15, 1]], generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI)],
-    'c': [[[0.85, 0.6], [0.7, 0.55], [0.5, 0.5], [0.3, 0.55], [0.15, 0.75], [0.3, 0.95], [0.5, 1.0], [0.7, 0.95], [0.85, 0.9]]],
-    'd': [[[0.85, 0], [0.85, 1]], generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI)],
-    'e': [[[0.15, 0.75], [0.85, 0.75]], [[0.85, 0.75], [0.7, 0.55], [0.5, 0.5], [0.25, 0.6], [0.15, 0.8], [0.25, 0.95], [0.5, 1], [0.8, 0.9]]],
+    'a': [generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI, 32), [[0.85, 0.5], [0.85, 1]]],
+    'b': [[[0.15, 0], [0.15, 1]], generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI, 32)],
+    'c': [generateArc(0.5, 0.75, 0.35, 0.25, 1.8 * Math.PI, 0.2 * Math.PI, 32)],
+    'd': [[[0.85, 0], [0.85, 1]], generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI, 32)],
+    'e': [[[0.15, 0.75], [0.85, 0.75]], generateArc(0.5, 0.75, 0.35, 0.25, 2 * Math.PI, 0.2 * Math.PI, 32)],
     'f': [[[0.7, 0.1], [0.5, 0.0], [0.3, 0.1], [0.3, 1]], [[0.1, 0.5], [0.6, 0.5]]],
-    'g': [generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI), [[0.85, 0.6], [0.85, 1.3]], generateArc(0.55, 1.3, 0.3, 0.2, 0, Math.PI)],
+    'g': [generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI, 32), [[0.85, 0.6], [0.85, 1.3]], generateArc(0.55, 1.3, 0.3, 0.2, 0, Math.PI, 16)],
     'h': [[[0.15, 0], [0.15, 1]], generateArc(0.45, 0.75, 0.3, 0.25, Math.PI, 2 * Math.PI), [[0.75, 0.75], [0.75, 1]]],
     'i': [[[0.5, 0.5], [0.5, 1]], [[0.5, 0.25], [0.5, 0.27]]],
     'j': [[[0.5, 0.5], [0.5, 1.3]], generateArc(0.35, 1.3, 0.15, 0.2, 0, Math.PI), [[0.5, 0.25], [0.5, 0.27]]],
@@ -154,9 +154,9 @@ const LOWERCASE_PATHS = {
     'l': [[[0.5, 0], [0.5, 1]]],
     'm': [[[0.15, 0.5], [0.15, 1]], generateArc(0.35, 0.75, 0.2, 0.25, Math.PI, 2 * Math.PI), [[0.55, 0.75], [0.55, 1]], generateArc(0.75, 0.75, 0.2, 0.25, Math.PI, 2 * Math.PI), [[0.95, 0.75], [0.95, 1]]],
     'n': [[[0.2, 0.5], [0.2, 1]], generateArc(0.5, 0.75, 0.3, 0.25, Math.PI, 2 * Math.PI), [[0.8, 0.75], [0.8, 1]]],
-    'o': [generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI, 24)],
-    'p': [[[0.15, 0.5], [0.15, 1.5]], generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI)],
-    'q': [generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI), [[0.85, 0.5], [0.85, 1.5]]],
+    'o': [generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI, 32)],
+    'p': [[[0.15, 0.5], [0.15, 1.5]], generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI, 32)],
+    'q': [generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI, 32), [[0.85, 0.5], [0.85, 1.5]]],
     'r': [[[0.2, 0.5], [0.2, 1]], generateArc(0.6, 0.75, 0.4, 0.25, Math.PI, 1.7 * Math.PI)],
     's': [[[0.85, 0.6], [0.75, 0.52], [0.5, 0.5], [0.3, 0.55], [0.3, 0.65], [0.5, 0.75], [0.75, 0.85], [0.8, 0.95], [0.5, 1], [0.2, 0.9]]],
     't': [[[0.5, 0.1], [0.5, 0.9], [0.6, 1.0], [0.8, 1.0]], [[0.2, 0.5], [0.8, 0.5]]],
@@ -174,17 +174,25 @@ Object.assign(LETTER_PATHS, NUMERIC_PATHS);
 // --- STENCIL CERTIFIED WORD ASSETS ---
 // These are the words that have verified .png icons in /assets
 const STENCIL_CERTIFIED = [
-    'ANT', 'APPLE', 'BALL', 'BAT', 'BATH', 'BATTERY', 'BEE', 'BELL', 'BIKE', 'BOOK',
-    'BOWLING', 'BREAD', 'BRUSH', 'BUS', 'CAKE', 'CAMEL', 'CAMERA', 'CANDY', 'CAR',
-    'CARROT', 'CAT', 'CHAIR', 'CHEESE', 'CHERRIES', 'CLOCK', 'CLOUD', 'COOKIE', 'CRAB',
-    'CROWN', 'CUP', 'CUPCAKE', 'DICE', 'DOG', 'DRUM', 'DUCK', 'EGG', 'ELEPHANT', 'FAN',
-    'FIRE', 'FISH', 'FLOWER', 'FORK', 'FOX', 'FROG', 'GHOST', 'GIFT', 'GRAPES', 'HAMMER',
-    'HAND', 'HAT', 'HEART', 'HOOK', 'HORN', 'HORSE', 'HOUSE', 'KEY', 'KITE', 'LAMB',
-    'LAMP', 'LEAF', 'LION', 'LOCK', 'MAP', 'MASK', 'MITTS', 'MOON', 'MOUSE', 'OWL',
-    'PANTS', 'PEAR', 'PENCIL', 'PENGUIN', 'PIANO', 'PIG', 'PIZZA', 'PLANE', 'PLANT',
-    'RAIN', 'RING', 'ROBOT', 'ROCKET', 'SCISSORS', 'SHIP', 'SHOE', 'SLED', 'SNAIL',
-    'SNOW', 'SOCK', 'SPIDER', 'SPOON', 'STAR', 'SUN', 'TENT', 'TOOTH', 'TRAIN', 'TREE',
-    'TRUCK', 'VIOLIN', 'WATCH', 'WAVE', 'WHALE', 'ZEBRA'
+    'ANCHOR', 'ANT', 'APPLE', 'BALL', 'BALLOON', 'BASKET', 'BAT', 'BATH', 'BATTERY',
+    'BEAR', 'BEE', 'BELL', 'BIKE', 'BIRD', 'BOOK', 'BOWLING', 'BREAD', 'BRIDGE',
+    'BROOM', 'BRUSH', 'BUS', 'BUTTERFLY', 'CACTUS', 'CAKE', 'CAMEL', 'CAMERA',
+    'CANDLE', 'CANDY', 'CAR', 'CARROT', 'CASTLE', 'CAT', 'CHAIR', 'CHEESE',
+    'CHERRIES', 'CLOCK', 'CLOUD', 'COOKIE', 'CRAB', 'CROWN', 'CUP', 'CUPCAKE',
+    'DEER', 'DESK', 'DICE', 'DOG', 'DOLPHIN', 'DONKEY', 'DOOR', 'DRAGON', 'DRESS',
+    'DRUM', 'DUCK', 'EAGLE', 'EGG', 'ELEPHANT', 'FAN', 'FARMER', 'FEATHER', 'FIRE',
+    'FISH', 'FLOWER', 'FORK', 'FOX', 'FROG', 'GHOST', 'GIFT', 'GIRAFFE', 'GOAT',
+    'GRAPES', 'GUITAR', 'HAMMER', 'HAND', 'HAT', 'HEART', 'HELMET', 'HOOK', 'HORN',
+    'HORNS', 'HORSE', 'HOUSE', 'KANGAROO', 'KEY', 'KITE', 'KNIFE', 'LADDER', 'LAMB',
+    'LAMP', 'LEAF', 'LION', 'LOCK', 'MAGNET', 'MAP', 'MASK', 'MITTS', 'MOON',
+    'MOUNTAINS', 'MOUSE', 'OWL', 'PANDA', 'PANTS', 'PEAR', 'PENCIL', 'PENGUIN',
+    'PIANO', 'PIG', 'PIRATE', 'PIZZA', 'PLANE', 'PLANET', 'PLANT', 'PUMPKIN', 'QUEEN',
+    'RABBIT', 'RACOON', 'RADIO', 'RAIN', 'RAINBOW', 'RING', 'ROBOT', 'ROCKET',
+    'SCISSORS', 'SHARK', 'SHIP', 'SHOE', 'SLED', 'SNAIL', 'SNAKE', 'SNOW', 'SNOWMAN',
+    'SOCK', 'SPIDER', 'SPOON', 'STAR', 'SUITCASE', 'SUN', 'SWEATER', 'SWORD', 'TABLE',
+    'TENT', 'THRONE', 'TIGER', 'TOOTH', 'TRACTOR', 'TRAIN', 'TREE', 'TRIANGLE',
+    'TROPHY', 'TRUCK', 'TURKEY', 'TURTLE', 'UMBRELLA', 'UNICORN', 'VACUUM', 'VIOLIN',
+    'WAGON', 'WATCH', 'WAVE', 'WHALE', 'WHEEL', 'WINDOW', 'WITCH', 'WIZARD', 'WOLF', 'ZEBRA'
 ];
 
 // Automatically build VOCABULARY_IMAGES
@@ -279,6 +287,21 @@ const SETTINGS = {
     rounds: 3
 };
 
+// Labels for UI display
+const DIFFICULTY_LABELS = {
+    'level1': 'Pre-Beginner',
+    'level2': 'Beginner',
+    'level3': 'Hard',
+    'level4': 'Expert',
+    'all': 'Mixed'
+};
+
+const MODE_LABELS = {
+    'spelling': 'Spelling',
+    'vocabulary': 'Vocabulary',
+    'numbers': 'Numbers'
+};
+
 function init() {
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
@@ -297,6 +320,9 @@ function init() {
     document.getElementById('newWordBtn').addEventListener('click', forceNextWord);
     document.getElementById('printBtn').addEventListener('click', printWorksheet);
     document.getElementById('printDrawBtn').addEventListener('click', printDrawWriteWorksheet);
+    
+    const printVocabBtn = document.getElementById('printVocabBtn');
+    if (printVocabBtn) printVocabBtn.addEventListener('click', printVocabWorksheet);
 
     // Setting Button Listeners
     // Add touchstart to ensure early capture on tablets before modal messes with event propagation
@@ -347,11 +373,10 @@ function syncSettingsToUI() {
         newWordBtn.textContent = SETTINGS.mode === 'numbers' ? 'New Number' : 'New Word';
     }
 
-    const modeIndicator = document.querySelector('.mode-indicator');
-    if (modeIndicator) {
-        const modeOpt = SETTING_OPTIONS.mode.options.find(o => o.value === SETTINGS.mode);
-        modeIndicator.textContent = `Mode: ${modeOpt ? modeOpt.label : 'Vocabulary'}`;
-    }
+    const levelName = document.querySelector('.level-indicator');
+    const modeName = document.querySelector('.mode-indicator');
+    if (levelName) levelName.textContent = `Level: ${DIFFICULTY_LABELS[SETTINGS.level]}`;
+    if (modeName) modeName.textContent = `Mode: ${MODE_LABELS[SETTINGS.mode]}`;
 
     applyDifficulty();
 }
@@ -1346,4 +1371,144 @@ function printDrawWriteWorksheet() {
     `;
 
     window.print();
+}
+
+/**
+ * GENERATE PRINTABLE VOCAB QUIZ (Worksheet 2)
+ * Features stencilled word on left + 4 image options on right with checkboxes
+ */
+function printVocabWorksheet() {
+    let printContainer = document.getElementById('printableWorksheet');
+    if (!printContainer) {
+        printContainer = document.createElement('div');
+        printContainer.id = 'printableWorksheet';
+        document.body.appendChild(printContainer);
+    }
+
+    // 1. Pick 4 random words based on CURRENT LEVEL
+    // Fallback to "all" if the specific bank is too small, but aim for current level.
+    const currentBank = WORD_BANKS[SETTINGS.level] || WORD_BANKS.all;
+    const candidates = currentBank.filter(w => VOCABULARY_IMAGES[w]);
+    
+    // Ensure we have at least 4 words
+    const finalCandidates = candidates.length >= 4 ? candidates : STENCIL_CERTIFIED;
+    
+    const shuffled = [...finalCandidates].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 4);
+
+    let rowsHtml = '';
+    const imagePromises = [];
+
+    selected.forEach(word => {
+        // Dynamic sizing for long words in expert mode
+        let fontSize = 68;
+        let letterSpacing = 5;
+        if (word.length === 6) fontSize = 54;
+        if (word.length === 7) fontSize = 46;
+        if (word.length === 8) fontSize = 40;
+        if (word.length >= 9) {
+            fontSize = 34;
+            letterSpacing = 2;
+        }
+
+        // Hide guides on Expert level (level4)
+        const showGuides = SETTINGS.level !== 'level4';
+        const guideHtml = showGuides ? `
+            <div class="vocab-quiz-mini-guides">
+                <span>☀️</span>
+                <span>✈️</span>
+                <span>🌱</span>
+                <span>🪱</span>
+            </div>
+        ` : '<div style="flex: 0 0 25px;"></div>'; // Spacer to maintain alignment
+
+        // Find distractors starting with same letter if possible for higher challenge
+        const sameLetter = STENCIL_CERTIFIED.filter(w => w !== word && w[0] === word[0]);
+        const otherPool = STENCIL_CERTIFIED.filter(w => w !== word && w[0] !== word[0]);
+        
+        // Take up to 2 same-letter distractors if available, then fill the rest with random
+        const sameSlotted = sameLetter.sort(() => 0.5 - Math.random()).slice(0, 2);
+        const distractors = [
+            ...sameSlotted,
+            ...otherPool.sort(() => 0.5 - Math.random()).slice(0, 3 - sameSlotted.length)
+        ];
+        
+        const choices = [word, ...distractors].sort(() => 0.5 - Math.random());
+        
+        const optionsHtml = choices.map((choice, i) => {
+            const fileName = choice.toLowerCase();
+            const imgSrc = `assets/${fileName}.png`;
+            return `
+                <div class="vocab-quiz-option">
+                    <img src="${imgSrc}" alt="${choice}" class="quiz-image">
+                    <div class="quiz-checkbox"></div>
+                </div>
+            `;
+        }).join('');
+
+        rowsHtml += `
+            <div class="vocab-quiz-row">
+                ${guideHtml}
+                <div class="vocab-quiz-word-box">
+                    <div class="trace-guide sky" style="top: 0;"></div>
+                    <div class="trace-guide plane" style="top: 33%;"></div>
+                    <div class="trace-guide grass" style="top: 66%;"></div>
+                    <div class="trace-guide worm" style="top: 100%;"></div>
+                    <div class="quiz-word-trace" style="font-size: ${fontSize}px; letter-spacing: ${letterSpacing}px;">${word}</div>
+                </div>
+                <div class="vocab-quiz-options">
+                    ${optionsHtml}
+                </div>
+            </div>
+        `;
+    });
+
+    const today = new Date().toLocaleDateString();
+    printContainer.innerHTML = `
+        <div class="worksheet-header">
+            <div class="header-left">
+                <img src="assets/banner/stencil.png" class="worksheet-logo">
+            </div>
+            <div class="header-right">
+                <div class="meta-item">Name: ______________________</div>
+                <div class="meta-item">Date: ${today}</div>
+            </div>
+        </div>
+        <hr class="worksheet-divider">
+        <div class="quiz-instructions" style="margin-bottom: 30px; font-style: italic; color: #555; font-family: 'Helvetica', sans-serif; font-size: 14px;">
+            Trace the word on the left, then check the box next to the matching picture!
+        </div>
+        <div class="vocab-quiz-content">
+            ${rowsHtml}
+        </div>
+    `;
+
+    // CRITICAL: Wait for all images to load before printing
+    const images = printContainer.querySelectorAll('img');
+    let loadedCount = 0;
+    const totalImages = images.length;
+
+    if (totalImages === 0) {
+        window.print();
+        return;
+    }
+
+    const checkAllLoaded = () => {
+        loadedCount++;
+        if (loadedCount >= totalImages) {
+            // Give a tiny bit more time for the browser to render the images into the layout
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        }
+    };
+
+    images.forEach(img => {
+        if (img.complete) {
+            checkAllLoaded();
+        } else {
+            img.addEventListener('load', checkAllLoaded);
+            img.addEventListener('error', checkAllLoaded); // Still count as "loaded" so we don't hang
+        }
+    });
 }
