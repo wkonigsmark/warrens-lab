@@ -125,9 +125,12 @@ body {
 }
 
 .bottom-row {
+    display: flex; /* Force flex in all environments */
     justify-content: space-between;
-    gap: 20px; /* Tighter gap to bring buttons closer */
-    margin-top: 8px;
+    align-items: center;
+    gap: 30px;
+    margin-top: 10px;
+    width: 100%;
 }
 
 .action-group {
@@ -465,21 +468,22 @@ body {
 
 /* Game Progression - Mercurial Thermometer */
 .progress-section {
-    flex: 1; /* Allow to grow and fill all available space */
+    flex: 1; /* Aggressive growth */
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch; /* Force children to match parent width */
     gap: 4px;
+    min-width: 0; /* Webkit fix for overgrowing children */
 }
 
 .thermometer-container {
-    width: 100%;
-    /* Max width removed to allow full expansion */
-    height: 24px; 
     display: flex;
     align-items: center;
     position: relative;
     padding-left: 20px;
+    height: 24px;
+    flex-grow: 1;
+    width: 100%;
 }
 
 .thermometer-bulb {
@@ -498,15 +502,15 @@ body {
 }
 
 .thermometer-tube {
-    flex-grow: 1;
+    flex: 1; /* Allow full fill */
     height: 18px;
-    background: rgba(255, 255, 255, 0.4);
-    border: 2px solid #fff;
-    border-radius: 0 20px 20px 0;
+    background: rgba(0, 0, 0, 0.05); /* Slightly darker for better contrast */
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 9px; /* Pill shape */
     position: relative;
     overflow: hidden;
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(2px);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4px);
 }
 
 .thermometer-mercury {
@@ -576,17 +580,7 @@ body {
     }
 }
 
-.thermometer-container {
-    max-width: 280px;
-}
-
-.progress-display {
-    font-family: 'Segoe UI', sans-serif;
-    font-weight: bold;
-    color: #2c3e50;
-    margin: 0 10px;
-    font-size: 1.1rem;
-}
+/* Constraints removed to allow full widescreen expansion */
 
 /* Modal Overlay */
 .modal {
