@@ -63,8 +63,9 @@
           <div id="ants-apples-keypad-grid"></div>
           <div id="ants-apples-keypad-actions">
             <div class="key action" data-action="clear">CLEAR</div>
-            <div class="key action" data-action="zero">0</div>
             <div class="key action" data-action="submit">ENTER</div>
+            <div class="key action" data-action="minus">-</div>
+            <div class="key action" data-action="zero">0</div>
           </div>
         </div>
       </div>
@@ -91,6 +92,14 @@
             <label>
               <input type="radio" name="ants-op" value="add" checked>
               Addition (+)
+            </label>
+            <label>
+              <input type="radio" name="ants-op" value="subtract">
+              Subtraction (-)
+            </label>
+            <label>
+              <input type="radio" name="ants-op" value="subtract-neg">
+              Subtraction (-Neg)
             </label>
             <label>
               <input type="radio" name="ants-op" value="multiply">
@@ -261,7 +270,15 @@
       let playableCount = 0;
       ROWS.forEach(r => {
         COLS.forEach(c => {
-          if (operation !== 'divide' || r % c === 0) playableCount++;
+          if (operation === 'divide') {
+            if (r % c === 0) playableCount++;
+          } else if (operation === 'subtract') {
+            if (r >= c) playableCount++;
+          } else if (operation === 'subtract-neg') {
+            playableCount++;
+          } else {
+            playableCount++;
+          }
         });
       });
 
@@ -290,7 +307,8 @@
       const headerRow = document.createElement('tr');
       const corner = document.createElement('td');
       corner.className = 'header';
-      corner.textContent = (operation === 'add') ? '+' : (operation === 'multiply') ? '×' : '÷';
+      const symbols = { 'add': '+', 'subtract': '-', 'multiply': '×', 'divide': '÷' };
+      corner.textContent = symbols[operation] || '+';
       headerRow.appendChild(corner);
 
       COLS.forEach(colVal => {
@@ -318,6 +336,10 @@
           td.dataset.status = 'inactive';
 
           if (operation === 'divide' && rowVal % colVal !== 0) {
+            td.classList.add('embargoed');
+            td.textContent = 'X';
+            td.dataset.embargoed = 'true';
+          } else if (operation === 'subtract' && rowVal < colVal) {
             td.classList.add('embargoed');
             td.textContent = 'X';
             td.dataset.embargoed = 'true';
@@ -373,6 +395,7 @@
       root.querySelector('[data-action="clear"]').addEventListener('click', clearInput);
       root.querySelector('[data-action="zero"]').addEventListener('click', () => appendDigit('0'));
       root.querySelector('[data-action="submit"]').addEventListener('click', submitInput);
+      root.querySelector('[data-action="minus"]').addEventListener('click', toggleMinus);
     }
 
     function showKeypad() {
@@ -389,8 +412,18 @@
     }
 
     function appendDigit(d) {
-      if (currentInput.length >= 3) return;
+      if (currentInput.replace('-', '').length >= 3) return;
       currentInput += d;
+      updateKeypadDisplay();
+    }
+
+    function toggleMinus() {
+      if (currentInput.startsWith('-')) {
+        currentInput = currentInput.slice(1);
+      } else {
+        // Prevent minus if it would exceed length (though minus doesn't count towards digit limit)
+        currentInput = '-' + currentInput;
+      }
       updateKeypadDisplay();
     }
 
@@ -424,7 +457,11 @@
       const colIdx = parseInt(activeTileEl.dataset.col, 10) - 1;
       const a = ROWS[rowIdx]; // dividend
       const b = COLS[colIdx]; // divisor
-      const correctAnswer = (operation === 'add') ? (a + b) : (operation === 'multiply') ? (a * b) : (a / b);
+      let correctAnswer;
+      if (operation === 'add') correctAnswer = a + b;
+      else if (operation === 'subtract' || operation === 'subtract-neg') correctAnswer = a - b;
+      else if (operation === 'multiply') correctAnswer = a * b;
+      else correctAnswer = a / b;
 
       activeTileEl.textContent = guess.toString();
 
@@ -577,24 +614,30 @@
       } else if (operation === 'multiply') {
         if (second >= 10) fontSize = 1.1;
         else if (second >= 8) fontSize = 1.3;
-      } else if (operation === 'add') {
-        const total = (first || 0) + (second || 0);
+      } else if (operation === 'add' || operation === 'subtract' || operation === 'subtract-neg') {
+        const total = (operation === 'add') ? (first + second) : first;
         if (total >= 20) fontSize = 0.9;
         else if (total >= 16) fontSize = 1.1;
         else if (total >= 12) fontSize = 1.3;
       }
       visual.style.fontSize = `${fontSize}rem`;
 
-      if (operation === 'add') {
-        // Addition mode: simple rows of ants + apples
-        opSymbolEl.textContent = '+';
-        plusEl.textContent = '+';
+      if (operation === 'add' || operation === 'subtract' || operation === 'subtract-neg') {
+        // Addition/Subtraction modes: simple rows of ants + apples
+        const sign = (operation === 'add') ? '+' : '-';
+        opSymbolEl.textContent = sign;
+        plusEl.textContent = sign;
 
         if (first > 0) {
           antsDiv.textContent = Array(first).fill(antEmoji).join(' ');
         }
         if (second > 0) {
-          applesDiv.textContent = Array(second).fill(appleEmoji).join(' ');
+          if (operation === 'subtract' || operation === 'subtract-neg') {
+            // Show apples as "ghosted" to imply subtraction
+            applesDiv.innerHTML = `<span class="ghost">${Array(second).fill(appleEmoji).join(' ')}</span>`;
+          } else {
+            applesDiv.textContent = Array(second).fill(appleEmoji).join(' ');
+          }
         }
       } else if (operation === 'multiply') {
         // Multiplication mode: array of apples (rows × columns)
@@ -768,8 +811,8 @@
         showHelper = document.getElementById('ants-show-helper-toggle').checked;
         const helperDiv = document.getElementById('ants-helper');
 
-        // Handle Pro Mode Visuals
-        const existingBadge = document.getElementById('ants-pro-badge');
+        // Handle Master Mode Visuals
+        const existingBadge = document.getElementById('ants-master-badge');
         if (existingBadge) existingBadge.remove();
 
         if (helperDiv) {
@@ -777,11 +820,11 @@
             helperDiv.style.display = 'block';
           } else {
             helperDiv.style.display = 'none';
-            // Inject the Pro Badge
+            // Inject the Master Badge
             const badge = document.createElement('div');
-            badge.id = 'ants-pro-badge';
-            badge.className = 'pro-mode-badge';
-            badge.innerHTML = 'Pro Mode Active';
+            badge.id = 'ants-master-badge';
+            badge.className = 'master-mode-badge';
+            badge.innerHTML = 'Master Mode Active';
             helperDiv.parentNode.insertBefore(badge, helperDiv.nextSibling);
           }
         }
@@ -904,7 +947,8 @@
       // Show equation at top of keypad
       const eq = document.getElementById('ants-keypad-equation');
       if (eq) {
-        let symbol = (operation === 'add') ? '+' : (operation === 'multiply') ? '×' : '÷';
+        const symbols = { 'add': '+', 'subtract': '-', 'multiply': '×', 'divide': '÷' };
+        let symbol = symbols[operation] || '+';
         eq.textContent = `${a} ${symbol} ${b}`;
       }
 
@@ -926,6 +970,8 @@
 
     function opLabel() {
       if (operation === 'add') return 'Addition';
+      if (operation === 'subtract') return 'Subtraction';
+      if (operation === 'subtract-neg') return 'Subtraction (Negative)';
       if (operation === 'multiply') return 'Multiplication';
       return 'Division';
     }
@@ -1113,9 +1159,31 @@
       const modeLabel = opLabel();
 
       if (!showHelper) {
-        titleEl.innerHTML = "🏆 PRO MODE CHAMPION! 🏆";
-        titleEl.className = "pro-victory-title";
-        bodyEl.innerHTML = `Spectacular! You solved all levels without the helper in ${timeText}.<br><span class="pro-victory-badge">Gold Mastery Earned</span>`;
+        titleEl.innerHTML = "MASTER MODE CHAMPION!";
+        titleEl.className = "master-victory-title";
+
+        let nextGrid = gridSize;
+        let nextOpName = opLabel();
+
+        if (gridSize < 9) {
+          nextGrid = gridSize + 1;
+        } else {
+          nextGrid = 3;
+          if (operation === 'add') nextOpName = 'Subtraction';
+          else if (operation === 'subtract') nextOpName = 'Subtraction (Negative)';
+          else if (operation === 'subtract-neg') nextOpName = 'Multiplication';
+          else if (operation === 'multiply') nextOpName = 'Division';
+          else nextOpName = 'Addition';
+        }
+
+        const currentOpLabel = opLabel().toLowerCase();
+        const nextOpLabel = nextOpName.toLowerCase();
+
+        bodyEl.innerHTML = `
+          <img src="assets/coloring-template-ants/math_master.png" class="master-victory-img" alt="Math Master Ant">
+          Impressive! You solved a ${gridSize}×${gridSize} matrix in ${currentOpLabel} mode.<br>
+          Consider challenging yourself to ${nextGrid}×${nextGrid} ${nextOpLabel}.
+        `;
       } else {
         titleEl.textContent = "Congratulations!";
         titleEl.className = "";
