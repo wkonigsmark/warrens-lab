@@ -62,10 +62,12 @@
           <div id="ants-apples-keypad-display"></div>
           <div id="ants-apples-keypad-grid"></div>
           <div id="ants-apples-keypad-actions">
-            <div class="key action" data-action="clear">CLEAR</div>
-            <div class="key action" data-action="submit">ENTER</div>
-            <div class="key action" data-action="minus">-</div>
+            <div class="key-side-by-side">
+              <div class="key action" data-action="clear">CLR</div>
+              <div class="key action" data-action="minus">-</div>
+            </div>
             <div class="key action" data-action="zero">0</div>
+            <div class="key action" data-action="submit">ENTER</div>
           </div>
         </div>
       </div>
@@ -307,7 +309,7 @@
       const headerRow = document.createElement('tr');
       const corner = document.createElement('td');
       corner.className = 'header';
-      const symbols = { 'add': '+', 'subtract': '-', 'multiply': '×', 'divide': '÷' };
+      const symbols = { 'add': '+', 'subtract': '-', 'subtract-neg': '-', 'multiply': '×', 'divide': '÷' };
       corner.textContent = symbols[operation] || '+';
       headerRow.appendChild(corner);
 
@@ -947,7 +949,7 @@
       // Show equation at top of keypad
       const eq = document.getElementById('ants-keypad-equation');
       if (eq) {
-        const symbols = { 'add': '+', 'subtract': '-', 'multiply': '×', 'divide': '÷' };
+        const symbols = { 'add': '+', 'subtract': '-', 'subtract-neg': '-', 'multiply': '×', 'divide': '÷' };
         let symbol = symbols[operation] || '+';
         eq.textContent = `${a} ${symbol} ${b}`;
       }
@@ -1094,6 +1096,9 @@
           appendDigit(e.key);
         } else if (e.key === 'Backspace' || e.key === 'Delete') {
           backspaceInput();
+        } else if (e.key === '-' || e.key === '_') {
+          e.preventDefault();
+          toggleMinus();
         }
         return;
       }
@@ -1164,8 +1169,9 @@
 
         let nextGrid = gridSize;
         let nextOpName = opLabel();
+        const isDivisionMax = (operation === 'divide' && gridSize === 5);
 
-        if (gridSize < 9) {
+        if (gridSize < 9 && !(operation === 'divide' && gridSize >= 5)) {
           nextGrid = gridSize + 1;
         } else {
           nextGrid = 3;
@@ -1182,13 +1188,16 @@
         bodyEl.innerHTML = `
           <img src="assets/coloring-template-ants/math_master.png" class="master-victory-img" alt="Math Master Ant">
           Impressive! You solved a ${gridSize}×${gridSize} matrix in ${currentOpLabel} mode.<br>
-          Consider challenging yourself to ${nextGrid}×${nextGrid} ${nextOpLabel}.
+          ${isDivisionMax ? '<strong>You have mastered Ants and Apples!</strong>' : `Consider challenging yourself to ${nextGrid}×${nextGrid} ${nextOpLabel}.`}
         `;
       } else {
         titleEl.textContent = "Congratulations!";
         titleEl.className = "";
-        bodyEl.textContent =
-          `Congratulations! You completed Ants & Apples in ${timeText} in ${modeLabel} mode, playing ${MAX_LEVEL} level${MAX_LEVEL === 1 ? '' : 's'}, with a best streak of ${bestStreak} correct answers in a row!`;
+        const currentOpLabel = modeLabel.toLowerCase();
+        bodyEl.innerHTML = `
+          You completed ${gridSize}×${gridSize} ${currentOpLabel} in ${timeText}.<br><br>
+          Next time, try the same challenge in <strong>Master Mode</strong> (turn off "Learning Aids" in Settings) to become a math master!
+        `;
       }
 
       backdrop.style.display = 'flex';
@@ -1265,12 +1274,17 @@
     /* ---------- Worksheet Print ---------- */
 
     function printWorksheet() {
-      const opSymbol = (operation === 'add') ? '+' : (operation === 'multiply') ? '×' : '÷';
+      const symbols = { 'add': '+', 'subtract': '-', 'subtract-neg': '-', 'multiply': '×', 'divide': '÷' };
+      const opSymbol = symbols[operation] || '+';
       const availableProblems = [];
 
       ROWS.forEach(r => {
         COLS.forEach(c => {
-          if (operation !== 'divide' || r % c === 0) {
+          let playable = true;
+          if (operation === 'divide') playable = (r % c === 0);
+          else if (operation === 'subtract') playable = (r >= c);
+
+          if (playable) {
             availableProblems.push(`${r} ${opSymbol} ${c} = `);
           }
         });
