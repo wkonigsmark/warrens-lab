@@ -329,6 +329,9 @@ function init() {
     const printIndyBtn = document.getElementById('printIndependentBtn');
     if (printIndyBtn) printIndyBtn.addEventListener('click', printIndependentWorksheet);
 
+    const printReversalBtn = document.getElementById('printReversalBtn');
+    if (printReversalBtn) printReversalBtn.addEventListener('click', printReversalWorksheet);
+
     // Setting Button Listeners
     // Add touchstart to ensure early capture on tablets before modal messes with event propagation
     ['click', 'touchstart'].forEach(evt => {
@@ -1614,4 +1617,68 @@ function printIndependentWorksheet() {
             img.addEventListener('error', checkAllLoaded);
         }
     });
+}
+
+/**
+ * GENERATE REVERSAL STUDY WORKSHEET (Worksheet 4)
+ * Theme: Tactician's Training - Spot the Mirror Ghosts
+ */
+function printReversalWorksheet() {
+    let printContainer = document.getElementById('printableWorksheet');
+    if (!printContainer) {
+        printContainer = document.createElement('div');
+        printContainer.id = 'printableWorksheet';
+        document.body.appendChild(printContainer);
+    }
+
+    const inputFieldValue = document.getElementById('reversalChars').value;
+    const userTargets = inputFieldValue ? inputFieldValue.trim().split('') : [];
+    const targets = userTargets.length > 0 ? userTargets : ['3', '4', 'b', 'd', 'p', 'q'];
+    
+    let rowsHtml = '';
+
+    targets.forEach(char => {
+        // Generate a random sequence of 6 characters, mixed correct and mirrored
+        const sequence = [];
+        // Ensure at least two are correct and two are mirrored for a good drill
+        const mirrors = [true, true, false, false, Math.random() > 0.5, Math.random() > 0.5];
+        mirrors.sort(() => Math.random() - 0.5);
+
+        mirrors.forEach(isMirrored => {
+            sequence.push({ val: char, mirrored: isMirrored });
+        });
+
+        const targetsHtml = sequence.map(item => `
+            <div class="reversal-char ${item.mirrored ? 'mirror' : ''}">${item.val}</div>
+        `).join('');
+
+        rowsHtml += `
+            <div class="reversal-row">
+                <div class="reversal-commander">${char}</div>
+                <div class="reversal-targets">
+                    ${targetsHtml}
+                </div>
+            </div>
+        `;
+    });
+
+    const today = new Date().toLocaleDateString();
+    printContainer.innerHTML = `
+        <div class="worksheet-header">
+            <img src="assets/banner/stencil.png" class="worksheet-logo">
+            <div class="header-right">
+                <div class="meta-item"><strong>Tactician's Training: Mirror Ghosts</strong></div>
+                <div class="meta-item">Name: ________________ Date: ${today}</div>
+            </div>
+        </div>
+        <div class="reversal-instructions">
+            <h3 style="margin-bottom: 5px; color: #c0392b; font-family: 'Segoe UI', sans-serif;">The Mirror Ghost Challenge!</h3>
+            <p style="font-size: 15px; color: #444; font-family: 'Helvetica', sans-serif; line-height: 1.4;">The "Commander" on the left shows the True Path. Circle the <strong>True Paths</strong> and trace them. Strike an 'X' through the <strong>Mirror Ghosts</strong> (the ones facing the wrong way) before they confuse the formation!</p>
+        </div>
+        <div class="reversal-content">
+            ${rowsHtml}
+        </div>
+    `;
+
+    window.print();
 }
