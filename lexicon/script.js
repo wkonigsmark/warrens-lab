@@ -1,87 +1,87 @@
 /**
- * Lexicon Vocabulary Engine
+ * Lexicon Vocabulary Engine - Custom Curriculum: Version 1 (Strategic & Historical)
  */
 
 const wordBank = [
     {
-        word: "Ephemeral",
-        pronunciation: "/i-FEM-er-uhl/",
+        word: "Magnanimous",
+        pronunciation: "/mag-NAN-i-muhs/",
+        origin: "Latin",
+        definition: "Showing a noble spirit and being generous toward rivals.",
+        helper: "Think of a Chess Champion who is kind to the person they just beat. It’s about being 'Big-Minded'.",
+        distractors: ["Feeling extremely angry and yelling at an opponent.", "Having a very small amount of money or resources.", "Moving in a repetitive circular motion for hours."]
+    },
+    {
+        word: "Tactician",
+        pronunciation: "/tak-TISH-uhn/",
         origin: "Greek",
-        definition: "Lasting for a very short time.",
-        helper: "Think of an insect that only lives for a day, or a beautiful sunset.",
-        distractors: ["Extremely large and heavy.", "Impossible to understand.", "Moving with sudden speed."]
+        definition: "A person who is highly skilled at planning a strategy.",
+        helper: "This is you when you're calling an audible on the football field or planning three moves ahead in Chess.",
+        distractors: ["A professional who builds houses out of wood.", "Someone who is always late to their appointments.", "A specific tool used for measuring loud noises."]
     },
     {
-        word: "Loquacious",
-        pronunciation: "/loh-KWAY-shuhs/",
-        origin: "Latin",
-        definition: "Tending to talk a great deal; talkative.",
-        helper: "Related to 'eloquent'—it's someone who has a lot of words to share.",
-        distractors: ["Silent and reserved.", "Easily broken or fragile.", "Bright and shining."]
-    },
-    {
-        word: "Pernicious",
-        pronunciation: "/per-NISH-uhs/",
-        origin: "Latin",
-        definition: "Having a harmful effect in a subtle way.",
-        helper: "Sounds like 'vicious'. It's a danger that creeps up on you slowly.",
-        distractors: ["A type of persistent cough.", "Extremely helpful and kind.", "Related to ancient history."]
-    },
-    {
-        word: "Mellifluous",
-        pronunciation: "/muh-LIF-loo-uhs/",
-        origin: "Latin",
-        definition: "Sweet or musical; pleasant to hear.",
-        helper: "The 'Melli' comes from the Latin word for honey. Sweet as honey to the ears.",
-        distractors: ["Smelling very strongly of rain.", "Harsh and grating noise.", "Old and falling apart."]
-    },
-    {
-        word: "Sagacious",
-        pronunciation: "/suh-GAY-shuhs/",
-        origin: "Latin",
-        definition: "Having keen mental discernment; wise.",
-        helper: "Related to 'Sage'. Think of a wise old owl or a grandfather.",
-        distractors: ["Quick to anger.", "Small and insignificant.", "Rough in texture."]
-    },
-    {
-        word: "Ineffable",
-        pronunciation: "/in-EF-uh-buhl/",
-        origin: "Latin",
-        definition: "Too great to be expressed in words.",
-        helper: "The 'fable' part relates to speaking. Ineffable means 'cannot be fabled' or told.",
-        distractors: ["Easily explained in a list.", "Lacking any real flavor.", "Stubborn and unmoving."]
-    },
-    {
-        word: "Luminous",
-        pronunciation: "/LOO-muh-nuhs/",
-        origin: "Latin",
-        definition: "Full of or shedding light; bright.",
-        helper: "Think of 'Illumination' or a glowing firefly in the dark.",
-        distractors: ["Cold and damp.", "Heavy and hard to carry.", "Very noisy and loud."]
-    },
-    {
-        word: "Petrichor",
-        pronunciation: "/PET-ri-kawr/",
+        word: "Hegemony",
+        pronunciation: "/hi-JEM-uh-nee/",
         origin: "Greek",
-        definition: "The smell of rain on dry ground.",
-        helper: "The combination of 'petra' (stone) and 'ichor' (the blood of gods).",
-        distractors: ["The sound of distant thunder.", "A fear of heavy storms.", "A very rare type of stone."]
+        definition: "Leadership or dominance of one group over all others.",
+        helper: "Think of how Sparta had 'Hegemony' over the other Greek cities because of their superior army.",
+        distractors: ["A type of garden hedge used for privacy fences.", "A mathematical equation with several variables.", "A feeling of deep confusion about a hard subject."]
     },
     {
-        word: "Alacrity",
-        pronunciation: "/uh-LAK-ri-tee/",
-        origin: "Latin",
-        definition: "Brisk and cheerful readiness.",
-        helper: "Think of someone jumping to their feet to help with a smile.",
-        distractors: ["A feeling of deep sadness.", "A state of total confusion.", "Slow and lazy movement."]
-    },
-    {
-        word: "Sycophant",
-        pronunciation: "/SI-kuh-funt/",
+        word: "Stoic",
+        pronunciation: "/STOH-ik/",
         origin: "Greek",
-        definition: "A person who acts obsequiously to gain advantage.",
-        helper: "A 'suck-up' who uses flattery to get what they want from powerful people.",
-        distractors: ["A type of musical instrument.", "A professional athlete.", "A deep-sea diving bell."]
+        definition: "Enduring hardship without showing feelings or complaint.",
+        helper: "A great athlete stays Stoic. They don't let the other team see them get frustrated when they lose a play.",
+        distractors: ["A person who talks too much in social settings.", "Something that is very sharp or painful to touch.", "Moving very quickly through a crowded area."]
+    },
+    {
+        word: "Analytical",
+        pronunciation: "/an-uh-LIT-i-kuhl/",
+        origin: "Greek",
+        definition: "Using logical reasoning to break down complex problems.",
+        helper: "This is the 'Math Brain.' You use this to solve equations or deconstruct a chess opponent's defense.",
+        distractors: ["Feeling very sleepy after a long day of school.", "Related to ancient sea creatures from the abyss.", "Something that is very colorful and hard to miss."]
+    },
+    {
+        word: "Resilience",
+        pronunciation: "/ri-ZIL-yuhns/",
+        origin: "Latin",
+        definition: "The ability to recover quickly from difficult setbacks.",
+        helper: "In football, if you drop a pass but catch the next touchdown, that’s resilience. You bounce back.",
+        distractors: ["A type of very soft metal found in the earth.", "The act of hiding the truth from your parents.", "A state of permanent rest and total relaxation."]
+    },
+    {
+        word: "Antiquity",
+        pronunciation: "/an-TIK-wi-tee/",
+        origin: "Latin",
+        definition: "The ancient past, especially before the Middle Ages.",
+        helper: "This covers the Greek and Roman timelines you're studying—the 'Old World' of great empires.",
+        distractors: ["A modern city with skyscrapers and fast cars.", "A feeling of being very nervous about a big test.", "A type of fast-growing plant found in jungles."]
+    },
+    {
+        word: "Strategic",
+        pronunciation: "/struh-TEE-jik/",
+        origin: "Greek",
+        definition: "Relating to long-term aims and the means to hit them.",
+        helper: "The 'Long Game.' It’s the difference between winning one play and winning the whole championship.",
+        distractors: ["Happening by total accident without any warning.", "Something that is very loud and hurts the ears.", "A type of cooking style used in fancy kitchens."]
+    },
+    {
+        word: "Calculated",
+        pronunciation: "/KAL-kyuh-lay-ted/",
+        origin: "Latin",
+        definition: "Done with full awareness of the likely consequences.",
+        helper: "Like a 'Calculated Risk' in Math or Chess. You knew exactly what might happen before you did it.",
+        distractors: ["Feeling very cold during a snowy winter night.", "A mistake made in a hurry while doing homework.", "The sound of a heavy bell ringing in a tower."]
+    },
+    {
+        word: "Audible",
+        pronunciation: "/AW-di-buhl/",
+        origin: "Latin",
+        definition: "Able to be heard or a last-minute change in plans.",
+        helper: "Just like the QB changing the play at the line of scrimmage because he saw something in the defense.",
+        distractors: ["Completely invisible to the naked human eye.", "Something that tastes very bitter like a lemon.", "A type of heavy rock found near active volcanoes."]
     }
 ];
 
