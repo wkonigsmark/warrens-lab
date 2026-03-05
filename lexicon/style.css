@@ -1,0 +1,242 @@
+:root {
+  --bg-color: #fcfaf7;
+  --card-bg: #ffffff;
+  --text-main: #2d3436;
+  --text-dim: #636e72;
+  --accent-primary: #10ac84; /* Emerald */
+  --accent-wrong: #ee5253; /* Red */
+  --accent-neutral: #54a0ff; /* Blue */
+  --gold: #d4af37;
+  --shadow: 0 10px 30px rgba(0,0,0,0.05);
+  --border-radius: 24px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+#app-container {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-weight: 800;
+  letter-spacing: 4px;
+  font-size: 1.2rem;
+  color: var(--text-dim);
+}
+
+#stats {
+  display: flex;
+  gap: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.stat-item span {
+  color: var(--accent-primary);
+}
+
+/* Card Design */
+.card {
+  background: var(--card-bg);
+  padding: 50px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+.meta-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.tag {
+  background: #f1f2f6;
+  color: var(--text-dim);
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.pronunciation {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--text-dim);
+  font-size: 1rem;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  margin-bottom: 10px;
+  color: var(--text-main);
+}
+
+.instruction {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+}
+
+/* Options */
+#options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.option-btn {
+  background: #f8f9fa;
+  border: 2px solid transparent;
+  padding: 20px;
+  border-radius: 16px;
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-main);
+  text-align: left;
+}
+
+.option-btn:hover {
+  background: #fff;
+  border-color: var(--accent-neutral);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.option-btn.correct {
+  background: rgba(16, 172, 132, 0.1);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.option-btn.wrong {
+  background: rgba(238, 82, 83, 0.1);
+  border-color: var(--accent-wrong);
+  color: var(--accent-wrong);
+}
+
+.option-btn.disabled {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Feedback Box */
+#feedback {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px border-style: solid;
+  border-top-color: #eee;
+  text-align: left;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#feedback-message {
+  font-weight: 800;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.helper {
+  background: #f1f2f6;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  margin-bottom: 25px;
+}
+
+.helper strong {
+  display: block;
+  color: var(--text-main);
+  margin-bottom: 5px;
+}
+
+#next-btn {
+  width: 100%;
+  padding: 20px;
+  background: var(--text-main);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+#next-btn:hover {
+  transform: scale(1.02);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Footer */
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+#reset-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 30px 20px;
+  }
+  h1 {
+    font-size: 2.5rem;
+  }
+}

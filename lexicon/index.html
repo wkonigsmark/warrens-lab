@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lexicon: The Simple Vocab Quiz</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app-container">
+        <header>
+            <div class="logo">LEXICON</div>
+            <div id="stats">
+                <span class="stat-item">Correct: <span id="correct-count">0</span></span>
+                <span class="stat-item">Series: <span id="streak-count">0</span></span>
+            </div>
+        </header>
+
+        <main id="quiz-area">
+            <div id="word-card" class="card">
+                <div class="meta-row">
+                    <span id="word-origin" class="tag">Language</span>
+                    <span id="word-pronunciation" class="pronunciation">/pro-nun-si-ey-shun/</span>
+                </div>
+                <h1 id="target-word">Luminous</h1>
+                <p class="instruction">Select the correct definition:</p>
+                
+                <div id="options-container">
+                    <!-- Options injected by JS -->
+                </div>
+
+                <div id="feedback" class="hidden">
+                    <p id="feedback-message"></p>
+                    <div id="helper-box" class="helper">
+                        <strong>Why it makes sense:</strong>
+                        <span id="helper-text"></span>
+                    </div>
+                    <button id="next-btn">Next Word &rarr;</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <button id="reset-btn">Reset Score</button>
+            <p>Curated for the Lifelong Learner</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
