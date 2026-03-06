@@ -71,6 +71,37 @@ body {
   gap: 20px;
 }
 
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 20px;
+    border-radius: 30px;
+    border: 1px solid var(--glass-border);
+    margin-right: 15px;
+}
+
+.filter-group label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent-gold);
+}
+
+.filter-group input[type="range"] {
+    width: 100px;
+    accent-color: var(--accent-gold);
+    cursor: pointer;
+}
+
+#sig-val {
+    font-weight: 800;
+    color: #fff;
+    min-width: 20px;
+}
+
 .action-btn {
   background: var(--glass);
   border: 1px solid var(--glass-border);
@@ -683,17 +714,36 @@ body {
     box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
 }
 
+.sig-indicator {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--accent-gold);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    pointer-events: none;
+}
+
 .quiz-level-banner {
-  text-align: center;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-  color: var(--accent-gold);
-  margin-bottom: 60px;
-  font-size: 0.9rem;
-  background: rgba(212, 175, 55, 0.1);
-  padding: 15px;
-  border: 1px dashed var(--accent-gold);
+    text-align: center;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--accent-gold);
+    margin: 20px auto 40px auto;
+    font-size: 0.9rem;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+    padding: 15px 40px;
+    border: none;
+    width: fit-content;
+}
+
+.quiz-level-banner:empty {
+    display: none;
 }
 
 .progression-unlocked {

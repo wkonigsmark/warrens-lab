@@ -364,34 +364,49 @@ const todayPulse = {
     ]
 };
 
-function initChronos() {
+// Smart Date Formatter for Deep Time vs. History
+function formatChronosDate(year) {
+    const absYear = Math.abs(year);
+    if (absYear >= 1000000) {
+        if (absYear >= 1000000000) {
+            return `${(absYear / 1000000000).toFixed(1)} Billion Years Ago`;
+        } else {
+            return `${(absYear / 1000000).toFixed(1)} Million Years Ago`;
+        }
+    }
+    if (year < 0) return `${absYear.toLocaleString()} BCE`;
+    return `${absYear.toLocaleString()} AD`;
+}
+
+// Combined Timeline Strategy: Internal Curation + Scholarly Wikidata Consensus
+let combinedTimeline = [...timelineData];
+if (typeof wikidataHistory !== 'undefined') {
+    combinedTimeline = [...combinedTimeline, ...wikidataHistory];
+}
+
+// Global Filter State
+let currentSignificanceFilter = 10;
+
+function renderTimeline(minSignificance) {
     const container = document.getElementById('events-container');
     const progressBar = document.getElementById('progress-bar');
-    const overlay = document.getElementById('event-detail-overlay');
-    const closeBtn = document.getElementById('close-overlay');
-    const printBtn = document.getElementById('print-quiz-btn');
-    const startQuizBtn = document.getElementById('start-quiz-btn');
-    const exitQuizBtn = document.getElementById('exit-quiz-btn');
-    const submitQuizBtn = document.getElementById('submit-quiz-btn');
-    const closeResultsBtn = document.getElementById('close-results');
-
-    if (printBtn) printBtn.onclick = generateQuiz;
-    if (startQuizBtn) startQuizBtn.onclick = startInteractiveQuiz;
-    if (exitQuizBtn) exitQuizBtn.onclick = exitQuiz;
-    if (submitQuizBtn) submitQuizBtn.onclick = submitQuiz;
-    if (closeResultsBtn) closeResultsBtn.onclick = closeResults;
-
-    // Sort by start year
-    const sortedData = [...timelineData].sort((a, b) => a.startYear - b.startYear);
+    
+    // Clear current view
+    container.innerHTML = '';
+    
+    // Filter and Sort
+    const filteredData = combinedTimeline
+        .filter(e => e.significance >= minSignificance)
+        .sort((a, b) => a.startYear - b.startYear);
 
     let blockCount = 0;
-    // Build the timeline
-    sortedData.forEach((event) => {
-        if (event.gap > 0) {
-            const spacer = document.createElement('div');
-            spacer.style.height = `${event.gap}px`;
-            container.appendChild(spacer);
-        }
+    
+    filteredData.forEach((event) => {
+        // Dynamic Gap Calculation for cleaner descent
+        const gapSize = event.gap || 150;
+        const spacer = document.createElement('div');
+        spacer.style.height = `${gapSize}px`;
+        container.appendChild(spacer);
 
         const block = document.createElement('div');
         const isLeft = blockCount % 2 === 0;
@@ -399,8 +414,8 @@ function initChronos() {
         block.id = `block-${event.id}`;
 
         const approxPrefix = event.approx ? '<span class="approx-tag">Around </span>' : '';
-
         const hasSources = event.sources && event.sources.length > 0;
+        
         const sourceHtml = hasSources ? `
             <div class="source-card ${isLeft ? 'to-right' : 'to-left'}">
                 <div class="source-trigger" onclick="event.stopPropagation(); showSources('${event.id}')">
@@ -410,31 +425,36 @@ function initChronos() {
             </div>
         ` : '';
 
+        const displayDate = formatChronosDate(event.startYear);
         block.innerHTML = `
             <div class="event-card" onclick="showDetail('${event.id}')">
-                <div class="event-meta">${approxPrefix}${event.date}</div>
+                <div class="event-meta">${approxPrefix}${displayDate}</div>
                 <h3>${event.title}</h3>
                 <div class="event-preview">${event.snippet}</div>
                 <div class="event-dot"></div>
+                <div class="sig-indicator">L${event.significance}</div>
             </div>
             ${sourceHtml}
         `;
 
         container.appendChild(block);
         blockCount++;
+        
+        // Handle reveal trigger
+        setTimeout(() => block.classList.add('visible'), 50 * blockCount);
     });
 
-    // Add Terminal "Live Pulse" Node
+    // Terminal Node
     const liveSpacer = document.createElement('div');
     liveSpacer.style.height = '400px';
     container.appendChild(liveSpacer);
 
     const liveBlock = document.createElement('div');
-    liveBlock.className = 'event-block live-pulse-block';
+    liveBlock.className = 'event-block live-pulse-block visible';
     liveBlock.innerHTML = `
         <div class="live-pulse-card">
             <div class="live-tag"><span class="pulse-dot"></span> LIVE PULSE: ${todayPulse.date}</div>
-            <h2>Today's Chronicle</h2>
+            <h2>The Present Moment</h2>
             <div class="live-news-container">
                 ${todayPulse.news.map(item => `
                     <div class="live-item">
@@ -449,46 +469,60 @@ function initChronos() {
         </div>
     `;
     container.appendChild(liveBlock);
+}
 
-    // Scroll Logic
-    window.addEventListener('scroll', () => {
+function initChronos() {
+    const printBtn = document.getElementById('print-quiz-btn');
+    const startQuizBtn = document.getElementById('start-quiz-btn');
+    const exitQuizBtn = document.getElementById('exit-quiz-btn');
+    const submitQuizBtn = document.getElementById('submit-quiz-btn');
+    const closeResultsBtn = document.getElementById('close-results');
+    const closeOverlayBtn = document.getElementById('close-overlay');
+    const sigSlider = document.getElementById('sig-filter');
+    const sigValText = document.getElementById('sig-val');
+
+    if (printBtn) printBtn.onclick = generateQuiz;
+    if (startQuizBtn) startQuizBtn.onclick = startInteractiveQuiz;
+    if (exitQuizBtn) exitQuizBtn.onclick = exitQuiz;
+    if (submitQuizBtn) submitQuizBtn.onclick = submitQuiz;
+    if (closeResultsBtn) closeResultsBtn.onclick = closeResults;
+    if (closeOverlayBtn) closeOverlayBtn.onclick = hideOverlay;
+
+    // Significance Filter Listener
+    if (sigSlider) {
+        sigSlider.oninput = (e) => {
+            const val = parseInt(e.target.value);
+            sigValText.innerText = val;
+            currentSignificanceFilter = val;
+            currentQuizLevel = val; // Synchronize Quiz Level with Slider
+            renderTimeline(val);
+        };
+    }
+
+    // Initial Render
+    renderTimeline(currentSignificanceFilter);
+
+    // Global Scroll Listener
+    window.onscroll = () => {
+        const progressBar = document.getElementById('progress-bar');
         const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         const scrolled = (winScroll / height) * 100;
-        progressBar.style.width = scrolled + "%";
+        if (progressBar) progressBar.style.width = scrolled + "%";
 
-        // Reveal animations
+        // Dynamic reveal on scroll
         const blocks = document.querySelectorAll('.event-block');
         blocks.forEach(block => {
             const rect = block.getBoundingClientRect();
-            const viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
-            if (rect.top <= viewHeight * 0.85) {
+            if (rect.top <= window.innerHeight * 0.9) {
                 block.classList.add('visible');
             }
         });
-    });
-
-    function hideOverlay() {
-        overlay.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    // Close Overlay
-    closeBtn.onclick = hideOverlay;
-
-    window.onclick = (e) => {
-        if (e.target === overlay) hideOverlay();
     };
-
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && overlay.style.display === 'flex') {
-            hideOverlay();
-        }
-    });
 }
 
 function showDetail(id) {
-    const event = timelineData.find(e => e.id === id);
+    const event = combinedTimeline.find(e => e.id === id);
     if (!event) return;
 
     const overlay = document.getElementById('event-detail-overlay');
@@ -502,13 +536,19 @@ function showDetail(id) {
     document.body.style.overflow = 'hidden';
 }
 
+function hideOverlay() {
+    const overlay = document.getElementById('event-detail-overlay');
+    overlay.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
 function showSources(id) {
-    const event = timelineData.find(e => e.id === id);
+    const event = combinedTimeline.find(e => e.id === id);
     if (!event || !event.sources) return;
 
     const overlay = document.getElementById('event-detail-overlay');
     document.getElementById('detail-title').innerText = `Sources: ${event.title}`;
-    document.getElementById('detail-date').innerText = "Defensible Documentation";
+    document.getElementById('detail-date').innerText = "Scholarly Documentation";
     
     let sourceListHtml = '<div class="source-list">';
     event.sources.forEach(src => {
@@ -541,8 +581,8 @@ function startInteractiveQuiz() {
     document.querySelector('footer').classList.add('hidden');
     window.scrollTo(0, 0);
 
-    // Filter by the current significance level
-    activeQuizData = [...timelineData]
+    // Use combined data for quiz
+    activeQuizData = [...combinedTimeline]
         .filter(e => e.significance === currentQuizLevel)
         .sort(() => Math.random() - 0.5)
         .slice(0, 4)
@@ -553,7 +593,7 @@ function startInteractiveQuiz() {
 
     activeQuizData.forEach((event, index) => {
         const side = index % 2 === 0 ? 'left' : 'right';
-        const distractors = timelineData
+        const distractors = combinedTimeline
             .filter(e => e.id !== event.id)
             .sort(() => Math.random() - 0.5)
             .slice(0, 3)
@@ -563,11 +603,12 @@ function startInteractiveQuiz() {
 
         const row = document.createElement('div');
         row.className = `quiz-row ${side}`;
+        const displayDate = formatChronosDate(event.startYear);
         row.innerHTML = `
             <div class="ping"></div>
             <div class="connector"></div>
             <div class="quiz-card">
-                <span class="date-tag">${event.date}</span>
+                <span class="date-tag">${displayDate}</span>
                 <h4>Identify this event:</h4>
                 <ul class="quiz-options">
                     ${options.map((opt, i) => `
@@ -642,6 +683,111 @@ function submitQuiz() {
 function closeResults() {
     document.getElementById('quiz-results-overlay').style.display = 'none';
     exitQuiz();
+}
+
+function generateQuiz() {
+    const quizEvents = [...combinedTimeline]
+        .filter(e => e.significance === currentQuizLevel) 
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 10)
+        .sort((a, b) => a.startYear - b.startYear);
+    
+    // Fallback if very few events at exact level
+    if (quizEvents.length < 5) {
+        quizEvents.length = 0;
+        const fallback = [...combinedTimeline]
+            .filter(e => e.significance >= currentQuizLevel)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 10)
+            .sort((a, b) => a.startYear - b.startYear);
+        quizEvents.push(...fallback);
+    }
+
+    const printWindow = window.open('', '_blank');
+    let html = `
+    <html>
+    <head>
+        <title>Chronos History Quiz</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Playfair+Display:wght@700;900&display=swap');
+            @page { size: auto; margin: 15mm; }
+            body { font-family: 'Inter', sans-serif; padding: 0; color: #1a1a1a; background: #fff; line-height: 1.2; }
+            .header { text-align: center; margin-bottom: 20px; }
+            .header h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 0; letter-spacing: -1px; }
+            .header .subtitle { text-transform: uppercase; letter-spacing: 3px; color: #666; font-size: 0.65rem; margin-top: 2px; }
+            .header .student-info { margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; display: flex; justify-content: space-between; font-weight: 700; font-size: 0.8rem; }
+            .instructions { text-align: center; margin: 15px auto 25px auto; font-style: italic; color: #1a1a1a; font-size: 0.85rem; max-width: 600px; line-height: 1.4; }
+            .timeline-wrapper { position: relative; max-width: 750px; margin: 0 auto; padding-top: 20px; min-height: 600px; }
+            .central-axis { position: absolute; left: 50%; transform: translateX(-50%); top: 0; bottom: 0; width: 2px; background-color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; z-index: 10; }
+            .axis-label { position: absolute; left: 50%; transform: translateX(-50%); font-size: 0.6rem; font-weight: 900; color: #000; z-index: 11; letter-spacing: 2px; background: #fff; padding: 0 4px; }
+            .axis-label.start { top: -15px; }
+            .axis-label.end { bottom: -15px; }
+            .quiz-row { position: relative; width: 100%; margin-bottom: 25px; display: flex; align-items: center; page-break-inside: avoid; break-inside: avoid; }
+            .quiz-row.left { justify-content: flex-start; }
+            .quiz-row.right { justify-content: flex-end; }
+            .quiz-card { position: relative; width: 42%; padding: 12px 18px; border: 1.5px solid #000; background: #fff; z-index: 5; }
+            .ping { position: absolute; width: 10px; height: 10px; background-color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 15; }
+            .connector { position: absolute; height: 1.5px; background-color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; top: 50%; width: 8%; z-index: 4; }
+            .left .connector { left: 42%; }
+            .right .connector { right: 42%; }
+            .date-tag { display: inline-block; border-bottom: 2px solid #000; color: #000; padding: 1px 0; font-weight: 900; font-size: 0.85rem; margin-bottom: 8px; }
+            .options { list-style: none; padding: 0; margin: 8px 0 0 0; }
+            .options li { margin-bottom: 6px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+            .checkbox { width: 14px; height: 14px; border: 1.5px solid #000; flex-shrink: 0; }
+            @media print { body { padding: 0; } .central-axis { height: 100%; } }
+        </style>
+    </head>
+    <body onload="window.print()">
+        <div class="header">
+            <h1>CHRONOS</h1>
+            <div class="subtitle">THE GRAND DESCENT THROUGH TIME</div>
+            <div class="student-info">
+                <span>NAME: ____________________________</span>
+                <span>DATE: ________________</span>
+            </div>
+        </div>
+        <p class="instructions">Analyze the chronology of the central throughline. Match each historical milestone to its timestamp.</p>
+        <div class="timeline-wrapper">
+            <div class="central-axis">
+                <span class="axis-label start">START</span>
+                <span class="axis-label end">END</span>
+            </div>
+    `;
+
+    quizEvents.forEach((event, index) => {
+        const side = index % 2 === 0 ? 'left' : 'right';
+        const displayDate = formatChronosDate(event.startYear);
+        const distractors = combinedTimeline
+            .filter(e => e.id !== event.id)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 3)
+            .map(e => e.title);
+        const options = [event.title, ...distractors].sort(() => Math.random() - 0.5);
+        html += `
+            <div class="quiz-row ${side}">
+                <div class="ping"></div>
+                <div class="connector"></div>
+                <div class="quiz-card">
+                    <span class="date-tag">${displayDate}</span>
+                    <ul class="options">
+                        ${options.map(opt => `<li><div class="checkbox"></div> <span>${opt}</span></li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+        `;
+    });
+
+    html += `
+        </div>
+        <div style="margin-top: 100px; text-align: center; font-size: 0.8rem; color: #888;">
+            CHRONOS HISTORICAL ENGINE &bull; LEVEL ${currentQuizLevel} RESOLUTION &bull; VERIFIED DATABASE
+        </div>
+    </body>
+    </html>
+    `;
+
+    printWindow.document.write(html);
+    printWindow.document.close();
 }
 
 // Start

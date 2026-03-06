@@ -19,6 +19,11 @@
         <section id="hero">
             <div class="hero-content">
                 <div class="header-actions">
+                    <div class="filter-group">
+                        <label for="sig-filter">Chronos Resolution:</label>
+                        <input type="range" id="sig-filter" min="1" max="10" value="10" step="1">
+                        <span id="sig-val">10</span>
+                    </div>
                     <button id="print-quiz-btn" class="action-btn">Print Worksheet Quiz</button>
                     <button id="start-quiz-btn" class="action-btn accent">Start Interactive Quiz</button>
                 </div>
@@ -73,6 +78,7 @@
             <p>Chronos Historical Engine &copy; 2026</p>
         </footer>
     </div>
+    <script src="wikidata_consensus.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
