@@ -1161,8 +1161,8 @@ async function syncWithWikidata() {
     btn.innerText = "🛰️ Syncing...";
     btn.disabled = true;
 
-    // Aggressive "Master Sweep" SPARQL Query
-    // This query targets a much wider range of significance (30+ sitelinks) to provide a deep pool for curation.
+    // Balanced Sweep SPARQL Query
+    // Targets a middle ground of significance (70+ sitelinks) to ensure a robust list without timeout issues.
     const sparql = `
     SELECT DISTINCT ?item ?itemLabel ?date ?description ?sitelinks WHERE {
       {
@@ -1174,14 +1174,14 @@ async function syncWithWikidata() {
         }
         ?item wdt:P31 ?type .
         ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 30) 
+        FILTER(?sitelinks > 70) 
       } UNION {
-        # --- High-Significance Humans (World Leaders, Thinkers, Explorers) ---
+        # --- Global Icons (Humans: World Leaders, Thinkers) ---
         ?item wdt:P31 wd:Q5 . 
         ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 180) # Only the most globally famous figures
+        FILTER(?sitelinks > 200)
       } UNION {
-        # --- Manual High-Value Items (Fallbacks) ---
+        # --- Core Historical Markers ---
         VALUES ?item {
           wd:Q4692 wd:Q8432 wd:Q35333 wd:Q12978 wd:Q7650 wd:Q8027 wd:Q39739 
           wd:Q5582 wd:Q9353 wd:Q307 wd:Q193484 wd:Q8942 wd:Q9129 wd:Q12519
@@ -1190,11 +1190,10 @@ async function syncWithWikidata() {
         }
         ?item wikibase:sitelinks ?sitelinks .
       }
-      # Date Extraction
       { ?item wdt:P585 ?date . } UNION { ?item wdt:P580 ?date . } UNION { ?item wdt:P569 ?date . }
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
       OPTIONAL { ?item schema:description ?description . FILTER(LANG(?description) = "en") }
-    } ORDER BY DESC(?sitelinks) LIMIT 800`;
+    } ORDER BY DESC(?sitelinks) LIMIT 400`;
 
     const url = "https://query.wikidata.org/sparql?query=" + encodeURIComponent(sparql);
 
