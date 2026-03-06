@@ -866,6 +866,56 @@ footer {
 }
 
 @media (max-width: 768px) {
+
+  /* ── Hero Header Actions: Stack for Mobile ── */
+  .header-actions {
+    position: relative;
+    top: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  .filter-group {
+    margin-right: 0;
+    width: 100%;
+    justify-content: center;
+    padding: 10px 16px;
+  }
+
+  .filter-group label {
+    font-size: 0.65rem;
+    white-space: nowrap;
+  }
+
+  .filter-group input[type="range"] {
+    width: 80px;
+  }
+
+  /* Action buttons sit side by side underneath the slider */
+  .header-actions .action-btn {
+    font-size: 0.7rem;
+    padding: 10px 14px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  /* Wrap the two buttons into a row */
+  .header-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: row;
+  }
+
+  /* The filter group takes full width (its own row) */
+  .filter-group {
+    flex: 0 0 100%;
+  }
+
+  /* ── Timeline mobile ── */
   #timeline-spine {
     left: 40px;
   }
@@ -901,5 +951,82 @@ footer {
   }
   .live-pulse-card h2 {
     font-size: 1.8rem;
+  }
+
+  /* ── Quiz Mode: Single Column Layout ── */
+  #quiz-view {
+    padding: 80px 15px 60px;
+  }
+
+  /* Move axis to a fixed position on the right, and start BELOW the banner */
+  #quiz-timeline-wrapper .central-axis {
+    left: auto;
+    right: 20px;
+    transform: none;
+    top: 80px; /* Start below the banner */
+  }
+
+  .quiz-level-banner {
+    position: relative;
+    z-index: 2;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    padding: 12px 20px;
+    margin-bottom: 30px;
+  }
+
+  /* All quiz rows: full width, no alternating */
+  .quiz-row {
+    justify-content: flex-start !important;
+    margin-bottom: 40px;
+    padding-right: 40px; /* Room for the axis line on the right */
+  }
+
+  .quiz-row.left,
+  .quiz-row.right {
+    justify-content: flex-start !important;
+  }
+
+  .quiz-card {
+    width: 100%;
+    padding: 20px;
+  }
+
+  /* Move the "ping" dot to the right edge, aligned with the axis */
+  .quiz-row .ping {
+    left: auto;
+    right: -26px;
+    transform: translate(50%, -50%);
+  }
+
+  /* Connector extends from the card to the right axis */
+  .quiz-row .connector {
+    left: auto !important;
+    right: -20px !important;
+    width: 20px !important;
+  }
+
+  .quiz-card h4 {
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+
+  .quiz-option {
+    padding: 8px;
+    gap: 10px;
+  }
+
+  .quiz-option span {
+    font-size: 0.9rem;
+  }
+
+  .submit-footer {
+    margin-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .primary-action {
+    padding: 12px 30px;
+    font-size: 0.95rem;
   }
 }

@@ -5,30 +5,11 @@
 
 const timelineData = [
     {
-        id: "big-bang",
-        startYear: -13800000000,
-        date: "13.8 Billion Years Ago",
-        title: "The Big Bang",
-        significance: 10,
-        snippet: "The emergence of space, time, and matter from a cosmic singularity.",
-        description: "Nearly 14 billion years ago, the universe began as a hot, dense point and has been expanding ever since. This cataclysmic inflation gave rise to the first atoms, stars, and eventually galaxies. It is the absolute zero of our history.",
-        gap: 0,
-        approx: false,
-        sources: [
-            {
-                title: "The First Three Minutes",
-                author: "Steven Weinberg",
-                description: "A comprehensive look at the modern view of the early universe and the physical evidence for the Big Bang.",
-                url: "https://www.google.com/search?q=The+First+Three+Minutes+Steven+Weinberg"
-            }
-        ]
-    },
-    {
         id: "earth-forms",
         startYear: -4500000000,
         date: "4.5 Billion Years Ago",
         title: "Formation of Earth",
-        significance: 9,
+        significance: 2,
         snippet: "A rocky planet coalesces in the goldilocks zone of a young star.",
         description: "Gravity pulls swirling gas and dust into the third planet from the sun. Earth begins as a molten inferno, eventually cooling to form the solid crust, atmosphere, and vast oceans that would eventually cradle life.",
         gap: 800,
@@ -39,7 +20,7 @@ const timelineData = [
         startYear: -3500000000,
         date: "3.5 Billion Years Ago",
         title: "The Spark of Life",
-        significance: 10,
+        significance: 1,
         snippet: "The first single-celled organisms emerge in Earth's primeval oceans.",
         description: "Deep in fossilized hydrothermal vents, simple prokaryotes begin a multibillion-year journey. This transition from chemistry to biology marks the most profound shift in the history of the planet.",
         gap: 600,
@@ -50,7 +31,7 @@ const timelineData = [
         startYear: -230000000,
         date: "230 – 66 Million BCE",
         title: "The Age of Dinosaurs",
-        significance: 8,
+        significance: 3,
         snippet: "Giant reptiles dominate the terrestrial landscape for over 160 million years.",
         description: "From the Triassic to the Cretaceous, dinosaurs were the undisputed masters of Earth. Their vast reign ended in fire and dust with the Chicxulub asteroid impact, clearing the path for the rise of mammals.",
         gap: 700,
@@ -61,7 +42,7 @@ const timelineData = [
         startYear: -300000,
         date: "300,000 BCE",
         title: "Rise of Homo Sapiens",
-        significance: 10,
+        significance: 1,
         snippet: "Anatomically modern humans emerge in Africa.",
         description: "Equipped with cognitive capacity for language, art, and complex tools, Homo sapiens begin migrating across the planet, eventually outlasting all other hominid species through innovation and social structure.",
         gap: 600,
@@ -72,7 +53,7 @@ const timelineData = [
         startYear: -10000,
         date: "10,000 BCE",
         title: "Agricultural Revolution",
-        significance: 10,
+        significance: 1,
         snippet: "The shift from foraging to farming fundamentally transforms human society.",
         description: "In the Fertile Crescent, humans begin domesticating plants and animals. This Neolithic shift leads to permanent settlements, surplus food, and the eventual rise of specialized labor and social hierarchies.",
         gap: 500,
@@ -83,7 +64,7 @@ const timelineData = [
         startYear: -3100,
         date: "3100 BCE",
         title: "Empire of the Nile",
-        significance: 8,
+        significance: 3,
         snippet: "The unification of Upper and Lower Egypt.",
         description: "Pharaoh Narmer unites the Nile Valley, initiating a civilization that would build pyramids, develop hieroglyphics, and endure for three millennia.",
         gap: 300,
@@ -94,7 +75,7 @@ const timelineData = [
         startYear: -4,
         date: "c. 4 BCE",
         title: "The Life of Jesus of Nazareth",
-        significance: 10,
+        significance: 1,
         snippet: "The life of the central figure of Christianity.",
         description: "Regardless of belief, the life and teachings of Jesus of Nazareth fundamentally reshaped the Western world's calendar, ethics, and political history for over two thousand years.",
         gap: 400,
@@ -105,7 +86,7 @@ const timelineData = [
         startYear: 850,
         date: "c. 850 AD",
         title: "Discovery of Gunpowder",
-        significance: 10,
+        significance: 1,
         snippet: "The accidental discovery that changed warfare forever.",
         description: "Taoist alchemists in China mixed saltpeter, sulfur, and charcoal while seeking an elixir of life. The resulting explosive changed the nature of global conflict and the power of empires.",
         gap: 300,
@@ -116,7 +97,7 @@ const timelineData = [
         startYear: 1914,
         date: "1914 – 1945 AD",
         title: "The World Wars",
-        significance: 10,
+        significance: 1,
         snippet: "The global total wars that defined the modern era.",
         description: "Two global conflicts that reshaped borders, technology, and international law. WWI saw the end of old empires, while WWII ended in the nuclear age and the formation of the United Nations.",
         gap: 400,
@@ -127,7 +108,7 @@ const timelineData = [
         startYear: 1969,
         date: "July 20, 1969",
         title: "The Moon Landing",
-        significance: 10,
+        significance: 1,
         snippet: "The first humans set foot on another celestial body.",
         description: "NASA's Apollo 11 mission landed Neil Armstrong and Buzz Aldrin on the lunar surface. It remains the absolute pinnacle of human engineering and exploration beyond our home planet.",
         gap: 200,
@@ -138,7 +119,7 @@ const timelineData = [
         startYear: 1776,
         date: "July 4, 1776",
         title: "Declaration of Independence",
-        significance: 10,
+        significance: 1,
         snippet: "The thirteen colonies formally break from the British Empire.",
         description: "Drafted primarily by Thomas Jefferson, the declaration stated the philosophical and practical reasons for the American Revolution, asserting that 'all men are created equal' with unalienable rights.",
         gap: 300,
@@ -149,7 +130,7 @@ const timelineData = [
         startYear: 1787,
         date: "September 17, 1787",
         title: "U.S. Constitution Signed",
-        significance: 9,
+        significance: 2,
         snippet: "The establishment of the supreme law of the United States.",
         description: "The framers created a system of checks and balances that became a blueprint for modern representative democracy.",
         gap: 300,
@@ -160,14 +141,14 @@ const timelineData = [
 // Feature: Quiz Generation Worksheet
 function generateQuiz() {
     const quizEvents = [...timelineData]
-        .filter(e => e.significance >= 9) // Focus on high significance
+        .filter(e => e.significance <= 2) // Focus on high significance (1 = most significant)
         .sort(() => Math.random() - 0.5)
         .slice(0, 10)
         .sort((a, b) => a.startYear - b.startYear);
 
     // Create a temporary print view
     const printWindow = window.open('', '_blank');
-    
+
     let html = `
     <html>
     <head>
@@ -306,14 +287,14 @@ function generateQuiz() {
 
     quizEvents.forEach((event, index) => {
         const side = index % 2 === 0 ? 'left' : 'right';
-        
+
         // Get distractors
         const distractors = timelineData
             .filter(e => e.id !== event.id)
             .sort(() => Math.random() - 0.5)
             .slice(0, 3)
             .map(e => e.title);
-        
+
         const options = [event.title, ...distractors].sort(() => Math.random() - 0.5);
 
         html += `
@@ -384,23 +365,41 @@ if (typeof wikidataHistory !== 'undefined') {
     combinedTimeline = [...combinedTimeline, ...wikidataHistory];
 }
 
+// Deduplicate: remove Wikidata entries that are too close in time AND title to an internal entry
+(function deduplicateTimeline() {
+    const seen = new Map();
+    combinedTimeline = combinedTimeline.filter(event => {
+        // Strip leading "the", collapse to alphanum, take first 10 chars
+        const titleKey = event.title
+            .toLowerCase()
+            .replace(/^the\s+/, '')          // strip leading "the "
+            .replace(/[^a-z0-9]/g, '')       // alphanum only
+            .slice(0, 10);
+        const yearKey = Math.round((event.startYear || 0) / 10000);
+        const key = `${titleKey}::${yearKey}`;
+        if (seen.has(key)) return false;
+        seen.set(key, true);
+        return true;
+    });
+})();
+
 // Global Filter State
-let currentSignificanceFilter = 10;
+let currentSignificanceFilter = 1;
 
 function renderTimeline(minSignificance) {
     const container = document.getElementById('events-container');
     const progressBar = document.getElementById('progress-bar');
-    
+
     // Clear current view
     container.innerHTML = '';
-    
+
     // Filter and Sort
     const filteredData = combinedTimeline
-        .filter(e => e.significance >= minSignificance)
+        .filter(e => e.significance <= minSignificance)
         .sort((a, b) => a.startYear - b.startYear);
 
     let blockCount = 0;
-    
+
     filteredData.forEach((event) => {
         // Dynamic Gap Calculation for cleaner descent
         const gapSize = event.gap || 150;
@@ -415,7 +414,7 @@ function renderTimeline(minSignificance) {
 
         const approxPrefix = event.approx ? '<span class="approx-tag">Around </span>' : '';
         const hasSources = event.sources && event.sources.length > 0;
-        
+
         const sourceHtml = hasSources ? `
             <div class="source-card ${isLeft ? 'to-right' : 'to-left'}">
                 <div class="source-trigger" onclick="event.stopPropagation(); showSources('${event.id}')">
@@ -432,14 +431,13 @@ function renderTimeline(minSignificance) {
                 <h3>${event.title}</h3>
                 <div class="event-preview">${event.snippet}</div>
                 <div class="event-dot"></div>
-                <div class="sig-indicator">L${event.significance}</div>
             </div>
             ${sourceHtml}
         `;
 
         container.appendChild(block);
         blockCount++;
-        
+
         // Handle reveal trigger
         setTimeout(() => block.classList.add('visible'), 50 * blockCount);
     });
@@ -527,7 +525,7 @@ function showDetail(id) {
 
     const overlay = document.getElementById('event-detail-overlay');
     const approxPrefix = event.approx ? 'Around ' : '';
-    
+
     document.getElementById('detail-title').innerText = event.title;
     document.getElementById('detail-date').innerText = approxPrefix + event.date;
     document.getElementById('detail-description').innerText = event.description;
@@ -549,7 +547,7 @@ function showSources(id) {
     const overlay = document.getElementById('event-detail-overlay');
     document.getElementById('detail-title').innerText = `Sources: ${event.title}`;
     document.getElementById('detail-date').innerText = "Scholarly Documentation";
-    
+
     let sourceListHtml = '<div class="source-list">';
     event.sources.forEach(src => {
         sourceListHtml += `
@@ -564,7 +562,7 @@ function showSources(id) {
         `;
     });
     sourceListHtml += '</div>';
-    
+
     document.getElementById('detail-description').innerHTML = sourceListHtml;
 
     overlay.style.display = 'flex';
@@ -572,7 +570,7 @@ function showSources(id) {
 }
 
 let activeQuizData = [];
-let currentQuizLevel = 10;
+let currentQuizLevel = 1;
 
 function startInteractiveQuiz() {
     document.getElementById('hero').classList.add('hidden');
@@ -598,7 +596,7 @@ function startInteractiveQuiz() {
             .sort(() => Math.random() - 0.5)
             .slice(0, 3)
             .map(e => e.title);
-        
+
         const options = [event.title, ...distractors].sort(() => Math.random() - 0.5);
 
         const row = document.createElement('div');
@@ -653,17 +651,17 @@ function submitQuiz() {
     const isPerfect = score === activeQuizData.length;
     let progressionMsg = "";
 
-    if (isPerfect && currentQuizLevel === 10) {
-        currentQuizLevel = 9;
-        progressionMsg = `<div class="progression-unlocked">MASTERED! Level 9 Now Unlocked.</div>`;
-    } else if (isPerfect && currentQuizLevel === 9) {
+    if (isPerfect && currentQuizLevel === 1) {
+        currentQuizLevel = 2;
+        progressionMsg = `<div class="progression-unlocked">MASTERED! Level 2 Now Unlocked.</div>`;
+    } else if (isPerfect && currentQuizLevel === 2) {
         progressionMsg = `<div class="progression-unlocked">TIME ARCHITECT STATUS ACHIEVED!</div>`;
     }
 
     const scorePct = Math.round((score / activeQuizData.length) * 100);
     const scoreEl = document.getElementById('results-score');
     scoreEl.innerHTML = `${progressionMsg}${scorePct}% (${score}/${activeQuizData.length})`;
-    
+
     const missedEl = document.getElementById('missed-questions');
     if (missed.length === 0) {
         missedEl.innerHTML = "<p style='text-align:center'>Your knowledge of this era is absolute.</p>";
@@ -687,16 +685,16 @@ function closeResults() {
 
 function generateQuiz() {
     const quizEvents = [...combinedTimeline]
-        .filter(e => e.significance === currentQuizLevel) 
+        .filter(e => e.significance === currentQuizLevel)
         .sort(() => Math.random() - 0.5)
         .slice(0, 10)
         .sort((a, b) => a.startYear - b.startYear);
-    
+
     // Fallback if very few events at exact level
     if (quizEvents.length < 5) {
         quizEvents.length = 0;
         const fallback = [...combinedTimeline]
-            .filter(e => e.significance >= currentQuizLevel)
+            .filter(e => e.significance <= currentQuizLevel)
             .sort(() => Math.random() - 0.5)
             .slice(0, 10)
             .sort((a, b) => a.startYear - b.startYear);

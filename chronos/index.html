@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,12 @@
     <meta name="description" content="A vertical journey through deep time, from the Big Bang to the Common Era.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div id="progress-container">
         <div id="progress-bar"></div>
@@ -21,10 +25,11 @@
                 <div class="header-actions">
                     <div class="filter-group">
                         <label for="sig-filter">Chronos Resolution:</label>
-                        <input type="range" id="sig-filter" min="1" max="10" value="10" step="1">
-                        <span id="sig-val">10</span>
+                        <input type="range" id="sig-filter" min="1" max="10" value="1" step="1">
+                        <span id="sig-val">1</span>
                     </div>
                     <button id="print-quiz-btn" class="action-btn">Print Worksheet Quiz</button>
+                    <button id="export-pdf-btn" class="action-btn">Export Event List</button>
                     <button id="start-quiz-btn" class="action-btn accent">Start Interactive Quiz</button>
                 </div>
                 <h1>Chronos</h1>
@@ -81,4 +86,5 @@
     <script src="wikidata_consensus.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>
