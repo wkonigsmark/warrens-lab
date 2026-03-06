@@ -519,9 +519,12 @@ function initChronos() {
     const exportCuratedBtn = document.getElementById('export-curated-data');
     const curationFilter = document.getElementById('curation-level-filter');
 
+    const syncWikidataBtn = document.getElementById('sync-wikidata-btn');
+
     if (curateBtn) curateBtn.onclick = openCuration;
     if (exitCurationBtn) exitCurationBtn.onclick = exitCuration;
     if (exportCuratedBtn) exportCuratedBtn.onclick = exportCuratedData;
+    if (syncWikidataBtn) syncWikidataBtn.onclick = syncWithWikidata;
     if (curationFilter) curationFilter.onchange = () => renderCurationTable();
 
     // Significance Filter Listener
@@ -571,6 +574,14 @@ function showDetail(id) {
 
     overlay.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+
+    // Track event view
+    if (typeof gtag === 'function') {
+        gtag('event', 'view_event_detail', {
+            'event_title': event.title,
+            'event_id': event.id
+        });
+    }
 }
 
 function hideOverlay() {
@@ -618,6 +629,12 @@ function startInteractiveQuiz() {
     document.querySelector('footer').classList.add('hidden');
     window.scrollTo(0, 0);
 
+    // Track quiz start
+    if (typeof gtag === 'function') {
+        gtag('event', 'quiz_start', {
+            'level': currentQuizLevel
+        });
+    }
     // Use combined data for quiz
     activeQuizData = [...combinedTimeline]
         .filter(e => e.significance === currentQuizLevel)
@@ -717,6 +734,15 @@ function submitQuiz() {
     }
 
     document.getElementById('quiz-results-overlay').style.display = 'flex';
+
+    // Track quiz completion
+    if (typeof gtag === 'function') {
+        gtag('event', 'quiz_complete', {
+            'score': scorePct,
+            'level': currentQuizLevel,
+            'perfect_score': isPerfect
+        });
+    }
 }
 
 function closeResults() {
@@ -1095,6 +1121,105 @@ function exportCuratedData() {
         `1. wikidata_consensus.js\n   → Replace the file in your chronos/ folder\n\n` +
         `2. timelineData_export.js\n   → Replace the timelineData array at the top of script.js with this file's contents\n\n` +
         `Your edits are also saved in the browser so they persist across page refreshes.`);
+
+    // Track data export
+    if (typeof gtag === 'function') {
+        gtag('event', 'data_export', {
+            'changes': changeCount
+        });
+    }
+}
+
+async function syncWithWikidata() {
+    const btn = document.getElementById('sync-wikidata-btn');
+    const originalText = btn.innerText;
+    btn.innerText = "🛰️ Syncing...";
+    btn.disabled = true;
+
+    // SPARQL Query for high-significance events and requested historical markers
+    const sparql = `
+    SELECT DISTINCT ?item ?itemLabel ?date ?description ?sitelinks WHERE {
+      {
+        ?item wdt:P31/wdt:P279* wd:Q1190554 . # Historical event
+        ?item wikibase:sitelinks ?sitelinks .
+        FILTER(?sitelinks > 100)
+      } UNION {
+        ?item wdt:P31/wdt:P279* wd:Q198 . # War
+        ?item wikibase:sitelinks ?sitelinks .
+        FILTER(?sitelinks > 150)
+      } UNION {
+        VALUES ?item {
+          wd:Q4692 wd:Q8432 wd:Q35333 wd:Q12978 wd:Q7650 wd:Q8027 wd:Q39739 
+          wd:Q5582 wd:Q9353 wd:Q307 wd:Q193484 wd:Q8942 wd:Q9129 wd:Q12519
+          wd:Q106660 wd:Q144334 wd:Q12562 wd:Q192761 wd:Q517 wd:Q17422
+          wd:Q13131 wd:Q9392 wd:Q5264 wd:Q362 wd:Q12032 wd:Q1776
+        }
+        ?item wikibase:sitelinks ?sitelinks .
+      }
+      { ?item wdt:P585 ?date . } UNION { ?item wdt:P580 ?date . } UNION { ?item wdt:P569 ?date . }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      OPTIONAL { ?item schema:description ?description . FILTER(LANG(?description) = "en") }
+    } ORDER BY ?date LIMIT 300`;
+
+    const url = "https://query.wikidata.org/sparql?query=" + encodeURIComponent(sparql);
+
+    try {
+        const response = await fetch(url, { headers: { 'Accept': 'application/json' } });
+        const data = await response.json();
+
+        const results = data.results.bindings;
+        let newCount = 0;
+
+        results.forEach(b => {
+            const id = b.item.value.split('/').pop();
+            if (combinedTimeline.some(e => e.id === id)) return; // Skip existing
+
+            const title = b.itemLabel.value;
+            const rawDate = b.date.value;
+            const sitelinks = parseInt(b.sitelinks.value);
+            const desc = b.description ? b.description.value : "";
+
+            // Basic date parsing
+            let year = 0;
+            let dateStr = "";
+            if (rawDate.startsWith('-')) {
+                year = -parseInt(rawDate.substring(1).split('-')[0]);
+                dateStr = `${Math.abs(year)} BCE`;
+            } else {
+                year = parseInt(rawDate.split('-')[0]);
+                dateStr = year < 1000 ? `${year} AD` : `${year}`;
+            }
+
+            // Significance
+            let sig = (sitelinks > 180) ? 1 : (sitelinks > 80 ? 2 : 3);
+
+            const newEvent = {
+                id, title, date: dateStr, startYear: year,
+                description: desc, snippet: desc.substring(0, 100),
+                significance: sig, gap: 150
+            };
+
+            wikidataHistory.push(newEvent);
+            combinedTimeline.push(newEvent);
+            newCount++;
+        });
+
+        alert(`Sync Complete! Added ${newCount} new significant events from Wikidata.\n\nNote: These are now in the table. Use 'Export' to save them permanently.`);
+        renderCurationTable();
+
+        // Track Wikidata sync
+        if (typeof gtag === 'function') {
+            gtag('event', 'wikidata_sync', {
+                'new_events': newCount
+            });
+        }
+    } catch (e) {
+        console.error(e);
+        alert("Failed to sync with Wikidata. This can happen if the query takes too long or there is a network issue.");
+    } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }
 }
 
 function downloadFile(filename, content) {
