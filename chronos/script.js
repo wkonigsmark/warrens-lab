@@ -859,6 +859,7 @@ function generateQuiz() {
 // Feature: Database Curation Mode
 // ════════════════════════════════════════════════
 let curationChanges = {}; // Track changes: { eventId: newSignificance }
+let curationDeletions = new Set(); // Track deleted event IDs
 let curationSortCol = 'date';  // 'date', 'title', 'sig'
 let curationSortAsc = true;
 
@@ -868,7 +869,8 @@ function openCuration() {
     document.getElementById('curation-view').classList.remove('hidden');
     document.querySelector('footer').classList.add('hidden');
     window.scrollTo(0, 0);
-    curationChanges = {}; // Fresh session changes (localStorage edits are already applied)
+    curationChanges = {}; // Fresh session changes
+    curationDeletions = new Set();
     renderCurationTable();
 }
 
@@ -1019,12 +1021,15 @@ function renderCurationTable() {
                     <th>Description</th>
                     <th data-col="sig">Level${sortIcon('sig')}</th>
                     <th>Source</th>
+                    <th class="col-actions">Actions</th>
                 </tr>
             </thead>
             <tbody>
     `;
 
     data.forEach(event => {
+        if (curationDeletions.has(event.id)) return; // Skip deleted items
+
         const displayDate = formatChronosDate(event.startYear);
         const desc = event.snippet || event.description || '';
         const truncDesc = desc.length > 120 ? desc.slice(0, 120) + '…' : desc;
@@ -1049,6 +1054,9 @@ function renderCurationTable() {
                     ${changeMarker}
                 </td>
                 <td class="col-source">${event.source}</td>
+                <td class="col-actions">
+                    <button class="delete-btn" data-id="${event.id}" title="Remove from timeline">🗑️</button>
+                </td>
             </tr>
         `;
     });
@@ -1069,6 +1077,17 @@ function renderCurationTable() {
                 delete curationChanges[id];
             }
             renderCurationTable();
+        });
+    });
+
+    // Wire up delete listeners
+    container.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const id = e.target.dataset.id;
+            if (confirm("Are you sure you want to remove this event from the timeline?")) {
+                curationDeletions.add(id);
+                renderCurationTable();
+            }
         });
     });
 
@@ -1093,6 +1112,12 @@ function exportCuratedData() {
         const event = combinedTimeline.find(e => e.id === id);
         if (event) event.significance = newSig;
     });
+
+    // Handle Deletions: Filter out deleted items from the live combinedTimeline
+    if (curationDeletions.size > 0) {
+        // We modify the live combinedTimeline
+        combinedTimeline = combinedTimeline.filter(e => !curationDeletions.has(e.id));
+    }
 
     // Persist to localStorage
     saveCurationToLocalStorage();
@@ -1136,18 +1161,37 @@ async function syncWithWikidata() {
     btn.innerText = "🛰️ Syncing...";
     btn.disabled = true;
 
-    // Optimized SPARQL Query: Removed expensive recursive property paths (/wdt:P279*) for general categories
-    // and increased the sitelink floor to ensure faster execution.
+    // Sweeping for a broader list of items including empires, discoveries, battles, and inventions.
     const sparql = `
     SELECT DISTINCT ?item ?itemLabel ?date ?description ?sitelinks WHERE {
       {
-        ?item wdt:P31 wd:Q1190554 . # Direct historical events
+        ?item wdt:P31 wd:Q1190554 . # Historical events
         ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 150) 
+        FILTER(?sitelinks > 100) 
       } UNION {
-        ?item wdt:P31 wd:Q198 . # Direct wars
+        ?item wdt:P31 wd:Q198 . # Wars
         ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 200)
+        FILTER(?sitelinks > 120)
+      } UNION {
+        ?item wdt:P31 wd:Q178561 . # Battles
+        ?item wikibase:sitelinks ?sitelinks .
+        FILTER(?sitelinks > 150)
+      } UNION {
+        ?item wdt:P31 wd:Q1322139 . # Revolutions
+        ?item wikibase:sitelinks ?sitelinks .
+        FILTER(?sitelinks > 100)
+      } UNION {
+        ?item wdt:P31 wd:Q12519 . # Empires
+        ?item wikibase:sitelinks ?sitelinks .
+        FILTER(?sitelinks > 80)
+      } UNION {
+        ?item wdt:P31 wd:Q4692 . # Scientific discoveries
+        ?item wikibase:sitelinks ?sitelinks .
+        FILTER(?sitelinks > 80)
+      } UNION {
+        ?item wdt:P31 wd:Q124901 . # Inventions
+        ?item wikibase:sitelinks ?sitelinks .
+        FILTER(?sitelinks > 100)
       } UNION {
         VALUES ?item {
           wd:Q4692 wd:Q8432 wd:Q35333 wd:Q12978 wd:Q7650 wd:Q8027 wd:Q39739 
@@ -1160,7 +1204,7 @@ async function syncWithWikidata() {
       { ?item wdt:P585 ?date . } UNION { ?item wdt:P580 ?date . } UNION { ?item wdt:P569 ?date . }
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
       OPTIONAL { ?item schema:description ?description . FILTER(LANG(?description) = "en") }
-    } ORDER BY DESC(?sitelinks) LIMIT 150`;
+    } ORDER BY DESC(?sitelinks) LIMIT 300`;
 
     const url = "https://query.wikidata.org/sparql?query=" + encodeURIComponent(sparql);
 
@@ -1197,7 +1241,8 @@ async function syncWithWikidata() {
             const newEvent = {
                 id, title, date: dateStr, startYear: year,
                 description: desc, snippet: desc.substring(0, 100),
-                significance: sig, gap: 150
+                significance: sig, gap: 150,
+                source: 'WIKIDATA'
             };
 
             wikidataHistory.push(newEvent);
