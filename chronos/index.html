@@ -25,11 +25,12 @@
                 <div class="header-actions">
                     <div class="filter-group">
                         <label for="sig-filter">Chronos Resolution:</label>
-                        <input type="range" id="sig-filter" min="1" max="10" value="1" step="1">
-                        <span id="sig-val">1</span>
+                        <input type="range" id="sig-filter" min="1" max="3" value="1" step="1">
+                        <span id="sig-val">1 (High)</span>
                     </div>
                     <button id="print-quiz-btn" class="action-btn">Print Worksheet Quiz</button>
                     <button id="export-pdf-btn" class="action-btn">Export Event List</button>
+                    <button id="curate-btn" class="action-btn">Curate Database</button>
                     <button id="start-quiz-btn" class="action-btn accent">Start Interactive Quiz</button>
                 </div>
                 <h1>Chronos</h1>
@@ -59,6 +60,32 @@
                     <button id="submit-quiz-btn" class="primary-action">Submit Responses</button>
                 </div>
             </div>
+        </section>
+
+        <section id="curation-view" class="hidden">
+            <div class="curation-header">
+                <div class="curation-title-row">
+                    <h2>Database Curation</h2>
+                    <button id="exit-curation-btn" class="action-btn">Exit Curation</button>
+                </div>
+                <div class="curation-controls">
+                    <div class="curation-filter">
+                        <label>Show Level:</label>
+                        <select id="curation-level-filter">
+                            <option value="all">All Levels</option>
+                            <option value="1">Level 1 — High Significance</option>
+                            <option value="2">Level 2 — Medium Significance</option>
+                            <option value="3">Level 3 — Low Significance</option>
+                        </select>
+                    </div>
+                    <div class="curation-stats" id="curation-stats"></div>
+                    <div class="curation-actions">
+                        <button id="export-curated-data" class="action-btn accent">Export Updated Data</button>
+                    </div>
+                </div>
+            </div>
+            <div id="curation-gaps" class="curation-gaps"></div>
+            <div id="curation-table-container" class="curation-table-container"></div>
         </section>
 
         <div id="quiz-results-overlay" class="overlay">

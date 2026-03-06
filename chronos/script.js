@@ -9,7 +9,7 @@ const timelineData = [
         startYear: -4500000000,
         date: "4.5 Billion Years Ago",
         title: "Formation of Earth",
-        significance: 2,
+        significance: 1,
         snippet: "A rocky planet coalesces in the goldilocks zone of a young star.",
         description: "Gravity pulls swirling gas and dust into the third planet from the sun. Earth begins as a molten inferno, eventually cooling to form the solid crust, atmosphere, and vast oceans that would eventually cradle life.",
         gap: 800,
@@ -31,7 +31,7 @@ const timelineData = [
         startYear: -230000000,
         date: "230 – 66 Million BCE",
         title: "The Age of Dinosaurs",
-        significance: 3,
+        significance: 1,
         snippet: "Giant reptiles dominate the terrestrial landscape for over 160 million years.",
         description: "From the Triassic to the Cretaceous, dinosaurs were the undisputed masters of Earth. Their vast reign ended in fire and dust with the Chicxulub asteroid impact, clearing the path for the rise of mammals.",
         gap: 700,
@@ -64,7 +64,7 @@ const timelineData = [
         startYear: -3100,
         date: "3100 BCE",
         title: "Empire of the Nile",
-        significance: 3,
+        significance: 1,
         snippet: "The unification of Upper and Lower Egypt.",
         description: "Pharaoh Narmer unites the Nile Valley, initiating a civilization that would build pyramids, develop hieroglyphics, and endure for three millennia.",
         gap: 300,
@@ -130,7 +130,7 @@ const timelineData = [
         startYear: 1787,
         date: "September 17, 1787",
         title: "U.S. Constitution Signed",
-        significance: 2,
+        significance: 1,
         snippet: "The establishment of the supreme law of the United States.",
         description: "The framers created a system of checks and balances that became a blueprint for modern representative democracy.",
         gap: 300,
@@ -140,8 +140,8 @@ const timelineData = [
 
 // Feature: Quiz Generation Worksheet
 function generateQuiz() {
-    const quizEvents = [...timelineData]
-        .filter(e => e.significance <= 2) // Focus on high significance (1 = most significant)
+    const quizEvents = [...combinedTimeline]
+        .filter(e => e.significance === 1) // High Significance
         .sort(() => Math.random() - 0.5)
         .slice(0, 10)
         .sort((a, b) => a.startYear - b.startYear);
@@ -314,7 +314,7 @@ function generateQuiz() {
     html += `
         </div>
         <div style="margin-top: 100px; text-align: center; font-size: 0.8rem; color: #888;">
-            CHRONOS HISTORICAL ENGINE &bull; LEVEL 10 CORE MILESTONES &bull; VERIFIED DATABASE
+            CHRONOS HISTORICAL ENGINE &bull; LEVEL 1 CORE MILESTONES &bull; VERIFIED DATABASE
         </div>
     </body>
     </html>
@@ -381,6 +381,31 @@ if (typeof wikidataHistory !== 'undefined') {
         seen.set(key, true);
         return true;
     });
+})();
+
+// Restore any saved curation edits from localStorage
+(function restoreCurationEdits() {
+    try {
+        const saved = localStorage.getItem('chronos_curation');
+        if (saved) {
+            const edits = JSON.parse(saved); // { eventId: newSignificance }
+            let applied = 0;
+            Object.entries(edits).forEach(([id, sig]) => {
+                const event = combinedTimeline.find(e => e.id === id);
+                if (event) {
+                    // Remap old 1-10 values if found
+                    let val = parseInt(sig);
+                    if (val > 3) {
+                        if (val <= 7) val = 2;
+                        else val = 3;
+                    }
+                    event.significance = val;
+                    applied++;
+                }
+            });
+            if (applied > 0) console.log(`Chronos: Restored ${applied} curation edits from localStorage`);
+        }
+    } catch (e) { /* ignore parse errors */ }
 })();
 
 // Global Filter State
@@ -471,6 +496,7 @@ function renderTimeline(minSignificance) {
 
 function initChronos() {
     const printBtn = document.getElementById('print-quiz-btn');
+    const exportBtn = document.getElementById('export-pdf-btn');
     const startQuizBtn = document.getElementById('start-quiz-btn');
     const exitQuizBtn = document.getElementById('exit-quiz-btn');
     const submitQuizBtn = document.getElementById('submit-quiz-btn');
@@ -480,19 +506,32 @@ function initChronos() {
     const sigValText = document.getElementById('sig-val');
 
     if (printBtn) printBtn.onclick = generateQuiz;
+    if (exportBtn) exportBtn.onclick = exportEventList;
     if (startQuizBtn) startQuizBtn.onclick = startInteractiveQuiz;
     if (exitQuizBtn) exitQuizBtn.onclick = exitQuiz;
     if (submitQuizBtn) submitQuizBtn.onclick = submitQuiz;
     if (closeResultsBtn) closeResultsBtn.onclick = closeResults;
     if (closeOverlayBtn) closeOverlayBtn.onclick = hideOverlay;
 
+    // Curation wiring
+    const curateBtn = document.getElementById('curate-btn');
+    const exitCurationBtn = document.getElementById('exit-curation-btn');
+    const exportCuratedBtn = document.getElementById('export-curated-data');
+    const curationFilter = document.getElementById('curation-level-filter');
+
+    if (curateBtn) curateBtn.onclick = openCuration;
+    if (exitCurationBtn) exitCurationBtn.onclick = exitCuration;
+    if (exportCuratedBtn) exportCuratedBtn.onclick = exportCuratedData;
+    if (curationFilter) curationFilter.onchange = () => renderCurationTable();
+
     // Significance Filter Listener
     if (sigSlider) {
         sigSlider.oninput = (e) => {
             const val = parseInt(e.target.value);
-            sigValText.innerText = val;
+            const label = val === 1 ? '1 (High)' : val === 2 ? '2 (Med)' : '3 (Low)';
+            sigValText.innerText = label;
             currentSignificanceFilter = val;
-            currentQuizLevel = val; // Synchronize Quiz Level with Slider
+            currentQuizLevel = val;
             renderTimeline(val);
         };
     }
@@ -587,7 +626,9 @@ function startInteractiveQuiz() {
         .sort((a, b) => a.startYear - b.startYear);
 
     const container = document.getElementById('quiz-questions-container');
-    container.innerHTML = `<div class="quiz-level-banner">Current Challenge: Significance Level ${currentQuizLevel}</div>`;
+    const levelTitle = currentQuizLevel === 1 ? "HIGH SIGNIFICANCE" :
+        currentQuizLevel === 2 ? "MEDIUM SIGNIFICANCE" : "LOW SIGNIFICANCE";
+    container.innerHTML = `<div class="quiz-level-banner">Current Challenge: ${levelTitle}</div>`;
 
     activeQuizData.forEach((event, index) => {
         const side = index % 2 === 0 ? 'left' : 'right';
@@ -779,6 +820,457 @@ function generateQuiz() {
         </div>
         <div style="margin-top: 100px; text-align: center; font-size: 0.8rem; color: #888;">
             CHRONOS HISTORICAL ENGINE &bull; LEVEL ${currentQuizLevel} RESOLUTION &bull; VERIFIED DATABASE
+        </div>
+    </body>
+    </html>
+    `;
+
+    printWindow.document.write(html);
+    printWindow.document.close();
+}
+
+// ════════════════════════════════════════════════
+// Feature: Database Curation Mode
+// ════════════════════════════════════════════════
+let curationChanges = {}; // Track changes: { eventId: newSignificance }
+let curationSortCol = 'date';  // 'date', 'title', 'sig'
+let curationSortAsc = true;
+
+function openCuration() {
+    document.getElementById('hero').classList.add('hidden');
+    document.getElementById('timeline-wrapper').classList.add('hidden');
+    document.getElementById('curation-view').classList.remove('hidden');
+    document.querySelector('footer').classList.add('hidden');
+    window.scrollTo(0, 0);
+    curationChanges = {}; // Fresh session changes (localStorage edits are already applied)
+    renderCurationTable();
+}
+
+function exitCuration() {
+    // Apply any changes to the live combinedTimeline
+    const changeCount = Object.keys(curationChanges).length;
+    if (changeCount > 0) {
+        Object.entries(curationChanges).forEach(([id, newSig]) => {
+            const event = combinedTimeline.find(e => e.id === id);
+            if (event) event.significance = newSig;
+        });
+
+        // Persist ALL current significance values to localStorage
+        saveCurationToLocalStorage();
+
+        // Re-render the timeline with updated data
+        renderTimeline(currentSignificanceFilter);
+    }
+
+    document.getElementById('hero').classList.remove('hidden');
+    document.getElementById('timeline-wrapper').classList.remove('hidden');
+    document.getElementById('curation-view').classList.add('hidden');
+    document.querySelector('footer').classList.remove('hidden');
+}
+
+function saveCurationToLocalStorage() {
+    // Build a map of id -> current significance for any event that differs from its original file value
+    // We store the full current state so it can be restored on reload
+    const edits = {};
+    combinedTimeline.forEach(e => {
+        // Find original value from the source arrays
+        const origInternal = timelineData.find(t => t.id === e.id);
+        const origWiki = (typeof wikidataHistory !== 'undefined') ? wikidataHistory.find(t => t.id === e.id) : null;
+        const originalSig = origInternal ? origInternal.significance : (origWiki ? origWiki.significance : null);
+        // Note: originalSig from the source arrays may already have been overwritten in memory
+        // So we just store ALL current values — simpler and more reliable
+        edits[e.id] = e.significance;
+    });
+    localStorage.setItem('chronos_curation', JSON.stringify(edits));
+    console.log(`Chronos: Saved ${Object.keys(edits).length} event states to localStorage`);
+}
+
+function renderCurationTable() {
+    const filterVal = document.getElementById('curation-level-filter').value;
+    const container = document.getElementById('curation-table-container');
+    const gapsEl = document.getElementById('curation-gaps');
+    const statsEl = document.getElementById('curation-stats');
+
+    // Build working data with current significance (including pending changes)
+    let data = combinedTimeline.map(e => ({
+        ...e,
+        currentSig: curationChanges[e.id] !== undefined ? curationChanges[e.id] : e.significance,
+        isChanged: curationChanges[e.id] !== undefined,
+        source: timelineData.some(t => t.id === e.id) ? 'curated' : 'wikidata'
+    }));
+
+    // Filter
+    if (filterVal !== 'all') {
+        const level = parseInt(filterVal);
+        data = data.filter(e => e.currentSig === level);
+    }
+
+    // Sort
+    data.sort((a, b) => {
+        let cmp = 0;
+        if (curationSortCol === 'date') cmp = a.startYear - b.startYear;
+        else if (curationSortCol === 'title') cmp = a.title.localeCompare(b.title);
+        else if (curationSortCol === 'sig') cmp = a.currentSig - b.currentSig;
+        return curationSortAsc ? cmp : -cmp;
+    });
+
+    // Stats
+    const totalChanges = Object.keys(curationChanges).length;
+    const levelCounts = {};
+    combinedTimeline.forEach(e => {
+        const sig = curationChanges[e.id] !== undefined ? curationChanges[e.id] : e.significance;
+        levelCounts[sig] = (levelCounts[sig] || 0) + 1;
+    });
+    let statsHtml = `<strong>${data.length}</strong> events shown`;
+    if (filterVal === 'all') {
+        statsHtml += ` &nbsp;|&nbsp; `;
+        for (let i = 1; i <= 3; i++) {
+            statsHtml += `L${i}: <strong>${levelCounts[i] || 0}</strong>&nbsp; `;
+        }
+    }
+    if (totalChanges > 0) {
+        statsHtml += ` &nbsp;|&nbsp; <strong>${totalChanges}</strong> pending change${totalChanges > 1 ? 's' : ''}`;
+    }
+    statsEl.innerHTML = statsHtml;
+
+    // Gap Detection (only when filtering a specific level)
+    gapsEl.innerHTML = '';
+    if (filterVal !== 'all') {
+        const level = parseInt(filterVal);
+        const levelEvents = combinedTimeline
+            .filter(e => {
+                const sig = curationChanges[e.id] !== undefined ? curationChanges[e.id] : e.significance;
+                return sig <= level;
+            })
+            .sort((a, b) => a.startYear - b.startYear);
+
+        // Define gap thresholds based on era
+        for (let i = 0; i < levelEvents.length - 1; i++) {
+            const curr = levelEvents[i];
+            const next = levelEvents[i + 1];
+            const gapYears = next.startYear - curr.startYear;
+
+            // Only flag gaps in the historical era (after 10000 BCE) that span > 500 years
+            // For deep time, gaps of billions of years are expected
+            let threshold = 500;
+            if (curr.startYear < -10000) threshold = 1000000; // deep time: 1M year gaps are fine
+            if (curr.startYear < -1000000) threshold = 100000000; // really deep time
+
+            if (gapYears > threshold && curr.startYear > -100000) {
+                const fromDate = formatChronosDate(curr.startYear);
+                const toDate = formatChronosDate(next.startYear);
+                const gapDisplay = gapYears >= 1000000
+                    ? `${(gapYears / 1000000).toFixed(1)}M years`
+                    : `${gapYears.toLocaleString()} years`;
+                gapsEl.innerHTML += `
+                    <div class="gap-alert">
+                        <span class="gap-icon">⚠️</span>
+                        <span class="gap-text">Gap between <strong>${curr.title}</strong> and <strong>${next.title}</strong></span>
+                        <span class="gap-span">${fromDate} → ${toDate} (${gapDisplay})</span>
+                    </div>
+                `;
+            }
+        }
+    }
+
+    // Table
+    if (data.length === 0) {
+        container.innerHTML = '<div class="curation-empty">No events at this level.</div>';
+        return;
+    }
+
+    const sortIcon = (col) => {
+        if (curationSortCol === col) return curationSortAsc ? ' ▴' : ' ▾';
+        return '';
+    };
+
+    let html = `
+        <table class="curation-table">
+            <thead>
+                <tr>
+                    <th data-col="date">Date${sortIcon('date')}</th>
+                    <th data-col="title">Event${sortIcon('title')}</th>
+                    <th>Description</th>
+                    <th data-col="sig">Level${sortIcon('sig')}</th>
+                    <th>Source</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    data.forEach(event => {
+        const displayDate = formatChronosDate(event.startYear);
+        const desc = event.snippet || event.description || '';
+        const truncDesc = desc.length > 120 ? desc.slice(0, 120) + '…' : desc;
+        const changedClass = event.isChanged ? 'changed' : '';
+        const changeMarker = event.isChanged ? '<span class="change-indicator"></span>' : '';
+        const levelClass = event.currentSig <= 5 ? `level-${event.currentSig}` : '';
+
+        let sigOptions = '';
+        for (let i = 1; i <= 3; i++) {
+            sigOptions += `<option value="${i}" ${i === event.currentSig ? 'selected' : ''}>${i}</option>`;
+        }
+
+        html += `
+            <tr class="${changedClass}" data-id="${event.id}">
+                <td class="col-date">${displayDate}</td>
+                <td class="col-title">${event.title}</td>
+                <td class="col-desc">${truncDesc}</td>
+                <td class="col-sig">
+                    <select class="sig-select ${levelClass}" data-id="${event.id}" data-original="${event.significance}">
+                        ${sigOptions}
+                    </select>
+                    ${changeMarker}
+                </td>
+                <td class="col-source">${event.source}</td>
+            </tr>
+        `;
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
+
+    // Wire up change listeners
+    container.querySelectorAll('.sig-select').forEach(select => {
+        select.addEventListener('change', (e) => {
+            const id = e.target.dataset.id;
+            const original = parseInt(e.target.dataset.original);
+            const newVal = parseInt(e.target.value);
+
+            if (newVal !== original) {
+                curationChanges[id] = newVal;
+            } else {
+                delete curationChanges[id];
+            }
+            renderCurationTable();
+        });
+    });
+
+    // Wire up column sort
+    container.querySelectorAll('th[data-col]').forEach(th => {
+        th.addEventListener('click', () => {
+            const col = th.dataset.col;
+            if (curationSortCol === col) {
+                curationSortAsc = !curationSortAsc;
+            } else {
+                curationSortCol = col;
+                curationSortAsc = true;
+            }
+            renderCurationTable();
+        });
+    });
+}
+
+function exportCuratedData() {
+    // Apply pending changes first
+    Object.entries(curationChanges).forEach(([id, newSig]) => {
+        const event = combinedTimeline.find(e => e.id === id);
+        if (event) event.significance = newSig;
+    });
+
+    // Persist to localStorage
+    saveCurationToLocalStorage();
+
+    // Separate back into timelineData events and wikidataHistory events
+    const internalIds = new Set(timelineData.map(e => e.id));
+    const updatedInternal = combinedTimeline.filter(e => internalIds.has(e.id));
+    const updatedWikidata = combinedTimeline.filter(e => !internalIds.has(e.id));
+
+    // Generate wikidata_consensus.js content
+    const wikidataContent = `// Vetted Wikidata Historical Consensus\nconst wikidataHistory = ${JSON.stringify(updatedWikidata, null, 4)};\n`;
+
+    // Generate the timelineData block for script.js
+    // We wrap it so the user knows where to paste it
+    const timelineDataContent = `/**\n * Chronos Timeline Engine\n * Vertical Descent Version\n */\n\nconst timelineData = ${JSON.stringify(updatedInternal, null, 4)};\n`;
+
+    // Auto-download both files
+    downloadFile('wikidata_consensus.js', wikidataContent);
+    setTimeout(() => downloadFile('timelineData_export.js', timelineDataContent), 500);
+
+    // Show confirmation
+    const changeCount = Object.keys(curationChanges).length;
+    curationChanges = {};
+    renderCurationTable();
+    alert(`✅ ${changeCount > 0 ? changeCount + ' changes applied. ' : ''}2 files downloaded:\n\n` +
+        `1. wikidata_consensus.js\n   → Replace the file in your chronos/ folder\n\n` +
+        `2. timelineData_export.js\n   → Replace the timelineData array at the top of script.js with this file's contents\n\n` +
+        `Your edits are also saved in the browser so they persist across page refreshes.`);
+}
+
+function downloadFile(filename, content) {
+    const blob = new Blob([content], { type: 'application/javascript' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function clearCurationStorage() {
+    localStorage.removeItem('chronos_curation');
+    console.log('Chronos: Cleared curation localStorage');
+}
+
+// Feature: Export Event List as PDF
+function exportEventList() {
+    const events = [...combinedTimeline]
+        .filter(e => e.significance <= currentSignificanceFilter)
+        .sort((a, b) => a.startYear - b.startYear);
+
+    const levelLabel = currentSignificanceFilter === 1 ? 'Level 1 — High Significance'
+        : currentSignificanceFilter === 2 ? `Level 2 — Medium Significance`
+            : `Level 3 — Low Significance`;
+
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    const printWindow = window.open('', '_blank');
+    let html = `
+    <html>
+    <head>
+        <title>Chronos Event List — Level ${currentSignificanceFilter}</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@700;900&display=swap');
+            @page { size: auto; margin: 18mm 15mm; }
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { font-family: 'Inter', sans-serif; color: #1a1a1a; background: #fff; line-height: 1.5; }
+
+            .page-header {
+                text-align: center;
+                padding-bottom: 20px;
+                border-bottom: 2px solid #1a1a1a;
+                margin-bottom: 30px;
+            }
+            .page-header h1 {
+                font-family: 'Playfair Display', serif;
+                font-size: 2.4rem;
+                letter-spacing: -1px;
+                margin-bottom: 2px;
+            }
+            .page-header .level {
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 3px;
+                color: #666;
+            }
+            .page-header .meta {
+                margin-top: 12px;
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.75rem;
+                color: #999;
+            }
+
+            .event-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 0.85rem;
+            }
+            .event-table thead th {
+                text-align: left;
+                padding: 10px 12px;
+                font-size: 0.65rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                color: #666;
+                border-bottom: 2px solid #1a1a1a;
+            }
+            .event-table thead th:first-child { width: 22%; }
+            .event-table thead th:nth-child(2) { width: 25%; }
+            .event-table thead th:nth-child(3) { width: 53%; }
+
+            .event-table tbody tr {
+                border-bottom: 1px solid #eee;
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            .event-table tbody tr:nth-child(even) {
+                background: #fafafa;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .event-table tbody td {
+                padding: 10px 12px;
+                vertical-align: top;
+            }
+            .event-table .date-cell {
+                font-weight: 700;
+                white-space: nowrap;
+                color: #333;
+            }
+            .event-table .title-cell {
+                font-weight: 700;
+                color: #1a1a1a;
+            }
+            .event-table .desc-cell {
+                color: #555;
+                font-size: 0.8rem;
+                line-height: 1.5;
+            }
+
+            .page-footer {
+                margin-top: 40px;
+                padding-top: 15px;
+                border-top: 1px solid #ddd;
+                text-align: center;
+                font-size: 0.7rem;
+                color: #bbb;
+                letter-spacing: 1px;
+            }
+
+            @media print {
+                body { padding: 0; }
+                .event-table tbody tr:nth-child(even) {
+                    background: #fafafa !important;
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+            }
+        </style>
+    </head>
+    <body onload="window.print()">
+        <div class="page-header">
+            <h1>CHRONOS</h1>
+            <div class="level">${levelLabel}</div>
+            <div class="meta">
+                <span>${events.length} Events</span>
+                <span>Generated ${today}</span>
+            </div>
+        </div>
+
+        <table class="event-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Event</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    events.forEach(event => {
+        const displayDate = formatChronosDate(event.startYear);
+        const desc = event.description || event.snippet || '';
+        html += `
+                <tr>
+                    <td class="date-cell">${displayDate}</td>
+                    <td class="title-cell">${event.title}</td>
+                    <td class="desc-cell">${desc}</td>
+                </tr>
+        `;
+    });
+
+    html += `
+            </tbody>
+        </table>
+
+        <div class="page-footer">
+            CHRONOS HISTORICAL ENGINE &bull; ${levelLabel.toUpperCase()} &bull; VERIFIED DATABASE
         </div>
     </body>
     </html>
