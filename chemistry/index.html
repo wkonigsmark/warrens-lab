@@ -14,8 +14,8 @@
         <header>
             <div class="logo">CHEMISTRY</div>
             <nav class="mode-nav">
-                <button id="mode-quiz" class="mode-btn active">Quiz</button>
-                <button id="mode-lab" class="mode-btn">Synthesis Lab</button>
+                <button id="mode-quiz" class="mode-btn">Quiz</button>
+                <button id="mode-lab" class="mode-btn active">Synthesis Lab</button>
             </nav>
             <div id="stats">
                 <span class="stat-item">Score: <span id="correct-count">0</span></span>
@@ -24,7 +24,7 @@
 
         <main id="game-area">
             <!-- Quiz View -->
-            <div id="quiz-view">
+            <div id="quiz-view" class="hidden">
                 <div id="element-card" class="card">
                     <div class="meta-row">
                         <span id="atomic-number" class="tag">#1</span>
@@ -50,7 +50,7 @@
             </div>
 
             <!-- Lab View (Building Mechanism) -->
-            <div id="lab-view" class="hidden">
+            <div id="lab-view">
                 <div class="card lab-card">
                     <h2>Synthesis Lab</h2>
                     <p class="lab-desc">Add elements to the beaker to create a compound.</p>
