@@ -2,6 +2,15 @@
 <html lang="en">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4XXC82248V"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-4XXC82248V');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -36,9 +45,10 @@
                         <button id="roundsBtn" class="setting-val">3</button>
                     </div>
                 </div>
-                
+
                 <!-- Expanded Meta Metadata (Moved to Top Right) -->
-                <div class="meta-info" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2;">
+                <div class="meta-info"
+                    style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2;">
                     <span class="level-indicator">Level: Pre-Beginner</span>
                     <span class="mode-indicator">Mode: Vocabulary</span>
                 </div>
@@ -52,8 +62,8 @@
                     <button id="printVocabBtn" class="print-button vocab-print">Vocab Quiz</button>
                     <button id="printIndependentBtn" class="print-button independent-print">Ind. Spelling</button>
                     <div class="reversal-group">
-                         <input type="text" id="reversalChars" maxlength="5" placeholder="e.g. 762E3">
-                         <button id="printReversalBtn" class="print-button reversal-print">Reversal Study</button>
+                        <input type="text" id="reversalChars" maxlength="5" placeholder="e.g. 762E3">
+                        <button id="printReversalBtn" class="print-button reversal-print">Reversal Study</button>
                     </div>
                 </div>
             </div>

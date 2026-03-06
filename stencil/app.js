@@ -322,10 +322,10 @@ function init() {
     document.getElementById('newWordBtn').addEventListener('click', forceNextWord);
     document.getElementById('printBtn').addEventListener('click', printWorksheet);
     document.getElementById('printDrawBtn').addEventListener('click', printDrawWriteWorksheet);
-    
+
     const printVocabBtn = document.getElementById('printVocabBtn');
     if (printVocabBtn) printVocabBtn.addEventListener('click', printVocabWorksheet);
-    
+
     const printIndyBtn = document.getElementById('printIndependentBtn');
     if (printIndyBtn) printIndyBtn.addEventListener('click', printIndependentWorksheet);
 
@@ -501,6 +501,14 @@ function startNewWord() {
 
     resetForNewLetter();
     calculateLayout();
+
+    // Track new word
+    if (typeof gtag === 'function') {
+        gtag('event', 'new_word', {
+            'word': newWord,
+            'mode': SETTINGS.mode
+        });
+    }
 }
 
 function forceNextWord() {
@@ -1122,6 +1130,15 @@ function finishGame() {
         modal.classList.remove('hidden');
         modal.style.display = 'flex';
     }
+
+    // Track victory
+    if (typeof gtag === 'function') {
+        gtag('event', 'victory', {
+            'level': SETTINGS.level,
+            'mode': SETTINGS.mode,
+            'duration_secs': Math.floor(durationMs / 1000)
+        });
+    }
 }
 
 window.addEventListener('load', init);
@@ -1397,10 +1414,10 @@ function printVocabWorksheet() {
     // Fallback to "all" if the specific bank is too small, but aim for current level.
     const currentBank = WORD_BANKS[SETTINGS.level] || WORD_BANKS.all;
     const candidates = currentBank.filter(w => VOCABULARY_IMAGES[w]);
-    
+
     // Ensure we have at least 4 words
     const finalCandidates = candidates.length >= 4 ? candidates : STENCIL_CERTIFIED;
-    
+
     const shuffled = [...finalCandidates].sort(() => 0.5 - Math.random());
     const selected = shuffled.slice(0, 4);
 
@@ -1433,16 +1450,16 @@ function printVocabWorksheet() {
         // Find distractors starting with same letter if possible for higher challenge
         const sameLetter = STENCIL_CERTIFIED.filter(w => w !== word && w[0] === word[0]);
         const otherPool = STENCIL_CERTIFIED.filter(w => w !== word && w[0] !== word[0]);
-        
+
         // Take up to 2 same-letter distractors if available, then fill the rest with random
         const sameSlotted = sameLetter.sort(() => 0.5 - Math.random()).slice(0, 2);
         const distractors = [
             ...sameSlotted,
             ...otherPool.sort(() => 0.5 - Math.random()).slice(0, 3 - sameSlotted.length)
         ];
-        
+
         const choices = [word, ...distractors].sort(() => 0.5 - Math.random());
-        
+
         const optionsHtml = choices.map((choice, i) => {
             const fileName = choice.toLowerCase();
             const imgSrc = `assets/${fileName}.png`;
@@ -1634,7 +1651,7 @@ function printReversalWorksheet() {
     const inputFieldValue = document.getElementById('reversalChars').value;
     const userTargets = inputFieldValue ? inputFieldValue.trim().split('') : [];
     const targets = userTargets.length > 0 ? userTargets : ['3', '4', 'b', 'd', 'p', 'q'];
-    
+
     let rowsHtml = '';
 
     targets.forEach(char => {
