@@ -838,6 +838,16 @@
         if (musicEnabled) {
           playMusic();
         }
+
+        // Track game start
+        if (typeof gtag === 'function') {
+          gtag('event', 'game_start', {
+            'grid_size': size,
+            'operation': operation,
+            'level_count': levelCount,
+            'learning_aids': showHelper
+          });
+        }
       }
 
       document.getElementById('ants-size-cancel-btn').addEventListener('click', () => {
@@ -1201,6 +1211,16 @@
       }
 
       backdrop.style.display = 'flex';
+
+      // Track game win
+      if (typeof gtag === 'function') {
+        gtag('event', 'game_win', {
+          'grid_size': gridSize,
+          'operation': operation,
+          'duration_secs': elapsedSeconds,
+          'learning_aids': showHelper
+        });
+      }
     }
 
     function hideWinOverlay() {
