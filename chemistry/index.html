@@ -13,33 +13,96 @@
     <div id="app-container">
         <header>
             <div class="logo">CHEMISTRY</div>
+            <nav class="mode-nav">
+                <button id="mode-quiz" class="mode-btn active">Quiz</button>
+                <button id="mode-lab" class="mode-btn">Synthesis Lab</button>
+            </nav>
             <div id="stats">
-                <span class="stat-item">Correct: <span id="correct-count">0</span></span>
-                <span class="stat-item">Level: <span id="level-count">1</span></span>
+                <span class="stat-item">Score: <span id="correct-count">0</span></span>
             </div>
         </header>
 
         <main id="game-area">
-            <div id="element-card" class="card">
-                <div class="meta-row">
-                    <span id="atomic-number" class="tag">#1</span>
-                    <span id="element-type" class="tag type-noble">Noble Gas</span>
-                </div>
-
-                <div id="element-symbol" class="symbol-display">H</div>
-                <h2 id="question-text">What is this element?</h2>
-                
-                <div id="options-container">
-                    <!-- Options injected by JS -->
-                </div>
-
-                <div id="feedback" class="hidden">
-                    <p id="feedback-message"></p>
-                    <div id="helper-box" class="helper">
-                        <strong>The Building Blocks:</strong>
-                        <span id="helper-text"></span>
+            <!-- Quiz View -->
+            <div id="quiz-view">
+                <div id="element-card" class="card">
+                    <div class="meta-row">
+                        <span id="atomic-number" class="tag">#1</span>
+                        <span id="element-type" class="tag type-noble">Noble Gas</span>
                     </div>
-                    <button id="next-btn">Next Element &rarr;</button>
+
+                    <div id="element-symbol" class="symbol-display">H</div>
+                    <h2 id="question-text">What is this element?</h2>
+                    
+                    <div id="options-container">
+                        <!-- Options injected by JS -->
+                    </div>
+
+                    <div id="feedback" class="hidden">
+                        <p id="feedback-message"></p>
+                        <div id="helper-box" class="helper">
+                            <strong>The Building Blocks:</strong>
+                            <span id="helper-text"></span>
+                        </div>
+                        <button id="next-btn">Next Task &rarr;</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lab View (Building Mechanism) -->
+            <div id="lab-view" class="hidden">
+                <div class="card lab-card">
+                    <h2>Synthesis Lab</h2>
+                    <p class="lab-desc">Add elements to the beaker to create a compound.</p>
+                    
+                    <div id="beaker">
+                        <div class="beaker-liquid"></div>
+                        <div id="beaker-contents">
+                            <!-- Selected atoms show up here -->
+                        </div>
+                    </div>
+
+                    <div id="element-shelf">
+                        <button class="shelf-btn" data-el="H">H<span>Hydrogen</span></button>
+                        <button class="shelf-btn" data-el="O">O<span>Oxygen</span></button>
+                        <button class="shelf-btn" data-el="C">C<span>Carbon</span></button>
+                        <button class="shelf-btn" data-el="N">N<span>Nitrogen</span></button>
+                        <button class="shelf-btn" data-el="Na">Na<span>Sodium</span></button>
+                        <button class="shelf-btn" data-el="Cl">Cl<span>Chlorine</span></button>
+                        <button class="shelf-btn" data-el="Fe">Fe<span>Iron</span></button>
+                        <button class="shelf-btn" data-el="Au">Au<span>Gold</span></button>
+                        <button class="shelf-btn" data-el="Ag">Ag<span>Silver</span></button>
+                        <button class="shelf-btn" data-el="Cu">Cu<span>Copper</span></button>
+                        <button class="shelf-btn" data-el="Ca">Ca<span>Calcium</span></button>
+                        <button class="shelf-btn" data-el="K">K<span>Potassium</span></button>
+                        <button class="shelf-btn" data-el="Al">Al<span>Aluminum</span></button>
+                        <button class="shelf-btn" data-el="Si">Si<span>Silicon</span></button>
+                        <button class="shelf-btn" data-el="Mg">Mg<span>Magnesium</span></button>
+                    </div>
+
+                    <div class="lab-actions">
+                        <button id="show-recipes-btn" class="secondary-action">View Recipes</button>
+                        <button id="synthesize-btn" class="primary-action">Synthesize</button>
+                        <button id="import-blueprint" class="secondary-action">📋 Import Blueprint</button>
+                        <button id="clear-beaker">Reset</button>
+                    </div>
+
+                    <div id="recipes-modal" class="modal-overlay hidden">
+                        <div class="modal-card">
+                            <button id="close-recipes">×</button>
+                            <h2>Synthesis Blueprints</h2>
+                            <p>Try constructing these common compounds:</p>
+                            <div id="recipe-list">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="lab-feedback" class="hidden">
+                        <div id="result-molecule" class="symbol-display"></div>
+                        <h3 id="result-name"></h3>
+                        <p id="result-desc"></p>
+                    </div>
                 </div>
             </div>
         </main>
@@ -47,7 +110,10 @@
         <footer>
             <div class="footer-links">
                 <button id="reset-btn">Reset Score</button>
-                <a href="table.html" class="db-link">Element Database &rarr;</a>
+                <div class="db-nav">
+                    <a href="table.html" class="db-link">Periodic Index</a>
+                    <a href="compounds.html" class="db-link">Compound Index</a>
+                </div>
             </div>
             <p>From Atoms to Molecules</p>
         </footer>
