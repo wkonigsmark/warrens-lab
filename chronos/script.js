@@ -1136,17 +1136,18 @@ async function syncWithWikidata() {
     btn.innerText = "🛰️ Syncing...";
     btn.disabled = true;
 
-    // SPARQL Query for high-significance events and requested historical markers
+    // Optimized SPARQL Query: Removed expensive recursive property paths (/wdt:P279*) for general categories
+    // and increased the sitelink floor to ensure faster execution.
     const sparql = `
     SELECT DISTINCT ?item ?itemLabel ?date ?description ?sitelinks WHERE {
       {
-        ?item wdt:P31/wdt:P279* wd:Q1190554 . # Historical event
+        ?item wdt:P31 wd:Q1190554 . # Direct historical events
         ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 100)
+        FILTER(?sitelinks > 150) 
       } UNION {
-        ?item wdt:P31/wdt:P279* wd:Q198 . # War
+        ?item wdt:P31 wd:Q198 . # Direct wars
         ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 150)
+        FILTER(?sitelinks > 200)
       } UNION {
         VALUES ?item {
           wd:Q4692 wd:Q8432 wd:Q35333 wd:Q12978 wd:Q7650 wd:Q8027 wd:Q39739 
@@ -1159,7 +1160,7 @@ async function syncWithWikidata() {
       { ?item wdt:P585 ?date . } UNION { ?item wdt:P580 ?date . } UNION { ?item wdt:P569 ?date . }
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
       OPTIONAL { ?item schema:description ?description . FILTER(LANG(?description) = "en") }
-    } ORDER BY ?date LIMIT 300`;
+    } ORDER BY DESC(?sitelinks) LIMIT 150`;
 
     const url = "https://query.wikidata.org/sparql?query=" + encodeURIComponent(sparql);
 
