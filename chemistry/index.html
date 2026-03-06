@@ -62,6 +62,18 @@
                         </div>
                     </div>
 
+                    <div id="search-lab-container">
+                        <div class="search-box">
+                            <input type="text" id="element-search-input" placeholder="Search Elements or Compounds (e.g. 'Gold' or 'Glucose')...">
+                            <div id="search-results" class="hidden"></div>
+                        </div>
+                        <div class="custom-slots">
+                            <button class="slot-btn" data-slot="1" title="Click search result to assign"><span>Slot 1</span></button>
+                            <button class="slot-btn" data-slot="2" title="Click search result to assign"><span>Slot 2</span></button>
+                            <button class="slot-btn" data-slot="3" title="Click search result to assign"><span>Slot 3</span></button>
+                        </div>
+                    </div>
+
                     <div id="element-shelf">
                         <button class="shelf-btn" data-el="H">H<span>Hydrogen</span></button>
                         <button class="shelf-btn" data-el="O">O<span>Oxygen</span></button>
@@ -81,6 +93,7 @@
                     </div>
 
                     <div class="lab-actions">
+                        <button id="random-compound-btn" class="random-action">🎲 Random</button>
                         <button id="show-recipes-btn" class="secondary-action">View Recipes</button>
                         <button id="synthesize-btn" class="primary-action">Synthesize</button>
                         <button id="import-blueprint" class="secondary-action">📋 Import Blueprint</button>
