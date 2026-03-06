@@ -18,6 +18,10 @@
     <div id="app">
         <section id="hero">
             <div class="hero-content">
+                <div class="header-actions">
+                    <button id="print-quiz-btn" class="action-btn">Print Worksheet Quiz</button>
+                    <button id="start-quiz-btn" class="action-btn accent">Start Interactive Quiz</button>
+                </div>
                 <h1>Chronos</h1>
                 <p class="subtitle">The Grand Descent Through Time</p>
                 <div class="scroll-prompt">
@@ -33,6 +37,28 @@
                 <!-- Events will be dynamically injected here -->
             </div>
         </main>
+
+        <section id="quiz-view" class="hidden">
+            <div class="quiz-controls no-print">
+                <button id="exit-quiz-btn" class="action-btn">Exit Quiz</button>
+            </div>
+            <div id="quiz-timeline-wrapper">
+                <div class="central-axis"></div>
+                <div id="quiz-questions-container"></div>
+                <div class="submit-footer">
+                    <button id="submit-quiz-btn" class="primary-action">Submit Responses</button>
+                </div>
+            </div>
+        </section>
+
+        <div id="quiz-results-overlay" class="overlay">
+            <div class="overlay-content results-card">
+                <h2>Quiz Results</h2>
+                <div id="results-score"></div>
+                <div id="missed-questions"></div>
+                <button id="close-results" class="action-btn">Return to Timeline</button>
+            </div>
+        </div>
 
         <div id="event-detail-overlay" class="overlay">
             <button id="close-overlay" aria-label="Close">×</button>

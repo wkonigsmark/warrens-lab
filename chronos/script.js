@@ -9,6 +9,7 @@ const timelineData = [
         startYear: -13800000000,
         date: "13.8 Billion Years Ago",
         title: "The Big Bang",
+        significance: 10,
         snippet: "The emergence of space, time, and matter from a cosmic singularity.",
         description: "Nearly 14 billion years ago, the universe began as a hot, dense point and has been expanding ever since. This cataclysmic inflation gave rise to the first atoms, stars, and eventually galaxies. It is the absolute zero of our history.",
         gap: 0,
@@ -19,18 +20,6 @@ const timelineData = [
                 author: "Steven Weinberg",
                 description: "A comprehensive look at the modern view of the early universe and the physical evidence for the Big Bang.",
                 url: "https://www.google.com/search?q=The+First+Three+Minutes+Steven+Weinberg"
-            },
-            {
-                title: "A Brief History of Time",
-                author: "Stephen Hawking",
-                description: "The seminal work explaining the evolution of the universe and the singularity that started it all.",
-                url: "https://www.google.com/search?q=A+Brief+History+of+Time+Stephen+Hawking"
-            },
-            {
-                title: "Discovery of Cosmic Microwave Background",
-                author: "Penzias & Wilson (1964)",
-                description: "The primary observational anchor for the Big Bang theory, documenting the residual heat of the explosion.",
-                url: "https://journals.aps.org/pr/abstract/10.1103/PhysRev.142.417"
             }
         ]
     },
@@ -39,114 +28,40 @@ const timelineData = [
         startYear: -4500000000,
         date: "4.5 Billion Years Ago",
         title: "Formation of Earth",
+        significance: 9,
         snippet: "A rocky planet coalesces in the goldilocks zone of a young star.",
         description: "Gravity pulls swirling gas and dust into the third planet from the sun. Earth begins as a molten inferno, eventually cooling to form the solid crust, atmosphere, and vast oceans that would eventually cradle life.",
         gap: 800,
-        approx: false,
-        sources: [
-            {
-                title: "The Age of the Earth",
-                author: "Allegre, Manhes, & Gopel (1995)",
-                description: "This definitive work in Geochimica et Cosmochimica Acta utilized isotope analysis to anchor the 4.5 billion year age of our planet.",
-                url: "https://www.google.com/search?q=Allegre+Manhes+Gopel+Age+of+the+Earth+1995"
-            },
-            {
-                title: "Origin of the Moon in a Giant Impact",
-                author: "Canup & Asphaug (2001)",
-                description: "The primary paper detailing the 'Giant Impact Hypothesis,' where a Mars-sized body strike on the proto-Earth led to the formation of the Moon.",
-                url: "https://www.nature.com/articles/35089010"
-            },
-            {
-                title: "Zircons and the Early Earth",
-                author: "Wilde et al. (2001)",
-                description: "Discovery of 4.4 billion-year-old zircon crystals, providing the first solid evidence that Earth had a crust and liquid water much earlier than previously thought.",
-                url: "https://www.nature.com/articles/35051550"
-            },
-            {
-                title: "The Hadean Crust",
-                author: "T. Mark Harrison (2009)",
-                description: "A comprehensive review of the geochemical evidence for the first 500 million years of Earth's history.",
-                url: "https://www.annualreviews.org/doi/abs/10.1146/annurev.earth.031208.094218"
-            }
-        ]
+        approx: false
     },
     {
         id: "life-begins",
         startYear: -3500000000,
         date: "3.5 Billion Years Ago",
         title: "The Spark of Life",
+        significance: 10,
         snippet: "The first single-celled organisms emerge in Earth's primeval oceans.",
         description: "Deep in fossilized hydrothermal vents, simple prokaryotes begin a multibillion-year journey. This transition from chemistry to biology marks the most profound shift in the history of the planet.",
         gap: 600,
-        approx: false,
-        sources: [
-            {
-                title: "Evidence for early life in Earth’s oldest hydrothermal vent precipitates",
-                author: "Dodd et al. (2017)",
-                description: "Published in Nature, this paper presents evidence of 3.77-billion-year-old microfossils, pushing back the confirmed timeline of life's emergence.",
-                url: "https://www.nature.com/articles/nature21377"
-            },
-            {
-                title: "On the origins of cells",
-                author: "Martin & Russell (2003)",
-                description: "A foundational hypothesis proposing that life originated in submarine hydrothermal vents, where rocky mounds acted as the first cell-like structures.",
-                url: "https://royalsocietypublishing.org/doi/10.1098/rstb.2002.1183"
-            },
-            {
-                title: "The Vital Question",
-                author: "Nick Lane (2015)",
-                description: "A comprehensive synthesis of bioenergetics, arguing that life's origin is inextricably linked to energy gradients at the seafloor.",
-                url: "https://www.google.com/search?q=Nick+Lane+The+Vital+Question"
-            },
-            {
-                title: "Microfossils of the Apex Chert",
-                author: "J. William Schopf (1993)",
-                description: "The classic (though debated) Science paper documenting some of the oldest known cellular structures in the fossil record.",
-                url: "https://www.science.org/doi/10.1126/science.8475383"
-            }
-        ]
+        approx: false
     },
     {
         id: "dinosaurs",
         startYear: -230000000,
         date: "230 – 66 Million BCE",
         title: "The Age of Dinosaurs",
+        significance: 8,
         snippet: "Giant reptiles dominate the terrestrial landscape for over 160 million years.",
         description: "From the Triassic to the Cretaceous, dinosaurs were the undisputed masters of Earth. Their vast reign ended in fire and dust with the Chicxulub asteroid impact, clearing the path for the rise of mammals.",
         gap: 700,
-        approx: true,
-        sources: [
-            {
-                title: "Extraterrestrial Cause for the Cretaceous-Tertiary Extinction",
-                author: "Alvarez, Alvarez, Asaro, & Michel (1980)",
-                description: "The groundbreaking Science paper that proposed the asteroid impact theory based on iridium anomalies in the geological record.",
-                url: "https://www.science.org/doi/10.1126/science.208.4448.1095"
-            },
-            {
-                title: "The origin and diversification of dinosaurs",
-                author: "Brusatte et al. (2015)",
-                description: "A comprehensive review of the evolutionary journey of dinosaurs from the Triassic through their dominance in the Jurassic and Cretaceous.",
-                url: "https://onlinelibrary.wiley.com/doi/full/10.1111/brv.12112"
-            },
-            {
-                title: "Osteology of Deinonychus antirrhopus",
-                author: "John H. Ostrom (1969)",
-                description: "The pivotal work that sparked the 'Dinosaur Renaissance' by proposing dinosaurs were active, warm-blooded animals and the ancestors of birds.",
-                url: "https://www.google.com/search?q=John+Ostrom+Deinonychus+1969+Peabody+Museum"
-            },
-            {
-                title: "Four-winged dinosaurs from China",
-                author: "Xu et al. (2003)",
-                description: "Discovery of Microraptor, providing critical evidence for the evolution of flight and the bird-dinosaur link.",
-                url: "https://www.nature.com/articles/nature01342"
-            }
-        ]
+        approx: true
     },
     {
         id: "homo-sapiens",
         startYear: -300000,
         date: "300,000 BCE",
         title: "Rise of Homo Sapiens",
+        significance: 10,
         snippet: "Anatomically modern humans emerge in Africa.",
         description: "Equipped with cognitive capacity for language, art, and complex tools, Homo sapiens begin migrating across the planet, eventually outlasting all other hominid species through innovation and social structure.",
         gap: 600,
@@ -157,249 +72,65 @@ const timelineData = [
         startYear: -10000,
         date: "10,000 BCE",
         title: "Agricultural Revolution",
+        significance: 10,
         snippet: "The shift from foraging to farming fundamentally transforms human society.",
         description: "In the Fertile Crescent, humans begin domesticating plants and animals. This Neolithic shift leads to permanent settlements, surplus food, and the eventual rise of specialized labor and social hierarchies.",
         gap: 500,
         approx: true
     },
     {
-        id: "sumerians",
-        startYear: -4500,
-        date: "4500 – 1900 BCE",
-        title: "Sumerian Civilization",
-        snippet: "The world's first true civilization rises in southern Mesopotamia.",
-        description: "In the land between the Tigris and Euphrates, the Sumerians invent writing (cuneiform), the wheel, and the plow. They build the first great city-states, like Uruk and Ur, establishing the blueprint for urban life.",
-        gap: 400,
-        approx: true
-    },
-    {
         id: "egyptians",
         startYear: -3100,
-        date: "3100 BCE – 30 BCE",
-        title: "The Egyptian Kingdoms",
-        snippet: "A monumental civilization flourishes along the Nile for three millennia.",
-        description: "Unified by Narmer, Egypt develops a complex society centered on the Pharaoh and the concept of Ma'at. Their achievements in architecture, medicine, and administrative organization remain unparalleled in antiquity.",
+        date: "3100 BCE",
+        title: "Empire of the Nile",
+        significance: 8,
+        snippet: "The unification of Upper and Lower Egypt.",
+        description: "Pharaoh Narmer unites the Nile Valley, initiating a civilization that would build pyramids, develop hieroglyphics, and endure for three millennia.",
         gap: 300,
         approx: true
     },
     {
-        id: "pyramids",
-        startYear: -2630,
-        date: "2630 – 1800 BCE",
-        title: "Giza and the Pyramids",
-        snippet: "The Old Kingdom constructs the last remaining Ancient Wonder of the World.",
-        description: "Starting with Djoser's Step Pyramid and culminating in the Great Pyramid of Khufu (c. 2560 BCE), these structures required roughly 20-30 years each to complete. They serves as tombs and cosmic conduits for the Pharaohs.",
-        gap: 200,
-        approx: false
-    },
-    {
-        id: "chinese-civ",
-        startYear: -2100,
-        date: "2100 BCE – Present",
-        title: "Ancient Chinese Dynasties",
-        snippet: "The Yellow River valley gives rise to one of Earth's oldest continuous civilizations.",
-        description: "From the legendary Xia to the historical Shang and Zhou dynasties, China develops a unique cultural identity, mastering bronze, silk, and the foundational philosophies of Confucianism and Taoism.",
-        gap: 300,
-        approx: true
-    },
-    {
-        id: "stonehenge",
-        startYear: -3000,
-        date: "c. 3000 – 2000 BCE",
-        title: "Construction of Stonehenge",
-        snippet: "A prehistoric monument in England aligned with the sun.",
-        description: "Built in various phases over a thousand years, Stonehenge remains one of the world's most famous megalithic sites. Its architectural precision and solar alignments suggest advanced knowledge of astronomy and a complex social structure among Neolithic peoples.",
-        gap: 300,
-        approx: true
-    },
-    {
-        id: "athens",
-        startYear: -1400,
-        date: "c. 1400 BCE",
-        title: "The Rise of Athens",
-        snippet: "Settlements begin on the Acropolis, foundations for the future of democracy.",
-        description: "Starting as a Mycenaean stronghold, Athens would grow into a dominant Greek city-state. It became the epicenter of art, philosophy, and the democratic experiment, fundamentally influencing the trajectory of Western civilization.",
-        gap: 300,
-        approx: true
-    },
-    {
-        id: "sparta",
-        startYear: -900,
-        date: "c. 900 BCE",
-        title: "The Spartan City-State",
-        snippet: "A militaristic society rises in the Eurotas valley.",
-        description: "Sparta's unique social system focused on military training and physical excellence. Known for its hoplite army and the dual kingship, it became the primary rival to Athens and a major power in the Peloponnese.",
-        gap: 250,
-        approx: true
-    },
-    {
-        id: "rome-founding",
-        startYear: -753,
-        date: "c. 753 BCE",
-        title: "Founding of Rome",
-        snippet: "The legendary establishment of the eternal city by Romulus.",
-        description: "According to myth, Rome was founded on the Palatine Hill. From a collection of shepherd huts, it evolved into a Republic and eventually an Empire that governed the entire Mediterranean world for centuries.",
-        gap: 200,
-        approx: true
-    },
-    {
-        id: "cyrus-the-great",
-        startYear: -600,
-        date: "c. 600 – 530 BCE",
-        title: "Cyrus the Great of Persia",
-        snippet: "The founding of the Achaemenid Empire.",
-        description: "Cyrus II created the largest empire the world had yet seen. Known for his policy of religious tolerance and the liberation of the Jews from Babylon, he established the first model for a multicultural superpower.",
-        gap: 300,
-        approx: true
-    },
-    {
-        id: "confucius",
-        startYear: -551,
-        date: "551 – 479 BCE",
-        title: "Life of Confucius",
-        snippet: "The philosopher whose teachings shaped East Asian ethics and governance.",
-        description: "Kong Fuzi (Confucius) emphasized personal and governmental morality, correctness of social relationships, justice, and sincerity. His philosophy eventually became the official state ideology of imperial China.",
-        gap: 200,
-        approx: false
-    },
-    {
-        id: "xerxes",
-        startYear: -518,
-        date: "c. 518 – 465 BCE",
-        title: "Xerxes of Persia",
-        snippet: "The Fourth King of Kings of the Achaemenid Empire.",
-        description: "Known for his massive invasion of Greece, Xerxes is a central figure in the Greco-Persian Wars. Despite the setback at Salamis, his reign saw the height of Persian architectural ambition, including the Palace of Persepolis.",
-        gap: 200,
-        approx: true
-    },
-    {
-        id: "thermopylae",
-        startYear: -480,
-        date: "480 BCE",
-        title: "Battle of Thermopylae",
-        snippet: "The legendary stand of the 300 Spartans against Persia.",
-        description: "A coalition of Greek city-states led by King Leonidas held the narrow pass of Thermopylae for three days. While a tactical defeat, it became a moral victory and a symbol of resistance against overwhelming odds.",
-        gap: 150,
-        approx: false
-    },
-    {
-        id: "greek-philosophers",
-        startYear: -470,
-        date: "c. 470 – 322 BCE",
-        title: "Socrates, Plato, & Aristotle",
-        snippet: "The Golden Age of Western Philosophy.",
-        description: "This span encompasses the lives of the three thinkers who laid the foundation for Western logic, science, and ethics. From the Socratic Method to Plato's Academy and Aristotle's Lyceum, their influence is unparalleled.",
-        gap: 300,
-        approx: true
-    },
-    {
-        id: "alexander-great",
-        startYear: -356,
-        date: "356 – 323 BCE",
-        title: "Alexander the Great",
-        snippet: "The Macedonian king who conquered the known world.",
-        description: "Alexander III created one of the largest empires in history by the age of 30, from Greece to India. His conquests launched the Hellenistic period, blending Greek culture with the East.",
-        gap: 200,
-        approx: false
-    },
-    {
-        id: "archimedes",
-        startYear: -287,
-        date: "c. 287 – 212 BCE",
-        title: "Inventions of Archimedes",
-        snippet: "The greatest mathematician and engineer of antiquity.",
-        description: "Archimedes of Syracuse anticipated modern calculus, discovered the principles of buoyancy and the lever, and designed advanced machines for the defense of his city against the Romans.",
-        gap: 200,
-        approx: true
-    },
-    {
-        id: "julius-caesar",
-        startYear: -100,
-        date: "100 – 44 BCE",
-        title: "The Era of Julius Caesar",
-        snippet: "The transition from the Roman Republic to the Roman Empire.",
-        description: "A brilliant general and politician, Caesar's crossing of the Rubicon led to civil war and his appointment as Dictator for Life. His assassination on the Ides of March fundamentally altered the course of Rome.",
-        gap: 300,
-        approx: false
-    },
-    {
-        id: "rome-collapse",
-        startYear: 476,
-        date: "476 AD",
-        title: "The Collapse of Western Rome",
-        snippet: "The deposition of Romulus Augustulus and the end of the ancient world.",
-        description: "Decades of internal instability and external pressure culminate in the Germanic leader Odoacer deposing the last Western emperor. This event traditionally marks the beginning of the Middle Ages in Europe.",
-        gap: 500,
-        approx: false
-    },
-    {
-        id: "celtic-culture",
-        startYear: 800,
-        date: "c. 800 BCE – 1st Century AD",
-        title: "Rise of the Celtic Culture",
-        snippet: "The spread of the Iron Age Hallstatt and La Tene cultures.",
-        description: "While roots go back further, the Celts became a dominant cultural force across Europe. Known for their intricate metalwork, druidic traditions, and fierce warriors, they dominated the landscape before the expansion of Rome.",
+        id: "christ-birth",
+        startYear: -4,
+        date: "c. 4 BCE",
+        title: "The Life of Jesus of Nazareth",
+        significance: 10,
+        snippet: "The life of the central figure of Christianity.",
+        description: "Regardless of belief, the life and teachings of Jesus of Nazareth fundamentally reshaped the Western world's calendar, ethics, and political history for over two thousand years.",
         gap: 400,
         approx: true
     },
     {
-        id: "leif-erikson",
-        startYear: 970,
-        date: "c. 970 – 1020 AD",
-        title: "Leif Erikson reaches Vinland",
-        snippet: "The first known European to reach North America.",
-        description: "Long before Columbus, the Norse explorer Leif Erikson established a settlement in 'Vinland' (likely Newfoundland). His voyages demonstrate the incredible maritime reach of the Viking age.",
-        gap: 600,
+        id: "gunpowder",
+        startYear: 850,
+        date: "c. 850 AD",
+        title: "Discovery of Gunpowder",
+        significance: 10,
+        snippet: "The accidental discovery that changed warfare forever.",
+        description: "Taoist alchemists in China mixed saltpeter, sulfur, and charcoal while seeking an elixir of life. The resulting explosive changed the nature of global conflict and the power of empires.",
+        gap: 300,
         approx: true
     },
     {
-        id: "roses-war",
-        startYear: 1455,
-        date: "1455 – 1487 AD",
-        title: "Wars of the Roses",
-        snippet: "The dynastic struggle for the throne of England.",
-        description: "A series of civil wars between supporters of the House of Lancaster (Red Rose) and the House of York (White Rose). The conflict ended with the rise of the Tudor dynasty under Henry VII.",
+        id: "world-wars",
+        startYear: 1914,
+        date: "1914 – 1945 AD",
+        title: "The World Wars",
+        significance: 10,
+        snippet: "The global total wars that defined the modern era.",
+        description: "Two global conflicts that reshaped borders, technology, and international law. WWI saw the end of old empires, while WWII ended in the nuclear age and the formation of the United Nations.",
         gap: 400,
         approx: false
     },
     {
-        id: "copernicus",
-        startYear: 1473,
-        date: "1473 – 1543 AD",
-        title: "Copernican Revolution",
-        snippet: "The shift from Earth-centered to Sun-centered astronomy.",
-        description: "Nicolaus Copernicus proposed that the Earth and planets revolve around the Sun. His work, 'On the Revolutions of the Celestial Spheres', sparked the Scientific Revolution and changed our place in the cosmos.",
+        id: "moon-landing",
+        startYear: 1969,
+        date: "July 20, 1969",
+        title: "The Moon Landing",
+        significance: 10,
+        snippet: "The first humans set foot on another celestial body.",
+        description: "NASA's Apollo 11 mission landed Neil Armstrong and Buzz Aldrin on the lunar surface. It remains the absolute pinnacle of human engineering and exploration beyond our home planet.",
         gap: 200,
-        approx: false
-    },
-    {
-        id: "columbus",
-        startYear: 1492,
-        date: "1492 AD",
-        title: "Voyage of Columbus",
-        snippet: "Spanish-backed exploration reaches the Caribbean.",
-        description: "Seeking a westward route to Asia, Christopher Columbus landed in the Americas. This event initiated centuries of European exploration, colonization, and global exchange across the Atlantic.",
-        gap: 200,
-        approx: false
-    },
-    {
-        id: "spanish-armada",
-        startYear: 1588,
-        date: "1588 AD",
-        title: "Defeat of the Spanish Armada",
-        snippet: "Elizabethan England fends off the massive Spanish fleet.",
-        description: "Sent by Philip II to invade England, the Armada was decimated by fire ships and the 'Protestant Wind'. The victory established England as a major maritime power and saved the Protestant Reformation in Britain.",
-        gap: 250,
-        approx: false
-    },
-    {
-        id: "colonies-founding",
-        startYear: 1607,
-        date: "1607 – 1620 AD",
-        title: "Jamestown & Plymouth",
-        snippet: "The first permanent English settlements in North America.",
-        description: "From the survival struggle of Jamestown (1607) to the arrival of the Mayflower at Plymouth Rock (1620), these colonies established the cultural and political foundations of what would become the United States.",
-        gap: 300,
         approx: false
     },
     {
@@ -407,22 +138,210 @@ const timelineData = [
         startYear: 1776,
         date: "July 4, 1776",
         title: "Declaration of Independence",
+        significance: 10,
         snippet: "The thirteen colonies formally break from the British Empire.",
         description: "Drafted primarily by Thomas Jefferson, the declaration stated the philosophical and practical reasons for the American Revolution, asserting that 'all men are created equal' with unalienable rights.",
         gap: 300,
         approx: false
     },
     {
-        id: "constitution",
+        id: "constitition",
         startYear: 1787,
-        date: "1787 – 1788 AD",
-        title: "U.S. Constitution Ratified",
+        date: "September 17, 1787",
+        title: "U.S. Constitution Signed",
+        significance: 9,
         snippet: "The establishment of the supreme law of the United States.",
-        description: "In Philadelphia, the framers created the framework for the three branches of government and the checks and balances system that remains the foundation of American democracy.",
-        gap: 200,
+        description: "The framers created a system of checks and balances that became a blueprint for modern representative democracy.",
+        gap: 300,
         approx: false
     }
 ];
+
+// Feature: Quiz Generation Worksheet
+function generateQuiz() {
+    const quizEvents = [...timelineData]
+        .filter(e => e.significance >= 9) // Focus on high significance
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 10)
+        .sort((a, b) => a.startYear - b.startYear);
+
+    // Create a temporary print view
+    const printWindow = window.open('', '_blank');
+    
+    let html = `
+    <html>
+    <head>
+        <title>Chronos History Quiz</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Playfair+Display:wght@700;900&display=swap');
+            @page { size: auto; margin: 15mm; }
+            body { font-family: 'Inter', sans-serif; padding: 0; color: #1a1a1a; background: #fff; line-height: 1.2; }
+            .header { text-align: center; margin-bottom: 20px; }
+            .header h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 0; letter-spacing: -1px; }
+            .header .subtitle { text-transform: uppercase; letter-spacing: 3px; color: #666; font-size: 0.65rem; margin-top: 2px; }
+            .header .student-info { margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; display: flex; justify-content: space-between; font-weight: 700; font-size: 0.8rem; }
+            
+            .instructions { text-align: center; margin: 15px auto 25px auto; font-style: italic; color: #1a1a1a; font-size: 0.85rem; max-width: 600px; line-height: 1.4; }
+
+            .timeline-wrapper { 
+                position: relative; 
+                max-width: 750px; 
+                margin: 0 auto; 
+                padding-top: 20px;
+                min-height: 600px;
+            }
+            
+            .central-axis { 
+                position: absolute; 
+                left: 50%; 
+                transform: translateX(-50%); 
+                top: 0; 
+                bottom: 0; 
+                width: 2px; 
+                background-color: #000 !important; 
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                z-index: 10;
+            }
+            .axis-label { 
+                position: absolute; 
+                left: 50%; 
+                transform: translateX(-50%); 
+                font-size: 0.6rem; 
+                font-weight: 900; 
+                color: #000; 
+                z-index: 11;
+                letter-spacing: 2px;
+                background: #fff;
+                padding: 0 4px;
+            }
+            .axis-label.start { top: -15px; }
+            .axis-label.end { bottom: -15px; }
+
+            .quiz-row { 
+                position: relative; 
+                width: 100%; 
+                margin-bottom: 25px; 
+                display: flex; 
+                align-items: center; 
+                page-break-inside: avoid; 
+                break-inside: avoid;
+            }
+            .quiz-row.left { justify-content: flex-start; }
+            .quiz-row.right { justify-content: flex-end; }
+
+            .quiz-card { 
+                position: relative; 
+                width: 42%; 
+                padding: 12px 18px; 
+                border: 1.5px solid #000; 
+                background: #fff; 
+                z-index: 5;
+            }
+
+            .ping { 
+                position: absolute; 
+                width: 10px; 
+                height: 10px; 
+                background-color: #000 !important; 
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                border-radius: 50%; 
+                left: 50%; 
+                top: 50%;
+                transform: translate(-50%, -50%); 
+                z-index: 15;
+            }
+            
+            .connector { 
+                position: absolute; 
+                height: 1.5px; 
+                background-color: #000 !important; 
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                top: 50%; 
+                width: 8%; 
+                z-index: 4;
+            }
+            .left .connector { left: 42%; }
+            .right .connector { right: 42%; }
+
+            .date-tag { 
+                display: inline-block; 
+                border-bottom: 2px solid #000;
+                color: #000; 
+                padding: 1px 0; 
+                font-weight: 900; 
+                font-size: 0.85rem; 
+                margin-bottom: 8px; 
+            }
+            .options { list-style: none; padding: 0; margin: 8px 0 0 0; }
+            .options li { margin-bottom: 6px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+            .checkbox { width: 14px; height: 14px; border: 1.5px solid #000; flex-shrink: 0; }
+            
+            @media print { 
+                body { padding: 0; }
+                .central-axis { height: 100%; }
+            }
+        </style>
+    </head>
+    <body onload="window.print()">
+        <div class="header">
+            <h1>CHRONOS</h1>
+            <div class="subtitle">THE GRAND DESCENT THROUGH TIME</div>
+            <div class="student-info">
+                <span>NAME: ____________________________</span>
+                <span>DATE: ________________</span>
+            </div>
+        </div>
+
+        <p class="instructions">Analyze the chronology of the central throughline. Match each historical milestone to its timestamp.</p>
+
+        <div class="timeline-wrapper">
+            <div class="central-axis">
+                <span class="axis-label start">START</span>
+                <span class="axis-label end">END</span>
+            </div>
+    `;
+
+    quizEvents.forEach((event, index) => {
+        const side = index % 2 === 0 ? 'left' : 'right';
+        
+        // Get distractors
+        const distractors = timelineData
+            .filter(e => e.id !== event.id)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 3)
+            .map(e => e.title);
+        
+        const options = [event.title, ...distractors].sort(() => Math.random() - 0.5);
+
+        html += `
+            <div class="quiz-row ${side}">
+                <div class="ping"></div>
+                <div class="connector"></div>
+                <div class="quiz-card">
+                    <span class="date-tag">${event.date}</span>
+                    <ul class="options">
+                        ${options.map(opt => `<li><div class="checkbox"></div> <span>${opt}</span></li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+        `;
+    });
+
+    html += `
+        </div>
+        <div style="margin-top: 100px; text-align: center; font-size: 0.8rem; color: #888;">
+            CHRONOS HISTORICAL ENGINE &bull; LEVEL 10 CORE MILESTONES &bull; VERIFIED DATABASE
+        </div>
+    </body>
+    </html>
+    `;
+
+    printWindow.document.write(html);
+    printWindow.document.close();
+}
 
 // Feature: Today's Chronicle (Live Pulse)
 const todayPulse = {
@@ -450,6 +369,17 @@ function initChronos() {
     const progressBar = document.getElementById('progress-bar');
     const overlay = document.getElementById('event-detail-overlay');
     const closeBtn = document.getElementById('close-overlay');
+    const printBtn = document.getElementById('print-quiz-btn');
+    const startQuizBtn = document.getElementById('start-quiz-btn');
+    const exitQuizBtn = document.getElementById('exit-quiz-btn');
+    const submitQuizBtn = document.getElementById('submit-quiz-btn');
+    const closeResultsBtn = document.getElementById('close-results');
+
+    if (printBtn) printBtn.onclick = generateQuiz;
+    if (startQuizBtn) startQuizBtn.onclick = startInteractiveQuiz;
+    if (exitQuizBtn) exitQuizBtn.onclick = exitQuiz;
+    if (submitQuizBtn) submitQuizBtn.onclick = submitQuiz;
+    if (closeResultsBtn) closeResultsBtn.onclick = closeResults;
 
     // Sort by start year
     const sortedData = [...timelineData].sort((a, b) => a.startYear - b.startYear);
@@ -457,7 +387,6 @@ function initChronos() {
     let blockCount = 0;
     // Build the timeline
     sortedData.forEach((event) => {
-        // ... (existing loop content) ...
         if (event.gap > 0) {
             const spacer = document.createElement('div');
             spacer.style.height = `${event.gap}px`;
@@ -602,5 +531,119 @@ function showSources(id) {
     document.body.style.overflow = 'hidden';
 }
 
+let activeQuizData = [];
+let currentQuizLevel = 10;
+
+function startInteractiveQuiz() {
+    document.getElementById('hero').classList.add('hidden');
+    document.getElementById('timeline-wrapper').classList.add('hidden');
+    document.getElementById('quiz-view').classList.remove('hidden');
+    document.querySelector('footer').classList.add('hidden');
+    window.scrollTo(0, 0);
+
+    // Filter by the current significance level
+    activeQuizData = [...timelineData]
+        .filter(e => e.significance === currentQuizLevel)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 4)
+        .sort((a, b) => a.startYear - b.startYear);
+
+    const container = document.getElementById('quiz-questions-container');
+    container.innerHTML = `<div class="quiz-level-banner">Current Challenge: Significance Level ${currentQuizLevel}</div>`;
+
+    activeQuizData.forEach((event, index) => {
+        const side = index % 2 === 0 ? 'left' : 'right';
+        const distractors = timelineData
+            .filter(e => e.id !== event.id)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 3)
+            .map(e => e.title);
+        
+        const options = [event.title, ...distractors].sort(() => Math.random() - 0.5);
+
+        const row = document.createElement('div');
+        row.className = `quiz-row ${side}`;
+        row.innerHTML = `
+            <div class="ping"></div>
+            <div class="connector"></div>
+            <div class="quiz-card">
+                <span class="date-tag">${event.date}</span>
+                <h4>Identify this event:</h4>
+                <ul class="quiz-options">
+                    ${options.map((opt, i) => `
+                        <li>
+                            <label class="quiz-option">
+                                <input type="radio" name="event-${event.id}" value="${opt}">
+                                <span>${opt}</span>
+                            </label>
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+        `;
+        container.appendChild(row);
+    });
+}
+
+function exitQuiz() {
+    document.getElementById('hero').classList.remove('hidden');
+    document.getElementById('timeline-wrapper').classList.remove('hidden');
+    document.getElementById('quiz-view').classList.add('hidden');
+    document.querySelector('footer').classList.remove('hidden');
+}
+
+function submitQuiz() {
+    let score = 0;
+    const missed = [];
+
+    activeQuizData.forEach(event => {
+        const selected = document.querySelector(`input[name="event-${event.id}"]:checked`);
+        if (selected && selected.value === event.title) {
+            score++;
+        } else {
+            missed.push({
+                date: event.date,
+                correct: event.title,
+                selected: selected ? selected.value : "No answer"
+            });
+        }
+    });
+
+    const isPerfect = score === activeQuizData.length;
+    let progressionMsg = "";
+
+    if (isPerfect && currentQuizLevel === 10) {
+        currentQuizLevel = 9;
+        progressionMsg = `<div class="progression-unlocked">MASTERED! Level 9 Now Unlocked.</div>`;
+    } else if (isPerfect && currentQuizLevel === 9) {
+        progressionMsg = `<div class="progression-unlocked">TIME ARCHITECT STATUS ACHIEVED!</div>`;
+    }
+
+    const scorePct = Math.round((score / activeQuizData.length) * 100);
+    const scoreEl = document.getElementById('results-score');
+    scoreEl.innerHTML = `${progressionMsg}${scorePct}% (${score}/${activeQuizData.length})`;
+    
+    const missedEl = document.getElementById('missed-questions');
+    if (missed.length === 0) {
+        missedEl.innerHTML = "<p style='text-align:center'>Your knowledge of this era is absolute.</p>";
+    } else {
+        missedEl.innerHTML = "<h3>Gaps in your timeline:</h3>" + missed.map(m => `
+            <div class="missed-item">
+                <h5>${m.date}</h5>
+                <p>Selection: <span style="color:#ff4757">${m.selected}</span></p>
+                <p>Reality: <span style="color:#2ecc71">${m.correct}</span></p>
+            </div>
+        `).join('');
+    }
+
+    document.getElementById('quiz-results-overlay').style.display = 'flex';
+}
+
+function closeResults() {
+    document.getElementById('quiz-results-overlay').style.display = 'none';
+    exitQuiz();
+}
+
 // Start
 document.addEventListener('DOMContentLoaded', initChronos);
+
