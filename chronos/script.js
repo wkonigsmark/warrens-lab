@@ -1161,38 +1161,27 @@ async function syncWithWikidata() {
     btn.innerText = "🛰️ Syncing...";
     btn.disabled = true;
 
-    // Sweeping for a broader list of items including empires, discoveries, battles, and inventions.
+    // Aggressive "Master Sweep" SPARQL Query
+    // This query targets a much wider range of significance (30+ sitelinks) to provide a deep pool for curation.
     const sparql = `
     SELECT DISTINCT ?item ?itemLabel ?date ?description ?sitelinks WHERE {
       {
-        ?item wdt:P31 wd:Q1190554 . # Historical events
+        # --- Major Historical Categories ---
+        VALUES ?type { 
+          wd:Q1190554 wd:Q198 wd:Q178561 wd:Q1322139 wd:Q12519 
+          wd:Q4692 wd:Q124901 wd:Q131569 wd:Q30248 wd:Q134808 
+          wd:Q839954 wd:Q25674 wd:Q23498 wd:Q16567
+        }
+        ?item wdt:P31 ?type .
         ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 100) 
+        FILTER(?sitelinks > 30) 
       } UNION {
-        ?item wdt:P31 wd:Q198 . # Wars
+        # --- High-Significance Humans (World Leaders, Thinkers, Explorers) ---
+        ?item wdt:P31 wd:Q5 . 
         ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 120)
+        FILTER(?sitelinks > 180) # Only the most globally famous figures
       } UNION {
-        ?item wdt:P31 wd:Q178561 . # Battles
-        ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 150)
-      } UNION {
-        ?item wdt:P31 wd:Q1322139 . # Revolutions
-        ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 100)
-      } UNION {
-        ?item wdt:P31 wd:Q12519 . # Empires
-        ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 80)
-      } UNION {
-        ?item wdt:P31 wd:Q4692 . # Scientific discoveries
-        ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 80)
-      } UNION {
-        ?item wdt:P31 wd:Q124901 . # Inventions
-        ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 100)
-      } UNION {
+        # --- Manual High-Value Items (Fallbacks) ---
         VALUES ?item {
           wd:Q4692 wd:Q8432 wd:Q35333 wd:Q12978 wd:Q7650 wd:Q8027 wd:Q39739 
           wd:Q5582 wd:Q9353 wd:Q307 wd:Q193484 wd:Q8942 wd:Q9129 wd:Q12519
@@ -1201,10 +1190,11 @@ async function syncWithWikidata() {
         }
         ?item wikibase:sitelinks ?sitelinks .
       }
+      # Date Extraction
       { ?item wdt:P585 ?date . } UNION { ?item wdt:P580 ?date . } UNION { ?item wdt:P569 ?date . }
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
       OPTIONAL { ?item schema:description ?description . FILTER(LANG(?description) = "en") }
-    } ORDER BY DESC(?sitelinks) LIMIT 300`;
+    } ORDER BY DESC(?sitelinks) LIMIT 800`;
 
     const url = "https://query.wikidata.org/sparql?query=" + encodeURIComponent(sparql);
 
