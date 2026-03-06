@@ -82,7 +82,7 @@ const wikidataHistory = [
     },
     {
         "id": "Q1065985",
-        "title": "Ordovician\u2013Silurian extinction event",
+        "title": "Ordovician–Silurian extinction event",
         "date": "443800000 BCE",
         "startYear": -443800000,
         "description": "mass extinction event at the end of the Ordovician period and the beginning of the Silurian period in the Paleozoic era, around 444 million years ago",
@@ -105,9 +105,9 @@ const wikidataHistory = [
         "title": "Big Bang nucleosynthesis",
         "date": "13798000000 BCE",
         "startYear": -13798000000,
-        "description": "nucleosynthesis that occurred during the Big Bang (between ca. 10\u207b\u00b2 and 200 seconds after the Big Bang)",
-        "snippet": "nucleosynthesis that occurred during the Big Bang (between ca. 10\u207b\u00b2 and 200 seconds after the Big Bang)",
-        "significance": 2,
+        "description": "nucleosynthesis that occurred during the Big Bang (between ca. 10⁻² and 200 seconds after the Big Bang)",
+        "snippet": "nucleosynthesis that occurred during the Big Bang (between ca. 10⁻² and 200 seconds after the Big Bang)",
+        "significance": 1,
         "gap": 150
     },
     {
@@ -301,16 +301,6 @@ const wikidataHistory = [
         "gap": 150
     },
     {
-        "id": "Q213074",
-        "title": "Battle of the Hydaspes",
-        "date": "325 BCE",
-        "startYear": -325,
-        "description": "battle fought by Alexander the Great in 326 BCE against King Porus of the Paurava kingdom on the banks of the Hydaspes River (Jhelum River) in the Punjab near Bhera",
-        "snippet": "battle fought by Alexander the Great in 326 BCE against King Porus of the Paurava kingdom on the banks of the Hydaspes R...",
-        "significance": 2,
-        "gap": 150
-    },
-    {
         "id": "Q179670",
         "title": "Battle of Gaugamela",
         "date": "330 BCE",
@@ -361,26 +351,6 @@ const wikidataHistory = [
         "gap": 150
     },
     {
-        "id": "Q131969",
-        "title": "Battle of Thermopylae",
-        "date": "479 BCE",
-        "startYear": -479,
-        "description": "battle of 480 BCE during Persian invasion of Greece",
-        "snippet": "battle of 480 BCE during Persian invasion of Greece",
-        "significance": 2,
-        "gap": 150
-    },
-    {
-        "id": "Q31900",
-        "title": "Battle of Marathon",
-        "date": "489 BCE",
-        "startYear": -489,
-        "description": "490 BCE battle in the Greco-Persian wars",
-        "snippet": "490 BCE battle in the Greco-Persian wars",
-        "significance": 2,
-        "gap": 150
-    },
-    {
         "id": "Q47538",
         "title": "221 BC",
         "date": "220 BCE",
@@ -417,7 +387,7 @@ const wikidataHistory = [
         "startYear": -13787000000,
         "description": "hypothetical begin of the Universe through expansion out of an infinitely small and infinitely dense state",
         "snippet": "hypothetical begin of the Universe through expansion out of an infinitely small and infinitely dense state",
-        "significance": 3,
+        "significance": 1,
         "gap": 150
     }
 ];
