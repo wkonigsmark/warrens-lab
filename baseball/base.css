@@ -147,15 +147,26 @@ h1 {
 @media (max-width: 768px) {
     .tabs-nav {
         top: 10px;
-        padding: 6px;
+        padding: 8px;
+        flex-wrap: wrap;
+        border-radius: 20px;
+    }
+
+    .tabs-nav.minimized {
+        flex-wrap: nowrap;
+        border-radius: 50px;
+    }
+
+    .tabs-nav.minimized:hover,
+    .tabs-nav.expanded {
+        flex-wrap: wrap;
+        border-radius: 20px;
     }
 
     .tab-btn {
-        padding: 8px 14px;
+        padding: 8px 12px;
         font-size: 0.75rem;
     }
-
-    /* Force minimized on mobile by default or just let it collapse on scroll */
 }
 
 /* Content Sections */
