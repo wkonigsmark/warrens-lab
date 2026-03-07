@@ -516,14 +516,13 @@ function initChronos() {
     // Curation wiring
     const curateBtn = document.getElementById('curate-btn');
     const exitCurationBtn = document.getElementById('exit-curation-btn');
-    const exportCuratedBtn = document.getElementById('export-curated-data');
-    const curationFilter = document.getElementById('curation-level-filter');
-
+    const exportCsvBtn = document.getElementById('export-csv-btn');
     const syncWikidataBtn = document.getElementById('sync-wikidata-btn');
 
     if (curateBtn) curateBtn.onclick = openCuration;
     if (exitCurationBtn) exitCurationBtn.onclick = exitCuration;
     if (exportCuratedBtn) exportCuratedBtn.onclick = exportCuratedData;
+    if (exportCsvBtn) exportCsvBtn.onclick = exportTimelineToCSV;
     if (syncWikidataBtn) syncWikidataBtn.onclick = syncWithWikidata;
     if (curationFilter) curationFilter.onchange = () => renderCurationTable();
 
@@ -1172,6 +1171,32 @@ function exportCuratedData() {
     }
 }
 
+function exportTimelineToCSV() {
+    // Merge everything for the master list
+    const masterList = [...combinedTimeline].sort((a, b) => a.startYear - b.startYear);
+
+    // CSV Header
+    let csv = 'ID,Title,Date_Display,Year_Numeric,Level,Source,Description\n';
+
+    masterList.forEach(item => {
+        const id = item.id || '';
+        const title = `"${(item.title || '').replace(/"/g, '""')}"`;
+        const dateDisp = item.date || formatChronosDate(item.startYear);
+        const yearNum = item.startYear || 0;
+        const level = item.significance || 3;
+        const source = item.source || 'CURATED';
+        const desc = `"${(item.description || item.snippet || '').replace(/"/g, '""')}"`;
+
+        csv += `${id},${title},${dateDisp},${yearNum},${level},${source},${desc}\n`;
+    });
+
+    downloadFile('chronos_database_master.csv', csv, 'text/csv');
+
+    if (typeof gtag === 'function') {
+        gtag('event', 'csv_export', { 'item_count': masterList.length });
+    }
+}
+
 function syncWithWikidata() {
     const btn = document.getElementById('sync-wikidata-btn');
     const originalText = btn.innerText;
@@ -1214,8 +1239,8 @@ function syncWithWikidata() {
     }
 }
 
-function downloadFile(filename, content) {
-    const blob = new Blob([content], { type: 'application/javascript' });
+function downloadFile(filename, content, mimeType = 'application/javascript') {
+    const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
