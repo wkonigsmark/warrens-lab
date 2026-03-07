@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rockies Hub | 7U Baseball</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../base.css">
+    <style>
+        :root {
+            --team-primary: #333366;
+            --team-accent: #C4CED4;
+            --team-shadow: rgba(51, 51, 102, 0.4);
+        }
+
+        body {
+            background: radial-gradient(circle at top right, #333366, #0f1218);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="../index.html"
+            style="position: absolute; left: 20px; top: 20px; color: white; text-decoration: none; font-size: 0.9rem;">&larr;
+            Switch Team</a>
+        <div class="team-badge">
+            <img src="https://content.sportslogos.net/logos/54/58/full/colorado_rockies_logo_primary_19932879.png"
+                alt="Rockies Logo">
+        </div>
+        <h1>Rockies</h1>
+        <span class="age-group">7 Year Old Baseball</span>
+    </header>
+
+    <div class="container">
+        <nav class="tabs-nav" id="tabs-nav">
+            <button class="tab-btn active" onclick="handleTabClick('roster')">Roster</button>
+            <button class="tab-btn" onclick="handleTabClick('schedule')">Schedule</button>
+            <button class="tab-btn" onclick="handleTabClick('staff')">Coaches</button>
+            <button class="tab-btn" onclick="handleTabClick('plan')">Practice Plan</button>
+            <button class="tab-btn" onclick="handleTabClick('batting')">Batting Order</button>
+            <button class="tab-btn" onclick="handleTabClick('lineup')">Field / Lineup</button>
+            <button class="tab-btn" onclick="handleTabClick('drills')">Drills</button>
+        </nav>
+
+        <!-- Roster Section -->
+        <section id="roster" class="tab-content active">
+            <div class="roster-controls">
+                <div class="attendance-count" id="attendance-stat">13 / 13 Attending</div>
+                <div class="group-config">
+                    <span class="group-label">Groups:</span>
+                    <select id="group-count" class="group-select" onchange="renderRoster()">
+                        <option value="1">1 (Whole Team)</option>
+                        <option value="2">2 groups</option>
+                        <option value="3">3 groups</option>
+                        <option value="4">4 groups</option>
+                        <option value="5">5 groups</option>
+                    </select>
+                </div>
+                <div class="sort-group">
+                    <button id="sort-toggle-btn" class="sort-btn" onclick="toggleSort()">Sort: Color</button>
+                </div>
+            </div>
+            <div class="roster-grid" id="roster-grid">
+                <!-- Players will be injected here -->
+            </div>
+        </section>
+
+        <!-- Schedule Section -->
+        <section id="schedule" class="tab-content">
+            <h2 class="section-title">Practices</h2>
+            <div class="schedule-item">
+                <div class="schedule-date">
+                    <span class="date-val">Sundays</span>
+                    <span class="time-val">9:00 AM - 10:00 AM</span>
+                </div>
+                <div class="schedule-details">
+                    <div class="opponent">Team Practice</div>
+                    <div class="location">P40 Rooftop</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Game Schedule (Tentative)</h2>
+            <div id="game-list">
+                <!-- Games will be injected here -->
+            </div>
+        </section>
+
+        <!-- Practice Plan Section -->
+        <section id="plan" class="tab-content">
+            <div class="print-only">
+                <center>
+                    <h1 style="color:black">Rockies</h1>
+                    <p style="color:black; text-transform:uppercase; letter-spacing:2px">7 Year Old Baseball • Master
+                        Practice Plan</p>
+                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+                </center>
+            </div>
+
+            <div class="print-actions">
+                <button class="contact-btn" onclick="window.print()"
+                    style="max-width: 200px; background: var(--team-primary); border-color: var(--team-accent);">
+                    📄 Export / Print Plan
+                </button>
+            </div>
+
+            <h2 class="section-title">The Rockies 60-Minute Master Plan</h2>
+
+            <div class="staff-card" style="background: rgba(196, 206, 212, 0.1); border-left-color: #C4CED4;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="color: #C4CED4;">Phase 1: The Warmup & Mindset</h3>
+                    <span class="staff-role">0:00 - 0:08</span>
+                </div>
+                <p style="margin-top: 10px; opacity: 0.9;"><strong>5m Stretch:</strong> Ease in, burn energy, then
+                    transition to quiet focus. Listen to the whistle.</p>
+                <p style="margin-top: 5px; opacity: 0.9;"><strong>3m Huddle:</strong> The 3 S's: <strong>Safety,
+                        Sportsmanship, Success.</strong> Focus, Respect, All-Out Effort, and Toughness (No Quitting).
+                </p>
+            </div>
+
+            <div class="staff-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Phase 2: Diamond Dogs</h3>
+                    <span class="staff-role">0:08 - 0:15</span>
+                </div>
+                <p style="margin-top: 10px; opacity: 0.8;">Full team sprints around the bases starting at home.
+                    <strong>Crucial:</strong> Boys must cheer their teammates to earn their turn to run.
+                </p>
+            </div>
+
+            <div class="staff-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Phase 3: Tactical Throwing & Pop-ups</h3>
+                    <span class="staff-role">0:15 - 0:25</span>
+                </div>
+                <p style="margin-top: 10px; opacity: 0.8;"><strong>Throwing:</strong> Pairs at 15ft. Mechanics check:
+                    "Warrior Yoga Pose" (ball behind), step to target, follow through.</p>
+                <p style="margin-top: 5px; opacity: 0.8;"><strong>Catching:</strong> Break into coach-led pods. Progress
+                    from lobs to "Big Sky" fly balls to build early confidence.</p>
+            </div>
+
+            <h2 class="section-title">Phase 4: Station Rotations (25m Total)</h2>
+            <div class="roster-grid">
+                <div class="staff-card" style="margin-bottom: 0;">
+                    <h3 style="color: var(--team-accent);">Station 1: Foundations</h3>
+                    <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 10px;">Full Hour Support</p>
+                    <p style="font-size: 0.9rem;">Small group focused instruction (max 1:4) for players needing extra
+                        work on fundamentals: catching, fielding, and proper throwing motion.</p>
+                </div>
+                <div class="staff-card" style="margin-bottom: 0;">
+                    <h3 style="color: var(--team-accent);">Station 2: Force Out Logic</h3>
+                    <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 10px;">10m Rotation</p>
+                    <p style="font-size: 0.9rem;">Situational fielding at SS and 2B. Focus on bag coverage at 2nd and
+                        accurate throws for force-outs at 1st. <strong>Coach dictates the play target mid-roll.</strong>
+                    </p>
+                </div>
+                <div class="staff-card" style="margin-bottom: 0;">
+                    <h3 style="color: var(--team-accent);">Station 3: Power & Hip-Turn</h3>
+                    <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 10px;">10m Rotation</p>
+                    <p style="font-size: 0.9rem;">Swing mechanics: Turning hips (Williams) and bat fanning (Gwynn).
+                        Drill seargent push-ups for "Long Ball" strength.</p>
+                </div>
+            </div>
+
+            <div class="staff-card"
+                style="margin-top: 30px; border-left-color: #fff; background: rgba(255,255,255,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Phase 5: The Closing Ceremony</h3>
+                    <span class="staff-role">0:50 - 1:00</span>
+                </div>
+                <p style="margin-top: 10px; opacity: 0.8;">Review core philosophy. Distribute Baseball Cards (Rewards).
+                    Final huddle break...</p>
+                <h4 style="text-align: center; margin-top: 15px; letter-spacing: 2px;">1 - 2 - 3 ROCKIES!</h4>
+            </div>
+        </section>
+
+        <!-- Batting Order Section -->
+        <section id="batting" class="tab-content">
+            <h2 class="section-title">Strategic Batting Order</h2>
+            <div class="print-actions" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                <button class="contact-btn" onclick="generateStaggeredLineup()"
+                    style="background: var(--team-primary); border-color: var(--team-accent);">
+                    ⚡ Auto-Stagger Lineup
+                </button>
+                <button class="contact-btn" onclick="window.print()">
+                    📄 Print Order
+                </button>
+            </div>
+            <div id="batting-order-list" class="batting-list">
+                <!-- Batting order will be injected here -->
+                <p style="text-align:center; opacity:0.5; margin-top:40px;">Click "Auto-Stagger" to generate a balanced
+                    lineup based on attendance.</p>
+            </div>
+        </section>
+
+        <!-- Lineup Section -->
+        <section id="lineup" class="tab-content">
+            <h2 class="section-title">Field Strategy</h2>
+            <div class="print-actions">
+                <button class="contact-btn" onclick="window.print()"
+                    style="width: auto; padding: 12px 24px; background: #fff; color: #000; display: inline-flex;">
+                    🖨️ Print Blank Diamond for Sketching
+                </button>
+            </div>
+            <div class="field-container">
+                <img src="../diamond.png" alt="Baseball Diamond" class="diamond-img">
+            </div>
+            <p style="margin-top: 20px; opacity: 0.5; font-size: 0.8rem; text-align: center;">
+                Future functionality: Drag & drop active roster players onto positions for digital lineup export.
+            </p>
+        </section>
+
+        <!-- Staff Section -->
+        <section id="staff" class="tab-content">
+            <h2 class="section-title">Coaching Staff</h2>
+            <div id="staff-list">
+                <!-- Staff will be injected here -->
+            </div>
+        </section>
+
+        <!-- Drills Section -->
+        <section id="drills" class="tab-content">
+            <h2 class="section-title">Suggested 7U Drills</h2>
+            <div class="staff-card">
+                <h3>Base Running Basics</h3>
+                <p style="margin-top:10px; opacity:0.7;">Focus on running through 1st base and proper turns at 2nd.</p>
+            </div>
+            <div class="staff-card">
+                <h3>The "Bucket" Drill</h3>
+                <p style="margin-top:10px; opacity:0.7;">Fielding ground balls with feet in proper power position.</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const roster = [
+            { id: 1, first: "Jack", last: "Bernstein", rating: 3, absent: false },
+            { id: 2, first: "Luca", last: "Fetissoff Zakula", rating: 3, absent: false },
+            { id: 3, first: "Noah", last: "Gorelov", rating: 3, absent: false },
+            { id: 4, first: "Ollie", last: "Hess", rating: 2, absent: false },
+            { id: 5, first: "Ballard", last: "Konigsmark", rating: 4, absent: false },
+            { id: 6, first: "Leon", last: "Leveto", rating: 2, absent: false },
+            { id: 7, first: "William", last: "Marbach", rating: 3, absent: false },
+            { id: 8, first: "Evren", last: "Rasmussen", rating: 4, absent: false },
+            { id: 9, first: "Flanagan", last: "Smith", rating: 1, absent: false },
+            { id: 10, first: "Harrison", last: "Soto", rating: 1, absent: false },
+            { id: 11, first: "Oliver", last: "Stodola", rating: 2, absent: false },
+            { id: 12, first: "Simon", last: "Sutta", rating: 3, absent: false },
+            { id: 13, first: "Quincy", last: "Wu", rating: 1, absent: false }
+        ];
+
+        let currentSort = 'rank';
+
+        function toggleSort() {
+            currentSort = (currentSort === 'name') ? 'rank' : 'name';
+            const btn = document.getElementById('sort-toggle-btn');
+            btn.innerText = currentSort === 'name' ? 'Sort: Name A-Z' : 'Sort: Color';
+            renderRoster();
+        }
+
+        function toggleAttendance(id) {
+            const player = roster.find(p => p.id === id);
+            if (player) {
+                player.absent = !player.absent;
+                renderRoster();
+            }
+        }
+
+        // Dynamic Navigation Logic
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('tabs-nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('minimized');
+            } else {
+                nav.classList.remove('minimized');
+                nav.classList.remove('expanded');
+            }
+        });
+
+        function handleTabClick(tabId) {
+            const nav = document.getElementById('tabs-nav');
+            const activeBtn = document.querySelector('.tab-btn.active');
+            const isClickingActive = activeBtn && activeBtn.getAttribute('onclick').includes(`'${tabId}'`);
+
+            if (nav.classList.contains('minimized') && isClickingActive && !nav.classList.contains('expanded')) {
+                nav.classList.add('expanded');
+            } else {
+                showTab(tabId);
+                nav.classList.remove('expanded');
+            }
+        }
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            // Find button and mark active
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                if (b.getAttribute('onclick').includes(`'${tabId}'`)) {
+                    b.classList.add('active');
+                }
+            });
+        }
+
+        let battingOrder = [];
+
+        function generateStaggeredLineup() {
+            const active = roster.filter(p => !p.absent);
+            // Sort by rank: 4s, then 3s, then 2s, then 1s
+            const pools = {
+                4: active.filter(p => p.rating === 4),
+                3: active.filter(p => p.rating === 3),
+                2: active.filter(p => p.rating === 2),
+                1: active.filter(p => p.rating === 1)
+            };
+
+            const result = [];
+            const total = active.length;
+
+            // Staggering strategy: High, Mid, Low, Mid...
+            // Let's just alternate from strongest pools to weakest
+            const poolOrder = [4, 2, 3, 1];
+            let poolIdx = 0;
+
+            while (result.length < total) {
+                const pool = pools[poolOrder[poolIdx]];
+                if (pool && pool.length > 0) {
+                    // Pull a random player from this pool
+                    const playerIdx = Math.floor(Math.random() * pool.length);
+                    result.push(pool.splice(playerIdx, 1)[0]);
+                }
+                poolIdx = (poolIdx + 1) % poolOrder.length;
+
+                // Safety break if we get stuck in empty pools
+                if (pools[4].length === 0 && pools[3].length === 0 && pools[2].length === 0 && pools[1].length === 0) break;
+            }
+
+            battingOrder = result;
+            renderBattingOrder();
+        }
+
+        function renderBattingOrder() {
+            const list = document.getElementById('batting-order-list');
+            list.innerHTML = '';
+
+            battingOrder.forEach((p, index) => {
+                const item = document.createElement('div');
+                item.className = `batting-item rank-${p.rating}`;
+                item.draggable = true;
+                item.innerHTML = `
+                    <div class="order-num">${index + 1}</div>
+                    <div class="player-icon" style="width:30px; height:30px; font-size:0.7rem;">${p.first[0]}${p.last[0]}</div>
+                    <div class="player-info">
+                        <h3 style="font-size:0.9rem;">${p.first} ${p.last}</h3>
+                    </div>
+                `;
+
+                // Add DnD listeners
+                item.addEventListener('dragstart', () => item.classList.add('dragging'));
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');
+                    updateBattingDataFromUI();
+                });
+
+                list.appendChild(item);
+            });
+
+            list.addEventListener('dragover', e => {
+                e.preventDefault();
+                const draggingItem = document.querySelector('.dragging');
+                const afterElement = getDragAfterElement(list, e.clientY);
+                if (afterElement == null) {
+                    list.appendChild(draggingItem);
+                } else {
+                    list.insertBefore(draggingItem, afterElement);
+                }
+            });
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.batting-item:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function updateBattingDataFromUI() {
+            const items = [...document.querySelectorAll('.batting-item')];
+            // We need to sync the global battingOrder array with the new DOM sequence
+            // For now, re-indexing the order-num is a good visual sync
+            items.forEach((item, idx) => {
+                item.querySelector('.order-num').innerText = idx + 1;
+            });
+        }
+
+        function renderRoster() {
+            const grid = document.getElementById('roster-grid');
+            grid.innerHTML = '';
+
+            const groupCount = parseInt(document.getElementById('group-count').value);
+            const activePlayers = roster.filter(p => !p.absent);
+            const absentPlayers = roster.filter(p => p.absent);
+
+            activePlayers.sort((a, b) => {
+                if (currentSort === 'name') return a.first.localeCompare(b.first);
+                return b.rating - a.rating;
+            });
+
+            if (groupCount > 1) {
+                const total = activePlayers.length;
+                const baseSize = Math.floor(total / groupCount);
+                let remainder = total % groupCount;
+                let currentIndex = 0;
+                for (let i = 1; i <= groupCount; i++) {
+                    const size = baseSize + (remainder > 0 ? 1 : 0);
+                    remainder--;
+                    const groupTitle = document.createElement('div');
+                    groupTitle.className = 'group-header';
+                    groupTitle.innerHTML = `<h4>Group ${i} ${i === 1 && currentSort === 'rank' ? '(Top)' : (i === groupCount && currentSort === 'rank' ? '(Foundations)' : '')}</h4>`;
+                    grid.appendChild(groupTitle);
+                    const slice = activePlayers.slice(currentIndex, currentIndex + size);
+                    slice.forEach(p => grid.appendChild(createPlayerCard(p)));
+                    currentIndex += size;
+                }
+            } else {
+                activePlayers.forEach(p => grid.appendChild(createPlayerCard(p)));
+            }
+
+            if (absentPlayers.length > 0) {
+                const absentHeader = document.createElement('div');
+                absentHeader.className = 'group-header';
+                absentHeader.innerHTML = `<h4>Absent</h4>`;
+                grid.appendChild(absentHeader);
+                absentPlayers.forEach(p => grid.appendChild(createPlayerCard(p)));
+            }
+            const attending = activePlayers.length;
+            document.getElementById('attendance-stat').innerText = `${attending} / ${roster.length} Attending`;
+        }
+
+        function createPlayerCard(p) {
+            const card = document.createElement('div');
+            card.className = `player-card rank-${p.rating} ${p.absent ? 'is-absent' : ''}`;
+            card.innerHTML = `
+                <div class="absent-toggle" onclick="toggleAttendance(${p.id})">${p.absent ? '↺' : '✕'}</div>
+                <div class="player-icon">${p.first[0]}${p.last[0]}</div>
+                <div class="player-info">
+                    <h3>${p.first} ${p.last}</h3>
+                    <p>Rockies 7U</p>
+                </div>
+            `;
+            return card;
+        }
+
+        renderRoster();
+
+        const games = [
+            { date: "Wed, Apr 1", time: "9:00 AM", opponent: "Dodgers", location: "BPC North" },
+            { date: "Wed, Apr 8", time: "10:00 AM", opponent: "Yankees", location: "BPC South" },
+            { date: "Thu, Apr 16", time: "11:00 AM", opponent: "Mariners", location: "Rockefeller Park" },
+            { date: "Wed, Apr 22", time: "12:00 PM", opponent: "Twins", location: "P40" }
+        ];
+
+        const staff = [
+            { role: "HBC", first: "Warren", last: "Konigsmark", email: "wkonigsmark@gmail.com", phone: "770-757-6274" },
+            { role: "Assistant Coach", first: "Joseph", last: "Bernstein", email: "Joeb2683@gmail.com", phone: "516-375-6647" },
+            { role: "Assistant Coach", first: "Andrew", last: "Marbach", email: "andrew.marbach@gmail.com", phone: "917-538-3039" },
+            { role: "Assistant Coach", first: "Richard", last: "Soto", email: "richardsoto@gmail.com", phone: "401-419-2393" },
+            { role: "Assistant Coach", first: "Eric", last: "Stodola", email: "estodola@gmail.com", phone: "917-225-9192" },
+            { role: "Assistant Coach", first: "Sloan", last: "Sutta", email: "sloansutta@gmail.com", phone: "646-283-2151" }
+        ];
+
+        const gameList = document.getElementById('game-list');
+        games.forEach(g => {
+            const item = document.createElement('div');
+            item.className = 'schedule-item';
+            item.innerHTML = `
+                <div class="schedule-date">
+                    <span class="date-val">${g.date}</span>
+                    <span class="time-val">${g.time}</span>
+                </div>
+                <div class="schedule-details">
+                    <div class="opponent">vs ${g.opponent}</div>
+                    <div class="location">${g.location}</div>
+                </div>
+            `;
+            gameList.appendChild(item);
+        });
+
+        const staffList = document.getElementById('staff-list');
+        staff.forEach(s => {
+            const card = document.createElement('div');
+            card.className = 'staff-card';
+            card.innerHTML = `
+                <div class="staff-header">
+                    <div class="staff-name">
+                        <h3>${s.first} ${s.last}</h3>
+                        <span class="staff-role">${s.role}</span>
+                    </div>
+                </div>
+                <div class="staff-contact">
+                    <a href="mailto:${s.email}" class="contact-btn">✉️ Email</a>
+                    <a href="tel:${s.phone}" class="contact-btn">📞 Call</a>
+                </div>
+            `;
+            staffList.appendChild(card);
+        });
+    </script>
+</body>
+
+</html>
