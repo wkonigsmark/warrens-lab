@@ -11,6 +11,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q333",
+    title: "astronomy",
+    date: "8000 BCE",
+    startYear: -8000,
+    description: "natural science studying celestial objects and phenomena in the cosmos",
+    snippet: "natural science studying celestial objects and phenomena in the cosmos",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q203729",
     title: "Battle of Kadesh",
     date: "1273 BCE",
@@ -275,6 +286,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q185117",
+    title: "Justin Martyr",
+    date: "0100",
+    startYear: 0100,
+    description: "2nd century CE Christian apologist and martyr",
+    snippet: "2nd century CE Christian apologist and martyr",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q34943",
     title: "Ptolemy",
     date: "0100",
@@ -484,17 +506,6 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
-    id: "Q7063",
-    title: "11th century",
-    date: "1100",
-    startYear: 1100,
-    description: "century",
-    snippet: "century",
-    significance: 2,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
     id: "Q39837",
     title: "Averroes",
     date: "1126",
@@ -693,6 +704,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q127751",
+    title: "Wars of the Roses",
+    date: "1455",
+    startYear: 1455,
+    description: "dynastic civil war in England from 1455 to 1487",
+    snippet: "dynastic civil war in England from 1455 to 1487",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q5580",
     title: "Albrecht Dürer",
     date: "1471",
@@ -737,34 +759,12 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
-    id: "Q127751",
-    title: "Wars of the Roses",
-    date: "1500",
-    startYear: 1500,
-    description: "dynastic civil war in England from 1455 to 1487",
-    snippet: "dynastic civil war in England from 1455 to 1487",
-    significance: 2,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
     id: "Q39978",
     title: "Nostradamus",
     date: "1503",
     startYear: 1503,
     description: "French seer and astrologer (1503–1566)",
     snippet: "French seer and astrologer (1503–1566)",
-    significance: 2,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
-    id: "Q12562",
-    title: "Protestant Reformation",
-    date: "1517",
-    startYear: 1517,
-    description: "16th-century movement in Western Christianity",
-    snippet: "16th-century movement in Western Christianity",
     significance: 2,
     gap: 150,
     source: "WIKIDATA"
@@ -990,6 +990,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q133100",
+    title: "Innocent XIII",
+    date: "1655",
+    startYear: 1655,
+    description: "pope of the Catholic Church from 1721 to 1724",
+    snippet: "pope of the Catholic Church from 1721 to 1724",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q74623",
     title: "Great Turkish War",
     date: "1683",
@@ -1018,17 +1029,6 @@ const wikidataMasterList = [
     startYear: 1688,
     description: "war principally fought in Central Europe from 1688 to 1697",
     snippet: "war principally fought in Central Europe from 1688 to 1697",
-    significance: 3,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
-    id: "Q135111",
-    title: "Vere Beauclerk, 1st Baron Vere",
-    date: "1699",
-    startYear: 1699,
-    description: "British Baron and politician (1699-1781)",
-    snippet: "British Baron and politician (1699-1781)",
     significance: 3,
     gap: 150,
     source: "WIKIDATA"
@@ -1276,17 +1276,6 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
-    id: "Q517",
-    title: "Napoleon",
-    date: "1769",
-    startYear: 1769,
-    description: "French military leader, French Emperor 1804–1814 and again in 1815 (1769–1821)",
-    snippet: "French military leader, French Emperor 1804–1814 and again in 1815 (1769–1821)",
-    significance: 1,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
     id: "Q6694",
     title: "Alexander von Humboldt",
     date: "1769",
@@ -1327,6 +1316,17 @@ const wikidataMasterList = [
     description: "British chemist",
     snippet: "British chemist",
     significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q6534",
+    title: "French Revolution",
+    date: "1789",
+    startYear: 1789,
+    description: "revolution in France from 1789 to 1799",
+    snippet: "revolution in France from 1789 to 1799",
+    significance: 1,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -1551,17 +1551,6 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
-    id: "Q186423",
-    title: "Joseph Rankin",
-    date: "1833",
-    startYear: 1833,
-    description: "American politician (1833-1886)",
-    snippet: "American politician (1833-1886)",
-    significance: 3,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
     id: "Q23810",
     title: "Alfred Nobel",
     date: "1833",
@@ -1601,17 +1590,6 @@ const wikidataMasterList = [
     startYear: 1839,
     description: "war between Great Britain and China in the 19th century",
     snippet: "war between Great Britain and China in the 19th century",
-    significance: 3,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
-    id: "Q6683",
-    title: "Mexican-American War",
-    date: "1840",
-    startYear: 1840,
-    description: "military conflict between the United States of America and Mexico from 1846 to 1848",
-    snippet: "military conflict between the United States of America and Mexico from 1846 to 1848",
     significance: 3,
     gap: 150,
     source: "WIKIDATA"
@@ -1661,6 +1639,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q6683",
+    title: "Mexican-American War",
+    date: "1846",
+    startYear: 1846,
+    description: "military conflict between the United States of America and Mexico from 1846 to 1848",
+    snippet: "military conflict between the United States of America and Mexico from 1846 to 1848",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q8743",
     title: "Thomas Edison",
     date: "1847",
@@ -1679,17 +1668,6 @@ const wikidataMasterList = [
     description: "Canadian-American scientist inventor of telephone (1847–1922)",
     snippet: "Canadian-American scientist inventor of telephone (1847–1922)",
     significance: 2,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
-    id: "Q76641",
-    title: "Felix Klein",
-    date: "1849",
-    startYear: 1849,
-    description: "German mathematician, author of the Erlangen Program (1849-1925)",
-    snippet: "German mathematician, author of the Erlangen Program (1849-1925)",
-    significance: 3,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -1958,6 +1936,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q1001",
+    title: "Mahatma Gandhi",
+    date: "1869",
+    startYear: 1869,
+    description: "Indian independence activist (1869–1948)",
+    snippet: "Indian independence activist (1869–1948)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q46083",
     title: "Franco-Prussian War",
     date: "1870",
@@ -2042,6 +2031,17 @@ const wikidataMasterList = [
     description: "German-Jewish physicist and mathematician (1882-1970)",
     snippet: "German-Jewish physicist and mathematician (1882-1970)",
     significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q103986",
+    title: "Gerhard Dammann",
+    date: "1883",
+    startYear: 1883,
+    description: "German actor (1883–1946)",
+    snippet: "German actor (1883–1946)",
+    significance: 3,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -2277,17 +2277,6 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
-    id: "Q106660",
-    title: "Joseph M. Piel",
-    date: "1903",
-    startYear: 1903,
-    description: "German romanist (1903-1992)",
-    snippet: "German romanist (1903-1992)",
-    significance: 3,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
     id: "Q17455",
     title: "John von Neumann",
     date: "1903",
@@ -2475,23 +2464,23 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q186284",
+    title: "Polish–Soviet War",
+    date: "1919",
+    startYear: 1919,
+    description: "conflict between Poland and Soviet Russia following the First World War (February 1919 - March 1921)",
+    snippet: "conflict between Poland and Soviet Russia following the First World War (February 1919 - March 1921)",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q87138",
     title: "Greco-Turkish War",
     date: "1919",
     startYear: 1919,
     description: "war lasting from 1919 to 1922 during the Turkish War of Independence",
     snippet: "war lasting from 1919 to 1922 during the Turkish War of Independence",
-    significance: 3,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
-    id: "Q186284",
-    title: "Polish–Soviet War",
-    date: "1920",
-    startYear: 1920,
-    description: "conflict between Poland and Soviet Russia following the First World War (February 1919 - March 1921)",
-    snippet: "conflict between Poland and Soviet Russia following the First World War (February 1919 - March 1921)",
     significance: 3,
     gap: 150,
     source: "WIKIDATA"
@@ -2596,17 +2585,6 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
-    id: "Q362",
-    title: "World War II",
-    date: "1939",
-    startYear: 1939,
-    description: "1939–1945 global conflict",
-    snippet: "1939–1945 global conflict",
-    significance: 1,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
     id: "Q183492",
     title: "Margaret Atwood",
     date: "1939",
@@ -2614,17 +2592,6 @@ const wikidataMasterList = [
     description: "Canadian poet, novelist, literary critic, essayist, teacher, environmental activist, pépiniériste and inventor (born 1939)",
     snippet: "Canadian poet, novelist, literary critic, essayist, teacher, environmental activist, pépiniériste ",
     significance: 2,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
-    id: "Q49097",
-    title: "1948 Palestine war",
-    date: "1940",
-    startYear: 1940,
-    description: "first war of the Arab–Israeli conflict",
-    snippet: "first war of the Arab–Israeli conflict",
-    significance: 3,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -2783,6 +2750,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q49097",
+    title: "1948 Palestine war",
+    date: "1947",
+    startYear: 1947,
+    description: "first war of the Arab–Israeli conflict",
+    snippet: "first war of the Arab–Israeli conflict",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q1413732",
     title: "Kashmir conflict",
     date: "1947",
@@ -2812,17 +2790,6 @@ const wikidataMasterList = [
     description: "American computer pioneer, inventor, computer engineer and programmer; co-founder of Apple Inc.",
     snippet: "American computer pioneer, inventor, computer engineer and programmer; co-founder of Apple Inc.",
     significance: 2,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
-    id: "Q103131",
-    title: "Erwin Hadewicz",
-    date: "1951",
-    startYear: 1951,
-    description: "German footballer",
-    snippet: "German footballer",
-    significance: 3,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -2906,8 +2873,8 @@ const wikidataMasterList = [
   {
     id: "Q49101",
     title: "Suez Crisis",
-    date: "1957",
-    startYear: 1957,
+    date: "1956",
+    startYear: 1956,
     description: "1956 invasion of Egypt by Israel, the United Kingdom, and France",
     snippet: "1956 invasion of Egypt by Israel, the United Kingdom, and France",
     significance: 2,
@@ -3036,17 +3003,6 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
-    id: "Q1776",
-    title: "Gerd Kanter",
-    date: "1979",
-    startYear: 1979,
-    description: "Estonian athletics competitor and coach (born 1979)",
-    snippet: "Estonian athletics competitor and coach (born 1979)",
-    significance: 3,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
     id: "Q82664",
     title: "Iran–Iraq War",
     date: "1980",
@@ -3091,17 +3047,6 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
-    id: "Q56039",
-    title: "German reunification",
-    date: "1989",
-    startYear: 1989,
-    description: "process in 1990 in which the German Democratic Republic became part of the Federal Republic of Germany",
-    snippet: "process in 1990 in which the German Democratic Republic became part of the Federal Republic of Germa",
-    significance: 2,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
     id: "Q37643",
     title: "Gulf War",
     date: "1990",
@@ -3124,23 +3069,34 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q68969",
+    title: "Croatian War of Independence",
+    date: "1991",
+    startYear: 1991,
+    description: "war of independence fought from 1991 to 1995",
+    snippet: "war of independence fought from 1991 to 1995",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q56039",
+    title: "German reunification",
+    date: "1991",
+    startYear: 1991,
+    description: "process in 1990 in which the German Democratic Republic became part of the Federal Republic of Germany",
+    snippet: "process in 1990 in which the German Democratic Republic became part of the Federal Republic of Germa",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q29269",
     title: "First Chechen War",
     date: "1994",
     startYear: 1994,
     description: "war fought from 1994 to 1996 in Chechnya",
     snippet: "war fought from 1994 to 1996 in Chechnya",
-    significance: 3,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
-    id: "Q68969",
-    title: "Croatian War of Independence",
-    date: "1995",
-    startYear: 1995,
-    description: "war of independence fought from 1991 to 1995",
-    snippet: "war of independence fought from 1991 to 1995",
     significance: 3,
     gap: 150,
     source: "WIKIDATA"
@@ -3256,23 +3212,12 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
-    id: "Q13131",
-    title: "The Simpsons, season 24",
-    date: "2012",
-    startYear: 2012,
-    description: "season of television series",
-    snippet: "season of television series",
-    significance: 3,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
-    id: "Q122962941",
-    title: "Gaza war",
-    date: "2020",
-    startYear: 2020,
-    description: "armed conflict around the Gaza Strip that started on 7 October 2023",
-    snippet: "armed conflict around the Gaza Strip that started on 7 October 2023",
+    id: "Q15860072",
+    title: "Russo-Ukrainian war",
+    date: "2014",
+    startYear: 2014,
+    description: "armed conflict between Russia and Ukraine since 2014",
+    snippet: "armed conflict between Russia and Ukraine since 2014",
     significance: 2,
     gap: 150,
     source: "WIKIDATA"
@@ -3300,6 +3245,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q122962941",
+    title: "Gaza war",
+    date: "2023",
+    startYear: 2023,
+    description: "armed conflict around the Gaza Strip that started on 7 October 2023",
+    snippet: "armed conflict around the Gaza Strip that started on 7 October 2023",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q134900605",
     title: "Twelve-Day War",
     date: "2025",
@@ -3307,17 +3263,6 @@ const wikidataMasterList = [
     description: "2025 armed conflict in the Middle East",
     snippet: "2025 armed conflict in the Middle East",
     significance: 3,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
-    id: "Q15860072",
-    title: "Russo-Ukrainian war",
-    date: "2100",
-    startYear: 2100,
-    description: "armed conflict between Russia and Ukraine since 2014",
-    snippet: "armed conflict between Russia and Ukraine since 2014",
-    significance: 2,
     gap: 150,
     source: "WIKIDATA"
   },
