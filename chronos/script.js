@@ -1155,102 +1155,42 @@ function exportCuratedData() {
     }
 }
 
-async function syncWithWikidata() {
+function syncWithWikidata() {
     const btn = document.getElementById('sync-wikidata-btn');
     const originalText = btn.innerText;
     btn.innerText = "🛰️ Syncing...";
     btn.disabled = true;
 
-    // Balanced Sweep SPARQL Query
-    // Targets a middle ground of significance (70+ sitelinks) to ensure a robust list without timeout issues.
-    const sparql = `
-    SELECT DISTINCT ?item ?itemLabel ?date ?description ?sitelinks WHERE {
-      {
-        # --- Major Historical Categories ---
-        VALUES ?type { 
-          wd:Q1190554 wd:Q198 wd:Q178561 wd:Q1322139 wd:Q12519 
-          wd:Q4692 wd:Q124901 wd:Q131569 wd:Q30248 wd:Q134808 
-          wd:Q839954 wd:Q25674 wd:Q23498 wd:Q16567
-        }
-        ?item wdt:P31 ?type .
-        ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 70) 
-      } UNION {
-        # --- Global Icons (Humans: World Leaders, Thinkers) ---
-        ?item wdt:P31 wd:Q5 . 
-        ?item wikibase:sitelinks ?sitelinks .
-        FILTER(?sitelinks > 200)
-      } UNION {
-        # --- Core Historical Markers ---
-        VALUES ?item {
-          wd:Q4692 wd:Q8432 wd:Q35333 wd:Q12978 wd:Q7650 wd:Q8027 wd:Q39739 
-          wd:Q5582 wd:Q9353 wd:Q307 wd:Q193484 wd:Q8942 wd:Q9129 wd:Q12519
-          wd:Q106660 wd:Q144334 wd:Q12562 wd:Q192761 wd:Q517 wd:Q17422
-          wd:Q13131 wd:Q9392 wd:Q5264 wd:Q362 wd:Q12032 wd:Q1776
-        }
-        ?item wikibase:sitelinks ?sitelinks .
-      }
-      { ?item wdt:P585 ?date . } UNION { ?item wdt:P580 ?date . } UNION { ?item wdt:P569 ?date . }
-      SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-      OPTIONAL { ?item schema:description ?description . FILTER(LANG(?description) = "en") }
-    } ORDER BY DESC(?sitelinks) LIMIT 400`;
-
-    const url = "https://query.wikidata.org/sparql?query=" + encodeURIComponent(sparql);
-
+    // We now use the pre-fetched wikidataMasterList from wikidata_master.js
+    // This avoids browser timeouts and provides a robust, curated starting point.
     try {
-        const response = await fetch(url, { headers: { 'Accept': 'application/json' } });
-        const data = await response.json();
+        if (typeof wikidataMasterList === 'undefined') {
+            throw new Error("Master dataset not loaded. Ensure wikidata_master.js is in your repo.");
+        }
 
-        const results = data.results.bindings;
         let newCount = 0;
+        wikidataMasterList.forEach(event => {
+            // Skip if already in timeline
+            if (combinedTimeline.some(e => e.id === event.id)) return;
 
-        results.forEach(b => {
-            const id = b.item.value.split('/').pop();
-            if (combinedTimeline.some(e => e.id === id)) return; // Skip existing
-
-            const title = b.itemLabel.value;
-            const rawDate = b.date.value;
-            const sitelinks = parseInt(b.sitelinks.value);
-            const desc = b.description ? b.description.value : "";
-
-            // Basic date parsing
-            let year = 0;
-            let dateStr = "";
-            if (rawDate.startsWith('-')) {
-                year = -parseInt(rawDate.substring(1).split('-')[0]);
-                dateStr = `${Math.abs(year)} BCE`;
-            } else {
-                year = parseInt(rawDate.split('-')[0]);
-                dateStr = year < 1000 ? `${year} AD` : `${year}`;
-            }
-
-            // Significance
-            let sig = (sitelinks > 180) ? 1 : (sitelinks > 80 ? 2 : 3);
-
-            const newEvent = {
-                id, title, date: dateStr, startYear: year,
-                description: desc, snippet: desc.substring(0, 100),
-                significance: sig, gap: 150,
-                source: 'WIKIDATA'
-            };
-
-            wikidataHistory.push(newEvent);
-            combinedTimeline.push(newEvent);
+            wikidataHistory.push(event);
+            combinedTimeline.push(event);
             newCount++;
         });
 
-        alert(`Sync Complete! Added ${newCount} new significant events from Wikidata.\n\nNote: These are now in the table. Use 'Export' to save them permanently.`);
+        alert(`Sync Complete! Injected ${newCount} new significant events from the master dataset.\n\nNote: These are now in the table. Use 'Export' to save them permanently.`);
         renderCurationTable();
 
         // Track Wikidata sync
         if (typeof gtag === 'function') {
             gtag('event', 'wikidata_sync', {
-                'new_events': newCount
+                'new_events': newCount,
+                'method': 'local_master'
             });
         }
     } catch (e) {
         console.error(e);
-        alert("Failed to sync with Wikidata. This can happen if the query takes too long or there is a network issue.");
+        alert("Failed to sync: " + e.message);
     } finally {
         btn.innerText = originalText;
         btn.disabled = false;
