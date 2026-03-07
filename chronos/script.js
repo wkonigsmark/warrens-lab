@@ -516,7 +516,9 @@ function initChronos() {
     // Curation wiring
     const curateBtn = document.getElementById('curate-btn');
     const exitCurationBtn = document.getElementById('exit-curation-btn');
+    const exportCuratedBtn = document.getElementById('export-curated-data');
     const exportCsvBtn = document.getElementById('export-csv-btn');
+    const curationFilter = document.getElementById('curation-level-filter');
     const syncWikidataBtn = document.getElementById('sync-wikidata-btn');
 
     if (curateBtn) curateBtn.onclick = openCuration;
