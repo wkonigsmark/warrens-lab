@@ -84,7 +84,7 @@ const timelineData = [
     {
         id: "gunpowder",
         startYear: 850,
-        date: "c. 850 AD",
+        date: "c. 850",
         title: "Discovery of Gunpowder",
         significance: 1,
         snippet: "The accidental discovery that changed warfare forever.",
@@ -95,7 +95,7 @@ const timelineData = [
     {
         id: "world-wars",
         startYear: 1914,
-        date: "1914 – 1945 AD",
+        date: "1914 – 1945",
         title: "The World Wars",
         significance: 1,
         snippet: "The global total wars that defined the modern era.",
@@ -356,7 +356,7 @@ function formatChronosDate(year) {
         }
     }
     if (year < 0) return `${absYear.toLocaleString()} BCE`;
-    return `${absYear.toLocaleString()} AD`;
+    return `${absYear.toLocaleString()}`; // Removed as per user request
 }
 
 // Combined Timeline Strategy: Internal Curation + Scholarly Wikidata Consensus
@@ -1031,8 +1031,8 @@ function renderCurationTable() {
         if (curationDeletions.has(event.id)) return; // Skip deleted items
 
         const displayDate = formatChronosDate(event.startYear);
-        const desc = event.snippet || event.description || '';
-        const truncDesc = desc.length > 120 ? desc.slice(0, 120) + '…' : desc;
+        const title = event.title || '';
+        const desc = event.description || event.snippet || '';
         const changedClass = event.isChanged ? 'changed' : '';
         const changeMarker = event.isChanged ? '<span class="change-indicator"></span>' : '';
         const levelClass = event.currentSig <= 5 ? `level-${event.currentSig}` : '';
@@ -1045,8 +1045,8 @@ function renderCurationTable() {
         html += `
             <tr class="${changedClass}" data-id="${event.id}">
                 <td class="col-date">${displayDate}</td>
-                <td class="col-title">${event.title}</td>
-                <td class="col-desc">${truncDesc}</td>
+                <td class="col-title" contenteditable="true" data-field="title">${title}</td>
+                <td class="col-desc" contenteditable="true" data-field="description">${desc}</td>
                 <td class="col-sig">
                     <select class="sig-select ${levelClass}" data-id="${event.id}" data-original="${event.significance}">
                         ${sigOptions}
@@ -1086,6 +1086,23 @@ function renderCurationTable() {
             const id = e.target.dataset.id;
             if (confirm("Are you sure you want to remove this event from the timeline?")) {
                 curationDeletions.add(id);
+                renderCurationTable();
+            }
+        });
+    });
+
+    // Wire up text edit listeners
+    container.querySelectorAll('[contenteditable="true"]').forEach(cell => {
+        cell.addEventListener('blur', (e) => {
+            const id = e.target.closest('tr').dataset.id;
+            const field = e.target.dataset.field;
+            const newVal = e.target.innerText.trim();
+            const event = combinedTimeline.find(ev => ev.id === id);
+
+            if (event && event[field] !== newVal) {
+                event[field] = newVal;
+                // Add to curationChanges so it marks as changed
+                curationChanges[id] = event.significance;
                 renderCurationTable();
             }
         });

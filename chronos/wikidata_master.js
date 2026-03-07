@@ -22,6 +22,50 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q42458",
+    title: "Anaximander",
+    date: "609 BCE",
+    startYear: -609,
+    description: "pre-Socratic Greek philosopher",
+    snippet: "pre-Socratic Greek philosopher",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q10261",
+    title: "Pythagoras",
+    date: "582 BCE",
+    startYear: -582,
+    description: "Greek philosopher and mathematician (c. 570 – c. 495 BC)",
+    snippet: "Greek philosopher and mathematician (c. 570 – c. 495 BC)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q41155",
+    title: "Heraclitus",
+    date: "534 BCE",
+    startYear: -534,
+    description: "Greek philosopher (late 6th/early 5th-century BC)",
+    snippet: "Greek philosopher (late 6th/early 5th-century BC)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q83041",
+    title: "Anaxagoras",
+    date: "499 BCE",
+    startYear: -499,
+    description: "5th-century BC Greek philosopher",
+    snippet: "5th-century BC Greek philosopher",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q31900",
     title: "Battle of Marathon",
     date: "489 BCE",
@@ -55,6 +99,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q41980",
+    title: "Democritus",
+    date: "460 BCE",
+    startYear: -460,
+    description: "Greek philosopher (c. 460–c. 370 BC)",
+    snippet: "Greek philosopher (c. 460–c. 370 BC)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q33745",
     title: "Peloponnesian War",
     date: "430 BCE",
@@ -62,6 +117,17 @@ const wikidataMasterList = [
     description: "war fought between Athens and Sparta (431–404 BCE)",
     snippet: "war fought between Athens and Sparta (431–404 BCE)",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q8747",
+    title: "Euclid",
+    date: "333 BCE",
+    startYear: -333,
+    description: "ancient Greek mathematician (fl. 300 BC)",
+    snippet: "ancient Greek mathematician (fl. 300 BC)",
+    significance: 1,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -84,6 +150,28 @@ const wikidataMasterList = [
     description: "decisive battle of Alexander the Great's invasion of the Persian Achaemenid Empire",
     snippet: "decisive battle of Alexander the Great's invasion of the Persian Achaemenid Empire",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q8739",
+    title: "Archimedes",
+    date: "286 BCE",
+    startYear: -286,
+    description: "Greek mathematician and physicist (c. 287 – c. 212 BC)",
+    snippet: "Greek mathematician and physicist (c. 287 – c. 212 BC)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q43182",
+    title: "Eratosthenes",
+    date: "275 BCE",
+    startYear: -275,
+    description: "Greek mathematician, geographer, poet, astronomer, librarian and music theorist",
+    snippet: "Greek mathematician, geographer, poet, astronomer, librarian and music theorist",
+    significance: 2,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -143,6 +231,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q9372",
+    title: "Sima Qian",
+    date: "144 BCE",
+    startYear: -144,
+    description: "2nd-century BCE Chinese historian and writer",
+    snippet: "2nd-century BCE Chinese historian and writer",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q194378",
     title: "Third Servile War",
     date: "72 BCE",
@@ -167,7 +266,7 @@ const wikidataMasterList = [
   {
     id: "Q87779",
     title: "Battle of the Teutoburg Forest",
-    date: "0009 AD",
+    date: "0009",
     startYear: 0009,
     description: "battle between a coalition of Germanic peoples and an Imperial Roman army, 9 BCE",
     snippet: "battle between a coalition of Germanic peoples and an Imperial Roman army, 9 BCE",
@@ -176,9 +275,31 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q34943",
+    title: "Ptolemy",
+    date: "0100",
+    startYear: 0100,
+    description: "2nd-century Roman mathematician, astronomer, geographer",
+    snippet: "2nd-century Roman mathematician, astronomer, geographer",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q11903",
+    title: "Hypatia",
+    date: "0360",
+    startYear: 0360,
+    description: "Greek Neoplatonist philosopher",
+    snippet: "Greek Neoplatonist philosopher",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q139808",
     title: "Battle of the Maureaco Fields",
-    date: "0451 AD",
+    date: "0451",
     startYear: 0451,
     description: "battle between Romans and Huns in 451",
     snippet: "battle between Romans and Huns in 451",
@@ -187,9 +308,20 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q202943",
+    title: "Brahmagupta",
+    date: "0598",
+    startYear: 0598,
+    description: "Indian mathematician and astronomer (c. 598 – c. 668 CE)",
+    snippet: "Indian mathematician and astronomer (c. 598 – c. 668 CE)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q486124",
     title: "Battle of Badr",
-    date: "0624 AD",
+    date: "0624",
     startYear: 0624,
     description: "624 battle between the Muslims and the Quraysh near Badr (present-day Saudi Arabia)",
     snippet: "624 battle between the Muslims and the Quraysh near Badr (present-day Saudi Arabia)",
@@ -200,7 +332,7 @@ const wikidataMasterList = [
   {
     id: "Q488278",
     title: "Battle of Uhud",
-    date: "0625 AD",
+    date: "0625",
     startYear: 0625,
     description: "early Islamic battle",
     snippet: "early Islamic battle",
@@ -211,7 +343,7 @@ const wikidataMasterList = [
   {
     id: "Q826083",
     title: "Battle of the Trench",
-    date: "0627 AD",
+    date: "0627",
     startYear: 0627,
     description: "failed besieging of early Muslims by Arab and Jewish forces in 627 CE",
     snippet: "failed besieging of early Muslims by Arab and Jewish forces in 627 CE",
@@ -222,7 +354,7 @@ const wikidataMasterList = [
   {
     id: "Q887684",
     title: "Muslim conquest of Persia",
-    date: "0633 AD",
+    date: "0633",
     startYear: 0633,
     description: "historical event",
     snippet: "historical event",
@@ -233,7 +365,7 @@ const wikidataMasterList = [
   {
     id: "Q194226",
     title: "Battle of Yarmouk",
-    date: "0636 AD",
+    date: "0636",
     startYear: 0636,
     description: "battle of the Arab–Byzantine wars",
     snippet: "battle of the Arab–Byzantine wars",
@@ -244,7 +376,7 @@ const wikidataMasterList = [
   {
     id: "Q626058",
     title: "Battle of Karbala",
-    date: "0680 AD",
+    date: "0680",
     startYear: 0680,
     description: "battle in October 680 between the army of Ubayd Allah ibn Ziyad and al-Husayn ibn Ali",
     snippet: "battle in October 680 between the army of Ubayd Allah ibn Ziyad and al-Husayn ibn Ali",
@@ -255,11 +387,66 @@ const wikidataMasterList = [
   {
     id: "Q173077",
     title: "Battle of Tours",
-    date: "0732 AD",
+    date: "0732",
     startYear: 0732,
     description: "battle fought in 732 by Merovingian Franks against the Umayyad Caliphate",
     snippet: "battle fought in 732 by Merovingian Franks against the Umayyad Caliphate",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q9038",
+    title: "Muḥammad ibn Musa al-Khwarizmi",
+    date: "0780",
+    startYear: 0780,
+    description: "9th-century Persian mathematician and astronomer",
+    snippet: "9th-century Persian mathematician and astronomer",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q11104",
+    title: "Ibn al-Haytham",
+    date: "0965",
+    startYear: 0965,
+    description: "Persian physicist, mathematician and astronomer (c. 965 – c. 1040)",
+    snippet: "Persian physicist, mathematician and astronomer (c. 965 – c. 1040)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q11826",
+    title: "Al-Biruni",
+    date: "0973",
+    startYear: 0973,
+    description: "11th-century Persian scholar and polymath (973–1048)",
+    snippet: "11th-century Persian scholar and polymath (973–1048)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q8011",
+    title: "Avicenna",
+    date: "0980",
+    startYear: 0980,
+    description: "Persian polymath, physician and philosopher (c. 980–1037)",
+    snippet: "Persian polymath, physician and philosopher (c. 980–1037)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q35900",
+    title: "Omar Khayyám",
+    date: "1048",
+    startYear: 1048,
+    description: "Persian mathematician and poet (1048–1131)",
+    snippet: "Persian mathematician and poet (1048–1131)",
+    significance: 2,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -293,6 +480,50 @@ const wikidataMasterList = [
     description: "battle between the Byzantine Empire and Seljuq Turks in 1071",
     snippet: "battle between the Byzantine Empire and Seljuq Turks in 1071",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q7063",
+    title: "11th century",
+    date: "1100",
+    startYear: 1100,
+    description: "century",
+    snippet: "century",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q39837",
+    title: "Averroes",
+    date: "1126",
+    startYear: 1126,
+    description: "Arab Andalusian Muslim writer and philosopher (1126–1198)",
+    snippet: "Arab Andalusian Muslim writer and philosopher (1126–1198)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q127398",
+    title: "Moshe ben Maimon",
+    date: "1138",
+    startYear: 1138,
+    description: "Medieval Jewish philosopher from Spain (1135–1204)",
+    snippet: "Medieval Jewish philosopher from Spain (1135–1204)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q8763",
+    title: "Fibonacci",
+    date: "1170",
+    startYear: 1170,
+    description: "Italian mathematician (c.1170–c.1240/50)",
+    snippet: "Italian mathematician (c.1170–c.1240/50)",
+    significance: 2,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -374,6 +605,28 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q4692",
+    title: "Renaissance",
+    date: "1400",
+    startYear: 1400,
+    description: "cultural movement that spanned the period roughly from the 14th to the 17th century",
+    snippet: "cultural movement that spanned the period roughly from the 14th to the 17th century",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q8958",
+    title: "Johannes Gutenberg",
+    date: "1400",
+    startYear: 1400,
+    description: "German inventor and craftsman (1400-1468)",
+    snippet: "German inventor and craftsman (1400-1468)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q209387",
     title: "Battle of Ankara",
     date: "1402",
@@ -407,6 +660,28 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q7322",
+    title: "Christopher Columbus",
+    date: "1451",
+    startYear: 1451,
+    description: "Italian navigator, explorer, and colonist (1451–1506)",
+    snippet: "Italian navigator, explorer, and colonist (1451–1506)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q762",
+    title: "Leonardo da Vinci",
+    date: "1452",
+    startYear: 1452,
+    description: "Italian Renaissance polymath (1452−1519)",
+    snippet: "Italian Renaissance polymath (1452−1519)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q160077",
     title: "Fall of Constantinople",
     date: "1453",
@@ -418,12 +693,78 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q5580",
+    title: "Albrecht Dürer",
+    date: "1471",
+    startYear: 1471,
+    description: "German painter, printmaker, mathematician, and theorist (1471–1528)",
+    snippet: "German painter, printmaker, mathematician, and theorist (1471–1528)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q619",
+    title: "Nicolaus Copernicus",
+    date: "1473",
+    startYear: 1473,
+    description: "Polish mathematician and astronomer (1473–1543)",
+    snippet: "Polish mathematician and astronomer (1473–1543)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q7321",
+    title: "Jacques Cartier",
+    date: "1492",
+    startYear: 1492,
+    description: "Breton maritime explorer of North America (1491–1557)",
+    snippet: "Breton maritime explorer of North America (1491–1557)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q83428",
+    title: "Paracelsus",
+    date: "1493",
+    startYear: 1493,
+    description: "Swiss physician, philosopher, theologian, and alchemist (c. 1493–1541)",
+    snippet: "Swiss physician, philosopher, theologian, and alchemist (c. 1493–1541)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q127751",
     title: "Wars of the Roses",
-    date: "1455",
-    startYear: 1455,
+    date: "1500",
+    startYear: 1500,
     description: "dynastic civil war in England from 1455 to 1487",
     snippet: "dynastic civil war in England from 1455 to 1487",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q39978",
+    title: "Nostradamus",
+    date: "1503",
+    startYear: 1503,
+    description: "French seer and astrologer (1503–1566)",
+    snippet: "French seer and astrologer (1503–1566)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q12562",
+    title: "Protestant Reformation",
+    date: "1517",
+    startYear: 1517,
+    description: "16th-century movement in Western Christianity",
+    snippet: "16th-century movement in Western Christianity",
     significance: 2,
     gap: 150,
     source: "WIKIDATA"
@@ -440,6 +781,28 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q36620",
+    title: "Tycho Brahe",
+    date: "1546",
+    startYear: 1546,
+    description: "Danish astronomer and alchemist, 1546–1601",
+    snippet: "Danish astronomer and alchemist, 1546–1601",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q36330",
+    title: "Giordano Bruno",
+    date: "1548",
+    startYear: 1548,
+    description: "Italian Dominican friar, philosopher and mathematician (1548–1600)",
+    snippet: "Italian Dominican friar, philosopher and mathematician (1548–1600)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q246863",
     title: "Livonian War",
     date: "1558",
@@ -447,6 +810,28 @@ const wikidataMasterList = [
     description: "war in the Baltic region (1558-1583)",
     snippet: "war in the Baltic region (1558-1583)",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q37388",
+    title: "Francis Bacon",
+    date: "1561",
+    startYear: 1561,
+    description: "English philosopher and statesman (1561–1626)",
+    snippet: "English philosopher and statesman (1561–1626)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q307",
+    title: "Galileo Galilei",
+    date: "1564",
+    startYear: 1564,
+    description: "Italian polymath (1564–1642)",
+    snippet: "Italian polymath (1564–1642)",
+    significance: 1,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -462,6 +847,116 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q8963",
+    title: "Johannes Kepler",
+    date: "1572",
+    startYear: 1572,
+    description: "German mathematician and astronomer (1571–1630)",
+    snippet: "German mathematician and astronomer (1571–1630)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q37621",
+    title: "Thomas Hobbes",
+    date: "1588",
+    startYear: 1588,
+    description: "English philosopher (1588–1679)",
+    snippet: "English philosopher (1588–1679)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q9191",
+    title: "René Descartes",
+    date: "1596",
+    startYear: 1596,
+    description: "French philosopher, mathematician, and scientist (1596–1650)",
+    snippet: "French philosopher, mathematician, and scientist (1596–1650)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q75655",
+    title: "Pierre de Fermat",
+    date: "1607",
+    startYear: 1607,
+    description: "French mathematician and lawyer",
+    snippet: "French mathematician and lawyer",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q1290",
+    title: "Blaise Pascal",
+    date: "1623",
+    startYear: 1623,
+    description: "French mathematician, physicist, inventor, writer, and Christian philosopher (1623–1662)",
+    snippet: "French mathematician, physicist, inventor, writer, and Christian philosopher (1623–1662)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q43393",
+    title: "Robert Boyle",
+    date: "1627",
+    startYear: 1627,
+    description: "Anglo-Irish natural philosopher, chemist, physicist, and inventor",
+    snippet: "Anglo-Irish natural philosopher, chemist, physicist, and inventor",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q39599",
+    title: "Christiaan Huygens",
+    date: "1629",
+    startYear: 1629,
+    description: "Dutch mathematician, physicist and astronomer (1629–1695)",
+    snippet: "Dutch mathematician, physicist and astronomer (1629–1695)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q9353",
+    title: "John Locke",
+    date: "1632",
+    startYear: 1632,
+    description: "English philosopher and physician (1632–1704)",
+    snippet: "English philosopher and physician (1632–1704)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q43522",
+    title: "Antonie van Leeuwenhoek",
+    date: "1632",
+    startYear: 1632,
+    description: "Dutch scientist known as \",
+    snippet: "Dutch scientist known as \",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q46830",
+    title: "Robert Hooke",
+    date: "1635",
+    startYear: 1635,
+    description: "English natural philosopher, architect and polymath (1635 — 1703)",
+    snippet: "English natural philosopher, architect and polymath (1635 — 1703)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q80330",
     title: "English Civil War",
     date: "1642",
@@ -469,6 +964,28 @@ const wikidataMasterList = [
     description: "series of armed conflicts and political machinations between Parliamentarians and Royalists",
     snippet: "series of armed conflicts and political machinations between Parliamentarians and Royalists",
     significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q935",
+    title: "Isaac Newton",
+    date: "1643",
+    startYear: 1643,
+    description: "English mathematician and physicist (1642–1727)",
+    snippet: "English mathematician and physicist (1642–1727)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q9047",
+    title: "Gottfried Wilhelm Leibniz",
+    date: "1646",
+    startYear: 1646,
+    description: "German mathematician and philosopher (1646–1716)",
+    snippet: "German mathematician and philosopher (1646–1716)",
+    significance: 1,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -506,6 +1023,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q135111",
+    title: "Vere Beauclerk, 1st Baron Vere",
+    date: "1699",
+    startYear: 1699,
+    description: "British Baron and politician (1699-1781)",
+    snippet: "British Baron and politician (1699-1781)",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q151616",
     title: "Great Northern War",
     date: "1700",
@@ -513,6 +1041,17 @@ const wikidataMasterList = [
     description: "conflict between anti-Swedish coalition Led by Russia and Swedish empires in 1700–1721",
     snippet: "conflict between anti-Swedish coalition Led by Russia and Swedish empires in 1700–1721",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q7604",
+    title: "Leonhard Euler",
+    date: "1707",
+    startYear: 1707,
+    description: "Swiss mathematician, physicist, and engineer (1707–1783)",
+    snippet: "Swiss mathematician, physicist, and engineer (1707–1783)",
+    significance: 1,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -528,6 +1067,72 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q58720",
+    title: "Mikhail Lomonosov",
+    date: "1711",
+    startYear: 1711,
+    description: "Russian polymath (1711-1765)",
+    snippet: "Russian polymath (1711-1765)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q153232",
+    title: "Jean Le Rond d'Alembert",
+    date: "1717",
+    startYear: 1717,
+    description: "French mathematician, mechanician, physicist, philosopher and music theorist (1717–1783)",
+    snippet: "French mathematician, mechanician, physicist, philosopher and music theorist (1717–1783)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q9312",
+    title: "Immanuel Kant",
+    date: "1724",
+    startYear: 1724,
+    description: "German philosopher (1724–1804)",
+    snippet: "German philosopher (1724–1804)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q9041",
+    title: "James Watt",
+    date: "1736",
+    startYear: 1736,
+    description: "British engineer (1736–1819)",
+    snippet: "British engineer (1736–1819)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q80222",
+    title: "Joseph-Louis Lagrange",
+    date: "1736",
+    startYear: 1736,
+    description: "Mathematician and astronomer (1736–1813)",
+    snippet: "Mathematician and astronomer (1736–1813)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q14277",
+    title: "William Herschel",
+    date: "1738",
+    startYear: 1738,
+    description: "German-born British astronomer and composer (1738–1822)",
+    snippet: "German-born British astronomer and composer (1738–1822)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q32929",
     title: "War of the Austrian Succession",
     date: "1740",
@@ -535,6 +1140,61 @@ const wikidataMasterList = [
     description: "1740–1748 war",
     snippet: "1740–1748 war",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q11812",
+    title: "Thomas Jefferson",
+    date: "1743",
+    startYear: 1743,
+    description: "president of the United States from 1801 to 1809 (1743–1826)",
+    snippet: "president of the United States from 1801 to 1809 (1743–1826)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q39607",
+    title: "Antoine Lavoisier",
+    date: "1743",
+    startYear: 1743,
+    description: "French nobleman and chemist (1743–1794)",
+    snippet: "French nobleman and chemist (1743–1794)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q680",
+    title: "Alessandro Volta",
+    date: "1745",
+    startYear: 1745,
+    description: "Italian physicist, chemist, and pioneer of electricity and power (1745-1827)",
+    snippet: "Italian physicist, chemist, and pioneer of electricity and power (1745-1827)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q5879",
+    title: "Johann Wolfgang von Goethe",
+    date: "1749",
+    startYear: 1749,
+    description: "German writer, artist, natural scientist and politician (1749–1832)",
+    snippet: "German writer, artist, natural scientist and politician (1749–1832)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q44481",
+    title: "Pierre-Simon Laplace",
+    date: "1749",
+    startYear: 1749,
+    description: "French mathematician and astronomer (1749–1827)",
+    snippet: "French mathematician and astronomer (1749–1827)",
+    significance: 2,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -583,6 +1243,127 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q41284",
+    title: "John Dalton",
+    date: "1766",
+    startYear: 1766,
+    description: "British chemist and mathematician (1766–1844)",
+    snippet: "British chemist and mathematician (1766–1844)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q13526",
+    title: "Thomas Robert Malthus",
+    date: "1766",
+    startYear: 1766,
+    description: "British political economist (1766–1834)",
+    snippet: "British political economist (1766–1834)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q8772",
+    title: "Joseph Fourier",
+    date: "1768",
+    startYear: 1768,
+    description: "French mathematician and physicist (1768 – 1830)",
+    snippet: "French mathematician and physicist (1768 – 1830)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q517",
+    title: "Napoleon",
+    date: "1769",
+    startYear: 1769,
+    description: "French military leader, French Emperor 1804–1814 and again in 1815 (1769–1821)",
+    snippet: "French military leader, French Emperor 1804–1814 and again in 1815 (1769–1821)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q6694",
+    title: "Alexander von Humboldt",
+    date: "1769",
+    startYear: 1769,
+    description: "Prussian geographer, naturalist and explorer (1769–1859)",
+    snippet: "Prussian geographer, naturalist and explorer (1769–1859)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q675",
+    title: "André-Marie Ampère",
+    date: "1775",
+    startYear: 1775,
+    description: "French physicist and mathematician (1775–1836)",
+    snippet: "French physicist and mathematician (1775–1836)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q6722",
+    title: "Carl Friedrich Gauss",
+    date: "1777",
+    startYear: 1777,
+    description: "German mathematician and physicist (1777–1855)",
+    snippet: "German mathematician and physicist (1777–1855)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q131761",
+    title: "Humphry Davy",
+    date: "1778",
+    startYear: 1778,
+    description: "British chemist",
+    snippet: "British chemist",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q1585",
+    title: "Georg Simon Ohm",
+    date: "1789",
+    startYear: 1789,
+    description: "German physicist and mathematician",
+    snippet: "German physicist and mathematician",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q8750",
+    title: "Michael Faraday",
+    date: "1791",
+    startYear: 1791,
+    description: "British scientist (1791–1867)",
+    snippet: "British scientist (1791–1867)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q46633",
+    title: "Charles Babbage",
+    date: "1791",
+    startYear: 1791,
+    description: "English mathematician, philosopher, and engineer (1791–1871)",
+    snippet: "English mathematician, philosopher, and engineer (1791–1871)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q207318",
     title: "French Revolutionary Wars",
     date: "1792",
@@ -590,6 +1371,28 @@ const wikidataMasterList = [
     description: "1792–1802 series of conflicts between the French Republic and several European monarchies",
     snippet: "1792–1802 series of conflicts between the French Republic and several European monarchies",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q151403",
+    title: "Thomas Carlyle",
+    date: "1795",
+    startYear: 1795,
+    description: "Scottish essayist, historian and philosopher (1795–1881)",
+    snippet: "Scottish essayist, historian and philosopher (1795–1881)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q12718",
+    title: "Auguste Comte",
+    date: "1798",
+    startYear: 1798,
+    description: "French philosopher, mathematician and sociologist (1798–1857)",
+    snippet: "French philosopher, mathematician and sociologist (1798–1857)",
+    significance: 2,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -671,6 +1474,116 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q7259",
+    title: "Ada Lovelace",
+    date: "1815",
+    startYear: 1815,
+    description: "English mathematician (1815–1852)",
+    snippet: "English mathematician (1815–1852)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q8962",
+    title: "James Prescott Joule",
+    date: "1818",
+    startYear: 1818,
+    description: "English physicist and brewer (1818–1889)",
+    snippet: "English physicist and brewer (1818–1889)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q37970",
+    title: "Gregor Mendel",
+    date: "1822",
+    startYear: 1822,
+    description: "Moravian scientist and Augustinian friar (1822–1884)",
+    snippet: "Moravian scientist and Augustinian friar (1822–1884)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q160627",
+    title: "Alfred Russel Wallace",
+    date: "1823",
+    startYear: 1823,
+    description: "British naturalist, explorer, geographer, anthropologist and biologist (1823-1913)",
+    snippet: "British naturalist, explorer, geographer, anthropologist and biologist (1823-1913)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q42299",
+    title: "Bernhard Riemann",
+    date: "1826",
+    startYear: 1826,
+    description: "German mathematician (1826–1866)",
+    snippet: "German mathematician (1826–1866)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q9095",
+    title: "James Clerk Maxwell",
+    date: "1831",
+    startYear: 1831,
+    description: "Scottish physicist (1831–1879)",
+    snippet: "Scottish physicist (1831–1879)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q38082",
+    title: "Lewis Carroll",
+    date: "1832",
+    startYear: 1832,
+    description: "British author and scholar (1832–1898)",
+    snippet: "British author and scholar (1832–1898)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q186423",
+    title: "Joseph Rankin",
+    date: "1833",
+    startYear: 1833,
+    description: "American politician (1833-1886)",
+    snippet: "American politician (1833-1886)",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q23810",
+    title: "Alfred Nobel",
+    date: "1833",
+    startYear: 1833,
+    description: "Swedish chemist and inventor (1833–1896)",
+    snippet: "Swedish chemist and inventor (1833–1896)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q9106",
+    title: "Dmitri Mendeleev",
+    date: "1834",
+    startYear: 1834,
+    description: "Russian chemist (1834–1907)",
+    snippet: "Russian chemist (1834–1907)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q235344",
     title: "Battle of the Alamo",
     date: "1836",
@@ -695,11 +1608,110 @@ const wikidataMasterList = [
   {
     id: "Q6683",
     title: "Mexican-American War",
-    date: "1846",
-    startYear: 1846,
+    date: "1840",
+    startYear: 1840,
     description: "military conflict between the United States of America and Mexico from 1846 to 1848",
     snippet: "military conflict between the United States of America and Mexico from 1846 to 1848",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q37193",
+    title: "Robert Koch",
+    date: "1843",
+    startYear: 1843,
+    description: "German physician, bacteriologist (1843–1910)",
+    snippet: "German physician, bacteriologist (1843–1910)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q40224",
+    title: "Carl Benz",
+    date: "1844",
+    startYear: 1844,
+    description: "German automotive and engine designer and manufacturer (1844–1929)",
+    snippet: "German automotive and engine designer and manufacturer (1844–1929)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q35149",
+    title: "Wilhelm Röntgen",
+    date: "1845",
+    startYear: 1845,
+    description: "German physicist (1845–1923)",
+    snippet: "German physicist (1845–1923)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q76420",
+    title: "Georg Cantor",
+    date: "1845",
+    startYear: 1845,
+    description: "German mathematician, inventor of set theory (1845–1918)",
+    snippet: "German mathematician, inventor of set theory (1845–1918)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q8743",
+    title: "Thomas Edison",
+    date: "1847",
+    startYear: 1847,
+    description: "American inventor and businessman (1847–1931)",
+    snippet: "American inventor and businessman (1847–1931)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q34286",
+    title: "Alexander Graham Bell",
+    date: "1847",
+    startYear: 1847,
+    description: "Canadian-American scientist inventor of telephone (1847–1922)",
+    snippet: "Canadian-American scientist inventor of telephone (1847–1922)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q76641",
+    title: "Felix Klein",
+    date: "1849",
+    startYear: 1849,
+    description: "German mathematician, author of the Erlangen Program (1849-1925)",
+    snippet: "German mathematician, author of the Erlangen Program (1849-1925)",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q41269",
+    title: "Henri Becquerel",
+    date: "1852",
+    startYear: 1852,
+    description: "French physicist (1852–1908)",
+    snippet: "French physicist (1852–1908)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q127234",
+    title: "Albert A. Michelson",
+    date: "1852",
+    startYear: 1852,
+    description: "American physicist (1852–1931)",
+    snippet: "American physicist (1852–1931)",
+    significance: 2,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -710,6 +1722,28 @@ const wikidataMasterList = [
     startYear: 1853,
     description: "military conflict fought between October 1853 – March 1856",
     snippet: "military conflict fought between October 1853 – March 1856",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q41688",
+    title: "Hendrik Lorentz",
+    date: "1853",
+    startYear: 1853,
+    description: "Dutch physicist (1853–1928)",
+    snippet: "Dutch physicist (1853–1928)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q81082",
+    title: "Henri Poincaré",
+    date: "1854",
+    startYear: 1854,
+    description: "French mathematician, physicist and engineer (1854–1912)",
+    snippet: "French mathematician, physicist and engineer (1854–1912)",
     significance: 2,
     gap: 150,
     source: "WIKIDATA"
@@ -726,6 +1760,28 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q9036",
+    title: "Nikola Tesla",
+    date: "1856",
+    startYear: 1856,
+    description: "Serbian-American engineer and inventor (1856–1943)",
+    snippet: "Serbian-American engineer and inventor (1856–1943)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q47285",
+    title: "J. J. Thomson",
+    date: "1856",
+    startYear: 1856,
+    description: "British physicist (1856-1940)",
+    snippet: "British physicist (1856-1940)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q129864",
     title: "Indian Mutiny of 1857",
     date: "1857",
@@ -733,6 +1789,94 @@ const wikidataMasterList = [
     description: "1857–58 uprising against British Company rule",
     snippet: "1857–58 uprising against British Company rule",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q41257",
+    title: "Heinrich Hertz",
+    date: "1857",
+    startYear: 1857,
+    description: "German physicist (1857–1894)",
+    snippet: "German physicist (1857–1894)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q41239",
+    title: "Konstantin Tsiolkovsky",
+    date: "1857",
+    startYear: 1857,
+    description: "Russian and Soviet rocket scientist and pioneer of the astronautic theory (1857-1935)",
+    snippet: "Russian and Soviet rocket scientist and pioneer of the astronautic theory (1857-1935)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q9021",
+    title: "Max Planck",
+    date: "1858",
+    startYear: 1858,
+    description: "German theoretical physicist (1858–1947)",
+    snippet: "German theoretical physicist (1858–1947)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q11758",
+    title: "L. L. Zamenhof",
+    date: "1859",
+    startYear: 1859,
+    description: "Polish-Jewish physician and inventor of Esperanto (1859-1917)",
+    snippet: "Polish-Jewish physician and inventor of Esperanto (1859-1917)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q37463",
+    title: "Pierre Curie",
+    date: "1859",
+    startYear: 1859,
+    description: "French physicist (1859–1906)",
+    snippet: "French physicist (1859–1906)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q80956",
+    title: "Svante August Arrhenius",
+    date: "1859",
+    startYear: 1859,
+    description: "Swedish astronomer, chemist and physicist (1859–1927)",
+    snippet: "Swedish astronomer, chemist and physicist (1859–1927)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q41585",
+    title: "David Hilbert",
+    date: "1862",
+    startYear: 1862,
+    description: "German mathematician (1862–1943)",
+    snippet: "German mathematician (1862–1943)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q133747",
+    title: "William Henry Bragg",
+    date: "1862",
+    startYear: 1862,
+    description: "British scientist (1862–1942)",
+    snippet: "British scientist (1862–1942)",
+    significance: 2,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -748,6 +1892,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q8768",
+    title: "Henry Ford",
+    date: "1863",
+    startYear: 1863,
+    description: "American business magnate (1863–1947)",
+    snippet: "American business magnate (1863–1947)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q58947",
     title: "Paraguayan War",
     date: "1864",
@@ -755,6 +1910,17 @@ const wikidataMasterList = [
     description: "large-scale conflict in South America (1864–1870)",
     snippet: "large-scale conflict in South America (1864–1870)",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q79000",
+    title: "Pieter Zeeman",
+    date: "1865",
+    startYear: 1865,
+    description: "Dutch physicist (1865–1943)",
+    snippet: "Dutch physicist (1865–1943)",
+    significance: 2,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -770,12 +1936,67 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q7186",
+    title: "Marie Curie",
+    date: "1867",
+    startYear: 1867,
+    description: "Polish-French physicist and chemist (1867–1934)",
+    snippet: "Polish-French physicist and chemist (1867–1934)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q130975",
+    title: "Robert A. Millikan",
+    date: "1868",
+    startYear: 1868,
+    description: "American physicist (1868–1953)",
+    snippet: "American physicist (1868–1953)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q46083",
     title: "Franco-Prussian War",
     date: "1870",
     startYear: 1870,
     description: "1870–1871 military conflict of the Second French Empire versus Prussia and its allies",
     snippet: "1870–1871 military conflict of the Second French Empire versus Prussia and its allies",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q9123",
+    title: "Ernest Rutherford",
+    date: "1871",
+    startYear: 1871,
+    description: "New Zealand physicist (1871–1937)",
+    snippet: "New Zealand physicist (1871–1937)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q33760",
+    title: "Bertrand Russell",
+    date: "1872",
+    startYear: 1872,
+    description: "British philosopher and logician (1872–1970)",
+    snippet: "British philosopher and logician (1872–1970)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q36488",
+    title: "Guglielmo Marconi",
+    date: "1874",
+    startYear: 1874,
+    description: "Italian inventor and radio pioneer (1874-1937)",
+    snippet: "Italian inventor and radio pioneer (1874-1937)",
     significance: 2,
     gap: 150,
     source: "WIKIDATA"
@@ -792,6 +2013,127 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q937",
+    title: "Albert Einstein",
+    date: "1879",
+    startYear: 1879,
+    description: "German-born theoretical physicist (1879–1955)",
+    snippet: "German-born theoretical physicist (1879–1955)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q37064",
+    title: "Alexander Fleming",
+    date: "1881",
+    startYear: 1881,
+    description: "Scottish biologist, pharmacologist, botanist, and Nobel laureate (1881–1955)",
+    snippet: "Scottish biologist, pharmacologist, botanist, and Nobel laureate (1881–1955)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q58978",
+    title: "Max Born",
+    date: "1882",
+    startYear: 1882,
+    description: "German-Jewish physicist and mathematician (1882-1970)",
+    snippet: "German-Jewish physicist and mathematician (1882-1970)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q9317",
+    title: "John Maynard Keynes",
+    date: "1883",
+    startYear: 1883,
+    description: "British economist (1883–1946)",
+    snippet: "British economist (1883–1946)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q7085",
+    title: "Niels Bohr",
+    date: "1885",
+    startYear: 1885,
+    description: "Danish physicist (1885–1962)",
+    snippet: "Danish physicist (1885–1962)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q9130",
+    title: "Erwin Schrödinger",
+    date: "1887",
+    startYear: 1887,
+    description: "Austrian physicist (1887–1961)",
+    snippet: "Austrian physicist (1887–1961)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q83163",
+    title: "Srinivasa Ramanujan",
+    date: "1887",
+    startYear: 1887,
+    description: "Indian mathematician (1887–1920)",
+    snippet: "Indian mathematician (1887–1920)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q60429",
+    title: "Chandrasekhara Venkata Raman",
+    date: "1888",
+    startYear: 1888,
+    description: "Indian physicist (1888–1970)",
+    snippet: "Indian physicist (1888–1970)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q9391",
+    title: "Ludwig Wittgenstein",
+    date: "1889",
+    startYear: 1889,
+    description: "Austrian philosopher and logician (1889–1951)",
+    snippet: "Austrian philosopher and logician (1889–1951)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q48301",
+    title: "Martin Heidegger",
+    date: "1889",
+    startYear: 1889,
+    description: "German philosopher (1889–1976)",
+    snippet: "German philosopher (1889–1976)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q43027",
+    title: "Edwin Hubble",
+    date: "1889",
+    startYear: 1889,
+    description: "American astronomer (1889–1953)",
+    snippet: "American astronomer (1889–1953)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q178687",
     title: "First Sino-Japanese War",
     date: "1894",
@@ -803,12 +2145,34 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q7504",
+    title: "Irène Joliot-Curie",
+    date: "1897",
+    startYear: 1897,
+    description: "French scientist (1897–1956)",
+    snippet: "French scientist (1897–1956)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q12583",
     title: "Spanish–American War",
     date: "1898",
     startYear: 1898,
     description: "1898 conflict between Spain and the United States",
     snippet: "1898 conflict between Spain and the United States",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q8003",
+    title: "Sergei Eisenstein",
+    date: "1898",
+    startYear: 1898,
+    description: "Soviet filmmaker (1898–1948)",
+    snippet: "Soviet filmmaker (1898–1948)",
     significance: 2,
     gap: 150,
     source: "WIKIDATA"
@@ -847,12 +2211,155 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q2908",
+    title: "Antoine de Saint-Exupéry",
+    date: "1900",
+    startYear: 1900,
+    description: "French writer and aviator (1900–1944)",
+    snippet: "French writer and aviator (1900–1944)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q8704",
+    title: "Walt Disney",
+    date: "1901",
+    startYear: 1901,
+    description: "American animator, producer, director, screenwriter, voice actor and entrepreneur, founder of The Walt Disney Company (1901–1966)",
+    snippet: "American animator, producer, director, screenwriter, voice actor and entrepreneur, founder of The Wa",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q8753",
+    title: "Enrico Fermi",
+    date: "1901",
+    startYear: 1901,
+    description: "Italian–American physicist (1901–1954)",
+    snippet: "Italian–American physicist (1901–1954)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q48983",
+    title: "Linus Pauling",
+    date: "1901",
+    startYear: 1901,
+    description: "American scientist (1901–1994)",
+    snippet: "American scientist (1901–1994)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q81244",
+    title: "Karl Popper",
+    date: "1902",
+    startYear: 1902,
+    description: "Austrian-British philosopher of science and social and política e falsificationism and for criticism of Plato, Hegel and Marx as totalitarian opponents of open society (1902-1994)",
+    snippet: "Austrian-British philosopher of science and social and política e falsificationism and for criticis",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q47480",
+    title: "Paul Dirac",
+    date: "1902",
+    startYear: 1902,
+    description: "British theoretical physicist (1902–1984)",
+    snippet: "British theoretical physicist (1902–1984)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q106660",
+    title: "Joseph M. Piel",
+    date: "1903",
+    startYear: 1903,
+    description: "German romanist (1903-1992)",
+    snippet: "German romanist (1903-1992)",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q17455",
+    title: "John von Neumann",
+    date: "1903",
+    startYear: 1903,
+    description: "Hungarian and American mathematician and physicist (1903–1957)",
+    snippet: "Hungarian and American mathematician and physicist (1903–1957)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q159950",
     title: "Russo-Japanese War",
     date: "1904",
     startYear: 1904,
     description: "conflict between the Russian and Japanese empires from 1904 to 1905",
     snippet: "conflict between the Russian and Japanese empires from 1904 to 1905",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q132537",
+    title: "Robert Oppenheimer",
+    date: "1904",
+    startYear: 1904,
+    description: "American theoretical physicist, known as \",
+    snippet: "American theoretical physicist, known as \",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q41390",
+    title: "Kurt Gödel",
+    date: "1906",
+    startYear: 1906,
+    description: "Austrian-American logician, mathematician, and philosopher of mathematics (1906-1978)",
+    snippet: "Austrian-American logician, mathematician, and philosopher of mathematics (1906-1978)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q57100",
+    title: "Maria Goeppert Mayer",
+    date: "1906",
+    startYear: 1906,
+    description: "German-born American theoretical physicist (1906-1972)",
+    snippet: "German-born American theoretical physicist (1906-1972)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q185007",
+    title: "Rita Levi-Montalcini",
+    date: "1909",
+    startYear: 1909,
+    description: "Italian neurologist (1909–2012)",
+    snippet: "Italian neurologist (1909–2012)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q7487",
+    title: "Dorothy Hodgkin",
+    date: "1910",
+    startYear: 1910,
+    description: "British chemist",
+    snippet: "British chemist",
     significance: 2,
     gap: 150,
     source: "WIKIDATA"
@@ -876,6 +2383,17 @@ const wikidataMasterList = [
     description: "war involving the Balkan League and the Ottoman Empire",
     snippet: "war involving the Balkan League and the Ottoman Empire",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q57384",
+    title: "Wernher von Braun",
+    date: "1912",
+    startYear: 1912,
+    description: "German and later American aerospace engineer and space architect (1912–1977)",
+    snippet: "German and later American aerospace engineer and space architect (1912–1977)",
+    significance: 2,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -935,13 +2453,24 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
-    id: "Q186284",
-    title: "Polish–Soviet War",
-    date: "1919",
-    startYear: 1919,
-    description: "conflict between Poland and Soviet Russia following the First World War (February 1919 - March 1921)",
-    snippet: "conflict between Poland and Soviet Russia following the First World War (February 1919 - March 1921)",
-    significance: 3,
+    id: "Q47087",
+    title: "Arthur C. Clarke",
+    date: "1917",
+    startYear: 1917,
+    description: "British science fiction writer, inventor, and futurist (1917–2008)",
+    snippet: "British science fiction writer, inventor, and futurist (1917–2008)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q39246",
+    title: "Richard Feynman",
+    date: "1918",
+    startYear: 1918,
+    description: "American theoretical physicist (1918–1988)",
+    snippet: "American theoretical physicist (1918–1988)",
+    significance: 2,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -953,6 +2482,72 @@ const wikidataMasterList = [
     description: "war lasting from 1919 to 1922 during the Turkish War of Independence",
     snippet: "war lasting from 1919 to 1922 during the Turkish War of Independence",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q186284",
+    title: "Polish–Soviet War",
+    date: "1920",
+    startYear: 1920,
+    description: "conflict between Poland and Soviet Russia following the First World War (February 1919 - March 1921)",
+    snippet: "conflict between Poland and Soviet Russia following the First World War (February 1919 - March 1921)",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q7474",
+    title: "Rosalind Franklin",
+    date: "1920",
+    startYear: 1920,
+    description: "British chemist, biophysicist, and X-ray crystallographer (1920–1958)",
+    snippet: "British chemist, biophysicist, and X-ray crystallographer (1920–1958)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q997",
+    title: "Andrei Sakharov",
+    date: "1921",
+    startYear: 1921,
+    description: "Soviet nuclear physicist and human rights activist (1921–1989)",
+    snippet: "Soviet nuclear physicist and human rights activist (1921–1989)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q83333",
+    title: "James Watson",
+    date: "1928",
+    startYear: 1928,
+    description: "American molecular biologist, geneticist, zoologist and Nobel Laureate (1928–2025)",
+    snippet: "American molecular biologist, geneticist, zoologist and Nobel Laureate (1928–2025)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q128736",
+    title: "John Forbes Nash",
+    date: "1928",
+    startYear: 1928,
+    description: "American mathematician and economist (1928–2015)",
+    snippet: "American mathematician and economist (1928–2015)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q410",
+    title: "Carl Sagan",
+    date: "1934",
+    startYear: 1934,
+    description: "American astrophysicist, cosmologist and author (1934–1996)",
+    snippet: "American astrophysicist, cosmologist and author (1934–1996)",
+    significance: 2,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -996,6 +2591,39 @@ const wikidataMasterList = [
     startYear: 1939,
     description: "eight-month period at the start of World War II, during which there was only one limited military land operation on the Western Front",
     snippet: "eight-month period at the start of World War II, during which there was only one limited military la",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q362",
+    title: "World War II",
+    date: "1939",
+    startYear: 1939,
+    description: "1939–1945 global conflict",
+    snippet: "1939–1945 global conflict",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q183492",
+    title: "Margaret Atwood",
+    date: "1939",
+    startYear: 1939,
+    description: "Canadian poet, novelist, literary critic, essayist, teacher, environmental activist, pépiniériste and inventor (born 1939)",
+    snippet: "Canadian poet, novelist, literary critic, essayist, teacher, environmental activist, pépiniériste ",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q49097",
+    title: "1948 Palestine war",
+    date: "1940",
+    startYear: 1940,
+    description: "first war of the Arab–Israeli conflict",
+    snippet: "first war of the Arab–Israeli conflict",
     significance: 3,
     gap: 150,
     source: "WIKIDATA"
@@ -1078,6 +2706,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q41314",
+    title: "Bobby Fischer",
+    date: "1943",
+    startYear: 1943,
+    description: "American chess player (1943–2008)",
+    snippet: "American chess player (1943–2008)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q154940",
     title: "Lapland War",
     date: "1944",
@@ -1144,17 +2783,6 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
-    id: "Q49097",
-    title: "1948 Palestine war",
-    date: "1947",
-    startYear: 1947,
-    description: "first war of the Arab–Israeli conflict",
-    snippet: "first war of the Arab–Israeli conflict",
-    significance: 3,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
     id: "Q1413732",
     title: "Kashmir conflict",
     date: "1947",
@@ -1177,6 +2805,39 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q483382",
+    title: "Steve Wozniak",
+    date: "1950",
+    startYear: 1950,
+    description: "American computer pioneer, inventor, computer engineer and programmer; co-founder of Apple Inc.",
+    snippet: "American computer pioneer, inventor, computer engineer and programmer; co-founder of Apple Inc.",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q103131",
+    title: "Erwin Hadewicz",
+    date: "1951",
+    startYear: 1951,
+    description: "German footballer",
+    snippet: "German footballer",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q7439",
+    title: "Richard Stallman",
+    date: "1953",
+    startYear: 1953,
+    description: "American software freedom activist, short story writer and computer programmer, founder of the GNU project",
+    snippet: "American software freedom activist, short story writer and computer programmer, founder of the GNU p",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q604897",
     title: "Battle of Dien Bien Phu",
     date: "1954",
@@ -1188,10 +2849,65 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q567",
+    title: "Angela Merkel",
+    date: "1954",
+    startYear: 1954,
+    description: "chancellor of Germany from 2005 to 2021",
+    snippet: "chancellor of Germany from 2005 to 2021",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q42574",
+    title: "James Cameron",
+    date: "1954",
+    startYear: 1954,
+    description: "Canadian and New-Zealander filmmaker (born 1954)",
+    snippet: "Canadian and New-Zealander filmmaker (born 1954)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q19837",
+    title: "Steve Jobs",
+    date: "1955",
+    startYear: 1955,
+    description: "American entrepreneur; co-founder of Apple Inc. (1955–2011)",
+    snippet: "American entrepreneur; co-founder of Apple Inc. (1955–2011)",
+    significance: 1,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q6109517",
+    title: "Leo XIV",
+    date: "1955",
+    startYear: 1955,
+    description: "267th Pope of the Catholic Church (2025–)",
+    snippet: "267th Pope of the Catholic Church (2025–)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q80",
+    title: "Tim Berners-Lee",
+    date: "1955",
+    startYear: 1955,
+    description: "English computer scientist (born 1955)",
+    snippet: "English computer scientist (born 1955)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q49101",
     title: "Suez Crisis",
-    date: "1956",
-    startYear: 1956,
+    date: "1957",
+    startYear: 1957,
     description: "1956 invasion of Egypt by Israel, the United Kingdom, and France",
     snippet: "1956 invasion of Egypt by Israel, the United Kingdom, and France",
     significance: 2,
@@ -1205,6 +2921,17 @@ const wikidataMasterList = [
     startYear: 1962,
     description: "1962 war between India and China",
     snippet: "1962 war between India and China",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q193484",
+    title: "assassination of John F. Kennedy",
+    date: "1963",
+    startYear: 1963,
+    description: "1963 murder in Dallas, Texas, U.S",
+    snippet: "1963 murder in Dallas, Texas, U.S",
     significance: 3,
     gap: 150,
     source: "WIKIDATA"
@@ -1232,6 +2959,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q34253",
+    title: "Linus Torvalds",
+    date: "1969",
+    startYear: 1969,
+    description: "Finnish software engineer (born 1969)",
+    snippet: "Finnish software engineer (born 1969)",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q371394",
     title: "Bangladesh Liberation War",
     date: "1971",
@@ -1250,6 +2988,17 @@ const wikidataMasterList = [
     description: "1971 war between India and Pakistan along Bengladesh Liberation War",
     snippet: "1971 war between India and Pakistan along Bengladesh Liberation War",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q317521",
+    title: "Elon Musk",
+    date: "1971",
+    startYear: 1971,
+    description: "businessman and entrepreneur (born 1971)",
+    snippet: "businessman and entrepreneur (born 1971)",
+    significance: 1,
     gap: 150,
     source: "WIKIDATA"
   },
@@ -1282,6 +3031,17 @@ const wikidataMasterList = [
     startYear: 1979,
     description: "war between the People's Republic of China and Socialist Republic of Vietnam in 1979",
     snippet: "war between the People's Republic of China and Socialist Republic of Vietnam in 1979",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q1776",
+    title: "Gerd Kanter",
+    date: "1979",
+    startYear: 1979,
+    description: "Estonian athletics competitor and coach (born 1979)",
+    snippet: "Estonian athletics competitor and coach (born 1979)",
     significance: 3,
     gap: 150,
     source: "WIKIDATA"
@@ -1331,6 +3091,17 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
+    id: "Q56039",
+    title: "German reunification",
+    date: "1989",
+    startYear: 1989,
+    description: "process in 1990 in which the German Democratic Republic became part of the Federal Republic of Germany",
+    snippet: "process in 1990 in which the German Democratic Republic became part of the Federal Republic of Germa",
+    significance: 2,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
     id: "Q37643",
     title: "Gulf War",
     date: "1990",
@@ -1353,34 +3124,23 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
-    id: "Q68969",
-    title: "Croatian War of Independence",
-    date: "1991",
-    startYear: 1991,
-    description: "war of independence fought from 1991 to 1995",
-    snippet: "war of independence fought from 1991 to 1995",
-    significance: 3,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
-    id: "Q56039",
-    title: "German reunification",
-    date: "1991",
-    startYear: 1991,
-    description: "process in 1990 in which the German Democratic Republic became part of the Federal Republic of Germany",
-    snippet: "process in 1990 in which the German Democratic Republic became part of the Federal Republic of Germa",
-    significance: 2,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
     id: "Q29269",
     title: "First Chechen War",
     date: "1994",
     startYear: 1994,
     description: "war fought from 1994 to 1996 in Chechnya",
     snippet: "war fought from 1994 to 1996 in Chechnya",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q68969",
+    title: "Croatian War of Independence",
+    date: "1995",
+    startYear: 1995,
+    description: "war of independence fought from 1991 to 1995",
+    snippet: "war of independence fought from 1991 to 1995",
     significance: 3,
     gap: 150,
     source: "WIKIDATA"
@@ -1496,12 +3256,23 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
-    id: "Q15860072",
-    title: "Russo-Ukrainian war",
-    date: "2014",
-    startYear: 2014,
-    description: "armed conflict between Russia and Ukraine since 2014",
-    snippet: "armed conflict between Russia and Ukraine since 2014",
+    id: "Q13131",
+    title: "The Simpsons, season 24",
+    date: "2012",
+    startYear: 2012,
+    description: "season of television series",
+    snippet: "season of television series",
+    significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q122962941",
+    title: "Gaza war",
+    date: "2020",
+    startYear: 2020,
+    description: "armed conflict around the Gaza Strip that started on 7 October 2023",
+    snippet: "armed conflict around the Gaza Strip that started on 7 October 2023",
     significance: 2,
     gap: 150,
     source: "WIKIDATA"
@@ -1529,17 +3300,6 @@ const wikidataMasterList = [
     source: "WIKIDATA"
   },
   {
-    id: "Q122962941",
-    title: "Gaza war",
-    date: "2023",
-    startYear: 2023,
-    description: "armed conflict around the Gaza Strip that started on 7 October 2023",
-    snippet: "armed conflict around the Gaza Strip that started on 7 October 2023",
-    significance: 2,
-    gap: 150,
-    source: "WIKIDATA"
-  },
-  {
     id: "Q134900605",
     title: "Twelve-Day War",
     date: "2025",
@@ -1547,6 +3307,17 @@ const wikidataMasterList = [
     description: "2025 armed conflict in the Middle East",
     snippet: "2025 armed conflict in the Middle East",
     significance: 3,
+    gap: 150,
+    source: "WIKIDATA"
+  },
+  {
+    id: "Q15860072",
+    title: "Russo-Ukrainian war",
+    date: "2100",
+    startYear: 2100,
+    description: "armed conflict between Russia and Ukraine since 2014",
+    snippet: "armed conflict between Russia and Ukraine since 2014",
+    significance: 2,
     gap: 150,
     source: "WIKIDATA"
   },
