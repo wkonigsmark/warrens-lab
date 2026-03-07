@@ -137,6 +137,50 @@ h1 {
     justify-content: center;
 }
 
+/* Compact Coach List */
+.coach-list-container {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.coach-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.coach-row:last-child {
+    border-bottom: none;
+}
+
+.coach-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 150px;
+}
+
+.coach-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.coach-toggle {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--team-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
 .tab-btn.active {
     background: var(--team-primary);
     color: white;
@@ -714,4 +758,48 @@ h1 {
 .batting-item.dragging {
     opacity: 0.5;
     transform: scale(0.95);
+}
+
+/* Compact Coach List */
+.coach-list-container {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.coach-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.coach-row:last-child {
+    border-bottom: none;
+}
+
+.coach-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 150px;
+}
+
+.coach-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.coach-toggle {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--team-primary);
+    cursor: pointer;
+    flex-shrink: 0;
 }

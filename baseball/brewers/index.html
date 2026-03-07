@@ -157,6 +157,12 @@
         <!-- Staff Section -->
         <section id="staff" class="tab-content">
             <h2 class="section-title">Coaching Staff</h2>
+            <div class="print-actions" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                <button class="contact-btn" onclick="copyStaffList('email')"
+                    style="background: var(--team-primary); border-color: var(--team-accent);">
+                    📋 Copy Checked Emails
+                </button>
+            </div>
             <div id="staff-list">
                 <!-- Staff will be injected here -->
             </div>
@@ -432,22 +438,47 @@
 
         // Render Staff
         const staffList = document.getElementById('staff-list');
-        staff.forEach(s => {
-            const card = document.createElement('div');
-            card.className = 'staff-card';
-            card.innerHTML = `
-                <div class="staff-header">
-                    <div class="staff-name">
-                        <h3>${s.first} ${s.last}</h3>
-                        <span class="staff-role">${s.role}</span>
+        staffList.className = 'coach-list-container';
+        staff.forEach((s, index) => {
+            const row = document.createElement('div');
+            row.className = 'coach-row';
+            row.innerHTML = `
+                <div class="coach-info">
+                    <input type="checkbox" id="coach-cb-${index}" class="coach-toggle" checked>
+                    <div>
+                        <h3 style="margin:0; font-size:1rem;">${s.first} ${s.last}</h3>
+                        <span style="font-size:0.7rem; opacity:0.7; text-transform:uppercase; font-weight:700;">${s.role}</span>
                     </div>
                 </div>
-                <div class="staff-contact">
-                    <a href="mailto:${s.email}" class="contact-btn">✉️ Email</a>
+                <div class="coach-actions">
+                    <button onclick="copyToClipboard('${s.email}', this)" class="contact-btn" style="padding:6px 10px; font-size:0.75rem; flex:initial; width:auto;">📋 Email</button>
                 </div>
             `;
-            staffList.appendChild(card);
+            staffList.appendChild(row);
         });
+
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '✅ Copied!';
+                setTimeout(() => { btn.innerHTML = originalText; }, 2000);
+            });
+        }
+
+        function copyStaffList(type) {
+            const selectedStr = [];
+            staff.forEach((s, index) => {
+                const cb = document.getElementById(`coach-cb-${index}`);
+                if (cb && cb.checked) {
+                    if (type === 'email') selectedStr.push(s.email);
+                    if (type === 'phone') selectedStr.push(s.phone);
+                }
+            });
+            const textToCopy = selectedStr.join(', ');
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert(`📋 Copied ${selectedStr.length} ${type}s to clipboard!\nReady to paste into your app.`);
+            });
+        }
     </script>
 </body>
 
