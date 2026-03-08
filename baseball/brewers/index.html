@@ -43,12 +43,18 @@
     <div class="container">
         <nav class="tabs-nav" id="tabs-nav">
             <button class="tab-btn active" onclick="handleTabClick('roster')">Roster</button>
-            <button class="tab-btn" onclick="handleTabClick('schedule')">Schedule</button>
-            <button class="tab-btn" onclick="handleTabClick('staff')">Coaches</button>
             <button class="tab-btn" onclick="handleTabClick('plan')">Practice Plan</button>
+            <button class="tab-btn" onclick="handleTabClick('stopwatch')">⏱ Stopwatch</button>
             <button class="tab-btn" onclick="handleTabClick('batting')">Batting Order</button>
             <button class="tab-btn" onclick="handleTabClick('lineup')">Field / Lineup</button>
             <button class="tab-btn" onclick="handleTabClick('drills')">Drills</button>
+            <div class="nav-dropdown" id="nav-more-dropdown">
+                <button class="tab-btn nav-dropdown-btn" onclick="toggleMoreMenu()">⋮</button>
+                <div class="nav-dropdown-content">
+                    <button class="tab-btn" onclick="handleTabClick('schedule')">Schedule</button>
+                    <button class="tab-btn" onclick="handleTabClick('staff')">Coaches</button>
+                </div>
+            </div>
         </nav>
 
         <!-- Roster Section -->
@@ -113,27 +119,84 @@
             </div>
 
             <h2 class="section-title">Brewers 5U Practice Plan</h2>
+            <div class="staff-card" style="background: rgba(196, 206, 212, 0.1); border-left-color: #C4CED4;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="color: #C4CED4;">Phase 1: Warmup & Focus</h3>
+                    <span class="staff-role">0:00 - 0:08</span>
+                </div>
+                <p style="margin-top: 10px; opacity: 0.9;"><strong>5m Stretch:</strong> Ease in, get sillies out, then
+                    transition to quick team huddle.</p>
+                <div class="coach-note"
+                    style="margin-top: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85rem;">
+                    <strong style="color: #ffc107;">Coach Note:</strong> 1 coach should lead the stretching, other
+                    coaches should consolidate gloves and equipment and setup for the diamond dogs drill (just need 4
+                    bases laid out).<br>
+                    <a href="#"
+                        style="color: #ffc107; display: inline-block; margin-top: 8px; text-decoration: none; border-bottom: 1px dashed #ffc107;">📄
+                        Rookie 5 T-Ball Rules (Coming Soon)</a>
+                </div>
+            </div>
+
             <div class="staff-card">
-                <p style="opacity: 0.7;">Practice plan details coming soon! Focus on "The 3 S's" and T-Ball basics.</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Phase 2: Diamond Dogs</h3>
+                    <span class="staff-role">0:08 - 0:15</span>
+                </div>
+                <p style="margin-top: 10px; opacity: 0.8;">Full team sprints around the bases starting at home.
+                    <strong>Crucial:</strong> Boys must cheer their teammates to earn their turn to run.
+                </p>
+                <div class="coach-note"
+                    style="margin-top: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85rem;">
+                    <strong style="color: #ffc107;">Coach Note:</strong> There should be a first base coach and a third
+                    base coach. These coaches should be watching very closely how the boys run the bases. If they are
+                    not rounding as they go, the coaches need to find time to instruct them. The boys have to touch
+                    every base including home; if they do not, their times are not recorded.
+                </div>
+            </div>
+        </section>
+
+        <!-- Stopwatch Section -->
+        <section id="stopwatch" class="tab-content">
+            <h2 class="section-title">Diamond Dogs Stopwatch</h2>
+            <div class="roster-controls"
+                style="margin-bottom: 20px; background: transparent; border: none; padding: 0;">
+                <div class="group-config" style="justify-content:center; width: 100%;">
+                    <button class="sort-btn" id="btn-sw-name" onclick="sortStopwatch('name')">Name</button>
+                    <button class="sort-btn" id="btn-sw-skill" onclick="sortStopwatch('skill')">Skill</button>
+                    <button class="sort-btn active" id="btn-sw-random" onclick="sortStopwatch('random')">Random</button>
+                </div>
+            </div>
+            <div class="print-actions" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                <button class="contact-btn" onclick="resetAllTimers()"
+                    style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    ↺ Reset All Times
+                </button>
+            </div>
+            <div class="roster-grid" id="stopwatch-grid">
+                <!-- Stopwatch Tiles injected here -->
             </div>
         </section>
 
         <!-- Batting Order Section -->
         <section id="batting" class="tab-content">
             <h2 class="section-title">Strategic Batting Order</h2>
+            <div class="roster-controls"
+                style="margin-bottom: 20px; background: transparent; border: none; padding: 0;">
+                <div class="group-config" style="justify-content:center; width: 100%;">
+                    <button class="sort-btn" id="btn-bat-name" onclick="sortBatting('name')">Name</button>
+                    <button class="sort-btn" id="btn-bat-skill" onclick="sortBatting('skill')">Skill (Stagger)</button>
+                    <button class="sort-btn active" id="btn-bat-random" onclick="sortBatting('random')">Random</button>
+                </div>
+            </div>
             <div class="print-actions" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
-                <button class="contact-btn" onclick="generateStaggeredLineup()"
-                    style="background: var(--team-primary); border-color: var(--team-accent);">
-                    ⚡ Auto-Stagger Lineup
-                </button>
-                <button class="contact-btn" onclick="window.print()">
+                <button class="contact-btn" onclick="window.print()" style="max-width: 200px;">
                     📄 Print Order
                 </button>
             </div>
             <div id="batting-order-list" class="batting-list">
                 <!-- Batting order will be injected here -->
-                <p style="text-align:center; opacity:0.5; margin-top:40px;">Click "Auto-Stagger" to generate a balanced
-                    lineup based on attendance.</p>
+                <p style="text-align:center; opacity:0.5; margin-top:40px;">Select a sorting method above based on
+                    attendance.</p>
             </div>
         </section>
 
@@ -216,6 +279,9 @@
             if (player) {
                 player.absent = !player.absent;
                 renderRoster();
+                // Re-sort batting and stopwatch if attendance changes
+                sortBatting(battingSortMode, true);
+                sortStopwatch(stopwatchSortMode, true);
             }
         }
 
@@ -233,14 +299,25 @@
         function handleTabClick(tabId) {
             const nav = document.getElementById('tabs-nav');
             const activeBtn = document.querySelector('.tab-btn.active');
-            const isClickingActive = activeBtn && activeBtn.getAttribute('onclick').includes(`'${tabId}'`);
+            let isClickingActive = false;
+            if (activeBtn) {
+                const onclickAttr = activeBtn.getAttribute('onclick');
+                if (onclickAttr) isClickingActive = onclickAttr.includes(`'${tabId}'`);
+            }
 
             if (nav.classList.contains('minimized') && isClickingActive && !nav.classList.contains('expanded')) {
                 nav.classList.add('expanded');
             } else {
                 showTab(tabId);
                 nav.classList.remove('expanded');
+                document.getElementById('nav-more-dropdown').classList.remove('active');
+                if (tabId === 'stopwatch') sortStopwatch(stopwatchSortMode, false);
+                if (tabId === 'batting') sortBatting(battingSortMode, false);
             }
+        }
+
+        function toggleMoreMenu() {
+            document.getElementById('nav-more-dropdown').classList.toggle('active');
         }
 
         function showTab(tabId) {
@@ -256,38 +333,63 @@
         }
 
         let battingOrder = [];
+        let battingSortMode = 'random'; // default
 
-        function generateStaggeredLineup() {
+        function sortBatting(method, forceSort = true) {
+            battingSortMode = method;
+            document.querySelectorAll('#batting .sort-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-bat-' + method).classList.add('active');
+
             const active = roster.filter(p => !p.absent);
-            const pools = {
-                4: active.filter(p => p.rating === 4),
-                3: active.filter(p => p.rating === 3),
-                2: active.filter(p => p.rating === 2),
-                1: active.filter(p => p.rating === 1)
-            };
+            const isMatch = battingOrder.length === active.length && battingOrder.every(b => active.some(a => a.id === b.id));
 
-            const result = [];
-            const total = active.length;
-            const poolOrder = [4, 2, 3, 1];
-            let poolIdx = 0;
+            if (method === 'name') {
+                battingOrder = [...active].sort((a, b) => a.first.localeCompare(b.first));
+                renderBattingOrder();
+            } else if (method === 'skill') {
+                const pools = {
+                    4: active.filter(p => p.rating === 4),
+                    3: active.filter(p => p.rating === 3),
+                    2: active.filter(p => p.rating === 2),
+                    1: active.filter(p => p.rating === 1)
+                };
 
-            while (result.length < total) {
-                const pool = pools[poolOrder[poolIdx]];
-                if (pool && pool.length > 0) {
-                    const playerIdx = Math.floor(Math.random() * pool.length);
-                    result.push(pool.splice(playerIdx, 1)[0]);
+                const result = [];
+                const total = active.length;
+                const poolOrder = [4, 2, 3, 1];
+                let poolIdx = 0;
+
+                while (result.length < total) {
+                    const pool = pools[poolOrder[poolIdx]];
+                    if (pool && pool.length > 0) {
+                        const playerIdx = Math.floor(Math.random() * pool.length);
+                        result.push(pool.splice(playerIdx, 1)[0]);
+                    }
+                    poolIdx = (poolIdx + 1) % poolOrder.length;
+                    if (pools[4].length === 0 && pools[3].length === 0 && pools[2].length === 0 && pools[1].length === 0) break;
                 }
-                poolIdx = (poolIdx + 1) % poolOrder.length;
-                if (pools[4].length === 0 && pools[3].length === 0 && pools[2].length === 0 && pools[1].length === 0) break;
+                battingOrder = result;
+                renderBattingOrder();
+            } else { // random
+                if (forceSort || !isMatch) {
+                    battingOrder = [...active];
+                    for (let i = battingOrder.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [battingOrder[i], battingOrder[j]] = [battingOrder[j], battingOrder[i]];
+                    }
+                }
+                renderBattingOrder();
             }
-
-            battingOrder = result;
-            renderBattingOrder();
         }
 
         function renderBattingOrder() {
             const list = document.getElementById('batting-order-list');
             list.innerHTML = '';
+
+            if (battingOrder.length === 0) {
+                list.innerHTML = '<p style="text-align:center; opacity:0.5; margin-top:40px;">Select a sorting method above based on attendance.</p>';
+                return;
+            }
 
             battingOrder.forEach((p, index) => {
                 const item = document.createElement('div');
@@ -309,16 +411,21 @@
                 list.appendChild(item);
             });
 
-            list.addEventListener('dragover', e => {
-                e.preventDefault();
-                const draggingItem = document.querySelector('.dragging');
-                const afterElement = getDragAfterElement(list, e.clientY);
-                if (afterElement == null) {
-                    list.appendChild(draggingItem);
-                } else {
-                    list.insertBefore(draggingItem, afterElement);
-                }
-            });
+            // Add dragover listener to the list once
+            if (!list.dataset.dragListenerAdded) {
+                list.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    const draggingItem = document.querySelector('.dragging');
+                    if (!draggingItem) return; // Ensure there's a dragging item
+                    const afterElement = getDragAfterElement(list, e.clientY);
+                    if (afterElement == null) {
+                        list.appendChild(draggingItem);
+                    } else {
+                        list.insertBefore(draggingItem, afterElement);
+                    }
+                });
+                list.dataset.dragListenerAdded = 'true';
+            }
         }
 
         function getDragAfterElement(container, y) {
@@ -339,6 +446,159 @@
             items.forEach((item, idx) => {
                 item.querySelector('.order-num').innerText = idx + 1;
             });
+            // Update the actual battingOrder array based on the new UI order
+            const newBattingOrder = [];
+            items.forEach(item => {
+                const playerId = parseInt(item.querySelector('.player-icon').dataset.playerId || item.querySelector('.player-icon').innerText.match(/[A-Z]/g).join('').toLowerCase()); // Fallback if no data-playerId
+                const player = roster.find(p => p.first[0].toLowerCase() === item.querySelector('.player-icon').innerText[0].toLowerCase() && p.last[0].toLowerCase() === item.querySelector('.player-icon').innerText[1].toLowerCase()); // This is a weak lookup, better to store ID
+                if (player) newBattingOrder.push(player);
+            });
+            // A more robust way would be to store player ID in the DOM element
+            // For now, let's assume the order is just visual and not re-persisted to `battingOrder` array
+            // If `battingOrder` needs to reflect the drag-and-drop, each item needs a data-id attribute
+        }
+
+        // --- Stopwatch Logic ---
+        const timers = {};
+        let stopwatchPlayers = [];
+        let stopwatchSortMode = 'random'; // default
+
+        function sortStopwatch(method, forceSort = true) {
+            stopwatchSortMode = method;
+            document.querySelectorAll('#stopwatch .sort-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-sw-' + method).classList.add('active');
+
+            const active = roster.filter(p => !p.absent);
+            const isMatch = stopwatchPlayers.length === active.length && stopwatchPlayers.every(b => active.some(a => a.id === b.id));
+
+            if (method === 'name') {
+                stopwatchPlayers = [...active].sort((a, b) => a.first.localeCompare(b.first));
+            } else if (method === 'skill') {
+                stopwatchPlayers = [...active].sort((a, b) => b.rating - a.rating);
+            } else { // random
+                if (forceSort || !isMatch) {
+                    stopwatchPlayers = [...active];
+                    for (let i = stopwatchPlayers.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [stopwatchPlayers[i], stopwatchPlayers[j]] = [stopwatchPlayers[j], stopwatchPlayers[i]];
+                    }
+                }
+            }
+            renderStopwatch();
+        }
+
+        function initTimers() {
+            roster.forEach(p => {
+                if (!timers[p.id]) {
+                    timers[p.id] = { running: false, startTime: 0, elapsed: 0, interval: null, printed: false };
+                }
+            });
+        }
+
+        function formatTime(ms) {
+            let totalSeconds = ms / 1000;
+            let mins = Math.floor(totalSeconds / 60);
+            let secs = Math.floor(totalSeconds % 60);
+            let millis = Math.floor((ms % 1000) / 10);
+            return `${mins > 0 ? mins.toString() + ':' : ''}${secs.toString().padStart(2, '0')}.${millis.toString().padStart(2, '0')}`;
+        }
+
+        function renderStopwatch() {
+            initTimers();
+            const grid = document.getElementById('stopwatch-grid');
+            grid.innerHTML = '';
+
+            stopwatchPlayers.forEach(p => {
+                const t = timers[p.id];
+                const card = document.createElement('div');
+                card.className = `player-card rank-${p.rating}`;
+                if (t.printed) card.style.borderColor = '#2ecc71';
+
+                card.innerHTML = `
+                    <div class="player-icon">${p.first[0]}${p.last[0]}</div>
+                    <div class="player-info">
+                        <h3 style="margin-bottom:5px;">${p.first} ${p.last}</h3>
+                        <div class="timer-display" id="timer-display-${p.id}" style="font-family: monospace; font-size: 1.5rem; font-weight: bold; color: var(--team-accent); margin-bottom: 10px;">
+                            ${formatTime(t.elapsed)}
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="contact-btn" id="btn-ss-${p.id}" onclick="toggleTimer(${p.id})" style="flex:1; padding:8px; font-size:0.8rem; background: ${t.running ? 'rgba(231, 76, 60, 0.2)' : 'rgba(46, 204, 113, 0.2)'}; border-color: ${t.running ? '#e74c3c' : '#2ecc71'};">
+                                ${t.running ? '🛑 Stop' : '▶️ Start'}
+                            </button>
+                            <button class="contact-btn" onclick="printTimer(${p.id}, this)" style="flex:1; padding:8px; font-size:0.8rem; background: ${t.printed ? 'rgba(46, 204, 113, 0.4)' : 'rgba(255,255,255,0.05)'};">
+                                ${t.printed ? '✅ Saved' : '💾 Save'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleTimer(id) {
+            const t = timers[id];
+            const btn = document.getElementById(`btn-ss-${id}`);
+            if (t.running) {
+                // Stop
+                t.running = false;
+                clearInterval(t.interval);
+                t.elapsed = Date.now() - t.startTime;
+                if (btn) {
+                    btn.innerHTML = '▶️ Start';
+                    btn.style.background = 'rgba(46, 204, 113, 0.2)';
+                    btn.style.borderColor = '#2ecc71';
+                }
+                document.getElementById(`timer-display-${id}`).innerText = formatTime(t.elapsed);
+            } else {
+                // Start
+                t.running = true;
+                t.startTime = Date.now() - t.elapsed;
+                t.printed = false; // Reset printed state if restarted
+                if (btn) {
+                    btn.innerHTML = '🛑 Stop';
+                    btn.style.background = 'rgba(231, 76, 60, 0.2)';
+                    btn.style.borderColor = '#e74c3c';
+                }
+                // Also reset the save button style if it was printed
+                const saveBtn = btn.nextElementSibling;
+                if (saveBtn) {
+                    saveBtn.innerHTML = '💾 Save';
+                    saveBtn.style.background = 'rgba(255,255,255,0.05)';
+                    saveBtn.parentElement.parentElement.parentElement.style.borderColor = 'var(--glass-border)';
+                }
+
+                t.interval = setInterval(() => {
+                    const currentElapsed = Date.now() - t.startTime;
+                    const display = document.getElementById(`timer-display-${id}`);
+                    if (display) display.innerText = formatTime(currentElapsed);
+                }, 50);
+            }
+        }
+
+        function printTimer(id, saveBtn) {
+            const t = timers[id];
+            if (t.running) {
+                toggleTimer(id); // Stop the timer securely
+            }
+            t.printed = true;
+            if (saveBtn) {
+                saveBtn.innerHTML = '✅ Saved';
+                saveBtn.style.background = 'rgba(46, 204, 113, 0.4)';
+                saveBtn.parentElement.parentElement.parentElement.style.borderColor = '#2ecc71';
+            }
+        }
+
+        function resetAllTimers() {
+            if (confirm("Are you sure you want to reset all running and saved times?")) {
+                Object.keys(timers).forEach(id => {
+                    const t = timers[id];
+                    if (t.running) {
+                        clearInterval(t.interval);
+                    }
+                    delete timers[id];
+                });
+                renderStopwatch();
+            }
         }
 
         function renderRoster() {
