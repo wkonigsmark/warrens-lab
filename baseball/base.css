@@ -213,6 +213,52 @@ h1 {
     }
 }
 
+/* Nav Dropdown for Subtle Menu items */
+.nav-dropdown {
+    position: relative;
+    display: inline-flex;
+}
+
+.nav-dropdown-btn {
+    opacity: 0.6;
+    padding: 10px;
+    min-width: 40px;
+}
+
+.nav-dropdown-btn:hover {
+    opacity: 1;
+}
+
+.nav-dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background: rgba(15, 18, 24, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    flex-direction: column;
+    gap: 8px;
+    min-width: 150px;
+}
+
+.nav-dropdown.active .nav-dropdown-content {
+    display: flex;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.nav-dropdown-content .tab-btn {
+    width: 100%;
+    margin: 0;
+    text-align: left;
+    justify-content: flex-start;
+}
+
+
 /* Content Sections */
 .tab-content {
     display: none;
