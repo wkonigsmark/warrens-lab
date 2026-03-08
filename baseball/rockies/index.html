@@ -321,13 +321,22 @@
         }
 
         // Dynamic Navigation Logic
+        let expandedScrollPosition = 0;
+
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('tabs-nav');
             if (window.scrollY > 100) {
                 nav.classList.add('minimized');
+                if (nav.classList.contains('expanded')) {
+                    if (Math.abs(window.scrollY - expandedScrollPosition) > 50) {
+                        nav.classList.remove('expanded');
+                        document.getElementById('nav-more-dropdown').classList.remove('active');
+                    }
+                }
             } else {
                 nav.classList.remove('minimized');
                 nav.classList.remove('expanded');
+                document.getElementById('nav-more-dropdown').classList.remove('active');
             }
         });
 
@@ -342,6 +351,7 @@
 
             if (nav.classList.contains('minimized') && isClickingActive && !nav.classList.contains('expanded')) {
                 nav.classList.add('expanded');
+                expandedScrollPosition = window.scrollY;
             } else {
                 showTab(tabId);
                 nav.classList.remove('expanded');

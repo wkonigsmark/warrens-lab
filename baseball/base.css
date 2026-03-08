@@ -85,36 +85,65 @@ h1 {
 }
 
 /* Minimized State (triggered via JS on scroll) */
-.tabs-nav.minimized {
+.tabs-nav.minimized:not(.expanded) {
     gap: 0;
     padding: 5px;
     background: rgba(15, 18, 24, 0.9);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-.tabs-nav.minimized .tab-btn:not(.active) {
-    width: 0;
-    padding: 0;
-    margin: 0;
-    opacity: 0;
+.tabs-nav.minimized:not(.expanded) .tab-btn:not(.active),
+.tabs-nav.minimized:not(.expanded) .nav-dropdown {
+    width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    opacity: 0 !important;
     pointer-events: none;
-    border: none;
+    border: none !important;
+    overflow: hidden;
 }
 
-.tabs-nav.minimized:hover,
+/* Hover on Desktop, click on mobile */
+@media (min-width: 769px) {
+    .tabs-nav.minimized:hover {
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .tabs-nav.minimized:hover .tab-btn:not(.active),
+    .tabs-nav.minimized:hover .nav-dropdown {
+        width: auto !important;
+        padding: 10px 18px !important;
+        opacity: 1 !important;
+        pointer-events: auto;
+        border: 1px solid var(--glass-border) !important;
+    }
+
+    .tabs-nav.minimized:hover .nav-dropdown {
+        padding: 0 !important;
+        /* The dropdown button itself holds the padding */
+        border: none !important;
+    }
+}
+
 .tabs-nav.expanded {
     gap: 8px;
     padding: 8px;
 }
 
-.tabs-nav.minimized:hover .tab-btn,
-.tabs-nav.expanded .tab-btn {
+.tabs-nav.expanded .tab-btn,
+.tabs-nav.expanded .nav-dropdown {
     width: auto;
     padding: 10px 18px;
     opacity: 1;
     pointer-events: auto;
     margin: 0;
     border: 1px solid var(--glass-border);
+}
+
+.tabs-nav.expanded .nav-dropdown {
+    padding: 0;
+    border: none;
 }
 
 .tab-btn {
@@ -192,18 +221,18 @@ h1 {
         border-radius: 20px;
     }
 
-    .tabs-nav.minimized {
+    .tabs-nav.minimized:not(.expanded) {
         flex-wrap: nowrap;
         border-radius: 50px;
     }
 
-    .tabs-nav.minimized:hover,
     .tabs-nav.expanded {
         flex-wrap: wrap;
         border-radius: 20px;
     }
 
-    .tab-btn {
+    .tab-btn,
+    .tabs-nav.expanded .tab-btn {
         padding: 8px 12px;
         font-size: 0.75rem;
     }
