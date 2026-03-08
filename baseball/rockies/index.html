@@ -230,8 +230,9 @@
                 style="margin-bottom: 20px; background: transparent; border: none; padding: 0;">
                 <div class="group-config" style="justify-content:center; width: 100%;">
                     <button class="sort-btn" id="btn-bat-name" onclick="sortBatting('name')">Name</button>
-                    <button class="sort-btn" id="btn-bat-skill" onclick="sortBatting('skill')">Skill (Stagger)</button>
-                    <button class="sort-btn active" id="btn-bat-random" onclick="sortBatting('random')">Random</button>
+                    <button class="sort-btn" id="btn-bat-skill" onclick="sortBatting('skill')">Skill</button>
+                    <button class="sort-btn active" id="btn-bat-stagger" onclick="sortBatting('stagger')">Skill
+                        (Stagger)</button>
                 </div>
             </div>
             <div class="print-actions" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
@@ -266,16 +267,6 @@
         <!-- Staff Section -->
         <section id="staff" class="tab-content">
             <h2 class="section-title">Coaching Staff</h2>
-            <div class="print-actions" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
-                <button class="contact-btn" onclick="copyStaffList('email')"
-                    style="background: var(--team-primary); border-color: var(--team-accent);">
-                    📋 Copy Checked Emails
-                </button>
-                <button class="contact-btn" onclick="copyStaffList('phone')"
-                    style="background: var(--team-primary); border-color: var(--team-accent);">
-                    📞 Copy Checked Phones
-                </button>
-            </div>
             <div id="staff-list">
                 <!-- Staff will be injected here -->
             </div>
@@ -378,7 +369,7 @@
         }
 
         let battingOrder = [];
-        let battingSortMode = 'random'; // default
+        let battingSortMode = 'stagger'; // default
 
         function sortBatting(method, forceSort = true) {
             battingSortMode = method;
@@ -387,24 +378,14 @@
 
             const active = roster.filter(p => !p.absent);
 
-            // Check if active changed drastically
-            const isMatch = battingOrder.length === active.length && battingOrder.every(b => active.some(a => a.id === b.id));
-
             if (method === 'name') {
                 battingOrder = [...active].sort((a, b) => a.first.localeCompare(b.first));
                 renderBattingOrder();
             } else if (method === 'skill') {
-                generateStaggeredLineup();
-                // generateStaggeredLineup calls renderBattingOrder inside
-            } else {
-                if (forceSort || !isMatch) {
-                    battingOrder = [...active];
-                    for (let i = battingOrder.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [battingOrder[i], battingOrder[j]] = [battingOrder[j], battingOrder[i]];
-                    }
-                }
+                battingOrder = [...active].sort((a, b) => b.rating - a.rating);
                 renderBattingOrder();
+            } else if (method === 'stagger') {
+                generateStaggeredLineup();
             }
         }
 
@@ -556,16 +537,21 @@
 
                 card.innerHTML = `
                     <div class="player-icon">${p.first[0]}${p.last[0]}</div>
-                    <div class="player-info">
-                        <h3 style="margin-bottom:5px;">${p.first} ${p.last}</h3>
-                        <div class="timer-display" id="timer-display-${p.id}" style="font-family: monospace; font-size: 1.5rem; font-weight: bold; color: var(--team-accent); margin-bottom: 10px;">
-                            ${formatTime(t.elapsed)}
+                    <div class="player-info" style="width: 100%;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <h3 style="margin:0;">${p.first} ${p.last}</h3>
+                            <div class="timer-display" id="timer-display-${p.id}" style="font-family: monospace; font-size: 2.2rem; font-weight: bold; color: var(--team-accent); line-height: 1;">
+                                ${formatTime(t.elapsed)}
+                            </div>
                         </div>
-                        <div style="display:flex; gap:10px;">
-                            <button class="contact-btn" id="btn-ss-${p.id}" onclick="toggleTimer(${p.id})" style="flex:1; padding:8px; font-size:0.8rem; background: ${t.running ? 'rgba(231, 76, 60, 0.2)' : 'rgba(46, 204, 113, 0.2)'}; border-color: ${t.running ? '#e74c3c' : '#2ecc71'};">
+                        <div style="display:flex; gap:10px; justify-content: flex-end;">
+                            <button class="contact-btn" onclick="clearTimer(${p.id})" style="flex:initial; padding:8px 12px; font-size:0.8rem; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1);">
+                                ↺ Clear
+                            </button>
+                            <button class="contact-btn" id="btn-ss-${p.id}" onclick="toggleTimer(${p.id})" style="flex:initial; padding:8px 15px; font-size:0.8rem; min-width:80px; background: ${t.running ? 'rgba(231, 76, 60, 0.2)' : 'rgba(46, 204, 113, 0.2)'}; border-color: ${t.running ? '#e74c3c' : '#2ecc71'};">
                                 ${t.running ? '🛑 Stop' : '▶️ Start'}
                             </button>
-                            <button class="contact-btn" onclick="printTimer(${p.id}, this)" style="flex:1; padding:8px; font-size:0.8rem; background: ${t.printed ? 'rgba(46, 204, 113, 0.4)' : 'rgba(255,255,255,0.05)'};">
+                            <button class="contact-btn" onclick="printTimer(${p.id}, this)" style="flex:initial; padding:8px 15px; font-size:0.8rem; min-width:80px; background: ${t.printed ? 'rgba(46, 204, 113, 0.4)' : 'rgba(255,255,255,0.05)'};">
                                 ${t.printed ? '✅ Saved' : '💾 Save'}
                             </button>
                         </div>
@@ -626,6 +612,17 @@
                 saveBtn.style.background = 'rgba(46, 204, 113, 0.4)';
                 saveBtn.parentElement.parentElement.parentElement.style.borderColor = '#2ecc71';
             }
+        }
+
+        function clearTimer(id) {
+            const t = timers[id];
+            if (t.running) {
+                clearInterval(t.interval);
+                t.running = false;
+            }
+            t.elapsed = 0;
+            t.printed = false;
+            renderStopwatch();
         }
 
         function resetAllTimers() {
@@ -731,12 +728,12 @@
         ];
 
         const staff = [
-            { role: "HBC", first: "Warren", last: "Konigsmark", email: "wkonigsmark@gmail.com", phone: "770-757-6274" },
-            { role: "Assistant Coach", first: "Joseph", last: "Bernstein", email: "Joeb2683@gmail.com", phone: "516-375-6647" },
-            { role: "Assistant Coach", first: "Andrew", last: "Marbach", email: "andrew.marbach@gmail.com", phone: "917-538-3039" },
-            { role: "Assistant Coach", first: "Richard", last: "Soto", email: "richardsoto@gmail.com", phone: "401-419-2393" },
-            { role: "Assistant Coach", first: "Eric", last: "Stodola", email: "estodola@gmail.com", phone: "917-225-9192" },
-            { role: "Assistant Coach", first: "Sloan", last: "Sutta", email: "sloansutta@gmail.com", phone: "646-283-2151" }
+            { role: "HBC", first: "Warren", last: "Konigsmark" },
+            { role: "Assistant Coach", first: "Joseph", last: "Bernstein" },
+            { role: "Assistant Coach", first: "Andrew", last: "Marbach" },
+            { role: "Assistant Coach", first: "Richard", last: "Soto" },
+            { role: "Assistant Coach", first: "Eric", last: "Stodola" },
+            { role: "Assistant Coach", first: "Sloan", last: "Sutta" }
         ];
 
         const gameList = document.getElementById('game-list');
@@ -758,47 +755,17 @@
 
         const staffList = document.getElementById('staff-list');
         staffList.className = 'coach-list-container';
-        staff.forEach((s, index) => {
+        staff.forEach((s) => {
             const row = document.createElement('div');
             row.className = 'coach-row';
             row.innerHTML = `
-                <div class="coach-info">
-                    <input type="checkbox" id="coach-cb-${index}" class="coach-toggle" checked>
-                    <div>
-                        <h3 style="margin:0; font-size:1rem;">${s.first} ${s.last}</h3>
-                        <span style="font-size:0.7rem; opacity:0.7; text-transform:uppercase; font-weight:700;">${s.role}</span>
-                    </div>
-                </div>
-                <div class="coach-actions">
-                    <button onclick="copyToClipboard('${s.email}', this)" class="contact-btn" style="padding:6px 10px; font-size:0.75rem; flex:initial; width:auto;">📋 Email</button>
-                    <button onclick="copyToClipboard('${s.phone}', this)" class="contact-btn" style="padding:6px 10px; font-size:0.75rem; flex:initial; width:auto;">📋 Phone</button>
+                <div class="coach-info" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin:0; font-size:1.1rem;">${s.first} ${s.last}</h3>
+                    <span style="font-size:0.8rem; opacity:0.7; text-transform:uppercase; font-weight:700; color: var(--team-accent);">${s.role}</span>
                 </div>
             `;
             staffList.appendChild(row);
         });
-
-        function copyToClipboard(text, btn) {
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '✅ Copied!';
-                setTimeout(() => { btn.innerHTML = originalText; }, 2000);
-            });
-        }
-
-        function copyStaffList(type) {
-            const selectedStr = [];
-            staff.forEach((s, index) => {
-                const cb = document.getElementById(`coach-cb-${index}`);
-                if (cb && cb.checked) {
-                    if (type === 'email') selectedStr.push(s.email);
-                    if (type === 'phone') selectedStr.push(s.phone);
-                }
-            });
-            const textToCopy = selectedStr.join(', ');
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                alert(`📋 Copied ${selectedStr.length} ${type}s to clipboard!\nReady to paste into your app.`);
-            });
-        }
     </script>
 </body>
 
