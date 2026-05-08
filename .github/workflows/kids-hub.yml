@@ -1,0 +1,46 @@
+name: Kids Hub Pipeline
+
+on:
+  schedule:
+    # 7am and 4pm ET daily (12:00 and 21:00 UTC)
+    - cron: "0 12 * * *"
+    - cron: "0 21 * * *"
+  workflow_dispatch: # allow manual trigger from GitHub UI
+
+jobs:
+  scan-and-render:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write   # needed to push updated JSON + HTML back to repo
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r kids/hub/pipeline/requirements.txt
+
+      - name: Scan emails
+        env:
+          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
+          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
+          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python kids/hub/pipeline/scan.py
+
+      - name: Render dashboard
+        run: python kids/hub/pipeline/render.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add kids/hub/data/ kids/hub/index.html
+          git diff --staged --quiet || git commit -m "chore: kids hub update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push
