@@ -371,6 +371,11 @@ def upsert_to_supabase(sb, new_items: list[dict], type_: str):
     deduped = _dedup_list(new_items)
     rows = [item_to_row(i, type_) for i in deduped]
 
+    # Deduplicate by id — Claude sometimes assigns the same id to different
+    # items, and Postgres raises "ON CONFLICT DO UPDATE command cannot affect
+    # row a second time" if the same id appears twice in one batch.
+    rows = list({r["id"]: r for r in rows}.values())
+
     # Fetch existing IDs so we don't reset completed status
     ids = [r["id"] for r in rows]
     existing = sb.table("items").select("id,completed").in_("id", ids).execute().data
@@ -379,12 +384,16 @@ def upsert_to_supabase(sb, new_items: list[dict], type_: str):
     to_insert = []
     for row in rows:
         if row["id"] in completed_ids:
-            # Keep completed items but update content fields
             row.pop("completed", None)
         to_insert.append(row)
 
-    sb.table("items").upsert(to_insert, on_conflict="id",
-                             ignore_duplicates=False).execute()
+    try:
+        sb.table("items").upsert(to_insert, on_conflict="id",
+                                 ignore_duplicates=False).execute()
+    except Exception as e:
+        print(f"  WARNING: upsert failed for {type_}: {e}")
+        return 0
+
     new_count = len(rows) - len(existing)
     return max(new_count, 0)
 
