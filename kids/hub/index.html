@@ -112,6 +112,20 @@
     .done-btn { font-size: 10px; font-weight: 500; padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); background: white; color: var(--bark-light); cursor: pointer; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; }
     .done-btn:hover { background: var(--spruce-pale); border-color: var(--spruce); color: var(--spruce); }
     .done-btn.undo:hover { background: var(--rust-pale); border-color: var(--rust); color: var(--rust); }
+    /* Highlights */
+    .highlights { margin-bottom: 1.75rem; display: flex; flex-direction: column; gap: 7px; }
+    .hl { padding: 10px 14px; border-radius: 10px; border: 0.5px solid var(--border); border-left: 3px solid; background: white; min-width: 0; }
+    .hl.hl-urgent { background: var(--rust-pale); border-color: rgba(192,75,42,0.18); border-left-color: var(--rust); }
+    .hl.hl-warn   { background: var(--sun-pale);  border-color: rgba(232,160,32,0.2);  border-left-color: var(--sun); }
+    .hl.hl-today  { background: var(--sky-pale);  border-color: rgba(42,93,140,0.18);  border-left-color: var(--sky); }
+    .hl.hl-soon   { border-left-color: var(--border); }
+    .hl-badge { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 3px; }
+    .hl-urgent .hl-badge { color: var(--rust); }
+    .hl-warn   .hl-badge { color: #8A5A00; }
+    .hl-today  .hl-badge { color: var(--sky); }
+    .hl-soon   .hl-badge { color: var(--bark-light); }
+    .hl-title { font-size: 13px; font-weight: 500; color: var(--bark); line-height: 1.4; overflow-wrap: break-word; }
+    .hl-meta  { font-size: 11.5px; color: var(--bark-light); font-weight: 300; margin-top: 2px; }
     .filtered { display: none !important; }
     #loading { text-align: center; padding: 4rem; color: var(--bark-light); font-size: 14px; }
     .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); background: var(--bark); color: white; font-size: 13px; font-weight: 500; padding: 10px 20px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 999; }
@@ -150,6 +164,7 @@
       <input type="checkbox" id="show-done"> Show completed
     </label>
   </div>
+  <div id="highlights"></div>
   <div id="loading">Loading school data…</div>
   <div class="cols" id="main-cols" style="display:none">
     <section><div class="section-title">Events</div><div id="events-list"></div></section>
@@ -276,10 +291,45 @@
     }).join('');
   }
 
+  function renderHighlights(items) {
+    const vis = activeChild === 'All' ? items : items.filter(i => i.child === activeChild || i.child === 'All');
+    const active = vis.filter(i => !i.completed);
+
+    const tomorrow = new Date(TODAY + 'T12:00:00');
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+    const rows = [];
+    active.filter(i => i.type==='event' && i.date===TODAY)
+      .forEach(i => rows.push({cls:'hl-today', badge:'Today', item:i}));
+    active.filter(i => i.type==='task' && i.date && i.date < TODAY)
+      .sort((a,b) => a.date < b.date ? -1 : 1).slice(0,3)
+      .forEach(i => rows.push({cls:'hl-urgent', badge:'Overdue', item:i}));
+    active.filter(i => i.type==='task' && i.date===TODAY)
+      .forEach(i => rows.push({cls:'hl-warn', badge:'Due today', item:i}));
+    active.filter(i => i.type==='event' && i.date===tomorrowStr).slice(0,3)
+      .forEach(i => rows.push({cls:'hl-soon', badge:'Tomorrow', item:i}));
+
+    const el = document.getElementById('highlights');
+    if (!rows.length) { el.innerHTML = ''; return; }
+    el.innerHTML = '<div class="highlights">' + rows.slice(0,7).map(({cls,badge,item}) => {
+      const parts = [];
+      if (item.child && item.child !== 'All') parts.push(item.child);
+      if (item.time) parts.push(item.time);
+      const meta = parts.join(' · ');
+      return `<div class="hl ${cls}">
+        <div class="hl-badge">${badge}</div>
+        <div class="hl-title">${esc(item.title)}</div>
+        ${meta ? `<div class="hl-meta">${esc(meta)}</div>` : ''}
+      </div>`;
+    }).join('') + '</div>';
+  }
+
   function render() {
     document.getElementById('events-list').innerHTML     = renderEvents(allItems);
     document.getElementById('tasks-list').innerHTML      = renderTasks(allItems);
     document.getElementById('curriculum-list').innerHTML = renderCurriculum(allItems);
+    renderHighlights(allItems);
     applySection();
     applyFilters();
   }
