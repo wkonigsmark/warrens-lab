@@ -35,8 +35,17 @@
     .fpill[data-child="Ballard"].active { background: var(--sky); }
     .fpill[data-child="Elle"].active   { background: var(--plum); }
     .fpill[data-child="Edie"].active   { background: var(--spruce); }
+    .fpill[data-section="All"].active      { background: var(--bark); }
+    .fpill[data-section="Events"].active   { background: var(--sky); }
+    .fpill[data-section="Tasks"].active    { background: var(--rust); }
+    .fpill[data-section="Curriculum"].active { background: var(--spruce); }
+    .pills-divider { width: 1px; height: 22px; background: var(--border); align-self: center; margin: 0 2px; }
     .show-done-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; font-size: 12px; color: var(--bark-light); cursor: pointer; user-select: none; }
     .cols { display: grid; grid-template-columns: 1.1fr 0.9fr 1fr; gap: 2rem; align-items: start; }
+    .cols.solo { grid-template-columns: 1fr; max-width: 680px; }
+    .cols.solo-curr { grid-template-columns: 1fr; }
+    .cols.solo-curr #curriculum-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+    .cols.solo-curr #curriculum-list .card { margin-bottom: 0; }
     @media (max-width: 860px) { .cols { grid-template-columns: 1fr; } }
     .section-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 600; margin-bottom: 1.2rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
     .empty { color: var(--bark-light); font-size: 13px; font-style: italic; }
@@ -111,6 +120,13 @@
       <button class="fpill" data-child="Elle">Elle</button>
       <button class="fpill" data-child="Edie">Edie</button>
     </div>
+    <div class="pills-divider"></div>
+    <div class="filter-pills" id="section-pills">
+      <button class="fpill active" data-section="All">All</button>
+      <button class="fpill" data-section="Events">Events</button>
+      <button class="fpill" data-section="Tasks">Tasks</button>
+      <button class="fpill" data-section="Curriculum">Curriculum</button>
+    </div>
     <label class="show-done-wrap">
       <input type="checkbox" id="show-done"> Show completed
     </label>
@@ -136,6 +152,7 @@
   const TODAY = new Date().toISOString().split('T')[0];
   let allItems = [];
   let activeChild = 'All';
+  let activeSection = 'All';
   let showDone = false;
 
   const CHILD_FG = {Ballard:'#2A5D8C',Elle:'#6B3FA0',Edie:'#2E5C3E',All:'#8A5A00'};
@@ -244,7 +261,21 @@
     document.getElementById('events-list').innerHTML     = renderEvents(allItems);
     document.getElementById('tasks-list').innerHTML      = renderTasks(allItems);
     document.getElementById('curriculum-list').innerHTML = renderCurriculum(allItems);
+    applySection();
     applyFilters();
+  }
+
+  function applySection() {
+    const cols = document.getElementById('main-cols');
+    const sections = cols.querySelectorAll('section');
+    const idx = { Events: 0, Tasks: 1, Curriculum: 2 };
+    cols.classList.remove('solo', 'solo-curr');
+    if (activeSection === 'All') {
+      sections.forEach(s => s.style.display = '');
+    } else {
+      sections.forEach((s, i) => s.style.display = i === idx[activeSection] ? '' : 'none');
+      cols.classList.add(activeSection === 'Curriculum' ? 'solo-curr' : 'solo');
+    }
   }
 
   function applyFilters() {
@@ -276,9 +307,13 @@
 
   document.getElementById('search').addEventListener('input', applyFilters);
   document.getElementById('show-done').addEventListener('change', e => { showDone=e.target.checked; applyFilters(); });
-  document.querySelectorAll('.fpill').forEach(p => p.addEventListener('click', () => {
-    document.querySelectorAll('.fpill').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.fpill[data-child]').forEach(p => p.addEventListener('click', () => {
+    document.querySelectorAll('.fpill[data-child]').forEach(x=>x.classList.remove('active'));
     p.classList.add('active'); activeChild=p.dataset.child; applyFilters();
+  }));
+  document.querySelectorAll('.fpill[data-section]').forEach(p => p.addEventListener('click', () => {
+    document.querySelectorAll('.fpill[data-section]').forEach(x=>x.classList.remove('active'));
+    p.classList.add('active'); activeSection=p.dataset.section; applySection();
   }));
 
   loadAll();
