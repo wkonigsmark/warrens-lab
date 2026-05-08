@@ -306,17 +306,33 @@ EXTRACTION_PROMPT = EXTRACTION_SYSTEM_PROMPT  # alias used inside extract_with_c
 # ---------------------------------------------------------------------------
 
 
-def _dedup(existing: list[dict], new_items: list[dict], id_field: str = "id") -> list[dict]:
-    """Merge new_items into existing, skipping duplicates by id."""
-    seen = {item[id_field] for item in existing if id_field in item}
+def _normalize(s: str) -> str:
+    """Lowercase, strip punctuation/whitespace for fuzzy title matching."""
+    return re.sub(r"[^a-z0-9]", "", s.lower())
+
+
+def _dedup(existing: list[dict], new_items: list[dict], id_field: str = "id") -> tuple[list[dict], int]:
+    """Merge new_items into existing, skipping duplicates by id OR normalized title."""
+    seen_ids = {item[id_field] for item in existing if id_field in item}
+    # Build a set of normalized title keys for fuzzy dedup
+    title_key = "topic" if any("topic" in i for i in existing) else "title"
+    seen_titles = {_normalize(item.get(title_key) or item.get("title") or "") for item in existing}
+    seen_titles.discard("")
     merged = list(existing)
     added = 0
     for item in new_items:
         item_id = item.get(id_field)
-        if item_id and item_id not in seen:
-            merged.append(item)
-            seen.add(item_id)
-            added += 1
+        item_title = _normalize(item.get(title_key) or item.get("title") or "")
+        if item_id and item_id in seen_ids:
+            continue
+        if item_title and item_title in seen_titles:
+            continue
+        merged.append(item)
+        if item_id:
+            seen_ids.add(item_id)
+        if item_title:
+            seen_titles.add(item_title)
+        added += 1
     return merged, added
 
 
