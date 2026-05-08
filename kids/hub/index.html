@@ -42,6 +42,7 @@
     .pills-divider { width: 1px; height: 22px; background: var(--border); align-self: center; margin: 0 2px; }
     .show-done-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; font-size: 12px; color: var(--bark-light); cursor: pointer; user-select: none; }
     .cols { display: grid; grid-template-columns: 1.1fr 0.9fr 1fr; gap: 2rem; align-items: start; }
+    .cols > section { min-width: 0; }
     .cols.solo { grid-template-columns: 1fr; max-width: 680px; }
     .cols.solo-curr { grid-template-columns: 1fr; }
     .cols.solo-curr #curriculum-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
@@ -71,13 +72,13 @@
     .cal-mo { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bark-light); margin: 1rem 0 0.5rem 2px; }
     .cal-mo:first-child { margin-top: 0; }
     .cal-list { display: flex; flex-direction: column; gap: 8px; }
-    .cal-row { display: grid; grid-template-columns: 48px 1fr; gap: 10px; background: white; border: 0.5px solid var(--border); border-radius: 10px; padding: 0.7rem 0.85rem; border-left-width: 3px; transition: opacity 0.2s; }
+    .cal-row { display: grid; grid-template-columns: 48px minmax(0,1fr); gap: 10px; background: white; border: 0.5px solid var(--border); border-radius: 10px; padding: 0.7rem 0.85rem; border-left-width: 3px; transition: opacity 0.2s; }
     .cal-row.done { opacity: 0.38; }
     .cal-date { text-align: center; }
     .cal-wday { font-size: 9px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bark-light); }
     .cal-d { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 600; line-height: 1; }
-    .cal-name { font-size: 13px; font-weight: 500; color: var(--bark); margin-bottom: 2px; line-height: 1.4; }
-    .cal-info { font-size: 11.5px; color: var(--bark-light); font-weight: 300; line-height: 1.4; margin-bottom: 5px; }
+    .cal-name { font-size: 13px; font-weight: 500; color: var(--bark); margin-bottom: 2px; line-height: 1.4; overflow-wrap: break-word; }
+    .cal-info { font-size: 11.5px; color: var(--bark-light); font-weight: 300; line-height: 1.4; margin-bottom: 5px; overflow-wrap: break-word; }
     .cal-foot { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
     .cal-tags { display: flex; gap: 4px; flex-wrap: wrap; }
     /* Tasks */
@@ -87,9 +88,9 @@
     .task-bar { width: 4px; flex-shrink: 0; }
     .task-body { padding: 0.75rem 0.9rem; flex: 1; min-width: 0; }
     .task-head { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; flex-wrap: wrap; }
-    .task-title { font-size: 13px; font-weight: 500; color: var(--bark); margin-bottom: 3px; line-height: 1.4; }
+    .task-title { font-size: 13px; font-weight: 500; color: var(--bark); margin-bottom: 3px; line-height: 1.4; overflow-wrap: break-word; }
     .task-title.struck { text-decoration: line-through; color: var(--bark-light); }
-    .task-desc { font-size: 11.5px; color: var(--bark-light); font-weight: 300; line-height: 1.5; }
+    .task-desc { font-size: 11.5px; color: var(--bark-light); font-weight: 300; line-height: 1.5; overflow-wrap: break-word; }
     .due-badge { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 10px; background: var(--sun-pale); color: #8A5A00; }
     .due-badge.urgent { background: var(--rust-pale); color: var(--rust); }
     /* Curriculum */
@@ -104,8 +105,8 @@
     .c-amber{color:#8A5A00}.c-amber .sdot{background:var(--sun)}
     .c-green{color:#3A6820}.c-green .sdot{background:#3A6820}
     .c-bark{color:var(--bark-light)}.c-bark .sdot{background:var(--bark-light)}
-    .stopic { font-size: 13px; font-weight: 500; color: var(--bark); margin-bottom: 3px; }
-    .sdetail { font-size: 12px; color: var(--bark-light); font-weight: 300; line-height: 1.5; }
+    .stopic { font-size: 13px; font-weight: 500; color: var(--bark); margin-bottom: 3px; overflow-wrap: break-word; }
+    .sdetail { font-size: 12px; color: var(--bark-light); font-weight: 300; line-height: 1.5; overflow-wrap: break-word; }
     .ctag { font-size: 11px; font-weight: 500; padding: 2px 9px; border-radius: 20px; }
     /* Complete button */
     .done-btn { font-size: 10px; font-weight: 500; padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); background: white; color: var(--bark-light); cursor: pointer; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; }
