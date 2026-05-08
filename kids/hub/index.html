@@ -114,7 +114,8 @@
     .done-btn.undo:hover { background: var(--rust-pale); border-color: var(--rust); color: var(--rust); }
     /* Highlights */
     .highlights { margin-bottom: 1.75rem; display: flex; flex-direction: column; gap: 7px; }
-    .hl { padding: 10px 14px; border-radius: 10px; border: 0.5px solid var(--border); border-left: 3px solid; background: white; min-width: 0; }
+    .hl { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; border: 0.5px solid var(--border); border-left: 3px solid; background: white; min-width: 0; }
+    .hl-body { flex: 1; min-width: 0; }
     .hl.hl-urgent { background: var(--rust-pale); border-color: rgba(192,75,42,0.18); border-left-color: var(--rust); }
     .hl.hl-warn   { background: var(--sun-pale);  border-color: rgba(232,160,32,0.2);  border-left-color: var(--sun); }
     .hl.hl-today  { background: var(--sky-pale);  border-color: rgba(42,93,140,0.18);  border-left-color: var(--sky); }
@@ -318,9 +319,12 @@
       if (item.time) parts.push(item.time);
       const meta = parts.join(' · ');
       return `<div class="hl ${cls}">
-        <div class="hl-badge">${badge}</div>
-        <div class="hl-title">${esc(item.title)}</div>
-        ${meta ? `<div class="hl-meta">${esc(meta)}</div>` : ''}
+        <div class="hl-body">
+          <div class="hl-badge">${badge}</div>
+          <div class="hl-title">${esc(item.title)}</div>
+          ${meta ? `<div class="hl-meta">${esc(meta)}</div>` : ''}
+        </div>
+        <button class="done-btn" onclick="window._toggle('${item.id}',${item.completed})">Done</button>
       </div>`;
     }).join('') + '</div>';
   }
