@@ -14,6 +14,7 @@ Headless runs (CI):
 
 import argparse
 import base64
+import hashlib
 import json
 import os
 import re
@@ -345,9 +346,18 @@ def _dedup(existing: list[dict], new_items: list[dict]) -> tuple[list[dict], int
     return merged, added
 
 
+def _stable_id(type_: str, item: dict) -> str:
+    """Deterministic ID from type+title+date+child so re-runs never duplicate items."""
+    title = (item.get("title") or item.get("topic") or "").lower().strip()
+    date  = (item.get("date") or item.get("due_date") or "").strip()
+    child = (item.get("child") or "all").lower().strip()
+    h = hashlib.md5(f"{type_}|{title}|{date}|{child}".encode()).hexdigest()[:8]
+    return f"{type_[:3]}-{h}"
+
+
 def item_to_row(item: dict, type_: str) -> dict:
     return {
-        "id":                   item.get("id") or f"{type_}-{abs(hash(str(item))) % 99999:05d}",
+        "id":                   _stable_id(type_, item),
         "type":                 type_,
         "title":                item.get("title") or item.get("topic") or "",
         "date":                 item.get("date") or item.get("due_date"),
