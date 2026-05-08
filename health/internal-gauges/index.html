@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal Gauges - Health Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../style-lab.css">
+    <style>
+        .gauge-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--glass-bg);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .gauge-group {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .gauge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+
+        .gauge-name {
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--dos-green);
+        }
+
+        .gauge-desc {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+        }
+
+        .slider-wrapper {
+            position: relative;
+            height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            height: 8px;
+            border-radius: 4px;
+            outline: none;
+            border: 1px solid var(--glass-border);
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--dos-green);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--dos-glow);
+            border: 2px solid #fff;
+        }
+
+        .gauge-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+            color: var(--text-dim);
+        }
+
+        .cortisol-group .gauge-name {
+            color: #ff4444;
+        }
+        .cortisol-group input[type=range]::-webkit-slider-thumb {
+            background: #ff4444;
+            box-shadow: 0 0 15px rgba(255, 68, 68, 0.5);
+        }
+
+        .back-btn {
+            margin-top: 40px;
+            display: inline-block;
+            text-decoration: none;
+            color: var(--dos-green);
+            font-family: "Perfect DOS VGA 437", monospace;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="tty-container">
+            SYSTEM STATUS: INTERNAL BIO-METRICS
+        </div>
+
+        <div class="gauge-container">
+            <!-- Oxytocin -->
+            <div class="gauge-group">
+                <div class="gauge-header">
+                    <span class="gauge-name">Oxytocin</span>
+                    <span class="gauge-desc">Connection & Affection</span>
+                </div>
+                <div class="slider-wrapper">
+                    <input type="range" min="0" max="100" value="50">
+                </div>
+                <div class="gauge-labels">
+                    <span>Lonely</span>
+                    <span>Loved</span>
+                </div>
+            </div>
+
+            <!-- Dopamine -->
+            <div class="gauge-group">
+                <div class="gauge-header">
+                    <span class="gauge-name">Dopamine</span>
+                    <span class="gauge-desc">Excitement & Interest</span>
+                </div>
+                <div class="slider-wrapper">
+                    <input type="range" min="0" max="100" value="50">
+                </div>
+                <div class="gauge-labels">
+                    <span>Bored/Drained</span>
+                    <span>Sparky</span>
+                </div>
+            </div>
+
+            <!-- Endorphins -->
+            <div class="gauge-group">
+                <div class="gauge-header">
+                    <span class="gauge-name">Endorphins</span>
+                    <span class="gauge-desc">Movement & Play</span>
+                </div>
+                <div class="slider-wrapper">
+                    <input type="range" min="0" max="100" value="50">
+                </div>
+                <div class="gauge-labels">
+                    <span>Restless</span>
+                    <span>Active/Good</span>
+                </div>
+            </div>
+
+            <!-- Serotonin -->
+            <div class="gauge-group">
+                <div class="gauge-header">
+                    <span class="gauge-name">Serotonin</span>
+                    <span class="gauge-desc">Pride & Helpfulness</span>
+                </div>
+                <div class="slider-wrapper">
+                    <input type="range" min="0" max="100" value="50">
+                </div>
+                <div class="gauge-labels">
+                    <span>Unseen</span>
+                    <span>Proud</span>
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 40px 0;">
+
+            <!-- Cortisol -->
+            <div class="gauge-group cortisol-group">
+                <div class="gauge-header">
+                    <span class="gauge-name">Cortisol</span>
+                    <span class="gauge-desc">Worry & Anxiety</span>
+                </div>
+                <div class="slider-wrapper">
+                    <input type="range" min="0" max="100" value="20">
+                </div>
+                <div class="gauge-labels">
+                    <span>Calm</span>
+                    <span>Anxious</span>
+                </div>
+            </div>
+        </div>
+
+        <a href="../index.html" class="back-btn">← RETURN TO HUB</a>
+    </div>
+</body>
+</html>

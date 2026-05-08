@@ -41,6 +41,7 @@ This document outlines the strategic organization and categorization of projects
 
 ## health/
 **Focus:** Nutrition, physical well-being, and culinary education.
+- **internal-gauges**: Kid-friendly emotional/chemical dashboard.
 - **chef**: "The Chef" - primary culinary logic and interactive meal tool.
 - **recipes**: General nutrition tracking and recipe repository.
 
