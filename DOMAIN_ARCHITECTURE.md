@@ -10,7 +10,7 @@ This document outlines the strategic organization and categorization of projects
 - **mu-terminal**: High-fidelity data visualization and analysis.
 - **real-estate**: Fund modeling and property analysis tools.
 - **macro-engine**: Core processing engine for economic indicators.
-- **greengates-boutique**: Business logic and e-commerce prototyping.
+- **family-finance**: Business & family wealth management.
 *Note: This domain is excluded from GitHub syncing due to high compute and local-only database requirements.*
 
 ## iq/

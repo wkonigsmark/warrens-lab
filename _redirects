@@ -8,6 +8,9 @@
 # Health Domain Redirects
 /chef/*         /health/chef/:splat         200
 
+/greengates-boutique/*  /intelligence/family-finance/:splat  200
+/family-finance/*       /intelligence/family-finance/:splat  200
+
 # Catch-all for top-level access (ensuring legacy links still work)
 /iq/ants-apples/*  /ants-apples/:splat   301
 /iq/lexicon/*      /lexicon/:splat       301
