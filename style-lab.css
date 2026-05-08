@@ -1,0 +1,186 @@
+/* Burnmark Productions - Shared Design System (style-lab.css) */
+
+@font-face {
+  font-family: "Perfect DOS VGA 437";
+  src: url("/lifestyle/fonts/PerfectDOSVGA437.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg-color: #0c0e12;
+  --dos-green: #33ff33;
+  --dos-glow: rgba(51, 255, 51, 0.25);
+  --text-main: #ffffff;
+  --text-dim: rgba(255, 255, 255, 0.4);
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  background: #000000;
+  background: radial-gradient(circle at top right, #1a1e26, #000000);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  color: var(--text-main);
+  font-family: 'Outfit', sans-serif;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hero {
+  text-align: center;
+  padding: 60px 24px 40px;
+  max-width: 400px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: auto;
+}
+
+.tty-container {
+  font-family: "Perfect DOS VGA 437", monospace;
+  font-size: clamp(18px, 5vw, 26px);
+  color: var(--dos-green);
+  text-shadow: 0 0 10px var(--dos-glow);
+  line-height: 1.4;
+  margin-bottom: 2.5rem;
+  min-height: 3.5em;
+  display: block;
+  -webkit-font-smoothing: none;
+  letter-spacing: 0;
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.7ch;
+  height: 1.05em;
+  background: var(--dos-green);
+  margin-left: 0.15ch;
+  vertical-align: middle;
+  animation: blink 0.8s steps(1, end) infinite;
+  box-shadow: 0 0 8px var(--dos-green);
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.nav-menu {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+  margin-top: 1rem;
+}
+
+.nav-menu.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.nav-item {
+  text-decoration: none;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 14px 20px;
+  border-radius: 12px;
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-item.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--dos-green);
+  transform: scaleY(0);
+  transition: transform 0.4s ease;
+}
+
+.nav-item:hover {
+  color: #ffffff;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.1) 100%);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateX(12px) scale(1.01);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7), 0 0 15px rgba(51, 255, 51, 0.15);
+}
+
+.nav-item:hover::before { transform: scaleY(1); }
+
+.item-icon { font-size: 1.8rem; flex-shrink: 0; }
+
+.item-info { display: flex; flex-direction: column; gap: 2px; text-align: left; }
+
+.item-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0;
+}
+
+.item-subtext {
+  font-weight: 400;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+.nav-item::after {
+  content: '→';
+  font-size: 1.1rem;
+  opacity: 0;
+  transform: translateX(-15px);
+  transition: all 0.3s ease;
+  color: var(--dos-green);
+  margin-left: auto;
+}
+
+.nav-item:hover::after { opacity: 1; transform: translateX(0); }
+
+.skip-hint {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  color: var(--dos-green);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  opacity: 0.3;
+  font-family: "Perfect DOS VGA 437", monospace;
+  transition: opacity 0.3s;
+}

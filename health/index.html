@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Domain - Burnmark Productions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style-lab.css">
+</head>
+<body>
+  <div class="hero">
+    <div class="tty-container">
+      <span id="text"></span><span class="cursor"></span>
+    </div>
+
+    <nav id="main-nav" class="nav-menu">
+      <a href="chef/index.html" class="nav-item">
+        <div class="item-icon">👨‍🍳</div>
+        <div class="item-info">
+          <h3 class="item-title">The Chef</h3>
+          <p class="item-subtext">Culinary Logic & Experiments</p>
+        </div>
+      </a>
+      <a href="recipes/index.html" class="nav-item">
+        <div class="item-icon">📖</div>
+        <div class="item-info">
+          <h3 class="item-title">Kitchen Vault</h3>
+          <p class="item-subtext">Recipe Archives & Planning</p>
+        </div>
+      </a>
+      <a href="../index.html" class="nav-item">
+        <div class="item-icon">🔙</div>
+        <div class="item-info">
+          <h3 class="item-title">Back to Lab</h3>
+          <p class="item-subtext">Return to Main Hub</p>
+        </div>
+      </a>
+    </nav>
+  </div>
+
+  <div id="skip-hint" class="skip-hint">Click Anywhere to Skip</div>
+
+  <script>
+    (function () {
+      const TEXT = "Calibrating nutrition metrics, preheating...";
+      const textEl = document.getElementById("text");
+      const navEl = document.getElementById("main-nav");
+      const hintEl = document.getElementById("skip-hint");
+      let i = 0; let isSkipped = false;
+      function getStaggeredDelay(char) {
+        if (isSkipped) return 0;
+        let delay = Math.floor(60 + Math.random() * 60);
+        if (char === " ") delay += 100;
+        if (char === ",") delay += 300;
+        return delay;
+      }
+      function skip() {
+        if (isSkipped) return;
+        isSkipped = true;
+        textEl.textContent = TEXT;
+        showMenu();
+      }
+      function showMenu() {
+        navEl.classList.add("visible");
+        const items = navEl.querySelectorAll(".nav-item");
+        items.forEach((item, index) => {
+          setTimeout(() => { item.classList.add("revealed"); }, index * 120);
+        });
+        hintEl.style.opacity = "0";
+        setTimeout(() => hintEl.remove(), 400);
+      }
+      function type() {
+        if (isSkipped) return;
+        textEl.textContent = TEXT.slice(0, i++);
+        if (i <= TEXT.length) {
+          setTimeout(type, getStaggeredDelay(TEXT[i - 1]));
+        } else {
+          setTimeout(showMenu, 400);
+        }
+      }
+      document.addEventListener('click', skip);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') skip();
+      });
+      setTimeout(type, 300);
+    })();
+  </script>
+</body>
+</html>

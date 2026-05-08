@@ -9,218 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-  <style>
-    @font-face {
-      font-family: "Perfect DOS VGA 437";
-      src: url("fonts/PerfectDOSVGA437.woff2") format("woff2");
-      font-weight: normal;
-      font-style: normal;
-      font-display: swap;
-    }
 
-    :root {
-      --bg-color: #0c0e12;
-      --dos-green: #33ff33;
-      --dos-glow: rgba(51, 255, 51, 0.25);
-      --text-main: #ffffff;
-      --text-dim: rgba(255, 255, 255, 0.4);
-      --glass-bg: rgba(255, 255, 255, 0.04);
-      --glass-border: rgba(255, 255, 255, 0.1);
-    }
-
-    body {
-      background: #000000;
-      background: radial-gradient(circle at top right, #1a1e26, #000000);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column; /* Allows vertical stacking */
-      align-items: center;
-      justify-content: flex-start; /* Ensures content flows from top and doesn't cut off */
-      min-height: 100vh;
-      color: var(--text-main);
-      font-family: 'Outfit', sans-serif;
-      overflow-y: auto; /* Enable scroll */
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 60px 24px 40px; /* Gives room at the top, and tightens left/right margins */
-      max-width: 400px;
-      width: 100%;
-      box-sizing: border-box;
-      margin: auto; /* Centers horizontally and vertically */
-    }
-
-    .tty-container {
-      font-family: "Perfect DOS VGA 437", monospace;
-      font-size: clamp(18px, 5vw, 26px);
-      color: var(--dos-green);
-      text-shadow: 0 0 10px var(--dos-glow);
-      line-height: 1.4;
-      margin-bottom: 2.5rem;
-      min-height: 3.5em;
-      display: block;
-      -webkit-font-smoothing: none;
-      letter-spacing: 0;
-    }
-
-    #text {
-      color: inherit;
-    }
-
-    .cursor {
-      display: inline-block;
-      width: 0.7ch;
-      height: 1.05em;
-      background: var(--dos-green);
-      margin-left: 0.15ch;
-      vertical-align: middle;
-      animation: blink 0.8s steps(1, end) infinite;
-      box-shadow: 0 0 8px var(--dos-green);
-    }
-
-    @keyframes blink {
-      50% {
-        opacity: 0;
-      }
-    }
-
-    /* Minimalist Premium Dropdown Menu */
-    .nav-menu {
-      opacity: 0;
-      transform: translateY(-10px);
-      transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      pointer-events: none;
-      margin-top: 1rem;
-    }
-
-    .nav-menu.visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: all;
-    }
-
-    .nav-item {
-      text-decoration: none;
-      color: #ffffff;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-top: 1px solid rgba(255, 255, 255, 0.35);
-      padding: 14px 20px;
-      border-radius: 12px;
-      transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      backdrop-filter: blur(20px);
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
-
-      /* Cascading Reveal Prep */
-      opacity: 0;
-      transform: translateY(15px);
-      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .nav-item.revealed {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .nav-item::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 4px;
-      height: 100%;
-      background: var(--dos-green);
-      transform: scaleY(0);
-      transition: transform 0.4s ease;
-    }
-
-    .nav-item:hover {
-      color: #ffffff;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.1) 100%);
-      border-color: rgba(255, 255, 255, 0.4);
-      transform: translateX(12px) scale(1.01);
-      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7), 0 0 15px rgba(51, 255, 51, 0.15);
-    }
-
-    .nav-item:hover::before {
-      transform: scaleY(1);
-    }
-
-    .item-icon {
-      font-size: 1.8rem;
-      flex-shrink: 0;
-    }
-
-    .item-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      text-align: left;
-    }
-
-    .item-title {
-      font-weight: 700;
-      font-size: 1.05rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin: 0;
-    }
-
-    .item-subtext {
-      font-weight: 400;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--text-dim);
-      margin: 0;
-    }
-
-    .nav-item::after {
-      content: '→';
-      font-size: 1.1rem;
-      opacity: 0;
-      transform: translateX(-15px);
-      transition: all 0.3s ease;
-      color: var(--dos-green);
-      margin-left: auto;
-    }
-
-    .nav-item:hover::after {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .skip-hint {
-      position: fixed;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.7rem;
-      color: var(--dos-green);
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      opacity: 0.3;
-      font-family: "Perfect DOS VGA 437", monospace;
-      transition: opacity 0.3s;
-    }
-
-    .skip-hint:hover {
-      opacity: 0.8;
-    }
-  </style>
+    <link rel="stylesheet" href="style-lab.css">
 </head>
 
 <body>
@@ -234,35 +24,56 @@
         <div class="item-icon">🧠</div>
         <div class="item-info">
           <h3 class="item-title">IQ</h3>
-          <p class="item-subtext">Educational toolkit & brain training lab</p>
+          <p class="item-subtext">Academy & Brain Training</p>
         </div>
       </a>
-      <a href="dynasty/baseball/index.html" class="nav-item">
-        <div class="item-icon">⚾</div>
+      <a href="intelligence/index.html" class="nav-item">
+        <div class="item-icon">⚡</div>
         <div class="item-info">
-          <h3 class="item-title">Dynasty</h3>
-          <p class="item-subtext">Diamond strategy & team management</p>
+          <h3 class="item-title">Intelligence</h3>
+          <p class="item-subtext">Enterprise Data & Modeling</p>
         </div>
       </a>
-      <a href="world-cup/index.html" class="nav-item">
+      <a href="sports/index.html" class="nav-item">
         <div class="item-icon">🏆</div>
         <div class="item-info">
-          <h3 class="item-title">World Cup</h3>
-          <p class="item-subtext">Tournament tracking & historical archives</p>
+          <h3 class="item-title">Sports</h3>
+          <p class="item-subtext">Competitions & Analytics</p>
         </div>
       </a>
-      <a href="recipes/index.html" class="nav-item">
-        <div class="item-icon">🍳</div>
+      <a href="games/index.html" class="nav-item">
+        <div class="item-icon">🎮</div>
         <div class="item-info">
-          <h3 class="item-title">Kitchen Sync</h3>
-          <p class="item-subtext">Culinary vault & recipe coordination</p>
+          <h3 class="item-title">Games</h3>
+          <p class="item-subtext">Logic, Skill & Strategy</p>
         </div>
       </a>
-      <a href="cocktails/index.html" class="nav-item">
-        <div class="item-icon">🍸</div>
+      <a href="health/index.html" class="nav-item">
+        <div class="item-icon">🌿</div>
         <div class="item-info">
-          <h3 class="item-title">Cocktail Compass</h3>
-          <p class="item-subtext">Mixology library & drink coordination</p>
+          <h3 class="item-title">Health</h3>
+          <p class="item-subtext">Nutrition & Culinary Arts</p>
+        </div>
+      </a>
+      <a href="music/index.html" class="nav-item">
+        <div class="item-icon">🎵</div>
+        <div class="item-info">
+          <h3 class="item-title">Music</h3>
+          <p class="item-subtext">Theory & Composition</p>
+        </div>
+      </a>
+      <a href="kids/index.html" class="nav-item">
+        <div class="item-icon">🎈</div>
+        <div class="item-info">
+          <h3 class="item-title">Kids</h3>
+          <p class="item-subtext">Early Learning & Play</p>
+        </div>
+      </a>
+      <a href="lifestyle/index.html" class="nav-item">
+        <div class="item-icon">✨</div>
+        <div class="item-info">
+          <h3 class="item-title">Lifestyle</h3>
+          <p class="item-subtext">Design, Mixology & Art</p>
         </div>
       </a>
     </nav>
