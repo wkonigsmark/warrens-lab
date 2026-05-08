@@ -361,17 +361,29 @@
     });
   }
 
+  function updateRunStamp(row) {
+    if (!row?.description) return;
+    const d = new Date(row.description);
+    const isToday = d.toDateString() === new Date().toDateString();
+    const dateStr = isToday ? 'today' : d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const timeStr = d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    document.getElementById('updated-ts').textContent = `Pipeline last ran ${dateStr} at ${timeStr}`;
+  }
+
   async function loadAll() {
     const { data, error } = await sb.from('items').select('*').order('date', {ascending:true, nullsFirst:false});
     if (error) { document.getElementById('loading').textContent = 'Error loading data.'; return; }
-    allItems = data;
+    const metaRow = data.find(i => i.id === 'meta-last-run');
+    allItems = data.filter(i => i.type !== 'meta');
     document.getElementById('loading').style.display = 'none';
     document.getElementById('main-cols').style.display = '';
-    document.getElementById('updated-ts').textContent = 'Updated ' + new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+    if (metaRow) updateRunStamp(metaRow);
+    else document.getElementById('updated-ts').textContent = 'Pipeline run time unknown — trigger a run to sync';
     render();
   }
 
   sb.channel('items').on('postgres_changes', {event:'*', schema:'public', table:'items'}, p => {
+    if (p.new?.id === 'meta-last-run') { updateRunStamp(p.new); return; }
     if (p.eventType==='UPDATE') { const i=allItems.findIndex(x=>x.id===p.new.id); if(i!==-1) allItems[i]=p.new; }
     else if (p.eventType==='INSERT') allItems.push(p.new);
     else if (p.eventType==='DELETE') allItems=allItems.filter(x=>x.id!==p.old.id);

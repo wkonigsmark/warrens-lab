@@ -426,6 +426,15 @@ def main(auth: bool = False):
         added = upsert_to_supabase(sb, items, type_)
         print(f"  {type_}: +{added} new items")
 
+    run_ts = datetime.now(timezone.utc).isoformat()
+    sb.table("items").upsert({
+        "id": "meta-last-run",
+        "type": "meta",
+        "title": "Pipeline last run",
+        "description": run_ts,
+    }, on_conflict="id").execute()
+    print(f"Pipeline timestamp: {run_ts}")
+
     print("Done.")
 
 
