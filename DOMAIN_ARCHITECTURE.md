@@ -42,7 +42,8 @@ This document outlines the strategic organization and categorization of projects
 
 ## health/
 **Focus:** Nutrition, physical well-being, and culinary education.
-- **recipes**: "The Chef" - culinary logic and nutrition tracking.
+- **chef**: "The Chef" - primary culinary logic and interactive meal tool.
+- **recipes**: General nutrition tracking and recipe repository.
 
 ## music/
 **Focus:** Music theory, audio composition, and sound experiments.

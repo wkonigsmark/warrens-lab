@@ -5,6 +5,9 @@
 /lexicon/*      /iq/lexicon/:splat       200
 /stencil/*      /iq/stencil/:splat       200
 
+# Health Domain Redirects
+/chef/*         /health/chef/:splat         200
+
 # Catch-all for top-level access (ensuring legacy links still work)
 /iq/ants-apples/*  /ants-apples/:splat   301
 /iq/lexicon/*      /lexicon/:splat       301
