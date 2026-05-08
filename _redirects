@@ -10,6 +10,7 @@
 
 /greengates-boutique/*  /intelligence/family-finance/:splat  200
 /family-finance/*       /intelligence/family-finance/:splat  200
+/art-gallery/*          /kids/art-gallery/:splat             200
 
 # Catch-all for top-level access (ensuring legacy links still work)
 /iq/ants-apples/*  /ants-apples/:splat   301

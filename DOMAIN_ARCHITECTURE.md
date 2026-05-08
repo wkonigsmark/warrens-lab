@@ -33,12 +33,11 @@ This document outlines the strategic organization and categorization of projects
 
 ## games/
 **Focus:** Classic board games, logic puzzles, and skill-based stimulation.
-- **mancala**: Traditional stone-sowing game engine.
-- **connect-4**: Spatial logic and strategy.
-- **blackjack**: Probability and risk-management simulator.
-- **sudoku**: Pure logic and number placement.
-- **matching**: Memory and pattern matching.
-- **abacus**: Calculation-based logic game.
+- **mancala**: Traditional stone game.
+- **connect-4**: Classic spatial strategy.
+- **sudoku**: Logic and number grid.
+- **matching**: Kid-friendly memory game.
+- **abacus**: Calculation and math visualization.
 
 ## health/
 **Focus:** Nutrition, physical well-being, and culinary education.
@@ -50,14 +49,14 @@ This document outlines the strategic organization and categorization of projects
 - **music**: Central repository for theory labs and composition tools.
 
 ## kids/
-**Focus:** Early-stage logic and foundational digital literacy.
-- **kids**: General activities and simplified interfaces.
-- **kid-code**: Foundational programming concepts for early learners.
+**Focus:** Child-safe learning, early coding, and creative tools.
+- **kid-code**: Foundational logic and interactive play.
+- **art-gallery**: Premium framing and creative display tool.
+- **kids**: General collection of children's activities and simplified interfaces.
 
 ## lifestyle/
 **Focus:** Design, leisure, and aesthetic exploration.
 - **cocktails**: Mixology and social utility.
-- **art-gallery**: High-end CSS framing and presentation.
 - **fonts**: Typography and design asset management.
 
 ---
