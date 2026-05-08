@@ -47,6 +47,24 @@
     .cols.solo-curr #curriculum-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
     .cols.solo-curr #curriculum-list .card { margin-bottom: 0; }
     @media (max-width: 860px) { .cols { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) {
+      .page { padding: 1rem 0.9rem 3rem; }
+      .site-header { padding: 1rem 0 0.75rem; margin-bottom: 1rem; }
+      h1 { font-size: 1.75rem; }
+      .controls { gap: 8px; margin-bottom: 1.25rem; }
+      .search-wrap { max-width: 100%; min-width: 0; flex: 1 1 auto; }
+      .show-done-wrap { margin-left: 0; width: 100%; padding: 2px 0; }
+      .pills-divider { display: none; }
+      .filter-pills { width: 100%; }
+      .fpill { padding: 7px 14px; font-size: 13px; }
+      .done-btn { padding: 6px 12px; font-size: 11px; }
+      .cal-row { padding: 0.6rem 0.75rem; }
+      .task-body { padding: 0.65rem 0.75rem; }
+      .card { padding: 0.75rem 0.85rem; }
+      .cols { gap: 1.5rem; }
+      .section-title { font-size: 1.05rem; margin-bottom: 1rem; }
+      footer { font-size: 11px; }
+    }
     .section-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 600; margin-bottom: 1.2rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
     .empty { color: var(--bark-light); font-size: 13px; font-style: italic; }
     /* Events */
