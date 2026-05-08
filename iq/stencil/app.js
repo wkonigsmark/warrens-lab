@@ -1,0 +1,1749 @@
+// Canvas setup
+const canvas = document.getElementById('drawingCanvas');
+const ctx = canvas.getContext('2d');
+const clearBtn = document.getElementById('clearBtn');
+const newWordBtn = document.getElementById('newWordBtn');
+
+// Offscreen canvas for hit testing
+const hitCanvas = document.createElement('canvas');
+const hitCtx = hitCanvas.getContext('2d', { willReadFrequently: true });
+
+// Game State
+const GAME_STATE = {
+    word: '',
+    letterIndex: 0,
+    isDrawing: false,
+    currentStroke: [],
+    fadingStrokes: [],
+    currentLetterStrokes: [],
+    completedLetters: [],
+    totalPathLength: 0 // Total length of the letter path
+};
+
+// Curve Tolerance Boost
+const CURVED_LETTERS = ['B', 'C', 'D', 'G', 'J', 'O', 'P', 'Q', 'R', 'S', 'U'];
+const TRICKY_LETTERS = ['J', 'U', 'E', 'G', 'I'];
+
+// Helper to generate smooth arcs
+function generateArc(centerX, centerY, radiusX, radiusY, startAngle, endAngle, steps = 12) {
+    return Array.from({ length: steps + 1 }, (_, i) => {
+        const t = startAngle + (i / steps) * (endAngle - startAngle);
+        return [centerX + radiusX * Math.cos(t), centerY + radiusY * Math.sin(t)];
+    });
+}
+
+// Simplified Vector Paths (0-1 coordinate space)
+const LETTER_PATHS = {
+    'A': [[[0.5, 0], [0.1, 1]], [[0.5, 0], [0.9, 1]], [[0.25, 0.6], [0.75, 0.6]]],
+    'B': [
+        [[0.15, 0], [0.15, 1]], // Spine
+        generateArc(0.15, 0.25, 0.55, 0.25, -Math.PI / 2, Math.PI / 2), // Top Loop
+        generateArc(0.15, 0.75, 0.60, 0.25, -Math.PI / 2, Math.PI / 2)  // Bottom Loop
+    ],
+    'C': [
+        // Smooth C curve (counter-clockwise from top-right)
+        [[0.85, 0.2], [0.7, 0.05], [0.5, 0], [0.3, 0.05], [0.15, 0.2], [0.1, 0.5], [0.15, 0.8], [0.3, 0.95], [0.5, 1], [0.7, 0.95], [0.85, 0.8]]
+    ],
+    'D': [
+        [[0.15, 0], [0.15, 1]], // Spine
+        generateArc(0.15, 0.5, 0.7, 0.5, -Math.PI / 2, Math.PI / 2) // Big Right Curve
+    ],
+    'E': [[[0.15, 0], [0.15, 1]], [[0.15, 0], [0.85, 0]], [[0.15, 0.5], [0.75, 0.5]], [[0.15, 1], [0.85, 1]]],
+    'F': [[[0.15, 0], [0.15, 1]], [[0.15, 0], [0.85, 0]], [[0.15, 0.5], [0.75, 0.5]]],
+    'G': [
+        [[0.85, 0.2], [0.7, 0.05], [0.5, 0], [0.3, 0.05], [0.15, 0.2], [0.1, 0.5], [0.15, 0.8], [0.3, 0.95], [0.5, 1], [0.7, 0.95], [0.88, 0.8]],
+        [[0.88, 0.8], [0.88, 0.6], [0.6, 0.6]]
+    ],
+    'H': [[[0.2, 0], [0.2, 1]], [[0.8, 0], [0.8, 1]], [[0.2, 0.5], [0.8, 0.5]]],
+    'I': [[[0.5, 0], [0.5, 1]], [[0.2, 0], [0.8, 0]], [[0.2, 1], [0.8, 1]]],
+    'J': [
+        // Spine down to curve
+        [[0.65, 0], [0.65, 0.75]],
+        // Hook
+        generateArc(0.4, 0.75, 0.25, 0.25, 0, Math.PI)
+    ],
+    'K': [[[0.2, 0], [0.2, 1]], [[0.8, 0], [0.2, 0.5]], [[0.2, 0.5], [0.8, 1]]],
+    'L': [[[0.2, 0], [0.2, 1]], [[0.2, 1], [0.8, 1]]],
+    'M': [[[0.1, 1], [0.1, 0]], [[0.1, 0], [0.5, 0.8]], [[0.5, 0.8], [0.9, 0]], [[0.9, 0], [0.9, 1]]],
+    'N': [[[0.2, 1], [0.2, 0]], [[0.2, 0], [0.8, 1]], [[0.8, 1], [0.8, 0]]],
+    'O': [generateArc(0.5, 0.5, 0.45, 0.5, -Math.PI / 2, 1.5 * Math.PI, 24)],
+    'P': [
+        [[0.15, 0], [0.15, 1]], // Spine
+        generateArc(0.15, 0.25, 0.6, 0.25, -Math.PI / 2, Math.PI / 2) // Loop
+    ],
+    'Q': [
+        generateArc(0.5, 0.5, 0.45, 0.5, -Math.PI / 2, 1.5 * Math.PI, 24),
+        [[0.6, 0.7], [0.9, 1]]
+    ],
+    'R': [
+        [[0.15, 0], [0.15, 1]], // Spine
+        generateArc(0.15, 0.25, 0.6, 0.25, -Math.PI / 2, Math.PI / 2), // Top Loop
+        [[0.25, 0.5], [0.85, 1]] // Leg
+    ],
+    'S': [
+        // High-Res Smooth S (Manual Control Points interpolated)
+        [
+            [0.85, 0.15], [0.82, 0.10], [0.75, 0.05], [0.65, 0.02], [0.5, 0.02], [0.35, 0.04], [0.25, 0.10], [0.18, 0.18], // Top hook
+            [0.15, 0.25], [0.16, 0.32], [0.22, 0.38], [0.30, 0.44], [0.40, 0.48], [0.5, 0.5], // Middle crossing
+            [0.60, 0.52], [0.70, 0.56], [0.78, 0.62], [0.84, 0.68], [0.85, 0.75], // Bottom curve start
+            [0.82, 0.85], [0.75, 0.92], [0.65, 0.96], [0.5, 0.98], [0.35, 0.96], [0.22, 0.90], [0.15, 0.82] // Bottom hook
+        ]
+    ],
+    'T': [[[0.5, 0], [0.5, 1]], [[0.1, 0], [0.9, 0]]],
+    'U': [
+        // Left side down, curve, right side up
+        [[0.2, 0], [0.2, 0.7]],
+        generateArc(0.5, 0.7, 0.3, 0.3, Math.PI, 0), // Bottom bowl - Corrected angle for downward curve
+        [[0.8, 0.7], [0.8, 0]] // Right side up
+    ],
+    'V': [[[0.1, 0], [0.5, 1]], [[0.5, 1], [0.9, 0]]],
+    'W': [[[0.1, 0], [0.3, 1]], [[0.3, 1], [0.5, 0.5]], [[0.5, 0.5], [0.7, 1]], [[0.7, 1], [0.9, 0]]],
+    'X': [[[0.15, 0], [0.85, 1]], [[0.85, 0], [0.15, 1]]],
+    'Y': [[[0.15, 0], [0.5, 0.5]], [[0.85, 0], [0.5, 0.5]], [[0.5, 0.5], [0.5, 1]]],
+    'Z': [[[0.15, 0], [0.85, 0]], [[0.85, 0], [0.15, 1]], [[0.15, 1], [0.85, 1]]]
+};
+
+const NUMERIC_PATHS = {
+    '0': [generateArc(0.5, 0.5, 0.4, 0.5, -Math.PI / 2, 1.5 * Math.PI, 30)],
+    '1': [[[0.5, 0], [0.5, 1]], [[0.3, 0.2], [0.5, 0]]],
+    '2': [
+        [[0.15, 0.25], [0.25, 0.08], [0.5, 0], [0.75, 0.08], [0.85, 0.25], [0.85, 0.45], [0.15, 1]],
+        [[0.15, 1], [0.85, 1]]
+    ],
+    '3': [
+        // Top loop - refined to match screenshot
+        [[0.2, 0.22], [0.35, 0.05], [0.55, 0], [0.75, 0.05], [0.85, 0.22], [0.85, 0.4], [0.75, 0.48], [0.45, 0.48]],
+        // Bottom loop - fixed flat bottom with rounded curve
+        [[0.45, 0.48], [0.75, 0.48], [0.92, 0.55], [0.95, 0.75], [0.85, 0.95], [0.55, 1.0], [0.25, 0.95], [0.15, 0.85]]
+    ],
+    '4': [[[0.8, 0], [0.8, 1]], [[0.8, 0], [0.15, 0.7]], [[0.1, 0.7], [0.95, 0.7]]],
+    '5': [
+        [[0.8, 0.02], [0.22, 0.02]],        // Top bar
+        [[0.22, 0.02], [0.22, 0.42]],      // Stem
+        // Open bowl
+        [[0.22, 0.42], [0.5, 0.42], [0.85, 0.55], [0.85, 0.85], [0.5, 1.0], [0.15, 0.88]]
+    ],
+    '6': [
+        // Rounded organic 6 - continuous stroke
+        [[0.75, 0.12], [0.5, 0.02], [0.25, 0.12], [0.12, 0.4], [0.1, 0.7], [0.25, 0.98], [0.5, 1.0], [0.8, 0.95], [0.92, 0.72], [0.85, 0.48], [0.55, 0.4], [0.15, 0.55]]
+    ],
+    '7': [[[0.15, 0.02], [0.85, 0.02]], [[0.85, 0.02], [0.4, 0.98]]],
+    '8': [
+        // High-resolution infinity loop - widened to match screenshot
+        [[0.5, 0.44], [0.28, 0.32], [0.2, 0.2], [0.32, 0.02], [0.5, 0], [0.68, 0.02], [0.8, 0.2], [0.72, 0.32], [0.5, 0.44], [0.25, 0.6], [0.12, 0.8], [0.3, 0.98], [0.5, 1], [0.7, 0.98], [0.88, 0.8], [0.75, 0.6], [0.5, 0.44]]
+    ],
+    '9': [
+        generateArc(0.5, 0.32, 0.38, 0.32, 0, 2 * Math.PI, 24),
+        [[0.88, 0.32], [0.88, 1]]
+    ]
+};
+
+
+const LOWERCASE_PATHS = {
+    'a': [generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI, 32), [[0.85, 0.5], [0.85, 1]]],
+    'b': [[[0.15, 0], [0.15, 1]], generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI, 32)],
+    'c': [generateArc(0.5, 0.75, 0.35, 0.25, 1.8 * Math.PI, 0.2 * Math.PI, 32)],
+    'd': [[[0.85, 0], [0.85, 1]], generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI, 32)],
+    'e': [[[0.15, 0.75], [0.85, 0.75]], generateArc(0.5, 0.75, 0.35, 0.25, 2 * Math.PI, 0.2 * Math.PI, 32)],
+    'f': [[[0.7, 0.1], [0.5, 0.0], [0.3, 0.1], [0.3, 1]], [[0.1, 0.5], [0.6, 0.5]]],
+    'g': [generateArc(0.5, 0.75, 0.35, 0.25, 0, 2 * Math.PI, 32), [[0.85, 0.6], [0.85, 1.3]], generateArc(0.55, 1.3, 0.3, 0.2, 0, Math.PI, 16)],
+    'h': [[[0.15, 0], [0.15, 1]], generateArc(0.45, 0.75, 0.3, 0.25, Math.PI, 2 * Math.PI), [[0.75, 0.75], [0.75, 1]]],
+    'i': [[[0.5, 0.5], [0.5, 1]], [[0.5, 0.25], [0.5, 0.27]]],
+    'j': [[[0.5, 0.5], [0.5, 1.3]], generateArc(0.35, 1.3, 0.15, 0.2, 0, Math.PI), [[0.5, 0.25], [0.5, 0.27]]],
+    'k': [[[0.15, 0], [0.15, 1]], [[0.8, 0.5], [0.15, 0.75]], [[0.25, 0.7], [0.8, 1]]],
+    'l': [[[0.5, 0], [0.5, 1]]],
+    'm': [[[0.15, 0.5], [0.15, 1]], generateArc(0.35, 0.75, 0.2, 0.25, Math.PI, 2 * Math.PI), [[0.55, 0.75], [0.55, 1]], generateArc(0.75, 0.75, 0.2, 0.25, Math.PI, 2 * Math.PI), [[0.95, 0.75], [0.95, 1]]],
+    'n': [[[0.2, 0.5], [0.2, 1]], generateArc(0.5, 0.75, 0.3, 0.25, Math.PI, 2 * Math.PI), [[0.8, 0.75], [0.8, 1]]],
+    'o': [generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI, 32)],
+    'p': [[[0.15, 0.5], [0.15, 1.5]], generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI, 32)],
+    'q': [generateArc(0.5, 0.75, 0.35, 0.25, -Math.PI / 2, 1.5 * Math.PI, 32), [[0.85, 0.5], [0.85, 1.5]]],
+    'r': [[[0.2, 0.5], [0.2, 1]], generateArc(0.6, 0.75, 0.4, 0.25, Math.PI, 1.7 * Math.PI)],
+    's': [[[0.85, 0.6], [0.75, 0.52], [0.5, 0.5], [0.3, 0.55], [0.3, 0.65], [0.5, 0.75], [0.75, 0.85], [0.8, 0.95], [0.5, 1], [0.2, 0.9]]],
+    't': [[[0.5, 0.1], [0.5, 0.9], [0.6, 1.0], [0.8, 1.0]], [[0.2, 0.5], [0.8, 0.5]]],
+    'u': [[[0.2, 0.5], [0.2, 0.8]], generateArc(0.5, 0.8, 0.3, 0.2, Math.PI, 0), [[0.8, 0.5], [0.8, 1]]],
+    'v': [[[0.2, 0.5], [0.5, 1]], [[0.5, 1], [0.8, 0.5]]],
+    'w': [[[0.1, 0.5], [0.3, 1]], [[0.3, 1], [0.5, 0.75]], [[0.5, 0.75], [0.7, 1]], [[0.7, 1], [0.9, 0.5]]],
+    'x': [[[0.2, 0.5], [0.8, 1]], [[0.8, 0.5], [0.2, 1]]],
+    'y': [[[0.15, 0.5], [0.5, 0.9]], [[0.85, 0.5], [0.35, 1.5]]],
+    'z': [[[0.15, 0.5], [0.85, 0.5]], [[0.85, 0.5], [0.15, 1]], [[0.15, 1], [0.85, 1]]]
+};
+
+Object.assign(LETTER_PATHS, LOWERCASE_PATHS);
+Object.assign(LETTER_PATHS, NUMERIC_PATHS);
+
+// --- STENCIL CERTIFIED WORD ASSETS ---
+// These are the words that have verified .png icons in /assets
+const STENCIL_CERTIFIED = [
+    'ANCHOR', 'ANT', 'APPLE', 'BALL', 'BALLOON', 'BASKET', 'BAT', 'BATH', 'BATTERY',
+    'BEAR', 'BEE', 'BELL', 'BIKE', 'BIRD', 'BOOK', 'BOTTLE', 'BOWLING', 'BREAD',
+    'BRIDGE', 'BROOM', 'BRUSH', 'BUS', 'BUTTERFLY', 'BUTTON', 'CACTUS', 'CAKE',
+    'CAMEL', 'CAMERA', 'CANDLE', 'CANDY', 'CAR', 'CARROT', 'CASTLE', 'CAT', 'CHAIR',
+    'CHEESE', 'CHERRIES', 'CHICKEN', 'CIRCLE', 'CLAW', 'CLOCK', 'CLOUD', 'CLOWN',
+    'COAT', 'COMB', 'COMPUTER', 'COOKIE', 'CORN', 'CRAB', 'CRANE', 'CRAYON', 'CROWN',
+    'CUP', 'CUPCAKE', 'DEER', 'DESK', 'DICE', 'DOG', 'DOLPHIN', 'DONKEY', 'DOOR',
+    'DRAGON', 'DRESS', 'DRUM', 'DUCK', 'EAGLE', 'EGG', 'ELEPHANT', 'FAN', 'FARMER',
+    'FEATHER', 'FIRE', 'FISH', 'FLAG', 'FLOWER', 'FORK', 'FOX', 'FROG', 'GHOST',
+    'GIFT', 'GIRAFFE', 'GLASS', 'GOAT', 'GRAPES', 'GUITAR', 'HAMMER', 'HAND', 'HAT',
+    'HEART', 'HELMET', 'HOOK', 'HORN', 'HORNS', 'HORSE', 'HOUSE', 'KANGAROO', 'KEY',
+    'KITE', 'KNIFE', 'LADDER', 'LAMB', 'LAMP', 'LEAF', 'LION', 'LOCK', 'LOG',
+    'MAGNET', 'MAP', 'MASK', 'MITTS', 'MOON', 'MOUNTAINS', 'MOUSE', 'OWL', 'PANDA',
+    'PANTS', 'PEAR', 'PENCIL', 'PENGUIN', 'PIANO', 'PIG', 'PIRATE', 'PIZZA', 'PLANE',
+    'PLANET', 'PLANT', 'PUMPKIN', 'QUEEN', 'RABBIT', 'RACOON', 'RADIO', 'RAIN',
+    'RAINBOW', 'RING', 'ROBOT', 'ROCKET', 'SCISSORS', 'SHARK', 'SHIP', 'SHOE',
+    'SLED', 'SNAIL', 'SNAKE', 'SNOW', 'SNOWMAN', 'SOCK', 'SPIDER', 'SPOON', 'STAR',
+    'SUITCASE', 'SUN', 'SWEATER', 'SWORD', 'TABLE', 'TENT', 'THRONE', 'TIGER',
+    'TOOTH', 'TRACTOR', 'TRAIN', 'TREE', 'TRIANGLE', 'TROPHY', 'TRUCK', 'TURKEY',
+    'TURTLE', 'UMBRELLA', 'UNICORN', 'VACUUM', 'VIOLIN', 'WAGON', 'WATCH', 'WAVE',
+    'WHALE', 'WHEEL', 'WINDOW', 'WITCH', 'WIZARD', 'WOLF', 'ZEBRA'
+];
+
+// Automatically build VOCABULARY_IMAGES
+const VOCABULARY_IMAGES = {};
+STENCIL_CERTIFIED.forEach(word => {
+    const fileName = word.toLowerCase();
+    VOCABULARY_IMAGES[word] = `<img src="assets/${fileName}.png" alt="${word}">`;
+});
+
+// Automatically build WORD_BANKS based on difficulty (word length)
+const WORD_BANKS = {
+    level1: STENCIL_CERTIFIED.filter(w => w.length === 3), // e.g. CAT, DOG (Base)
+    level2: STENCIL_CERTIFIED.filter(w => w.length === 4), // e.g. BALL, FISH (Beginner)
+    level3: STENCIL_CERTIFIED.filter(w => w.length === 5), // e.g. APPLE, TRAIN (Intermediate)
+    level4: STENCIL_CERTIFIED.filter(w => w.length >= 6),  // e.g. FLOWER, ROCKET (Advanced)
+    all: STENCIL_CERTIFIED
+};
+
+// Flatten for default usage
+const VALID_WORDS = STENCIL_CERTIFIED.filter(w => w.split('').every(c => LETTER_PATHS[c]));
+
+// Configuration
+const CONFIG = {
+    visualStrokeWidth: 4,      // Thin lines for the letter skeleton
+    hitToleranceWidth: 60,     // Widened 40->60: Very forgiving on "wobble"
+
+    // COMPLETION LOGIC:
+    // Reduced significantly to 0.40 (40% area coverage).
+    // Since the halo is very wide (60px), filling 40% of that huge area with a thin pen is actually quite a lot of work.
+    completionThreshold: 0.40,
+
+    accuracyThreshold: 0.1, // Not used directly in new logic, implicit in hitToleranceWidth
+
+    fadeSpeed: 0.08,
+    guideColor: 'rgba(139, 119, 101, 0.15)',
+
+    // Layout
+    letterSize: 0,
+    baseline: 0,
+    startX: 0,
+    letterPadding: 30
+};
+
+const GUIDES = {
+    sky: 0.15,
+    plane: 0.35,
+    grass: 0.55,
+    worm: 0.75
+};
+
+const DIFFICULTY_CONFIGS = {
+    'level1': { tolerance: 60, threshold: 0.35, label: "Pre-Beginner" },
+    'level2': { tolerance: 40, threshold: 0.50, label: "Beginner" },
+    'level3': { tolerance: 30, threshold: 0.60, label: "Hard" },
+    'level4': { tolerance: 20, threshold: 0.75, label: "Expert" },
+    'all': { tolerance: 40, threshold: 0.50, label: "Mixed" }
+};
+
+const SETTING_OPTIONS = {
+    mode: {
+        title: "Game Mode",
+        options: [
+            { label: 'Spelling', value: 'spelling', short: 'SPL' },
+            { label: 'Vocabulary', value: 'vocabulary', short: 'VOC' },
+            { label: 'Numbers', value: 'numbers', short: 'NUM' }
+        ]
+    },
+    level: {
+        title: "Difficulty Level",
+        options: [
+            { label: 'Pre-Beginner', value: 'level1', short: 'PB' },
+            { label: 'Beginner', value: 'level2', short: 'BEG' },
+            { label: 'Hard', value: 'level3', short: 'HRD' },
+            { label: 'Expert', value: 'level4', short: 'EXP' },
+            { label: 'All Mixed', value: 'all', short: 'MIX' }
+        ]
+    },
+    words: {
+        title: "Words Per Round",
+        options: [1, 2, 3, 4, 5, 10, 15, 20].map(v => ({ label: v.toString(), value: v, short: v.toString() }))
+    },
+    rounds: {
+        title: "Rounds To Win",
+        options: [1, 2, 3, 4, 5, 10].map(v => ({ label: v.toString(), value: v, short: v.toString() }))
+    }
+};
+
+const SETTINGS = {
+    mode: 'vocabulary',
+    level: 'level1',
+    words: 3,
+    rounds: 3
+};
+
+// Labels for UI display
+const DIFFICULTY_LABELS = {
+    'level1': 'Pre-Beginner',
+    'level2': 'Beginner',
+    'level3': 'Hard',
+    'level4': 'Expert',
+    'all': 'Mixed'
+};
+
+const MODE_LABELS = {
+    'spelling': 'Spelling',
+    'vocabulary': 'Vocabulary',
+    'numbers': 'Numbers'
+};
+
+function init() {
+    // Resize handling: Use ResizeObserver to ensure we sync whenever the 
+    // element size changes (e.g. rotating, or the menu opening/closing)
+    const resizeObserver = new ResizeObserver(() => {
+        resizeCanvas();
+    });
+    resizeObserver.observe(canvas);
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', drawStroke);
+    canvas.addEventListener('mouseup', endDrawing);
+    canvas.addEventListener('mouseout', endDrawing);
+
+    canvas.addEventListener('touchstart', startDrawing, { passive: false });
+    canvas.addEventListener('touchmove', drawStroke, { passive: false });
+    canvas.addEventListener('touchend', endDrawing, { passive: false });
+    canvas.addEventListener('touchcancel', endDrawing, { passive: false });
+
+    function clearInk() {
+        GAME_STATE.fadingStrokes = [];
+        GAME_STATE.currentStroke = [];
+        GAME_STATE.currentLetterStrokes = [];
+        GAME_STATE.totalLetterPixels = 0;
+        for (let i = 0; i < GAME_STATE.completedLetters.length; i++) {
+            GAME_STATE.completedLetters[i] = false;
+        }
+        GAME_STATE.letterIndex = 0;
+        calculateTargetArea();
+    }
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+        clearInk();
+        if (controlsContainer) controlsContainer.classList.remove('mobile-open');
+    });
+    document.getElementById('newWordBtn').addEventListener('click', () => {
+        forceNextWord();
+        if (controlsContainer) controlsContainer.classList.remove('mobile-open');
+    });
+    document.getElementById('printBtn').addEventListener('click', printWorksheet);
+    document.getElementById('printDrawBtn').addEventListener('click', printDrawWriteWorksheet);
+
+    const printVocabBtn = document.getElementById('printVocabBtn');
+    if (printVocabBtn) printVocabBtn.addEventListener('click', printVocabWorksheet);
+
+    const printIndyBtn = document.getElementById('printIndependentBtn');
+    if (printIndyBtn) printIndyBtn.addEventListener('click', printIndependentWorksheet);
+
+    const printReversalBtn = document.getElementById('printReversalBtn');
+    if (printReversalBtn) printReversalBtn.addEventListener('click', printReversalWorksheet);
+
+    // Setting Button Listeners
+    // Add touchstart to ensure early capture on tablets before modal messes with event propagation
+    ['click', 'touchstart'].forEach(evt => {
+        document.getElementById('modeBtn').addEventListener(evt, (e) => { e.preventDefault(); showSettingsOverlay('mode'); });
+        document.getElementById('levelBtn').addEventListener(evt, (e) => { e.preventDefault(); showSettingsOverlay('level'); });
+        document.getElementById('wordsBtn').addEventListener(evt, (e) => { e.preventDefault(); showSettingsOverlay('words'); });
+        document.getElementById('roundsBtn').addEventListener(evt, (e) => { e.preventDefault(); showSettingsOverlay('rounds'); });
+        document.getElementById('closeOverlay').addEventListener(evt, (e) => { e.preventDefault(); hideSettingsOverlay(); });
+    });
+
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const controlsContainer = document.querySelector('.controls');
+    if (mobileMenuBtn && controlsContainer) {
+        mobileMenuBtn.addEventListener('click', () => {
+            controlsContainer.classList.toggle('mobile-open');
+            // Force a resize check when menu state changes
+            setTimeout(resizeCanvas, 50);
+        });
+    }
+
+    applyDifficulty(); // Initial apply
+
+    // Victory Modal
+    // Note: Modal HTML might not be injected yet if full file rewrite didn't happen perfectly, but assuming it exists from Step 1.
+    const playAgainBtn = document.getElementById('playAgainBtn');
+    if (playAgainBtn) playAgainBtn.addEventListener('click', () => {
+        document.getElementById('victoryModal').classList.add('hidden');
+        resetGame();
+    });
+
+    // Initial Sync of SETTINGS to UI
+    syncSettingsToUI();
+
+    resetGame();
+    requestAnimationFrame(gameLoop);
+}
+
+function syncSettingsToUI() {
+    const modeBtn = document.getElementById('modeBtn');
+    const levelBtn = document.getElementById('levelBtn');
+    const wordsBtn = document.getElementById('wordsBtn');
+    const roundsBtn = document.getElementById('roundsBtn');
+
+    if (modeBtn) {
+        const modeOpt = SETTING_OPTIONS.mode.options.find(o => o.value === SETTINGS.mode);
+        modeBtn.textContent = modeOpt ? modeOpt.short : 'SPL';
+    }
+    if (levelBtn) {
+        const levelOpt = SETTING_OPTIONS.level.options.find(o => o.value === SETTINGS.level);
+        levelBtn.textContent = levelOpt ? levelOpt.short : 'BEG';
+    }
+    if (wordsBtn) wordsBtn.textContent = SETTINGS.words;
+    if (roundsBtn) roundsBtn.textContent = SETTINGS.rounds;
+
+    const newWordBtn = document.getElementById('newWordBtn');
+    if (newWordBtn) {
+        newWordBtn.textContent = SETTINGS.mode === 'numbers' ? 'New Number' : 'New Word';
+    }
+
+    const levelName = document.querySelector('.level-indicator');
+    const modeName = document.querySelector('.mode-indicator');
+    if (levelName) levelName.textContent = `Level: ${DIFFICULTY_LABELS[SETTINGS.level]}`;
+    if (modeName) modeName.textContent = `Mode: ${MODE_LABELS[SETTINGS.mode]}`;
+
+    applyDifficulty();
+}
+
+function applyDifficulty() {
+    const level = SETTINGS.level;
+    const config = DIFFICULTY_CONFIGS[level] || DIFFICULTY_CONFIGS['level2'];
+
+    CONFIG.hitToleranceWidth = config.tolerance;
+    CONFIG.completionThreshold = config.threshold;
+
+    const indicator = document.querySelector('.level-indicator');
+    if (indicator) indicator.textContent = `Level: ${config.label}`;
+
+    // Hide emoji guides on Hard and Expert — they're for younger learners only
+    const guidesCol = document.querySelector('.guides-column');
+    if (guidesCol) guidesCol.classList.toggle('guides-hidden', ['level3', 'level4'].includes(level));
+}
+
+function showSettingsOverlay(type) {
+    const data = SETTING_OPTIONS[type];
+    const overlay = document.getElementById('settingsOverlay');
+    const title = document.getElementById('overlayTitle');
+    const grid = document.getElementById('overlayGrid');
+
+    title.textContent = data.title;
+    grid.innerHTML = '';
+
+    data.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        if (SETTINGS[type] === opt.value) btn.classList.add('active');
+        btn.textContent = opt.label;
+        btn.onclick = (e) => {
+            e.preventDefault();
+            selectSetting(type, opt);
+        };
+        btn.ontouchstart = (e) => {
+            e.preventDefault();
+            selectSetting(type, opt);
+        };
+        grid.appendChild(btn);
+    });
+
+    overlay.classList.remove('hidden');
+}
+
+function hideSettingsOverlay() {
+    document.getElementById('settingsOverlay').classList.add('hidden');
+}
+
+function selectSetting(type, opt) {
+    SETTINGS[type] = opt.value;
+    hideSettingsOverlay();
+    
+    // Close mobile menu on selection
+    const controls = document.querySelector('.controls');
+    if (controls) controls.classList.remove('mobile-open');
+    
+    syncSettingsToUI(); // Force update all UI labels and buttons
+    resetGame();
+}
+
+function resetGame() {
+    GAME_STATE.currentRound = 1;
+    GAME_STATE.completedWordsInRound = 0;
+    GAME_STATE.hasStarted = false;
+    GAME_STATE.startTime = null;
+
+    GAME_STATE.wordsPerRound = SETTINGS.words;
+    GAME_STATE.roundsToWin = SETTINGS.rounds;
+
+    updateProgressDisplay();
+    startNewWord();
+}
+
+function startNewWord() {
+    // 1. Determine eligible words
+    const selectedLevel = SETTINGS.level;
+    const isVocab = SETTINGS.mode === 'vocabulary';
+    const isNumbers = SETTINGS.mode === 'numbers';
+
+    let eligibleWords = [];
+
+    if (isNumbers) {
+        // Generate a random number between 0 and 999
+        const randomNum = Math.floor(Math.random() * 1000);
+        eligibleWords = [randomNum.toString()];
+    } else if (isVocab) {
+        const levelWords = (selectedLevel === 'all' || !WORD_BANKS[selectedLevel]) ? VALID_WORDS : WORD_BANKS[selectedLevel];
+        // Filter the level-appropriate words to only those that have icons
+        eligibleWords = levelWords.filter(w => VOCABULARY_IMAGES[w.toUpperCase()]);
+        // If no overlap (unlikely now with unified bank), fallback to levelWords
+        if (eligibleWords.length === 0) eligibleWords = levelWords;
+    } else {
+        const levelWords = (selectedLevel === 'all' || !WORD_BANKS[selectedLevel]) ? VALID_WORDS : WORD_BANKS[selectedLevel];
+        eligibleWords = levelWords;
+    }
+
+    // Safety check
+    if (eligibleWords.length === 0) eligibleWords = VALID_WORDS;
+
+    // Mobile length cap - prevent extremely long words from overflowing small screens
+    if (window.innerWidth <= 768) {
+        eligibleWords = eligibleWords.filter(w => w.length <= 10);
+        if (eligibleWords.length === 0) eligibleWords = VALID_WORDS.filter(w => w.length <= 10);
+    }
+
+    // 2. Pick a new word (different from current if possible)
+    let newWord = GAME_STATE.word;
+    // Allow repeat if only 1 word available
+    if (eligibleWords.length > 1) {
+        let attempts = 0;
+        let lastWord = GAME_STATE.word.toUpperCase();
+        while (newWord.toUpperCase() === lastWord && attempts < 10) {
+            newWord = eligibleWords[Math.floor(Math.random() * eligibleWords.length)];
+            attempts++;
+        }
+    } else {
+        newWord = eligibleWords[0];
+    }
+
+    if (['level3', 'level4'].includes(selectedLevel)) {
+        newWord = newWord.toLowerCase();
+    }
+
+    GAME_STATE.word = newWord;
+    GAME_STATE.letterIndex = 0;
+
+    resetForNewLetter();
+    calculateLayout();
+
+    // Track new word
+    if (typeof gtag === 'function') {
+        gtag('event', 'new_word', {
+            'word': newWord,
+            'mode': SETTINGS.mode
+        });
+    }
+}
+
+function forceNextWord() {
+    startNewWord();
+}
+
+
+
+function resetForNewLetter() {
+    GAME_STATE.fadingStrokes = [];
+    GAME_STATE.currentStroke = [];
+    GAME_STATE.currentLetterStrokes = [];
+
+    if (GAME_STATE.letterIndex === 0) {
+        GAME_STATE.completedLetters = new Array(GAME_STATE.word.length).fill(false);
+    }
+
+    calculateTargetArea();
+}
+
+function resetWord() {
+    startNewWord(); // Just pick a new one or restart
+}
+
+function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+
+    hitCanvas.width = canvas.width;
+    hitCanvas.height = canvas.height;
+
+    calculateLayout();
+}
+
+function calculateLayout() {
+    const rect = canvas.getBoundingClientRect();
+    const canvasHeight = rect.height;
+    const canvasWidth = rect.width;
+
+    // Logic coordinates
+    const skyY = GUIDES.sky * canvasHeight;
+    const grassY = GUIDES.grass * canvasHeight;
+    const h = grassY - skyY;
+
+    // Use full height between sky and grass for the letter size
+    let size = h;
+    let padding = size * 0.1; // Dynamic padding
+
+    // Check width constraint
+    const maxW = canvasWidth * 0.85;
+    const aspect = 0.7;
+    const count = GAME_STATE.word.length || 1;
+    
+    let totalW = (size * aspect + padding) * count - padding;
+    if (totalW > maxW) {
+        const scale = maxW / totalW;
+        size *= scale;
+        padding *= scale;
+    }
+
+    CONFIG.letterSize = size;
+    CONFIG.letterPadding = Math.max(10, padding);
+
+    // Baseline: if letters are smaller than h (because of width scaling), 
+    // we still want them to sit on the grass line.
+    CONFIG.baseline = grassY - size;
+
+    // Calculate final width and center
+    const w = CONFIG.letterSize * aspect;
+    const finalTotalW = (w + CONFIG.letterPadding) * count - CONFIG.letterPadding;
+    CONFIG.startX = (canvasWidth - finalTotalW) / 2;
+
+    // Update Icon positions in the column
+    updateIconPositions(canvasHeight);
+
+    calculateTargetArea();
+}
+
+function updateIconPositions(canvasHeight) {
+    const icons = document.querySelectorAll('.guide-icon');
+    if (icons.length < 4) return;
+
+    icons[0].style.top = (GUIDES.sky * canvasHeight) + 'px';
+    icons[1].style.top = (GUIDES.plane * canvasHeight) + 'px';
+    icons[2].style.top = (GUIDES.grass * canvasHeight) + 'px';
+    icons[3].style.top = (GUIDES.worm * canvasHeight) + 'px';
+}
+
+function calculateTargetArea() {
+    if (GAME_STATE.letterIndex >= GAME_STATE.word.length) return;
+
+    const letter = GAME_STATE.word[GAME_STATE.letterIndex];
+    const path = LETTER_PATHS[letter];
+    if (!path) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    hitCtx.clearRect(0, 0, hitCanvas.width, hitCanvas.height);
+    hitCtx.save();
+    hitCtx.scale(dpr, dpr);
+
+    const x = getLetterX(GAME_STATE.letterIndex);
+    const y = CONFIG.baseline;
+    const s = CONFIG.letterSize;
+    const w = s * 0.7;
+
+    // Draw the "Ideal" wide path (The Target Area)
+    hitCtx.lineCap = 'round';
+    hitCtx.lineJoin = 'round';
+    hitCtx.lineWidth = CONFIG.hitToleranceWidth;
+    hitCtx.strokeStyle = 'red';
+
+    hitCtx.beginPath();
+    path.forEach(stroke => {
+        hitCtx.moveTo(x + stroke[0][0] * w, y + stroke[0][1] * s);
+        for (let i = 1; i < stroke.length; i++) {
+            hitCtx.lineTo(x + stroke[i][0] * w, y + stroke[i][1] * s);
+        }
+    });
+    hitCtx.stroke();
+    hitCtx.restore();
+
+    // Count pixels
+    const pixelData = hitCtx.getImageData(0, 0, hitCanvas.width, hitCanvas.height).data;
+    let count = 0;
+    for (let i = 3; i < pixelData.length; i += 4) {
+        if (pixelData[i] > 20) count++;
+    }
+    GAME_STATE.totalLetterPixels = count;
+}
+
+function getLetterX(index) {
+    const w = CONFIG.letterSize * 0.7;
+    return CONFIG.startX + index * (w + CONFIG.letterPadding);
+}
+
+// Rendering
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
+
+    drawFadingStrokes();
+    drawGuideLines();
+    drawWordPaths();
+    drawCurrentLetterStrokes();
+    drawCurrentStroke();
+
+    // Directional Beacon (PB Stage Only)
+    if (SETTINGS.level === 'level1') {
+        drawStartBeacon();
+    }
+
+    requestAnimationFrame(gameLoop);
+}
+
+function drawGuideLines() {
+    const width = canvas.width / window.devicePixelRatio;
+    const height = canvas.height / window.devicePixelRatio;
+
+    ctx.save();
+    ctx.lineWidth = 1;
+
+    // Sky Line (Blue)
+    ctx.strokeStyle = 'rgba(74, 144, 226, 0.4)';
+    ctx.beginPath();
+    ctx.moveTo(0, height * GUIDES.sky);
+    ctx.lineTo(width, height * GUIDES.sky);
+    ctx.stroke();
+
+    // Plane Line (Grey Dashed)
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+    ctx.beginPath();
+    ctx.setLineDash([8, 8]);
+    ctx.moveTo(0, height * GUIDES.plane);
+    ctx.lineTo(width, height * GUIDES.plane);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Grass Line (Thick Green)
+    ctx.strokeStyle = 'rgba(126, 211, 33, 0.6)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, height * GUIDES.grass);
+    ctx.lineTo(width, height * GUIDES.grass);
+    ctx.stroke();
+
+    // Worm Line (Brown)
+    ctx.strokeStyle = 'rgba(139, 119, 101, 0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, height * GUIDES.worm);
+    ctx.lineTo(width, height * GUIDES.worm);
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+function drawWordPaths() {
+    if (!GAME_STATE.word) return;
+
+    const s = CONFIG.letterSize;
+    const w = s * 0.7;
+
+    for (let i = 0; i < GAME_STATE.word.length; i++) {
+        if (GAME_STATE.completedLetters[i]) {
+            ctx.strokeStyle = '#2c3e50'; // Completed
+            ctx.lineWidth = CONFIG.visualStrokeWidth + 1; // Slightly bolder
+        } else if (i === GAME_STATE.letterIndex) {
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)'; // Active Target (Grey)
+            ctx.lineWidth = CONFIG.visualStrokeWidth;
+        } else {
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)'; // Inactive (Faint)
+            ctx.lineWidth = CONFIG.visualStrokeWidth;
+        }
+
+        const letter = GAME_STATE.word[i];
+        const path = LETTER_PATHS[letter];
+        if (!path) continue;
+
+        const lx = getLetterX(i);
+        const ly = CONFIG.baseline;
+
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        path.forEach(stroke => {
+            ctx.moveTo(lx + stroke[0][0] * w, ly + stroke[0][1] * s);
+            for (let k = 1; k < stroke.length; k++) {
+                ctx.lineTo(lx + stroke[k][0] * w, ly + stroke[k][1] * s);
+            }
+        });
+        ctx.stroke();
+    }
+}
+
+function drawCurrentLetterStrokes() {
+    if (GAME_STATE.currentLetterStrokes.length === 0) return;
+
+    ctx.beginPath();
+    ctx.strokeStyle = '#2c3e50';
+    ctx.lineWidth = CONFIG.visualStrokeWidth + 2; // Ink slightly thicker than template
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    for (let stroke of GAME_STATE.currentLetterStrokes) {
+        if (stroke.length === 0) continue;
+        ctx.moveTo(stroke[0].x, stroke[0].y);
+        for (let i = 1; i < stroke.length; i++) ctx.lineTo(stroke[i].x, stroke[i].y);
+    }
+    ctx.stroke();
+}
+
+function drawCurrentStroke() {
+    if (GAME_STATE.currentStroke.length === 0) return;
+
+    ctx.beginPath();
+    ctx.strokeStyle = '#2c3e50';
+    ctx.lineWidth = CONFIG.visualStrokeWidth + 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    const points = GAME_STATE.currentStroke;
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+    ctx.stroke();
+}
+
+function drawFadingStrokes() {
+    for (let i = GAME_STATE.fadingStrokes.length - 1; i >= 0; i--) {
+        const item = GAME_STATE.fadingStrokes[i];
+        item.opacity -= CONFIG.fadeSpeed;
+
+        if (item.opacity <= 0) {
+            GAME_STATE.fadingStrokes.splice(i, 1);
+            continue;
+        }
+
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(200, 80, 80, ${item.opacity})`;
+        ctx.lineWidth = CONFIG.visualStrokeWidth + 2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        const points = item.points;
+        if (points.length > 0) {
+            ctx.moveTo(points[0].x, points[0].y);
+            for (let j = 1; j < points.length; j++) ctx.lineTo(points[j].x, points[j].y);
+            ctx.stroke();
+        }
+    }
+}
+
+// Interactions
+function getCoords(e) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: clientX - rect.left, y: clientY - rect.top };
+}
+
+function startDrawing(e) {
+    e.preventDefault();
+    if (GAME_STATE.letterIndex >= GAME_STATE.word.length) return;
+
+    // START TIMER ON FIRST STROKE
+    if (!GAME_STATE.hasStarted) {
+        GAME_STATE.hasStarted = true;
+        GAME_STATE.startTime = Date.now();
+    }
+
+    GAME_STATE.isDrawing = true;
+    GAME_STATE.currentStroke = [];
+    GAME_STATE.currentStroke.push(getCoords(e));
+}
+
+function drawStroke(e) {
+    if (!GAME_STATE.isDrawing) return;
+    e.preventDefault();
+    GAME_STATE.currentStroke.push(getCoords(e));
+}
+
+function endDrawing(e) {
+    if (!GAME_STATE.isDrawing) return;
+    e.preventDefault();
+    GAME_STATE.isDrawing = false;
+    validateStroke();
+}
+
+function validateStroke() {
+    const points = GAME_STATE.currentStroke;
+    if (points.length < 5) return;
+
+    const dpr = window.devicePixelRatio || 1;
+
+    const letter = GAME_STATE.word[GAME_STATE.letterIndex];
+    if (!letter || !LETTER_PATHS[letter]) return;
+
+    const path = LETTER_PATHS[letter];
+    const lx = getLetterX(GAME_STATE.letterIndex);
+    const ly = CONFIG.baseline;
+    const s = CONFIG.letterSize;
+    const w = s * 0.7;
+
+    // Dynamic Tolerance
+    let currentTolerance = CONFIG.hitToleranceWidth;
+    if (CURVED_LETTERS.includes(letter)) {
+        currentTolerance *= 1.35; // 35% more forgiving for curves
+    }
+    if (TRICKY_LETTERS.includes(letter)) {
+        currentTolerance *= 1.2; // Dialed back from 1.5x to 1.2x for better challenge
+    }
+
+    // 1. Is the stroke inside the Halo?
+    // We check this by drawing the halo on hitCanvas and checking overlap
+    // Re-draw halo just to be safe
+    hitCtx.clearRect(0, 0, hitCanvas.width, hitCanvas.height);
+    hitCtx.save();
+    hitCtx.scale(dpr, dpr);
+    hitCtx.lineCap = 'round';
+    hitCtx.lineJoin = 'round';
+    hitCtx.lineWidth = currentTolerance;
+    hitCtx.strokeStyle = 'red';
+
+    hitCtx.beginPath();
+    path.forEach(stroke => {
+        hitCtx.moveTo(lx + stroke[0][0] * w, ly + stroke[0][1] * s);
+        for (let k = 1; k < stroke.length; k++) {
+            hitCtx.lineTo(lx + stroke[k][0] * w, ly + stroke[k][1] * s);
+        }
+    });
+    hitCtx.stroke();
+    hitCtx.restore();
+
+    // Check points
+    let hits = 0;
+    let total = 0;
+    const sample = 3;
+    for (let i = 0; i < points.length; i += sample) {
+        const px = Math.floor(points[i].x * dpr);
+        const py = Math.floor(points[i].y * dpr);
+        if (px >= 0 && py >= 0 && px < hitCanvas.width && py < hitCanvas.height) {
+            const alpha = hitCtx.getImageData(px, py, 1, 1).data[3];
+            if (alpha > 50) hits++;
+            total++;
+        }
+    }
+
+    const accuracy = total > 0 ? hits / total : 0;
+
+    if (accuracy < 0.6) { // Must keep 60% of stroke inside the halo
+        GAME_STATE.fadingStrokes.push({ points: [...points], opacity: 1.0 });
+        GAME_STATE.currentStroke = [];
+        return;
+    }
+
+    // Stroke is valid! Keep it.
+    GAME_STATE.currentLetterStrokes.push([...points]);
+    GAME_STATE.currentStroke = [];
+
+    checkCoverage();
+}
+
+function checkCoverage() {
+    const dpr = window.devicePixelRatio || 1;
+    const letter = GAME_STATE.word[GAME_STATE.letterIndex];
+    if (!letter || !LETTER_PATHS[letter]) return;
+
+    const path = LETTER_PATHS[letter];
+    const lx = getLetterX(GAME_STATE.letterIndex);
+    const ly = CONFIG.baseline;
+    const s = CONFIG.letterSize;
+    const w = s * 0.7;
+
+    // Dynamic Tolerance Boost
+    let currentTolerance = CONFIG.hitToleranceWidth;
+    if (CURVED_LETTERS.includes(letter)) {
+        currentTolerance *= 1.35;
+    }
+    if (TRICKY_LETTERS.includes(letter)) {
+        currentTolerance *= 1.2; // Dialed back from 1.5x
+    }
+
+    // Use global threshold
+    let letterThreshold = CONFIG.completionThreshold;
+    if (TRICKY_LETTERS.includes(letter)) {
+        letterThreshold = 0.40; // Restored to 40% challenge level
+    }
+
+    // We must pass EVERY stroke in the letter
+    const STROKE_THRESHOLD = letterThreshold;
+    let allStrokesPassed = true;
+
+    for (let i = 0; i < path.length; i++) {
+        const strokeSegment = path[i];
+
+        // PASS 1: Count Target Pixels (Red Halo)
+        hitCtx.globalCompositeOperation = 'source-over';
+        hitCtx.clearRect(0, 0, hitCanvas.width, hitCanvas.height);
+        hitCtx.save();
+        hitCtx.scale(dpr, dpr);
+        hitCtx.lineCap = 'round';
+        hitCtx.lineJoin = 'round';
+
+        // SPECIAL FIX FOR 'A' CROSSBAR:
+        // If the segment is very short relative to tolerance (like A crossbar),
+        // we use a narrower check halo to prevent intersections from "clogging" the check.
+        let checkTolerance = currentTolerance;
+        const segLen = Math.sqrt(Math.pow(strokeSegment[0][0] - strokeSegment[1][0], 2) + Math.pow(strokeSegment[0][1] - strokeSegment[1][1], 2));
+        if (segLen < 0.65) {
+            checkTolerance = Math.min(currentTolerance, 15); // Tighten for 'A' and 'H' crossbars
+        }
+
+        hitCtx.lineWidth = checkTolerance;
+        hitCtx.strokeStyle = 'red';
+
+        hitCtx.beginPath();
+        hitCtx.moveTo(lx + strokeSegment[0][0] * w, ly + strokeSegment[0][1] * s);
+        for (let k = 1; k < strokeSegment.length; k++) hitCtx.lineTo(lx + strokeSegment[k][0] * w, ly + strokeSegment[k][1] * s);
+        hitCtx.stroke();
+        hitCtx.restore();
+
+        // Calc Bounds
+        let minX = strokeSegment[0][0], maxX = strokeSegment[0][0];
+        let minY = strokeSegment[0][1], maxY = strokeSegment[0][1];
+        for (let k = 1; k < strokeSegment.length; k++) {
+            minX = Math.min(minX, strokeSegment[k][0]);
+            maxX = Math.max(maxX, strokeSegment[k][0]);
+            minY = Math.min(minY, strokeSegment[k][1]);
+            maxY = Math.max(maxY, strokeSegment[k][1]);
+        }
+        const bX = Math.floor((lx + minX * w - currentTolerance) * dpr);
+        const bY = Math.floor((ly + minY * s - currentTolerance) * dpr);
+        const bW = Math.ceil(((maxX - minX) * w + currentTolerance * 2) * dpr);
+        const bH = Math.ceil(((maxY - minY) * s + currentTolerance * 2) * dpr);
+
+        const safeBX = Math.max(0, bX);
+        const safeBY = Math.max(0, bY);
+        const safeBW = Math.min(hitCanvas.width - safeBX, bW);
+        const safeBH = Math.min(hitCanvas.height - safeBY, bH);
+
+        if (safeBW <= 0 || safeBH <= 0) continue;
+
+        const pixels1 = hitCtx.getImageData(safeBX, safeBY, safeBW, safeBH).data;
+        let targetCount = 0;
+        for (let p = 3; p < pixels1.length; p += 4) { if (pixels1[p] > 20) targetCount++; }
+
+        // PASS 2: Count Overlap (Blue User Paint)
+        hitCtx.save();
+        hitCtx.scale(dpr, dpr);
+        hitCtx.globalCompositeOperation = 'source-in';
+        hitCtx.strokeStyle = 'blue';
+        // User paint check is relative to the check halo
+        hitCtx.lineWidth = checkTolerance * 0.8;
+        hitCtx.lineCap = 'round';
+        hitCtx.lineJoin = 'round';
+
+        hitCtx.beginPath();
+        for (let uStroke of GAME_STATE.currentLetterStrokes) {
+            if (uStroke.length === 0) continue;
+            hitCtx.moveTo(uStroke[0].x, uStroke[0].y);
+            for (let u = 1; u < uStroke.length; u++) hitCtx.lineTo(uStroke[u].x, uStroke[u].y);
+        }
+        hitCtx.stroke();
+        hitCtx.restore();
+
+        const pixels2 = hitCtx.getImageData(safeBX, safeBY, safeBW, safeBH).data;
+        let coveredCount = 0;
+        for (let p = 3; p < pixels2.length; p += 4) { if (pixels2[p] > 20) coveredCount++; }
+
+        // CHECK
+        if (targetCount > 0) {
+            const ratio = coveredCount / targetCount;
+            if (ratio < STROKE_THRESHOLD) {
+                allStrokesPassed = false;
+                break; // Fail early
+            }
+        }
+    }
+
+    if (allStrokesPassed) {
+        completeLetter();
+    }
+}
+
+function updateProgressDisplay() {
+    const ratioEl = document.getElementById('progressRatio');
+    const mercury = document.getElementById('thermometerMercury');
+
+    // Calculate global progress
+    const totalWords = GAME_STATE.roundsToWin * GAME_STATE.wordsPerRound;
+
+    // completedWordsGlobal now includes letter-level decimal progress
+    const completedWordsBase = ((GAME_STATE.currentRound - 1) * GAME_STATE.wordsPerRound) + GAME_STATE.completedWordsInRound;
+
+    // Add letter progress: fraction of the current word completed
+    let letterProgress = 0;
+    if (GAME_STATE.word && GAME_STATE.word.length > 0) {
+        letterProgress = GAME_STATE.letterIndex / GAME_STATE.word.length;
+    }
+
+    const completedWordsGlobal = completedWordsBase + letterProgress;
+
+    // Percentage for mercury (0 to 100)
+    const percentage = totalWords > 0 ? (completedWordsGlobal / totalWords) * 100 : 0;
+
+    if (mercury) {
+        const currentWidth = mercury.style.width;
+        const newWidth = `${percentage}%`;
+        const bulb = document.getElementById('thermometerBulb');
+
+        if (currentWidth !== newWidth) {
+            mercury.style.width = newWidth;
+            if (bulb) {
+                // We add a slight offset to stay within the tube's visuals
+                bulb.style.left = `calc(20px + ${percentage}%)`;
+            }
+            // Trigger splash
+            mercury.classList.remove('splash');
+            void mercury.offsetWidth; // Trigger reflow
+            mercury.classList.add('splash');
+        }
+    }
+
+    if (ratioEl) {
+        ratioEl.textContent = `Word ${GAME_STATE.completedWordsInRound + 1}/${GAME_STATE.wordsPerRound} • Round ${GAME_STATE.currentRound}/${GAME_STATE.roundsToWin}`;
+    }
+}
+
+function completeLetter() {
+    playLockSound();
+    GAME_STATE.completedLetters[GAME_STATE.letterIndex] = true;
+    GAME_STATE.letterIndex++;
+
+    updateProgressDisplay();
+    resetForNewLetter();
+
+    if (GAME_STATE.letterIndex >= GAME_STATE.word.length) {
+        if (SETTINGS.mode === 'vocabulary') {
+            setTimeout(showVocabularyTest, 800);
+        } else {
+            setTimeout(completeWord, 800);
+        }
+    }
+}
+
+function completeWord() {
+    GAME_STATE.completedWordsInRound++;
+
+    if (GAME_STATE.completedWordsInRound >= GAME_STATE.wordsPerRound) {
+        // Round Complete
+        GAME_STATE.completedWordsInRound = 0;
+        GAME_STATE.currentRound++;
+
+        if (GAME_STATE.currentRound > GAME_STATE.roundsToWin) {
+            setTimeout(finishGame, 400); // Small delay to let mercury reach 100%
+            return;
+        }
+    }
+
+    startNewWord();
+}
+
+function finishGame() {
+    const durationMs = Date.now() - GAME_STATE.startTime;
+    const minutes = Math.floor(durationMs / 60000);
+    const seconds = Math.floor((durationMs % 60000) / 1000).toString().padStart(2, '0');
+
+    const msg = document.getElementById('victoryMessage');
+    if (msg) msg.textContent = `You completed Level ${GAME_STATE.wordsPerRound}x${GAME_STATE.roundsToWin} in ${minutes}:${seconds}!`;
+
+    // Explicitly force display to override any hidden classes or issues
+    const modal = document.getElementById('victoryModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+    }
+
+    // Track victory
+    if (typeof gtag === 'function') {
+        gtag('event', 'victory', {
+            'level': SETTINGS.level,
+            'mode': SETTINGS.mode,
+            'duration_secs': Math.floor(durationMs / 1000)
+        });
+    }
+}
+
+window.addEventListener('load', init);
+// Subtle "Deadbolt" Sound Synthesizer
+function playLockSound() {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+
+        // Two-part "clink-clack" sound
+        const playClick = (delay, freq, vol) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = 'square'; // Mechanical feel
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+            osc.frequency.exponentialRampToValueAtTime(10, ctx.currentTime + delay + 0.05);
+
+            gain.gain.setValueAtTime(vol, ctx.currentTime + delay);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + delay + 0.05);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.start(ctx.currentTime + delay);
+            osc.stop(ctx.currentTime + delay + 0.05);
+        };
+
+        // First click (bolt sliding)
+        playClick(0, 800, 0.05);
+        // Second click (bolt locking)
+        playClick(0.06, 400, 0.08);
+
+    } catch (e) {
+        // Silently fail if audio blocked
+    }
+}
+// Directional Beacon Synthesizer
+function drawStartBeacon() {
+    const letter = GAME_STATE.word[GAME_STATE.letterIndex];
+    if (!letter || !LETTER_PATHS[letter]) return;
+
+    const path = LETTER_PATHS[letter];
+    const lx = getLetterX(GAME_STATE.letterIndex);
+    const ly = CONFIG.baseline;
+    const s = CONFIG.letterSize;
+    const w = s * 0.7;
+
+    // 1. Find the first incomplete stroke
+    // We can't strictly know if a stroke is done without checking coverage,
+    // so we'll look at GAME_STATE.currentLetterStrokes vs LETTER_PATHS length.
+    const currentStrokeIdx = Math.min(GAME_STATE.currentLetterStrokes.length, path.length - 1);
+
+    // Get the start point of that stroke
+    const startPt = path[currentStrokeIdx][0];
+    const px = lx + startPt[0] * w;
+    const py = ly + startPt[1] * s;
+
+    // 2. Pulsing Animation
+    const time = Date.now() / 1000;
+    const pulse = (Math.sin(time * 6) + 1) / 2; // 0 to 1
+    const radius = 10 + pulse * 15;
+    const opacity = 0.2 + pulse * 0.4;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(px, py, radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(118, 75, 162, ${opacity})`; // Match theme purple
+    ctx.fill();
+
+    // Core dot
+    ctx.beginPath();
+    ctx.arc(px, py, 6, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(118, 75, 162, 0.8)`;
+    ctx.fill();
+    ctx.restore();
+}
+
+// Vocabulary Feature
+function showVocabularyTest() {
+    // 1. Normalize the target word to uppercase for reliable dictionary lookup
+    const wordBase = (GAME_STATE.word || '').toUpperCase();
+    const vocabModal = document.getElementById('vocabModal');
+    const vocabImages = document.getElementById('vocabImages');
+
+    if (!vocabModal || !vocabImages) return;
+
+    // Clear previous images
+    vocabImages.innerHTML = '';
+
+    // 2. Identify all possible words with mapped images
+    const allAssetKeys = Object.keys(VOCABULARY_IMAGES);
+
+    // 3. Ensure the correct word is actually in the bank
+    if (!VOCABULARY_IMAGES[wordBase]) {
+        console.warn(`Stencil Error: No image mapped for "${wordBase}". Please check STENCIL_CERTIFIED list and assets folder.`);
+    }
+
+    // 4. Gather distractors (all other words)
+    const distractors = allAssetKeys.filter(w => w !== wordBase);
+
+    // Shuffle distractors
+    for (let i = distractors.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [distractors[i], distractors[j]] = [distractors[j], distractors[i]];
+    }
+
+    // 5. Build final choice array (Correct Word + up to 3 distractors)
+    const numChoices = Math.min(4, allAssetKeys.length);
+    const selectedWords = [wordBase, ...distractors.slice(0, numChoices - 1)];
+
+    // Final shuffle so the correct answer isn't always first
+    for (let i = selectedWords.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [selectedWords[i], selectedWords[j]] = [selectedWords[j], selectedWords[i]];
+    }
+
+    // 6. Create selection buttons
+    selectedWords.forEach(w => {
+        const btn = document.createElement('button');
+        btn.className = 'vocab-option';
+
+        // Safety fallback: If dictionary lookup fails, show a descriptive label instead of "undefined"
+        const imgHtml = VOCABULARY_IMAGES[w];
+        if (imgHtml) {
+            btn.innerHTML = imgHtml;
+        } else {
+            btn.innerHTML = `<div class="missing-asset">?<span>${w}</span></div>`;
+            console.error(`Vocabulary choice error: Missing asset for "${w}"`);
+        }
+
+        btn.onclick = () => handleVocabSelection(w, wordBase, btn);
+        vocabImages.appendChild(btn);
+    });
+
+    // Populate the target word text
+    const targetLabel = document.getElementById('vocabTargetWord');
+    if (targetLabel) targetLabel.textContent = wordBase;
+
+    // Show the modal
+    vocabModal.classList.remove('hidden');
+}
+
+function handleVocabSelection(selectedWord, correctWord, btnElement) {
+    // Normalizing both to uppercase for safety
+    if (selectedWord.toUpperCase() === correctWord.toUpperCase()) {
+        // Success
+        btnElement.classList.add('correct');
+        playLockSound();
+        setTimeout(() => {
+            document.getElementById('vocabModal').classList.add('hidden');
+            completeWord();
+        }, 800);
+    } else {
+        // Incorrect
+        btnElement.classList.add('incorrect');
+        setTimeout(() => {
+            btnElement.classList.remove('incorrect');
+        }, 400); // Wait for shake animation to finish
+    }
+}
+
+function printWorksheet() {
+    // 1. Create a print-only container if it doesn't exist
+    let printContainer = document.getElementById('printableWorksheet');
+    if (!printContainer) {
+        printContainer = document.createElement('div');
+        printContainer.id = 'printableWorksheet';
+        document.body.appendChild(printContainer);
+    }
+
+    // 2. Build the worksheet content
+    const today = new Date().toLocaleDateString();
+    printContainer.innerHTML = `
+        <div class="worksheet-header">
+            <div class="header-left">
+                <img src="assets/banner/stencil.png" class="worksheet-logo">
+            </div>
+            <div class="header-right">
+                <div class="meta-item">Name: ______________________</div>
+                <div class="meta-item">Date: ${today}</div>
+            </div>
+        </div>
+        <hr class="worksheet-divider">
+        <div class="worksheet-content">
+            
+            <div class="trace-row">
+                <div class="trace-guide sky"></div>
+                <div class="trace-guide plane"></div>
+                <div class="trace-guide grass"></div>
+                <div class="trace-guide worm"></div>
+                <div class="trace-text">MY NAME IS</div>
+            </div>
+
+            <div class="trace-row">
+                <div class="trace-guide sky"></div>
+                <div class="trace-guide plane"></div>
+                <div class="trace-guide grass"></div>
+                <div class="trace-guide worm"></div>
+                <div class="trace-text">I AM LEARNING TO WRITE.</div>
+            </div>
+
+            <div class="trace-row">
+                <div class="trace-guide sky"></div>
+                <div class="trace-guide plane"></div>
+                <div class="trace-guide grass"></div>
+                <div class="trace-guide worm"></div>
+                <div class="trace-text"></div>
+            </div>
+        </div>
+    `;
+
+    // 3. Trigger print
+    window.print();
+}
+
+function printDrawWriteWorksheet() {
+    let printContainer = document.getElementById('printableWorksheet');
+    if (!printContainer) {
+        printContainer = document.createElement('div');
+        printContainer.id = 'printableWorksheet';
+        document.body.appendChild(printContainer);
+    }
+
+    printContainer.innerHTML = `
+        <div class="large-name-field">Name: <span></span></div>
+        <div class="draw-box"></div>
+        <div class="guides-container">
+            <div class="trace-row no-text short-row">
+                <div class="guide-icons-print">
+                    <span style="position: absolute; top: -6px;">☀️</span>
+                    <span style="position: absolute; top: 14px;">✈️</span>
+                    <span style="position: absolute; top: 34px;">🌱</span>
+                    <span style="position: absolute; top: 54px;">🪱</span>
+                </div>
+                <div class="trace-guide sky"></div>
+                <div class="trace-guide plane"></div>
+                <div class="trace-guide grass"></div>
+                <div class="trace-guide worm"></div>
+            </div>
+            <div class="trace-row no-text short-row">
+                <div class="guide-icons-print">
+                    <span style="position: absolute; top: -6px;">☀️</span>
+                    <span style="position: absolute; top: 14px;">✈️</span>
+                    <span style="position: absolute; top: 34px;">🌱</span>
+                    <span style="position: absolute; top: 54px;">🪱</span>
+                </div>
+                <div class="trace-guide sky"></div>
+                <div class="trace-guide plane"></div>
+                <div class="trace-guide grass"></div>
+                <div class="trace-guide worm"></div>
+            </div>
+        </div>
+    `;
+
+    window.print();
+}
+
+/**
+ * GENERATE PRINTABLE VOCAB QUIZ (Worksheet 2)
+ * Features stencilled word on left + 4 image options on right with checkboxes
+ */
+function printVocabWorksheet() {
+    let printContainer = document.getElementById('printableWorksheet');
+    if (!printContainer) {
+        printContainer = document.createElement('div');
+        printContainer.id = 'printableWorksheet';
+        document.body.appendChild(printContainer);
+    }
+
+    // 1. Pick 4 random words based on CURRENT LEVEL
+    // Fallback to "all" if the specific bank is too small, but aim for current level.
+    const currentBank = WORD_BANKS[SETTINGS.level] || WORD_BANKS.all;
+    const candidates = currentBank.filter(w => VOCABULARY_IMAGES[w]);
+
+    // Ensure we have at least 4 words
+    const finalCandidates = candidates.length >= 4 ? candidates : STENCIL_CERTIFIED;
+
+    const shuffled = [...finalCandidates].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 4);
+
+    let rowsHtml = '';
+    const imagePromises = [];
+
+    selected.forEach(word => {
+        // Dynamic sizing for long words in expert mode
+        let fontSize = 68;
+        let letterSpacing = 5;
+        if (word.length === 6) fontSize = 54;
+        if (word.length === 7) fontSize = 46;
+        if (word.length === 8) fontSize = 40;
+        if (word.length >= 9) {
+            fontSize = 34;
+            letterSpacing = 2;
+        }
+
+        // Hide guides on Expert level (level4)
+        const showGuides = SETTINGS.level !== 'level4';
+        const guideHtml = showGuides ? `
+            <div class="vocab-quiz-mini-guides">
+                <span>☀️</span>
+                <span>✈️</span>
+                <span>🌱</span>
+                <span>🪱</span>
+            </div>
+        ` : '<div style="flex: 0 0 25px;"></div>'; // Spacer to maintain alignment
+
+        // Find distractors starting with same letter if possible for higher challenge
+        const sameLetter = STENCIL_CERTIFIED.filter(w => w !== word && w[0] === word[0]);
+        const otherPool = STENCIL_CERTIFIED.filter(w => w !== word && w[0] !== word[0]);
+
+        // Take up to 2 same-letter distractors if available, then fill the rest with random
+        const sameSlotted = sameLetter.sort(() => 0.5 - Math.random()).slice(0, 2);
+        const distractors = [
+            ...sameSlotted,
+            ...otherPool.sort(() => 0.5 - Math.random()).slice(0, 3 - sameSlotted.length)
+        ];
+
+        const choices = [word, ...distractors].sort(() => 0.5 - Math.random());
+
+        const optionsHtml = choices.map((choice, i) => {
+            const fileName = choice.toLowerCase();
+            const imgSrc = `assets/${fileName}.png`;
+            return `
+                <div class="vocab-quiz-option">
+                    <img src="${imgSrc}" alt="${choice}" class="quiz-image">
+                    <div class="quiz-checkbox"></div>
+                </div>
+            `;
+        }).join('');
+
+        rowsHtml += `
+            <div class="vocab-quiz-row">
+                ${guideHtml}
+                <div class="vocab-quiz-word-box">
+                    <div class="trace-guide sky" style="top: 0;"></div>
+                    <div class="trace-guide plane" style="top: 33%;"></div>
+                    <div class="trace-guide grass" style="top: 66%;"></div>
+                    <div class="trace-guide worm" style="top: 100%;"></div>
+                    <div class="quiz-word-trace" style="font-size: ${fontSize}px; letter-spacing: ${letterSpacing}px;">${word}</div>
+                </div>
+                <div class="vocab-quiz-options">
+                    ${optionsHtml}
+                </div>
+            </div>
+        `;
+    });
+
+    const today = new Date().toLocaleDateString();
+    printContainer.innerHTML = `
+        <div class="worksheet-header">
+            <div class="header-left">
+                <img src="assets/banner/stencil.png" class="worksheet-logo">
+            </div>
+            <div class="header-right">
+                <div class="meta-item">Name: ______________________</div>
+                <div class="meta-item">Date: ${today}</div>
+            </div>
+        </div>
+        <hr class="worksheet-divider">
+        <div class="quiz-instructions" style="margin-bottom: 30px; font-style: italic; color: #555; font-family: 'Helvetica', sans-serif; font-size: 14px;">
+            Trace the word on the left, then check the box next to the matching picture!
+        </div>
+        <div class="vocab-quiz-content">
+            ${rowsHtml}
+        </div>
+    `;
+
+    // CRITICAL: Wait for all images to load before printing
+    const images = printContainer.querySelectorAll('img');
+    let loadedCount = 0;
+    const totalImages = images.length;
+
+    if (totalImages === 0) {
+        window.print();
+        return;
+    }
+
+    const checkAllLoaded = () => {
+        loadedCount++;
+        if (loadedCount >= totalImages) {
+            // Give a tiny bit more time for the browser to render the images into the layout
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        }
+    };
+
+    images.forEach(img => {
+        if (img.complete) {
+            checkAllLoaded();
+        } else {
+            img.addEventListener('load', checkAllLoaded);
+            img.addEventListener('error', checkAllLoaded); // Still count as "loaded" so we don't hang
+        }
+    });
+}
+
+/**
+ * GENERATE INDEPENDENT SPELLING WORKSHEET (Worksheet 3)
+ * Features one large picture per row + blank guidelines for independent spelling
+ */
+function printIndependentWorksheet() {
+    let printContainer = document.getElementById('printableWorksheet');
+    if (!printContainer) {
+        printContainer = document.createElement('div');
+        printContainer.id = 'printableWorksheet';
+        document.body.appendChild(printContainer);
+    }
+
+    // 1. Pick 4 random words based on CURRENT LEVEL
+    const currentBank = WORD_BANKS[SETTINGS.level] || WORD_BANKS.all;
+    const candidates = currentBank.filter(w => VOCABULARY_IMAGES[w]);
+    const finalCandidates = candidates.length >= 4 ? candidates : STENCIL_CERTIFIED;
+    const shuffled = [...finalCandidates].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 4);
+
+    let rowsHtml = '';
+    selected.forEach(word => {
+        // Hide guides on Expert level (level4)
+        const showGuides = SETTINGS.level !== 'level4';
+        const guideHtml = showGuides ? `
+            <div class="vocab-quiz-mini-guides">
+                <span>☀️</span>
+                <span>✈️</span>
+                <span>🌱</span>
+                <span>🪱</span>
+            </div>
+        ` : '<div style="flex: 0 0 25px;"></div>';
+
+        const fileName = word.toLowerCase();
+        const imgSrc = `assets/${fileName}.png`;
+
+        rowsHtml += `
+            <div class="vocab-quiz-row" style="justify-content: flex-start;">
+                ${guideHtml}
+                <div class="vocab-quiz-word-box" style="flex: 1; margin-right: 40px;">
+                    <div class="trace-guide sky" style="top: 0;"></div>
+                    <div class="trace-guide plane" style="top: 33%;"></div>
+                    <div class="trace-guide grass" style="top: 66%;"></div>
+                    <div class="trace-guide worm" style="top: 100%;"></div>
+                    <!-- Blank lines for independent writing (No stencil) -->
+                </div>
+                <div class="vocab-quiz-options" style="justify-content: flex-end; flex: 0 0 100px;">
+                    <div class="vocab-quiz-option" style="margin: 0; padding: 0;">
+                        <img src="${imgSrc}" alt="${word}" class="quiz-image" style="width: 100px; height: 100px; border: none; background: transparent;">
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    const levelLabel = DIFFICULTY_LABELS[SETTINGS.level] || 'Custom';
+    printContainer.innerHTML = `
+        <div class="worksheet-header">
+            <img src="assets/banner/stencil.png" class="worksheet-logo">
+            <div class="header-right">
+                <div class="meta-item"><strong>Independent Spelling</strong></div>
+                <div class="meta-item">Level: ${levelLabel}</div>
+                <div class="meta-item">Date: __________ Name: ____________</div>
+            </div>
+        </div>
+        <div class="vocab-quiz-content">
+            ${rowsHtml}
+        </div>
+    `;
+
+    // Wait for images to load before printing
+    const images = printContainer.querySelectorAll('img');
+    let loadedCount = 0;
+    const totalImages = images.length;
+
+    if (totalImages === 0) {
+        window.print();
+        return;
+    }
+
+    const checkAllLoaded = () => {
+        loadedCount++;
+        if (loadedCount >= totalImages) {
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        }
+    };
+
+    images.forEach(img => {
+        if (img.complete) {
+            checkAllLoaded();
+        } else {
+            img.addEventListener('load', checkAllLoaded);
+            img.addEventListener('error', checkAllLoaded);
+        }
+    });
+}
+
+/**
+ * GENERATE REVERSAL STUDY WORKSHEET (Worksheet 4)
+ * Theme: Tactician's Training - Spot the Mirror Ghosts
+ */
+function printReversalWorksheet() {
+    let printContainer = document.getElementById('printableWorksheet');
+    if (!printContainer) {
+        printContainer = document.createElement('div');
+        printContainer.id = 'printableWorksheet';
+        document.body.appendChild(printContainer);
+    }
+
+    const inputFieldValue = document.getElementById('reversalChars').value;
+    const userTargets = inputFieldValue ? inputFieldValue.trim().split('') : [];
+    const targets = userTargets.length > 0 ? userTargets : ['3', '4', 'b', 'd', 'p', 'q'];
+
+    let rowsHtml = '';
+
+    targets.forEach(char => {
+        // Generate a random sequence of 6 characters, mixed correct and mirrored
+        const sequence = [];
+        // Ensure at least two are correct and two are mirrored for a good drill
+        const mirrors = [true, true, false, false, Math.random() > 0.5, Math.random() > 0.5];
+        mirrors.sort(() => Math.random() - 0.5);
+
+        mirrors.forEach(isMirrored => {
+            sequence.push({ val: char, mirrored: isMirrored });
+        });
+
+        const targetsHtml = sequence.map(item => `
+            <div class="reversal-char ${item.mirrored ? 'mirror' : ''}">${item.val}</div>
+        `).join('');
+
+        rowsHtml += `
+            <div class="reversal-row">
+                <div class="reversal-commander">${char}</div>
+                <div class="reversal-targets">
+                    ${targetsHtml}
+                </div>
+            </div>
+        `;
+    });
+
+    const today = new Date().toLocaleDateString();
+    printContainer.innerHTML = `
+        <div class="worksheet-header">
+            <img src="assets/banner/stencil.png" class="worksheet-logo">
+            <div class="header-right">
+                <div class="meta-item"><strong>Tactician's Training: Mirror Ghosts</strong></div>
+                <div class="meta-item">Name: ________________ Date: ${today}</div>
+            </div>
+        </div>
+        <div class="reversal-instructions">
+            <h3 style="margin-bottom: 5px; color: #c0392b; font-family: 'Segoe UI', sans-serif;">The Mirror Ghost Challenge!</h3>
+            <p style="font-size: 15px; color: #444; font-family: 'Helvetica', sans-serif; line-height: 1.4;">The "Commander" on the left shows the True Path. Circle the <strong>True Paths</strong> and trace them. Strike an 'X' through the <strong>Mirror Ghosts</strong> (the ones facing the wrong way) before they confuse the formation!</p>
+        </div>
+        <div class="reversal-content">
+            ${rowsHtml}
+        </div>
+    `;
+
+    window.print();
+}

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lexicon: Vocab Study</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="app-container">
+        <header>
+            <div class="logo">LEXICON</div>
+            <div class="search-container">
+                <input type="text" id="lex-search" placeholder="Explore (e.g. 'Soccer' or 'Latin')..."
+                    onkeyup="handleSearchInput(this)">
+                <span class="search-icon" onclick="triggerSearch()">🔍</span>
+            </div>
+            <div id="stats">
+                <button id="mode-toggle-btn">📖 Learn Mode</button>
+                <button id="study-list-btn">📝 Study List</button>
+                <button id="curation-btn">Review Library</button>
+                <span id="learn-stats-wrapper" class="stat-item hidden">Unit Progress: <span id="learn-progress-count">0 of 0</span></span>
+                <span class="stat-item">Correct: <span id="correct-count">0</span></span>
+                <span class="stat-item">Streak: <span id="streak-count">0</span></span>
+            </div>
+        </header>
+
+        <main id="quiz-area">
+
+            <!-- Filter Bar — always visible, never replaced -->
+            <div id="filter-bar">
+                <!-- Grade accordion -->
+                <div class="filter-accordion" id="accordion-grade">
+                    <button class="filter-accordion-toggle" id="toggle-grade" aria-expanded="false">
+                        <span class="filter-accordion-label">Grade</span>
+                        <span class="filter-accordion-value" id="grade-display">All</span>
+                        <span class="filter-accordion-arrow">›</span>
+                    </button>
+                    <div class="filter-accordion-panel" id="panel-grade">
+                        <button class="filter-pill active" data-filter="grade" data-value="all">All</button>
+                        <button class="filter-pill" data-filter="grade" data-value="preK">Pre-K</button>
+                        <button class="filter-pill" data-filter="grade" data-value="K">K</button>
+                        <button class="filter-pill" data-filter="grade" data-value="1">1st</button>
+                        <button class="filter-pill" data-filter="grade" data-value="2">2nd</button>
+                        <button class="filter-pill" data-filter="grade" data-value="3">3rd</button>
+                        <button class="filter-pill" data-filter="grade" data-value="4">4th</button>
+                        <button class="filter-pill" data-filter="grade" data-value="5+">5+</button>
+                        <button class="filter-pill" data-filter="grade" data-value="Adult">Adult</button>
+                    </div>
+                </div>
+                <!-- Part of Speech accordion -->
+                <div class="filter-accordion" id="accordion-pos">
+                    <button class="filter-accordion-toggle" id="toggle-pos" aria-expanded="false">
+                        <span class="filter-accordion-label">Part of Speech</span>
+                        <span class="filter-accordion-value" id="pos-display">All</span>
+                        <span class="filter-accordion-arrow">›</span>
+                    </button>
+                    <div class="filter-accordion-panel" id="panel-pos">
+                        <button class="filter-pill active" data-filter="pos" data-value="all">All</button>
+                        <button class="filter-pill pos-pill" data-filter="pos" data-value="noun">Noun</button>
+                        <button class="filter-pill pos-pill" data-filter="pos" data-value="verb">Verb</button>
+                        <button class="filter-pill pos-pill" data-filter="pos" data-value="adj">Adj</button>
+                    </div>
+                </div>
+                <!-- Root accordion -->
+                <div class="filter-accordion" id="accordion-root">
+                    <button class="filter-accordion-toggle" id="toggle-root" aria-expanded="false">
+                        <span class="filter-accordion-label">Root</span>
+                        <span class="filter-accordion-value" id="root-display">All</span>
+                        <span class="filter-accordion-arrow">›</span>
+                    </button>
+                    <div class="filter-accordion-panel" id="panel-root">
+                        <button class="filter-pill active" data-filter="root" data-value="all">All</button>
+                        <button class="filter-pill" data-filter="root" data-value="Latin">Latin</button>
+                        <button class="filter-pill" data-filter="root" data-value="Germanic">Germanic</button>
+                        <button class="filter-pill" data-filter="root" data-value="Greek">Greek</button>
+                        <button class="filter-pill" data-filter="root" data-value="Old French">Old French</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area — swapped by JS between Quiz, Learn, Explorer, Curation -->
+            <div id="content-area">
+                <div id="word-card" class="card">
+                    <div class="meta-row">
+                        <span id="word-origin" class="tag">Language</span>
+                        <span id="word-pronunciation" class="pronunciation">/pro-nun-si-ey-shun/</span>
+                        <button id="quiz-study-add" class="study-add-btn"
+                            style="padding: 4px 10px; font-size: 0.65rem;">+ Add to Study</button>
+                    </div>
+                    <h1 id="target-word">Loading...</h1>
+                    <p id="word-pos" class="quiz-pos"></p>
+                    <p class="instruction">Select the correct definition:</p>
+
+                    <div id="options-container">
+                        <!-- Options injected by JS -->
+                    </div>
+
+                    <div id="feedback" class="hidden">
+                        <p id="feedback-message"></p>
+                        <div id="helper-box" class="helper">
+                            <strong>Why it makes sense:</strong>
+                            <span id="helper-text"></span>
+                        </div>
+                        <button id="next-btn">Next Word &rarr;</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <button id="reset-btn">Reset Score</button>
+            <p>Curated for the Lifelong Learner</p>
+        </footer>
+    </div>
+
+    <!-- Etymology Overlay -->
+    <div id="etymology-overlay" class="overlay hidden">
+        <div class="overlay-content">
+            <button class="close-overlay" onclick="hideEtymologyStats()">✕</button>
+            <h2>Etymology Distribution</h2>
+            <p style="margin-bottom: 25px; color: var(--text-dim);">Comparing your database against standard English metrics for clear communication.</p>
+            <div id="etymology-chart"></div>
+        </div>
+    </div>
+
+    <!-- Study List Overlay -->
+    <div id="study-list-overlay" class="overlay hidden">
+        <div class="overlay-content">
+            <button class="close-overlay" onclick="hideStudyList()">✕</button>
+            <div id="study-list-content"></div>
+        </div>
+    </div>
+
+    <!-- Quick Quiz Overlay -->
+    <div id="quick-quiz-overlay" class="overlay hidden">
+        <div class="quick-quiz-content">
+            <h2 class="quick-quiz-word">Word</h2>
+            <div class="quick-quiz-options" id="quick-quiz-options">
+                <!-- Options injected by JS -->
+            </div>
+            <div class="learn-status-controls" style="justify-content:center; margin-top: 20px;">
+                <button class="status-btn unknown" id="quick-unknown-btn">❌ Unknown</button>
+                <button class="status-btn known" id="quick-known-btn">✅ Known</button>
+            </div>
+            <button onclick="document.getElementById('quick-quiz-overlay').classList.add('hidden')" 
+                    class="tag" style="margin-top:20px; cursor:pointer; background:none; border:none; text-decoration:underline;">Cancel</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

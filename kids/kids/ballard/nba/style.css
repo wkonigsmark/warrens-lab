@@ -1,0 +1,549 @@
+:root {
+    --bg-color: #0c0e12;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --west-color: #1d428a;
+    --east-color: #c8102e;
+    --gold: #ffd700;
+    --text-primary: #ffffff;
+    --text-dim: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(29, 66, 138, 0.15), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(200, 16, 46, 0.15), transparent 40%);
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding-bottom: 50px;
+}
+
+header {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+    position: relative;
+}
+
+.audio-controls {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+#mute-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+#mute-btn:hover {
+    background: var(--gold);
+    color: black;
+}
+
+.nba-logo img {
+    height: 60px;
+    margin-bottom: 15px;
+}
+
+h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    letter-spacing: 4px;
+    margin: 0;
+    text-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+.year {
+    color: var(--gold);
+}
+
+/* Bracket Layout */
+.bracket-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.conference {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.conf-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.west .conf-title { background: linear-gradient(90deg, transparent, var(--west-color), transparent); }
+.east .conf-title { background: linear-gradient(90deg, transparent, var(--east-color), transparent); }
+
+.round-columns {
+    display: flex;
+    gap: 0;
+    align-items: flex-start;
+    overflow-x: auto;
+    padding: 20px 0;
+}
+
+.round {
+    display: flex;
+    flex-direction: column;
+    min-width: 160px;
+}
+
+/* Precision Brick Offsetting */
+.round-1 { gap: 40px; }
+
+.round-2 { 
+    padding-top: 80px; 
+    gap: 160px;
+}
+
+.west .round-2 { margin-left: -20px; }
+.east .round-2 { margin-right: -20px; }
+
+.round-3 { 
+    padding-top: 200px;
+}
+
+.west .round-3 { margin-left: -20px; }
+.east .round-3 { margin-right: -20px; }
+
+/* Matchup Cards */
+.matchup {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 4px; /* More "brick" like corner */
+    padding: 0;
+    width: 150px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    box-shadow: 10px 10px 20px rgba(0,0,0,0.4);
+    overflow: hidden;
+}
+
+.matchup:hover {
+    border-color: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.team {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.team:last-child { border-bottom: none; }
+
+.team:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.team.winner {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.team.loser {
+    opacity: 0.3;
+}
+
+.team img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.seed {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--gold);
+    width: 12px;
+}
+
+.team-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    flex: 1;
+}
+
+.mobile-only { display: none; }
+.full-name { display: inline; }
+
+@media (max-width: 768px) {
+    .full-name { display: none; }
+    .mobile-only { display: inline; }
+    .matchup { width: 100px; padding: 6px; }
+    .team { gap: 6px; padding: 4px; }
+    .team-name { font-size: 0.75rem; font-weight: 800; }
+    .bracket-container { gap: 40px; padding: 10px; }
+    h1 { font-size: 2.5rem; }
+    .round-columns { gap: 15px; }
+}
+
+.score-input {
+    width: 25px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-family: inherit;
+    font-weight: 800;
+    text-align: right;
+    font-size: 1.1rem;
+}
+
+/* Finals Hub */
+.finals-hub {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.nba-finals-card {
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid var(--gold);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 0 50px rgba(255, 215, 0, 0.1);
+}
+
+.finals-header {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--gold);
+    margin-bottom: 30px;
+}
+
+.finals-matchup {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.finals-matchup .team {
+    padding: 15px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+}
+
+.champion-podium {
+    border-top: 1px solid rgba(255,215,0,0.3);
+    padding-top: 30px;
+}
+
+.trophy-icon {
+    font-size: 4rem;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 0 10px var(--gold));
+}
+
+.champ-label {
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--gold);
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+}
+
+.champ-team-display {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+}
+
+/* Responsive adjustments */
+/* Export and Wizard Controls */
+.export-controls {
+    margin-top: 40px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    outline: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--gold), #ffb800);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    filter: brightness(1.1);
+}
+
+/* Wizard Overlay */
+.wizard-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, #1a1e26, #0c0e12);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.wizard-overlay.hidden {
+    transform: translateY(100%);
+}
+
+.wizard-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.wizard-progress {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--gold);
+    width: 0%;
+    transition: width 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.close-wizard {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.wizard-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wizard-card {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    text-align: center;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.wizard-match-label {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--text-dim);
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.wizard-teampair {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.wizard-team-choice {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.wizard-team-choice.selected {
+    border-color: var(--gold);
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.wizard-team-choice img {
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.wizard-team-choice .team-name {
+    font-size: 1.8rem;
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+.vs-divider {
+    font-family: 'Bebas Neue', sans-serif;
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 1.5rem;
+}
+
+.wizard-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding: 10px;
+}
+
+.wizard-footer button {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: 'Bebas Neue', sans-serif;
+    cursor: pointer;
+}
+
+#wizard-step-label {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
+
+@media (max-width: 768px) {
+    .bracket-container {
+        display: none;
+    }
+    body.show-full-bracket .bracket-container {
+        display: flex;
+    }
+    body.show-full-bracket .wizard-overlay {
+        display: none;
+    }
+    header {
+        padding: 20px 10px;
+    }
+    h1 {
+        font-size: 2rem;
+    }
+    .export-controls {
+        display: none;
+    }
+    .wizard-card { padding: 20px; }
+    .wizard-card.summary-card { width: 90%; max-width: none; }
+    .wizard-team-choice img { height: 80px; }
+    .wizard-team-choice .team-name { font-size: 1.5rem; }
+}
+
+/* EXPORT MODE - Force desktop view for PDF capture */
+body.export-mode {
+    overflow: visible !important;
+}
+
+body.export-mode .bracket-container {
+    display: flex !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 1400px !important;
+    height: auto !important;
+    background: #0c0e12 !important;
+    z-index: 99999 !important;
+    padding: 40px !important;
+}
+
+body.export-mode .conference {
+    display: flex !important;
+}
+
+body.export-mode .round {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+body.export-mode .finals-hub {
+    display: flex !important;
+}
+
+body.export-mode header,
+body.export-mode .export-controls,
+body.export-mode #wizard-flow,
+body.export-mode .audio-controls {
+    display: none !important;
+}
+
+.mini-mute {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}

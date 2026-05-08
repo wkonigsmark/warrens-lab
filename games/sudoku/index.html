@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mini Sudoku</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="game-panel" aria-label="Mini Sudoku game">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">4x4 Beginner</p>
+            <h1>Mini Sudoku</h1>
+          </div>
+          <div class="controls" aria-label="Puzzle controls">
+            <label class="select-control" for="gridSize">
+              <span>Grid</span>
+              <select id="gridSize">
+                <option value="4">4x4</option>
+                <option value="6">6x6</option>
+                <option value="9">9x9</option>
+              </select>
+            </label>
+            <label class="select-control" for="difficulty">
+              <span>Level</span>
+              <select id="difficulty">
+                <option value="beginner">Beginner</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </label>
+            <button id="newPuzzle" type="button">New</button>
+            <button id="checkPuzzle" type="button">Check</button>
+            <button id="resetPuzzle" type="button">Reset</button>
+            <button id="printWorksheet" type="button">Print</button>
+          </div>
+        </header>
+
+        <div class="status-strip" id="statusStrip" aria-live="polite">
+          <span id="statusText">Fill each row, column, and box.</span>
+          <strong id="timerText">0:00</strong>
+        </div>
+
+        <div class="board-wrap">
+          <div class="sudoku-board" id="board" aria-label="Sudoku board"></div>
+        </div>
+
+        <div class="number-pad" id="numberPad" aria-label="Number pad"></div>
+      </section>
+
+      <aside class="lesson-panel" aria-label="How to play">
+        <p class="eyebrow">How It Works</p>
+        <h2>Small Grid, Big Logic</h2>
+        <p>Every row, column, and thick box needs each number exactly once. Start with 4x4, then move up to 6x6 and 9x9 when the pattern feels natural.</p>
+        <p>Beginner puzzles leave more starting numbers. Hard puzzles remove more numbers, and the generator checks that each puzzle still has one solution.</p>
+      </aside>
+    </main>
+
+    <div class="notes-popover" id="notesPopover" hidden>
+      <div class="notes-popover-grid" id="notesPopoverGrid" aria-label="Candidate notes"></div>
+      <button class="notes-done" id="notesDone" type="button">Done</button>
+    </div>
+
+    <section class="print-sheet" id="printSheet" aria-label="Printable Sudoku worksheet"></section>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 March Madness Bracket Lab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --accent-primary: #f97316; /* NCAA Orange */
+            --accent-secondary: #2563eb; /* Sports Blue */
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --win-color: #22c55e;
+            --loss-color: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: auto;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(249, 115, 22, 0.1) 0%, transparent 40%);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            z-index: 10;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge {
+            background: var(--accent-primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .sim-controls {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 20px;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 250px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-primary);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: #ffffff20;
+            border-radius: 5px;
+            appearance: none;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            background: #ffffff10;
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn:hover {
+            background: #ffffff20;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #ea580c;
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+        }
+
+        /* --- Bracket Layout --- */
+        .bracket-container {
+            display: flex;
+            gap: 0;
+            margin: 0 auto;
+            position: relative;
+            padding-bottom: 5rem;
+        }
+
+        .region-group {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .round {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 220px;
+        }
+
+        .matchup {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        /* Connecting Lines */
+        .matchup::after {
+            content: '';
+            position: absolute;
+            right: -1rem;
+            top: 50%;
+            width: 1rem;
+            height: 2px;
+            background: var(--border-color);
+        }
+
+        .round:last-child .matchup::after {
+            display: none;
+        }
+
+        .team-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            height: 40px;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .team-box:hover {
+            background: rgba(45, 55, 72, 0.9);
+            border-color: var(--accent-secondary);
+        }
+
+        .team-box.selected {
+            border-color: var(--accent-primary);
+            background: rgba(249, 115, 22, 0.1);
+        }
+
+        .team-box.winner::before {
+            content: '✓';
+            position: absolute;
+            right: 8px;
+            color: var(--win-color);
+            font-weight: 800;
+            font-size: 0.8rem;
+        }
+
+        .team-box img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .seed {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            width: 15px;
+        }
+
+        .team-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 140px;
+        }
+
+        /* Champion Display */
+        .champion-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 300px;
+            margin: 0 3rem;
+        }
+
+        .champ-trophy {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px gold);
+        }
+
+        .champ-box {
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%);
+            border: 2px solid var(--accent-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            box-shadow: 0 0 30px rgba(249, 115, 22, 0.2);
+        }
+
+        .champ-box img {
+            width: 48px;
+            height: 48px;
+        }
+
+        .champ-info h3 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .champ-info p {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        .scroller {
+            overflow-x: auto;
+            padding-bottom: 2rem;
+        }
+
+        .region-title {
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        /* Modal / Overlay */
+        .modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            background: var(--bg-color);
+            border: 2px solid var(--accent-primary);
+            width: 100%;
+            max-width: 800px;
+            max-height: 80vh;
+            border-radius: 20px;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .odds-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        .odds-table th {
+            text-align: left;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .odds-table td {
+            padding: 0.85rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .odds-category-header {
+            background: rgba(255,255,255,0.05);
+            padding: 0.5rem 1rem;
+            font-weight: 700;
+            color: white;
+            border-radius: 8px;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+
+        .odds-value {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--win-color);
+            font-weight: 700;
+        }
+
+        .team-box-hover-odds {
+            position: absolute;
+            right: 10px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .team-box:hover .team-box-hover-odds {
+            opacity: 1;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        /* Connection logic for rounds */
+        .round-1 { gap: 10px; }
+        .round-2 { gap: 40px; }
+        .round-3 { gap: 100px; }
+        .round-4 { gap: 220px; }
+
+        /* Connection logic for rounds */
+        .round-1 { gap: 10px; }
+        .round-2 { gap: 40px; }
+        .round-3 { gap: 100px; }
+        .round-4 { gap: 220px; }
+    </style>
+</head>
+<body>
+
+    <div class="modal-backdrop" id="odds-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="toggleModal()">&times;</span>
+            <h2 style="font-size: 2rem; margin-bottom: 1rem;">2026 Championship Odds</h2>
+            <p style="color: var(--text-secondary);">Live betting lines and market analysis for the 2026 tournament field.</p>
+            
+            <div id="odds-list-container">
+                <!-- Sorted odds will go here -->
+            </div>
+        </div>
+    </div>
+
+
+
+    <header>
+        <div class="header-top">
+            <span class="badge">Live Simulator</span>
+            <h1>2026 March Madness</h1>
+            <span class="badge">NCAAM</span>
+        </div>
+        <p>A professional dashboard for building and analyzing your tournament bracket.</p>
+        
+        <div class="actions">
+            <button class="btn" onclick="toggleModal()">Odds Index</button>
+            <button class="btn" onclick="resetBracket()">Reset</button>
+            <button class="btn btn-primary" onclick="exportCSV()">Export CSV</button>
+        </div>
+
+        <div class="sim-controls">
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Chaos Factor</span>
+                    <span id="chaos-val">40%</span>
+                </div>
+                <input type="range" id="chaos-slider" min="0" max="100" value="40" oninput="document.getElementById('chaos-val').innerText = this.value + '%'">
+            </div>
+            
+            <button class="btn btn-primary" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);" onclick="runSimulation()">
+                <span>⚡</span> Run Monte Carlo Sim
+            </button>
+            
+            <p style="font-size: 0.8rem; color: var(--text-secondary); max-width: 200px; text-align: left;">
+                Chaos decays by 10% each round to simulate higher seed stability in the Final Four.
+            </p>
+        </div>
+    </header>
+
+    <div class="scroller">
+        <div class="bracket-container">
+            
+            <!-- LEFT SIDE (East & West) -->
+            <div id="left-bracket" class="region-group">
+                <div class="round" id="L-R64"></div>
+                <div class="round" id="L-R32"></div>
+                <div class="round" id="L-S16"></div>
+                <div class="round" id="L-E8"></div>
+            </div>
+
+            <!-- CENTER (F4 & Champ) -->
+            <div class="champion-area">
+                <div class="champ-trophy">🏆</div>
+                <div class="champ-box" id="champion-display">
+                    <div class="champ-info">
+                        <h3>National Champion</h3>
+                        <p id="winner-name">Select Winner</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 4rem; display: flex; gap: 2rem;">
+                    <div id="F4-L" class="matchup"></div>
+                    <div id="F4-R" class="matchup"></div>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE (South & Midwest) -->
+            <div id="right-bracket" class="region-group" style="flex-direction: row-reverse;">
+                <div class="round" id="R-R64"></div>
+                <div class="round" id="R-R32"></div>
+                <div class="round" id="R-S16"></div>
+                <div class="round" id="R-E8"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const TEAMS = [
+            // Region 1 (East)
+            { name: "Duke Blue Devils", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/150.png" },
+            { name: "Siena Saints", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2561.png" },
+            { name: "Ohio State Buckeyes", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" },
+            { name: "TCU Horned Frogs", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2628.png" },
+            { name: "St. John's Red Storm", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2599.png" },
+            { name: "Northern Iowa", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2460.png" },
+            { name: "Kansas Jayhawks", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2305.png" },
+            { name: "California Baptist Lancers", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2856.png" },
+            { name: "Louisville Cardinals", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/97.png" },
+            { name: "South Florida Bulls", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/58.png" },
+            { name: "Michigan State Spartans", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/127.png" },
+            { name: "North Dakota State Bison", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2449.png" },
+            { name: "UCLA Bruins", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/26.png" },
+            { name: "UCF Knights", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2116.png" },
+            { name: "UConn Huskies", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/41.png" },
+            { name: "Furman Paladins", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/231.png" },
+
+            // Region 2 (West) - Specified by USER
+            { name: "Florida Gators", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/57.png" },
+            { name: "Prairie View A&M Panthers", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2504.png" },
+            { name: "Clemson Tigers", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/228.png" },
+            { name: "Iowa Hawkeyes", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2294.png" },
+            { name: "Vanderbilt Commodores", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/238.png" },
+            { name: "McNeese Cowboys", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2377.png" },
+            { name: "Nebraska Cornhuskers", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/158.png" },
+            { name: "Troy Trojans", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2653.png" },
+            { name: "North Carolina Tar Heels", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/153.png" },
+            { name: "VCU Rams", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2670.png" },
+            { name: "Illinois Fighting Illini", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/356.png" },
+            { name: "Pennsylvania Quakers", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/219.png" },
+            { name: "Saint Mary's Gaels", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2608.png" },
+            { name: "Texas A&M Aggies", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/245.png" },
+            { name: "Houston Cougars", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/248.png" },
+            { name: "Idaho Vandals", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/70.png" },
+
+            // Region 3 (South)
+            { name: "Arizona Wildcats", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/12.png" },
+            { name: "Brooklyn LIU", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/112358.png" },
+            { name: "Villanova Wildcats", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/222.png" },
+            { name: "Utah State Aggies", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/328.png" },
+            { name: "Wisconsin Badgers", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/275.png" },
+            { name: "High Point Panthers", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2272.png" },
+            { name: "Arkansas Razorbacks", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/8.png" },
+            { name: "Hawai'i Rainbow Warriors", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/62.png" },
+            { name: "BYU Cougars", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/252.png" },
+            { name: "Texas Longhorns", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/251.png" },
+            { name: "Gonzaga Bulldogs", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2250.png" },
+            { name: "Kennesaw State Owls", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/338.png" },
+            { name: "Miami Hurricanes", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png" },
+            { name: "Missouri Tigers", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/142.png" },
+            { name: "Purdue Boilermakers", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2509.png" },
+            { name: "Queens University Royals", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2511.png" },
+
+            // Region 4 (Midwest) - Specified by USER
+            { name: "Michigan Wolverines", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/130.png" },
+            { name: "Howard Bison", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/47.png" },
+            { name: "Georgia Bulldogs", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/61.png" },
+            { name: "Saint Louis Billikens", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/139.png" },
+            { name: "Texas Tech Red Raiders", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png" },
+            { name: "Akron Zips", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2006.png" },
+            { name: "Alabama Crimson Tide", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/333.png" },
+            { name: "Hofstra Pride", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2275.png" },
+            { name: "Tennessee Volunteers", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2633.png" },
+            { name: "Miami (OH) RedHawks", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/193.png" },
+            { name: "Virginia Cavaliers", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/258.png" },
+            { name: "Wright State Raiders", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2750.png" },
+            { name: "Kentucky Wildcats", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/96.png" },
+            { name: "Santa Clara Broncos", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2541.png" },
+            { name: "Iowa State Cyclones", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/66.png" },
+            { name: "Tennessee State Tigers", logo: "https://a.espncdn.com/i/teamlogos/ncaa/500/2634.png" }
+        ];
+
+        // Seeds repeat for every region
+        const SEEDS = [
+            1, 16, 8, 9, 5, 12, 4, 13, 6, 11, 3, 14, 7, 10, 2, 15,
+            1, 16, 8, 9, 5, 12, 4, 13, 6, 11, 3, 14, 7, 10, 2, 15
+        ];
+
+        let bracketData = {
+            left: [],  // East & West
+            right: []  // South & Midwest
+        };
+
+        function initBracket() {
+            // First 32 teams are Left side
+            for (let i = 0; i < 32; i += 2) {
+                bracketData.left.push({ t1: TEAMS[i], t2: TEAMS[i+1], winner: null });
+            }
+            // Next 32 are Right side
+            for (let i = 32; i < 64; i += 2) {
+                bracketData.right.push({ t1: TEAMS[i], t2: TEAMS[i+1], winner: null });
+            }
+
+            renderRound("L-R64", bracketData.left);
+            renderRound("R-R64", bracketData.right);
+            
+            // Initialize empty rounds
+            renderEmptyRound("L-R32", 8);
+            renderEmptyRound("R-R32", 8);
+            renderEmptyRound("L-S16", 4);
+            renderEmptyRound("R-S16", 4);
+            renderEmptyRound("L-E8", 2);
+            renderEmptyRound("R-E8", 2);
+            renderEmptyRound("F4-L", 1);
+            renderEmptyRound("F4-R", 1);
+        }
+
+        const ODDS_RAW = [
+            { cat: "The favorites", teams: { "Florida": 700, "Michigan": 375, "Arizona": 350, "Duke": 325 } },
+            { cat: "The top contenders", teams: { "Virginia": 8000, "Vanderbilt": 6600, "Wisconsin": 6600, "St. John's": 6600, "Gonzaga": 5500, "Michigan State": 5000, "Kansas": 5000, "Arkansas": 5000, "Purdue": 2500, "UConn": 2200, "Illinois": 2000, "Iowa State": 1600, "Houston": 1100 } },
+            { cat: "Dark horse teams", teams: { "Miami Fla": 25000, "Saint Mary's": 25000, "Iowa": 25000, "Clemson": 25000, "UCLA": 25000, "North Carolina": 20000, "BYU": 15000, "Texas Tech": 12500, "Kentucky": 12500, "Nebraska": 10000, "Tennessee": 10000, "Louisville": 10000, "Alabama": 10000 } },
+            { cat: "Potential sleepers", teams: { "South Florida": 75000, "VCU": 75000, "Santa Clara": 75000, "Georgia": 75000, "Texas": 75000, "UCF": 50000, "Texas A&M": 50000, "Missouri": 50000, "Ohio State": 50000, "Villanova": 50000, "Saint Louis": 35000, "Utah State": 35000 } },
+            { cat: "Longshot Cinderella", teams: { "Kennesaw State": 500000, "Prairie View A&M": 500000, "Howard": 500000, "Idaho": 500000, "Lehigh": 500000, "Penn": 200000, "Cal Baptist": 200000, "Hawaii": 200000, "McNeese": 200000, "Siena": 200000, "Wright State": 200000, "Furman": 200000, "Troy": 200000, "North Dakota State": 200000, "Queens": 200000, "LIU": 200000, "Tennessee State": 200000, "Miami Ohio": 200000, "Akron": 100000, "Hofstra": 100000, "High Point": 100000, "Northern Iowa": 100000, "TCU": 100000, "SMU": 100000 } }
+        ];
+
+        const ODDS_VALS_DEFAULT = 1000000;
+
+        function getOddsValue(teamName) {
+            const map = {
+                "Miami Fla": "Miami Hurricanes",
+                "Miami Ohio": "Miami (OH) RedHawks",
+                "Penn": "Pennsylvania Quakers",
+                "LIU": "Brooklyn LIU",
+                "Cal Baptist": "California Baptist Lancers",
+                "Hawaii": "Hawai'i Rainbow Warriors",
+                "North Carolina": "North Carolina Tar Heels",
+                "Saint Mary's": "Saint Mary's Gaels"
+            };
+
+            for (const category of ODDS_RAW) {
+                for (const key in category.teams) {
+                    if (teamName.toLowerCase().includes(key.toLowerCase()) || (map[key] && teamName === map[key])) {
+                        return category.teams[key];
+                    }
+                }
+            }
+            return ODDS_VALS_DEFAULT;
+        }
+
+        function getOddsForTeam(teamName) {
+            const val = getOddsValue(teamName);
+            return val === ODDS_VALS_DEFAULT ? null : "+" + val.toLocaleString();
+        }
+
+        async function runSimulation() {
+            const baseChaos = parseInt(document.getElementById('chaos-slider').value) / 100;
+            const rounds = ["R64", "R32", "S16", "E8", "F4"];
+            
+            // Remove the total reset to allow preserving manual "real world" results
+            // resetBracket(false); 
+
+            for (let rIdx = 0; rIdx < rounds.length; rIdx++) {
+                const roundCode = rounds[rIdx];
+                const roundChaos = Math.max(0, baseChaos * (1 - (rIdx * 0.1)));
+                
+                const allMatchups = document.querySelectorAll(`[id$="-${roundCode}-m0"], [id$="-${roundCode}-m1"], [id$="-${roundCode}-m2"], [id$="-${roundCode}-m3"], [id$="-${roundCode}-m4"], [id$="-${roundCode}-m5"], [id$="-${roundCode}-m6"], [id$="-${roundCode}-m7"], [id$="-${roundCode}-m8"], [id$="-${roundCode}-m9"], [id$="-${roundCode}-m10"], [id$="-${roundCode}-m11"], [id$="-${roundCode}-m12"], [id$="-${roundCode}-m13"], [id$="-${roundCode}-m14"], [id$="-${roundCode}-m15"]`);
+                
+                for (const mEl of allMatchups) {
+                    if (!mEl.id.includes(`-${roundCode}-`)) continue;
+                    
+                    // SKIP if a winner is already selected (e.g. manual real-world results)
+                    if (mEl.querySelector('.winner')) continue;
+
+                    const teams = mEl.querySelectorAll('.team-box');
+                    if (teams.length < 2) continue;
+                    
+                    const name1 = teams[0].querySelector('.team-name').innerText;
+                    const name2 = teams[1].querySelector('.team-name').innerText;
+                    
+                    if (name1 === "TBD" || name2 === "TBD") continue;
+
+                    const winnerIdx = calculateWinner(name1, name2, roundChaos);
+                    selectWinner(mEl.id, winnerIdx);
+                }
+                await new Promise(r => setTimeout(r, 450));
+            }
+
+            // Finally, decide Championship between F4 Winners
+            const f4L = document.getElementById('F4-L-m0').querySelector('.winner');
+            const f4R = document.getElementById('F4-R-m0').querySelector('.winner');
+            if (f4L && f4R) {
+                const nameL = f4L.querySelector('.team-name').innerText;
+                const nameR = f4R.querySelector('.team-name').innerText;
+                const chamIdx = calculateWinner(nameL, nameR, Math.max(0, baseChaos - 0.5));
+                
+                const champTeam = {
+                    name: chamIdx === 1 ? nameL : nameR,
+                    logo: chamIdx === 1 ? f4L.querySelector('img').src : f4R.querySelector('img').src
+                };
+                displayChampion(champTeam);
+            }
+        }
+
+        function calculateWinner(name1, name2, chaos) {
+            const odds1 = getOddsValue(name1);
+            const odds2 = getOddsValue(name2);
+            
+            // Standard Elo-like strength
+            const w1 = 1 / (odds1 + 1);
+            const w2 = 1 / (odds2 + 1);
+            const prob1 = w1 / (w1 + w2);
+
+            // Blend based on chaos
+            // If chaos = 0, we take the weighted edge.
+            // If chaos = 1, it's 50/50.
+            const finalProb1 = (prob1 * (1 - chaos)) + (0.5 * chaos);
+            
+            return Math.random() < finalProb1 ? 1 : 2;
+        }
+
+        function toggleModal() {
+            const m = document.getElementById('odds-modal');
+            m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+            if (m.style.display === 'flex') renderOddsList();
+        }
+
+        function renderOddsList() {
+            const container = document.getElementById('odds-list-container');
+            container.innerHTML = '';
+            ODDS_RAW.forEach(cat => {
+                const head = document.createElement('div');
+                head.className = 'odds-category-header';
+                head.innerText = cat.cat;
+                container.appendChild(head);
+
+                const table = document.createElement('table');
+                table.className = 'odds-table';
+                table.innerHTML = `<tr><th style="width: 70%;">Team</th><th>Championship Odds</th></tr>`;
+                
+                Object.entries(cat.teams).forEach(([name, val]) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${name}</td><td class="odds-value">+${val.toLocaleString()}</td>`;
+                    table.appendChild(row);
+                });
+                container.appendChild(table);
+            });
+        }
+
+        function createTeamElement(team, matchupId, teamIndex, seed) {
+            const div = document.createElement('div');
+            div.className = 'team-box';
+            if (!team) {
+                div.innerHTML = `<span class="seed"></span><span class="team-name">TBD</span>`;
+                return div;
+            }
+
+            const odds = getOddsForTeam(team.name);
+            div.innerHTML = `
+                <span class="seed">${seed || ''}</span>
+                <img src="${team.logo}" alt="">
+                <span class="team-name">${team.name}</span>
+                <span class="team-box-hover-odds">${odds || ''}</span>
+            `;
+            div.onclick = () => selectWinner(matchupId, teamIndex);
+            return div;
+        }
+
+        function renderRound(containerId, matchups) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            matchups.forEach((m, i) => {
+                const matchupDiv = document.createElement('div');
+                matchupDiv.className = 'matchup';
+                matchupDiv.id = `${containerId}-m${i}`;
+                const t1 = createTeamElement(m.t1, matchupDiv.id, 1, SEEDS[i*2]);
+                const t2 = createTeamElement(m.t2, matchupDiv.id, 2, SEEDS[i*2+1]);
+                if (m.winner === 1) t1.classList.add('winner');
+                if (m.winner === 2) t2.classList.add('winner');
+                matchupDiv.appendChild(t1);
+                matchupDiv.appendChild(t2);
+                container.appendChild(matchupDiv);
+            });
+        }
+
+        function renderEmptyRound(containerId, count) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const matchupDiv = document.createElement('div');
+                matchupDiv.className = 'matchup';
+                matchupDiv.id = `${containerId}-m${i}`;
+                matchupDiv.appendChild(createTeamElement(null));
+                matchupDiv.appendChild(createTeamElement(null));
+                container.appendChild(matchupDiv);
+            }
+        }
+
+        function selectWinner(matchupId, winnerIdx) {
+            const matchupEl = document.getElementById(matchupId);
+            if (!matchupEl) return;
+            const teams = matchupEl.querySelectorAll('.team-box');
+            if (!teams[winnerIdx - 1]) return;
+            const clickedTeam = teams[winnerIdx - 1];
+            if (clickedTeam.classList.contains('winner')) {
+                clickedTeam.classList.remove('winner');
+                clearDownstream(matchupId);
+                return;
+            }
+            teams.forEach(t => t.classList.remove('winner'));
+            clickedTeam.classList.add('winner');
+            const winnerTeam = {
+                name: clickedTeam.querySelector('.team-name').innerText,
+                logo: clickedTeam.querySelector('img').src
+            };
+            advanceTeam(matchupId, winnerTeam);
+        }
+
+        function clearDownstream(fromId) {
+            const parts = fromId.split('-'); // ["L", "R64", "m0"]
+            const side = parts[0];
+            const round = parts[1];
+            const matchIndex = parseInt(parts[2].replace('m', ''));
+            const nextRound = getNextRound(round);
+            if (nextRound === "CHAMP") { clearChampion(); return; }
+            const nextMatchIndex = Math.floor(matchIndex / 2);
+            const nextTeamPos = (matchIndex % 2) === 0 ? 1 : 2;
+            let nextMatchId = `${side}-${nextRound}-m${nextMatchIndex}`;
+            if (round === "E8") { nextMatchId = side === "L" ? "F4-L-m0" : "F4-R-m0"; }
+            else if (fromId.startsWith("F4")) { clearChampion(); return; }
+            const nextMatchEl = document.getElementById(nextMatchId);
+            if (!nextMatchEl) return;
+            const slots = nextMatchEl.querySelectorAll('.team-box');
+            const slot = slots[nextTeamPos - 1];
+            if (slot.querySelector('.team-name').innerText !== "TBD") {
+                if (slot.classList.contains('winner')) { clearDownstream(nextMatchId); }
+                slot.innerHTML = `<span class="seed"></span><span class="team-name">TBD</span>`;
+                slot.classList.remove('winner');
+                slot.onclick = null;
+            }
+        }
+
+        function clearChampion() {
+            const display = document.getElementById('champion-display');
+            const winnerName = document.getElementById('winner-name');
+            if (winnerName) winnerName.innerText = "Select Winner";
+            const img = display.querySelector('img');
+            if (img) img.remove();
+        }
+
+        function advanceTeam(fromId, team) {
+            const parts = fromId.split('-');
+            const side = parts[0];
+            const round = parts[1];
+            const matchIndex = parseInt(parts[2].replace('m', ''));
+            const nextRound = getNextRound(round);
+            if (nextRound === "CHAMP") { displayChampion(team); return; }
+            const nextMatchIndex = Math.floor(matchIndex / 2);
+            const nextTeamPos = (matchIndex % 2) === 0 ? 1 : 2;
+            let nextMatchId = `${side}-${nextRound}-m${nextMatchIndex}`;
+            if (round === "E8") {
+                nextMatchId = side === "L" ? "F4-L-m0" : "F4-R-m0";
+                const nextPosFromE8 = (matchIndex % 2) === 0 ? 1 : 2;
+                updateNextSlot(nextMatchId, nextPosFromE8, team); 
+                return;
+            }
+            if (fromId.startsWith("F4")) { displayChampion(team); return; }
+            updateNextSlot(nextMatchId, nextTeamPos, team);
+        }
+
+        function getNextRound(current) {
+            if (current === "R64") return "R32";
+            if (current === "R32") return "S16";
+            if (current === "S16") return "E8";
+            if (current === "E8") return "F4";
+            return "CHAMP";
+        }
+
+        function updateNextSlot(matchId, pos, team) {
+            const matchEl = document.getElementById(matchId);
+            if (!matchEl) return;
+            const teamSlots = matchEl.querySelectorAll('.team-box');
+            const slot = teamSlots[pos - 1];
+            slot.innerHTML = `
+                <span class="seed"></span>
+                <img src="${team.logo}" alt="">
+                <span class="team-name">${team.name}</span>
+            `;
+            slot.classList.remove('winner');
+            slot.onclick = () => selectWinner(matchId, pos);
+        }
+
+        function displayChampion(team) {
+            const display = document.getElementById('champion-display');
+            document.getElementById('winner-name').innerText = team.name;
+            if (!display.querySelector('img')) {
+                const img = document.createElement('img');
+                display.prepend(img);
+            }
+            display.querySelector('img').src = team.logo;
+            display.style.transform = "scale(1.1)";
+            setTimeout(() => display.style.transform = "scale(1)", 200);
+        }
+
+        function exportCSV() {
+            let csv = "Round,Matchup,Winner\n";
+            document.querySelectorAll('.matchup').forEach(m => {
+                const winner = m.querySelector('.winner');
+                if (winner) {
+                    const name = winner.querySelector('.team-name').innerText;
+                    csv += `${m.id.split('-')[1]},${m.id},${name}\n`;
+                }
+            });
+            const champ = document.getElementById('winner-name').innerText;
+            if (champ !== "Select Winner") { csv += `CHAMPION,,${champ}\n`; }
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', ''); a.setAttribute('href', url); a.setAttribute('download', 'march_madness_picks_2026.csv');
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        }
+
+        function resetBracket(fullReload = true) {
+            if (fullReload) {
+                location.reload();
+            } else {
+                const roundsToClear = ["R32", "S16", "E8", "F4"];
+                roundsToClear.forEach(r => {
+                    document.querySelectorAll(`[id*="${r}"] .team-box`).forEach(slot => {
+                        slot.innerHTML = `<span class="seed"></span><span class="team-name">TBD</span>`;
+                        slot.classList.remove('winner');
+                    });
+                });
+                document.querySelectorAll('.winner').forEach(w => w.classList.remove('winner'));
+                clearChampion();
+            }
+        }
+
+        window.onload = initBracket;
+    </script>
+</body>
+</html>

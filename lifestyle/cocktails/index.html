@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cocktail Compass</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <main class="app-container">
+    <header class="intro-container">
+      <h1 class="main-title">cocktail compass</h1>
+      <p class="intro-text">
+        Always use fresh-squeezed ingredients—it makes all the difference. Simple syrup is easy: combine equal parts
+        water and sugar in a saucepan, bring to a boil while stirring, and store in the fridge.
+      </p>
+      <p class="intro-text">
+        Remember, 1 ounce = 1/8 cup. No muddler? Use a wooden spoon. A strainer, however, is key.
+      </p>
+    </header>
+
+    <div class="search-wrapper">
+      <input type="text" id="search-input" class="search-input"
+        placeholder="Search by name or ingredient (e.g. Martini, Gin)..." autofocus>
+    </div>
+
+    <section id="cocktail-grid" class="cocktail-grid">
+      <!-- Cocktails will be injected here -->
+    </section>
+  </main>
+
+  <!-- Data and Logic -->
+  <script src="cocktails.js"></script>
+  <script src="cocktail-logic.js"></script>
+</body>
+
+</html>

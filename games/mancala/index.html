@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mini Mancala</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="game-panel" aria-label="Mancala game">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Kalah Rules</p>
+            <h1>Mini Mancala</h1>
+          </div>
+          <div class="controls">
+            <button id="newGame" type="button">New Game</button>
+            <button id="mentorToggle" class="active" type="button" aria-pressed="true">Mentor</button>
+          </div>
+        </header>
+
+        <div class="status-strip" id="statusStrip" aria-live="polite">
+          Player 1 starts. Pick one of your pits.
+        </div>
+
+        <div class="board-wrap">
+          <div class="mancala-board" id="board" aria-label="Mancala board"></div>
+        </div>
+      </section>
+
+      <aside class="mentor-panel" id="mentorPanel" aria-label="Mancala mentor">
+        <p class="eyebrow">Mentor</p>
+        <h2>How To Play</h2>
+        <div id="lessonText">
+          <p>Choose a pit on your side. Pick up all stones from that pit, then drop one stone into each next pit as you move around the board.</p>
+          <p>Your store is the large cup on your right. Stones in your store are your score.</p>
+        </div>
+        <div class="rule-list">
+          <p><strong>Extra turn:</strong> last stone lands in your store.</p>
+          <p><strong>Capture:</strong> last stone lands in your empty pit, and the opposite pit has stones.</p>
+          <p><strong>Game end:</strong> one side is empty, then the other side sweeps remaining stones into its store.</p>
+        </div>
+      </aside>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

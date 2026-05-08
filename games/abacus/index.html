@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kid Abacus</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace" aria-label="Interactive abacus">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Level 1</p>
+            <h1>Kid Abacus</h1>
+          </div>
+          <div class="toolbar" aria-label="Abacus controls">
+            <label class="column-control" for="columnCount">
+              <span>Columns</span>
+              <select id="columnCount" aria-label="Number of abacus columns">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4" selected>4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+              </select>
+            </label>
+            <button class="tool-button" id="resetButton" type="button" aria-label="Reset abacus" title="Reset">
+              Reset
+            </button>
+            <button class="tool-button" id="quizButton" type="button" aria-pressed="false" title="Start quiz">
+              Quiz
+            </button>
+            <button class="tool-button active" id="mentorButton" type="button" aria-pressed="true" title="Toggle mentor">
+              Mentor
+            </button>
+          </div>
+        </header>
+
+        <div class="value-strip" id="valueStrip" aria-live="polite">
+          <span id="totalLabel">Total</span>
+          <strong id="totalValue">0</strong>
+        </div>
+
+        <div class="abacus-stage">
+          <div class="abacus-frame" id="abacus" aria-label="Drag beads to use the abacus"></div>
+        </div>
+      </section>
+
+      <aside class="mentor-panel" id="mentorPanel" aria-label="Mentor lesson">
+        <div class="mentor-header">
+          <p class="eyebrow">Mentor</p>
+          <h2 id="lessonTitle">Meet the Abacus</h2>
+        </div>
+        <div class="lesson-body" id="lessonBody"></div>
+        <div class="lesson-progress" id="lessonProgress"></div>
+        <div class="lesson-actions">
+          <button class="secondary-button" id="prevLesson" type="button">Back</button>
+          <button class="primary-button quiz-submit mentor-hidden" id="submitQuiz" type="button">Submit</button>
+          <button class="primary-button" id="nextLesson" type="button">Next</button>
+        </div>
+      </aside>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

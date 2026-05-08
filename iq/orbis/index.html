@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbis: The Global Eye</title>
+    <meta name="description" content="A cinematic platform for world geography. Explore continents and oceans with precision.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="app">
+        <!-- Navigation / Header -->
+        <header id="main-header">
+            <div class="brand">
+                <span class="logo-text">ORBIS</span>
+                <span class="tagline">The World in View</span>
+            </div>
+            <nav class="header-actions">
+                <button class="action-btn" id="view-continents-btn">Continents</button>
+                <button class="action-btn" id="view-oceans-btn">Oceans</button>
+                <button class="action-btn accent" id="start-exploration">START QUIZ</button>
+                <a href="../iq/index.html" class="action-btn subtle">Exit to IQ</a>
+            </nav>
+        </header>
+
+        <!-- Main Display: The Globe -->
+        <main id="globe-container">
+            <div id="status-display">
+                <div class="status-label">CURRENT FOCUS</div>
+                <div id="current-region-name">PLANET EARTH</div>
+            </div>
+
+            <div id="globe-viewport">
+                <!-- The globe will be rendered as a sophisticated SVG mapping -->
+                <div id="globe-wrap">
+                    <svg id="world-map" viewBox="-1000 -10000 11000 6200" preserveAspectRatio="xMidYMid meet">
+                        <!-- Background Ocean Glow -->
+                        <rect width="100%" height="100%" fill="none" class="ocean-bg"></rect>
+                        
+                        <!-- Regions will be injected via JS for cleaner mapping -->
+                        <g id="map-regions"></g>
+                        <g id="map-labels"></g>
+                    </svg>
+                    
+                    <!-- Decorative Globe Grid / Overlay -->
+                    <div id="globe-grid"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Sophisticated Modal Overlay -->
+        <div id="discovery-overlay" class="overlay">
+            <div class="modal-content glass">
+                <button id="close-modal" aria-label="Close">×</button>
+                <div class="modal-body">
+                    <div id="modal-image-wrap">
+                        <!-- A generated asset will go here -->
+                        <div class="placeholder-img">🌍</div>
+                    </div>
+                    <div class="modal-info">
+                        <div id="modal-category" class="tag">CONTINENT</div>
+                        <h2 id="modal-title">North America</h2>
+                        <div id="modal-stats" class="stats-row">
+                            <div class="stat-item">
+                                <span class="lbl">Area</span>
+                                <span class="val" id="stat-area">---</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="lbl">Countries</span>
+                                <span class="val" id="stat-count">---</span>
+                            </div>
+                        </div>
+                        <p id="modal-description">Detailed overview will appear here...</p>
+                        <div class="modal-footer">
+                            <button class="primary-action">Deep Dive Explorer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer id="main-footer">
+            <div class="footer-meta">
+                <span>ORBIS GEOGRAPHIC ENGINE</span>
+                <span>&bull;</span>
+                <span>VERIFIED SPATIAL DATA</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

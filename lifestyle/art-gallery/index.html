@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Gallery | Warren's Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #16110d;
+      --wall-red: #8f2030;
+      --wall-shadow: #4f151d;
+      --wall-blue: #23343a;
+      --text-primary: #fff8e8;
+      --text-secondary: rgba(255, 248, 232, 0.72);
+      --gold: #d8aa45;
+      --gold-bright: #f6df95;
+      --old-gold: #8c6226;
+      --wood: #3b2216;
+      --plaque: #d6bf86;
+      --ink: #26180d;
+      --glass-bg: rgba(23, 15, 10, 0.76);
+      --glass-border: rgba(246, 223, 149, 0.18);
+      
+      /* Local Frame Assets (Root-relative for robustness) */
+      --frame-gold: url('/art-gallery/assets/gold_frame.png');
+      --frame-wood: url('/art-gallery/assets/wood_frame.png');
+      --mat-color: #f2f0e6;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 74px 100%,
+        radial-gradient(circle at 50% -15%, rgba(246, 223, 149, .16), transparent 36%),
+        linear-gradient(180deg, var(--wall-red), var(--wall-shadow) 68%, #1b120d 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto 0 0;
+      height: 84px;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(246,223,149,.34), rgba(255,255,255,.08), rgba(246,223,149,.34)),
+        repeating-linear-gradient(135deg, #5a321f 0 18px, #3a2116 18px 36px);
+      border-top: 5px solid rgba(246, 223, 149, .62);
+      box-shadow: 0 -12px 30px rgba(0,0,0,.28);
+      z-index: -1;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-color);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Header / Nav */
+    .menu {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
+      box-shadow: 0 8px 24px rgba(0,0,0,.26), inset 0 -1px rgba(246,223,149,.12);
+      padding: 0.85rem 2rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+      transform: translateY(0);
+      opacity: 1;
+      transition: transform 0.42s ease, opacity 0.42s ease, box-shadow 0.42s ease;
+    }
+
+    .menu.is-hidden {
+      transform: translateY(calc(-100% + 10px));
+      opacity: 0.08;
+      box-shadow: none;
+    }
+
+    .menu.is-hidden:hover,
+    .menu.is-hidden:focus-within,
+    body.menu-peek .menu {
+      transform: translateY(0);
+      opacity: 1;
+      box-shadow: 0 8px 24px rgba(0,0,0,.26), inset 0 -1px rgba(246,223,149,.12);
+    }
+
+    .menu-peek-zone {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 26px;
+      z-index: 999;
+      pointer-events: auto;
+    }
+
+    .menu-title {
+      width: 100%;
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.7rem);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.35rem;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 rgba(0,0,0,.34), 0 0 20px rgba(246,223,149,.22);
+    }
+
+    .menu-title::before,
+    .menu-title::after {
+      content: "";
+      display: inline-block;
+      width: min(12vw, 110px);
+      height: 1px;
+      margin: 0 18px 0.28em;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      vertical-align: middle;
+    }
+
+    .menu a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.48rem 0.9rem;
+      border-radius: 2px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      border: 1px solid rgba(246, 223, 149, 0.2);
+      background: rgba(0,0,0,.16);
+    }
+
+    .menu a:hover {
+      color: var(--text-primary);
+      background: rgba(216, 170, 69, 0.18);
+      border-color: rgba(246, 223, 149, 0.5);
+    }
+
+    .menu a.active {
+      background: var(--gold);
+      color: var(--ink);
+      box-shadow: 0 0 15px rgba(246, 223, 149, 0.3);
+    }
+
+    /* Container */
+    #gallery-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 3rem 2rem 7rem;
+    }
+
+    /* Section */
+    .gallery-section {
+      margin-bottom: 5rem;
+      padding: 2rem clamp(1rem, 3vw, 2.4rem) 2.4rem;
+      border-top: 1px solid rgba(246, 223, 149, .28);
+      border-bottom: 1px solid rgba(0,0,0,.25);
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.18)),
+        radial-gradient(circle at 20% 0%, rgba(246, 223, 149, .08), transparent 25%);
+      box-shadow: inset 0 1px rgba(255,255,255,.05), 0 24px 60px rgba(0,0,0,.18);
+    }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      font-weight: 700;
+      margin: 0 0 2rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid rgba(246, 223, 149, .45);
+      color: var(--text-primary);
+      display: inline-block;
+      letter-spacing: .04em;
+      text-shadow: 0 3px 0 rgba(0,0,0,.22);
+    }
+
+    /* Grid */
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      column-gap: clamp(3rem, 5.4vw, 5.8rem);
+      row-gap: clamp(4rem, 7vw, 7.5rem);
+    }
+
+    /* Card */
+    .gallery-item {
+      --item-width: 300px;
+      width: min(var(--item-width), 92vw);
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      padding: 0;
+      transition: transform 0.34s cubic-bezier(0.4, 0, 0.2, 1), filter 0.34s;
+      position: relative;
+      overflow: visible;
+      margin: 1.1rem;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-7px) scale(1.015);
+      filter: drop-shadow(0 30px 26px rgba(0,0,0,.45));
+      z-index: 4;
+    }
+
+    .img-container {
+      width: var(--item-width, 300px);
+      aspect-ratio: var(--frame-ratio, 1 / 1);
+      border-radius: 0;
+      overflow: visible;
+
+      /* Matting: stays cleanly inside the border */
+      background: var(--mat-color);
+      padding: clamp(8px, 1.8vw, 14px);
+
+      /* Soft white frame using layered box-shadow rings */
+      border: 18px solid #f0ede4;
+      box-shadow:
+        /* Inner bevel */
+        inset 2px 2px 0 rgba(255,255,255,0.9),
+        inset -2px -2px 0 rgba(180,170,155,0.5),
+        inset 0 0 6px rgba(0,0,0,0.1),
+        /* Outer edge line */
+        0 0 0 1px rgba(120,110,95,0.4),
+        /* Wall shadow */
+        0 14px 35px rgba(0,0,0,0.5),
+        0 4px 12px rgba(0,0,0,0.3);
+
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .img-container:hover {
+      box-shadow:
+        inset 2px 2px 0 rgba(255,255,255,0.9),
+        inset -2px -2px 0 rgba(180,170,155,0.5),
+        inset 0 0 6px rgba(0,0,0,0.1),
+        0 0 0 1px rgba(120,110,95,0.4),
+        0 20px 50px rgba(0,0,0,0.6),
+        0 6px 18px rgba(0,0,0,0.38);
+    }
+
+    .artwork-mat {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .img-container::after { display: none; }
+
+    .artwork-button {
+      display: block;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      color: inherit;
+      background: transparent;
+      border: 0;
+      cursor: zoom-in;
+      text-align: inherit;
+      font: inherit;
+    }
+
+    .frame-portrait  { --item-width: 255px; }
+    .frame-landscape { --item-width: 370px; }
+    .frame-small     { --item-width: 220px; }
+    .frame-grand     { --item-width: 430px; }
+
+    /* Dark wood frame */
+    .frame-dark .img-container {
+      border-color: #d8d4cb;
+      border-width: 14px;
+      box-shadow:
+        inset 2px 2px 0 rgba(255,255,255,0.8),
+        inset -2px -2px 0 rgba(150,140,125,0.5),
+        0 0 0 1px rgba(100,95,85,0.35),
+        0 12px 30px rgba(0,0,0,0.5);
+    }
+
+    /* Brass gilded frame */
+    .frame-brass .img-container {
+      border-color: #f2efe6;
+      border-width: 20px;
+      box-shadow:
+        inset 3px 3px 0 rgba(255,255,255,0.95),
+        inset -3px -3px 0 rgba(160,150,135,0.55),
+        inset 0 0 8px rgba(0,0,0,0.08),
+        0 0 0 1px rgba(110,100,88,0.4),
+        0 14px 40px rgba(0,0,0,0.55);
+    }
+
+    /* Carved gilded frame */
+    .frame-carved .img-container {
+      border-color: #e8e4da;
+      border-width: 22px;
+      box-shadow:
+        inset 4px 4px 0 rgba(255,255,255,1),
+        inset -4px -4px 0 rgba(155,145,130,0.6),
+        inset 0 0 10px rgba(0,0,0,0.1),
+        0 0 0 1px rgba(100,95,82,0.45),
+        0 16px 45px rgba(0,0,0,0.6);
+    }
+
+    /* Fancy frame — widest */
+    .frame-fancy .img-container {
+      border-color: #f5f2eb;
+      border-width: 26px;
+      box-shadow:
+        inset 5px 5px 0 rgba(255,255,255,1),
+        inset -5px -5px 0 rgba(150,140,125,0.65),
+        inset 0 0 12px rgba(0,0,0,0.08),
+        0 0 0 1px rgba(100,90,78,0.45),
+        0 0 0 3px rgba(220,215,205,0.5),
+        0 0 0 4px rgba(90,82,70,0.3),
+        0 18px 55px rgba(0,0,0,0.65),
+        0 6px 18px rgba(0,0,0,0.35);
+    }
+
+
+
+    .gallery-item:hover img {
+      transform: scale(1.035);
+    }
+
+    .gallery-item p {
+      width: fit-content;
+      max-width: calc(100% - 28px);
+      margin: 0.85rem auto 0;
+      padding: 0.42rem 0.72rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.02rem;
+      color: var(--ink);
+      background: linear-gradient(180deg, #ead79e, var(--plaque));
+      border: 1px solid rgba(83, 52, 20, .55);
+      box-shadow: inset 0 1px rgba(255,255,255,.45), 0 4px 8px rgba(0,0,0,.22);
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: .02em;
+    }
+
+    /* Fullscreen Overlay fallback */
+    .gallery-item a {
+      display: block;
+      text-decoration: none;
+    }
+
+    .art-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(5, 3, 2, .86);
+      backdrop-filter: blur(14px);
+      align-items: center;
+      justify-content: center;
+      padding: clamp(1rem, 3vw, 2.5rem);
+    }
+
+    .art-modal.active {
+      display: flex;
+    }
+
+    .modal-panel {
+      width: min(1180px, 96vw);
+      max-height: 92vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 240px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .featured-frame {
+      background: var(--mat-color);
+      padding: clamp(20px, 4vw, 50px);
+      border: 60px solid transparent;
+      border-image-source: var(--frame-gold);
+      border-image-slice: 180;
+      border-image-repeat: stretch;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.9);
+      position: relative;
+    }
+
+    .featured-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);
+      pointer-events: none;
+    }
+
+    .featured-frame img {
+      display: block;
+      width: 100%;
+      max-height: calc(92vh - 120px);
+      object-fit: contain;
+      background: #fbfaf5;
+    }
+
+    .modal-menu {
+      background: linear-gradient(180deg, rgba(36,24,16,.98), rgba(18,12,8,.98));
+      border: 1px solid rgba(246, 223, 149, .28);
+      box-shadow: 0 18px 44px rgba(0,0,0,.46);
+      padding: 14px;
+      color: var(--text-primary);
+    }
+
+    .modal-menu h3 {
+      margin: 0 0 4px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      line-height: 1.05;
+    }
+
+    .modal-menu p {
+      margin: 0 0 14px;
+      color: var(--text-secondary);
+      font-size: .8rem;
+      line-height: 1.35;
+    }
+
+    .modal-actions {
+      display: grid;
+      gap: 8px;
+    }
+
+    .modal-actions button,
+    .modal-actions a {
+      display: block;
+      width: 100%;
+      padding: 10px 11px;
+      color: var(--ink);
+      background: linear-gradient(180deg, #f3d98a, #c89a3c);
+      border: 1px solid rgba(72,45,17,.65);
+      text-align: center;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: .78rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 38px;
+      height: 38px;
+      color: var(--ink);
+      background: linear-gradient(180deg, #f3d98a, #c89a3c);
+      border: 1px solid rgba(72,45,17,.65);
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 1.1rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,.42);
+    }
+
+    .modal-status {
+      min-height: 18px;
+      margin-top: 10px;
+      color: #f5df9d;
+      font-size: .76rem;
+      line-height: 1.35;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    /* Loading & Error */
+    #loading {
+      text-align: center;
+      padding: 4rem;
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      font-family: 'Cormorant Garamond', serif;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .error-message {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.24);
+      border: 1px solid rgba(246, 223, 149, 0.28);
+      border-radius: 8px;
+      color: #f8e5b0;
+      max-width: 600px;
+      margin: 2rem auto;
+    }
+
+    /* Back to Top */
+    #back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+      color: var(--ink);
+      border: 1px solid rgba(60,35,14,.5);
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      pointer-events: none;
+      z-index: 1001;
+    }
+
+    #back-to-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    #back-to-top:hover {
+      transform: translateY(-2px);
+      background: #f3d16e;
+    }
+
+    @media (max-width: 768px) {
+      .gallery {
+        row-gap: 4rem;
+        column-gap: 2rem;
+      }
+
+      .gallery-item,
+      .frame-landscape,
+      .frame-grand,
+      .frame-portrait,
+      .frame-small {
+        --item-width: min(78vw, 330px);
+      }
+
+      .menu {
+        padding: 1rem;
+      }
+
+      .menu-title::before,
+      .menu-title::after {
+        display: none;
+      }
+
+      .modal-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-menu {
+        max-height: 32vh;
+        overflow: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="menu-peek-zone" id="menuPeekZone" aria-hidden="true"></div>
+  <nav class="menu" id="menu">
+    <div class="menu-title">THE GALLERY</div>
+    <!-- Menu items will be injected here -->
+  </nav>
+
+  <div id="loading">Loading artwork...</div>
+  <div id="gallery-container"></div>
+
+  <button id="back-to-top" onclick="scrollToTop()">↑</button>
+
+  <div class="art-modal" id="artModal" aria-hidden="true">
+    <button class="modal-close" id="modalClose" aria-label="Close featured artwork">×</button>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="featured-frame">
+        <img id="modalImage" src="" alt="">
+      </div>
+      <aside class="modal-menu">
+        <h3 id="modalTitle">Artwork</h3>
+        <p id="modalFolder">Gallery selection</p>
+        <div class="modal-actions">
+          <button type="button" id="copyImageBtn">Copy Image</button>
+          <button type="button" id="printImageBtn">Print Image</button>
+          <button type="button" id="saveImageBtn">Save File</button>
+        </div>
+        <div class="modal-status" id="modalStatus"></div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQCO6dPZsGsk6Ivym0ypjSejef8Zc5pJn_8yT0eTjntBVrre6Re6vzcRsY5hwV9jQvyHRcnDM8bsOK_/pub?gid=1772542183&single=true&output=csv";
+    let currentArtwork = null;
+
+    // Fallback data in case CSV is empty or fails
+    const mockData = [
+      {
+        folderName: 'Abstract Series',
+        fileName: 'Ethereal Waves',
+        thumbnailUrl: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?auto=format&fit=crop&q=80&w=600',
+        imageUrl: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?auto=format&fit=crop&q=80&w=1600'
+      },
+      {
+        folderName: 'Abstract Series',
+        fileName: 'Golden Hour flows',
+        thumbnailUrl: 'https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&q=80&w=600',
+        imageUrl: 'https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&q=80&w=1600'
+      },
+      {
+        folderName: 'Modern Architecture',
+        fileName: 'Geometric Blue',
+        thumbnailUrl: 'https://images.unsplash.com/photo-1515405295579-ba7f9f92f4b3?auto=format&fit=crop&q=80&w=600',
+        imageUrl: 'https://images.unsplash.com/photo-1515405295579-ba7f9f92f4b3?auto=format&fit=crop&q=80&w=1600'
+      },
+      {
+        folderName: 'Modern Architecture',
+        fileName: 'Urban Lines',
+        thumbnailUrl: 'https://images.unsplash.com/photo-1486744360530-ca98492d03ec?auto=format&fit=crop&q=80&w=600',
+        imageUrl: 'https://images.unsplash.com/photo-1486744360530-ca98492d03ec?auto=format&fit=crop&q=80&w=1600'
+      },
+      {
+        folderName: 'Digital Scapes',
+        fileName: 'Neon Cyberpunk',
+        thumbnailUrl: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=600',
+        imageUrl: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=1600'
+      }
+    ];
+
+    async function fetchCsv() {
+      try {
+        const response = await fetch(csvUrl);
+        if (!response.ok) throw new Error("Failed to fetch CSV");
+        const csvText = await response.text();
+
+        const rows = csvText.split("\n").map(row => row.trim()).filter(row => row);
+
+        // Skip header if it exists and looks like a header
+        const startIndex = rows[0].toLowerCase().includes("folder") ? 1 : 0;
+
+        return rows.slice(startIndex).map(row => {
+          // Simple split, handles basic CSV. For complex CSVs with commas in values, a better parser is needed.
+          const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(col => col.replace(/^"|"$/g, '').trim());
+
+          return {
+            folderName: cols[0] || 'Uncategorized',
+            fileName: cols[1] || 'Untitled',
+            thumbnailUrl: cols[2],
+            imageUrl: cols[3]
+          };
+        });
+      } catch (error) {
+        console.warn("CSV Fetch failed, using mock data:", error);
+        return [];
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value || '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[char]));
+    }
+
+    function cleanFileName(value) {
+      return String(value || 'artwork').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'artwork';
+    }
+
+    function setFrameSizeFromImage(img, galleryItem, index) {
+      const w = img.naturalWidth;
+      const h = img.naturalHeight;
+      if (!w || !h) return;
+      
+      const ratio = w / h;
+      galleryItem.style.setProperty('--frame-ratio', `${w} / ${h}`);
+      
+      galleryItem.classList.remove('frame-portrait', 'frame-landscape', 'frame-small', 'frame-grand');
+      if (ratio > 1.5) {
+        galleryItem.classList.add(index % 6 === 0 ? 'frame-grand' : 'frame-landscape');
+      } else if (ratio < 0.8) {
+        galleryItem.classList.add('frame-portrait');
+      } else if (index % 7 === 3) {
+        galleryItem.classList.add('frame-small');
+      } else {
+        galleryItem.classList.add('frame-landscape');
+      }
+    }
+
+    function getDriveId(url) {
+      const value = String(url || '');
+      const fileMatch = value.match(/\/d\/([^/]+)/);
+      if (fileMatch) return fileMatch[1];
+      const idMatch = value.match(/[?&]id=([^&]+)/);
+      if (idMatch) return idMatch[1];
+      return null;
+    }
+
+    function imageCandidates(item) {
+      const candidates = [];
+      const add = url => {
+        if (url && !candidates.includes(url)) candidates.push(url);
+      };
+      [item.imageUrl, item.thumbnailUrl].forEach(url => {
+        const id = getDriveId(url);
+        if (id) {
+          add(`https://drive.google.com/thumbnail?id=${id}&sz=w2000`);
+          add(`https://lh3.googleusercontent.com/d/${id}=w2000`);
+          add(`https://drive.google.com/uc?export=view&id=${id}`);
+        }
+        add(url);
+      });
+      return candidates;
+    }
+
+    function currentImageUrl() {
+      return document.getElementById('modalImage').currentSrc || document.getElementById('modalImage').src || currentArtwork?.thumbnailUrl || currentArtwork?.imageUrl || '';
+    }
+
+    function useNextModalImageCandidate() {
+      const img = document.getElementById('modalImage');
+      const candidates = JSON.parse(img.dataset.candidates || '[]');
+      const nextIndex = Number(img.dataset.candidateIndex || 0) + 1;
+      if (nextIndex < candidates.length) {
+        img.dataset.candidateIndex = String(nextIndex);
+        img.src = candidates[nextIndex];
+      } else {
+        document.getElementById('modalStatus').textContent = 'The full image link could not render. Try Save File to open the source.';
+      }
+    }
+
+    function openArtwork(item) {
+      currentArtwork = item;
+      const title = item.fileName.replace(/_/g, ' ');
+      const candidates = imageCandidates(item);
+      const imageUrl = candidates[0] || item.thumbnailUrl || item.imageUrl;
+      const modalImage = document.getElementById('modalImage');
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalFolder').textContent = item.folderName || 'Gallery selection';
+      modalImage.dataset.candidates = JSON.stringify(candidates);
+      modalImage.dataset.candidateIndex = '0';
+      modalImage.src = imageUrl;
+      modalImage.alt = title;
+      document.getElementById('modalStatus').textContent = '';
+      document.getElementById('artModal').classList.add('active');
+      document.getElementById('artModal').setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+    }
+
+    function closeArtwork() {
+      document.getElementById('artModal').classList.remove('active');
+      document.getElementById('artModal').setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      const modalImage = document.getElementById('modalImage');
+      modalImage.src = '';
+      modalImage.dataset.candidates = '[]';
+      modalImage.dataset.candidateIndex = '0';
+      currentArtwork = null;
+    }
+
+    async function copyCurrentImage() {
+      const status = document.getElementById('modalStatus');
+      if (!currentArtwork) return;
+      const imageUrl = currentImageUrl();
+      try {
+        const response = await fetch(imageUrl, { mode: 'cors' });
+        const blob = await response.blob();
+        if (navigator.clipboard && window.ClipboardItem) {
+          await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+          status.textContent = 'Image copied to clipboard.';
+          return;
+        }
+        throw new Error('Image clipboard unavailable');
+      } catch (error) {
+        try {
+          await navigator.clipboard.writeText(imageUrl);
+          status.textContent = 'Image copy was blocked, so the image URL was copied instead.';
+        } catch (fallbackError) {
+          status.textContent = 'Clipboard access was blocked by the browser.';
+        }
+      }
+    }
+
+    function printCurrentImage() {
+      if (!currentArtwork) return;
+      const title = currentArtwork.fileName.replace(/_/g, ' ');
+      const imageUrl = currentImageUrl();
+      const printWindow = window.open('', '_blank', 'noopener,noreferrer');
+      if (!printWindow) {
+        document.getElementById('modalStatus').textContent = 'Pop-up blocked. Allow pop-ups to print.';
+        return;
+      }
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>${escapeHtml(title)}</title>
+            <style>
+              body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: white; }
+              img { max-width: 96vw; max-height: 96vh; object-fit: contain; }
+            </style>
+          </head>
+          <body>
+            <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(title)}" onload="window.focus(); window.print();">
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+    }
+
+    async function saveCurrentImage() {
+      const status = document.getElementById('modalStatus');
+      if (!currentArtwork) return;
+      const title = currentArtwork.fileName.replace(/_/g, ' ');
+      const imageUrl = currentImageUrl();
+      try {
+        const response = await fetch(imageUrl, { mode: 'cors' });
+        const blob = await response.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = objectUrl;
+        anchor.download = `${cleanFileName(title)}.jpg`;
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+        URL.revokeObjectURL(objectUrl);
+        status.textContent = 'Download started.';
+      } catch (error) {
+        window.open(imageUrl, '_blank', 'noopener,noreferrer');
+        status.textContent = 'Direct download was blocked, so the image opened in a new tab.';
+      }
+    }
+
+    async function renderGallery() {
+      let data = await fetchCsv();
+      let isMock = false;
+
+      // Use mock data if CSV is empty
+      if (data.length === 0) {
+        data = mockData;
+        isMock = true;
+      }
+
+      document.getElementById('loading').style.display = 'none';
+
+      // Group data by folder
+      const groupedData = data.reduce((acc, item) => {
+        if (item.thumbnailUrl && item.imageUrl) {
+          if (!acc[item.folderName]) acc[item.folderName] = [];
+          acc[item.folderName].push(item);
+        }
+        return acc;
+      }, {});
+
+      const menu = document.getElementById("menu");
+      const galleryContainer = document.getElementById("gallery-container");
+
+      if (Object.keys(groupedData).length === 0) {
+        galleryContainer.innerHTML = "<div class='error-message'><p>No valid images found in the dataset.</p></div>";
+        return;
+      }
+
+      // If we are showing mock data, add a notice
+      if (isMock) {
+        const notice = document.createElement('div');
+        notice.style.cssText = 'text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9rem; font-style: italic;';
+        notice.innerHTML = 'Displaying demo content. <br>Populate the Google Sheet to see your own images.';
+        galleryContainer.prepend(notice);
+      }
+
+      Object.keys(groupedData).forEach(folder => {
+        const folderId = folder.replace(/\s+/g, '-').toLowerCase();
+
+        // Add folder to menu
+        const menuItem = document.createElement("a");
+        menuItem.href = `#${folderId}`;
+        menuItem.textContent = folder;
+        menu.appendChild(menuItem);
+
+        // Create folder section
+        const section = document.createElement("div");
+        section.className = 'gallery-section';
+        section.id = folderId;
+        section.innerHTML = `<h2>${folder}</h2>`;
+
+        const gallery = document.createElement("div");
+        gallery.className = "gallery";
+
+        groupedData[folder].forEach((item, index) => {
+          const galleryItem = document.createElement("div");
+          const frameStyles = ["frame-fancy", "frame-brass", "frame-dark", "frame-carved", "frame-brass", "frame-dark", "frame-fancy"];
+          galleryItem.className = `gallery-item ${frameStyles[index % frameStyles.length]} frame-landscape`;
+
+          galleryItem.innerHTML = `
+                <button type="button" class="artwork-button">
+                    <div class="img-container">
+                        <div class="artwork-mat">
+                            <img src="${item.thumbnailUrl}" alt="${escapeHtml(item.fileName)}" loading="lazy">
+                        </div>
+                    </div>
+                    <p>${escapeHtml(item.fileName.replace(/_/g, ' '))}</p>
+                </button>
+            `;
+          const img = galleryItem.querySelector('img');
+          img.addEventListener('load', () => setFrameSizeFromImage(img, galleryItem, index), { once: true });
+          galleryItem.querySelector('.artwork-button').addEventListener('click', () => openArtwork(item));
+          gallery.appendChild(galleryItem);
+        });
+
+        section.appendChild(gallery);
+        galleryContainer.appendChild(section);
+      });
+
+      // Smooth scroll for nav links
+      document.querySelectorAll('.menu a').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          document.querySelector(targetId).scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      });
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.addEventListener('scroll', function () {
+      const button = document.getElementById("back-to-top");
+      if (window.scrollY > 300) {
+        button.classList.add('visible');
+      } else {
+        button.classList.remove('visible');
+      }
+    });
+
+    function setupAutoHidingMenu() {
+      const menu = document.getElementById('menu');
+      const peekZone = document.getElementById('menuPeekZone');
+      let hideTimer = null;
+
+      const shouldHide = () => window.scrollY > 80 && !menu.matches(':hover') && !menu.matches(':focus-within');
+      const hideMenu = () => {
+        if (shouldHide()) {
+          menu.classList.add('is-hidden');
+          document.body.classList.remove('menu-peek');
+        }
+      };
+      const scheduleHide = () => {
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(hideMenu, 1200);
+      };
+      const showMenu = () => {
+        clearTimeout(hideTimer);
+        menu.classList.remove('is-hidden');
+        document.body.classList.add('menu-peek');
+      };
+
+      peekZone.addEventListener('mouseenter', showMenu);
+      menu.addEventListener('mouseenter', showMenu);
+      menu.addEventListener('focusin', showMenu);
+      menu.addEventListener('mouseleave', scheduleHide);
+      menu.addEventListener('focusout', scheduleHide);
+      window.addEventListener('scroll', () => {
+        if (window.scrollY <= 80) {
+          showMenu();
+        } else {
+          document.body.classList.remove('menu-peek');
+          scheduleHide();
+        }
+      });
+      scheduleHide();
+    }
+
+    document.getElementById('modalClose').addEventListener('click', closeArtwork);
+    document.getElementById('modalImage').addEventListener('error', useNextModalImageCandidate);
+    document.getElementById('artModal').addEventListener('click', event => {
+      if (event.target.id === 'artModal') closeArtwork();
+    });
+    document.getElementById('copyImageBtn').addEventListener('click', copyCurrentImage);
+    document.getElementById('printImageBtn').addEventListener('click', printCurrentImage);
+    document.getElementById('saveImageBtn').addEventListener('click', saveCurrentImage);
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeArtwork();
+    });
+
+    setupAutoHidingMenu();
+    renderGallery();
+  </script>
+</body>
+
+</html>

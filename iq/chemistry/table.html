@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chemistry: Periodic Table</title>
+    <link rel="stylesheet" href="table-style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="table-container">
+        <header>
+            <div class="header-top">
+                <div class="logo">PERIODIC TABLE</div>
+                <nav>
+                    <a href="index.html">Back to Lab</a>
+                    <a href="compounds.html">Compound Index</a>
+                </nav>
+            </div>
+
+            <div class="controls-wrapper">
+                <div class="search-box">
+                    <input type="text" id="element-search" placeholder="Search element...">
+                    <span class="search-icon">🔍</span>
+                </div>
+
+                <div class="filter-controls">
+                    <div class="category-select-wrapper">
+                        <select id="category-filter">
+                            <option value="all">All categories</option>
+                            <option value="alkali-metal">Alkali metals</option>
+                            <option value="alkaline-earth-metal">Alkaline earth</option>
+                            <option value="transition-metal">Transition metals</option>
+                            <option value="post-transition-metal">Post-transition metals</option>
+                            <option value="metalloid">Metalloids</option>
+                            <option value="reactive-nonmetal">Reactive nonmetals</option>
+                            <option value="noble-gas">Noble gases</option>
+                            <option value="lanthanide">Lanthanides</option>
+                            <option value="actinide">Actinides</option>
+                        </select>
+                    </div>
+
+                    <div class="legend-pills" id="category-legend">
+                        <label class="legend-pill" data-category="alkali-metal">
+                            <span class="dot alkali"></span> Alkali metals
+                        </label>
+                        <label class="legend-pill" data-category="alkaline-earth-metal">
+                            <span class="dot alkaline"></span> Alkaline earth
+                        </label>
+                        <label class="legend-pill" data-category="transition-metal">
+                            <span class="dot transition"></span> Transition metals
+                        </label>
+                        <label class="legend-pill" data-category="post-transition-metal">
+                            <span class="dot post-transition"></span> Post-transition metals
+                        </label>
+                        <label class="legend-pill" data-category="metalloid">
+                            <span class="dot metalloid"></span> Metalloids
+                        </label>
+                        <label class="legend-pill" data-category="reactive-nonmetal">
+                            <span class="dot reactive"></span> Reactive nonmetals
+                        </label>
+                        <label class="legend-pill" data-category="noble-gas">
+                            <span class="dot noble"></span> Noble gases
+                        </label>
+                        <label class="legend-pill" data-category="lanthanide">
+                            <span class="dot lanthanide"></span> Lanthanides
+                        </label>
+                        <label class="legend-pill" data-category="actinide">
+                            <span class="dot actinide"></span> Actinides
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section id="periodic-grid-container">
+            <div id="periodic-grid"></div>
+        </section>
+
+        <section id="category-insight" class="hidden">
+            <div class="insight-card">
+                <button id="close-insight">×</button>
+                <div class="insight-header">
+                    <span class="insight-dot"></span>
+                    <h3 id="insight-title">Category Name</h3>
+                </div>
+                <p id="insight-text">Educational content goes here...</p>
+            </div>
+        </section>
+
+        <section id="element-detail" class="hidden">
+            <div id="detail-card" class="card">
+                <button id="close-detail">×</button>
+                <div class="detail-header">
+                    <div id="detail-symbol">H</div>
+                    <div class="detail-meta">
+                        <h2 id="detail-name">Hydrogen</h2>
+                        <p id="detail-category">Diatomic Nonmetal</p>
+                    </div>
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-item"><strong>Atomic Number</strong> <span id="val-number">1</span></div>
+                    <div class="detail-item"><strong>Atomic Mass</strong> <span id="val-mass">1.008</span></div>
+                    <div class="detail-item"><strong>Electronegativity</strong> <span id="val-en">2.2</span></div>
+                    <div class="detail-item"><strong>Block</strong> <span id="val-block">s</span></div>
+                    <div class="detail-item full"><strong>Electron Config</strong> <span id="val-config">1s1</span></div>
+                </div>
+                <p id="detail-summary" class="summary">Hydrogen is the lightest element...</p>
+                <a id="detail-wiki" href="#" target="_blank">Learn More on Wikipedia →</a>
+            </div>
+        </section>
+    </div>
+
+    <script src="table-logic.js"></script>
+</body>
+</html>

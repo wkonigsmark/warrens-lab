@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA | Playoff Bracket</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="jspdf.min.js"></script>
+    <audio id="bg-audio" src="roundball_rock.mp3" loop autoplay playsinline></audio>
+</head>
+<body>
+    <header>
+        <div class="audio-controls">
+            <button id="mute-btn" onclick="toggleAudio()">🔊</button>
+        </div>
+        <div class="nba-logo">
+            <img src="https://cdn.nba.com/logos/nba/nba-logoman.svg" alt="NBA Logo">
+        </div>
+        <h1>NBA PLAYOFFS <span class="year">2026</span></h1>
+    </header>
+
+    <main class="bracket-container" id="bracket">
+        <!-- Western Conference -->
+        <section class="conference west">
+            <h2 class="conf-title">WESTERN CONFERENCE</h2>
+            <div class="round-columns">
+                <div class="round round-1" id="west-r1"></div>
+                <div class="round round-2" id="west-r2"></div>
+                <div class="round round-3" id="west-r3"></div>
+            </div>
+        </section>
+
+        <!-- Finals Hub -->
+        <section class="finals-hub">
+            <div class="nba-finals-card">
+                <div class="finals-header">NBA FINALS</div>
+                <div class="finals-matchup" id="nba-finals"></div>
+                <div class="champion-podium" id="champion">
+                    <div class="trophy-icon">🏆</div>
+                    <div class="champ-content">
+                        <div class="champ-label">NBA CHAMPION</div>
+                        <div id="champ-team" class="champ-team-display">SELECT WINNER</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="export-controls">
+                <button id="export-btn" class="btn btn-primary" onclick="exportToPDF()">EXPORT AS PDF</button>
+            </div>
+        </section>
+
+
+
+        <!-- Eastern Conference -->
+        <section class="conference east">
+            <h2 class="conf-title">EASTERN CONFERENCE</h2>
+            <div class="round-columns">
+                <div class="round round-3" id="east-r3"></div>
+                <div class="round round-2" id="east-r2"></div>
+                <div class="round round-1" id="east-r1"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Export Title Modal -->
+    <div id="export-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:99999; align-items:center; justify-content:center;">
+        <div style="background:#1a1e2e; border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:32px; width:320px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+            <div style="font-size:1.5rem; font-weight:800; color:var(--gold); margin-bottom:8px;">NAME YOUR BRACKET</div>
+            <div style="color:var(--text-dim); font-size:0.9rem; margin-bottom:20px;">This will be used as your PDF filename</div>
+            <input id="export-title-input" type="text" placeholder="e.g. My Master Picks" 
+                style="width:100%; padding:12px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.08); color:white; font-size:1rem; font-family:inherit; box-sizing:border-box; margin-bottom:16px;"
+            />
+            <div style="display:flex; gap:10px;">
+                <button onclick="document.getElementById('export-modal').style.display='none'" 
+                    style="flex:1; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.2); background:transparent; color:white; cursor:pointer; font-family:inherit;">Cancel</button>
+                <button id="export-confirm-btn"
+                    style="flex:2; padding:12px; border-radius:8px; border:none; background:var(--gold); color:black; font-weight:800; cursor:pointer; font-family:inherit; font-size:0.95rem;">EXPORT PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Wizard Flow -->
+    <div id="wizard-flow" class="wizard-overlay hidden">
+        <div class="wizard-header">
+            <button id="wizard-mute-btn" class="mini-mute" onclick="toggleAudio()">🔊</button>
+            <div class="wizard-progress">
+                <div id="progress-bar" class="progress-fill"></div>
+            </div>
+            <button class="close-wizard" onclick="toggleWizard()">×</button>
+        </div>
+        <div class="wizard-content" id="wizard-content">
+            <!-- Matchup card will be injected here -->
+        </div>
+        <div class="wizard-footer">
+            <button id="prev-btn" onclick="wizardPrev()">PREVIOUS</button>
+            <span id="wizard-step-label">Match 1 of 15</span>
+            <button id="next-btn" onclick="wizardNext()">NEXT</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

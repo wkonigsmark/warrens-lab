@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guitar Lab | Interactive Fretboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Bebas+Neue&family=Noto+Music&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>GUITAR <span class="accent">LAB</span></h1>
+        <div class="controls-bar">
+            <div class="mode-tabs">
+                <button id="tab-chord" class="tab-btn active" onclick="switchMode('CHORD')">CHORD BUILDER</button>
+                <button id="tab-scale" class="tab-btn" onclick="switchMode('SCALE')">SCALE THEORY</button>
+            </div>
+            <button class="control-btn" onclick="toggleMetronomePopup()">METRONOME</button>
+            <button class="control-btn practice-btn" onclick="togglePracticeCenter(true)">PRACTICE CENTER</button>
+            <button class="control-btn clear-btn" onclick="clearBoard()">CLEAR BOARD</button>
+        </div>
+
+        <div class="theory-dashboard">
+            <!-- Shared Root Control -->
+            <div class="theory-group shared-group">
+                <span class="label">ROOT:</span>
+                <select id="root-select" onchange="updateTheory()">
+                    <option value="C">C</option>
+                    <option value="C#/Db">C♯ / D♭</option>
+                    <option value="D">D</option>
+                    <option value="D#/Eb">D♯ / E♭</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                    <option value="F#/Gb">F♯ / G♭</option>
+                    <option value="G">G</option>
+                    <option value="G#/Ab">G♯ / A♭</option>
+                    <option value="A">A</option>
+                    <option value="A#/Bb">A♯ / B♭</option>
+                    <option value="B">B</option>
+                </select>
+            </div>
+
+            <div id="chord-controls" class="theory-sub-panel active">
+                <div class="theory-group">
+                    <span class="label">FORM:</span>
+                    <select id="form-select" onchange="updateTheory()">
+                        <optgroup label="MAJOR FORMS">
+                            <option value="maj">Major (1, 3, 5)</option>
+                            <option value="maj7">Major 7 (1, 3, 5, 7)</option>
+                            <option value="maj9">Major 9 (1, 3, 5, 7, 9)</option>
+                            <option value="maj13">Major 13 (1, 3, 7, 13)</option>
+                            <option value="maj6">Major 6 (1, 3, 5, 6)</option>
+                        </optgroup>
+                        
+                        <optgroup label="MINOR FORMS">
+                            <option value="min">Minor (1, b3, 5)</option>
+                            <option value="min7">Minor 7 (1, b3, 5, b7)</option>
+                            <option value="min9">Minor 9 (1, b3, 5, b7, 9)</option>
+                            <option value="min11">Minor 11 (1, b3, b7, 11)</option>
+                            <option value="min13">Minor 13 (1, b3, b7, 13)</option>
+                            <option value="min6">Minor 6 (1, b3, 5, 6)</option>
+                            <option value="m7b5">m7b5 (Half-Dim)</option>
+                        </optgroup>
+                        
+                        <optgroup label="DOMINANT FORMS">
+                            <option value="dom7" selected>Dominant 7 (1, 3, 5, b7)</option>
+                            <option value="dom7b9">Dominant 7♭9 (1, 3, 5, b7, b9)</option>
+                            <option value="dom9">Dominant 9 (1, 3, 5, b7, 9)</option>
+                            <option value="dom11">Dominant 11 (1, b7, 11)</option>
+                            <option value="dom13">Dominant 13 (1, 3, b7, 13)</option>
+                            <option value="dom13_9">Dominant 13 (+9)</option>
+                            <option value="dom13b9">Dominant 13 (♭9)</option>
+                            <option value="dom13s11">Dominant 13 (♯11)</option>
+                            <option value="7sus4">7sus4 (1, 4, 5, b7)</option>
+                        </optgroup>
+                        
+                        <optgroup label="DIMINISHED / AUGMENTED">
+                            <option value="dim">Diminished (1, b3, b5)</option>
+                            <option value="dim7">Diminished 7 (1, b3, b5, bb7)</option>
+                            <option value="aug">Augmented (1, 3, #5)</option>
+                        </optgroup>
+                        
+                        <optgroup label="SUSPENDED">
+                            <option value="sus4">Sus4 (1, 4, 5)</option>
+                            <option value="sus2">Sus2 (1, 2, 5)</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
+            <div id="scale-controls" class="theory-sub-panel">
+                <div class="theory-group shared-group" style="border-bottom:none; margin-bottom: 0;">
+                    <span class="label">SEARCH:</span>
+                    <input type="text" id="scale-search" class="scale-search-input" placeholder="Type to search scales, moods, cultures..." oninput="filterScales()">
+                </div>
+                <div class="theory-group">
+                    <span class="label">SCALE:</span>
+                    <select id="scale-select-main" onchange="updateTheory()">
+                        <!-- Populated by JS -->
+                    </select>
+                    
+                    <span class="label">POSITION:</span>
+                    <select id="position-select" onchange="updateTheory()">
+                        <option value="0">Open Position (0 - 4)</option>
+                        <option value="1">I / First (1 - 5)</option>
+                        <option value="2">II / Second (2 - 6)</option>
+                        <option value="3">III / Third (3 - 7)</option>
+                        <option value="4">IV / Fourth (4 - 8)</option>
+                        <option value="5">V / Fifth (5 - 9)</option>
+                        <option value="6">VI / Sixth (6 - 10)</option>
+                        <option value="7">VII / Seventh (7 - 11)</option>
+                        <option value="8">VIII / Eighth (8 - 12)</option>
+                        <option value="9">IX / Ninth (9 - 13)</option>
+                        <option value="10">X / Tenth (10 - 14)</option>
+                        <option value="11">XI / Eleventh (11 - 15)</option>
+                        <option value="12">XII / Twelfth (12 - 16)</option>
+                    </select>
+                </div>
+                <div id="scale-info-panel" class="scale-info"></div>
+            </div>
+
+            <div class="manuscript-panel">
+                <div id="manuscript-container" class="manuscript-container">
+                    <!-- SVG Staff will be injected here -->
+                </div>
+            </div>
+
+            <div class="checklist-area">
+                <div id="theory-checklist" class="theory-checklist">
+                    <!-- Checklist items will be injected here -->
+                </div>
+                <button class="control-btn save-btn" onclick="saveToBank()" style="margin-top: 15px;">SAVE TO BANK</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="lab-container">
+            <!-- Fret numbers guide -->
+            <div class="fret-numbers">
+                <div class="fret-num">Open</div>
+                <div class="fret-num">1</div>
+                <div class="fret-num">2</div>
+                <div class="fret-num">3</div>
+                <div class="fret-num">4</div>
+                <div class="fret-num">5</div>
+                <div class="fret-num">6</div>
+                <div class="fret-num">7</div>
+                <div class="fret-num">8</div>
+                <div class="fret-num">9</div>
+                <div class="fret-num">10</div>
+                <div class="fret-num">11</div>
+                <div class="fret-num">12</div>
+                <div class="fret-num">13</div>
+                <div class="fret-num">14</div>
+                <div class="fret-num">15</div>
+                <div class="fret-num">16</div>
+                <div class="fret-num">17</div>
+            </div>
+
+            <div class="fretboard" id="fretboard">
+                <!-- JS will inject strings and notes here -->
+            </div>
+            
+            <section class="bank-section">
+                <div class="bank-toolbar">
+                    <h2 id="sheet-main-title" class="bank-title">CURATED CHORDS</h2>
+                    <div class="bank-controls">
+                        <input type="text" id="sheet-title-input" placeholder="Sheet Title..." value="Curated Chords" oninput="updateSheetTitle()">
+                        <button class="control-btn print-btn" onclick="window.print()">PRINT LAB</button>
+                    </div>
+                </div>
+                <div id="voicing-bank" class="voicing-bank">
+                    <div id="empty-state" class="empty-state">No voicings saved yet. Build a chord and hit 'SAVE TO BANK'.</div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- PRACTICE CENTER MODAL -->
+    <div id="practice-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="togglePracticeCenter(false)">&times;</button>
+            
+            <div class="practice-layout" style="grid-template-columns: 1fr;">
+                <div class="drill-section">
+                    <h3>CHORD SEQUENCE</h3>
+                    <div id="drill-display" class="drill-display">
+                        <div class="empty-drill">Save chords to the bank to start drilling!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING METRONOME WIDGET -->
+    <div id="metronome-widget" class="metronome-widget">
+        <button class="modal-close" onclick="toggleMetronomePopup()" style="position: absolute; right: 15px; top: 10px; font-size: 1.5rem;">&times;</button>
+        <h3>METRONOME</h3>
+        <div id="metronome-pulse" class="pulse-circle pulse-small"></div>
+        <div class="bpm-display">
+            <span id="bpm-value">120</span> <small>BPM</small>
+        </div>
+        <div id="metronome-timeout" class="metronome-timeout">
+            Auto-Stop: <span id="timeout-clock">15:00</span>
+        </div>
+        <input type="range" id="bpm-slider" min="40" max="220" value="120" oninput="updateBPM(this.value)">
+        <button id="metronome-toggle" class="control-btn" onclick="toggleMetronome()">START</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

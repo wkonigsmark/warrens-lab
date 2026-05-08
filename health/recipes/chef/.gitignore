@@ -1,0 +1,15 @@
+# Environment variables — NEVER commit this file
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Database lock files
+*.lock
+
+# macOS
+.DS_Store
+
+# Processed log (auto-generated)
+img-tool/.processed

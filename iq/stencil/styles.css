@@ -1,0 +1,1394 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f6f0;
+    background-image: radial-gradient(#dcdcdc 0.5px, transparent 0.5px);
+    background-size: 15px 15px;
+    /* Fill the full dynamic viewport — 100dvh accounts for iOS Safari's
+       collapsing address bar so the canvas is never clipped */
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    padding: 12px;
+    overflow: hidden;
+    touch-action: none;
+    overscroll-behavior: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.branding-section {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.brand-logo {
+    max-width: 150px;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+    opacity: 0.8;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    /* Take up the full available height so the canvas can flex into it */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0 auto;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    /* Tighter for compact look */
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    padding: 12px 30px;
+    /* Slimmer height */
+    border-radius: 20px;
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.04),
+        0 2px 4px rgba(0, 0, 0, 0.02),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+    position: relative;
+    max-width: 950px;
+    width: 95%;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.controls-row {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.top-row {
+    justify-content: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+}
+
+.settings-group {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.middle-row {
+    justify-content: center;
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.print-group {
+    display: flex;
+    gap: 15px;
+}
+
+.status-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 4px;
+    padding-left: 24px;
+    /* Align with bulb edge */
+}
+
+.meta-info {
+    font-size: 8px;
+    /* Very subtle */
+    color: #ccc;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+}
+
+.meta-info span {
+    margin-left: 12px;
+}
+
+.progress-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: #bbb;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-left: 24px;
+    /* Offset to align with tube edge */
+    transition: all 0.3s ease;
+}
+
+.bottom-row {
+    display: flex;
+    /* Force flex in all environments */
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.action-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.clear-button {
+    background: linear-gradient(135deg, #536dfe 0%, #3d5afe 100%);
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(83, 109, 254, 0.2);
+}
+
+.clear-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(83, 109, 254, 0.3);
+}
+
+.new-word-button {
+    background: linear-gradient(135deg, #ffb300 0%, #ffa000 100%);
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(255, 179, 0, 0.2);
+}
+
+.new-word-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(255, 179, 0, 0.3);
+}
+
+.new-word-button:active {
+    transform: translateY(0);
+}
+
+.print-button {
+    background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(22, 160, 133, 0.3);
+}
+
+.print-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(22, 160, 133, 0.5);
+}
+
+.draw-print {
+    background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+    box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
+}
+
+.draw-print:hover {
+    box-shadow: 0 6px 20px rgba(142, 68, 173, 0.5);
+}
+
+.vocab-print {
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+}
+
+.vocab-print:hover {
+    box-shadow: 0 6px 20px rgba(243, 156, 18, 0.5);
+}
+
+.independent-print:hover {
+    box-shadow: 0 6px 20px rgba(44, 62, 80, 0.5);
+}
+
+.reversal-print {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.reversal-print:hover {
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+}
+
+.reversal-group {
+    display: flex;
+    align-items: center;
+    background: #fdfdfd;
+    padding: 3px;
+    border: 1.5px solid #eee;
+    border-radius: 12px;
+}
+
+.reversal-group input {
+    border: none;
+    background: transparent;
+    padding: 4px 10px;
+    width: 70px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #e74c3c;
+    text-align: center;
+    outline: none;
+}
+
+.reversal-group button {
+    margin: 0 !important;
+}
+
+.word-display {
+    display: none;
+    /* Hidden used for internal logic or debug if needed */
+}
+
+.header-meta {
+    position: absolute;
+    right: 30px;
+    top: 25px;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.level-indicator,
+.mode-indicator {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.2;
+    opacity: 0.8;
+}
+
+.mode-indicator {
+    opacity: 0.6;
+}
+
+.canvas-wrapper {
+    display: flex;
+    /* Grow to fill all remaining vertical space after controls */
+    flex: 1;
+    min-height: 0; /* Critical: allows flex child to shrink below content size */
+    background: #f5f1e8;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    /* Parchment texture using CSS */
+    background-image:
+        repeating-linear-gradient(0deg,
+            transparent,
+            transparent 2px,
+            rgba(139, 119, 101, 0.03) 2px,
+            rgba(139, 119, 101, 0.03) 4px),
+        repeating-linear-gradient(90deg,
+            transparent,
+            transparent 2px,
+            rgba(139, 119, 101, 0.03) 2px,
+            rgba(139, 119, 101, 0.03) 4px);
+}
+
+.guides-column {
+    width: 60px;
+    flex-shrink: 0;
+    /* Prevent column from being squashed in portrait */
+    background: rgba(255, 255, 255, 0.3);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 0;
+    position: relative;
+    pointer-events: none;
+    transition: width 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hard / Expert: hide the emoji landmark column — it's for young learners */
+.guides-column.guides-hidden {
+    width: 0;
+    border-right-color: transparent;
+    overflow: hidden;
+}
+
+.guide-icon {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    opacity: 0.6;
+    filter: grayscale(0.2);
+}
+
+#drawingCanvas {
+    display: block;
+    width: 100%;
+    /* Flex: fill the full canvas-wrapper height — no fixed pixels */
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+/* ─── Mobile optimizations (≤ 768px) ─────────────────────────────────────── */
+
+/* ─── Hamburger only shows on mobile ─────────────────────────────────────── */
+@media (min-width: 769px) {
+    .hamburger-btn {
+        display: none;
+    }
+}
+
+/* ─── iPad / tablet (768–1024px) ─────────────────────────────────────────── */
+/* No fixed canvas height — flex:1 handles it for all tablet sizes too */
+@media (min-width: 768px) and (max-width: 1024px) {
+    body {
+        padding: 10px;
+    }
+    .controls {
+        padding: 12px 20px;
+        flex-shrink: 0;
+    }
+}
+
+
+
+.settings-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.settings-item label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Setting Buttons */
+.setting-val {
+    background: #fff;
+    border: 1.5px solid rgba(44, 62, 80, 0.2);
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    min-width: 80px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.setting-val:active {
+    background: #2c3e50;
+    color: #fff;
+    transform: scale(0.95);
+}
+
+/* Settings Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    transition: opacity 0.3s;
+}
+
+.overlay.hidden {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.overlay-content {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 25px;
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.4);
+}
+
+#overlayTitle {
+    margin-bottom: 2rem;
+    color: #2c3e50;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    margin-bottom: 2rem;
+}
+
+.option-btn {
+    background: #f8f9ff;
+    border: 2px solid #b5c1fb;
+    color: #333;
+    padding: 20px 10px;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.option-btn:active {
+    background: #2c3e50;
+    border-color: #2c3e50;
+    color: white;
+    transform: scale(0.9);
+}
+
+.option-btn.active {
+    background: #2c3e50;
+    color: white;
+    border-color: #2c3e50;
+}
+
+.close-overlay {
+    background: #eee;
+    border: none;
+    color: #666;
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.version-tag {
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    font-family: monospace;
+    pointer-events: none;
+}
+
+/* Game Progression - Mercurial Thermometer */
+.progress-section {
+    flex: 1;
+    /* Aggressive growth */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    /* Force children to match parent width */
+    gap: 4px;
+    min-width: 0;
+    /* Webkit fix for overgrowing children */
+}
+
+.thermometer-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 20px;
+    height: 24px;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.thermometer-bulb {
+    width: 32px;
+    height: 32px;
+    background: radial-gradient(circle at 35% 35%, #fff 0%, #d1d1d1 50%, #8a8a8a 100%);
+    border: 2px solid #fff;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    transform: translate(-50%, 0);
+    /* Center on the leading edge */
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.thermometer-tube {
+    flex: 1;
+    /* Allow full fill */
+    height: 18px;
+    background: rgba(0, 0, 0, 0.05);
+    /* Slightly darker for better contrast */
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 9px;
+    /* Pill shape */
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4px);
+}
+
+.thermometer-mercury {
+    height: 100%;
+    width: 0%;
+    /* Dynamic */
+    background: linear-gradient(to right, #6c5ce7, #a29bfe);
+    border-radius: 20px;
+    transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    box-shadow: 0 0 10px rgba(108, 92, 231, 0.3);
+}
+
+/* Splash Animation */
+.thermometer-mercury.splash {
+    animation: mercury-splash 0.5s ease-out;
+}
+
+@keyframes mercury-splash {
+    0% {
+        filter: brightness(1) contrast(1);
+    }
+
+    50% {
+        filter: brightness(1.4) contrast(1.2);
+        transform: scaleY(1.1);
+    }
+
+    100% {
+        filter: brightness(1) contrast(1);
+        transform: scaleY(1);
+    }
+}
+
+/* Metallic Shine / Mercury Highlight */
+.thermometer-mercury::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 2px;
+}
+
+.progress-label {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.5;
+}
+
+/* Re-adjusting mobile spacing for the new section */
+@media (max-width: 768px) {
+    .bottom-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .action-group {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+/* Constraints removed to allow full widescreen expansion */
+
+/* Modal Overlay */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex !important;
+    /* Force flex */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    transition: opacity 0.3s;
+}
+
+.modal.hidden {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    background: white;
+    padding: 3rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    font-family: sans-serif;
+    max-width: 90%;
+    width: 400px;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-content h2 {
+    color: #1a1a2e;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.modal-content p {
+    font-size: 1.2rem;
+    color: #4a4a4a;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+#playAgainBtn {
+    background: linear-gradient(135deg, #1a1a2e 0%, #2c3e50 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+    transition: transform 0.2s;
+}
+
+#playAgainBtn:hover {
+    transform: scale(1.05);
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+#vocabModal {
+    /* Using default modal styles (centered, dark overlay) */
+    align-items: center !important;
+}
+
+#vocabModal .vocab-content {
+    border: 5px solid #2c3e50;
+    padding: 2.5rem;
+    width: 600px;
+    max-width: 95%;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+#vocabModal h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.2rem;
+    color: #2c3e50;
+}
+
+.vocab-target-word {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #2c3e50;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.vocab-grid {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.vocab-option {
+    background: #f8f9ff;
+    border: 4px solid #b5c1fb;
+    border-radius: 20px;
+    width: 150px;
+    height: 150px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+}
+
+.vocab-option svg,
+.vocab-option img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.vocab-option:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.vocab-option.correct {
+    border-color: #a8e063;
+    background: #e8f5e9;
+    transform: scale(1.1);
+}
+
+.vocab-option.incorrect {
+    border-color: #ff6b6b;
+    background: #ffebee;
+    animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    50% {
+        transform: translateX(10px);
+    }
+
+    75% {
+        transform: translateX(-10px);
+    }
+}
+
+.missing-asset {
+    font-family: inherit;
+    font-weight: 800;
+    color: #b5c1fb;
+    font-size: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+@media print {
+    body {
+        background: white !important;
+        background-image: none !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container,
+    .modal,
+    .overlay,
+    .version-tag,
+    .branding-section {
+        display: none !important;
+    }
+
+    #printableWorksheet {
+        display: block !important;
+        padding: 40px;
+        width: 100%;
+        color: #000;
+    }
+
+    .worksheet-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 20px;
+    }
+
+    .worksheet-logo {
+        max-width: 180px;
+    }
+
+    .header-right {
+        text-align: right;
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 16px;
+    }
+
+    .meta-item {
+        margin-bottom: 5px;
+    }
+
+    .worksheet-divider {
+        border: 0;
+        border-top: 2px solid #333;
+        margin-bottom: 40px;
+    }
+
+    .worksheet-title {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 60px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .trace-row {
+        position: relative;
+        height: 120px;
+        margin-bottom: 80px;
+        width: 100%;
+    }
+
+    .trace-guide {
+        position: absolute;
+        left: 0;
+        right: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    .trace-guide.sky {
+        top: 0;
+        border-color: rgba(74, 144, 226, 0.4);
+    }
+
+    .trace-guide.plane {
+        top: 33.3%;
+        border-style: dashed;
+        border-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .trace-guide.grass {
+        bottom: 33.3%;
+        border-top-width: 2px;
+        border-color: rgba(126, 211, 33, 0.6);
+    }
+
+    .trace-guide.worm {
+        bottom: 0;
+        border-color: rgba(139, 119, 101, 0.3);
+    }
+
+    .trace-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 80px;
+        /* Exact height from Sky to Grass line (120px * 0.666) */
+        width: 100%;
+        display: flex;
+        align-items: flex-end;
+        /* Aligns text baseline to the bottom of this box (the Grass line) */
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 78px;
+        /* High enough to hit Sky line, but adjusted for font metrics */
+        line-height: 0.8;
+        letter-spacing: 12px;
+        color: rgba(0, 0, 0, 0.1);
+        padding-left: 10px;
+        white-space: nowrap;
+    }
+
+    /* Draw & Write Specifics */
+    .large-name-field {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        font-size: 32px;
+        font-weight: 600;
+        margin-bottom: 50px;
+        width: 100%;
+    }
+
+    .large-name-field span {
+        border-bottom: 2px solid #000;
+        display: inline-block;
+        width: 400px;
+        margin-left: 10px;
+    }
+
+    .draw-box {
+        width: 100%;
+        height: 500px;
+        border: 3px solid #000;
+        margin-bottom: 60px;
+    }
+
+    .guides-container {
+        margin-top: 40px;
+    }
+
+    .trace-row.no-text {
+        height: 60px;
+        margin-bottom: 40px;
+    }
+
+    .guide-icons-print {
+        position: absolute;
+        left: -40px;
+        top: -6px;
+        /* Offset to center emojis on lines */
+        bottom: -14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        font-size: 20px;
+        line-height: 1;
+    }
+
+    .short-row {
+        margin-left: 60px;
+        width: calc(100% - 60px) !important;
+    }
+}
+
+#printableWorksheet {
+    display: none;
+}
+
+@media print {
+    @page {
+        size: portrait;
+        margin: 1cm;
+    }
+
+    .vocab-quiz-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 0;
+        border-bottom: 1.5px dashed #ccc;
+        min-height: 160px;
+        page-break-inside: avoid;
+    }
+
+    .vocab-quiz-mini-guides {
+        flex: 0 0 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 120px;
+        font-size: 14px;
+        margin-right: 10px;
+    }
+
+    .vocab-quiz-word-box {
+        flex: 0 0 40%;
+        position: relative;
+        height: 120px;
+        margin-right: 20px;
+    }
+
+    .quiz-word-trace {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 68px;
+        color: rgba(0, 0, 0, 0.15);
+        /* More pronounced but still good for tracing */
+        letter-spacing: 5px;
+        position: absolute;
+        width: 100%;
+        top: 0;
+        height: 80px;
+        /* Height from Sky to Grass line in 120px box (66%) */
+        display: flex;
+        align-items: flex-end;
+        line-height: 0.8;
+        z-index: 2;
+        /* Guidelines and letters only - decoration removed per request */
+    }
+
+    .vocab-quiz-options {
+        flex: 1;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .vocab-quiz-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .quiz-image {
+        width: 85px;
+        height: 85px;
+        object-fit: contain;
+        border: 1px solid #eee;
+        padding: 4px;
+        border-radius: 10px;
+        background: #fff;
+    }
+
+    .quiz-checkbox {
+        width: 18px;
+        height: 18px;
+        border: 2px solid #444;
+        border-radius: 4px;
+        background: #fff;
+    }
+
+    /* Reversal Worksheet Styles */
+    .reversal-row {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        margin-bottom: 25px;
+        /* Reduced from 50px */
+        page-break-inside: avoid;
+    }
+
+    .reversal-commander {
+        font-size: 75px;
+        /* Sized down slightly */
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: bold;
+        border: 4px solid #000;
+        width: 100px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        flex-shrink: 0;
+    }
+
+    .reversal-targets {
+        display: flex;
+        gap: 15px;
+        flex: 1;
+        justify-content: space-between;
+    }
+
+    .reversal-char {
+        font-size: 70px;
+        /* Sized down slightly */
+        font-family: 'Courier New', Courier, monospace;
+        color: rgba(0, 0, 0, 0.1);
+        /* Traceable */
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .mirror {
+        transform: scaleX(-1);
+        display: inline-block;
+    }
+
+    .reversal-instructions {
+        text-align: center;
+        margin-bottom: 25px;
+        /* Reduced from 40px */
+        padding: 12px;
+        background: #fdfdfd;
+        border: 2px solid #eee;
+        border-radius: 10px;
+    }
+}@media (max-width: 768px) {
+    body {
+        padding: 8px;
+    }
+
+    /* Canvas fills remaining height — no fixed pixels needed */
+    #drawingCanvas {
+        flex: 1;
+        height: 100%;
+    }
+
+    .guides-column {
+        width: 45px;
+    }
+
+    .guide-icon {
+        font-size: 18px;
+    }
+
+    .controls {
+        padding: 10px 16px;
+        /* Compact the controls so the canvas gets maximum space */
+        flex-shrink: 0;
+    }
+
+    .clear-button {
+        padding: 10px 25px;
+        font-size: 14px;
+    }
+
+    .top-row {
+        position: relative !important;
+        min-height: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    .branding-section {
+        position: relative !important;
+        display: block;
+        margin-bottom: 5px;
+        z-index: 10;
+    }
+
+    .brand-logo {
+        max-width: 100px;
+    }
+
+    .meta-info {
+        position: relative !important;
+        right: auto !important;
+        top: auto !important;
+        transform: none !important;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .level-indicator {
+        font-size: 14px;
+        line-height: 1.2;
+    }
+
+    .mode-indicator {
+        font-size: 11px;
+        line-height: 1.2;
+    }
+
+    .hamburger-btn {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        transform: none;
+        width: 44px;
+        height: 44px;
+        background: white;
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 12px;
+        cursor: pointer;
+        z-index: 2100; /* Above the overlay */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .controls.mobile-open .hamburger-btn {
+        background: #fdfdfd;
+        border-color: #eee;
+    }
+
+    .hamburger-btn span {
+        display: block;
+        width: 24px;
+        height: 3px;
+        background-color: #2c3e50;
+        border-radius: 3px;
+        transition: all 0.3s ease;
+        transform-origin: center;
+    }
+
+    /* Animate to X when open */
+    .controls.mobile-open .hamburger-btn span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+    .controls.mobile-open .hamburger-btn span:nth-child(2) {
+        opacity: 0;
+    }
+    .controls.mobile-open .hamburger-btn span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    /* Mobile settings/menu as a full overlay */
+    .controls.mobile-open {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        margin: 0;
+        border-radius: 0;
+        z-index: 2000;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        overflow-y: auto;
+        padding-top: 80px; /* Space for branding and X */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .settings-group {
+        display: none !important;
+        width: 100%;
+        max-width: 400px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 20px;
+        padding: 20px;
+        gap: 15px;
+    }
+
+    .controls.mobile-open .settings-group {
+        display: flex !important;
+    }
+
+    .settings-item label {
+        font-size: 10px;
+    }
+
+    .setting-val {
+        padding: 6px 10px;
+        font-size: 12px;
+        min-width: 60px;
+    }
+
+    /* Hide the print panel by default on mobile, can be toggled via JS */
+    #mobileMenuPanel {
+        display: none !important;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 400px;
+        margin-top: 10px;
+        padding: 20px;
+    }
+
+    .controls.mobile-open #mobileMenuPanel {
+        display: flex !important;
+    }
+
+    .print-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .print-button {
+        padding: 8px 5px;
+        font-size: 11px;
+    }
+
+    .reversal-group {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5px;
+        background: transparent;
+        border: none;
+        padding: 0;
+    }
+
+    .reversal-group input {
+        border: 1px solid #eee;
+        background: #fdfdfd;
+        flex: 1;
+        width: 50%;
+        border-radius: 6px;
+    }
+
+    .reversal-group button {
+        flex: 1;
+    }
+
+    /* Compact Modals for Mobile */
+    .modal-content {
+        padding: 1.5rem;
+        width: 95%;
+    }
+
+    .modal-content h2 {
+        font-size: 1.5rem;
+    }
+
+    #vocabModal .vocab-content {
+        padding: 0.8rem;
+        max-height: 98vh;
+        overflow-y: auto;
+    }
+
+    .vocab-target-word {
+        font-size: 2.2rem;
+        letter-spacing: 2px;
+        margin-bottom: 0.8rem;
+    }
+
+    .vocab-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    .vocab-option {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        height: auto;
+        padding: 8px;
+        border-width: 3px;
+        border-radius: 12px;
+    }
+
+    #vocabModal h2 {
+        font-size: 1.2rem;
+    }
+}

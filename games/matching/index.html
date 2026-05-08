@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Match - Kid's Edition</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="win-overlay" class="win-overlay hidden"></div>
+    <div class="app-container no-print">
+        <header>
+            <h1>Memory Match! 🧩</h1>
+            <p>Find all the matching pairs to win!</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Game Mode:</label>
+                <select id="game-mode">
+                    <option value="chars">A-Z / 1-9</option>
+                    <option value="emojis">Emojis ✨</option>
+                    <option value="princess">Princesses 👑</option>
+                    <option value="foods">Yummy Foods 🍕</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="grid-size">Grid Size:</label>
+                <select id="grid-size">
+                    <option value="4">4 x 4 (Easy)</option>
+                    <option value="6" selected>6 x 6 (Medium)</option>
+                    <option value="8">8 x 8 (Hard)</option>
+                    <option value="10">10 x 10 (Master)</option>
+                </select>
+            </div>
+            <div class="stats">
+                <div class="stat-item">Matches: <span id="matches">0</span></div>
+                <div class="stat-item">Turns: <span id="turns">0</span></div>
+            </div>
+            <div class="actions">
+                <button id="reset-btn" class="btn primary">New Game</button>
+                <button id="print-btn" class="btn secondary">Print Paper Game</button>
+            </div>
+        </div>
+
+        <main id="game-board" class="game-board">
+            <!-- Cards will be injected here -->
+        </main>
+
+        <div id="win-message" class="win-message hidden">
+            <h2>You Found Them All! 🎉</h2>
+            <p>Great job! You finished in <span id="final-turns">0</span> turns.</p>
+            <p style="margin-top: 10px; font-weight: 800; color: var(--secondary);">Efficiency: <span id="efficiency">0</span>%</p>
+            <button id="play-again-btn" class="btn primary">Play Again</button>
+        </div>
+    </div>
+
+    <!-- Print View (Hidden on screen, visible on print) -->
+    <div id="print-view" class="print-view">
+        <header class="print-header">
+            <h1>My Memory Match Game</h1>
+            <p>Cut along the dotted lines to make your own game!</p>
+        </header>
+        <div id="print-grid" class="print-grid">
+            <!-- Cards for printing will be injected here -->
+        </div>
+
+        <div class="print-break"></div>
+
+        <header class="print-header">
+            <h1>Card Backs</h1>
+            <p>Print this on the back of your tiles!</p>
+        </header>
+        <div id="print-backs-grid" class="print-grid">
+            <!-- Card backs will be injected here -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

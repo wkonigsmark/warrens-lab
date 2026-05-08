@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect 4: Learning Lab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --panel-bg: #ffffff;
+            --board-blue: #2563eb;
+            --chip-red: #ef4444;
+            --chip-yellow: #eab308;
+            --chip-empty: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --panel-border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            gap: 4rem;
+            transition: all 0.5s ease;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+                gap: 2rem;
+                padding: 1rem;
+                justify-content: flex-start;
+            }
+            .game-container {
+                width: 100%;
+                transform: scale(0.9);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-container {
+                transform: scale(0.75);
+                margin-top: -3rem;
+            }
+            .cell {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        /* --- Game Board Styles --- */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .status {
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .turn-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .board {
+            background-color: var(--board-blue);
+            padding: 1rem;
+            border-radius: 16px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .board.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .cell {
+            width: 60px;
+            height: 60px;
+            background-color: var(--chip-empty);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .cell.hover-red::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--chip-red);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .cell.hover-yellow::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--chip-yellow);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .cell.red {
+            background-color: var(--chip-red);
+            box-shadow: inset 0 -4px 6px rgba(0,0,0,0.2), 0 2px 4px rgba(255,255,255,0.3);
+        }
+
+        .cell.yellow {
+            background-color: var(--chip-yellow);
+            box-shadow: inset 0 -4px 6px rgba(0,0,0,0.2), 0 2px 4px rgba(255,255,255,0.3);
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        button {
+            padding: 0.85rem 1.5rem;
+            border: 2px solid var(--panel-border);
+            border-radius: 14px;
+            background: #ffffff;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 0px 0 var(--panel-border);
+            min-width: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        button:hover {
+            background: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0px 0 var(--panel-border);
+            border-color: #cbd5e1;
+        }
+
+        button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0px 0 var(--panel-border);
+        }
+
+        button.active {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #1e40af;
+            box-shadow: 0 4px 0px 0 #1e40af;
+        }
+        
+        button.active:hover {
+            background: #1d4ed8;
+            box-shadow: 0 6px 0px 0 #1e40af;
+        }
+
+        button.active:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0px 0 #1e40af;
+        }
+
+        /* --- Protégé Mode Styles --- */
+        .prob-container {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.75rem;
+            width: 100%;
+            padding: 0 1rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            margin-bottom: 0.5rem;
+        }
+
+        .prob-container.active {
+            opacity: 1;
+        }
+
+        .prob-indicator {
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            background: #f1f5f9;
+            border: 1px solid var(--panel-border);
+        }
+
+        .prob-indicator.best {
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.1);
+            box-shadow: 0 0 10px rgba(74, 222, 128, 0.2);
+        }
+
+        .cell.best-move {
+            outline: 3px solid rgba(74, 222, 128, 0.5);
+            outline-offset: 2px;
+        }
+
+        /* --- Win Sequence Effects --- */
+        .board.game-over .cell:not(.winner) {
+            filter: grayscale(1) opacity(0.4);
+            transition: filter 1s ease, opacity 1s ease;
+        }
+
+        .cell.winner {
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 
+                        inset 0 0 15px rgba(255, 255, 255, 0.4);
+            animation: luminous 1.5s infinite alternate;
+        }
+
+        @keyframes luminous {
+            from {
+                filter: brightness(1) saturate(1);
+                transform: scale(1);
+            }
+            to {
+                filter: brightness(1.5) saturate(1.5);
+                transform: scale(1.08);
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Game Section -->
+    <div class="game-container">
+        <div class="header">
+            <h1>Connect 4</h1>
+            <p style="font-weight: 500; font-size: 1.2rem; color: #2563eb;">Learning Lab</p>
+            
+            <div style="margin-top: 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                <span style="font-weight: 700; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;">Game Mode</span>
+                <select id="game-mode" onchange="resetGame()" style="padding: 1rem 1.5rem; border-radius: 14px; background: #ffffff; color: var(--text-primary); border: 2px solid var(--panel-border); outline: none; font-family: Outfit; font-weight: 700; cursor: pointer; height: 55px; min-width: 240px; box-shadow: 0 4px 0px 0 var(--panel-border); font-size: 1rem; text-align-last: center;">
+                    <option value="pvp">2 Player (PvP)</option>
+                    <option value="easy">1 Player vs AI (Easy)</option>
+                    <option value="medium">1 Player vs AI (Medium)</option>
+                    <option value="hard">1 Player vs AI (Hard)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="status" id="status-display">
+            <span class="turn-indicator" id="turn-dot" style="background-color: var(--chip-red);"></span>
+            <span id="turn-text">Red's Turn</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: center; width: fit-content;">
+            <div class="prob-container" id="prob-container">
+                <!-- Probabilities injected here -->
+            </div>
+
+            <div class="board" id="board">
+                <!-- JS will generate the 6x7 grid here -->
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 1.5rem; width: 100%;">
+            <button id="protege-toggle" style="min-width: 240px; height: 50px; font-size: 1rem;" onclick="toggleProtege()">Protégé Mode: OFF</button>
+            
+            <div class="controls">
+                <button style="height: 50px;" onclick="toggleFlip()">Flip View</button>
+                <button style="height: 50px;" onclick="resetGame()">Restart Game</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const ROWS = 6;
+        const COLS = 7;
+        let currentPlayer = 'red'; // 'red' or 'yellow'
+        let boardState = [];
+        let gameActive = true;
+        let isHumanTurn = true;
+        let protegeMode = false;
+
+        const boardElement = document.getElementById('board');
+        const turnText = document.getElementById('turn-text');
+        const turnDot = document.getElementById('turn-dot');
+        const modeSelect = document.getElementById('game-mode');
+        const probContainer = document.getElementById('prob-container');
+        const protegeToggle = document.getElementById('protege-toggle');
+
+        function toggleFlip() {
+            boardElement.classList.toggle('flipped');
+        }
+
+
+        function toggleProtege() {
+            protegeMode = !protegeMode;
+            protegeToggle.innerText = `Protégé Mode: ${protegeMode ? 'ON' : 'OFF'}`;
+            protegeToggle.classList.toggle('active', protegeMode);
+            probContainer.classList.toggle('active', protegeMode);
+            if (protegeMode) updateProtege();
+            else clearProtegeStyles();
+        }
+
+        function clearProtegeStyles() {
+            document.querySelectorAll('.cell').forEach(c => c.classList.remove('best-move'));
+        }
+
+        function initBoard() {
+            boardElement.innerHTML = '';
+            boardElement.classList.remove('game-over');
+            probContainer.innerHTML = '';
+            boardState = Array(ROWS).fill(null).map(() => Array(COLS).fill(null));
+            gameActive = true;
+            currentPlayer = 'red';
+            isHumanTurn = true;
+            updateTurnDisplay();
+
+            // Create prob indicators
+            for (let c = 0; c < COLS; c++) {
+                const indicator = document.createElement('div');
+                indicator.classList.add('prob-indicator');
+                indicator.id = `prob-${c}`;
+                indicator.innerText = '-';
+                probContainer.appendChild(indicator);
+            }
+
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+                    
+                    // Interaction listeners
+                    cell.addEventListener('click', () => handleDrop(c));
+                    cell.addEventListener('mouseenter', () => handleHover(c, true));
+                    cell.addEventListener('mouseleave', () => handleHover(c, false));
+                    
+                    boardElement.appendChild(cell);
+                }
+            }
+        }
+
+        function handleHover(col, isEnter) {
+            if (!gameActive || !isHumanTurn) return;
+            
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.classList.remove('hover-red', 'hover-yellow');
+            });
+
+            if (isEnter) {
+                for (let r = ROWS - 1; r >= 0; r--) {
+                    if (!boardState[r][col]) {
+                        const cell = getCellElement(r, col);
+                        cell.classList.add(`hover-${currentPlayer}`);
+                        break;
+                    }
+                }
+            }
+        }
+
+        function handleDrop(col) {
+            if (!gameActive || !isHumanTurn) return;
+            executeMove(col);
+        }
+
+        function executeMove(col) {
+            for (let r = ROWS - 1; r >= 0; r--) {
+                if (!boardState[r][col]) {
+                    boardState[r][col] = currentPlayer;
+                    const cell = getCellElement(r, col);
+                    cell.classList.add(currentPlayer);
+                    cell.classList.remove('hover-red', 'hover-yellow');
+
+                    const winResult = checkWin(boardState, currentPlayer);
+                    if (winResult) {
+                        turnText.innerText = `${currentPlayer.charAt(0).toUpperCase() + currentPlayer.slice(1)} Wins!`;
+                        gameActive = false;
+                        
+                        // Apply visual effects
+                        boardElement.classList.add('game-over');
+                        winResult.forEach(coord => {
+                            const [r, c] = coord;
+                            getCellElement(r, c).classList.add('winner');
+                        });
+                        return;
+                    }
+
+                    if (checkDraw(boardState)) {
+                        turnText.innerText = "It's a Draw!";
+                        turnDot.style.backgroundColor = 'transparent';
+                        gameActive = false;
+                        return;
+                    }
+
+                    currentPlayer = currentPlayer === 'red' ? 'yellow' : 'red';
+                    updateTurnDisplay();
+                    
+                    if (protegeMode) updateProtege();
+
+                    if (modeSelect.value !== 'pvp' && currentPlayer === 'yellow') {
+                        isHumanTurn = false;
+                        document.querySelectorAll('.cell').forEach(c => c.classList.remove('hover-red', 'hover-yellow'));
+                        turnText.innerText = "AI is thinking...";
+                        setTimeout(makeAIMove, 500); // Small delay so it feels natural
+                    } else {
+                        isHumanTurn = true;
+                    }
+                    
+                    return;
+                }
+            }
+        }
+
+        function updateTurnDisplay() {
+            turnText.innerText = `${currentPlayer.charAt(0).toUpperCase() + currentPlayer.slice(1)}'s Turn`;
+            turnDot.style.backgroundColor = `var(--chip-${currentPlayer})`;
+        }
+
+        function getCellElement(r, c) {
+            return document.querySelector(`.cell[data-row='${r}'][data-col='${c}']`);
+        }
+
+        function checkWin(board, player) {
+            // Horizontal
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS - 3; c++) {
+                    if (board[r][c] === player && board[r][c+1] === player && board[r][c+2] === player && board[r][c+3] === player) {
+                        return [[r, c], [r, c+1], [r, c+2], [r, c+3]];
+                    }
+                }
+            }
+            // Vertical
+            for (let r = 0; r < ROWS - 3; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (board[r][c] === player && board[r+1][c] === player && board[r+2][c] === player && board[r+3][c] === player) {
+                        return [[r, c], [r+1, c], [r+2, c], [r+3, c]];
+                    }
+                }
+            }
+            // Diagonal /
+            for (let r = 3; r < ROWS; r++) {
+                for (let c = 0; c < COLS - 3; c++) {
+                    if (board[r][c] === player && board[r-1][c+1] === player && board[r-2][c+2] === player && board[r-3][c+3] === player) {
+                        return [[r, c], [r-1, c+1], [r-2, c+2], [r-3, c+3]];
+                    }
+                }
+            }
+            // Diagonal \
+            for (let r = 0; r < ROWS - 3; r++) {
+                for (let c = 0; c < COLS - 3; c++) {
+                    if (board[r][c] === player && board[r+1][c+1] === player && board[r+2][c+2] === player && board[r+3][c+3] === player) {
+                        return [[r, c], [r+1, c+1], [r+2, c+2], [r+3, c+3]];
+                    }
+                }
+            }
+            return null;
+        }
+
+        function checkDraw(board) {
+            return board[0].every(cell => cell !== null);
+        }
+
+        // --- AI LOGIC ---
+        function getValidLocations(board) {
+            let validLocations = [];
+            for (let c = 0; c < COLS; c++) {
+                if (!board[0][c]) validLocations.push(c);
+            }
+            return validLocations;
+        }
+
+        function getNextOpenRow(board, c) {
+            for (let r = ROWS - 1; r >= 0; r--) {
+                if (!board[r][c]) return r;
+            }
+            return -1;
+        }
+
+        function evaluateWindow(window, piece) {
+            let score = 0;
+            const oppPiece = piece === 'yellow' ? 'red' : 'yellow';
+            
+            let pieces = 0;
+            let empty = 0;
+            let opps = 0;
+
+            for (let i=0; i<4; i++) {
+                if (window[i] === piece) pieces++;
+                else if (window[i] === null) empty++;
+                else if (window[i] === oppPiece) opps++;
+            }
+
+            if (pieces === 4) score += 100;
+            else if (pieces === 3 && empty === 1) score += 5;
+            else if (pieces === 2 && empty === 2) score += 2;
+
+            if (opps === 3 && empty === 1) score -= 4;
+
+            return score;
+        }
+
+        function scorePosition(board, piece) {
+            let score = 0;
+
+            // Score center column preferentially
+            let centerArray = [];
+            for (let r = 0; r < ROWS; r++) centerArray.push(board[r][3]);
+            let centerCount = centerArray.filter(v => v === piece).length;
+            score += centerCount * 3;
+
+            // Horizontal
+            for (let r = 0; r < ROWS; r++) {
+                let rowArray = board[r];
+                for (let c = 0; c < COLS - 3; c++) {
+                    let window = rowArray.slice(c, c + 4);
+                    score += evaluateWindow(window, piece);
+                }
+            }
+
+            // Vertical
+            for (let c = 0; c < COLS; c++) {
+                let colArray = [];
+                for (let r = 0; r < ROWS; r++) colArray.push(board[r][c]);
+                for (let r = 0; r < ROWS - 3; r++) {
+                    let window = colArray.slice(r, r + 4);
+                    score += evaluateWindow(window, piece);
+                }
+            }
+
+            // Positive Diagonal
+            for (let r = 0; r < ROWS - 3; r++) {
+                for (let c = 0; c < COLS - 3; c++) {
+                    let window = [board[r][c], board[r+1][c+1], board[r+2][c+2], board[r+3][c+3]];
+                    score += evaluateWindow(window, piece);
+                }
+            }
+
+            // Negative Diagonal
+            for (let r = 0; r < ROWS - 3; r++) {
+                for (let c = 0; c < COLS - 3; c++) {
+                    let window = [board[r+3][c], board[r+2][c+1], board[r+1][c+2], board[r][c+3]];
+                    score += evaluateWindow(window, piece);
+                }
+            }
+
+            return score;
+        }
+
+        function isTerminalNode(board) {
+            return checkWin(board, 'red') || checkWin(board, 'yellow') || getValidLocations(board).length === 0;
+        }
+
+        function minimax(board, depth, alpha, beta, maximizingPlayer) {
+            let validLocations = getValidLocations(board);
+            let isTerminal = isTerminalNode(board);
+            
+            if (depth === 0 || isTerminal) {
+                if (isTerminal) {
+                    if (checkWin(board, 'yellow')) return { score: 100000000000000 };
+                    else if (checkWin(board, 'red')) return { score: -100000000000000 };
+                    else return { score: 0 }; // Draw
+                } else {
+                    return { score: scorePosition(board, 'yellow') };
+                }
+            }
+
+            if (maximizingPlayer) {
+                let value = -Infinity;
+                let bestCol = validLocations[Math.floor(Math.random() * validLocations.length)];
+                for (let c of validLocations) {
+                    let r = getNextOpenRow(board, c);
+                    let bCopy = board.map(arr => [...arr]);
+                    bCopy[r][c] = 'yellow';
+                    let newScore = minimax(bCopy, depth - 1, alpha, beta, false).score;
+                    if (newScore > value) {
+                        value = newScore;
+                        bestCol = c;
+                    }
+                    alpha = Math.max(alpha, value);
+                    if (alpha >= beta) break;
+                }
+                return { col: bestCol, score: value };
+            } else {
+                let value = Infinity;
+                let bestCol = validLocations[Math.floor(Math.random() * validLocations.length)];
+                for (let c of validLocations) {
+                    let r = getNextOpenRow(board, c);
+                    let bCopy = board.map(arr => [...arr]);
+                    bCopy[r][c] = 'red';
+                    let newScore = minimax(bCopy, depth - 1, alpha, beta, true).score;
+                    if (newScore < value) {
+                        value = newScore;
+                        bestCol = c;
+                    }
+                    beta = Math.min(beta, value);
+                    if (alpha >= beta) break;
+                }
+                return { col: bestCol, score: value };
+            }
+        }
+
+        function makeAIMove() {
+            if (!gameActive) return;
+            const mode = modeSelect.value;
+            let validLocations = getValidLocations(boardState);
+            let colIndex;
+
+            if (mode === 'easy') {
+                // Easy: completely random move
+                colIndex = validLocations[Math.floor(Math.random() * validLocations.length)];
+            } else if (mode === 'medium') {
+                // Medium: Depth 2 Minimax (looks 1 move ahead)
+                colIndex = minimax(boardState, 2, -Infinity, Infinity, true).col;
+            } else if (mode === 'hard') {
+                // Hard: Depth 5 Minimax
+                colIndex = minimax(boardState, 5, -Infinity, Infinity, true).col;
+            }
+
+            // Fallback safety
+            if (colIndex === undefined || colIndex === null) {
+                colIndex = validLocations[Math.floor(Math.random() * validLocations.length)];
+            }
+            
+            executeMove(colIndex);
+        }
+
+        function updateProtege() {
+            if (!gameActive || !protegeMode) return;
+            
+            clearProtegeStyles();
+            let validLocations = getValidLocations(boardState);
+            let scores = {};
+            let isMax = (currentPlayer === 'yellow');
+            
+            // To show real-time odds, we run minimax from the current player's perspective
+            validLocations.forEach(c => {
+                let r = getNextOpenRow(boardState, c);
+                let bCopy = boardState.map(arr => [...arr]);
+                bCopy[r][c] = currentPlayer;
+                
+                // We look 3-4 moves ahead for the training "tutor"
+                let result = minimax(bCopy, 4, -Infinity, Infinity, !isMax);
+                scores[c] = result.score;
+            });
+
+            // Normalize scores to a human-readable "Potential" 0-100
+            // Since minimax scores vary wildly, we'll use their relative ranking
+            let scoreVals = Object.values(scores);
+            let minS = Math.min(...scoreVals);
+            let maxS = Math.max(...scoreVals);
+            
+            // If maximizing (Yellow), max is best. If minimizing (Red), min is best for its perspective in minimax, 
+            // but we'll flip the logic so "best" is always highest positive for current player.
+            let bestCol = -1;
+            let bestVal = isMax ? -Infinity : Infinity;
+            
+            for (let c in scores) {
+                if (isMax) {
+                    if (scores[c] > bestVal) { bestVal = scores[c]; bestCol = c; }
+                } else {
+                    if (scores[c] < bestVal) { bestVal = scores[c]; bestCol = c; }
+                }
+            }
+
+            for (let c = 0; c < COLS; c++) {
+                const indicator = document.getElementById(`prob-${c}`);
+                indicator.classList.remove('best');
+                
+                if (scores[c] === undefined) {
+                    indicator.innerText = 'FULL';
+                    continue;
+                }
+
+                // Simple win/loss mapping
+                if (Math.abs(scores[c]) > 1e12) {
+                    indicator.innerText = scores[c] * (isMax ? 1 : -1) > 0 ? 'WIN!' : 'LOSE';
+                } else {
+                    // Relative potential percentage
+                    let p;
+                    if (maxS === minS) p = 50;
+                    else {
+                        p = ((scores[c] - minS) / (maxS - minS)) * 100;
+                        if (!isMax) p = 100 - p; // Flip for red so 100 is always best
+                    }
+                    indicator.innerText = Math.round(p) + '%';
+                }
+
+                if (parseInt(c) === parseInt(bestCol)) {
+                    indicator.classList.add('best');
+                    // Highlight the drop cell
+                    let r = getNextOpenRow(boardState, c);
+                    if (r !== -1) getCellElement(r, c).classList.add('best-move');
+                }
+            }
+        }
+
+        function resetGame() {
+            initBoard();
+        }
+
+        // Run on load
+        window.onload = initBoard;
+    </script>
+</body>
+</html>

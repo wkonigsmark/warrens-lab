@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4XXC82248V"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-4XXC82248V');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chronos: The Grand Descent</title>
+    <meta name="description" content="A vertical journey through deep time, from the Big Bang to the Common Era.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <div id="app">
+        <section id="hero">
+            <div class="hero-content">
+                <div class="header-actions">
+                    <div class="primary-buttons">
+                        <button id="edu-module-btn" class="action-btn subtle">How Do We Know?</button>
+                        <button id="print-quiz-btn" class="action-btn">Print Worksheet Quiz</button>
+                        <button id="curate-btn" class="action-btn">Curate Database</button>
+                        <button id="start-quiz-btn" class="action-btn accent">Start Quiz</button>
+                    </div>
+                    <div class="resolution-control">
+                        <select id="sig-filter" class="action-btn select-styled">
+                            <option value="1">Resolution: Level 1 (Core)</option>
+                            <option value="2">Resolution: Level 2 (Dedicated)</option>
+                            <option value="3" disabled>Resolution: Level 3 (Locked)</option>
+                        </select>
+                    </div>
+                </div>
+                <h1>Chronos</h1>
+                <p class="subtitle">The Grand Descent Through Time</p>
+            </div>
+        </section>
+
+        <main id="timeline-wrapper">
+            <div id="timeline-spine"></div>
+            <div id="events-container">
+                <!-- Events will be dynamically injected here -->
+            </div>
+        </main>
+
+        <section id="quiz-view" class="hidden">
+            <div class="quiz-controls no-print">
+                <button id="exit-quiz-btn" class="action-btn">Exit Quiz</button>
+            </div>
+            <div id="quiz-timeline-wrapper">
+                <div class="central-axis"></div>
+                <div id="quiz-questions-container"></div>
+                <div class="submit-footer">
+                    <button id="submit-quiz-btn" class="primary-action">Submit Responses</button>
+                </div>
+            </div>
+        </section>
+
+
+
+        <section id="curation-view" class="hidden">
+            <div class="curation-header">
+                <div class="curation-title-row">
+                    <h2>Database Curation</h2>
+                    <button id="exit-curation-btn" class="action-btn">Exit Curation</button>
+                </div>
+                <div class="curation-controls">
+                    <div class="curation-filter">
+                        <label>Show Level:</label>
+                        <select id="curation-level-filter">
+                            <option value="all">All Levels</option>
+                            <option value="1">Level 1 — High Significance</option>
+                            <option value="2">Level 2 — Medium Significance</option>
+                            <option value="3">Level 3 — Low Significance</option>
+                        </select>
+                    </div>
+                    <div class="curation-stats" id="curation-stats"></div>
+                <div class="curation-tabs">
+                    <button id="tab-table" class="tab-btn active">Table View</button>
+                    <button id="tab-diagnostics" class="tab-btn">Timeline Diagnostics</button>
+                </div>
+                <div class="curation-actions">
+                    <button id="export-pdf-btn-modal" class="action-btn">Export Event List (PDF)</button>
+                    <button id="export-csv-btn-modal" class="action-btn">Export to CSV</button>
+                    <button id="export-curated-data" class="action-btn accent">Export Updated JS Code</button>
+                </div>
+            </div>
+            
+            <div id="diagnostic-view" class="diagnostic-container hidden">
+                <div class="diagnostic-filters">
+                    <div class="filter-group">
+                        <label>Range Focus:</label>
+                        <input type="number" id="diag-start-year" value="-10000" step="100">
+                        <span>to</span>
+                        <input type="number" id="diag-end-year" value="2026" step="100">
+                        <div class="input-note">(Use negative for BCE)</div>
+                        <button id="apply-diag-filter" class="action-btn">Scan Timeline</button>
+                    </div>
+                    <div class="diagnostic-legend">
+                        <span class="legend-item"><span class="dot crit"></span> Critical Gap</span>
+                        <span class="legend-item"><span class="dot warn"></span> Moderate Gap</span>
+                        <span class="legend-item"><span class="dot ok"></span> Healthy</span>
+                    </div>
+                </div>
+                <div id="gap-analysis-chart" class="gap-chart"></div>
+                <div id="curation-gaps" class="curation-gaps"></div>
+            </div>
+
+            <div id="curation-table-container" class="curation-table-container"></div>
+        </section>
+
+        <div id="quiz-results-overlay" class="overlay">
+            <div class="overlay-content results-card">
+                <h2>Quiz Results</h2>
+                <div id="results-score"></div>
+                <div id="missed-questions"></div>
+                <button id="close-results" class="action-btn">Return to Timeline</button>
+            </div>
+        </div>
+
+        <div id="event-detail-overlay" class="overlay">
+            <button id="close-overlay" aria-label="Close">×</button>
+            <div class="overlay-content">
+                <div id="detail-date" class="date-tag"></div>
+                <h2 id="detail-title"></h2>
+                <div id="detail-description"></div>
+            </div>
+        </div>
+
+        <div id="edu-overlay" class="overlay">
+            <button id="close-edu-overlay" class="close-overlay" aria-label="Close">×</button>
+            <div class="edu-modal-content">
+                <!-- Content will be dynamically injected here -->
+            </div>
+        </div>
+
+        <footer>
+            <p>Chronos Historical Engine &copy; 2026</p>
+        </footer>
+    </div>
+    <script src="edu_module.js"></script>
+    <script src="chronos_significance_engine.js"></script>
+    <script src="seed_events.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

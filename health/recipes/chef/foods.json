@@ -1,0 +1,6256 @@
+{
+  "2_percent_milk": {
+    "id": "2_percent_milk",
+    "display_name": "2 Percent Milk",
+    "image": "2_percent_milk.png",
+    "category": "dairy",
+    "serving_size": "0.5 cup (141.0g)",
+    "calories": 112,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 4.13,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "carbohydrates": {
+        "amount": 17.61,
+        "unit": "g",
+        "daily_pct": 6
+      },
+      "fat": {
+        "amount": 2.83,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "saturated_fat": {
+        "amount": 1.48,
+        "unit": "g",
+        "daily_pct": 7
+      },
+      "fiber": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": 4.63,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 87.0,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "vitamin_c": {
+        "amount": 0.2,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 61.0,
+        "unit": "mcg",
+        "daily_pct": 7
+      },
+      "calcium": {
+        "amount": 146.0,
+        "unit": "mg",
+        "daily_pct": 11
+      },
+      "iron": {
+        "amount": 0.33,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "potassium": {
+        "amount": 214.0,
+        "unit": "mg",
+        "daily_pct": 5
+      }
+    },
+    "fdc_id": 168787,
+    "usda_name": "Egg custards, dry mix, prepared with 2% milk",
+    "last_enriched": "2026-04-27"
+  },
+  "angel_hair_pasta": {
+    "id": "angel_hair_pasta",
+    "display_name": "Angel Hair Pasta",
+    "image": "angel_hair_pasta.png",
+    "category": "grain",
+    "serving_size": "1.0 cup shells (64.0g)",
+    "calories": 371,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 13.04,
+        "unit": "g",
+        "daily_pct": 26
+      },
+      "carbohydrates": {
+        "amount": 74.67,
+        "unit": "g",
+        "daily_pct": 27
+      },
+      "fat": {
+        "amount": 1.51,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "saturated_fat": {
+        "amount": 0.28,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fiber": {
+        "amount": 3.2,
+        "unit": "g",
+        "daily_pct": 11
+      },
+      "sugar": {
+        "amount": 2.67,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 6.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 0.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 21.0,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 3.3,
+        "unit": "mg",
+        "daily_pct": 18
+      },
+      "potassium": {
+        "amount": 223.0,
+        "unit": "mg",
+        "daily_pct": 5
+      }
+    },
+    "fdc_id": 169736,
+    "usda_name": "Pasta, dry, enriched",
+    "last_enriched": "2026-04-27"
+  },
+  "apple": {
+    "id": "apple",
+    "display_name": "Apple",
+    "image": "apple.png",
+    "category": "fruit",
+    "serving_size": "1 medium (182g)",
+    "calories": 95,
+    "status": "complete",
+    "nutrients": {
+      "protein": {
+        "amount": 0.5,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "carbohydrates": {
+        "amount": 25.1,
+        "unit": "g",
+        "daily_pct": 9
+      },
+      "fat": {
+        "amount": 0.3,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 4.4,
+        "unit": "g",
+        "daily_pct": 16
+      },
+      "sugar": {
+        "amount": 18.9,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 2,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 8.4,
+        "unit": "mg",
+        "daily_pct": 9
+      },
+      "vitamin_a": {
+        "amount": 5,
+        "unit": "mcg",
+        "daily_pct": 1
+      },
+      "calcium": {
+        "amount": 11,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.2,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "potassium": {
+        "amount": 195,
+        "unit": "mg",
+        "daily_pct": 4
+      }
+    }
+  },
+  "apple_juice": {
+    "id": "apple_juice",
+    "display_name": "Apple Juice",
+    "image": "apple_juice.png",
+    "category": "fruit",
+    "serving_size": "1.0 bottle Gerber First Food (4 fl oz) (125.0g)",
+    "calories": 47,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "carbohydrates": {
+        "amount": 11.7,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "fat": {
+        "amount": 0.1,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": 0.02,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 0.1,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": 10.7,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 8.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 57.9,
+        "unit": "mg",
+        "daily_pct": 64
+      },
+      "vitamin_a": {
+        "amount": 1.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 4.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "iron": {
+        "amount": 0.57,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "potassium": {
+        "amount": 91.0,
+        "unit": "mg",
+        "daily_pct": 2
+      }
+    },
+    "fdc_id": 170959,
+    "usda_name": "Babyfood, juice, apple",
+    "last_enriched": "2026-04-27"
+  },
+  "asparagus": {
+    "id": "asparagus",
+    "display_name": "Asparagus",
+    "image": "asparagus.png",
+    "category": "vegetable",
+    "serving_size": "1.0 cup (134.0g)",
+    "calories": 20,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 2.2,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "carbohydrates": {
+        "amount": 3.88,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fat": {
+        "amount": 0.12,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": 0.04,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 2.1,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "sugar": {
+        "amount": 1.88,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 2.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 5.6,
+        "unit": "mg",
+        "daily_pct": 6
+      },
+      "vitamin_a": {
+        "amount": 38.0,
+        "unit": "mcg",
+        "daily_pct": 4
+      },
+      "calcium": {
+        "amount": 24.0,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 2.14,
+        "unit": "mg",
+        "daily_pct": 12
+      },
+      "potassium": {
+        "amount": 202.0,
+        "unit": "mg",
+        "daily_pct": 4
+      }
+    },
+    "fdc_id": 168389,
+    "usda_name": "Asparagus, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "avocado": {
+    "id": "avocado",
+    "display_name": "Avocado",
+    "image": "avocado.png",
+    "category": "dairy",
+    "serving_size": "1.0 tsp (4.5g)",
+    "calories": 884,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "carbohydrates": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fat": {
+        "amount": 100.0,
+        "unit": "g",
+        "daily_pct": 128
+      },
+      "saturated_fat": {
+        "amount": 11.56,
+        "unit": "g",
+        "daily_pct": 58
+      },
+      "fiber": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 0.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "iron": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "potassium": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      }
+    },
+    "fdc_id": 173573,
+    "usda_name": "Oil, avocado",
+    "last_enriched": "2026-04-27"
+  },
+  "baby_potatoes": {
+    "id": "baby_potatoes",
+    "display_name": "Baby Potatoes",
+    "image": "baby_potatoes.png",
+    "category": "vegetable",
+    "serving_size": "1.0 RACC (85.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 2.85,
+        "unit": "g",
+        "daily_pct": 6
+      },
+      "carbohydrates": {
+        "amount": 2.41,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fat": {
+        "amount": 0.62,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": 1.56,
+        "unit": "g",
+        "daily_pct": 6
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 111.4,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "vitamin_c": {
+        "amount": 26.52,
+        "unit": "mg",
+        "daily_pct": 29
+      },
+      "vitamin_a": {
+        "amount": 283.0,
+        "unit": "mcg",
+        "daily_pct": 31
+      },
+      "calcium": {
+        "amount": 68.35,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "iron": {
+        "amount": 1.26,
+        "unit": "mg",
+        "daily_pct": 7
+      },
+      "potassium": {
+        "amount": 581.8,
+        "unit": "mg",
+        "daily_pct": 12
+      }
+    },
+    "fdc_id": 1999632,
+    "usda_name": "Spinach, baby",
+    "last_enriched": "2026-04-27"
+  },
+  "backed_chicken": {
+    "id": "backed_chicken",
+    "display_name": "Backed Chicken",
+    "image": "backed_chicken.png",
+    "category": "protein",
+    "serving_size": "4.0 oz (113.0g)",
+    "calories": 137,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 19.56,
+        "unit": "g",
+        "daily_pct": 39
+      },
+      "carbohydrates": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fat": {
+        "amount": 5.92,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "saturated_fat": {
+        "amount": 1.52,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "fiber": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 82.0,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 30.0,
+        "unit": "mcg",
+        "daily_pct": 3
+      },
+      "calcium": {
+        "amount": 17.0,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 1.04,
+        "unit": "mg",
+        "daily_pct": 6
+      },
+      "potassium": {
+        "amount": 204.0,
+        "unit": "mg",
+        "daily_pct": 4
+      }
+    },
+    "fdc_id": 171073,
+    "usda_name": "Chicken, broilers or fryers, back, meat only, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "bagel_cream_cheese": {
+    "id": "bagel_cream_cheese",
+    "display_name": "Bagel Cream Cheese",
+    "image": "bagel_cream_cheese.png",
+    "category": "combo",
+    "serving_size": "1.0 cubic inch (16.0g)",
+    "calories": 350,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 6.15,
+        "unit": "g",
+        "daily_pct": 12
+      },
+      "carbohydrates": {
+        "amount": 5.52,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "fat": {
+        "amount": 34.44,
+        "unit": "g",
+        "daily_pct": 44
+      },
+      "saturated_fat": {
+        "amount": 20.21,
+        "unit": "g",
+        "daily_pct": 101
+      },
+      "fiber": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": 3.76,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 314.0,
+        "unit": "mg",
+        "daily_pct": 14
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 308.0,
+        "unit": "mcg",
+        "daily_pct": 34
+      },
+      "calcium": {
+        "amount": 97.0,
+        "unit": "mg",
+        "daily_pct": 7
+      },
+      "iron": {
+        "amount": 0.11,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "potassium": {
+        "amount": 132.0,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 173418,
+    "usda_name": "Cheese, cream",
+    "last_enriched": "2026-04-27"
+  },
+  "baked_cod": {
+    "id": "baked_cod",
+    "display_name": "Baked Cod",
+    "image": "baked_cod.png",
+    "category": "protein",
+    "serving_size": "1.0 RACC (115.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 16.07,
+        "unit": "g",
+        "daily_pct": 32
+      },
+      "carbohydrates": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fat": {
+        "amount": 0.67,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "saturated_fat": {
+        "amount": 0.04,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 298.8,
+        "unit": "mg",
+        "daily_pct": 13
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 6.59,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.07,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "potassium": {
+        "amount": 245.1,
+        "unit": "mg",
+        "daily_pct": 5
+      }
+    },
+    "fdc_id": 2684444,
+    "usda_name": "Fish, cod, Atlantic, wild caught, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "baked_salmon": {
+    "id": "baked_salmon",
+    "display_name": "Baked Salmon",
+    "image": "baked_salmon.png",
+    "category": "protein",
+    "serving_size": "1.0 tsp (4.5g)",
+    "calories": 902,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "carbohydrates": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fat": {
+        "amount": 100.0,
+        "unit": "g",
+        "daily_pct": 128
+      },
+      "saturated_fat": {
+        "amount": 19.87,
+        "unit": "g",
+        "daily_pct": 99
+      },
+      "fiber": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 0.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "iron": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "potassium": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      }
+    },
+    "fdc_id": 172343,
+    "usda_name": "Fish oil, salmon",
+    "last_enriched": "2026-04-27"
+  },
+  "banana": {
+    "id": "banana",
+    "display_name": "Banana",
+    "image": "banana.png",
+    "category": "fruit",
+    "serving_size": "1 medium (118g)",
+    "calories": 105,
+    "status": "complete",
+    "nutrients": {
+      "protein": {
+        "amount": 1.3,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "carbohydrates": {
+        "amount": 27.0,
+        "unit": "g",
+        "daily_pct": 10
+      },
+      "fat": {
+        "amount": 0.4,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fiber": {
+        "amount": 3.1,
+        "unit": "g",
+        "daily_pct": 11
+      },
+      "sugar": {
+        "amount": 14.4,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 1,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 10.3,
+        "unit": "mg",
+        "daily_pct": 11
+      },
+      "vitamin_a": {
+        "amount": 4,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 6,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "iron": {
+        "amount": 0.3,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "potassium": {
+        "amount": 422,
+        "unit": "mg",
+        "daily_pct": 9
+      }
+    }
+  },
+  "black_lentils": {
+    "id": "black_lentils",
+    "display_name": "Black Lentils",
+    "image": "black_lentils.png",
+    "category": "",
+    "serving_size": "1.0 RACC (35.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-28",
+    "nutrients": {
+      "protein": {
+        "amount": 23.57,
+        "unit": "g",
+        "daily_pct": 47
+      },
+      "carbohydrates": {
+        "amount": 62.17,
+        "unit": "g",
+        "daily_pct": 23
+      },
+      "fat": {
+        "amount": 1.93,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 61.85,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "iron": {
+        "amount": 7.16,
+        "unit": "mg",
+        "daily_pct": 40
+      },
+      "potassium": {
+        "amount": 948.9,
+        "unit": "mg",
+        "daily_pct": 20
+      }
+    },
+    "fdc_id": 2644283,
+    "usda_name": "Lentils, dry",
+    "last_enriched": "2026-04-28"
+  },
+  "black_pepper": {
+    "id": "black_pepper",
+    "display_name": "Black Pepper",
+    "image": "pepper.png",
+    "nutrients": {},
+    "category": "misc"
+  },
+  "blackberry": {
+    "id": "blackberry",
+    "display_name": "Blackberry",
+    "image": "blackberry.png",
+    "category": "fruit",
+    "serving_size": "1.0 cup (144.0g)",
+    "calories": 43,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 1.39,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "carbohydrates": {
+        "amount": 9.61,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "fat": {
+        "amount": 0.49,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "saturated_fat": {
+        "amount": 0.01,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 5.3,
+        "unit": "g",
+        "daily_pct": 19
+      },
+      "sugar": {
+        "amount": 4.88,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 1.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 21.0,
+        "unit": "mg",
+        "daily_pct": 23
+      },
+      "vitamin_a": {
+        "amount": 11.0,
+        "unit": "mcg",
+        "daily_pct": 1
+      },
+      "calcium": {
+        "amount": 29.0,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 0.62,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "potassium": {
+        "amount": 162.0,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 173946,
+    "usda_name": "Blackberries, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "blueberry": {
+    "id": "blueberry",
+    "display_name": "Blueberries",
+    "image": "blueberry.png",
+    "category": "fruit",
+    "serving_size": "1 cup (148g)",
+    "calories": 84,
+    "status": "complete",
+    "nutrients": {
+      "protein": {
+        "amount": 1.1,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "carbohydrates": {
+        "amount": 21.4,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "fat": {
+        "amount": 0.5,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fiber": {
+        "amount": 3.6,
+        "unit": "g",
+        "daily_pct": 13
+      },
+      "sugar": {
+        "amount": 14.7,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 1,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 14.4,
+        "unit": "mg",
+        "daily_pct": 16
+      },
+      "vitamin_a": {
+        "amount": 4,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 9,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.4,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "potassium": {
+        "amount": 114,
+        "unit": "mg",
+        "daily_pct": 2
+      }
+    }
+  },
+  "bowtie_pasta": {
+    "id": "bowtie_pasta",
+    "display_name": "Bowtie Pasta",
+    "image": "bowtie_pasta.png",
+    "category": "grain",
+    "serving_size": "1.0 cup shells (64.0g)",
+    "calories": 371,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 13.04,
+        "unit": "g",
+        "daily_pct": 26
+      },
+      "carbohydrates": {
+        "amount": 74.67,
+        "unit": "g",
+        "daily_pct": 27
+      },
+      "fat": {
+        "amount": 1.51,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "saturated_fat": {
+        "amount": 0.28,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fiber": {
+        "amount": 3.2,
+        "unit": "g",
+        "daily_pct": 11
+      },
+      "sugar": {
+        "amount": 2.67,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 6.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 0.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 21.0,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 3.3,
+        "unit": "mg",
+        "daily_pct": 18
+      },
+      "potassium": {
+        "amount": 223.0,
+        "unit": "mg",
+        "daily_pct": 5
+      }
+    },
+    "fdc_id": 169736,
+    "usda_name": "Pasta, dry, enriched",
+    "last_enriched": "2026-04-27"
+  },
+  "broccoli": {
+    "id": "broccoli",
+    "display_name": "Broccoli",
+    "image": "broccoli.png",
+    "category": "vegetable",
+    "serving_size": "1 cup chopped (91g)",
+    "calories": 31,
+    "status": "complete",
+    "nutrients": {
+      "protein": {
+        "amount": 2.6,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "carbohydrates": {
+        "amount": 6.0,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "fat": {
+        "amount": 0.3,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 2.4,
+        "unit": "g",
+        "daily_pct": 9
+      },
+      "sugar": {
+        "amount": 1.6,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 30,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "vitamin_c": {
+        "amount": 81.2,
+        "unit": "mg",
+        "daily_pct": 90
+      },
+      "vitamin_a": {
+        "amount": 60,
+        "unit": "mcg",
+        "daily_pct": 7
+      },
+      "calcium": {
+        "amount": 43,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "iron": {
+        "amount": 0.7,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "potassium": {
+        "amount": 288,
+        "unit": "mg",
+        "daily_pct": 6
+      }
+    }
+  },
+  "butter": {
+    "id": "butter",
+    "display_name": "Butter",
+    "image": "butter.png",
+    "category": "dairy",
+    "serving_size": "",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "carbohydrates": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fat": {
+        "amount": 82.2,
+        "unit": "g",
+        "daily_pct": 105
+      },
+      "saturated_fat": {
+        "amount": 45.6,
+        "unit": "g",
+        "daily_pct": 228
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 524.0,
+        "unit": "mg",
+        "daily_pct": 23
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": 758.0,
+        "unit": "mcg",
+        "daily_pct": 84
+      },
+      "calcium": {
+        "amount": 21.0,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 0.06,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "potassium": {
+        "amount": 23.0,
+        "unit": "mg",
+        "daily_pct": 0
+      }
+    },
+    "fdc_id": 790508,
+    "usda_name": "Butter, stick, salted",
+    "last_enriched": "2026-04-27"
+  },
+  "carrot": {
+    "id": "carrot",
+    "display_name": "Carrot",
+    "image": "carrot.png",
+    "category": "vegetable",
+    "serving_size": "1 medium (61g)",
+    "calories": 25,
+    "status": "complete",
+    "nutrients": {
+      "protein": {
+        "amount": 0.6,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "carbohydrates": {
+        "amount": 5.8,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "fat": {
+        "amount": 0.1,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 1.7,
+        "unit": "g",
+        "daily_pct": 6
+      },
+      "sugar": {
+        "amount": 2.9,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 42,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "vitamin_c": {
+        "amount": 3.6,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "vitamin_a": {
+        "amount": 459,
+        "unit": "mcg",
+        "daily_pct": 51
+      },
+      "calcium": {
+        "amount": 20,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 0.2,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "potassium": {
+        "amount": 195,
+        "unit": "mg",
+        "daily_pct": 4
+      }
+    }
+  },
+  "cauliflower": {
+    "id": "cauliflower",
+    "display_name": "Cauliflower",
+    "image": "cauliflower.png",
+    "category": "vegetable",
+    "serving_size": "1.0 RACC (85.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 1.64,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "carbohydrates": {
+        "amount": 4.72,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "fat": {
+        "amount": 0.24,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": 1.95,
+        "unit": "g",
+        "daily_pct": 7
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 20.0,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "vitamin_c": {
+        "amount": 67.1,
+        "unit": "mg",
+        "daily_pct": 75
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 20.35,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 0.33,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "potassium": {
+        "amount": 274.4,
+        "unit": "mg",
+        "daily_pct": 6
+      }
+    },
+    "fdc_id": 2685573,
+    "usda_name": "Cauliflower, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "celery": {
+    "id": "celery",
+    "display_name": "Celery",
+    "image": "celery.png",
+    "category": "vegetable",
+    "serving_size": "1.0 RACC (85.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.49,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "carbohydrates": {
+        "amount": 3.32,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fat": {
+        "amount": 0.16,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 97.21,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 46.28,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "iron": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "potassium": {
+        "amount": 265.2,
+        "unit": "mg",
+        "daily_pct": 6
+      }
+    },
+    "fdc_id": 2346405,
+    "usda_name": "Celery, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "chamomile_tea": {
+    "id": "chamomile_tea",
+    "display_name": "Chamomile Tea",
+    "image": "chamomile_tea.png",
+    "category": "dairy",
+    "serving_size": "1.0 fl oz (29.6g)",
+    "calories": 1,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "carbohydrates": {
+        "amount": 0.2,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fat": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 1.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 1.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 2.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "iron": {
+        "amount": 0.08,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "potassium": {
+        "amount": 9.0,
+        "unit": "mg",
+        "daily_pct": 0
+      }
+    },
+    "fdc_id": 174156,
+    "usda_name": "Beverages, tea, herb, brewed, chamomile",
+    "last_enriched": "2026-04-27"
+  },
+  "cheddar_cheese": {
+    "id": "cheddar_cheese",
+    "display_name": "Cheddar Cheese",
+    "image": "cheddar_cheese.png",
+    "category": "dairy",
+    "serving_size": "",
+    "calories": null,
+    "status": "stub",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "carbohydrates": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "iron": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "potassium": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      }
+    }
+  },
+  "cheerios": {
+    "id": "cheerios",
+    "display_name": "Cheerios",
+    "image": "cheerios.png",
+    "category": "grain",
+    "serving_size": "1.0 cup (1 NLEA serving) (28.0g)",
+    "calories": 372,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 12.4,
+        "unit": "g",
+        "daily_pct": 25
+      },
+      "carbohydrates": {
+        "amount": 73.2,
+        "unit": "g",
+        "daily_pct": 27
+      },
+      "fat": {
+        "amount": 6.6,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "saturated_fat": {
+        "amount": 1.6,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "fiber": {
+        "amount": 10.1,
+        "unit": "g",
+        "daily_pct": 36
+      },
+      "sugar": {
+        "amount": 4.5,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 497.0,
+        "unit": "mg",
+        "daily_pct": 22
+      },
+      "vitamin_c": {
+        "amount": 21.4,
+        "unit": "mg",
+        "daily_pct": 24
+      },
+      "vitamin_a": {
+        "amount": 990.0,
+        "unit": "mcg",
+        "daily_pct": 110
+      },
+      "calcium": {
+        "amount": 357.0,
+        "unit": "mg",
+        "daily_pct": 27
+      },
+      "iron": {
+        "amount": 28.9,
+        "unit": "mg",
+        "daily_pct": 161
+      },
+      "potassium": {
+        "amount": 633.0,
+        "unit": "mg",
+        "daily_pct": 13
+      }
+    },
+    "fdc_id": 173884,
+    "usda_name": "Cereals ready-to-eat, GENERAL MILLS, CHEERIOS",
+    "last_enriched": "2026-04-27"
+  },
+  "cherry": {
+    "id": "cherry",
+    "display_name": "Cherry",
+    "image": "cherry.png",
+    "category": "fruit",
+    "serving_size": "1.0 cup, without pits (154.0g)",
+    "calories": 63,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 1.06,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "carbohydrates": {
+        "amount": 16.01,
+        "unit": "g",
+        "daily_pct": 6
+      },
+      "fat": {
+        "amount": 0.2,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": 0.04,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 2.1,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "sugar": {
+        "amount": 12.82,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 7.0,
+        "unit": "mg",
+        "daily_pct": 8
+      },
+      "vitamin_a": {
+        "amount": 3.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 13.0,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.36,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "potassium": {
+        "amount": 222.0,
+        "unit": "mg",
+        "daily_pct": 5
+      }
+    },
+    "fdc_id": 171719,
+    "usda_name": "Cherries, sweet, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "corn": {
+    "id": "corn",
+    "display_name": "Corn",
+    "image": "corn.png",
+    "category": "vegetable",
+    "serving_size": "100.0  (91.3g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "carbohydrates": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "saturated_fat": {
+        "amount": 13.4,
+        "unit": "g",
+        "daily_pct": 67
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "iron": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "potassium": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      }
+    },
+    "fdc_id": 748323,
+    "usda_name": "Oil, corn",
+    "last_enriched": "2026-04-27"
+  },
+  "croissant_egg_cheese": {
+    "id": "croissant_egg_cheese",
+    "display_name": "Croissant Egg Cheese",
+    "image": "croissant_egg_cheese.png",
+    "category": "combo",
+    "serving_size": "1.0 item (128.0g)",
+    "calories": 289,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 12.92,
+        "unit": "g",
+        "daily_pct": 26
+      },
+      "carbohydrates": {
+        "amount": 22.5,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "fat": {
+        "amount": 16.4,
+        "unit": "g",
+        "daily_pct": 21
+      },
+      "saturated_fat": {
+        "amount": 7.03,
+        "unit": "g",
+        "daily_pct": 35
+      },
+      "fiber": {
+        "amount": 1.0,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "sugar": {
+        "amount": 4.8,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 602.0,
+        "unit": "mg",
+        "daily_pct": 26
+      },
+      "vitamin_c": {
+        "amount": 0.1,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 176.0,
+        "unit": "mcg",
+        "daily_pct": 20
+      },
+      "calcium": {
+        "amount": 146.0,
+        "unit": "mg",
+        "daily_pct": 11
+      },
+      "iron": {
+        "amount": 1.55,
+        "unit": "mg",
+        "daily_pct": 9
+      },
+      "potassium": {
+        "amount": 160.0,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 173269,
+    "usda_name": "Fast foods, croissant, with egg, cheese, and bacon",
+    "last_enriched": "2026-04-27"
+  },
+  "cucumber": {
+    "id": "cucumber",
+    "display_name": "Cucumber",
+    "image": "cucumber.png",
+    "category": "vegetable",
+    "serving_size": "1/2 cup sliced (52g)",
+    "calories": 8,
+    "status": "complete",
+    "nutrients": {
+      "protein": {
+        "amount": 0.3,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "carbohydrates": {
+        "amount": 1.9,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fat": {
+        "amount": 0.1,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 0.3,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "sugar": {
+        "amount": 0.9,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 1,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 1.5,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "vitamin_a": {
+        "amount": 5,
+        "unit": "mcg",
+        "daily_pct": 1
+      },
+      "calcium": {
+        "amount": 8,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.1,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "potassium": {
+        "amount": 76,
+        "unit": "mg",
+        "daily_pct": 2
+      }
+    }
+  },
+  "edamame": {
+    "id": "edamame",
+    "display_name": "Edamame",
+    "image": "edamame.png",
+    "category": "protein",
+    "serving_size": "1/2 cup shelled (78g)",
+    "calories": 94,
+    "status": "complete",
+    "nutrients": {
+      "protein": {
+        "amount": 9.2,
+        "unit": "g",
+        "daily_pct": 18
+      },
+      "carbohydrates": {
+        "amount": 7.6,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "fat": {
+        "amount": 4.0,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "fiber": {
+        "amount": 4.0,
+        "unit": "g",
+        "daily_pct": 14
+      },
+      "sugar": {
+        "amount": 1.9,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 9,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 9.5,
+        "unit": "mg",
+        "daily_pct": 11
+      },
+      "vitamin_a": {
+        "amount": 12,
+        "unit": "mcg",
+        "daily_pct": 1
+      },
+      "calcium": {
+        "amount": 49,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "iron": {
+        "amount": 1.8,
+        "unit": "mg",
+        "daily_pct": 10
+      },
+      "potassium": {
+        "amount": 338,
+        "unit": "mg",
+        "daily_pct": 7
+      }
+    }
+  },
+  "egg_cheese_sandwich": {
+    "id": "egg_cheese_sandwich",
+    "display_name": "Egg Cheese Sandwich",
+    "image": "egg_cheese_sandwich.png",
+    "category": "combo",
+    "serving_size": "1.0 item 6.1 oz (174.0g)",
+    "calories": 272,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 12.03,
+        "unit": "g",
+        "daily_pct": 24
+      },
+      "carbohydrates": {
+        "amount": 26.19,
+        "unit": "g",
+        "daily_pct": 10
+      },
+      "fat": {
+        "amount": 13.19,
+        "unit": "g",
+        "daily_pct": 17
+      },
+      "saturated_fat": {
+        "amount": 4.12,
+        "unit": "g",
+        "daily_pct": 21
+      },
+      "fiber": {
+        "amount": 0.8,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "sugar": {
+        "amount": 9.56,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 718.0,
+        "unit": "mg",
+        "daily_pct": 31
+      },
+      "vitamin_c": {
+        "amount": 1.8,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "vitamin_a": {
+        "amount": 63.0,
+        "unit": "mcg",
+        "daily_pct": 7
+      },
+      "calcium": {
+        "amount": 109.0,
+        "unit": "mg",
+        "daily_pct": 8
+      },
+      "iron": {
+        "amount": 1.65,
+        "unit": "mg",
+        "daily_pct": 9
+      },
+      "potassium": {
+        "amount": 158.0,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 172058,
+    "usda_name": "Fast foods, griddle cake sandwich, egg, cheese, and bacon",
+    "last_enriched": "2026-04-27"
+  },
+  "flour_tortilla_fried": {
+    "id": "flour_tortilla_fried",
+    "display_name": "Flour Tortilla Fried",
+    "image": "flour_tortilla_fried.png",
+    "category": "grain",
+    "serving_size": "1.0 cup (111.0g)",
+    "calories": 405,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 9.66,
+        "unit": "g",
+        "daily_pct": 19
+      },
+      "carbohydrates": {
+        "amount": 67.14,
+        "unit": "g",
+        "daily_pct": 24
+      },
+      "fat": {
+        "amount": 10.63,
+        "unit": "g",
+        "daily_pct": 14
+      },
+      "saturated_fat": {
+        "amount": 4.1,
+        "unit": "g",
+        "daily_pct": 20
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 677.0,
+        "unit": "mg",
+        "daily_pct": 29
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 205.0,
+        "unit": "mg",
+        "daily_pct": 16
+      },
+      "iron": {
+        "amount": 7.05,
+        "unit": "mg",
+        "daily_pct": 39
+      },
+      "potassium": {
+        "amount": 100.0,
+        "unit": "mg",
+        "daily_pct": 2
+      }
+    },
+    "fdc_id": 169724,
+    "usda_name": "Wheat flour, white, tortilla mix, enriched",
+    "last_enriched": "2026-04-27"
+  },
+  "fried_chicken": {
+    "id": "fried_chicken",
+    "display_name": "Fried Chicken",
+    "image": "fried_chicken.png",
+    "category": "protein",
+    "serving_size": "1.0 piece (36.0g)",
+    "calories": 234,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 21.28,
+        "unit": "g",
+        "daily_pct": 43
+      },
+      "carbohydrates": {
+        "amount": 8.51,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "fat": {
+        "amount": 12.77,
+        "unit": "g",
+        "daily_pct": 16
+      },
+      "saturated_fat": {
+        "amount": 1.13,
+        "unit": "g",
+        "daily_pct": 6
+      },
+      "fiber": {
+        "amount": 4.3,
+        "unit": "g",
+        "daily_pct": 15
+      },
+      "sugar": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 400.0,
+        "unit": "mg",
+        "daily_pct": 17
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 0.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 42.0,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "iron": {
+        "amount": 3.83,
+        "unit": "mg",
+        "daily_pct": 21
+      },
+      "potassium": {
+        "amount": 300.0,
+        "unit": "mg",
+        "daily_pct": 6
+      }
+    },
+    "fdc_id": 167719,
+    "usda_name": "Chicken, meatless, breaded, fried",
+    "last_enriched": "2026-04-27"
+  },
+  "grape_juice": {
+    "id": "grape_juice",
+    "display_name": "Grape Juice",
+    "image": "grape_juice.png",
+    "category": "fruit",
+    "serving_size": "1.0 bottle Gerber Second Foods (4 fl oz) (125.0g)",
+    "calories": 46,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.1,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "carbohydrates": {
+        "amount": 11.34,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "fat": {
+        "amount": 0.2,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": 0.04,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 0.1,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": 10.9,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 31.5,
+        "unit": "mg",
+        "daily_pct": 35
+      },
+      "vitamin_a": {
+        "amount": 0.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 6.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "iron": {
+        "amount": 0.39,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "potassium": {
+        "amount": 90.0,
+        "unit": "mg",
+        "daily_pct": 2
+      }
+    },
+    "fdc_id": 171381,
+    "usda_name": "Babyfood, juice, apple and grape",
+    "last_enriched": "2026-04-27"
+  },
+  "grits": {
+    "id": "grits",
+    "display_name": "Grits",
+    "image": "grits.png",
+    "category": "",
+    "serving_size": "1.0 packet (29.0g)",
+    "calories": 343,
+    "status": "complete",
+    "date_added": "2026-04-28",
+    "nutrients": {
+      "protein": {
+        "amount": 7.31,
+        "unit": "g",
+        "daily_pct": 15
+      },
+      "carbohydrates": {
+        "amount": 78.42,
+        "unit": "g",
+        "daily_pct": 29
+      },
+      "fat": {
+        "amount": 2.14,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "saturated_fat": {
+        "amount": 0.36,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "fiber": {
+        "amount": 4.2,
+        "unit": "g",
+        "daily_pct": 15
+      },
+      "sugar": {
+        "amount": 1.51,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 1121.0,
+        "unit": "mg",
+        "daily_pct": 49
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 0.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 378.0,
+        "unit": "mg",
+        "daily_pct": 29
+      },
+      "iron": {
+        "amount": 38.75,
+        "unit": "mg",
+        "daily_pct": 215
+      },
+      "potassium": {
+        "amount": 135.0,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 171656,
+    "usda_name": "Cereals, QUAKER, corn grits, instant, plain, dry",
+    "last_enriched": "2026-04-28"
+  },
+  "ground_beef": {
+    "id": "ground_beef",
+    "display_name": "Ground Beef",
+    "image": "ground_beef.png",
+    "category": "protein",
+    "serving_size": "1.0 RACC (114.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 17.53,
+        "unit": "g",
+        "daily_pct": 35
+      },
+      "carbohydrates": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fat": {
+        "amount": 19.44,
+        "unit": "g",
+        "daily_pct": 25
+      },
+      "saturated_fat": {
+        "amount": 6.84,
+        "unit": "g",
+        "daily_pct": 34
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 54.94,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 6.89,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 1.97,
+        "unit": "mg",
+        "daily_pct": 11
+      },
+      "potassium": {
+        "amount": 273.3,
+        "unit": "mg",
+        "daily_pct": 6
+      }
+    },
+    "fdc_id": 2514744,
+    "usda_name": "Beef, ground, 80% lean meat / 20% fat, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "half_and_half": {
+    "id": "half_and_half",
+    "display_name": "Half And Half",
+    "image": "half_and_half.png",
+    "category": "dairy",
+    "serving_size": "1.0 tbsp (15.0g)",
+    "calories": 131,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 3.13,
+        "unit": "g",
+        "daily_pct": 6
+      },
+      "carbohydrates": {
+        "amount": 4.3,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "fat": {
+        "amount": 11.5,
+        "unit": "g",
+        "daily_pct": 15
+      },
+      "saturated_fat": {
+        "amount": 7.03,
+        "unit": "g",
+        "daily_pct": 35
+      },
+      "fiber": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": 4.13,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 61.0,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "vitamin_c": {
+        "amount": 0.9,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "vitamin_a": {
+        "amount": 97.0,
+        "unit": "mcg",
+        "daily_pct": 11
+      },
+      "calcium": {
+        "amount": 107.0,
+        "unit": "mg",
+        "daily_pct": 8
+      },
+      "iron": {
+        "amount": 0.05,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "potassium": {
+        "amount": 132.0,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 171255,
+    "usda_name": "Cream, fluid, half and half",
+    "last_enriched": "2026-04-27"
+  },
+  "hamburger": {
+    "id": "hamburger",
+    "display_name": "Hamburger",
+    "image": "hamburger.png",
+    "category": "protein",
+    "serving_size": "1.0 sandwich (95.0g)",
+    "calories": 264,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 12.92,
+        "unit": "g",
+        "daily_pct": 26
+      },
+      "carbohydrates": {
+        "amount": 30.28,
+        "unit": "g",
+        "daily_pct": 11
+      },
+      "fat": {
+        "amount": 10.09,
+        "unit": "g",
+        "daily_pct": 13
+      },
+      "saturated_fat": {
+        "amount": 3.5,
+        "unit": "g",
+        "daily_pct": 18
+      },
+      "fiber": {
+        "amount": 1.3,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "sugar": {
+        "amount": 6.03,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 494.0,
+        "unit": "mg",
+        "daily_pct": 21
+      },
+      "vitamin_c": {
+        "amount": 0.6,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 127.0,
+        "unit": "mg",
+        "daily_pct": 10
+      },
+      "iron": {
+        "amount": 2.87,
+        "unit": "mg",
+        "daily_pct": 16
+      },
+      "potassium": {
+        "amount": 192.0,
+        "unit": "mg",
+        "daily_pct": 4
+      }
+    },
+    "fdc_id": 170717,
+    "usda_name": "McDONALD'S, Hamburger",
+    "last_enriched": "2026-04-27"
+  },
+  "hard_boiled_eggs": {
+    "id": "hard_boiled_eggs",
+    "display_name": "Hard Boiled Eggs",
+    "image": "hard_boiled_eggs.png",
+    "category": "protein",
+    "serving_size": "1.0 tbsp (8.5g)",
+    "calories": 155,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 12.58,
+        "unit": "g",
+        "daily_pct": 25
+      },
+      "carbohydrates": {
+        "amount": 1.12,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fat": {
+        "amount": 10.61,
+        "unit": "g",
+        "daily_pct": 14
+      },
+      "saturated_fat": {
+        "amount": 3.27,
+        "unit": "g",
+        "daily_pct": 16
+      },
+      "fiber": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": 1.12,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 124.0,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 149.0,
+        "unit": "mcg",
+        "daily_pct": 17
+      },
+      "calcium": {
+        "amount": 50.0,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "iron": {
+        "amount": 1.19,
+        "unit": "mg",
+        "daily_pct": 7
+      },
+      "potassium": {
+        "amount": 126.0,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 173424,
+    "usda_name": "Egg, whole, cooked, hard-boiled",
+    "last_enriched": "2026-04-27"
+  },
+  "heavy_cream": {
+    "id": "heavy_cream",
+    "display_name": "Heavy Cream",
+    "image": "heavy_cream.png",
+    "category": "dairy",
+    "serving_size": "1.0 RACC (15.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 2.02,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "carbohydrates": {
+        "amount": 3.8,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fat": {
+        "amount": 35.56,
+        "unit": "g",
+        "daily_pct": 46
+      },
+      "saturated_fat": {
+        "amount": 20.45,
+        "unit": "g",
+        "daily_pct": 102
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 20.61,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 61.21,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "iron": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "potassium": {
+        "amount": 96.94,
+        "unit": "mg",
+        "daily_pct": 2
+      }
+    },
+    "fdc_id": 2346386,
+    "usda_name": "Cream, heavy",
+    "last_enriched": "2026-04-27"
+  },
+  "hot_dog": {
+    "id": "hot_dog",
+    "display_name": "Hot Dog",
+    "image": "hot_dog.png",
+    "category": "protein",
+    "serving_size": "1.0 tbsp (15.0g)",
+    "calories": 91,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 1.5,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "carbohydrates": {
+        "amount": 23.35,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "fat": {
+        "amount": 0.46,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "saturated_fat": {
+        "amount": 0.04,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 1.5,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 1091.0,
+        "unit": "mg",
+        "daily_pct": 47
+      },
+      "vitamin_c": {
+        "amount": 1.0,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "vitamin_a": {
+        "amount": 8.0,
+        "unit": "mcg",
+        "daily_pct": 1
+      },
+      "calcium": {
+        "amount": 5.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "iron": {
+        "amount": 1.25,
+        "unit": "mg",
+        "daily_pct": 7
+      },
+      "potassium": {
+        "amount": 78.0,
+        "unit": "mg",
+        "daily_pct": 2
+      }
+    },
+    "fdc_id": 168560,
+    "usda_name": "Pickle relish, hot dog",
+    "last_enriched": "2026-04-27"
+  },
+  "hummus": {
+    "id": "hummus",
+    "display_name": "Hummus",
+    "image": "hummus.png",
+    "category": "protein",
+    "serving_size": "1.0 tbsp (15.0g)",
+    "calories": 237,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 7.78,
+        "unit": "g",
+        "daily_pct": 16
+      },
+      "carbohydrates": {
+        "amount": 15.0,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "fat": {
+        "amount": 17.82,
+        "unit": "g",
+        "daily_pct": 23
+      },
+      "saturated_fat": {
+        "amount": 2.56,
+        "unit": "g",
+        "daily_pct": 13
+      },
+      "fiber": {
+        "amount": 5.5,
+        "unit": "g",
+        "daily_pct": 20
+      },
+      "sugar": {
+        "amount": 0.62,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 426.0,
+        "unit": "mg",
+        "daily_pct": 19
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 1.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 47.0,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "iron": {
+        "amount": 2.54,
+        "unit": "mg",
+        "daily_pct": 14
+      },
+      "potassium": {
+        "amount": 312.0,
+        "unit": "mg",
+        "daily_pct": 7
+      }
+    },
+    "fdc_id": 174289,
+    "usda_name": "Hummus, commercial",
+    "last_enriched": "2026-04-27"
+  },
+  "kiwi": {
+    "id": "kiwi",
+    "display_name": "Kiwi",
+    "image": "kiwi.png",
+    "category": "fruit",
+    "serving_size": "16.0 fl oz (473.0g)",
+    "calories": 47,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "carbohydrates": {
+        "amount": 12.26,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "fat": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": 11.63,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 11.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 24.7,
+        "unit": "mg",
+        "daily_pct": 27
+      },
+      "vitamin_a": {
+        "amount": 1.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "iron": {
+        "amount": 0.15,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "potassium": {
+        "amount": 14.0,
+        "unit": "mg",
+        "daily_pct": 0
+      }
+    },
+    "fdc_id": 174111,
+    "usda_name": "Beverages, Kiwi Strawberry Juice Drink",
+    "last_enriched": "2026-04-27"
+  },
+  "lemon": {
+    "id": "lemon",
+    "display_name": "Lemon",
+    "image": "lemon.png",
+    "category": "fruit",
+    "serving_size": "1.0 tsp (5.0g)",
+    "calories": 17,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.47,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "carbohydrates": {
+        "amount": 5.66,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "fat": {
+        "amount": 0.07,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": 0.03,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 0.7,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "sugar": {
+        "amount": 1.59,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 26.0,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "vitamin_c": {
+        "amount": 16.6,
+        "unit": "mg",
+        "daily_pct": 18
+      },
+      "vitamin_a": {
+        "amount": 2.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 9.0,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.06,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "potassium": {
+        "amount": 109.0,
+        "unit": "mg",
+        "daily_pct": 2
+      }
+    },
+    "fdc_id": 167802,
+    "usda_name": "Lemon juice from concentrate, bottled, REAL LEMON",
+    "last_enriched": "2026-04-27"
+  },
+  "lemonade": {
+    "id": "lemonade",
+    "display_name": "Lemonade",
+    "image": "lemonade.png",
+    "category": "fruit",
+    "serving_size": "1.0 serving (18.0g)",
+    "calories": 376,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "carbohydrates": {
+        "amount": 97.57,
+        "unit": "g",
+        "daily_pct": 35
+      },
+      "fat": {
+        "amount": 1.05,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "saturated_fat": {
+        "amount": 0.15,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fiber": {
+        "amount": 0.4,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "sugar": {
+        "amount": 94.7,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 51.0,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "vitamin_c": {
+        "amount": 39.9,
+        "unit": "mg",
+        "daily_pct": 44
+      },
+      "vitamin_a": {
+        "amount": 0.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 20.0,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 0.19,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "potassium": {
+        "amount": 147.0,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 174858,
+    "usda_name": "Beverages, Lemonade, powder",
+    "last_enriched": "2026-04-27"
+  },
+  "lentils": {
+    "id": "lentils",
+    "display_name": "Lentils",
+    "image": "lentils.png",
+    "category": "",
+    "serving_size": "1.0 RACC (35.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-28",
+    "nutrients": {
+      "protein": {
+        "amount": 23.57,
+        "unit": "g",
+        "daily_pct": 47
+      },
+      "carbohydrates": {
+        "amount": 62.17,
+        "unit": "g",
+        "daily_pct": 23
+      },
+      "fat": {
+        "amount": 1.93,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 61.85,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "iron": {
+        "amount": 7.16,
+        "unit": "mg",
+        "daily_pct": 40
+      },
+      "potassium": {
+        "amount": 948.9,
+        "unit": "mg",
+        "daily_pct": 20
+      }
+    },
+    "fdc_id": 2644283,
+    "usda_name": "Lentils, dry",
+    "last_enriched": "2026-04-28"
+  },
+  "lettuce": {
+    "id": "lettuce",
+    "display_name": "Lettuce",
+    "image": "lettuce.png",
+    "category": "vegetable",
+    "serving_size": "1.0 RACC (85.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.74,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "carbohydrates": {
+        "amount": 3.37,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fat": {
+        "amount": 0.07,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 16.11,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 14.24,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.03,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "potassium": {
+        "amount": 139.3,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 2346388,
+    "usda_name": "Lettuce, iceberg, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "lime": {
+    "id": "lime",
+    "display_name": "Lime",
+    "image": "lime.png",
+    "category": "fruit",
+    "serving_size": "1.0 fruit (2\" dia) (67.0g)",
+    "calories": 30,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.7,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "carbohydrates": {
+        "amount": 10.54,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "fat": {
+        "amount": 0.2,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": 0.02,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 2.8,
+        "unit": "g",
+        "daily_pct": 10
+      },
+      "sugar": {
+        "amount": 1.69,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 2.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 29.1,
+        "unit": "mg",
+        "daily_pct": 32
+      },
+      "vitamin_a": {
+        "amount": 2.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 33.0,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "iron": {
+        "amount": 0.6,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "potassium": {
+        "amount": 102.0,
+        "unit": "mg",
+        "daily_pct": 2
+      }
+    },
+    "fdc_id": 168155,
+    "usda_name": "Limes, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "mango": {
+    "id": "mango",
+    "display_name": "Mango",
+    "image": "mango.png",
+    "category": "fruit",
+    "serving_size": "1.0 fruit without refuse (336.0g)",
+    "calories": 60,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.82,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "carbohydrates": {
+        "amount": 14.98,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "fat": {
+        "amount": 0.38,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": 0.09,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 1.6,
+        "unit": "g",
+        "daily_pct": 6
+      },
+      "sugar": {
+        "amount": 13.66,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 1.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 36.4,
+        "unit": "mg",
+        "daily_pct": 40
+      },
+      "vitamin_a": {
+        "amount": 54.0,
+        "unit": "mcg",
+        "daily_pct": 6
+      },
+      "calcium": {
+        "amount": 11.0,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.16,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "potassium": {
+        "amount": 168.0,
+        "unit": "mg",
+        "daily_pct": 4
+      }
+    },
+    "fdc_id": 169910,
+    "usda_name": "Mangos, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "muffin_chocolate_chip": {
+    "id": "muffin_chocolate_chip",
+    "display_name": "Muffin Chocolate Chip",
+    "image": "muffin_chocolate_chip.png",
+    "category": "grain",
+    "serving_size": "1.0 package (17.5 oz) (496.0g)",
+    "calories": 497,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 4.6,
+        "unit": "g",
+        "daily_pct": 9
+      },
+      "carbohydrates": {
+        "amount": 66.1,
+        "unit": "g",
+        "daily_pct": 24
+      },
+      "fat": {
+        "amount": 25.2,
+        "unit": "g",
+        "daily_pct": 32
+      },
+      "saturated_fat": {
+        "amount": 8.32,
+        "unit": "g",
+        "daily_pct": 42
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 290.0,
+        "unit": "mg",
+        "daily_pct": 13
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 0.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 43.0,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "iron": {
+        "amount": 2.07,
+        "unit": "mg",
+        "daily_pct": 12
+      },
+      "potassium": {
+        "amount": 208.0,
+        "unit": "mg",
+        "daily_pct": 4
+      }
+    },
+    "fdc_id": 174952,
+    "usda_name": "Cookies, chocolate chip, dry mix",
+    "last_enriched": "2026-04-27"
+  },
+  "oatmeal": {
+    "id": "oatmeal",
+    "display_name": "Oatmeal",
+    "image": "oatmeal.png",
+    "category": "grain",
+    "serving_size": "1.0 slice (27.0g)",
+    "calories": 269,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 8.4,
+        "unit": "g",
+        "daily_pct": 17
+      },
+      "carbohydrates": {
+        "amount": 48.5,
+        "unit": "g",
+        "daily_pct": 18
+      },
+      "fat": {
+        "amount": 4.4,
+        "unit": "g",
+        "daily_pct": 6
+      },
+      "saturated_fat": {
+        "amount": 0.7,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "fiber": {
+        "amount": 4.0,
+        "unit": "g",
+        "daily_pct": 14
+      },
+      "sugar": {
+        "amount": 8.14,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 447.0,
+        "unit": "mg",
+        "daily_pct": 19
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 5.0,
+        "unit": "mcg",
+        "daily_pct": 1
+      },
+      "calcium": {
+        "amount": 66.0,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "iron": {
+        "amount": 2.7,
+        "unit": "mg",
+        "daily_pct": 15
+      },
+      "potassium": {
+        "amount": 142.0,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 172678,
+    "usda_name": "Bread, oatmeal",
+    "last_enriched": "2026-04-27"
+  },
+  "orange": {
+    "id": "orange",
+    "display_name": "Orange",
+    "image": "orange.png",
+    "category": "fruit",
+    "serving_size": "1 medium (131g)",
+    "calories": 62,
+    "status": "complete",
+    "nutrients": {
+      "protein": {
+        "amount": 1.2,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "carbohydrates": {
+        "amount": 15.4,
+        "unit": "g",
+        "daily_pct": 6
+      },
+      "fat": {
+        "amount": 0.2,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 3.1,
+        "unit": "g",
+        "daily_pct": 11
+      },
+      "sugar": {
+        "amount": 12.2,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 69.7,
+        "unit": "mg",
+        "daily_pct": 77
+      },
+      "vitamin_a": {
+        "amount": 14,
+        "unit": "mcg",
+        "daily_pct": 2
+      },
+      "calcium": {
+        "amount": 52,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "iron": {
+        "amount": 0.1,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "potassium": {
+        "amount": 237,
+        "unit": "mg",
+        "daily_pct": 5
+      }
+    }
+  },
+  "orange_juice": {
+    "id": "orange_juice",
+    "display_name": "Orange Juice",
+    "image": "orange_juice.png",
+    "category": "fruit",
+    "serving_size": "1.0 fl oz (31.2g)",
+    "calories": 45,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.6,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "carbohydrates": {
+        "amount": 10.2,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "fat": {
+        "amount": 0.3,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": 0.04,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 0.1,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": 8.26,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 62.5,
+        "unit": "mg",
+        "daily_pct": 69
+      },
+      "vitamin_a": {
+        "amount": 3.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 12.0,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.17,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "potassium": {
+        "amount": 184.0,
+        "unit": "mg",
+        "daily_pct": 4
+      }
+    },
+    "fdc_id": 171354,
+    "usda_name": "Babyfood, juice, orange",
+    "last_enriched": "2026-04-27"
+  },
+  "pancakes": {
+    "id": "pancakes",
+    "display_name": "Pancakes",
+    "image": "pancakes.png",
+    "category": "grain",
+    "serving_size": "1.0 medium 3-1/4 in. x 3-5/8 in., 5/8 in. thick. (37.0g)",
+    "calories": 268,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 6.08,
+        "unit": "g",
+        "daily_pct": 12
+      },
+      "carbohydrates": {
+        "amount": 27.81,
+        "unit": "g",
+        "daily_pct": 10
+      },
+      "fat": {
+        "amount": 14.76,
+        "unit": "g",
+        "daily_pct": 19
+      },
+      "saturated_fat": {
+        "amount": 2.5,
+        "unit": "g",
+        "daily_pct": 12
+      },
+      "fiber": {
+        "amount": 3.3,
+        "unit": "g",
+        "daily_pct": 12
+      },
+      "sugar": {
+        "amount": 1.79,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 764.0,
+        "unit": "mg",
+        "daily_pct": 33
+      },
+      "vitamin_c": {
+        "amount": 27.6,
+        "unit": "mg",
+        "daily_pct": 31
+      },
+      "vitamin_a": {
+        "amount": 32.0,
+        "unit": "mcg",
+        "daily_pct": 4
+      },
+      "calcium": {
+        "amount": 32.0,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 1.67,
+        "unit": "mg",
+        "daily_pct": 9
+      },
+      "potassium": {
+        "amount": 622.0,
+        "unit": "mg",
+        "daily_pct": 13
+      }
+    },
+    "fdc_id": 170092,
+    "usda_name": "Potato pancakes",
+    "last_enriched": "2026-04-27"
+  },
+  "pappardelle": {
+    "id": "pappardelle",
+    "display_name": "Pappardelle",
+    "image": "pappardelle.png",
+    "category": "",
+    "serving_size": "",
+    "calories": null,
+    "status": "stub",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "carbohydrates": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "iron": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "potassium": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      }
+    }
+  },
+  "peach": {
+    "id": "peach",
+    "display_name": "Peach",
+    "image": "peach.png",
+    "category": "fruit",
+    "serving_size": "1.0 piece (1/6 of 8\" pie) (117.0g)",
+    "calories": 224,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 1.9,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "carbohydrates": {
+        "amount": 32.9,
+        "unit": "g",
+        "daily_pct": 12
+      },
+      "fat": {
+        "amount": 10.0,
+        "unit": "g",
+        "daily_pct": 13
+      },
+      "saturated_fat": {
+        "amount": 1.51,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "fiber": {
+        "amount": 0.8,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "sugar": {
+        "amount": 16.23,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 217.0,
+        "unit": "mg",
+        "daily_pct": 9
+      },
+      "vitamin_c": {
+        "amount": 0.9,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "vitamin_a": {
+        "amount": 10.0,
+        "unit": "mcg",
+        "daily_pct": 1
+      },
+      "calcium": {
+        "amount": 8.0,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.5,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "potassium": {
+        "amount": 125.0,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 175020,
+    "usda_name": "Pie, peach",
+    "last_enriched": "2026-04-27"
+  },
+  "peanut_butter_and_jelly": {
+    "id": "peanut_butter_and_jelly",
+    "display_name": "Peanut Butter And Jelly",
+    "image": "peanut_butter_and_jelly.png",
+    "category": "combo",
+    "serving_size": "",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 23.99,
+        "unit": "g",
+        "daily_pct": 48
+      },
+      "carbohydrates": {
+        "amount": 22.7,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "fat": {
+        "amount": 49.43,
+        "unit": "g",
+        "daily_pct": 63
+      },
+      "saturated_fat": {
+        "amount": 8.41,
+        "unit": "g",
+        "daily_pct": 42
+      },
+      "fiber": {
+        "amount": 6.32,
+        "unit": "g",
+        "daily_pct": 23
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 220.7,
+        "unit": "mg",
+        "daily_pct": 10
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 49.85,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "iron": {
+        "amount": 1.85,
+        "unit": "mg",
+        "daily_pct": 10
+      },
+      "potassium": {
+        "amount": 654.0,
+        "unit": "mg",
+        "daily_pct": 14
+      }
+    },
+    "fdc_id": 2262072,
+    "usda_name": "Peanut butter, creamy",
+    "last_enriched": "2026-04-27"
+  },
+  "pear": {
+    "id": "pear",
+    "display_name": "Pear",
+    "image": "pear.png",
+    "category": "fruit",
+    "serving_size": "1 medium (178g)",
+    "calories": 101,
+    "status": "complete",
+    "nutrients": {
+      "protein": {
+        "amount": 0.6,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "carbohydrates": {
+        "amount": 27.1,
+        "unit": "g",
+        "daily_pct": 10
+      },
+      "fat": {
+        "amount": 0.2,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 5.5,
+        "unit": "g",
+        "daily_pct": 20
+      },
+      "sugar": {
+        "amount": 17.4,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 2,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 7.7,
+        "unit": "mg",
+        "daily_pct": 9
+      },
+      "vitamin_a": {
+        "amount": 2,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 16,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.3,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "potassium": {
+        "amount": 206,
+        "unit": "mg",
+        "daily_pct": 4
+      }
+    }
+  },
+  "penne_pasta": {
+    "id": "penne_pasta",
+    "display_name": "Penne Pasta",
+    "image": "penne_pasta.png",
+    "category": "grain",
+    "serving_size": "1.0 cup shells (64.0g)",
+    "calories": 371,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 13.04,
+        "unit": "g",
+        "daily_pct": 26
+      },
+      "carbohydrates": {
+        "amount": 74.67,
+        "unit": "g",
+        "daily_pct": 27
+      },
+      "fat": {
+        "amount": 1.51,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "saturated_fat": {
+        "amount": 0.28,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fiber": {
+        "amount": 3.2,
+        "unit": "g",
+        "daily_pct": 11
+      },
+      "sugar": {
+        "amount": 2.67,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 6.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 0.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 21.0,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 3.3,
+        "unit": "mg",
+        "daily_pct": 18
+      },
+      "potassium": {
+        "amount": 223.0,
+        "unit": "mg",
+        "daily_pct": 5
+      }
+    },
+    "fdc_id": 169736,
+    "usda_name": "Pasta, dry, enriched",
+    "last_enriched": "2026-04-27"
+  },
+  "pepper": {
+    "id": "pepper",
+    "display_name": "Pepper",
+    "image": "pepper.png",
+    "category": "vegetable",
+    "serving_size": "1.0 cup (124.0g)",
+    "calories": 27,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 1.66,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "carbohydrates": {
+        "amount": 5.35,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "fat": {
+        "amount": 0.45,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "saturated_fat": {
+        "amount": 0.05,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 3.4,
+        "unit": "g",
+        "daily_pct": 12
+      },
+      "sugar": {
+        "amount": 1.95,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 13.0,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "vitamin_c": {
+        "amount": 82.7,
+        "unit": "mg",
+        "daily_pct": 92
+      },
+      "vitamin_a": {
+        "amount": 17.0,
+        "unit": "mcg",
+        "daily_pct": 2
+      },
+      "calcium": {
+        "amount": 14.0,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.46,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "potassium": {
+        "amount": 256.0,
+        "unit": "mg",
+        "daily_pct": 5
+      }
+    },
+    "fdc_id": 169394,
+    "usda_name": "Pepper, banana, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "pineapple": {
+    "id": "pineapple",
+    "display_name": "Pineapple",
+    "image": "pineapple.png",
+    "category": "fruit",
+    "serving_size": "1.0 RACC (140.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.46,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "carbohydrates": {
+        "amount": 14.09,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "fat": {
+        "amount": 0.21,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": 0.93,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 58.61,
+        "unit": "mg",
+        "daily_pct": 65
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 12.5,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.05,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "potassium": {
+        "amount": 137.1,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 2346398,
+    "usda_name": "Pineapple, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "plum": {
+    "id": "plum",
+    "display_name": "Plum",
+    "image": "plum.png",
+    "category": "fruit",
+    "serving_size": "1.0 NLEA serving (151.0g)",
+    "calories": 46,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 0.7,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "carbohydrates": {
+        "amount": 11.42,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "fat": {
+        "amount": 0.28,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": 0.02,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 1.4,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "sugar": {
+        "amount": 9.92,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 9.5,
+        "unit": "mg",
+        "daily_pct": 11
+      },
+      "vitamin_a": {
+        "amount": 17.0,
+        "unit": "mcg",
+        "daily_pct": 2
+      },
+      "calcium": {
+        "amount": 6.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "iron": {
+        "amount": 0.17,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "potassium": {
+        "amount": 157.0,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 169949,
+    "usda_name": "Plums, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "potato": {
+    "id": "potato",
+    "display_name": "Potato",
+    "image": "potato.png",
+    "category": "vegetable",
+    "serving_size": "1.0 RACC (85.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 8.11,
+        "unit": "g",
+        "daily_pct": 16
+      },
+      "carbohydrates": {
+        "amount": 79.94,
+        "unit": "g",
+        "daily_pct": 29
+      },
+      "fat": {
+        "amount": 0.95,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": 5.4,
+        "unit": "g",
+        "daily_pct": 19
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 47.66,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 44.12,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "iron": {
+        "amount": 11.97,
+        "unit": "mg",
+        "daily_pct": 66
+      },
+      "potassium": {
+        "amount": 1269.0,
+        "unit": "mg",
+        "daily_pct": 27
+      }
+    },
+    "fdc_id": 2261422,
+    "usda_name": "Flour, potato",
+    "last_enriched": "2026-04-27"
+  },
+  "pretzels": {
+    "id": "pretzels",
+    "display_name": "Pretzels",
+    "image": "pretzels.png",
+    "category": "grain",
+    "serving_size": "1.0 pretzel (6.0g)",
+    "calories": 397,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 10.8,
+        "unit": "g",
+        "daily_pct": 22
+      },
+      "carbohydrates": {
+        "amount": 82.2,
+        "unit": "g",
+        "daily_pct": 30
+      },
+      "fat": {
+        "amount": 2.0,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "saturated_fat": {
+        "amount": 0.4,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "fiber": {
+        "amount": 2.3,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "sugar": {
+        "amount": 3.08,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 269.0,
+        "unit": "mg",
+        "daily_pct": 12
+      },
+      "vitamin_c": {
+        "amount": 3.8,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "vitamin_a": {
+        "amount": 0.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 25.0,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 3.77,
+        "unit": "mg",
+        "daily_pct": 21
+      },
+      "potassium": {
+        "amount": 137.0,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 171370,
+    "usda_name": "Babyfood, pretzels",
+    "last_enriched": "2026-04-27"
+  },
+  "quinoa": {
+    "id": "quinoa",
+    "display_name": "Quinoa",
+    "image": "quinoa.png",
+    "category": "",
+    "serving_size": "1.0 RACC (30.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-28",
+    "nutrients": {
+      "protein": {
+        "amount": 11.92,
+        "unit": "g",
+        "daily_pct": 24
+      },
+      "carbohydrates": {
+        "amount": 69.52,
+        "unit": "g",
+        "daily_pct": 25
+      },
+      "fat": {
+        "amount": 6.6,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": 6.29,
+        "unit": "g",
+        "daily_pct": 22
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 6.32,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 37.56,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "iron": {
+        "amount": 4.53,
+        "unit": "mg",
+        "daily_pct": 25
+      },
+      "potassium": {
+        "amount": 550.9,
+        "unit": "mg",
+        "daily_pct": 12
+      }
+    },
+    "fdc_id": 2512372,
+    "usda_name": "Flour, quinoa",
+    "last_enriched": "2026-04-28"
+  },
+  "raspberry": {
+    "id": "raspberry",
+    "display_name": "Raspberries",
+    "image": "raspberry.png",
+    "category": "fruit",
+    "serving_size": "1 cup (123g)",
+    "calories": 64,
+    "status": "complete",
+    "nutrients": {
+      "protein": {
+        "amount": 1.5,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "carbohydrates": {
+        "amount": 14.7,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "fat": {
+        "amount": 0.8,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fiber": {
+        "amount": 8.0,
+        "unit": "g",
+        "daily_pct": 29
+      },
+      "sugar": {
+        "amount": 5.4,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 1,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 32.2,
+        "unit": "mg",
+        "daily_pct": 36
+      },
+      "vitamin_a": {
+        "amount": 2,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 31,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 0.8,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "potassium": {
+        "amount": 186,
+        "unit": "mg",
+        "daily_pct": 4
+      }
+    }
+  },
+  "ravioli": {
+    "id": "ravioli",
+    "display_name": "Ravioli",
+    "image": "ravioli.png",
+    "category": "grain",
+    "serving_size": "1.0 cup (242.0g)",
+    "calories": 77,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 2.48,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "carbohydrates": {
+        "amount": 13.64,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "fat": {
+        "amount": 1.45,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "saturated_fat": {
+        "amount": 0.72,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "fiber": {
+        "amount": 1.3,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "sugar": {
+        "amount": 3.72,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 306.0,
+        "unit": "mg",
+        "daily_pct": 13
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 10.0,
+        "unit": "mcg",
+        "daily_pct": 1
+      },
+      "calcium": {
+        "amount": 33.0,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "iron": {
+        "amount": 0.74,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "potassium": {
+        "amount": 232.0,
+        "unit": "mg",
+        "daily_pct": 5
+      }
+    },
+    "fdc_id": 173328,
+    "usda_name": "Ravioli, cheese-filled, canned",
+    "last_enriched": "2026-04-27"
+  },
+  "raw": {
+    "id": "raw",
+    "display_name": "Raw",
+    "image": "raw.png",
+    "category": "",
+    "serving_size": "1.0 RACC (85.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-28",
+    "nutrients": {
+      "protein": {
+        "amount": 1.69,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "carbohydrates": {
+        "amount": 8.79,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "fat": {
+        "amount": 0.3,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": 3.12,
+        "unit": "g",
+        "daily_pct": 11
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 111.6,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "vitamin_c": {
+        "amount": 4.6,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 13.82,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.43,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "potassium": {
+        "amount": 341.5,
+        "unit": "mg",
+        "daily_pct": 7
+      }
+    },
+    "fdc_id": 2685576,
+    "usda_name": "Beets, raw",
+    "last_enriched": "2026-04-28"
+  },
+  "red_bell_pepper": {
+    "id": "red_bell_pepper",
+    "display_name": "Red Bell Pepper",
+    "image": "red_bell_pepper.png",
+    "category": "vegetable",
+    "serving_size": "1 medium (119g)",
+    "calories": 37,
+    "status": "complete",
+    "nutrients": {
+      "protein": {
+        "amount": 1.2,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "carbohydrates": {
+        "amount": 7.2,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "fat": {
+        "amount": 0.4,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fiber": {
+        "amount": 2.5,
+        "unit": "g",
+        "daily_pct": 9
+      },
+      "sugar": {
+        "amount": 4.2,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 4,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 152.0,
+        "unit": "mg",
+        "daily_pct": 169
+      },
+      "vitamin_a": {
+        "amount": 157,
+        "unit": "mcg",
+        "daily_pct": 17
+      },
+      "calcium": {
+        "amount": 10,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.5,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "potassium": {
+        "amount": 251,
+        "unit": "mg",
+        "daily_pct": 5
+      }
+    }
+  },
+  "red_grapes": {
+    "id": "red_grapes",
+    "display_name": "Red Grapes",
+    "image": "red_grapes.png",
+    "category": "fruit",
+    "serving_size": "1 cup (151g)",
+    "calories": 104,
+    "status": "complete",
+    "nutrients": {
+      "protein": {
+        "amount": 1.1,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "carbohydrates": {
+        "amount": 27.3,
+        "unit": "g",
+        "daily_pct": 10
+      },
+      "fat": {
+        "amount": 0.2,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 1.4,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "sugar": {
+        "amount": 23.4,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 3,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 4.8,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "vitamin_a": {
+        "amount": 5,
+        "unit": "mcg",
+        "daily_pct": 1
+      },
+      "calcium": {
+        "amount": 15,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "iron": {
+        "amount": 0.5,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "potassium": {
+        "amount": 288,
+        "unit": "mg",
+        "daily_pct": 6
+      }
+    }
+  },
+  "rigatoni": {
+    "id": "rigatoni",
+    "display_name": "Rigatoni",
+    "image": "rigatoni.png",
+    "category": "",
+    "serving_size": "",
+    "calories": null,
+    "status": "stub",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "carbohydrates": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "iron": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "potassium": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      }
+    }
+  },
+  "salt": {
+    "id": "salt",
+    "display_name": "Salt",
+    "image": "salt.png",
+    "category": "misc",
+    "serving_size": "",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "carbohydrates": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fat": {
+        "amount": 82.2,
+        "unit": "g",
+        "daily_pct": 105
+      },
+      "saturated_fat": {
+        "amount": 45.6,
+        "unit": "g",
+        "daily_pct": 228
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 524.0,
+        "unit": "mg",
+        "daily_pct": 23
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": 758.0,
+        "unit": "mcg",
+        "daily_pct": 84
+      },
+      "calcium": {
+        "amount": 21.0,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 0.06,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "potassium": {
+        "amount": 23.0,
+        "unit": "mg",
+        "daily_pct": 0
+      }
+    },
+    "fdc_id": 790508,
+    "usda_name": "Butter, stick, salted",
+    "last_enriched": "2026-04-27"
+  },
+  "scrambled_eggs": {
+    "id": "scrambled_eggs",
+    "display_name": "Scrambled Eggs",
+    "image": "scrambled_eggs.png",
+    "category": "protein",
+    "serving_size": "1.0 cup (220.0g)",
+    "calories": 149,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 9.99,
+        "unit": "g",
+        "daily_pct": 20
+      },
+      "carbohydrates": {
+        "amount": 1.61,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fat": {
+        "amount": 10.98,
+        "unit": "g",
+        "daily_pct": 14
+      },
+      "saturated_fat": {
+        "amount": 3.33,
+        "unit": "g",
+        "daily_pct": 17
+      },
+      "fiber": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": 1.39,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 145.0,
+        "unit": "mg",
+        "daily_pct": 6
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 161.0,
+        "unit": "mcg",
+        "daily_pct": 18
+      },
+      "calcium": {
+        "amount": 66.0,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "iron": {
+        "amount": 1.31,
+        "unit": "mg",
+        "daily_pct": 7
+      },
+      "potassium": {
+        "amount": 132.0,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 172187,
+    "usda_name": "Egg, whole, cooked, scrambled",
+    "last_enriched": "2026-04-27"
+  },
+  "shiitake_mushrooms": {
+    "id": "shiitake_mushrooms",
+    "display_name": "Shiitake Mushrooms",
+    "image": "shiitake_mushrooms.png",
+    "category": "vegetable",
+    "serving_size": "1.0 RACC (85.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 2.41,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "carbohydrates": {
+        "amount": 8.17,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "fat": {
+        "amount": 0.2,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": 4.17,
+        "unit": "g",
+        "daily_pct": 15
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 0.94,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 0.77,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "iron": {
+        "amount": 0.14,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "potassium": {
+        "amount": 243.0,
+        "unit": "mg",
+        "daily_pct": 5
+      }
+    },
+    "fdc_id": 1999628,
+    "usda_name": "Mushrooms, shiitake",
+    "last_enriched": "2026-04-27"
+  },
+  "skim_milk": {
+    "id": "skim_milk",
+    "display_name": "Skim Milk",
+    "image": "skim_milk.png",
+    "category": "dairy",
+    "serving_size": "1.0 container (8 oz) (227.0g)",
+    "calories": 56,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 5.73,
+        "unit": "g",
+        "daily_pct": 11
+      },
+      "carbohydrates": {
+        "amount": 7.68,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "fat": {
+        "amount": 0.18,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": 0.12,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fiber": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": 7.68,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 77.0,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "vitamin_c": {
+        "amount": 0.9,
+        "unit": "mg",
+        "daily_pct": 1
+      },
+      "vitamin_a": {
+        "amount": 2.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 199.0,
+        "unit": "mg",
+        "daily_pct": 15
+      },
+      "iron": {
+        "amount": 0.09,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "potassium": {
+        "amount": 255.0,
+        "unit": "mg",
+        "daily_pct": 5
+      }
+    },
+    "fdc_id": 170887,
+    "usda_name": "Yogurt, plain, skim milk",
+    "last_enriched": "2026-04-27"
+  },
+  "sour_cream": {
+    "id": "sour_cream",
+    "display_name": "Sour Cream",
+    "image": "sour_cream.png",
+    "category": "dairy",
+    "serving_size": "1.0 RACC (30.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 3.07,
+        "unit": "g",
+        "daily_pct": 6
+      },
+      "carbohydrates": {
+        "amount": 5.56,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "fat": {
+        "amount": 17.99,
+        "unit": "g",
+        "daily_pct": 23
+      },
+      "saturated_fat": {
+        "amount": 10.7,
+        "unit": "g",
+        "daily_pct": 53
+      },
+      "fiber": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 50.04,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "vitamin_c": {
+        "amount": null,
+        "unit": "mg",
+        "daily_pct": null
+      },
+      "vitamin_a": {
+        "amount": null,
+        "unit": "mcg",
+        "daily_pct": null
+      },
+      "calcium": {
+        "amount": 107.2,
+        "unit": "mg",
+        "daily_pct": 8
+      },
+      "iron": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "potassium": {
+        "amount": 153.8,
+        "unit": "mg",
+        "daily_pct": 3
+      }
+    },
+    "fdc_id": 2346387,
+    "usda_name": "Cream, sour, full fat",
+    "last_enriched": "2026-04-27"
+  },
+  "spaghetti": {
+    "id": "spaghetti",
+    "display_name": "Spaghetti",
+    "image": "spaghetti.png",
+    "category": "grain",
+    "serving_size": "2.0 oz (57.0g)",
+    "calories": 372,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 13.35,
+        "unit": "g",
+        "daily_pct": 27
+      },
+      "carbohydrates": {
+        "amount": 74.81,
+        "unit": "g",
+        "daily_pct": 27
+      },
+      "fat": {
+        "amount": 1.57,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "saturated_fat": {
+        "amount": 0.23,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fiber": {
+        "amount": 10.6,
+        "unit": "g",
+        "daily_pct": 38
+      },
+      "sugar": {
+        "amount": 2.72,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 36.0,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 23.0,
+        "unit": "mcg",
+        "daily_pct": 3
+      },
+      "calcium": {
+        "amount": 58.0,
+        "unit": "mg",
+        "daily_pct": 4
+      },
+      "iron": {
+        "amount": 2.13,
+        "unit": "mg",
+        "daily_pct": 12
+      },
+      "potassium": {
+        "amount": 376.0,
+        "unit": "mg",
+        "daily_pct": 8
+      }
+    },
+    "fdc_id": 168911,
+    "usda_name": "Spaghetti, spinach, dry",
+    "last_enriched": "2026-04-27"
+  },
+  "spinach": {
+    "id": "spinach",
+    "display_name": "Spinach",
+    "image": "spinach.png",
+    "category": "",
+    "serving_size": "1.0 RACC (85.0g)",
+    "calories": null,
+    "status": "complete",
+    "date_added": "2026-04-28",
+    "nutrients": {
+      "protein": {
+        "amount": 2.85,
+        "unit": "g",
+        "daily_pct": 6
+      },
+      "carbohydrates": {
+        "amount": 2.41,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fat": {
+        "amount": 0.62,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": 1.56,
+        "unit": "g",
+        "daily_pct": 6
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 111.4,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "vitamin_c": {
+        "amount": 26.52,
+        "unit": "mg",
+        "daily_pct": 29
+      },
+      "vitamin_a": {
+        "amount": 283.0,
+        "unit": "mcg",
+        "daily_pct": 31
+      },
+      "calcium": {
+        "amount": 68.35,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "iron": {
+        "amount": 1.26,
+        "unit": "mg",
+        "daily_pct": 7
+      },
+      "potassium": {
+        "amount": 581.8,
+        "unit": "mg",
+        "daily_pct": 12
+      }
+    },
+    "fdc_id": 1999632,
+    "usda_name": "Spinach, baby",
+    "last_enriched": "2026-04-28"
+  },
+  "strawberry": {
+    "id": "strawberry",
+    "display_name": "Strawberries",
+    "image": "strawberry.png",
+    "category": "fruit",
+    "serving_size": "1 cup (152g)",
+    "calories": 49,
+    "status": "complete",
+    "nutrients": {
+      "protein": {
+        "amount": 1.0,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "carbohydrates": {
+        "amount": 11.7,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "fat": {
+        "amount": 0.5,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fiber": {
+        "amount": 3.0,
+        "unit": "g",
+        "daily_pct": 11
+      },
+      "sugar": {
+        "amount": 7.4,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 2,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 89.4,
+        "unit": "mg",
+        "daily_pct": 99
+      },
+      "vitamin_a": {
+        "amount": 2,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 27,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 0.6,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "potassium": {
+        "amount": 233,
+        "unit": "mg",
+        "daily_pct": 5
+      }
+    }
+  },
+  "string_cheese": {
+    "id": "string_cheese",
+    "display_name": "String Cheese",
+    "image": "string_cheese.png",
+    "category": "dairy",
+    "serving_size": "1.0 oz (28.35g)",
+    "calories": 295,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 7.1,
+        "unit": "g",
+        "daily_pct": 14
+      },
+      "carbohydrates": {
+        "amount": 3.5,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fat": {
+        "amount": 28.6,
+        "unit": "g",
+        "daily_pct": 37
+      },
+      "saturated_fat": {
+        "amount": 18.02,
+        "unit": "g",
+        "daily_pct": 90
+      },
+      "fiber": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": 3.5,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 436.0,
+        "unit": "mg",
+        "daily_pct": 19
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 302.0,
+        "unit": "mcg",
+        "daily_pct": 34
+      },
+      "calcium": {
+        "amount": 71.0,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "iron": {
+        "amount": 1.13,
+        "unit": "mg",
+        "daily_pct": 6
+      },
+      "potassium": {
+        "amount": 112.0,
+        "unit": "mg",
+        "daily_pct": 2
+      }
+    },
+    "fdc_id": 169081,
+    "usda_name": "Cheese spread, cream cheese base",
+    "last_enriched": "2026-04-27"
+  },
+  "sugar": {
+    "id": "sugar",
+    "display_name": "Sugar",
+    "image": "sugar.png",
+    "nutrients": {},
+    "category": "misc"
+  },
+  "sweet_potato": {
+    "id": "sweet_potato",
+    "display_name": "Sweet Potato",
+    "image": "sweet_potato.png",
+    "category": "vegetable",
+    "serving_size": "1.0 cup, chopped (35.0g)",
+    "calories": 42,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 2.49,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "carbohydrates": {
+        "amount": 8.82,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "fat": {
+        "amount": 0.51,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "saturated_fat": {
+        "amount": 0.11,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fiber": {
+        "amount": 5.3,
+        "unit": "g",
+        "daily_pct": 19
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 6.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 11.0,
+        "unit": "mg",
+        "daily_pct": 12
+      },
+      "vitamin_a": {
+        "amount": 189.0,
+        "unit": "mcg",
+        "daily_pct": 21
+      },
+      "calcium": {
+        "amount": 78.0,
+        "unit": "mg",
+        "daily_pct": 6
+      },
+      "iron": {
+        "amount": 0.97,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "potassium": {
+        "amount": 508.0,
+        "unit": "mg",
+        "daily_pct": 11
+      }
+    },
+    "fdc_id": 169303,
+    "usda_name": "Sweet potato leaves, raw",
+    "last_enriched": "2026-04-27"
+  },
+  "tomato": {
+    "id": "tomato",
+    "display_name": "Tomato",
+    "image": "tomato.png",
+    "category": "vegetable",
+    "serving_size": "",
+    "calories": 302,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 12.91,
+        "unit": "g",
+        "daily_pct": 26
+      },
+      "carbohydrates": {
+        "amount": 74.68,
+        "unit": "g",
+        "daily_pct": 27
+      },
+      "fat": {
+        "amount": 0.44,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "saturated_fat": {
+        "amount": 0.06,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "fiber": {
+        "amount": 16.5,
+        "unit": "g",
+        "daily_pct": 59
+      },
+      "sugar": {
+        "amount": 43.9,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 134.0,
+        "unit": "mg",
+        "daily_pct": 6
+      },
+      "vitamin_c": {
+        "amount": 116.7,
+        "unit": "mg",
+        "daily_pct": 130
+      },
+      "vitamin_a": {
+        "amount": 862.0,
+        "unit": "mcg",
+        "daily_pct": 96
+      },
+      "calcium": {
+        "amount": 166.0,
+        "unit": "mg",
+        "daily_pct": 13
+      },
+      "iron": {
+        "amount": 4.56,
+        "unit": "mg",
+        "daily_pct": 25
+      },
+      "potassium": {
+        "amount": 1927.0,
+        "unit": "mg",
+        "daily_pct": 41
+      }
+    },
+    "fdc_id": 170461,
+    "usda_name": "Tomato powder",
+    "last_enriched": "2026-04-27"
+  },
+  "water": {
+    "id": "water",
+    "display_name": "Water",
+    "image": "water.png",
+    "category": "dairy",
+    "serving_size": "1.0 shoot (13.0g)",
+    "calories": 19,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 2.6,
+        "unit": "g",
+        "daily_pct": 5
+      },
+      "carbohydrates": {
+        "amount": 3.13,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fat": {
+        "amount": 0.2,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "saturated_fat": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "fiber": {
+        "amount": 2.1,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "sugar": {
+        "amount": null,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 113.0,
+        "unit": "mg",
+        "daily_pct": 5
+      },
+      "vitamin_c": {
+        "amount": 55.0,
+        "unit": "mg",
+        "daily_pct": 61
+      },
+      "vitamin_a": {
+        "amount": 315.0,
+        "unit": "mcg",
+        "daily_pct": 35
+      },
+      "calcium": {
+        "amount": 77.0,
+        "unit": "mg",
+        "daily_pct": 6
+      },
+      "iron": {
+        "amount": 1.67,
+        "unit": "mg",
+        "daily_pct": 9
+      },
+      "potassium": {
+        "amount": 312.0,
+        "unit": "mg",
+        "daily_pct": 7
+      }
+    },
+    "fdc_id": 169301,
+    "usda_name": "Water convolvulus,raw",
+    "last_enriched": "2026-04-27"
+  },
+  "watermelon": {
+    "id": "watermelon",
+    "display_name": "Watermelon",
+    "image": "watermelon.png",
+    "category": "fruit",
+    "serving_size": "2 cups diced (280g)",
+    "calories": 85,
+    "status": "complete",
+    "nutrients": {
+      "protein": {
+        "amount": 1.7,
+        "unit": "g",
+        "daily_pct": 3
+      },
+      "carbohydrates": {
+        "amount": 21.3,
+        "unit": "g",
+        "daily_pct": 8
+      },
+      "fat": {
+        "amount": 0.4,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fiber": {
+        "amount": 1.1,
+        "unit": "g",
+        "daily_pct": 4
+      },
+      "sugar": {
+        "amount": 17.5,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 3,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_c": {
+        "amount": 23.2,
+        "unit": "mg",
+        "daily_pct": 26
+      },
+      "vitamin_a": {
+        "amount": 43,
+        "unit": "mcg",
+        "daily_pct": 5
+      },
+      "calcium": {
+        "amount": 20,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "iron": {
+        "amount": 0.6,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "potassium": {
+        "amount": 320,
+        "unit": "mg",
+        "daily_pct": 7
+      }
+    }
+  },
+  "whole_milk": {
+    "id": "whole_milk",
+    "display_name": "Whole Milk",
+    "image": "whole_milk.png",
+    "category": "dairy",
+    "serving_size": "1.0 oz (28.35g)",
+    "calories": 299,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 22.17,
+        "unit": "g",
+        "daily_pct": 44
+      },
+      "carbohydrates": {
+        "amount": 2.4,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fat": {
+        "amount": 22.14,
+        "unit": "g",
+        "daily_pct": 28
+      },
+      "saturated_fat": {
+        "amount": 13.9,
+        "unit": "g",
+        "daily_pct": 70
+      },
+      "fiber": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": 0
+      },
+      "sugar": {
+        "amount": 0.0,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 486.0,
+        "unit": "mg",
+        "daily_pct": 21
+      },
+      "vitamin_c": {
+        "amount": 0.0,
+        "unit": "mg",
+        "daily_pct": 0
+      },
+      "vitamin_a": {
+        "amount": 179.0,
+        "unit": "mcg",
+        "daily_pct": 20
+      },
+      "calcium": {
+        "amount": 505.0,
+        "unit": "mg",
+        "daily_pct": 39
+      },
+      "iron": {
+        "amount": 0.44,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "potassium": {
+        "amount": 76.0,
+        "unit": "mg",
+        "daily_pct": 2
+      }
+    },
+    "fdc_id": 170845,
+    "usda_name": "Cheese, mozzarella, whole milk",
+    "last_enriched": "2026-04-27"
+  },
+  "yogurt": {
+    "id": "yogurt",
+    "display_name": "Yogurt",
+    "image": "yogurt.png",
+    "category": "dairy",
+    "serving_size": "1.0 cup (262.0g)",
+    "calories": 94,
+    "status": "complete",
+    "date_added": "2026-04-27",
+    "nutrients": {
+      "protein": {
+        "amount": 3.5,
+        "unit": "g",
+        "daily_pct": 7
+      },
+      "carbohydrates": {
+        "amount": 15.96,
+        "unit": "g",
+        "daily_pct": 6
+      },
+      "fat": {
+        "amount": 1.8,
+        "unit": "g",
+        "daily_pct": 2
+      },
+      "saturated_fat": {
+        "amount": 0.26,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "fiber": {
+        "amount": 0.2,
+        "unit": "g",
+        "daily_pct": 1
+      },
+      "sugar": {
+        "amount": 1.24,
+        "unit": "g",
+        "daily_pct": null
+      },
+      "sodium": {
+        "amount": 35.0,
+        "unit": "mg",
+        "daily_pct": 2
+      },
+      "vitamin_c": {
+        "amount": 2.5,
+        "unit": "mg",
+        "daily_pct": 3
+      },
+      "vitamin_a": {
+        "amount": 2.0,
+        "unit": "mcg",
+        "daily_pct": 0
+      },
+      "calcium": {
+        "amount": 118.0,
+        "unit": "mg",
+        "daily_pct": 9
+      },
+      "iron": {
+        "amount": 1.06,
+        "unit": "mg",
+        "daily_pct": 6
+      },
+      "potassium": {
+        "amount": 47.0,
+        "unit": "mg",
+        "daily_pct": 1
+      }
+    },
+    "fdc_id": 167722,
+    "usda_name": "Tofu yogurt",
+    "last_enriched": "2026-04-27"
+  }
+}

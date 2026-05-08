@@ -1,0 +1,597 @@
+:root {
+  color-scheme: light;
+  --ink: #202124;
+  --muted: #65707a;
+  --paper: #f3f0e9;
+  --panel: #fffdfa;
+  --line: #d9d3c8;
+  --accent: #2f80a8;
+  --accent-dark: #1f5d7b;
+  --warn: #d95043;
+  --ok: #4f8d5f;
+  --given: #ede7da;
+  --shadow: 0 22px 50px rgba(44, 36, 24, 0.15);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    linear-gradient(135deg, rgba(47, 128, 168, 0.16), transparent 34%),
+    linear-gradient(225deg, rgba(232, 184, 79, 0.18), transparent 44%),
+    var(--paper);
+  color: var(--ink);
+}
+
+button,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 14px;
+  min-height: 100vh;
+  padding: 14px;
+}
+
+.game-panel,
+.lesson-panel {
+  background: rgba(255, 253, 250, 0.9);
+  border: 1px solid rgba(217, 211, 200, 0.92);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.game-panel {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  min-width: 0;
+}
+
+.topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 20px 22px 12px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h1,
+h2 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3.8rem);
+  line-height: 0.96;
+}
+
+h2 {
+  font-size: 1.4rem;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.select-control,
+.controls button,
+.number-pad button {
+  min-height: 42px;
+  border-radius: 8px;
+  background: #eee8dc;
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.select-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px 0 12px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.select-control select {
+  min-width: 112px;
+  border: 0;
+  border-radius: 6px;
+  padding: 5px 7px;
+  background: #fffdfa;
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.controls button {
+  padding: 0 14px;
+}
+
+.controls button:hover,
+.number-pad button:hover {
+  transform: translateY(-1px);
+}
+
+#checkPuzzle {
+  background: var(--ink);
+  color: #fffdfa;
+}
+
+.status-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 0 22px 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #eee8dc;
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.status-strip strong {
+  flex: 0 0 auto;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  position: relative;
+}
+
+.status-strip.ok {
+  background: rgba(79, 141, 95, 0.18);
+  color: #2f6139;
+}
+
+.status-strip.warn {
+  background: rgba(217, 80, 67, 0.14);
+  color: #873329;
+}
+
+.board-wrap {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: 10px 22px 18px;
+}
+
+.sudoku-board {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-size, 4), 1fr);
+  width: min(520px, 100%);
+  aspect-ratio: 1;
+  border: 5px solid var(--ink);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--ink);
+  box-shadow: 0 18px 38px rgba(35, 28, 19, 0.18);
+}
+
+.cell {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid #c9c1b3;
+  background: #fffdfa;
+  color: var(--accent-dark);
+  font-size: clamp(1.05rem, 3.8vw, 2.6rem);
+  font-weight: 950;
+  font-variant-numeric: tabular-nums;
+  position: relative;
+}
+
+.cell.box-right::after,
+.cell.box-bottom::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  background: var(--ink);
+}
+
+.cell.box-right::after {
+  top: 0;
+  right: -2px;
+  bottom: 0;
+  width: 5px;
+}
+
+.cell.box-bottom::before {
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 5px;
+}
+
+.cell.shaded-box {
+  background: #eeeeea;
+}
+
+.cell.given {
+  background: var(--given);
+  color: var(--ink);
+}
+
+.cell.given.shaded-box {
+  background: #ded9cf;
+}
+
+.cell.selected {
+  background: rgba(47, 128, 168, 0.1);
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+}
+
+.cell.peer {
+  box-shadow: inset 0 0 0 2px rgba(47, 128, 168, 0.08);
+}
+
+.cell.conflict {
+  background: rgba(217, 80, 67, 0.16);
+  color: #8f3028;
+}
+
+.cell-notes {
+  display: grid;
+  grid-template-columns: repeat(var(--note-columns, 3), 1fr);
+  width: 88%;
+  height: 88%;
+  align-items: center;
+  justify-items: center;
+  color: #5f6971;
+  font-size: clamp(0.48rem, 1.25vw, 0.92rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.sudoku-board[data-size="4"] .cell-notes {
+  font-size: clamp(0.7rem, 2vw, 1.2rem);
+}
+
+.sudoku-board[data-size="6"] .cell-notes {
+  font-size: clamp(0.56rem, 1.45vw, 1rem);
+}
+
+.notes-popover {
+  position: fixed;
+  z-index: 50;
+  padding: 10px;
+  border: 1px solid rgba(32, 33, 36, 0.22);
+  border-radius: 8px;
+  background: #fffdfa;
+  box-shadow: 0 18px 40px rgba(35, 28, 19, 0.24);
+}
+
+.notes-popover-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--note-columns, 3), minmax(0, 1fr));
+  gap: 6px;
+}
+
+.notes-popover-grid button,
+.notes-done {
+  min-height: 42px;
+  border: 0;
+  border-radius: 8px;
+  background: #eee8dc;
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.notes-popover-grid button.active {
+  background: var(--accent);
+  color: #fffdfa;
+}
+
+.notes-done {
+  width: 100%;
+  margin-top: 8px;
+  background: var(--ink);
+  color: #fffdfa;
+}
+
+
+.number-pad {
+  display: grid;
+  grid-template-columns: repeat(var(--pad-columns, 5), minmax(0, 1fr));
+  gap: 8px;
+  padding: 0 22px 22px;
+}
+
+.number-pad button {
+  padding: 0 10px;
+}
+
+.lesson-panel {
+  padding: 20px 22px;
+  line-height: 1.5;
+}
+
+.lesson-panel p {
+  margin: 0 0 14px;
+}
+
+@media (max-width: 980px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .game-panel {
+    grid-template-rows: auto auto auto auto;
+  }
+}
+
+@media (max-width: 620px) {
+  .app-shell {
+    gap: 10px;
+    padding: 8px;
+  }
+
+  .topbar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 18px 14px 12px;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .select-control,
+  .controls button,
+  .number-pad button {
+    min-height: 40px;
+  }
+
+  .select-control {
+    justify-content: space-between;
+  }
+
+  .select-control select {
+    min-width: 94px;
+  }
+
+  .status-strip {
+    margin: 0 14px 12px;
+  }
+
+  .board-wrap {
+    padding: 8px 14px 18px;
+  }
+
+  .sudoku-board {
+    width: min(100%, 430px);
+  }
+
+  .cell {
+    font-size: clamp(0.95rem, 7vw, 2.4rem);
+  }
+
+  .cell-notes {
+    font-size: clamp(0.44rem, 2.6vw, 0.9rem);
+  }
+
+  .sudoku-board[data-size="4"] .cell-notes {
+    font-size: clamp(0.7rem, 4vw, 1.2rem);
+  }
+
+  .number-pad[data-size="6"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .number-pad[data-size="9"] {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .number-pad {
+    padding: 0 14px 18px;
+  }
+
+  .lesson-panel {
+    padding: 20px;
+  }
+}
+
+
+.print-sheet {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 0.35in;
+  }
+
+  * {
+    box-shadow: none !important;
+  }
+
+  body {
+    min-height: auto;
+    background: #fff;
+    color: #111;
+  }
+
+  .app-shell {
+    display: none;
+  }
+
+  .print-sheet {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 0.18in;
+    width: 7.0in;
+    max-width: 100%;
+    height: 10.1in;
+    margin: 0 auto;
+    overflow: visible;
+    page-break-after: avoid;
+    page-break-before: avoid;
+  }
+
+  .print-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 0.2in;
+    border-bottom: 2px solid #111;
+    padding-bottom: 0.08in;
+  }
+
+  .print-header p {
+    margin: 0 0 0.03in;
+    color: #555;
+    font-size: 9pt;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .print-header h1 {
+    margin: 0;
+    color: #111;
+    font-size: 20pt;
+    line-height: 1;
+  }
+
+  .print-meta {
+    display: grid;
+    grid-template-columns: 1.35in 1.05in;
+    gap: 0.16in;
+    color: #555;
+    font-size: 9pt;
+    font-weight: 800;
+  }
+
+  .print-meta span::after {
+    content: "";
+    display: block;
+    margin-top: 0.12in;
+    border-bottom: 1px solid #111;
+  }
+
+  .print-puzzles {
+    display: grid;
+    grid-template-columns: repeat(2, 3.18in);
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    justify-content: center;
+    align-content: start;
+    gap: 0.46in 0.28in;
+    min-width: 0;
+    padding-top: 0.1in;
+    min-height: 0;
+  }
+
+  .print-puzzle {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    justify-items: center;
+    min-width: 0;
+    min-height: 0;
+    overflow: visible;
+    page-break-inside: avoid;
+  }
+
+  .print-puzzle h2 {
+    justify-self: start;
+    margin: 0 0 0.05in;
+    color: #333;
+    font-size: 11pt;
+    font-weight: 900;
+  }
+
+  .print-board {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-size), 1fr);
+    box-sizing: border-box;
+    width: 3.0in;
+    aspect-ratio: 1;
+    border: 3px solid #111;
+    background: #111;
+    overflow: visible;
+  }
+
+  .print-cell {
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    border: 0.75px solid #555;
+    background: #fff;
+    color: #111;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 17pt;
+    line-height: 1;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-cell.shaded-box {
+    background: #dddddd !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-cell.box-right {
+    border-right: 2.5px solid #111;
+  }
+
+  .print-cell.box-bottom {
+    border-bottom: 2.5px solid #111;
+  }
+
+  .print-sheet[data-size="4"] .print-board {
+    width: 2.9in;
+  }
+
+  .print-sheet[data-size="4"] .print-cell {
+    font-size: 24pt;
+  }
+
+  .print-sheet[data-size="6"] .print-board {
+    width: 2.95in;
+  }
+
+  .print-sheet[data-size="6"] .print-cell {
+    font-size: 19pt;
+  }
+
+  .print-sheet[data-size="9"] .print-board {
+    width: 3.0in;
+  }
+
+  .print-sheet[data-size="9"] .print-cell {
+    font-size: 14pt;
+  }
+}

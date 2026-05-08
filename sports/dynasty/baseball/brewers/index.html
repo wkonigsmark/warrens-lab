@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynasty | Brewers Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../base.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --team-primary: #002D62;
+            --team-accent: #8F7230;
+            --team-shadow: rgba(0, 45, 98, 0.4);
+        }
+
+        body {
+            background: radial-gradient(circle at top right, #002D62, #0f1218);
+        }
+
+        .tab-btn.active {
+            background: #8F7230;
+            border-color: #002D62;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="../index.html"
+            style="position: absolute; left: 20px; top: 20px; color: white; text-decoration: none; font-size: 0.9rem;">&larr;
+            Switch Team</a>
+        <div class="team-badge">
+            <img src="../assets/brewers-logo.png" alt="Brewers Logo">
+
+        </div>
+        <h1>Brewers</h1>
+        <span class="age-group">5 Year Old T-Ball</span>
+    </header>
+
+    <div class="container">
+        <nav class="tabs-nav" id="tabs-nav">
+            <button class="tab-btn active" onclick="handleTabClick('roster')">Roster</button>
+            <button class="tab-btn" onclick="handleTabClick('plan')">Practice Plan</button>
+            <button class="tab-btn" onclick="handleTabClick('stopwatch')">⏱ Stopwatch</button>
+            <button class="tab-btn" onclick="handleTabClick('batting')">Batting Order</button>
+            <button class="tab-btn" onclick="handleTabClick('lineup')">Field / Lineup</button>
+            <button class="tab-btn" onclick="handleTabClick('drills')">Drills</button>
+            <div class="nav-dropdown" id="nav-more-dropdown">
+                <button class="tab-btn nav-dropdown-btn" onclick="toggleMoreMenu()">⋮</button>
+                <div class="nav-dropdown-content">
+                    <button class="tab-btn" onclick="handleTabClick('schedule')">Schedule</button>
+                    <button class="tab-btn" onclick="handleTabClick('staff')">Coaches</button>
+                    <button class="tab-btn" onclick="toggleResources()">Resources</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Roster Section -->
+        <section id="roster" class="tab-content active">
+            <div class="roster-controls">
+                <div class="attendance-count" id="attendance-stat">14 / 14 Attending</div>
+                <div class="group-config">
+                    <span class="group-label">Groups:</span>
+                    <select id="group-count" class="group-select" onchange="renderRoster()">
+                        <option value="1">1 (Whole Team)</option>
+                        <option value="2">2 groups</option>
+                        <option value="3">3 groups</option>
+                        <option value="4">4 groups</option>
+                        <option value="5">5 groups</option>
+                    </select>
+                </div>
+                <div class="sort-group">
+                    <button id="sort-toggle-btn" class="sort-btn" onclick="toggleSort()">Sort: Color</button>
+                </div>
+            </div>
+            <div class="roster-grid" id="roster-grid">
+                <!-- Players will be injected here -->
+            </div>
+        </section>
+
+        <!-- Schedule Section -->
+        <section id="schedule" class="tab-content">
+            <h2 class="section-title">Practices</h2>
+            <div class="schedule-item">
+                <div class="schedule-date">
+                    <span class="date-val">Tuesdays</span>
+                    <span class="time-val">5:15 PM</span>
+                </div>
+                <div class="schedule-details">
+                    <div class="opponent">Team Practice</div>
+                    <div class="location">Washington Market Park</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Game Schedule (Tentative)</h2>
+            <div id="game-list">
+                <!-- Games will be injected here -->
+            </div>
+        </section>
+
+        <!-- Practice Plan Section -->
+        <section id="plan" class="tab-content">
+            <div class="print-only">
+                <center>
+                    <h1 style="color:black">Brewers</h1>
+                    <p style="color:black; text-transform:uppercase; letter-spacing:2px">5 Year Old T-Ball • Practice
+                        Plan</p>
+                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+                </center>
+            </div>
+
+            <div class="print-actions">
+                <button class="contact-btn" onclick="window.print()"
+                    style="max-width: 200px; background: var(--team-primary); border-color: var(--team-accent);">
+                    📄 Export / Print Plan
+                </button>
+            </div>
+
+            <h2 class="section-title">Brewers 5U Practice Plan</h2>
+            <div class="staff-card" style="background: rgba(196, 206, 212, 0.1); border-left-color: #C4CED4;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="color: #C4CED4;">Phase 1: Warmup & Focus</h3>
+                    <span class="staff-role">0:00 - 0:08</span>
+                </div>
+                <p style="margin-top: 10px; opacity: 0.9;"><strong>5m Stretch:</strong> Ease in, get sillies out, and
+                    check for proper gear.</p>
+                <p style="margin-top: 5px; opacity: 0.9;"><strong>3m Huddle:</strong> Instill the "3 S's"—Safety,
+                    Sportsmanship, and Success. Talk about being a Brewer: we are creative, we are brave, and we are
+                    constantly learning new ways to hit, field, throw, and run. Most importantly: We are here to have
+                    fun!</p>
+                <div class="coach-note"
+                    style="margin-top: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85rem;">
+                    <strong style="color: #ffc107;">Coach Note:</strong> Keep the energy high and the talking points
+                    brief to match their 5U attention spans.<br>
+                    <a href="Rookies_5_Rules_2021.pdf" target="_blank"
+                        style="color: #ffc107; display: inline-block; margin-top: 8px; text-decoration: none; border-bottom: 1px dashed #ffc107;">📄
+                        Rookie 5 T-Ball Rules (2021)</a>
+                </div>
+            </div>
+
+            <div class="staff-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Phase 2: Diamond Dogs</h3>
+                    <span class="staff-role">0:08 - 0:15</span>
+                </div>
+                <p style="margin-top: 10px; opacity: 0.8;">Full team sprints around the bases starting at home.
+                    <strong>Crucial:</strong> Boys must cheer their teammates to earn their turn to run.
+                </p>
+                <div class="coach-note"
+                    style="margin-top: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85rem;">
+                    <strong style="color: #ffc107;">Coach Note:</strong> Must touch every base including home;
+                    otherwise,
+                    times are not recorded.
+                </div>
+            </div>
+
+            <div class="staff-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Phase 3: SWING-DROP-RUN</h3>
+                    <span class="staff-role">0:15 - 0:25</span>
+                </div>
+                <p style="margin-top: 10px; opacity: 0.8;">Set home plate and 1st base 30ft apart. Batter swings (with
+                    or
+                    without ball/tee), immediately drops the bat, and sprints to 1st.</p>
+                <div class="coach-note"
+                    style="margin-top: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85rem;">
+                    <strong style="color: #ffc107;">Coach Note:</strong> Instills the fundamental transition from batter
+                    to runner. Watch for: dropping the bat vs. throwing it.
+                </div>
+            </div>
+
+            <div class="staff-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Phase 4: Maddux Drill (1-3)</h3>
+                    <span class="staff-role">0:25 - 0:35</span>
+                </div>
+                <p style="margin-top: 10px; opacity: 0.8;">Line up players at P, 1B, 3B, SS, and RF. Coach hits
+                    grounders
+                    to the pitcher. Pitcher fields and throws to 1st. Repeat 3x then rotate.</p>
+                <div class="coach-note"
+                    style="margin-top: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85rem;">
+                    <strong style="color: #ffc107;">Coach Note:</strong> Focus on the pitcher's ready position and the
+                    immediate hand-off to 1st base.
+                </div>
+            </div>
+
+            <div class="staff-card"
+                style="margin-top: 30px; border-left-color: #fff; background: rgba(255,255,255,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Phase 5: The Closing Ceremony</h3>
+                    <span class="staff-role">0:35 - 0:40</span>
+                </div>
+                <p style="margin-top: 10px; opacity: 0.8;">Final review of the day's successes. Hand out
+                    <strong>Baseball Cards (Rewards)</strong> to all participating players.
+                </p>
+                <div class="coach-note"
+                    style="margin-top: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85rem;">
+                    <strong style="color: #ffc107;">Closing Chant:</strong> Bring everyone together for one big huddle.
+                    Hand on 3...<br>
+                    <strong>1-2-3 BREWERS!</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stopwatch Section -->
+        <section id="stopwatch" class="tab-content">
+            <div class="print-only">
+                <center>
+                    <h1 style="color:black">Brewers</h1>
+                    <p style="color:black; text-transform:uppercase; letter-spacing:2px">5 Year Old T-Ball • Diamond
+                        Dogs Results</p>
+                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+                </center>
+            </div>
+            <h2 class="section-title">Diamond Dogs Stopwatch</h2>
+            <div class="roster-controls"
+                style="margin-bottom: 20px; background: transparent; border: none; padding: 0;">
+                <div class="group-config" style="justify-content:center; width: 100%;">
+                    <button class="sort-btn" id="btn-sw-name" onclick="sortStopwatch('name')">Name</button>
+                    <button class="sort-btn" id="btn-sw-skill" onclick="sortStopwatch('skill')">Skill</button>
+                    <button class="sort-btn" id="btn-sw-fastest" onclick="sortStopwatch('fastest')">Fastest</button>
+                    <button class="sort-btn" id="btn-sw-slowest" onclick="sortStopwatch('slowest')">Slowest</button>
+                    <button class="sort-btn active" id="btn-sw-random" onclick="sortStopwatch('random')">Random</button>
+                </div>
+            </div>
+            <div class="print-actions"
+                style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+                <button class="contact-btn" onclick="printStopwatchResults()" style="max-width: 150px;">
+                    📄 Print Results
+                </button>
+                <button class="contact-btn" onclick="resetAllTimers()"
+                    style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3);">
+                    ↺ Reset
+                </button>
+            </div>
+            <div class="roster-grid" id="stopwatch-grid">
+                <!-- Stopwatch Tiles injected here -->
+            </div>
+        </section>
+
+        <!-- Batting Order Section -->
+        <section id="batting" class="tab-content">
+            <div class="print-only">
+                <center>
+                    <h1 style="color:black">Brewers</h1>
+                    <p style="color:black; text-transform:uppercase; letter-spacing:2px">5 Year Old T-Ball • Batting
+                        Order</p>
+                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+                </center>
+            </div>
+            <h2 class="section-title">Strategic Batting Order</h2>
+            <div class="roster-controls"
+                style="margin-bottom: 20px; background: transparent; border: none; padding: 0;">
+                <div class="group-config" style="justify-content:center; width: 100%;">
+                    <button class="sort-btn active" id="btn-bat-coach" onclick="sortBatting('coach')">Coach</button>
+                    <button class="sort-btn" id="btn-bat-name" onclick="sortBatting('name')">Name</button>
+                    <button class="sort-btn" id="btn-bat-skill" onclick="sortBatting('skill')">Skill</button>
+                    <button class="sort-btn" id="btn-bat-stagger" onclick="sortBatting('stagger')">Skill
+                        (Stagger)</button>
+                </div>
+            </div>
+            <div class="print-actions" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                <button class="contact-btn" onclick="window.print()" style="max-width: 200px;">
+                    📄 Print Order
+                </button>
+            </div>
+            <div id="batting-order-list" class="batting-list">
+                <!-- Batting order will be injected here -->
+                <p style="text-align:center; opacity:0.5; margin-top:40px;">Select a sorting method above based on
+                    attendance.</p>
+            </div>
+        </section>
+
+        <!-- Lineup Section -->
+        <section id="lineup" class="tab-content">
+            <div class="print-only">
+                <center>
+                    <h1 style="color:black">Brewers</h1>
+                    <p style="color:black; text-transform:uppercase; letter-spacing:2px">5 Year Old T-Ball • Field
+                        Lineup</p>
+                </center>
+            </div>
+
+            <h2 class="section-title">Interactive Lineup</h2>
+
+            <div class="print-actions"
+                style="display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 25px;">
+                <div
+                    style="background: rgba(255,255,255,0.05); padding: 5px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px;">
+                    <span
+                        style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6;">Format:</span>
+                    <select id="fielding-layout-mode" onchange="changeLayout()"
+                        style="background: transparent; color: white; border: none; font-family: 'Outfit', sans-serif; font-size: 0.9rem; cursor: pointer; outline: none;">
+                        <option value="junior_catcher">Jr. Mode (With Catcher)</option>
+                        <option value="junior_no_catcher">Jr. Mode (No Catcher)</option>
+                        <option value="tball">T-Ball (All Arc)</option>
+                        <option value="9player">9 Player Mode</option>
+                    </select>
+                </div>
+                <div
+                    style="background: rgba(255,255,255,0.05); padding: 5px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px;">
+                    <span
+                        style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6;">Mode:</span>
+                    <select id="auto-assign-mode" onchange="autoAssignLineup()"
+                        style="background: transparent; color: white; border: none; font-family: 'Outfit', sans-serif; font-size: 0.9rem; cursor: pointer; outline: none;">
+                        <option value="talent">Coach Picks (Standard)</option>
+                        <option value="primary">Primary Preference (Pos First)</option>
+                        <option value="sub">Flip (SubPos First)</option>
+                        <option value="dev">Mercy (Development)</option>
+                        <option value="random">Random (Lottery)</option>
+                    </select>
+                </div>
+                <button class="contact-btn" onclick="autoAssignLineup()"
+                    style="max-width: 180px; background: rgba(143, 114, 48, 0.2); border-color: #8F7230;">
+                    🤖 Auto-Assign
+                </button>
+                <button class="contact-btn" onclick="printBlankDiamond()" style="background: rgba(255,255,255,0.05);">
+                    📄 Blank Template
+                </button>
+                <button class="tab-btn" onclick="resetActiveLineup()"
+                    style="max-width: 120px; background: rgba(231, 76, 60, 0.1); border-color: #e74c3c;">
+                    🗑️ Clear
+                </button>
+            </div>
+
+            <!-- T-Ball Cycle Controls -->
+            <div id="tball-cycle-controls"
+                style="display:none; gap:10px; justify-content:center; margin-top:-15px; margin-bottom:25px;">
+                <button class="contact-btn" onclick="cycleTBall(-1)"
+                    style="flex:1; max-width:180px; background:rgba(255, 255, 255, 0.05); border-color:rgba(255, 255, 255, 0.2);">«
+                    Prev Batter</button>
+                <button class="contact-btn" onclick="cycleTBall(1)"
+                    style="flex:1; max-width:180px; background:var(--team-primary); border-color:var(--team-accent);">Next
+                    Batter »</button>
+            </div>
+
+            <div class="lineup-editor">
+                <div class="field-container interactive" id="diamond-field">
+                    <img src="../assets/diamond.png" alt="Baseball Diamond" class="diamond-img">
+                    <!-- JS will inject pos-spots here -->
+                </div>
+
+                <aside class="bench-container">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <h3 style="margin:0; font-size: 1.1rem; color: var(--team-accent);">Bench</h3>
+                        <span id="bench-count" style="font-size: 0.8rem; opacity: 0.6;">0 Players</span>
+                    </div>
+                    <p style="font-size: 0.75rem; opacity: 0.4; margin-bottom: 10px;">Select a spot on the field to
+                        assign someone.</p>
+                    <div id="lineup-bench" class="bench-list">
+                        <!-- Bench players will be injected here -->
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Position Picker Overlay -->
+            <div id="pos-picker" class="pos-picker-overlay" onclick="closePicker(event)">
+                <div class="picker-content" onclick="event.stopPropagation()">
+                    <div class="picker-header">
+                        <h2 id="picker-title" style="margin-bottom: 5px;">Assign Position</h2>
+                        <p id="picker-subtitle" style="font-size: 0.85rem; opacity: 0.6;"></p>
+                    </div>
+                    <div id="picker-options" class="picker-grid">
+                        <!-- Selectable players injected here -->
+                    </div>
+                    <button class="contact-btn" onclick="closePicker()"
+                        style="margin-top: 20px; background: rgba(255,255,255,0.05);">Cancel</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Staff Section -->
+        <section id="staff" class="tab-content">
+            <h2 class="section-title">Coaching Staff</h2>
+            <div id="staff-list">
+                <!-- Staff will be injected here -->
+            </div>
+        </section>
+
+        <!-- Drills Section -->
+        <section id="drills" class="tab-content">
+            <h2 class="section-title">Drill Library</h2>
+
+            <div class="staff-card drill-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <h3>The "Pizza Slice" Stance</h3>
+                    <div style="text-align: right;">
+                        <span class="staff-role"
+                            style="background: rgba(46, 204, 113, 0.2); color: #2ecc71;">Beginner</span>
+                        <span class="staff-role" style="background: rgba(93, 189, 226, 0.2); color: #5dade2;">5U</span>
+                    </div>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.9rem;">
+                    <p><strong>Objective:</strong> Establish a solid foundation for hitting.</p>
+                    <p style="margin-top: 8px;"><strong>Instruction:</strong> Teaching kids to spread their feet like a
+                        pizza slice for stability at the tee.</p>
+                </div>
+                <div class="coach-note"
+                    style="margin-top: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85rem;">
+                    <strong style="color: #ffc107;">Coach Note:</strong> Make sure they bend their knees slightly! Keep
+                    checking their feet before every swing.
+                </div>
+            </div>
+
+            <div class="staff-card drill-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <h3>Alligator Hands</h3>
+                    <div style="text-align: right;">
+                        <span class="staff-role"
+                            style="background: rgba(46, 204, 113, 0.2); color: #2ecc71;">Beginner</span>
+                        <span class="staff-role"
+                            style="background: rgba(93, 189, 226, 0.2); color: #5dade2;">5U-7U</span>
+                    </div>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.9rem;">
+                    <p><strong>Objective:</strong> Safely field ground balls with two hands.</p>
+                    <p style="margin-top: 8px;"><strong>Instruction:</strong> Using two hands to "chomp" the ball when
+                        fielding grounders. One hand on bottom (glove), one on top (bare hand).</p>
+                </div>
+                <div class="coach-note"
+                    style="margin-top: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85rem;">
+                    <strong style="color: #ffc107;">Coach Note:</strong> Have them make a "chomp" sound as they catch
+                    it. It keeps them engaged and reinforces using both hands.
+                </div>
+            </div>
+
+            <div class="staff-card drill-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <h3>SWING-DROP-RUN</h3>
+                    <div style="text-align: right;">
+                        <span class="staff-role"
+                            style="background: rgba(46, 204, 113, 0.2); color: #2ecc71;">Beginner</span>
+                        <span class="staff-role"
+                            style="background: rgba(93, 189, 226, 0.2); color: #5dade2;">T-Ball</span>
+                    </div>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.9rem;">
+                    <p><strong>Objective:</strong> Instilling the fundamental hit-to-run sequence.</p>
+                    <p style="margin-top: 8px;"><strong>Instruction:</strong> Set home plate and 1st base 30ft apart.
+                        Batter swings (with or without ball/tee), immediately drops the bat, and sprints to 1st.</p>
+                </div>
+                <div class="coach-note"
+                    style="margin-top: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85rem;">
+                    <strong style="color: #ffc107;">Coach Note:</strong> A major challenge in T-Ball is understanding
+                    the
+                    transition from batter to runner. This drill builds that instinct through repetition.
+                </div>
+            </div>
+
+            <div class="staff-card drill-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <h3>Maddux Drill (1-3)</h3>
+                    <div style="text-align: right;">
+                        <span class="staff-role"
+                            style="background: rgba(46, 204, 113, 0.2); color: #2ecc71;">Beginner</span>
+                        <span class="staff-role"
+                            style="background: rgba(93, 189, 226, 0.2); color: #5dade2;">T-Ball</span>
+                    </div>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.9rem;">
+                    <p><strong>Objective:</strong> Fielding grounders as a pitcher and immediately throwing to first.
+                    </p>
+                    <p style="margin-top: 8px;"><strong>Instruction:</strong> Line up players at P, 1B, 3B, SS, and RF.
+                        Coach hits/throws grounders to the pitcher. Pitcher fields and throws to 1st. Repeat 3x then
+                        rotate
+                        positions.</p>
+                </div>
+                <div class="coach-note"
+                    style="margin-top: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85rem;">
+                    <strong style="color: #ffc107;">Coach Note:</strong> Technique focus: Pitcher should stay on their
+                    feet with knees bent. 1B coach must ensure the 1st baseman is fully attentive and ready to catch.
+                </div>
+            </div>
+
+            <div class="staff-card drill-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <h3>Diamond Dogs</h3>
+                    <div style="text-align: right;">
+                        <span class="staff-role"
+                            style="background: rgba(46, 204, 113, 0.2); color: #2ecc71;">Beginner</span>
+                        <span class="staff-role" style="background: rgba(93, 189, 226, 0.2); color: #5dade2;">All
+                            Ages</span>
+                    </div>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.9rem;">
+                    <p><strong>Objective:</strong> Base running speed and team encouragement.</p>
+                    <p style="margin-top: 8px;"><strong>Instruction:</strong> Full team sprints around the bases
+                        starting at home. Crucial: Boys must cheer their teammates to earn their turn to run.</p>
+                </div>
+                <div class="coach-note"
+                    style="margin-top: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.85rem;">
+                    <strong style="color: #ffc107;">Coach Note:</strong> First base coach and third base coach should
+                    watch closely how boys run the bases. Instruct them if they are not rounding. Must touch every base
+                    including home; otherwise, times are not recorded.
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const SYNC_URLS = {
+            positions: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR8ouicp-zRPS3KQ53U42Ky0kNYWrS50hJdNOZ1Qfp4LcJjkF742aWZ3X_yZ6CxD36PT4jkkc0mJGtB/pub?gid=149106249&single=true&output=csv",
+            schedule: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR8ouicp-zRPS3KQ53U42Ky0kNYWrS50hJdNOZ1Qfp4LcJjkF742aWZ3X_yZ6CxD36PT4jkkc0mJGtB/pub?gid=0&single=true&output=csv"
+        };
+
+        let roster = [];
+        let games = [];
+
+        function parseCSV(text) {
+            const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+            if (lines.length === 0) return [];
+            const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+            return lines.slice(1).map(line => {
+                const values = [];
+                let current = '';
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"') inQuotes = !inQuotes;
+                    else if (char === ',' && !inQuotes) {
+                        values.push(current.trim());
+                        current = '';
+                    } else current += char;
+                }
+                values.push(current.trim());
+                
+                const obj = {};
+                headers.forEach((h, i) => {
+                    obj[h] = values[i] ? values[i].replace(/^"|"$/g, '') : '';
+                });
+                return obj;
+            });
+        }
+
+        async function syncTeamData() {
+            try {
+                // Fetch Roster
+                const posRes = await fetch(SYNC_URLS.positions);
+                const posText = await posRes.text();
+                const posData = parseCSV(posText);
+                
+                roster = posData.map((p, idx) => ({
+                    id: idx + 1,
+                    first: p["Player First"] || "Player",
+                    last: p["Player Last"] || idx,
+                    rating: parseInt(p["Rating"]) || 1,
+                    coachPos: p["coachPos"] || "Bench",
+                    pos: p["pos"] || "Bench",
+                    subPos: p["subPos"] || "Bench",
+                    batOrder: parseInt(p["Batting Order"]) || (idx + 1),
+                    absent: false
+                }));
+
+                // Fetch Schedule
+                const schRes = await fetch(SYNC_URLS.schedule);
+                const schText = await schRes.text();
+                const schData = parseCSV(schText);
+                
+                games = schData.map(g => ({
+                    date: g["Date"] || "",
+                    time: g["Time"] || "",
+                    location: g["Location"] || "",
+                    opponent: g["Opponent"] || "",
+                    type: g["vs/@"] || "vs"
+                }));
+
+                // Refresh UI
+                renderRoster();
+                renderGames();
+                initLineup();
+                renderStopwatch();
+                renderBattingOrder();
+                if (typeof initTimers === 'function') initTimers();
+                autoAssignLineup();
+            } catch (err) {
+                console.error("Data Sync Failed:", err);
+            }
+        }
+
+        function renderGames() {
+            const list = document.getElementById('game-list');
+            if (!list) return;
+            list.innerHTML = '';
+            games.forEach(g => {
+                const item = document.createElement('div');
+                item.className = 'schedule-item';
+                item.innerHTML = `
+                    <div class="schedule-date">
+                        <span class="date-val">${g.date}</span>
+                        <span class="time-val">${g.time}</span>
+                    </div>
+                    <div class="schedule-details">
+                        <div class="opponent">${g.type === '@' ? '@ ' : ''}${g.opponent}</div>
+                        <div class="location">${g.location}</div>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        let currentSort = 'rank';
+
+        function toggleSort() {
+            currentSort = (currentSort === 'name') ? 'rank' : 'name';
+            const btn = document.getElementById('sort-toggle-btn');
+            btn.innerText = currentSort === 'name' ? 'Sort: Name A-Z' : 'Sort: Color';
+            renderRoster();
+        }
+
+        function toggleAttendance(e, id) {
+            if (e) e.stopPropagation();
+
+            const player = roster.find(p => p.id === id);
+            if (player) {
+                player.absent = !player.absent;
+
+                if (player.absent) {
+                    // Remove from active lineup if they are present there
+                    for (const posKey in activeLineup) {
+                        if (activeLineup[posKey] === id) {
+                            delete activeLineup[posKey];
+                        }
+                    }
+                }
+
+                renderRoster();
+
+                // Maintain batting order custom sort
+                if (player.absent) {
+                    battingOrder = battingOrder.filter(p => p.id !== id);
+                } else {
+                    if (!battingOrder.some(p => p.id === id)) {
+                        battingOrder.push(player);
+                    }
+                }
+                renderBattingOrder();
+
+                // Maintain stopwatch order custom sort
+                if (player.absent) {
+                    stopwatchPlayers = stopwatchPlayers.filter(p => p.id !== id);
+                } else {
+                    if (!stopwatchPlayers.some(p => p.id === id)) {
+                        stopwatchPlayers.push(player);
+                    }
+                }
+                renderStopwatch();
+
+                // Refresh lineup view
+                if (typeof fieldingLayout !== 'undefined' && (fieldingLayout === 'tball' || fieldingLayout === 'junior_no_catcher')) {
+                    initLineup();
+                } else {
+                    if (typeof updateDiamondUI === 'function') updateDiamondUI();
+                    if (typeof renderBench === 'function') renderBench();
+                }
+            }
+        }
+
+        // Dynamic Navigation Logic
+        let expandedScrollPosition = 0;
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('tabs-nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('minimized');
+                // If the user scrolls 50px away from where they opened the menu, auto-collapse it
+                if (nav.classList.contains('expanded')) {
+                    if (Math.abs(window.scrollY - expandedScrollPosition) > 50) {
+                        nav.classList.remove('expanded');
+                        document.getElementById('nav-more-dropdown').classList.remove('active');
+                    }
+                }
+            } else {
+                nav.classList.remove('minimized');
+                nav.classList.remove('expanded');
+                document.getElementById('nav-more-dropdown').classList.remove('active');
+            }
+        });
+
+        function handleTabClick(tabId) {
+            const nav = document.getElementById('tabs-nav');
+            const activeBtn = document.querySelector('.tab-btn.active');
+            let isClickingActive = false;
+            if (activeBtn) {
+                const onclickAttr = activeBtn.getAttribute('onclick');
+                if (onclickAttr) isClickingActive = onclickAttr.includes(`'${tabId}'`);
+            }
+
+            if (nav.classList.contains('minimized') && isClickingActive && !nav.classList.contains('expanded')) {
+                nav.classList.add('expanded');
+                expandedScrollPosition = window.scrollY;
+            } else {
+                showTab(tabId);
+                nav.classList.remove('expanded');
+                document.getElementById('nav-more-dropdown').classList.remove('active');
+                if (tabId === 'stopwatch') sortStopwatch(stopwatchSortMode, false);
+                if (tabId === 'batting') sortBatting(battingSortMode, false);
+            }
+        }
+
+        function toggleMoreMenu() {
+            document.getElementById('nav-more-dropdown').classList.toggle('active');
+        }
+
+        function toggleResources() {
+            document.getElementById('resources-overlay').classList.toggle('active');
+            document.getElementById('nav-more-dropdown').classList.remove('active');
+        }
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                if (b.getAttribute('onclick').includes(`'${tabId}'`)) {
+                    b.classList.add('active');
+                }
+            });
+        }
+
+        let battingOrder = [];
+        let battingSortMode = 'coach'; // default
+
+        function sortBatting(method, forceSort = true) {
+            battingSortMode = method;
+            document.querySelectorAll('#batting .sort-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-bat-' + method).classList.add('active');
+
+            const active = roster.filter(p => !p.absent);
+
+            if (method === 'coach') {
+                battingOrder = [...active].sort((a, b) => a.batOrder - b.batOrder);
+                renderBattingOrder();
+            } else if (method === 'name') {
+                battingOrder = [...active].sort((a, b) => a.first.localeCompare(b.first));
+                renderBattingOrder();
+            } else if (method === 'skill') {
+                battingOrder = [...active].sort(() => Math.random() - 0.5).sort((a, b) => b.rating - a.rating);
+                renderBattingOrder();
+            } else if (method === 'stagger') {
+                const pools = {
+                    4: active.filter(p => p.rating === 4),
+                    3: active.filter(p => p.rating === 3),
+                    2: active.filter(p => p.rating === 2),
+                    1: active.filter(p => p.rating === 1)
+                };
+
+                const result = [];
+                const total = active.length;
+                const poolOrder = [4, 2, 3, 1];
+                let poolIdx = 0;
+
+                while (result.length < total) {
+                    const pool = pools[poolOrder[poolIdx]];
+                    if (pool && pool.length > 0) {
+                        const playerIdx = Math.floor(Math.random() * pool.length);
+                        result.push(pool.splice(playerIdx, 1)[0]);
+                    }
+                    poolIdx = (poolIdx + 1) % poolOrder.length;
+                    if (pools[4].length === 0 && pools[3].length === 0 && pools[2].length === 0 && pools[1].length === 0) break;
+                }
+                battingOrder = result;
+                renderBattingOrder();
+            }
+        }
+
+        function renderBattingOrder() {
+            const list = document.getElementById('batting-order-list');
+            list.innerHTML = '';
+
+            battingOrder.forEach((p, index) => {
+                const item = document.createElement('div');
+                item.className = `batting-item rank-${p.rating}`;
+                item.draggable = true;
+                item.dataset.id = p.id;
+                item.innerHTML = `
+                    <div class="absent-toggle" onclick="toggleAttendance(event, ${p.id})" style="position:relative; width: 24px; height: 24px; font-size: 1rem; margin-right: 10px; top:0; right:0;">✕</div>
+                    <div class="order-num">${index + 1}</div>
+                    <div class="player-icon" style="width:30px; height:30px; font-size:0.7rem;">${p.first[0]}${p.last[0]}</div>
+                    <div class="player-info" style="flex:1;">
+                        <h3 style="font-size:0.9rem; margin:0;">${p.first} ${p.last}</h3>
+                    </div>
+                    <div class="drag-handle" style="padding: 10px 0 10px 15px; opacity: 0.5; font-size: 1.4rem; cursor: grab; touch-action: none;">☰</div>
+                `;
+
+                // Add DnD listeners for Desktop
+                item.addEventListener('dragstart', () => item.classList.add('dragging'));
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');
+                    updateBattingDataFromUI();
+                });
+
+                // Add Touch DnD listeners for Mobile
+                const handle = item.querySelector('.drag-handle');
+                handle.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    item.classList.add('dragging');
+                }, { passive: false });
+
+                handle.addEventListener('touchend', () => {
+                    item.classList.remove('dragging');
+                    updateBattingDataFromUI();
+                });
+
+                list.appendChild(item);
+            });
+
+            // Render absent players at the bottom
+            const absentPlayers = roster.filter(p => p.absent);
+            absentPlayers.forEach(p => {
+                const item = document.createElement('div');
+                item.className = `batting-item rank-${p.rating} is-absent`;
+                item.style.opacity = '0.4';
+                item.dataset.id = p.id;
+                item.innerHTML = `
+                    <div class="absent-toggle" onclick="toggleAttendance(event, ${p.id})" style="position:relative; width: 24px; height: 24px; font-size: 1rem; margin-right: 10px; top:0; right:0;">↺</div>
+                    <div class="order-num" style="opacity:0;">-</div>
+                    <div class="player-icon" style="width:30px; height:30px; font-size:0.7rem;">${p.first[0]}${p.last[0]}</div>
+                    <div class="player-info" style="flex:1;">
+                        <h3 style="font-size:0.9rem; margin:0;">${p.first} ${p.last}</h3>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+
+            if (!list.dataset.dragListenerAdded) {
+                list.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    handleDragMove(list, e.clientY);
+                });
+
+                list.addEventListener('touchmove', e => {
+                    const draggingItem = document.querySelector('.dragging');
+                    if (!draggingItem) return;
+                    e.preventDefault();
+                    handleDragMove(list, e.touches[0].clientY);
+                }, { passive: false });
+
+                list.dataset.dragListenerAdded = 'true';
+            }
+        }
+
+        function handleDragMove(list, y) {
+            const draggingItem = document.querySelector('.dragging');
+            if (!draggingItem) return;
+            const afterElement = getDragAfterElement(list, y);
+            if (afterElement == null) {
+                const firstAbsent = list.querySelector('.is-absent');
+                if (firstAbsent) list.insertBefore(draggingItem, firstAbsent);
+                else list.appendChild(draggingItem);
+            } else {
+                list.insertBefore(draggingItem, afterElement);
+            }
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.batting-item:not(.dragging):not(.is-absent)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function updateBattingDataFromUI() {
+            const items = [...document.querySelectorAll('.batting-item:not(.is-absent)')];
+            const newOrder = [];
+            items.forEach((item, idx) => {
+                item.querySelector('.order-num').innerText = idx + 1;
+                const pid = parseInt(item.dataset.id);
+                const player = roster.find(p => p.id === pid);
+                if (player) newOrder.push(player);
+            });
+            battingOrder = newOrder;
+        }
+
+        // --- Stopwatch Logic ---
+        const timers = {};
+        let stopwatchPlayers = [];
+        let stopwatchSortMode = 'random'; // default
+
+        function sortStopwatch(method, forceSort = true) {
+            stopwatchSortMode = method;
+            document.querySelectorAll('#stopwatch .sort-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-sw-' + method).classList.add('active');
+
+            const active = roster.filter(p => !p.absent);
+            const isMatch = stopwatchPlayers.length === active.length && stopwatchPlayers.every(b => active.some(a => a.id === b.id));
+
+            if (method === 'name') {
+                stopwatchPlayers = [...active].sort((a, b) => a.first.localeCompare(b.first));
+            } else if (method === 'skill') {
+                stopwatchPlayers = [...active].sort(() => Math.random() - 0.5).sort((a, b) => b.rating - a.rating);
+            } else if (method === 'fastest') {
+                stopwatchPlayers = [...active].sort((a, b) => {
+                    const tA = timers[a.id].elapsed;
+                    const tB = timers[b.id].elapsed;
+                    if (tA === 0 && tB === 0) return a.first.localeCompare(b.first);
+                    if (tA === 0) return 1;
+                    if (tB === 0) return -1;
+                    return tA - tB;
+                });
+            } else if (method === 'slowest') {
+                stopwatchPlayers = [...active].sort((a, b) => {
+                    const tA = timers[a.id].elapsed;
+                    const tB = timers[b.id].elapsed;
+                    if (tA === 0 && tB === 0) return a.last.localeCompare(b.last);
+                    if (tA === 0) return 1;
+                    if (tB === 0) return -1;
+                    return tB - tA;
+                });
+            } else { // random
+                if (forceSort || !isMatch) {
+                    stopwatchPlayers = [...active];
+                    for (let i = stopwatchPlayers.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [stopwatchPlayers[i], stopwatchPlayers[j]] = [stopwatchPlayers[j], stopwatchPlayers[i]];
+                    }
+                }
+            }
+            renderStopwatch();
+        }
+
+        async function saveStopwatchAsImage() {
+            const stopwatchSection = document.getElementById('stopwatch');
+            const originalStyle = stopwatchSection.style.background;
+
+            // Temporary styling for better screenshot
+            stopwatchSection.style.background = '#0f1218';
+            stopwatchSection.style.padding = '20px';
+
+            try {
+                const canvas = await html2canvas(stopwatchSection, {
+                    backgroundColor: '#0f1218',
+                    scale: 2, // Higher quality
+                    logging: false,
+                    useCORS: true
+                });
+
+                const link = document.createElement('a');
+                const timestamp = new Date().toISOString().split('T')[0];
+                link.download = `Brewers-Diamond-Dogs-${timestamp}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (err) {
+                console.error("Screenshot failed:", err);
+                alert("Could not generate image. Standard print instead!");
+            } finally {
+                stopwatchSection.style.background = originalStyle;
+            }
+        }
+
+        function printStopwatchResults() {
+            sortStopwatch('fastest');
+            setTimeout(() => window.print(), 100);
+        }
+
+        function initTimers() {
+            roster.forEach(p => {
+                if (!timers[p.id]) {
+                    timers[p.id] = { running: false, startTime: 0, elapsed: 0, interval: null, printed: false };
+                }
+            });
+        }
+
+        function formatTime(ms) {
+            let totalSeconds = ms / 1000;
+            let mins = Math.floor(totalSeconds / 60);
+            let secs = Math.floor(totalSeconds % 60);
+            let millis = Math.floor((ms % 1000) / 10);
+            return `${mins > 0 ? mins.toString() + ':' : ''}${secs.toString().padStart(2, '0')}.${millis.toString().padStart(2, '0')}`;
+        }
+
+        function renderStopwatch() {
+            initTimers();
+            const grid = document.getElementById('stopwatch-grid');
+            grid.innerHTML = '';
+
+            stopwatchPlayers.forEach(p => {
+                const t = timers[p.id];
+                const card = document.createElement('div');
+                card.className = `player-card rank-${p.rating}`;
+                if (t.printed) card.style.borderColor = '#2ecc71';
+
+                card.innerHTML = `
+                    <div class="player-icon">${p.first[0]}${p.last[0]}</div>
+                    <div class="player-info" style="width: 100%;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <h3 style="margin:0;">${p.first} ${p.last}</h3>
+                            <div class="timer-display" id="timer-display-${p.id}" style="font-family: monospace; font-size: 2.2rem; font-weight: bold; color: var(--team-accent); line-height: 1;">
+                                ${formatTime(t.elapsed)}
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:6px; justify-content: flex-end; align-items: center; margin-top: 5px;">
+                            <div class="absent-toggle" onclick="toggleAttendance(event, ${p.id})" style="position:static; margin-right:auto; padding: 2px 5px; opacity: 0.3; font-size: 1rem;">✕</div>
+                            <button class="contact-btn" onclick="clearTimer(${p.id})" style="flex:initial; padding:5px 8px; font-size:0.7rem; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1);">
+                                 ↺ Clear
+                            </button>
+                            <button class="contact-btn sw-btn-main" id="btn-ss-${p.id}" onclick="toggleTimer(${p.id})" style="flex:initial; background: ${t.running ? 'rgba(231, 76, 60, 0.2)' : 'rgba(46, 204, 113, 0.2)'}; border-color: ${t.running ? '#e74c3c' : '#2ecc71'};">
+                                 ${t.running ? '🛑 Stop' : '▶️ Start'}
+                            </button>
+                            <button class="contact-btn" onclick="printTimer(${p.id}, this)" style="flex:initial; padding:5px 10px; font-size:0.7rem; background: ${t.printed ? 'rgba(46, 204, 113, 0.4)' : 'rgba(255,255,255,0.05)'};">
+                                 ${t.printed ? 'Recorded' : 'Record'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Render absent players
+            const absentPlayers = roster.filter(p => p.absent);
+            absentPlayers.forEach(p => {
+                const card = document.createElement('div');
+                card.className = `player-card rank-${p.rating} is-absent`;
+                card.style.opacity = '0.4';
+                card.innerHTML = `
+                    <div class="player-icon">${p.first[0]}${p.last[0]}</div>
+                    <div class="player-info" style="width: 100%;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;  margin-bottom: 10px;">
+                            <h3 style="margin:0;">${p.first} ${p.last}</h3>
+                            <div class="timer-display" style="font-family: monospace; font-size: 2.2rem; font-weight: bold; color: var(--team-accent); line-height: 1;">
+                                Absent
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:6px; justify-content: flex-end; align-items: center; margin-top: 5px;">
+                            <div class="absent-toggle" onclick="toggleAttendance(event, ${p.id})" style="position:static; margin-right:auto; padding: 2px 5px; opacity: 0.3; font-size: 1rem;">↺</div>
+                            <span style="font-size: 0.7rem; opacity: 0.4;">Marked Absent</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleTimer(id) {
+            const t = timers[id];
+            const btn = document.getElementById(`btn-ss-${id}`);
+            if (t.running) {
+                // Stop
+                t.running = false;
+                clearInterval(t.interval);
+                t.elapsed = Date.now() - t.startTime;
+                if (btn) {
+                    btn.innerHTML = '▶️ Start';
+                    btn.style.background = 'rgba(46, 204, 113, 0.2)';
+                    btn.style.borderColor = '#2ecc71';
+                }
+                document.getElementById(`timer-display-${id}`).innerText = formatTime(t.elapsed);
+            } else {
+                // Start
+                t.running = true;
+                t.startTime = Date.now() - t.elapsed;
+                t.printed = false; // Reset printed state if restarted
+                if (btn) {
+                    btn.innerHTML = '🛑 Stop';
+                    btn.style.background = 'rgba(231, 76, 60, 0.2)';
+                    btn.style.borderColor = '#e74c3c';
+                }
+                // Also reset the save button style if it was printed
+                const saveBtn = btn.nextElementSibling;
+                if (saveBtn) {
+                    saveBtn.innerHTML = '💾 Record';
+                    saveBtn.style.background = 'rgba(255,255,255,0.05)';
+                    saveBtn.closest('.player-card').style.borderColor = 'var(--glass-border)';
+                }
+
+                t.interval = setInterval(() => {
+                    const currentElapsed = Date.now() - t.startTime;
+                    const display = document.getElementById(`timer-display-${id}`);
+                    if (display) display.innerText = formatTime(currentElapsed);
+                }, 50);
+            }
+        }
+
+        function printTimer(id, saveBtn) {
+            const t = timers[id];
+            if (t.running) {
+                toggleTimer(id); // Stop the timer securely
+            }
+            t.printed = true;
+            if (saveBtn) {
+                saveBtn.innerHTML = '✅ Recorded';
+                saveBtn.style.background = 'rgba(46, 204, 113, 0.4)';
+                saveBtn.closest('.player-card').style.borderColor = '#2ecc71';
+            }
+        }
+
+        function clearTimer(id) {
+            const t = timers[id];
+            if (t.running) {
+                clearInterval(t.interval);
+                t.running = false;
+            }
+            t.elapsed = 0;
+            t.printed = false;
+            renderStopwatch();
+        }
+
+        function resetAllTimers() {
+            if (confirm("Are you sure you want to reset all running and saved times?")) {
+                Object.keys(timers).forEach(id => {
+                    const t = timers[id];
+                    if (t.running) {
+                        clearInterval(t.interval);
+                    }
+                    delete timers[id];
+                });
+                renderStopwatch();
+            }
+        }
+
+        function renderRoster() {
+            const grid = document.getElementById('roster-grid');
+            grid.innerHTML = '';
+
+            const groupCount = parseInt(document.getElementById('group-count').value);
+            const activePlayers = roster.filter(p => !p.absent);
+            const absentPlayers = roster.filter(p => p.absent);
+
+            activePlayers.sort(() => Math.random() - 0.5).sort((a, b) => {
+                if (currentSort === 'name') return a.first.localeCompare(b.first);
+                return b.rating - a.rating;
+            });
+
+            if (groupCount > 1) {
+                const total = activePlayers.length;
+                const baseSize = Math.floor(total / groupCount);
+                let remainder = total % groupCount;
+                let currentIndex = 0;
+                for (let i = 1; i <= groupCount; i++) {
+                    const size = baseSize + (remainder > 0 ? 1 : 0);
+                    remainder--;
+                    const groupTitle = document.createElement('div');
+                    groupTitle.className = 'group-header';
+                    groupTitle.innerHTML = `<h4>Group ${i} ${i === 1 && currentSort === 'rank' ? '(Top)' : (i === groupCount && currentSort === 'rank' ? '(Foundations)' : '')}</h4>`;
+                    grid.appendChild(groupTitle);
+                    const slice = activePlayers.slice(currentIndex, currentIndex + size);
+                    slice.forEach(p => grid.appendChild(createPlayerCard(p)));
+                    currentIndex += size;
+                }
+            } else {
+                activePlayers.forEach(p => grid.appendChild(createPlayerCard(p)));
+            }
+
+            if (absentPlayers.length > 0) {
+                const absentHeader = document.createElement('div');
+                absentHeader.className = 'group-header';
+                absentHeader.innerHTML = `<h4>Absent</h4>`;
+                grid.appendChild(absentHeader);
+                absentPlayers.forEach(p => grid.appendChild(createPlayerCard(p)));
+            }
+            const attending = activePlayers.length;
+            document.getElementById('attendance-stat').innerText = `${attending} / ${roster.length} Attending`;
+        }
+
+        function createPlayerCard(p) {
+            const card = document.createElement('div');
+            card.className = `player-card rank-${p.rating} ${p.absent ? 'is-absent' : ''}`;
+            card.innerHTML = `
+                <div class="absent-toggle" onclick="toggleAttendance(event, ${p.id})">${p.absent ? '↺' : '✕'}</div>
+                <div class="player-icon">${p.first[0]}${p.last[0]}</div>
+                <div class="player-info">
+                    <h3>${p.first} ${p.last}</h3>
+                    <p>Brewers 5U</p>
+                </div>
+            `;
+            return card;
+        }
+
+
+        const staff = [
+            { role: "HBC", first: "Warren", last: "Konigsmark" },
+            { role: "Assistant Coach / Trainer", first: "Ballard", last: "Konigsmark" },
+            { role: "Assistant Coach", first: "Joe", last: "Bernstein" },
+            { role: "Assistant Coach", first: "Sloan", last: "Sutta" },
+            { role: "Assistant Coach", first: "Brendan", last: "Ward" }
+        ];
+
+        // Render Staff
+        const staffList = document.getElementById('staff-list');
+        staffList.className = 'coach-list-container';
+        staff.forEach((s) => {
+            const row = document.createElement('div');
+            row.className = 'coach-row';
+            row.innerHTML = `
+                <div class="coach-info" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin:0; font-size:1.1rem;">${s.first} ${s.last}</h3>
+                    <span style="font-size:0.8rem; opacity:0.7; text-transform:uppercase; font-weight:700; color: var(--team-accent);">${s.role}</span>
+                </div>
+            `;
+            staffList.appendChild(row);
+        });
+
+        // --- Lineup Manager Logic ---
+        let FIELD_POSITIONS = [];
+        let activeLineup = {}; // { posKey: playerId }
+        let currentTargetPos = null;
+        let fieldingLayout = 'junior_catcher';
+
+        function changeLayout() {
+            fieldingLayout = document.getElementById('fielding-layout-mode').value;
+            activeLineup = {};
+            document.getElementById('tball-cycle-controls').style.display = (fieldingLayout === 'tball') ? 'flex' : 'none';
+            initLineup();
+            renderBench();
+        }
+
+        function getArcPosition(index, total) {
+            if (total <= 0) return { t: 0, l: 0 };
+            if (total === 1) return { t: 10, l: 50 };
+            const p = 1 - (index / (total - 1 || 1));
+            const l = 12 + p * 76;
+            const t = 140 * Math.pow(p - 0.5, 2) + 10;
+            return { t, l };
+        }
+
+        function initLineup() {
+            const field = document.getElementById('diamond-field');
+            if (!field) return;
+            const pool = roster.filter(p => !p.absent);
+            const attendingCount = pool.length;
+
+            FIELD_POSITIONS = [];
+            if (fieldingLayout === 'junior_catcher') {
+                FIELD_POSITIONS = [
+                    { key: 'P', label: 'Pitcher', t: 62, l: 50 },
+                    { key: 'C', label: 'Catcher', t: 88, l: 50 },
+                    { key: '1B', label: '1st Base', t: 60, l: 75 },
+                    { key: '2B', label: '2nd Base', t: 42, l: 65 },
+                    { key: 'SS', label: 'Shortstop', t: 42, l: 35 },
+                    { key: '3B', label: '3rd Base', t: 60, l: 25 },
+                    { key: 'LF', label: 'Left Field', t: 28, l: 15 },
+                    { key: 'LCF', label: 'Left Center', t: 12, l: 38 },
+                    { key: 'RCF', label: 'Right Center', t: 12, l: 62 },
+                    { key: 'RF', label: 'Right Field', t: 28, l: 85 }
+                ];
+            } else if (fieldingLayout === '9player') {
+                FIELD_POSITIONS = [
+                    { key: 'P', label: 'Pitcher', t: 62, l: 50 },
+                    { key: 'C', label: 'Catcher', t: 88, l: 50 },
+                    { key: '1B', label: '1st Base', t: 60, l: 75 },
+                    { key: '2B', label: '2nd Base', t: 42, l: 65 },
+                    { key: 'SS', label: 'Shortstop', t: 42, l: 35 },
+                    { key: '3B', label: '3rd Base', t: 60, l: 25 },
+                    { key: 'LF', label: 'Left Field', t: 28, l: 20 },
+                    { key: 'CF', label: 'Center Field', t: 12, l: 50 },
+                    { key: 'RF', label: 'Right Field', t: 28, l: 80 }
+                ];
+            } else if (fieldingLayout === 'junior_no_catcher') {
+                FIELD_POSITIONS = [
+                    { key: 'P', label: 'Pitcher', t: 62, l: 50 },
+                    { key: '1B', label: '1st Base', t: 60, l: 75 },
+                    { key: '2B', label: '2nd Base', t: 42, l: 65 },
+                    { key: 'SS', label: 'Shortstop', t: 42, l: 35 },
+                    { key: '3B', label: '3rd Base', t: 60, l: 25 }
+                ];
+                const arcCount = Math.max(0, attendingCount - 5);
+                for (let i = 0; i < arcCount; i++) {
+                    const coords = getArcPosition(i, arcCount);
+                    FIELD_POSITIONS.push({ key: (i + 4).toString(), label: `Spot ${i + 4}`, t: coords.t, l: coords.l });
+                }
+            } else if (fieldingLayout === 'tball') {
+                FIELD_POSITIONS = [
+                    { key: '3B', label: '3rd Base', t: 60, l: 25 },
+                    { key: 'P', label: 'Pitcher', t: 62, l: 50 },
+                    { key: '1B', label: '1st Base', t: 60, l: 75 }
+                ];
+                const arcCount = Math.max(0, attendingCount - 3);
+                for (let i = 0; i < arcCount; i++) {
+                    const coords = getArcPosition(i, arcCount);
+                    FIELD_POSITIONS.push({ key: (i + 4).toString(), label: `Spot ${i + 4}`, t: coords.t, l: coords.l });
+                }
+            }
+
+            field.querySelectorAll('.pos-spot').forEach(s => s.remove());
+            FIELD_POSITIONS.forEach(pos => {
+                const spot = document.createElement('div');
+                spot.className = 'pos-spot';
+                spot.style.top = `${pos.t}%`;
+                spot.style.left = `${pos.l}%`;
+                spot.onclick = () => openPicker(pos.key);
+                spot.innerHTML = `<span class="pos-label">${pos.key}</span><div class="pos-player-name" id="label-${pos.key}">Empty</div>`;
+                field.appendChild(spot);
+            });
+            updateDiamondUI();
+            renderBench();
+        }
+
+        function cycleTBall(dir) {
+            const arcKeys = FIELD_POSITIONS.filter(p => /^\d+$/.test(p.key)).map(p => p.key).sort((a, b) => parseInt(a) - parseInt(b));
+            const sequence = ['3B', 'P', '1B', ...arcKeys];
+            const currentPlayers = sequence.map(key => activeLineup[key]);
+            const nextLineup = { ...activeLineup };
+            sequence.forEach((key, i) => {
+                let sourceIndex = (sequence.length + i - dir) % sequence.length;
+                nextLineup[key] = currentPlayers[sourceIndex];
+            });
+            activeLineup = nextLineup;
+            updateDiamondUI();
+        }
+
+        function renderBench() {
+            const list = document.getElementById('lineup-bench');
+            const count = document.getElementById('bench-count');
+            if (!list) return;
+
+            const active = roster.filter(p => !p.absent);
+            const absentArr = roster.filter(p => p.absent);
+            const assignedIds = Object.values(activeLineup);
+            const onBench = active.filter(p => !assignedIds.includes(p.id));
+
+            list.innerHTML = '';
+            count.innerText = `${onBench.length} Players`;
+
+            if (onBench.length > 0) {
+                onBench.forEach(p => {
+                    const item = document.createElement('div');
+                    item.className = 'bench-item';
+                    item.innerHTML = `
+                        <div class="absent-toggle" onclick="toggleAttendance(event, ${p.id})" style="position:static; margin-right:10px; opacity:0.3;">✕</div>
+                        <div class="player-icon" style="width:32px; height:32px; font-size:0.75rem;">${p.first[0]}${p.last[0]}</div>
+                        <div style="flex:1;">
+                            <div style="font-weight:700; font-size:0.85rem;">${p.first} ${p.last}</div>
+                            <div style="font-size:0.65rem; opacity:0.5;">${p.pos || 'Bench'} | Rating: ${p.rating}</div>
+                        </div>
+                    `;
+                    item.onclick = (e) => {
+                        if (e.target.classList.contains('absent-toggle')) return;
+                        alert("Click a position on the diamond to assign " + p.first);
+                    };
+                    list.appendChild(item);
+                });
+            } else {
+                const emptyMsg = document.createElement('p');
+                emptyMsg.style.cssText = 'font-size: 0.8rem; opacity: 0.4; text-align: center; margin: 10px 0;';
+                emptyMsg.innerText = "No players available on bench.";
+                list.appendChild(emptyMsg);
+            }
+
+            if (absentArr.length > 0) {
+                const head = document.createElement('h4');
+                head.style.cssText = 'font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; opacity: 0.5; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px;';
+                head.innerText = "Absent";
+                list.appendChild(head);
+
+                absentArr.forEach(p => {
+                    const item = document.createElement('div');
+                    item.className = 'bench-item is-absent';
+                    item.style.opacity = '0.3';
+                    item.innerHTML = `
+                        <div class="absent-toggle" onclick="toggleAttendance(event, ${p.id})" style="position:static; margin-right:10px; opacity:0.3;">↺</div>
+                        <div class="player-icon" style="width:32px; height:32px; font-size:0.75rem;">${p.first[0]}${p.last[0]}</div>
+                        <div style="flex:1;">
+                            <div style="font-weight:700; font-size:0.85rem;">${p.first} ${p.last}</div>
+                            <div style="font-size:0.65rem; opacity:0.5;">Absent</div>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+            }
+        }
+
+        function openPicker(posKey) {
+            currentTargetPos = posKey;
+            const pos = FIELD_POSITIONS.find(p => p.key === posKey);
+            const overlay = document.getElementById('pos-picker');
+            const options = document.getElementById('picker-options');
+            const title = document.getElementById('picker-title');
+            title.innerText = `Assign ${pos.label}`;
+            overlay.classList.add('active');
+            options.innerHTML = '';
+            const clearBtn = document.createElement('button');
+            clearBtn.className = 'bench-item';
+            clearBtn.style.justifyContent = 'center';
+            clearBtn.style.borderColor = 'rgba(231, 76, 60, 0.3)';
+            clearBtn.innerHTML = '<span style="color: #e74c3c; font-weight:700;">Empty Spot</span>';
+            clearBtn.onclick = () => assignToPos(null);
+            options.appendChild(clearBtn);
+            const active = roster.filter(p => !p.absent).sort((a, b) => b.rating - a.rating || Math.random() - 0.5);
+            const assignedIds = Object.values(activeLineup).filter(id => id !== activeLineup[posKey]);
+            active.forEach(p => {
+                const isAssignedElsewhere = assignedIds.includes(p.id);
+                const isCurrent = activeLineup[posKey] === p.id;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `bench-item ${isAssignedElsewhere ? 'assigned' : ''} ${isCurrent ? 'occupied' : ''}`;
+                btn.style.pointerEvents = 'auto'; // FORCED OVERRIDE FOR MOBILE CACHE
+                btn.style.opacity = isAssignedElsewhere ? '0.6' : '1';
+                if (isCurrent) btn.style.borderColor = 'var(--team-accent)';
+                btn.innerHTML = `
+                    <div class="player-icon" style="width:30px; height:30px; font-size:0.7rem; background:${isCurrent ? 'var(--team-accent)' : ''}">${p.first[0]}${p.last[0]}</div>
+                    <div style="text-align:left; flex:1;">
+                        <span style="font-weight:700; font-size:0.9rem;">${p.first} ${p.last}</span>
+                        <div style="font-size:0.65rem; opacity:0.6;">Coach: ${p.coachPos} | Pref: ${p.pos} | ${isAssignedElsewhere ? 'Busy' : 'Available'}</div>
+                    </div>
+                `;
+                btn.onclick = () => assignToPos(p.id);
+                options.appendChild(btn);
+            });
+        }
+
+        function assignToPos(playerId) {
+            if (playerId === null) {
+                delete activeLineup[currentTargetPos];
+            } else {
+                // If player already assigned elsewhere, clear that position
+                Object.keys(activeLineup).forEach(key => {
+                    if (Number(activeLineup[key]) === Number(playerId)) {
+                        delete activeLineup[key];
+                    }
+                });
+                activeLineup[currentTargetPos] = Number(playerId);
+            }
+            closePicker();
+            updateDiamondUI();
+            renderBench();
+        }
+
+        function updateDiamondUI() {
+            FIELD_POSITIONS.forEach(pos => {
+                const label = document.getElementById(`label-${pos.key}`);
+                const spot = label.parentElement;
+                const pid = activeLineup[pos.key];
+                if (pid) {
+                    const p = roster.find(player => player.id === pid);
+                    label.innerText = `${p.first} ${p.last[0]}.`;
+                    spot.classList.add('occupied');
+                    label.style.color = "white";
+                } else {
+                    label.innerText = "Empty";
+                    spot.classList.remove('occupied');
+                    label.style.color = "rgba(255,255,255,0.3)";
+                }
+            });
+        }
+
+        function closePicker(e) { document.getElementById('pos-picker').classList.remove('active'); }
+
+        function printBlankDiamond() {
+            const savedLineup = activeLineup;
+            activeLineup = {};
+            updateDiamondUI();
+            setTimeout(() => {
+                window.print();
+                activeLineup = savedLineup;
+                updateDiamondUI();
+            }, 100);
+        }
+
+        function resetActiveLineup() {
+            if (Object.keys(activeLineup).length > 0 && !confirm("Clear current lineup?")) return;
+            activeLineup = {};
+            updateDiamondUI();
+            renderBench();
+        }
+
+        const POS_IMPORTANCE = ['SS', '1B', 'P', '2B', '3B', 'C', 'LCF', 'LF', 'RCF', 'RF'];
+
+        function autoAssignLineup() {
+            const mode = document.getElementById('auto-assign-mode').value;
+            let pool = roster.filter(p => !p.absent);
+
+            // 1. Sort the entire pool based on strategic mode (random seed for ties)
+            if (mode === 'talent' || mode === 'sub') {
+                pool.sort((a, b) => b.rating - a.rating || Math.random() - 0.5);
+            } else if (mode === 'dev') {
+                pool.sort((a, b) => a.rating - b.rating || Math.random() - 0.5);
+            } else if (mode === 'random') {
+                pool.sort(() => Math.random() - 0.5);
+            }
+
+            // 1. Define importance order based on layout
+            let importance = [];
+            // Strictly numeric arc keys to avoid duplication with named infield keys like '1B'
+            const arcKeys = FIELD_POSITIONS.filter(p => /^\d+$/.test(p.key)).map(p => p.key).sort((a, b) => parseInt(a) - parseInt(b));
+
+            if (fieldingLayout === 'tball') {
+                // Best at Infield, then descending from top arc spot (14) down to 4
+                importance = ['3B', 'P', '1B', ...[...arcKeys].reverse()];
+            } else if (fieldingLayout === 'junior_no_catcher') {
+                importance = ['SS', '1B', 'P', '2B', '3B', ...arcKeys];
+            } else if (fieldingLayout === '9player') {
+                importance = ['SS', '1B', 'P', '2B', '3B', 'C', 'CF', 'LF', 'RF'];
+            } else {
+                importance = POS_IMPORTANCE;
+            }
+
+            // 2. Identify the cohort that MUST be on the field
+            const spotsArr = FIELD_POSITIONS.map(p => p.key);
+            const starters = pool.slice(0, spotsArr.length);
+            const newLineup = {};
+            const placedIds = new Set();
+
+            // Helper for position mapping (9player support)
+            const isMatch = (playerValue, targetPos) => {
+                if (playerValue === targetPos) return true;
+                if (fieldingLayout === '9player') {
+                    if (targetPos === 'CF' && (playerValue === 'LCF' || playerValue === 'RCF')) return true;
+                    if (targetPos === 'LF' && (playerValue === 'LCF')) return true;
+                    if (targetPos === 'RF' && (playerValue === 'RCF')) return true;
+                }
+                return false;
+            };
+
+            if (mode === 'dev') {
+                // MERCY MODE: Weakest players get FIRST cracks at the BEST spots
+                importance.forEach(posKey => {
+                    const unplaced = starters.filter(p => !placedIds.has(p.id));
+                    if (unplaced.length === 0) return;
+
+                    const minRating = Math.min(...unplaced.map(p => p.rating));
+                    const currentTier = unplaced.filter(p => p.rating === minRating);
+
+                    let candidate = currentTier.find(p => isMatch(p.coachPos, posKey)) ||
+                        currentTier.find(p => isMatch(p.pos, posKey)) ||
+                        currentTier.find(p => isMatch(p.subPos, posKey)) ||
+                        currentTier[0];
+
+                    newLineup[posKey] = candidate.id;
+                    placedIds.add(candidate.id);
+                });
+            } else if (mode === 'random') {
+                importance.forEach(posKey => {
+                    const candidate = starters.find(p => !placedIds.has(p.id));
+                    if (candidate) {
+                        newLineup[posKey] = candidate.id;
+                        placedIds.add(candidate.id);
+                    }
+                });
+            } else {
+                // STANDARD/TALENT, PRIMARY, & FLIP MODES (Pass-based Cascade)
+                const isFlip = mode === 'sub';
+                const isPrimary = mode === 'primary';
+
+                // Pass 1: Coach's Intent (Only for Talent mode)
+                if (mode === 'talent') {
+                    importance.forEach(posKey => {
+                        if (newLineup[posKey]) return;
+                        const candidates = starters.filter(p => !placedIds.has(p.id) && isMatch(p.coachPos, posKey));
+                        if (candidates.length > 0) {
+                            candidates.sort((a, b) => b.rating - a.rating || Math.random() - 0.5);
+                            const winner = candidates[0];
+                            newLineup[posKey] = winner.id;
+                            placedIds.add(winner.id);
+                        }
+                    });
+                }
+
+                // Pass 2: Primary Preference (Starts here for 'primary' mode)
+                importance.forEach(posKey => {
+                    if (newLineup[posKey]) return;
+                    const candidates = starters.filter(p => !placedIds.has(p.id) && isMatch(isFlip ? p.subPos : p.pos, posKey));
+                    if (candidates.length > 0) {
+                        candidates.sort((a, b) => b.rating - a.rating || Math.random() - 0.5);
+                        const winner = candidates[0];
+                        newLineup[posKey] = winner.id;
+                        placedIds.add(winner.id);
+                    }
+                });
+
+                // Pass 3: Secondary Preference
+                importance.forEach(posKey => {
+                    if (newLineup[posKey]) return;
+                    const candidates = starters.filter(p => !placedIds.has(p.id) && isMatch(isFlip ? p.pos : p.subPos, posKey));
+                    if (candidates.length > 0) {
+                        candidates.sort((a, b) => b.rating - a.rating || Math.random() - 0.5);
+                        const winner = candidates[0];
+                        newLineup[posKey] = winner.id;
+                        placedIds.add(winner.id);
+                    }
+                });
+
+                // Pass 4: Clean up Leftovers
+                importance.forEach(posKey => {
+                    if (!newLineup[posKey]) {
+                        const leftover = starters.find(p => !placedIds.has(p.id));
+                        if (leftover) {
+                            newLineup[posKey] = leftover.id;
+                            placedIds.add(leftover.id);
+                        }
+                    }
+                });
+            }
+
+            activeLineup = newLineup;
+            updateDiamondUI();
+            renderBench();
+        }
+
+        const originalShowTab = showTab;
+        showTab = function (tabId) {
+            originalShowTab(tabId);
+            if (tabId === 'lineup') setTimeout(initLineup, 10);
+        };
+        // Initialize on load
+        initLineup();
+        syncTeamData();
+    </script>
+    <!-- Resources Overlay -->
+    <div class="pos-picker-overlay" id="resources-overlay" onclick="if(event.target === this) toggleResources()">
+        <div class="picker-content" style="max-width: 450px;">
+            <div class="picker-header">
+                <h3 style="color: var(--team-accent); text-transform: uppercase; letter-spacing: 2px;">Team Resources
+                </h3>
+                <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 5px;">Brewers Documentation & Permits</p>
+            </div>
+            <div class="picker-grid" style="grid-template-columns: 1fr; gap: 15px;">
+                <a href="Rookies_5_Rules_2021.pdf" target="_blank"
+                    style="text-decoration: none; display: flex; align-items: center; gap: 10px; color: inherit;">
+                    <span style="font-size: 1.2rem;">📄</span>
+                    <div style="text-align: left;">
+                        <div style="font-weight: 700;">League/Division Rules</div>
+                        <div style="font-size: 0.7rem; opacity: 0.9; color: var(--team-accent);">Rookies 5U (2021)</div>
+                    </div>
+                </a>
+                <div class="contact-btn"
+                    style="justify-content: flex-start; padding: 15px; background: rgba(255,255,255,0.05); opacity: 0.5; cursor: default;">
+                    <span style="font-size: 1.2rem;">📜</span>
+                    <div style="text-align: left;">
+                        <div style="font-weight: 700;">Field Permits</div>
+                        <div style="font-size: 0.7rem; opacity: 0.5;">Coming Soon</div>
+                    </div>
+                </div>
+                <button onclick="toggleResources()" class="contact-btn"
+                    style="margin-top: 20px; background: var(--team-primary); border-color: var(--team-accent);">
+                    Close Resources
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

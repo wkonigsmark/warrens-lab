@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chef | Meal Planner Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+    <header>
+        <div class="logo-group">
+            <p>Warren's Lab</p>
+            <h1>👨‍🍳👩‍🍳 Chef</h1>
+        </div>
+        
+        <!-- TOP NUTRITION BAR -->
+        <div class="top-nutrition">
+            <div class="hud-item compact">
+                <div class="hud-label">Calories: <span id="val-calories">0 kcal</span></div>
+                <div class="hud-bar-wrap"><div id="bar-calories" class="hud-bar-fill" style="background:var(--accent-color); width: 0%"></div></div>
+            </div>
+            <div class="hud-item compact">
+                <div class="hud-label">Protein: <span id="val-protein">0 / 15g</span></div>
+                <div class="hud-bar-wrap"><div id="bar-protein" class="hud-bar-fill" style="background:var(--protein)"></div></div>
+            </div>
+            <div class="hud-item compact">
+                <div class="hud-label">Fiber: <span id="val-fiber">0 / 8g</span></div>
+                <div class="hud-bar-wrap"><div id="bar-fiber" class="hud-bar-fill" style="background:var(--fiber)"></div></div>
+            </div>
+            <div class="hud-supplement compact" id="supplementBox">
+                <p id="supplementText">Add foods for suggestions!</p>
+            </div>
+        </div>
+
+        <div class="header-controls">
+            <div class="toggle-group">
+                <label class="switch">
+                    <input type="checkbox" id="modeToggle" onchange="toggleMode()">
+                    <span class="slider"></span>
+                </label>
+                <span>Smoothie</span>
+            </div>
+            <div class="toggle-group">
+                <label class="switch">
+                    <input type="checkbox" id="doubleServingToggle" onchange="updateTally()">
+                    <span class="slider"></span>
+                </label>
+                <span>2x Servings</span>
+            </div>
+            <button class="action-btn secondary" onclick="resetMeal()">
+                <i class="fas fa-rotate-left"></i> Reset
+            </button>
+            <button id="blendBtn" class="action-btn" style="display: none; background: #9b59b6;" onclick="blendSmoothie()">
+                <i class="fas fa-blender"></i> Blend
+            </button>
+            <button class="action-btn" onclick="exportMeal()">
+                <i class="fas fa-file-export"></i> Export
+            </button>
+            <a href="database.html" class="action-btn secondary" style="text-decoration: none;">
+                <i class="fas fa-database"></i> Database
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- LEFT SIDE: PLATE / BLENDER (1fr) -->
+        <div class="cooking-area">
+            <div id="blenderWrapper" class="blender-wrapper">
+                <div id="blenderLid" class="blender-lid" style="display:none"></div>
+                <div class="plate-container">
+                    <div id="mainPlate" class="plate">
+                        <!-- Placed foods -->
+                    </div>
+                </div>
+                <div id="blenderHandle" class="blender-handle" style="display:none"></div>
+                <div id="blenderBase" class="blender-base" style="display:none">
+                    <div class="blender-dial"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: PANTRY (480px) -->
+        <div class="sidebar">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search ingredients..." oninput="renderInventory()">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="category-tabs">
+                <button class="tab-btn active" onclick="setCategory('fruit', this)">Fruits</button>
+                <button class="tab-btn" onclick="setCategory('vegetable', this)">Veg</button>
+                <button class="tab-btn" onclick="setCategory('protein', this)">Prot</button>
+                <button class="tab-btn" onclick="setCategory('misc', this)">Misc</button>
+                <button class="tab-btn" onclick="setCategory('all', this)">All</button>
+            </div>
+            <div id="inventoryGrid" class="inventory-grid">
+                <!-- Food items will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- NUTRITION MODAL -->
+    <div id="nutritionModal" class="modal-overlay" onclick="closeModal()">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <div id="modalData">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

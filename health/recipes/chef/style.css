@@ -1,0 +1,668 @@
+:root {
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --accent-color: #5d4037; /* Warm wood brown */
+    --text-main: #2d3436;
+    --text-muted: #636e72;
+    --shadow: 0 10px 30px rgba(0,0,0,0.08);
+    --border-radius: 20px;
+    
+    /* Nutrient Colors */
+    --protein: #e67e22;
+    --carbs: #f1c40f;
+    --fiber: #27ae60;
+    --fat: #e74c3c;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    background-image: 
+        radial-gradient(circle at 2px 2px, rgba(0,0,0,0.02) 1px, transparent 0);
+    background-size: 40px 40px;
+    color: var(--text-main);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER */
+header {
+    background: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    z-index: 100;
+}
+
+.logo-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+}
+
+.logo-group h1 {
+    font-size: 1.2rem;
+    margin: 0;
+    font-weight: 900;
+    color: var(--text-main);
+}
+
+.logo-group p {
+    margin: 0;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+}
+
+/* TOP NUTRITION BAR */
+.top-nutrition {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(0,0,0,0.02);
+    padding: 8px 20px;
+    border-radius: 12px;
+    flex: 1;
+    margin: 0 20px;
+    justify-content: center;
+}
+
+.hud-item.compact {
+    min-width: 120px;
+}
+
+.hud-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: var(--text-main);
+    display: flex;
+    justify-content: space-between;
+}
+
+.hud-label span {
+    color: var(--text-muted);
+}
+
+.hud-bar-wrap {
+    height: 6px;
+    background: rgba(0,0,0,0.05);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.hud-bar-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hud-supplement.compact {
+    margin-left: 15px;
+    padding-left: 15px;
+    border-left: 1px solid rgba(0,0,0,0.1);
+    max-width: 250px;
+}
+
+.hud-supplement.compact p {
+    margin: 0;
+    font-size: 0.65rem;
+    line-height: 1.2;
+    color: var(--accent-color);
+    font-style: italic;
+}
+
+/* Header Controls */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Main Layout */
+main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 480px; /* Wider pantry */
+    gap: 0;
+    min-height: 0;
+}
+
+/* LEFT: The Kitchen Table / Plate Area */
+.table-area {
+    background: #fdfdfd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 20px; /* Tightened top gap */
+    position: relative;
+    overflow: hidden;
+}
+
+.plate-container {
+    position: relative;
+    width: min(85vw, 580px); /* Larger plate again */
+    height: min(85vw, 580px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.plate {
+    width: 90%;
+    height: 90%;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 
+        0 15px 45px rgba(0,0,0,0.08),
+        inset 0 0 0 15px #fcfcfc,
+        inset 0 0 40px rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.05);
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.plate.drag-over {
+    transform: scale(1.02);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    border-color: var(--accent-color);
+}
+
+/* Items on plate */
+.food-on-plate {
+    position: absolute;
+    cursor: grab;
+    transition: transform 0.2s;
+    z-index: 10;
+}
+
+.food-on-plate:active {
+    cursor: grabbing;
+}
+
+.food-on-plate img {
+    width: 160px; /* Larger food on plate */
+    height: 160px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 20px rgba(0,0,0,0.15));
+}
+
+.food-on-plate .remove-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #ff4757;
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-weight: bold;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(255,71,87,0.3);
+}
+
+.food-on-plate:hover .remove-btn {
+    display: flex;
+}
+
+/* RIGHT: The Sidebar / Pantry */
+.sidebar {
+    background: white;
+    border-left: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.02);
+    height: 100%;
+}
+
+/* Search Bar */
+.search-bar {
+    padding: 15px;
+    background: #fafafa;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    position: relative;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.search-bar input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(93,64,55,0.1);
+}
+
+.search-bar i {
+    position: absolute;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.category-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    padding: 15px;
+    background: #fafafa;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.tab-btn {
+    padding: 12px 5px;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: white;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.tab-btn i { font-size: 1.2rem; }
+
+.tab-btn.active {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 12px rgba(93,64,55,0.2);
+}
+
+.inventory-grid {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    align-content: start;
+}
+
+.food-card {
+    background: white;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 12px;
+    padding: 12px 5px;
+    text-align: center;
+    cursor: grab;
+    transition: all 0.2s;
+    position: relative;
+    min-width: 0; /* Prevent grid blowout */
+}
+
+.food-card img {
+    width: 50px; /* Smaller in pantry */
+    height: 50px;
+    object-fit: contain;
+    margin-bottom: 5px;
+}
+
+.food-card h3 {
+    margin: 0;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.food-card .info-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    background: rgba(0,0,0,0.04);
+    border-radius: 50%;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+/* POPUP / MODAL */
+.controls {
+    padding: 15px 40px;
+    background: white;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.toggle-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider { background-color: var(--accent-color); }
+input:checked + .slider:before { transform: translateX(20px); }
+
+button.action-btn {
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: none;
+    background: var(--accent-color);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button.action-btn:hover {
+    filter: brightness(1.1);
+}
+
+button.action-btn.secondary {
+    background: #f1f2f6;
+    color: var(--text-muted);
+}
+
+/* Smoothie / Blender Mode */
+.plate-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.blender-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.blender-wrapper.blender-mode {
+    width: 300px;
+    height: 420px;
+    position: relative;
+    display: block;
+}
+
+.blender-wrapper.blender-mode .plate {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px 5px 30px 30px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 6px solid rgba(255,255,255,0.7);
+    border-top: none;
+    box-shadow: 
+        inset 15px 0 30px rgba(255,255,255,0.5), 
+        inset -10px 0 20px rgba(0,0,0,0.05),
+        0 10px 20px rgba(0,0,0,0.05);
+    backdrop-filter: blur(2px);
+    overflow: hidden;
+    position: relative;
+    transition: all 0.5s;
+    z-index: 10;
+}
+
+.blender-wrapper.blender-mode .plate::after {
+    content: '500ml\A\A\A 400ml\A\A\A 300ml\A\A\A 200ml';
+    white-space: pre;
+    font-size: 0.6rem;
+    color: rgba(0,0,0,0.3);
+    font-weight: bold;
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    background: none;
+    height: auto;
+    text-align: left;
+    line-height: 1;
+}
+
+/* Blender Base */
+.blender-base {
+    width: 260px;
+    height: 140px;
+    background: linear-gradient(135deg, #f5f6fa 0%, #dcdde1 50%, #718093 100%);
+    border-radius: 20px 20px 15px 15px;
+    position: absolute;
+    bottom: -130px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.2), inset 0 2px 5px rgba(255,255,255,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 20px solid #2f3640;
+    z-index: 20;
+}
+
+.blender-dial {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #57606f, #2f3640);
+    border: 4px solid #dcdde1;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.blender-dial::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 15px;
+    background: #dcdde1;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+/* Blender Lid */
+.blender-lid {
+    width: 320px;
+    height: 40px;
+    background: #2f3640;
+    border-radius: 10px 10px 0 0;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    box-shadow: inset 0 10px 10px rgba(255,255,255,0.1);
+}
+
+.blender-lid::before {
+    content: '';
+    width: 100px;
+    height: 15px;
+    background: #1e272e;
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 5px 5px 0 0;
+}
+
+/* Blender Handle */
+.blender-handle {
+    width: 60px;
+    height: 220px;
+    border: 20px solid #2f3640;
+    border-left: none;
+    border-radius: 0 30px 30px 0;
+    position: absolute;
+    top: 50px;
+    right: -55px;
+    z-index: 5;
+}
+
+.smoothie-liquid {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    transition: height 1.5s cubic-bezier(0.25, 0.8, 0.25, 1), background 1s;
+    z-index: 1;
+    transform-origin: bottom;
+}
+
+/* Make foods smaller inside the blender so they fit easily */
+.blender-wrapper.blender-mode .food-on-plate img {
+    width: 100px;
+    height: 100px;
+}
+
+.blending-active .food-on-plate {
+    animation: blendAnimation 1.5s forwards;
+    pointer-events: none;
+}
+
+@keyframes blendAnimation {
+    0% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; }
+    20% { transform: scale(0.9) translateY(20px) rotate(15deg); }
+    40% { transform: scale(0.8) translateY(40px) rotate(-15deg); }
+    60% { transform: scale(0.5) translateY(60px) rotate(45deg); opacity: 0.8; }
+    80% { transform: scale(0.2) translateY(80px) rotate(-45deg); opacity: 0.4; }
+    100% { transform: scale(0) translateY(100px) rotate(90deg); opacity: 0; }
+}
+
+/* Tablet Optimizations */
+@media (max-width: 1024px) {
+    main { grid-template-columns: 1fr 340px; }
+    .plate-container { width: 500px; height: 500px; }
+    .plate { width: 450px; height: 450px; }
+}
+
+/* ========================================================================= */
+/* FOOD DATABASE MODULE STYLES                                               */
+/* ========================================================================= */
+
+.db-container {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow-x: auto;
+}
+
+.db-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.db-table th, .db-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.db-table th {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 800;
+}
+
+.db-table tr:hover {
+    background: rgba(0,0,0,0.01);
+}
+
+.db-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    background: rgba(0,0,0,0.03);
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.badge.verified {
+    background: rgba(39, 174, 96, 0.1);
+    color: #27ae60;
+}
+
+.badge.unverified {
+    background: rgba(230, 126, 34, 0.1);
+    color: #e67e22;
+}
