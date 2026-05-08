@@ -436,13 +436,16 @@ def main(auth: bool = False):
         print(f"  {type_}: +{added} new items")
 
     run_ts = datetime.now(timezone.utc).isoformat()
-    sb.table("items").upsert({
-        "id": "meta-last-run",
-        "type": "meta",
-        "title": "Pipeline last run",
-        "description": run_ts,
-    }, on_conflict="id").execute()
-    print(f"Pipeline timestamp: {run_ts}")
+    try:
+        sb.table("items").upsert({
+            "id": "meta-last-run",
+            "type": "meta",
+            "title": "Pipeline last run",
+            "description": run_ts,
+        }, on_conflict="id").execute()
+        print(f"Pipeline timestamp: {run_ts}")
+    except Exception as e:
+        print(f"WARNING: could not write pipeline timestamp: {e}")
 
     print("Done.")
 
