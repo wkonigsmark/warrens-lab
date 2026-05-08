@@ -225,7 +225,7 @@ def fetch_school_emails(service, max_results: int = 50) -> list[dict]:
 
     for msg_ref in messages:
         msg = service.users().messages().get(
-            userId="me", messageId=msg_ref["id"], format="full"
+            userId="me", id=msg_ref["id"], format="full"
         ).execute()
 
         payload = msg.get("payload", {})
