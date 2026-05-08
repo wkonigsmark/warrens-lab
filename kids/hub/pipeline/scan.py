@@ -307,32 +307,40 @@ EXTRACTION_PROMPT = EXTRACTION_SYSTEM_PROMPT  # alias used inside extract_with_c
 
 
 def _normalize(s: str) -> str:
-    """Lowercase, strip punctuation/whitespace for fuzzy title matching."""
     return re.sub(r"[^a-z0-9]", "", s.lower())
 
 
-def _dedup(existing: list[dict], new_items: list[dict], id_field: str = "id") -> tuple[list[dict], int]:
-    """Merge new_items into existing, skipping duplicates by id OR normalized title."""
-    seen_ids = {item[id_field] for item in existing if id_field in item}
-    # Build a set of normalized title keys for fuzzy dedup
-    title_key = "topic" if any("topic" in i for i in existing) else "title"
-    seen_titles = {_normalize(item.get(title_key) or item.get("title") or "") for item in existing}
-    seen_titles.discard("")
+def _item_key(item: dict) -> str:
+    """Composite dedup key: normalized title + date (if present) + child."""
+    title = _normalize(item.get("title") or item.get("topic") or "")
+    date  = _normalize(item.get("date") or item.get("due_date") or "")
+    child = _normalize(item.get("child") or "")
+    return f"{title}|{date}|{child}"
+
+
+def _dedup_list(items: list[dict]) -> list[dict]:
+    """Remove duplicates within a single list."""
+    seen: set[str] = set()
+    out = []
+    for item in items:
+        k = _item_key(item)
+        if k not in seen:
+            seen.add(k)
+            out.append(item)
+    return out
+
+
+def _dedup(existing: list[dict], new_items: list[dict]) -> tuple[list[dict], int]:
+    """Merge deduped new_items into existing, skipping any already present."""
+    seen = {_item_key(item) for item in existing}
     merged = list(existing)
     added = 0
-    for item in new_items:
-        item_id = item.get(id_field)
-        item_title = _normalize(item.get(title_key) or item.get("title") or "")
-        if item_id and item_id in seen_ids:
-            continue
-        if item_title and item_title in seen_titles:
-            continue
-        merged.append(item)
-        if item_id:
-            seen_ids.add(item_id)
-        if item_title:
-            seen_titles.add(item_title)
-        added += 1
+    for item in _dedup_list(new_items):
+        k = _item_key(item)
+        if k not in seen:
+            merged.append(item)
+            seen.add(k)
+            added += 1
     return merged, added
 
 
