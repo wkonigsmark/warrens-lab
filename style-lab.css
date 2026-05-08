@@ -138,6 +138,18 @@ body {
 
 .nav-item:hover::before { transform: scaleY(1); }
 
+/* Attention-Grabbing Pulsing Effect */
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 5px rgba(51, 255, 51, 0.1); border-color: rgba(255, 255, 255, 0.1); }
+  50% { box-shadow: 0 0 20px rgba(51, 255, 51, 0.4); border-color: var(--dos-green); }
+  100% { box-shadow: 0 0 5px rgba(51, 255, 51, 0.1); border-color: rgba(255, 255, 255, 0.1); }
+}
+
+.pulse-link {
+  animation: pulse-glow 3s infinite ease-in-out;
+  border-width: 1px;
+}
+
 .item-icon { font-size: 1.8rem; flex-shrink: 0; }
 
 .item-info { display: flex; flex-direction: column; gap: 2px; text-align: left; }

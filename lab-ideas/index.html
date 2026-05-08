@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Ideas - Locked</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style-lab.css">
+    <style>
+        #lock-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .pin-container {
+            text-align: center;
+        }
+
+        .pin-display {
+            font-family: "Perfect DOS VGA 437", monospace;
+            font-size: 2rem;
+            color: var(--dos-green);
+            margin-bottom: 20px;
+            letter-spacing: 10px;
+            height: 1.5em;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 250px;
+        }
+
+        .key {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .key:hover {
+            background: rgba(51, 255, 51, 0.1);
+            border-color: var(--dos-green);
+        }
+
+        .key:active {
+            transform: scale(0.9);
+        }
+
+        #roadmap-content {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            padding: 40px 20px;
+            margin: 0 auto;
+        }
+
+        .idea-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-left: 4px solid var(--dos-green);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .idea-card h2 {
+            margin-top: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--dos-green);
+            font-size: 1.1rem;
+        }
+
+        .idea-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .status-tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            background: rgba(51, 255, 51, 0.1);
+            color: var(--dos-green);
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="lock-screen">
+        <div class="pin-container">
+            <div class="tty-container" style="min-height: auto; margin-bottom: 10px;">SECURITY CLEARANCE REQUIRED</div>
+            <div id="pin-display" class="pin-display"></div>
+            <div class="keypad">
+                <button class="key" onclick="press(1)">1</button>
+                <button class="key" onclick="press(2)">2</button>
+                <button class="key" onclick="press(3)">3</button>
+                <button class="key" onclick="press(4)">4</button>
+                <button class="key" onclick="press(5)">5</button>
+                <button class="key" onclick="press(6)">6</button>
+                <button class="key" onclick="press(7)">7</button>
+                <button class="key" onclick="press(8)">8</button>
+                <button class="key" onclick="press(9)">9</button>
+                <button class="key" onclick="press(0)" style="grid-column: span 2;">0</button>
+                <button class="key" onclick="clearPin()" style="background: rgba(255,68,68,0.1)">C</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="roadmap-content">
+        <div class="hero" style="margin-bottom: 40px;">
+            <div class="tty-container">LAB ROADMAP: INTERNAL AGENDA</div>
+        </div>
+
+        <!-- Idea 1 -->
+        <div class="idea-card">
+            <div class="status-tag">Phase: Conceptual</div>
+            <h2>The Educational Journey Game</h2>
+            <p>A multi-layered 'meta-game' that weaves together all lab disciplines. Kids embark on a journey where math (Ants & Apples) and vocab (Lexicon) are integrated into a larger narrative. Peppered with strategy breaks (Connect 4, Sudoku) to create a high-value education experience that feels like pure adventure.</p>
+        </div>
+
+        <!-- Idea 2 -->
+        <div class="idea-card">
+            <div class="status-tag">Phase: In Development</div>
+            <h2>Internal Gauge Refinement</h2>
+            <p>Evolve the chemical balance gauges into a cleaner, more interactive experience. Focus on fun visuals and potential "action recommendations" based on the levels shared by the kids.</p>
+        </div>
+
+        <!-- Idea 3 -->
+        <div class="idea-card">
+            <div class="status-tag">Phase: Planned</div>
+            <h2>Abacus Masterclass</h2>
+            <p>Build out a comprehensive, step-by-step tutorial system for the Abacus tool. Transition it from a simple simulator into a guided learning platform for mental math.</p>
+        </div>
+
+        <!-- Idea 4 -->
+        <div class="idea-card">
+            <div class="status-tag">Phase: UI/UX Audit</div>
+            <h2>Mancala Modernization</h2>
+            <p>A total UX/UI overhaul for the Mancala game. Focus on fluid animations, tactile feedback, and making the interface feel more immersive and fun to play.</p>
+        </div>
+
+        <a href="../index.html" style="color: var(--dos-green); text-decoration: none; font-family: monospace; letter-spacing: 2px;">← EXIT SECURE VAULT</a>
+    </div>
+
+    <script>
+        const CORRECT_PIN = "2026";
+        let currentPin = "";
+        const display = document.getElementById("pin-display");
+
+        function press(num) {
+            if (currentPin.length < 4) {
+                currentPin += num;
+                updateDisplay();
+                if (currentPin.length === 4) {
+                    checkPin();
+                }
+            }
+        }
+
+        function clearPin() {
+            currentPin = "";
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            display.textContent = "*".repeat(currentPin.length);
+        }
+
+        function checkPin() {
+            if (currentPin === CORRECT_PIN) {
+                document.getElementById("lock-screen").style.opacity = "0";
+                setTimeout(() => {
+                    document.getElementById("lock-screen").style.display = "none";
+                    document.getElementById("roadmap-content").style.display = "block";
+                }, 500);
+            } else {
+                display.style.color = "#ff4444";
+                setTimeout(() => {
+                    display.style.color = "var(--dos-green)";
+                    clearPin();
+                }, 500);
+            }
+        }
+    </script>
+</body>
+</html>
