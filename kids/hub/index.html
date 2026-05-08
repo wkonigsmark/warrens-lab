@@ -9,33 +9,20 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --cream: #FAF7F2;
-      --bark: #3D2B1F;
-      --bark-light: #6B4C38;
-      --spruce: #2E5C3E;
-      --spruce-pale: #E4F0E8;
-      --sun: #E8A020;
-      --sun-pale: #FDF3E0;
-      --rust: #C04B2A;
-      --rust-pale: #FAEAE5;
-      --sky: #2A5D8C;
-      --sky-pale: #E3EEF7;
-      --plum: #6B3FA0;
-      --plum-pale: #F0EBF8;
-      --teal: #1A6A7A;
-      --teal-pale: #E2F3F6;
-      --border: rgba(61,43,31,0.12);
+      --cream: #FAF7F2; --bark: #3D2B1F; --bark-light: #6B4C38;
+      --spruce: #2E5C3E; --spruce-pale: #E4F0E8;
+      --sun: #E8A020; --sun-pale: #FDF3E0;
+      --rust: #C04B2A; --rust-pale: #FAEAE5;
+      --sky: #2A5D8C; --sky-pale: #E3EEF7;
+      --plum: #6B3FA0; --plum-pale: #F0EBF8;
+      --teal: #1A6A7A; --border: rgba(61,43,31,0.12);
     }
     body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--bark); font-size: 15px; line-height: 1.65; }
     .page { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-
-    /* Header */
     .site-header { padding: 2.5rem 0 1.5rem; border-bottom: 1.5px solid var(--border); margin-bottom: 1.5rem; }
     .eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--spruce); margin-bottom: 0.4rem; }
-    h1 { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 600; color: var(--bark); line-height: 1.15; }
+    h1 { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 600; color: var(--bark); }
     .updated { font-size: 12px; color: var(--bark-light); font-weight: 300; margin-top: 0.3rem; }
-
-    /* Controls */
     .controls { display: flex; gap: 12px; margin-bottom: 2rem; flex-wrap: wrap; align-items: center; }
     .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 360px; }
     .search-wrap svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--bark-light); pointer-events: none; }
@@ -48,75 +35,71 @@
     .fpill[data-child="Ballard"].active { background: var(--sky); }
     .fpill[data-child="Elle"].active   { background: var(--plum); }
     .fpill[data-child="Edie"].active   { background: var(--spruce); }
-
-    /* Layout */
+    .show-done-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; font-size: 12px; color: var(--bark-light); cursor: pointer; user-select: none; }
     .cols { display: grid; grid-template-columns: 1.1fr 0.9fr 1fr; gap: 2rem; align-items: start; }
     @media (max-width: 860px) { .cols { grid-template-columns: 1fr; } }
-
     .section-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 600; margin-bottom: 1.2rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
     .empty { color: var(--bark-light); font-size: 13px; font-style: italic; }
-
-    /* Calendar events */
-    .cal-mo { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bark-light); margin: 0 0 0.5rem 2px; margin-top: 1rem; }
+    /* Events */
+    .cal-mo { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bark-light); margin: 1rem 0 0.5rem 2px; }
     .cal-mo:first-child { margin-top: 0; }
-    .cal-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 0.5rem; }
-    .cal-row { display: grid; grid-template-columns: 48px 1fr; gap: 10px; background: white; border: 0.5px solid var(--border); border-radius: 10px; padding: 0.7rem 0.85rem; border-left-width: 3px; }
+    .cal-list { display: flex; flex-direction: column; gap: 8px; }
+    .cal-row { display: grid; grid-template-columns: 48px 1fr; gap: 10px; background: white; border: 0.5px solid var(--border); border-radius: 10px; padding: 0.7rem 0.85rem; border-left-width: 3px; transition: opacity 0.2s; }
+    .cal-row.done { opacity: 0.38; }
     .cal-date { text-align: center; }
     .cal-wday { font-size: 9px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bark-light); }
     .cal-d { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 600; line-height: 1; }
     .cal-name { font-size: 13px; font-weight: 500; color: var(--bark); margin-bottom: 2px; line-height: 1.4; }
     .cal-info { font-size: 11.5px; color: var(--bark-light); font-weight: 300; line-height: 1.4; margin-bottom: 5px; }
+    .cal-foot { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
     .cal-tags { display: flex; gap: 4px; flex-wrap: wrap; }
-
     /* Tasks */
-    .task-row { display: flex; background: white; border: 0.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
-    .task-row.task-urgent { border-color: rgba(192,75,42,0.3); }
+    .task-row { display: flex; background: white; border: 0.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 8px; transition: opacity 0.2s; }
+    .task-row.done { opacity: 0.38; }
+    .task-row.urgent { border-color: rgba(192,75,42,0.3); }
     .task-bar { width: 4px; flex-shrink: 0; }
-    .task-body { padding: 0.75rem 0.9rem; flex: 1; }
+    .task-body { padding: 0.75rem 0.9rem; flex: 1; min-width: 0; }
     .task-head { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; flex-wrap: wrap; }
     .task-title { font-size: 13px; font-weight: 500; color: var(--bark); margin-bottom: 3px; line-height: 1.4; }
+    .task-title.struck { text-decoration: line-through; color: var(--bark-light); }
     .task-desc { font-size: 11.5px; color: var(--bark-light); font-weight: 300; line-height: 1.5; }
     .due-badge { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 10px; background: var(--sun-pale); color: #8A5A00; }
     .due-badge.urgent { background: var(--rust-pale); color: var(--rust); }
-
-    /* Curriculum cards */
+    /* Curriculum */
     .card { background: white; border: 0.5px solid var(--border); border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 10px; }
     .slbl { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
     .sdot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-    .c-plum   { color: var(--plum); }   .c-plum .sdot   { background: var(--plum); }
-    .c-sky    { color: var(--sky); }    .c-sky .sdot    { background: var(--sky); }
-    .c-spruce { color: var(--spruce); } .c-spruce .sdot { background: var(--spruce); }
-    .c-teal   { color: var(--teal); }   .c-teal .sdot   { background: var(--teal); }
-    .c-rust   { color: var(--rust); }   .c-rust .sdot   { background: var(--rust); }
-    .c-amber  { color: #8A5A00; }       .c-amber .sdot  { background: var(--sun); }
-    .c-green  { color: #3A6820; }       .c-green .sdot  { background: #3A6820; }
-    .c-bark   { color: var(--bark-light); } .c-bark .sdot { background: var(--bark-light); }
-    .stopic  { font-size: 13px; font-weight: 500; color: var(--bark); margin-bottom: 3px; }
+    .c-plum{color:var(--plum)}.c-plum .sdot{background:var(--plum)}
+    .c-sky{color:var(--sky)}.c-sky .sdot{background:var(--sky)}
+    .c-spruce{color:var(--spruce)}.c-spruce .sdot{background:var(--spruce)}
+    .c-teal{color:var(--teal)}.c-teal .sdot{background:var(--teal)}
+    .c-rust{color:var(--rust)}.c-rust .sdot{background:var(--rust)}
+    .c-amber{color:#8A5A00}.c-amber .sdot{background:var(--sun)}
+    .c-green{color:#3A6820}.c-green .sdot{background:#3A6820}
+    .c-bark{color:var(--bark-light)}.c-bark .sdot{background:var(--bark-light)}
+    .stopic { font-size: 13px; font-weight: 500; color: var(--bark); margin-bottom: 3px; }
     .sdetail { font-size: 12px; color: var(--bark-light); font-weight: 300; line-height: 1.5; }
-
-    /* Child tag */
     .ctag { font-size: 11px; font-weight: 500; padding: 2px 9px; border-radius: 20px; }
-
-    /* Hidden */
-    .hidden { display: none !important; }
-
+    /* Complete button */
+    .done-btn { font-size: 10px; font-weight: 500; padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); background: white; color: var(--bark-light); cursor: pointer; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; }
+    .done-btn:hover { background: var(--spruce-pale); border-color: var(--spruce); color: var(--spruce); }
+    .done-btn.undo:hover { background: var(--rust-pale); border-color: var(--rust); color: var(--rust); }
+    .filtered { display: none !important; }
+    #loading { text-align: center; padding: 4rem; color: var(--bark-light); font-size: 14px; }
+    .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); background: var(--bark); color: white; font-size: 13px; font-weight: 500; padding: 10px 20px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 999; }
+    .toast.show { opacity: 1; }
     footer { margin-top: 3rem; padding-top: 1.2rem; border-top: 1px solid var(--border); font-size: 11px; color: var(--bark-light); font-weight: 300; }
-
-    @keyframes fu { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-    .site-header { animation: fu 0.35s ease both; }
-    .controls { animation: fu 0.4s ease both; }
-    .cols { animation: fu 0.45s ease both; }
+    @keyframes fu { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    .site-header{animation:fu 0.35s ease both}.controls{animation:fu 0.4s ease both}.cols{animation:fu 0.45s ease both}
   </style>
 </head>
 <body>
 <div class="page">
-
   <header class="site-header">
     <div class="eyebrow">Konigsmark Family · School Hub</div>
     <h1>Kids Hub</h1>
-    <p class="updated">Updated May 8, 2026 · 3:31 PM UTC</p>
+    <p class="updated" id="updated-ts">Loading…</p>
   </header>
-
   <div class="controls">
     <div class="search-wrap">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -128,1453 +111,177 @@
       <button class="fpill" data-child="Elle">Elle</button>
       <button class="fpill" data-child="Edie">Edie</button>
     </div>
+    <label class="show-done-wrap">
+      <input type="checkbox" id="show-done"> Show completed
+    </label>
   </div>
-
-  <div class="cols">
-    <section>
-      <div class="section-title">Events</div>
-      <div class="cal-mo">May 2026</div><div class="cal-list">
-
-      <div class="cal-row" style="border-left:3px solid #8A5A00"
-           data-child="All" data-text="Taste of Tribeca Ticket &amp; Hat Sales at Drop-off 08:00 · Tickets and Taste of Tribeca hats on sale in front of the school during morning drop-off starting at 8:00am.">
-        <div class="cal-date">
-          <div class="cal-wday">FRI</div>
-          <div class="cal-d" style="color:#8A5A00">8</div>
-        </div>
-        <div>
-          <div class="cal-name">Taste of Tribeca Ticket &amp; Hat Sales at Drop-off</div>
-          <div class="cal-info">08:00 · Tickets and Taste of Tribeca hats on sale in front of the school during morning drop-off starting at 8:00am.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #8A5A00"
-           data-child="All" data-text="SLT Coffee Talk: The Value in Letting Our Kids Fail 08:45 · Final SLT coffee talk of the school year held in the Library. Discussion based on the Atlantic article 'Let Your Kids Fail' by Russel Shaw, focusing on the value of letting kids experience failure and develop resilience.">
-        <div class="cal-date">
-          <div class="cal-wday">FRI</div>
-          <div class="cal-d" style="color:#8A5A00">8</div>
-        </div>
-        <div>
-          <div class="cal-name">SLT Coffee Talk: The Value in Letting Our Kids Fail</div>
-          <div class="cal-info">08:45 · Final SLT coffee talk of the school year held in the Library. Discussion based on the Atlantic article 'Let Your Kids Fail' by Russel Shaw, focusing on the value of letting kids experience failure and develop resilience.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2A5D8C"
-           data-child="Ballard" data-text="Field Trip: Harlem Grown Class field trip to Harlem Grown as part of the Urban Farm Study unit.">
-        <div class="cal-date">
-          <div class="cal-wday">FRI</div>
-          <div class="cal-d" style="color:#2A5D8C">8</div>
-        </div>
-        <div>
-          <div class="cal-name">Field Trip: Harlem Grown</div>
-          <div class="cal-info">Class field trip to Harlem Grown as part of the Urban Farm Study unit.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2A5D8C"
-           data-child="Ballard" data-text="Book Fair - Ballard's Class Visit 10:30 · Ms. Waterman's 1st grade class will visit the book fair at 10:30am on Wednesday, May 13th. Paperbacks are $5-10, hardcovers and picture books are $15-25. PTA will cover one book up to $10 if student forgets money.">
-        <div class="cal-date">
-          <div class="cal-wday">WED</div>
-          <div class="cal-d" style="color:#2A5D8C">13</div>
-        </div>
-        <div>
-          <div class="cal-name">Book Fair - Ballard's Class Visit</div>
-          <div class="cal-info">10:30 · Ms. Waterman's 1st grade class will visit the book fair at 10:30am on Wednesday, May 13th. Paperbacks are $5-10, hardcovers and picture books are $15-25. PTA will cover one book up to $10 if student forgets money.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #8A5A00"
-           data-child="All" data-text="Taste of Tribeca Ticket &amp; Hat Sales at Drop-off 08:00 · Tickets and Taste of Tribeca hats on sale in front of the school during morning drop-off starting at 8:00am.">
-        <div class="cal-date">
-          <div class="cal-wday">THU</div>
-          <div class="cal-d" style="color:#8A5A00">14</div>
-        </div>
-        <div>
-          <div class="cal-name">Taste of Tribeca Ticket &amp; Hat Sales at Drop-off</div>
-          <div class="cal-info">08:00 · Tickets and Taste of Tribeca hats on sale in front of the school during morning drop-off starting at 8:00am.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2A5D8C"
-           data-child="Ballard" data-text="Field Trip: One Love Community Fridge Class field trip to One Love Community Fridge as part of the Urban Farm Study unit.">
-        <div class="cal-date">
-          <div class="cal-wday">THU</div>
-          <div class="cal-d" style="color:#2A5D8C">14</div>
-        </div>
-        <div>
-          <div class="cal-name">Field Trip: One Love Community Fridge</div>
-          <div class="cal-info">Class field trip to One Love Community Fridge as part of the Urban Farm Study unit.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="Día de Español Performance Children celebrate the Spanish language and culture through a special performance showcasing their hard work.">
-        <div class="cal-date">
-          <div class="cal-wday">FRI</div>
-          <div class="cal-d" style="color:#2E5C3E">15</div>
-        </div>
-        <div>
-          <div class="cal-name">Día de Español Performance</div>
-          <div class="cal-info">Children celebrate the Spanish language and culture through a special performance showcasing their hard work.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2A5D8C"
-           data-child="Ballard" data-text="Pickling Family Morning 09:30 · Families are invited to join the class for a Pickling Family Morning. Sign up to attend and/or help with supplies. More details in the separate 'Pickling Family Morning' email.">
-        <div class="cal-date">
-          <div class="cal-wday">FRI</div>
-          <div class="cal-d" style="color:#2A5D8C">15</div>
-        </div>
-        <div>
-          <div class="cal-name">Pickling Family Morning</div>
-          <div class="cal-info">09:30 · Families are invited to join the class for a Pickling Family Morning. Sign up to attend and/or help with supplies. More details in the separate 'Pickling Family Morning' email.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #8A5A00"
-           data-child="All" data-text="Taste of Tribeca Festival 11:30 · Annual food festival fundraiser supporting Arts &amp; Enrichment programs for PS 234 and PS 150. Runs 11:30am–3:00pm. Tickets available at www.tasteoftribeca.com.">
-        <div class="cal-date">
-          <div class="cal-wday">SAT</div>
-          <div class="cal-d" style="color:#8A5A00">16</div>
-        </div>
-        <div>
-          <div class="cal-name">Taste of Tribeca Festival</div>
-          <div class="cal-info">11:30 · Annual food festival fundraiser supporting Arts &amp; Enrichment programs for PS 234 and PS 150. Runs 11:30am–3:00pm. Tickets available at www.tasteoftribeca.com.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="Taste Buds Kitchen Field Trip Hands-on cooking experience at Taste Buds Kitchen with mixing, measuring, and cooking activities.">
-        <div class="cal-date">
-          <div class="cal-wday">TUE</div>
-          <div class="cal-d" style="color:#2E5C3E">19</div>
-        </div>
-        <div>
-          <div class="cal-name">Taste Buds Kitchen Field Trip</div>
-          <div class="cal-info">Hands-on cooking experience at Taste Buds Kitchen with mixing, measuring, and cooking activities.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #8A5A00"
-           data-child="All" data-text="2026 Legislative Exhibit Opens PS234 5th graders' artwork on display at the Legislative Office Building, 3rd Floor Terrace Level, Albany NY. Works also viewable online.">
-        <div class="cal-date">
-          <div class="cal-wday">TUE</div>
-          <div class="cal-d" style="color:#8A5A00">19</div>
-        </div>
-        <div>
-          <div class="cal-name">2026 Legislative Exhibit Opens</div>
-          <div class="cal-info">PS234 5th graders' artwork on display at the Legislative Office Building, 3rd Floor Terrace Level, Albany NY. Works also viewable online.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="Field Trip: Taste Buds Kitchen 10:30 · Edie's class (Red &amp; Orange Room Discoverers) visits Taste Buds Kitchen, 109 West 27th Street, 10th Floor, NYC. Children will explore the kitchen and participate in preparing a recipe. Session runs 10:30–11:30 AM. Students arrive at RSP at normal drop-off; chaperones should be outside by 9:50–9:55 AM. Depart by subway (1 Train, Chambers St to 28th St) around 9:55 AM.">
-        <div class="cal-date">
-          <div class="cal-wday">TUE</div>
-          <div class="cal-d" style="color:#2E5C3E">19</div>
-        </div>
-        <div>
-          <div class="cal-name">Field Trip: Taste Buds Kitchen</div>
-          <div class="cal-info">10:30 · Edie's class (Red &amp; Orange Room Discoverers) visits Taste Buds Kitchen, 109 West 27th Street, 10th Floor, NYC. Children will explore the kitchen and participate in preparing a recipe. Session runs 10:30–11:30 AM. Students arrive at RSP at normal drop-off; chaperones should be outside by 9:50–9:55 AM. Depart by subway (1 Train, Chambers St to 28th St) around 9:55 AM.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="Field Trip to Taste Buds Kitchen 10:30 · Edie's class (Red &amp; Orange Room Discoverers) visits Taste Buds Kitchen at 109 West 27th Street, 10th Floor, NYC. Children will explore the kitchen and participate in preparing a recipe. Session runs 10:30–11:30 AM. Chaperones should be outside school between 9:50–9:55 AM. Depart for subway (~1 Train from Chambers St to 28th St) around 9:55 AM. Full-day students return to school afterward.">
-        <div class="cal-date">
-          <div class="cal-wday">TUE</div>
-          <div class="cal-d" style="color:#2E5C3E">19</div>
-        </div>
-        <div>
-          <div class="cal-name">Field Trip to Taste Buds Kitchen</div>
-          <div class="cal-info">10:30 · Edie's class (Red &amp; Orange Room Discoverers) visits Taste Buds Kitchen at 109 West 27th Street, 10th Floor, NYC. Children will explore the kitchen and participate in preparing a recipe. Session runs 10:30–11:30 AM. Chaperones should be outside school between 9:50–9:55 AM. Depart for subway (~1 Train from Chambers St to 28th St) around 9:55 AM. Full-day students return to school afterward.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="Picture Make-Up Day School picture make-up day takes place in the morning. Sign up via the provided Google Form if your child needs a retake or missed Picture Day.">
-        <div class="cal-date">
-          <div class="cal-wday">WED</div>
-          <div class="cal-d" style="color:#2E5C3E">20</div>
-        </div>
-        <div>
-          <div class="cal-name">Picture Make-Up Day</div>
-          <div class="cal-info">School picture make-up day takes place in the morning. Sign up via the provided Google Form if your child needs a retake or missed Picture Day.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="Miss Layla's Surprise Bridal Shower Celebration Surprise bridal shower celebration for Miss Layla in the afternoon. Class is helping make it special.">
-        <div class="cal-date">
-          <div class="cal-wday">THU</div>
-          <div class="cal-d" style="color:#2E5C3E">21</div>
-        </div>
-        <div>
-          <div class="cal-name">Miss Layla's Surprise Bridal Shower Celebration</div>
-          <div class="cal-info">Surprise bridal shower celebration for Miss Layla in the afternoon. Class is helping make it special.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2A5D8C"
-           data-child="Ballard" data-text="Field Trip: Hell's Kitchen Farm Project Class field trip to Hell's Kitchen Farm Project as part of the Urban Farm Study unit.">
-        <div class="cal-date">
-          <div class="cal-wday">FRI</div>
-          <div class="cal-d" style="color:#2A5D8C">22</div>
-        </div>
-        <div>
-          <div class="cal-name">Field Trip: Hell's Kitchen Farm Project</div>
-          <div class="cal-info">Class field trip to Hell's Kitchen Farm Project as part of the Urban Farm Study unit.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="Eid al-Adha - No School Eid al-Adha, no school at RSPrep.">
-        <div class="cal-date">
-          <div class="cal-wday">WED</div>
-          <div class="cal-d" style="color:#2E5C3E">27</div>
-        </div>
-        <div>
-          <div class="cal-name">Eid al-Adha - No School</div>
-          <div class="cal-info">Eid al-Adha, no school at RSPrep.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2A5D8C"
-           data-child="Ballard" data-text="Field Trip: Battery Urban Farm (2nd visit) Second class field trip to Battery Urban Farm as part of the Urban Farm Study unit.">
-        <div class="cal-date">
-          <div class="cal-wday">FRI</div>
-          <div class="cal-d" style="color:#2A5D8C">29</div>
-        </div>
-        <div>
-          <div class="cal-name">Field Trip: Battery Urban Farm (2nd visit)</div>
-          <div class="cal-info">Second class field trip to Battery Urban Farm as part of the Urban Farm Study unit.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span></div>
-        </div>
-      </div>
-</div>
-<div class="cal-mo">June 2026</div><div class="cal-list">
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="Prom Children dress up for a day of dancing, music, special treats, and celebration with friends.">
-        <div class="cal-date">
-          <div class="cal-wday">MON</div>
-          <div class="cal-d" style="color:#2E5C3E">1</div>
-        </div>
-        <div>
-          <div class="cal-name">Prom</div>
-          <div class="cal-info">Children dress up for a day of dancing, music, special treats, and celebration with friends.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="End of Year Music Performance with Miss Dani End of year music performance with Miss Dani. Will take place at the gym during arrival. More details to follow.">
-        <div class="cal-date">
-          <div class="cal-wday">MON</div>
-          <div class="cal-d" style="color:#2E5C3E">1</div>
-        </div>
-        <div>
-          <div class="cal-name">End of Year Music Performance with Miss Dani</div>
-          <div class="cal-info">End of year music performance with Miss Dani. Will take place at the gym during arrival. More details to follow.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="Glow Party Glow-in-the-dark celebration filled with music, dancing, glowing accessories, and activities.">
-        <div class="cal-date">
-          <div class="cal-wday">TUE</div>
-          <div class="cal-d" style="color:#2E5C3E">2</div>
-        </div>
-        <div>
-          <div class="cal-name">Glow Party</div>
-          <div class="cal-info">Glow-in-the-dark celebration filled with music, dancing, glowing accessories, and activities.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #8A5A00"
-           data-child="All" data-text="12th Annual Manhattan Borough Arts Festival Visual Arts Exhibit Opens PS234 student artwork on display at El Museo del Barrio, 1230 5th Avenue at 104th Street, New York, NY 10029. Featuring works by PS234 4th grader Iris Oshva and kindergartener Colette Murphy.">
-        <div class="cal-date">
-          <div class="cal-wday">TUE</div>
-          <div class="cal-d" style="color:#8A5A00">2</div>
-        </div>
-        <div>
-          <div class="cal-name">12th Annual Manhattan Borough Arts Festival Visual Arts Exhibit Opens</div>
-          <div class="cal-info">PS234 student artwork on display at El Museo del Barrio, 1230 5th Avenue at 104th Street, New York, NY 10029. Featuring works by PS234 4th grader Iris Oshva and kindergartener Colette Murphy.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="End of the Year Party Families are invited to join in the classroom for fun activities, treats, and special memories. More details to come.">
-        <div class="cal-date">
-          <div class="cal-wday">WED</div>
-          <div class="cal-d" style="color:#2E5C3E">3</div>
-        </div>
-        <div>
-          <div class="cal-name">End of the Year Party</div>
-          <div class="cal-info">Families are invited to join in the classroom for fun activities, treats, and special memories. More details to come.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="Graduation Special graduation ceremony celebrating graduates and their accomplishments. Only for students who are graduating.">
-        <div class="cal-date">
-          <div class="cal-wday">THU</div>
-          <div class="cal-d" style="color:#2E5C3E">4</div>
-        </div>
-        <div>
-          <div class="cal-name">Graduation</div>
-          <div class="cal-info">Special graduation ceremony celebrating graduates and their accomplishments. Only for students who are graduating.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="Last Day of School Final day of the school year at RSPrep.">
-        <div class="cal-date">
-          <div class="cal-wday">FRI</div>
-          <div class="cal-d" style="color:#2E5C3E">5</div>
-        </div>
-        <div>
-          <div class="cal-name">Last Day of School</div>
-          <div class="cal-info">Final day of the school year at RSPrep.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="Camp Week 1: All-Star Sports Week 1 of summer camp (All-Star Sports) runs June 8-12. A few spots remaining. Half day and full day options available.">
-        <div class="cal-date">
-          <div class="cal-wday">MON</div>
-          <div class="cal-d" style="color:#2E5C3E">8</div>
-        </div>
-        <div>
-          <div class="cal-name">Camp Week 1: All-Star Sports</div>
-          <div class="cal-info">Week 1 of summer camp (All-Star Sports) runs June 8-12. A few spots remaining. Half day and full day options available.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #8A5A00"
-           data-child="All" data-text="PS Art 2026 Exhibition Opens at The Met Annual juried exhibition of NYC public school student artwork at the Metropolitan Museum of Art (entrance at 81st &amp; 5th Ave, Uris Education Center), open to the public and schools. Featuring PS234 4th grade artist Sebastian Linhart.">
-        <div class="cal-date">
-          <div class="cal-wday">TUE</div>
-          <div class="cal-d" style="color:#8A5A00">9</div>
-        </div>
-        <div>
-          <div class="cal-name">PS Art 2026 Exhibition Opens at The Met</div>
-          <div class="cal-info">Annual juried exhibition of NYC public school student artwork at the Metropolitan Museum of Art (entrance at 81st &amp; 5th Ave, Uris Education Center), open to the public and schools. Featuring PS234 4th grade artist Sebastian Linhart.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span></div>
-        </div>
-      </div>
-</div>
-<div class="cal-mo">TBD</div><div class="cal-list">
-
-      <div class="cal-row" style="border-left:3px solid #8A5A00"
-           data-child="All" data-text="PS234 Art Parent Volunteer - Art Room Help (May &amp; June) Parent volunteers needed to help in the art room: prepping supplies, mounting and hanging artwork around the building for NDI and graduation, and packaging artwork to go home. Sign up for an available time slot.">
-        <div class="cal-date">
-          <div class="cal-wday">TBD</div>
-          <div class="cal-d" style="color:#8A5A00">?</div>
-        </div>
-        <div>
-          <div class="cal-name">PS234 Art Parent Volunteer - Art Room Help (May &amp; June)</div>
-          <div class="cal-info">Parent volunteers needed to help in the art room: prepping supplies, mounting and hanging artwork around the building for NDI and graduation, and packaging artwork to go home. Sign up for an available time slot.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #8A5A00"
-           data-child="All" data-text="Teacher Appreciation Week Teacher Appreciation Week mentioned in NYCPS May 2026 updates. Exact dates not specified in email.">
-        <div class="cal-date">
-          <div class="cal-wday">TBD</div>
-          <div class="cal-d" style="color:#8A5A00">?</div>
-        </div>
-        <div>
-          <div class="cal-name">Teacher Appreciation Week</div>
-          <div class="cal-info">Teacher Appreciation Week mentioned in NYCPS May 2026 updates. Exact dates not specified in email.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #8A5A00"
-           data-child="All" data-text="Climate Action Day Climate Action Day mentioned in NYCPS May 2026 updates. Exact date not specified in email.">
-        <div class="cal-date">
-          <div class="cal-wday">TBD</div>
-          <div class="cal-d" style="color:#8A5A00">?</div>
-        </div>
-        <div>
-          <div class="cal-name">Climate Action Day</div>
-          <div class="cal-info">Climate Action Day mentioned in NYCPS May 2026 updates. Exact date not specified in email.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #8A5A00"
-           data-child="All" data-text="Parent-Teacher Conferences Parent-Teacher Conferences mentioned in NYCPS May 2026 updates. Exact dates not specified in email.">
-        <div class="cal-date">
-          <div class="cal-wday">TBD</div>
-          <div class="cal-d" style="color:#8A5A00">?</div>
-        </div>
-        <div>
-          <div class="cal-name">Parent-Teacher Conferences</div>
-          <div class="cal-info">Parent-Teacher Conferences mentioned in NYCPS May 2026 updates. Exact dates not specified in email.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span></div>
-        </div>
-      </div>
-
-      <div class="cal-row" style="border-left:3px solid #2E5C3E"
-           data-child="Edie" data-text="Orange Room Alphabet Party Celebration of completing the alphabet, planned for the week after 4/27-4/29. The children completed all the way to Z and will celebrate with an alphabet party.">
-        <div class="cal-date">
-          <div class="cal-wday">TBD</div>
-          <div class="cal-d" style="color:#2E5C3E">?</div>
-        </div>
-        <div>
-          <div class="cal-name">Orange Room Alphabet Party</div>
-          <div class="cal-info">Celebration of completing the alphabet, planned for the week after 4/27-4/29. The children completed all the way to Z and will celebrate with an alphabet party.</div>
-          <div class="cal-tags"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-        </div>
-      </div>
-</div>
-    </section>
-    <section>
-      <div class="section-title">Tasks</div>
-      
-    <div class="task-row task-urgent"
-         data-child="All" data-text="Submit Staff Raffle tickets and payment Send in raffle tickets ($5 each) with cash or check made payable to PS 234 PTA in a sealed envelope labeled 'Staff Raffle' via backpack or drop off at the main office. Tickets are not valid without payment. Relevant play dates for Ballard: Molly (Ice Cream Date) and Anna &amp; Alexa (Movie Theater Pizza Party). Relevant play dates for Elle: Francine (Mini-Golf &amp; Ice Cream) and others in Kindergarten section.">
-      <div class="task-bar" style="background:#8A5A00"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span>
-          <span class="due-badge urgent">Due Apr 21</span>
-        </div>
-        <div class="task-title">Submit Staff Raffle tickets and payment</div>
-        <div class="task-desc">Send in raffle tickets ($5 each) with cash or check made payable to PS 234 PTA in a sealed envelope labeled 'Staff Raffle' via backpack or drop off at the main office. Tickets are not valid without payment. Relevant play dates for Ballard: Molly (Ice Cream Date) and Anna &amp; Alexa (Movie Theater Pizza Party). Relevant play dates for Elle: Francine (Mini-Golf &amp; Ice Cream) and others in Kindergarten section.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Elle" data-text="Reinforce classroom rules with Elle while Ms. Cornelius is absent Ms. Cornelius is out Tuesday-Thursday (Apr 21-23). Please remind Elle that the rules — listen to the teacher, be kind, and keep each other safe — still apply with substitute teachers.">
-      <div class="task-bar" style="background:#6B3FA0"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#F0EBF8;color:#6B3FA0;font-size:11px">Elle</span>
-          <span class="due-badge urgent">Due Apr 23</span>
-        </div>
-        <div class="task-title">Reinforce classroom rules with Elle while Ms. Cornelius is absent</div>
-        <div class="task-desc">Ms. Cornelius is out Tuesday-Thursday (Apr 21-23). Please remind Elle that the rules — listen to the teacher, be kind, and keep each other safe — still apply with substitute teachers.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Edie" data-text="RSVP for RSP Family Volunteer Day (April 25) RSVP so the committee knows to expect you at the Washington Market Park volunteer day. Link: https://docs.google.com/spreadsheets/d/1zglAp2lk-WX_3t-WKv9Y8ht7wLTw257r0MWogZ8gOXg/">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge urgent">Due Apr 25</span>
-        </div>
-        <div class="task-title">RSVP for RSP Family Volunteer Day (April 25)</div>
-        <div class="task-desc">RSVP so the committee knows to expect you at the Washington Market Park volunteer day. Link: https://docs.google.com/spreadsheets/d/1zglAp2lk-WX_3t-WKv9Y8ht7wLTw257r0MWogZ8gOXg/</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="All" data-text="Purchase tickets for Spring Auction Buy tickets in advance to skip the line at the door for The Greatest Show 234 Spring Auction on April 25th.">
-      <div class="task-bar" style="background:#8A5A00"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span>
-          <span class="due-badge urgent">Due Apr 25</span>
-        </div>
-        <div class="task-title">Purchase tickets for Spring Auction</div>
-        <div class="task-desc">Buy tickets in advance to skip the line at the door for The Greatest Show 234 Spring Auction on April 25th.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="All" data-text="Register for childcare at Spring Auction (if needed) Register with Manhattan Youth Childcare for last-minute childcare during the Spring Auction on April 25th.">
-      <div class="task-bar" style="background:#8A5A00"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span>
-          <span class="due-badge urgent">Due Apr 25</span>
-        </div>
-        <div class="task-title">Register for childcare at Spring Auction (if needed)</div>
-        <div class="task-desc">Register with Manhattan Youth Childcare for last-minute childcare during the Spring Auction on April 25th.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="All" data-text="Drop off auction item donations at main office Bring any auction item donations to the PS 234 main office before the Spring Auction. Questions: donations@ps234.org.">
-      <div class="task-bar" style="background:#8A5A00"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span>
-          <span class="due-badge urgent">Due Apr 25</span>
-        </div>
-        <div class="task-title">Drop off auction item donations at main office</div>
-        <div class="task-desc">Bring any auction item donations to the PS 234 main office before the Spring Auction. Questions: donations@ps234.org.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="All" data-text="Purchase Spring Auction tickets Purchase tickets in advance to skip the line at the door for the Spring Auction on April 25th.">
-      <div class="task-bar" style="background:#8A5A00"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span>
-          <span class="due-badge urgent">Due Apr 25</span>
-        </div>
-        <div class="task-title">Purchase Spring Auction tickets</div>
-        <div class="task-desc">Purchase tickets in advance to skip the line at the door for the Spring Auction on April 25th.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="All" data-text="Sign up to volunteer for Spring Auction setup Volunteers needed for Spring Auction setup. Sign up via the link in the email.">
-      <div class="task-bar" style="background:#8A5A00"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span>
-          <span class="due-badge urgent">Due Apr 25</span>
-        </div>
-        <div class="task-title">Sign up to volunteer for Spring Auction setup</div>
-        <div class="task-desc">Volunteers needed for Spring Auction setup. Sign up via the link in the email.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Edie" data-text="Send in fruits or veggies for Farmers Market Donate fruits or veggies for the Farmers Market on April 29th. Sign up via SignUpGenius and send items in on Monday April 27th so they are as fresh as possible.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge urgent">Due Apr 27</span>
-        </div>
-        <div class="task-title">Send in fruits or veggies for Farmers Market</div>
-        <div class="task-desc">Donate fruits or veggies for the Farmers Market on April 29th. Sign up via SignUpGenius and send items in on Monday April 27th so they are as fresh as possible.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Edie" data-text="Sign up to donate fruits or veggies for Farmers Market Use the SignUpGenius link to volunteer fruit or veggie donations for the April 29 Farmers Market. Send items in on Monday April 27th for freshness.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge urgent">Due Apr 27</span>
-        </div>
-        <div class="task-title">Sign up to donate fruits or veggies for Farmers Market</div>
-        <div class="task-desc">Use the SignUpGenius link to volunteer fruit or veggie donations for the April 29 Farmers Market. Send items in on Monday April 27th for freshness.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Edie" data-text="Send in donated fruits/veggies for Farmers Market Send in donated fruits or vegetables on Monday, April 27th so they are as fresh as possible for the Farmers Market on April 29.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge urgent">Due Apr 27</span>
-        </div>
-        <div class="task-title">Send in donated fruits/veggies for Farmers Market</div>
-        <div class="task-desc">Send in donated fruits or vegetables on Monday, April 27th so they are as fresh as possible for the Farmers Market on April 29.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Ballard" data-text="Bid on silent auction items (last day) Last day to bid on silent auction items via the OneCause link in the email.">
-      <div class="task-bar" style="background:#2A5D8C"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span>
-          <span class="due-badge urgent">Due Apr 29</span>
-        </div>
-        <div class="task-title">Bid on silent auction items (last day)</div>
-        <div class="task-desc">Last day to bid on silent auction items via the OneCause link in the email.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="All" data-text="Register for Fun Run free t-shirt Deadline to register for a free t-shirt for the 1st Annual Fun Run is Wednesday, April 29th. Register via the link in the email.">
-      <div class="task-bar" style="background:#8A5A00"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span>
-          <span class="due-badge urgent">Due Apr 29</span>
-        </div>
-        <div class="task-title">Register for Fun Run free t-shirt</div>
-        <div class="task-desc">Deadline to register for a free t-shirt for the 1st Annual Fun Run is Wednesday, April 29th. Register via the link in the email.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="All" data-text="Bid on silent auction items Last day to bid on silent auction items is Wednesday, April 29th. Bid via the link in the email.">
-      <div class="task-bar" style="background:#8A5A00"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span>
-          <span class="due-badge urgent">Due Apr 29</span>
-        </div>
-        <div class="task-title">Bid on silent auction items</div>
-        <div class="task-desc">Last day to bid on silent auction items is Wednesday, April 29th. Bid via the link in the email.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="All" data-text="Register for PS 234 Fun Run Register for the Fun Run by April 29th to receive a free t-shirt. Registration is open via the PS 234 PTA link.">
-      <div class="task-bar" style="background:#8A5A00"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span>
-          <span class="due-badge urgent">Due Apr 29</span>
-        </div>
-        <div class="task-title">Register for PS 234 Fun Run</div>
-        <div class="task-desc">Register for the Fun Run by April 29th to receive a free t-shirt. Registration is open via the PS 234 PTA link.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Edie" data-text="Review Edie's Spring Progress Report Attached progress report includes checklist and comments for all domains in both Spanish and English. Use the provided key: Not Yet, Emerging, Consistently, Mastered. Greyed-out benchmarks have not been targeted yet.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge urgent">Due Apr 30</span>
-        </div>
-        <div class="task-title">Review Edie's Spring Progress Report</div>
-        <div class="task-desc">Attached progress report includes checklist and comments for all domains in both Spanish and English. Use the provided key: Not Yet, Emerging, Consistently, Mastered. Greyed-out benchmarks have not been targeted yet.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Elle" data-text="Submit Memory Book Shout Out for Elle's 5th Grade Buddy Submit a Shout Out message (20 words or less) for Elle's 5th grade buddy via the Memory Book form. Suggested donation is $10 per Shout Out (payable via PayPal, Venmo, debit, or credit card). Note: the email says deadline is April 30 but was sent after the originally advertised 4/21 date.">
-      <div class="task-bar" style="background:#6B3FA0"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#F0EBF8;color:#6B3FA0;font-size:11px">Elle</span>
-          <span class="due-badge urgent">Due Apr 30</span>
-        </div>
-        <div class="task-title">Submit Memory Book Shout Out for Elle's 5th Grade Buddy</div>
-        <div class="task-desc">Submit a Shout Out message (20 words or less) for Elle's 5th grade buddy via the Memory Book form. Suggested donation is $10 per Shout Out (payable via PayPal, Venmo, debit, or credit card). Note: the email says deadline is April 30 but was sent after the originally advertised 4/21 date.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Elle" data-text="Pack disposable lunch for field trip day All students need a disposable lunch on field trip day. NOTE: Elle already has school lunch ordered per Ms. Cornelius — no action needed for Elle specifically, but confirm if unsure.">
-      <div class="task-bar" style="background:#6B3FA0"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#F0EBF8;color:#6B3FA0;font-size:11px">Elle</span>
-          <span class="due-badge urgent">Due May 1</span>
-        </div>
-        <div class="task-title">Pack disposable lunch for field trip day</div>
-        <div class="task-desc">All students need a disposable lunch on field trip day. NOTE: Elle already has school lunch ordered per Ms. Cornelius — no action needed for Elle specifically, but confirm if unsure.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Elle" data-text="Pack disposable lunch for Elle's class trip Elle needs a disposable/packed lunch for the class trip on Friday. Note: the teacher listed Elle as having ordered a school lunch, so confirm whether a packed lunch is still needed or if the school lunch order is covered.">
-      <div class="task-bar" style="background:#6B3FA0"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#F0EBF8;color:#6B3FA0;font-size:11px">Elle</span>
-          <span class="due-badge urgent">Due May 1</span>
-        </div>
-        <div class="task-title">Pack disposable lunch for Elle's class trip</div>
-        <div class="task-desc">Elle needs a disposable/packed lunch for the class trip on Friday. Note: the teacher listed Elle as having ordered a school lunch, so confirm whether a packed lunch is still needed or if the school lunch order is covered.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Edie" data-text="Pay $39 field trip fee for Taste Buds Kitchen Submit the $39 per child fee for the Taste Buds Kitchen field trip on May 19 via the updated Brightwheel sign-up link: https://schools.mybrightwheel.com/sign-in?redirect_path=/admissions/packet/5ac3ac86-8949-4087-92cc-1b9a14002033/fill?school_id=5aeeb31c-b328-41cc-9aee-77ecf1189ae0. Payment deadline is Wednesday, May 5th.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge urgent">Due May 5</span>
-        </div>
-        <div class="task-title">Pay $39 field trip fee for Taste Buds Kitchen</div>
-        <div class="task-desc">Submit the $39 per child fee for the Taste Buds Kitchen field trip on May 19 via the updated Brightwheel sign-up link: https://schools.mybrightwheel.com/sign-in?redirect_path=/admissions/packet/5ac3ac86-8949-4087-92cc-1b9a14002033/fill?school_id=5aeeb31c-b328-41cc-9aee-77ecf1189ae0. Payment deadline is Wednesday, May 5th.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Ballard" data-text="Return Harlem Grown field trip waiver Sign and return the Harlem Grown waiver in Ballard's backpack so he can attend the field trip. Ms. Waterman will also have extra waivers and pens at drop-off.">
-      <div class="task-bar" style="background:#2A5D8C"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span>
-          <span class="due-badge urgent">Due May 8</span>
-        </div>
-        <div class="task-title">Return Harlem Grown field trip waiver</div>
-        <div class="task-desc">Sign and return the Harlem Grown waiver in Ballard's backpack so he can attend the field trip. Ms. Waterman will also have extra waivers and pens at drop-off.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Ballard" data-text="Sign and return Harlem Grown waiver A Harlem Grown field trip waiver was sent home in Ballard's backpack on 5/7. Sign it and return it in his backpack by Friday morning (5/8) so he can attend the field trip. Ms. Waterman will also have extra waivers at drop-off.">
-      <div class="task-bar" style="background:#2A5D8C"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span>
-          <span class="due-badge urgent">Due May 8</span>
-        </div>
-        <div class="task-title">Sign and return Harlem Grown waiver</div>
-        <div class="task-desc">A Harlem Grown field trip waiver was sent home in Ballard's backpack on 5/7. Sign it and return it in his backpack by Friday morning (5/8) so he can attend the field trip. Ms. Waterman will also have extra waivers at drop-off.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Edie" data-text="Pay for printed class book (K-Pop Demon Hunters Y Su Aventura à la Playa) Optional: Purchase a printed copy of Edie's class book for $44. Venmo @readestreetprep by May 8, 2026.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge urgent">Due May 8</span>
-        </div>
-        <div class="task-title">Pay for printed class book (K-Pop Demon Hunters Y Su Aventura à la Playa)</div>
-        <div class="task-desc">Optional: Purchase a printed copy of Edie's class book for $44. Venmo @readestreetprep by May 8, 2026.</div>
-      </div>
-    </div>
-
-    <div class="task-row task-urgent"
-         data-child="Edie" data-text="Submit note/photo for RSPrep Teacher Appreciation slideshow Submit a short appreciation note (from you or Edie, with optional photos) for Cindy and Estephanie via the RSP Appreciation Slideshow link. The slideshow will be presented on Friday May 8.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge urgent">Due May 8</span>
-        </div>
-        <div class="task-title">Submit note/photo for RSPrep Teacher Appreciation slideshow</div>
-        <div class="task-desc">Submit a short appreciation note (from you or Edie, with optional photos) for Cindy and Estephanie via the RSP Appreciation Slideshow link. The slideshow will be presented on Friday May 8.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Ballard" data-text="Send cash for Book Fair in labeled Ziploc bag Send Ballard to school by Wednesday, May 13th with cash in a Ziploc bag with his name written on it. Paperbacks are $5-10, hardcovers and picture books are $15-25.">
-      <div class="task-bar" style="background:#2A5D8C"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span>
-          <span class="due-badge">May 13</span>
-        </div>
-        <div class="task-title">Send cash for Book Fair in labeled Ziploc bag</div>
-        <div class="task-desc">Send Ballard to school by Wednesday, May 13th with cash in a Ziploc bag with his name written on it. Paperbacks are $5-10, hardcovers and picture books are $15-25.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Ballard" data-text="Sign up to contribute supplies for Pickling Family Morning Sign up via the provided Google Doc to contribute supplies. Send supplies in between Monday, May 11th and Wednesday, May 13th.">
-      <div class="task-bar" style="background:#2A5D8C"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span>
-          <span class="due-badge">May 13</span>
-        </div>
-        <div class="task-title">Sign up to contribute supplies for Pickling Family Morning</div>
-        <div class="task-desc">Sign up via the provided Google Doc to contribute supplies. Send supplies in between Monday, May 11th and Wednesday, May 13th.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Prepare outfit for Día de Español performance Edie is a girl, so no outfit needed — girls will wear dresses provided by the school. If Edie were a boy, they would need a button-down shirt (solid white, red, or blue) and a kids fedora hat.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge">May 15</span>
-        </div>
-        <div class="task-title">Prepare outfit for Día de Español performance</div>
-        <div class="task-desc">Edie is a girl, so no outfit needed — girls will wear dresses provided by the school. If Edie were a boy, they would need a button-down shirt (solid white, red, or blue) and a kids fedora hat.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Complete RSPrep Parent Survey Complete the short parent survey (including theme/artist recommendations and friend requests) for next school year planning via the Brightwheel link in the newsletter.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge">May 15</span>
-        </div>
-        <div class="task-title">Complete RSPrep Parent Survey</div>
-        <div class="task-desc">Complete the short parent survey (including theme/artist recommendations and friend requests) for next school year planning via the Brightwheel link in the newsletter.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Dress Edie in button-down solid shirt for Día de Español Boys wear a button-down solid shirt for the Día de Español performance. Confirm if applicable to Edie.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge">May 15</span>
-        </div>
-        <div class="task-title">Dress Edie in button-down solid shirt for Día de Español</div>
-        <div class="task-desc">Boys wear a button-down solid shirt for the Día de Español performance. Confirm if applicable to Edie.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Ballard" data-text="Sign up to attend Pickling Family Morning Sign up via the provided Google Doc link to attend the Pickling Family Morning on May 15th at 9:30am in Annex 333.">
-      <div class="task-bar" style="background:#2A5D8C"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span>
-          <span class="due-badge">May 15</span>
-        </div>
-        <div class="task-title">Sign up to attend Pickling Family Morning</div>
-        <div class="task-desc">Sign up via the provided Google Doc link to attend the Pickling Family Morning on May 15th at 9:30am in Annex 333.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="All" data-text="Sign up to volunteer at Taste of Tribeca Over 30 parent volunteers needed for 2-hour shifts before, during, and after the event on May 16. Sign up at www.tasteoftribeca.com or contact karnonenoy@gmail.com.">
-      <div class="task-bar" style="background:#8A5A00"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span>
-          <span class="due-badge">May 16</span>
-        </div>
-        <div class="task-title">Sign up to volunteer at Taste of Tribeca</div>
-        <div class="task-desc">Over 30 parent volunteers needed for 2-hour shifts before, during, and after the event on May 16. Sign up at www.tasteoftribeca.com or contact karnonenoy@gmail.com.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="All" data-text="Purchase Taste of Tribeca tickets Buy tickets online at www.tasteoftribeca.com or in person at drop-off on May 8th or May 14th.">
-      <div class="task-bar" style="background:#8A5A00"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span>
-          <span class="due-badge">May 16</span>
-        </div>
-        <div class="task-title">Purchase Taste of Tribeca tickets</div>
-        <div class="task-desc">Buy tickets online at www.tasteoftribeca.com or in person at drop-off on May 8th or May 14th.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="All" data-text="Buy Taste of Tribeca tickets Purchase tickets for the Taste of Tribeca event on Saturday May 16th via the link in the PTA newsletter.">
-      <div class="task-bar" style="background:#8A5A00"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span>
-          <span class="due-badge">May 16</span>
-        </div>
-        <div class="task-title">Buy Taste of Tribeca tickets</div>
-        <div class="task-desc">Purchase tickets for the Taste of Tribeca event on Saturday May 16th via the link in the PTA newsletter.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Sign up to chaperone Taste Buds Kitchen field trip (optional) At least 7 chaperones needed. Each chaperone is responsible for their child plus one additional student. Note: chaperones may not participate in the cooking activity. Sign up at: https://docs.google.com/document/d/1MupV1-hqDsi-IqZIqS_Erngm25cRoys9CnGw7FbeVEs/edit?usp=sharing">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge">May 19</span>
-        </div>
-        <div class="task-title">Sign up to chaperone Taste Buds Kitchen field trip (optional)</div>
-        <div class="task-desc">At least 7 chaperones needed. Each chaperone is responsible for their child plus one additional student. Note: chaperones may not participate in the cooking activity. Sign up at: https://docs.google.com/document/d/1MupV1-hqDsi-IqZIqS_Erngm25cRoys9CnGw7FbeVEs/edit?usp=sharing</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Notify RSPrep if Edie will NOT attend the Taste Buds Kitchen field trip If Edie will not be attending the May 19 field trip to Taste Buds Kitchen, contact Miss Cindy &amp; Miss Estephanie so they can note her absence.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge">May 19</span>
-        </div>
-        <div class="task-title">Notify RSPrep if Edie will NOT attend the Taste Buds Kitchen field trip</div>
-        <div class="task-desc">If Edie will not be attending the May 19 field trip to Taste Buds Kitchen, contact Miss Cindy &amp; Miss Estephanie so they can note her absence.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Notify RSPrep if Edie will NOT attend the field trip If Edie will not be attending the Taste Buds Kitchen field trip on May 19th, inform Miss Cindy &amp; Miss Estephanie so they can note her absence.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge">May 19</span>
-        </div>
-        <div class="task-title">Notify RSPrep if Edie will NOT attend the field trip</div>
-        <div class="task-desc">If Edie will not be attending the Taste Buds Kitchen field trip on May 19th, inform Miss Cindy &amp; Miss Estephanie so they can note her absence.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Sign up and drop off contribution for Miss Layla's bridal shower Sign up via SignUpGenius (https://www.signupgenius.com/go/904084BAFAF2DA6FC1-63985247-laylas#/) and drop off contributed items at the RSPrep front desk by Wednesday, May 20th to keep it a surprise.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge">May 20</span>
-        </div>
-        <div class="task-title">Sign up and drop off contribution for Miss Layla's bridal shower</div>
-        <div class="task-desc">Sign up via SignUpGenius (https://www.signupgenius.com/go/904084BAFAF2DA6FC1-63985247-laylas#/) and drop off contributed items at the RSPrep front desk by Wednesday, May 20th to keep it a surprise.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Sign up for Picture Make-Up Day If Edie needs a photo retake, was absent on Picture Day, or did not take a photo, sign up using the Google Form linked in the newsletter. Sibling photos also taken this day.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge">May 20</span>
-        </div>
-        <div class="task-title">Sign up for Picture Make-Up Day</div>
-        <div class="task-desc">If Edie needs a photo retake, was absent on Picture Day, or did not take a photo, sign up using the Google Form linked in the newsletter. Sibling photos also taken this day.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Sign up for Picture Make-Up Day if needed If Edie needs a retake or missed Picture Day, sign up using the Google Form linked in the email before Make-Up Day on May 20th.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          <span class="due-badge">May 20</span>
-        </div>
-        <div class="task-title">Sign up for Picture Make-Up Day if needed</div>
-        <div class="task-desc">If Edie needs a retake or missed Picture Day, sign up using the Google Form linked in the email before Make-Up Day on May 20th.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Elle" data-text="Complete Field Day 2026 permission slip Ms. Cornelius sent a permission slip for Field Day 2026. Complete it at: https://docs.google.com/forms/d/e/1FAIpQLSffcELEjBjp2pVPOmQjHdb82o7wsjJ2y5kV7KMR9KinBz7cqw/viewform?usp=publish-editor. More details about the event to follow.">
-      <div class="task-bar" style="background:#6B3FA0"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#F0EBF8;color:#6B3FA0;font-size:11px">Elle</span>
-          
-        </div>
-        <div class="task-title">Complete Field Day 2026 permission slip</div>
-        <div class="task-desc">Ms. Cornelius sent a permission slip for Field Day 2026. Complete it at: https://docs.google.com/forms/d/e/1FAIpQLSffcELEjBjp2pVPOmQjHdb82o7wsjJ2y5kV7KMR9KinBz7cqw/viewform?usp=publish-editor. More details about the event to follow.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="All" data-text="Sign up to volunteer in the PS234 Art Room (May &amp; June) Parent volunteer sign-up for available time slots to help in the art room with prepping supplies, mounting/hanging artwork for NDI and graduation, and packaging artwork to go home.">
-      <div class="task-bar" style="background:#8A5A00"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span>
-          
-        </div>
-        <div class="task-title">Sign up to volunteer in the PS234 Art Room (May &amp; June)</div>
-        <div class="task-desc">Parent volunteer sign-up for available time slots to help in the art room with prepping supplies, mounting/hanging artwork for NDI and graduation, and packaging artwork to go home.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Apply for Summer Camp if interested A few spots remain for Week 1 camp (June 8-12, All-Star Sports). Apply for half day or full day via the Brightwheel links in the newsletter.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          
-        </div>
-        <div class="task-title">Apply for Summer Camp if interested</div>
-        <div class="task-desc">A few spots remain for Week 1 camp (June 8-12, All-Star Sports). Apply for half day or full day via the Brightwheel links in the newsletter.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="View and order school pictures School pictures are ready to view at https://iloveschoolpictures.com/rsp/5841. Click 'Order Now' on the right side of the screen.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          
-        </div>
-        <div class="task-title">View and order school pictures</div>
-        <div class="task-desc">School pictures are ready to view at https://iloveschoolpictures.com/rsp/5841. Click 'Order Now' on the right side of the screen.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Review Edie's Spring Progress Report Edie's spring progress report (checklist and comments for all domains, both Spanish and English) was attached to the conference email as 'Edie Konigsmark Spring Conference 2026.pdf'. Review using the provided key: Not Yet, Emerging, Consistently, Mastered.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          
-        </div>
-        <div class="task-title">Review Edie's Spring Progress Report</div>
-        <div class="task-desc">Edie's spring progress report (checklist and comments for all domains, both Spanish and English) was attached to the conference email as 'Edie Konigsmark Spring Conference 2026.pdf'. Review using the provided key: Not Yet, Emerging, Consistently, Mastered.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Sign up for Parent Teacher Conference timeslot Sign up for one 20-minute conference timeslot via the Brightwheel link: https://schools.mybrightwheel.com/paperwork/sign-ups/30de066c-50bf-4e6a-ab52-6fd5e49beb37/share">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          
-        </div>
-        <div class="task-title">Sign up for Parent Teacher Conference timeslot</div>
-        <div class="task-desc">Sign up for one 20-minute conference timeslot via the Brightwheel link: https://schools.mybrightwheel.com/paperwork/sign-ups/30de066c-50bf-4e6a-ab52-6fd5e49beb37/share</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Wash produce from Farmers Market before eating Remember to wash all produce received from the Farmers Market unboxing before consuming at home.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          
-        </div>
-        <div class="task-title">Wash produce from Farmers Market before eating</div>
-        <div class="task-desc">Remember to wash all produce received from the Farmers Market unboxing before consuming at home.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Sign up to be Mystery Reader (Red Room AM or Orange Room PM) Sign up to be Mystery Reader in the Red Room Mornings at https://www.signupgenius.com/go/904084BAFAF29AAFA7-58813740-mystery or Orange Room Afternoons at https://www.signupgenius.com/go/904084BAFAF2DA6FC1-58419902-pmmystery">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          
-        </div>
-        <div class="task-title">Sign up to be Mystery Reader (Red Room AM or Orange Room PM)</div>
-        <div class="task-desc">Sign up to be Mystery Reader in the Red Room Mornings at https://www.signupgenius.com/go/904084BAFAF29AAFA7-58813740-mystery or Orange Room Afternoons at https://www.signupgenius.com/go/904084BAFAF2DA6FC1-58419902-pmmystery</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="View and order school photos Visit https://iloveschoolpictures.com/rsp/5841 and click 'Order Now'. Use the individual code sent by Stomping Ground (no-reply@imagequix.com). If you can't find the code, use the recovery link provided.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          
-        </div>
-        <div class="task-title">View and order school photos</div>
-        <div class="task-desc">Visit https://iloveschoolpictures.com/rsp/5841 and click 'Order Now'. Use the individual code sent by Stomping Ground (no-reply@imagequix.com). If you can't find the code, use the recovery link provided.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Ballard" data-text="Sign up to chaperone Urban Farm field trips There is still room for chaperones for the upcoming May field trips (Harlem Grown, One Love Community Fridge, Hell's Kitchen Farm Project, Battery Urban Farm). Sign up via the Google Sheets link in the email.">
-      <div class="task-bar" style="background:#2A5D8C"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span>
-          
-        </div>
-        <div class="task-title">Sign up to chaperone Urban Farm field trips</div>
-        <div class="task-desc">There is still room for chaperones for the upcoming May field trips (Harlem Grown, One Love Community Fridge, Hell's Kitchen Farm Project, Battery Urban Farm). Sign up via the Google Sheets link in the email.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Ballard" data-text="Sign up for Pickling Family Morning (attend and/or supply help) Sign up to attend the Pickling Family Morning on May 15th and/or sign up to help with supplies. Links provided in the original email.">
-      <div class="task-bar" style="background:#2A5D8C"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span>
-          
-        </div>
-        <div class="task-title">Sign up for Pickling Family Morning (attend and/or supply help)</div>
-        <div class="task-desc">Sign up to attend the Pickling Family Morning on May 15th and/or sign up to help with supplies. Links provided in the original email.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Complete next school year survey Complete a short survey including theme/artist recommendations and friend requests for next school year via the Brightwheel link.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          
-        </div>
-        <div class="task-title">Complete next school year survey</div>
-        <div class="task-desc">Complete a short survey including theme/artist recommendations and friend requests for next school year via the Brightwheel link.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Sign up to be Mystery Reader Optionally sign up to be a Mystery Reader in the Red Room (AM) or Orange Room (PM) via the respective SignUpGenius links.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          
-        </div>
-        <div class="task-title">Sign up to be Mystery Reader</div>
-        <div class="task-desc">Optionally sign up to be a Mystery Reader in the Red Room (AM) or Orange Room (PM) via the respective SignUpGenius links.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="All" data-text="Reply to Ms. Berkowsky if you want to adopt mealworms or beetles Shannon Berkowsky (K-2 Science) is looking for volunteer homes for mealworms and fully grown darkling beetles from the beetle unit. Email sberkowsky@ps234.org if interested. Note: availability is not guaranteed.">
-      <div class="task-bar" style="background:#8A5A00"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span>
-          
-        </div>
-        <div class="task-title">Reply to Ms. Berkowsky if you want to adopt mealworms or beetles</div>
-        <div class="task-desc">Shannon Berkowsky (K-2 Science) is looking for volunteer homes for mealworms and fully grown darkling beetles from the beetle unit. Email sberkowsky@ps234.org if interested. Note: availability is not guaranteed.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Elle" data-text="Fill out K116 permission slip Complete the permission slip form linked by Ms. Cornelius: https://docs.google.com/forms/d/e/1FAIpQLSdcwLrWB4x8rMcA9Rad6avOlEUBDA_uO2bEhOYNlBuk7L6zpw/viewform?usp=sharing&amp;ouid=100702804133287134186">
-      <div class="task-bar" style="background:#6B3FA0"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#F0EBF8;color:#6B3FA0;font-size:11px">Elle</span>
-          
-        </div>
-        <div class="task-title">Fill out K116 permission slip</div>
-        <div class="task-desc">Complete the permission slip form linked by Ms. Cornelius: https://docs.google.com/forms/d/e/1FAIpQLSdcwLrWB4x8rMcA9Rad6avOlEUBDA_uO2bEhOYNlBuk7L6zpw/viewform?usp=sharing&amp;ouid=100702804133287134186</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Place bean seeds in a sunny window at home Orange PM class planted bean seeds this week. Place them in a sunny window at home so Edie can continue to observe them grow and change each day.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          
-        </div>
-        <div class="task-title">Place bean seeds in a sunny window at home</div>
-        <div class="task-desc">Orange PM class planted bean seeds this week. Place them in a sunny window at home so Edie can continue to observe them grow and change each day.</div>
-      </div>
-    </div>
-
-    <div class="task-row "
-         data-child="Edie" data-text="Sign up to donate fruits or veggies for RSP Farmers Market Sign up via SignUpGenius to donate fruits or vegetables for the Farmers Market event on April 29. Items should be sent in on Monday, April 27th so they are as fresh as possible.">
-      <div class="task-bar" style="background:#2E5C3E"></div>
-      <div class="task-body">
-        <div class="task-head">
-          <span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span>
-          
-        </div>
-        <div class="task-title">Sign up to donate fruits or veggies for RSP Farmers Market</div>
-        <div class="task-desc">Sign up via SignUpGenius to donate fruits or vegetables for the Farmers Market event on April 29. Items should be sent in on Monday, April 27th so they are as fresh as possible.</div>
-      </div>
-    </div>
-    </section>
-    <section>
-      <div class="section-title">Curriculum</div>
-      
-    <div class="card"
-         data-child="Ballard" data-text="Beetle / Mealworm Unit 1st graders have been studying grass, alfalfa, and wheat seeds as part of the K-2 science animal and plant investigation unit. The class also observed mealworms transforming into darkling beetles. The beetle unit is now concluding.">
-      <div class="slbl c-spruce"><span class="sdot"></span>Science</div>
-      <div class="stopic">Beetle / Mealworm Unit</div>
-      <div class="sdetail">1st graders have been studying grass, alfalfa, and wheat seeds as part of the K-2 science animal and plant investigation unit. The class also observed mealworms transforming into darkling beetles. The beetle unit is now concluding.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Día de Español Students are performing in a Spanish-language cultural performance event called Día de Español, reflecting Spanish language and cultural learning in the Red Room AM class.">
-      <div class="slbl c-bark"><span class="sdot"></span>Other</div>
-      <div class="stopic">Día de Español</div>
-      <div class="sdetail">Students are performing in a Spanish-language cultural performance event called Día de Español, reflecting Spanish language and cultural learning in the Red Room AM class.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Class Book Project: K-Pop Demon Hunters Y Su Aventura à la Playa Students collaborated over several weeks to create a class book combining Spanish language skills, creative writing, artistic expression, and teamwork. The story follows three girls on a beach adventure involving a witch, a Cybertruck, a volcano, and Garfield.">
-      <div class="slbl c-bark"><span class="sdot"></span>Other</div>
-      <div class="stopic">Class Book Project: K-Pop Demon Hunters Y Su Aventura à la Playa</div>
-      <div class="sdetail">Students collaborated over several weeks to create a class book combining Spanish language skills, creative writing, artistic expression, and teamwork. The story follows three girls on a beach adventure involving a witch, a Cybertruck, a volcano, and Garfield.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Elle" data-text="Fish and Aquatic Animals - Body Structures and Survival Kindergarteners are studying goldfish and livebearers: body structures, survival needs, water care. Next up: snails.">
-      <div class="slbl c-spruce"><span class="sdot"></span>Science</div>
-      <div class="stopic">Fish and Aquatic Animals - Body Structures and Survival</div>
-      <div class="sdetail">Kindergarteners are studying goldfish and livebearers: body structures, survival needs, water care. Next up: snails.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#F0EBF8;color:#6B3FA0;font-size:11px">Elle</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Ballard" data-text="Plants - Germination and Growth 1st graders planted ryegrass, alfalfa, and wheat seeds. Studying germination, growth rates, and plant care. Connects to classroom teacher's current unit.">
-      <div class="slbl c-spruce"><span class="sdot"></span>Science</div>
-      <div class="stopic">Plants - Germination and Growth</div>
-      <div class="sdetail">1st graders planted ryegrass, alfalfa, and wheat seeds. Studying germination, growth rates, and plant care. Connects to classroom teacher's current unit.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span></div>
-    </div>
-
-    <div class="card"
-         data-child="All" data-text="Review, Team Sports, and Field Day Prep K-5 students reviewing year's material: teamwork, sportsmanship, throwing/catching, manipulating objects, cardiovascular endurance. Field Day activities being practiced. Fitnessgram concepts and skills incorporated into warm-ups.">
-      <div class="slbl c-green"><span class="sdot"></span>PE</div>
-      <div class="stopic">Review, Team Sports, and Field Day Prep</div>
-      <div class="sdetail">K-5 students reviewing year's material: teamwork, sportsmanship, throwing/catching, manipulating objects, cardiovascular endurance. Field Day activities being practiced. Fitnessgram concepts and skills incorporated into warm-ups.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#FDF3E0;color:#8A5A00;font-size:11px">All</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Elle" data-text="Underwater Animal Paintings and Clay Sculpture Kindergarteners completing final paintings of underwater animals and beginning a clay sculpture unit. Clay explorations will be sent home.">
-      <div class="slbl c-rust"><span class="sdot"></span>Art</div>
-      <div class="stopic">Underwater Animal Paintings and Clay Sculpture</div>
-      <div class="sdetail">Kindergarteners completing final paintings of underwater animals and beginning a clay sculpture unit. Clay explorations will be sent home.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#F0EBF8;color:#6B3FA0;font-size:11px">Elle</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Ballard" data-text="Spring Flower Paintings and Clay Sculpture 1st graders completing final paintings depicting spring flowers and beginning a clay sculpture unit. Clay explorations will be sent home.">
-      <div class="slbl c-rust"><span class="sdot"></span>Art</div>
-      <div class="stopic">Spring Flower Paintings and Clay Sculpture</div>
-      <div class="sdetail">1st graders completing final paintings depicting spring flowers and beginning a clay sculpture unit. Clay explorations will be sent home.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Chef's Kiss: Cooking &amp; Healthy Habits May theme focuses on cooking. Students will work with an array of ingredients, practice measurements, and learn about healthy habits. Inspired by world-renowned chef Jean-Georges Vongerichten.">
-      <div class="slbl c-bark"><span class="sdot"></span>Other</div>
-      <div class="stopic">Chef's Kiss: Cooking &amp; Healthy Habits</div>
-      <div class="sdetail">May theme focuses on cooking. Students will work with an array of ingredients, practice measurements, and learn about healthy habits. Inspired by world-renowned chef Jean-Georges Vongerichten.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Bilingual Progress Assessment (Spanish &amp; English) Edie's spring progress report covers all developmental domains in both Spanish and English. Benchmarks are rated: Not Yet, Emerging, Consistently, or Mastered. Greyed-out benchmarks have not yet been targeted by the class.">
-      <div class="slbl c-bark"><span class="sdot"></span>Other</div>
-      <div class="stopic">Bilingual Progress Assessment (Spanish &amp; English)</div>
-      <div class="sdetail">Edie's spring progress report covers all developmental domains in both Spanish and English. Benchmarks are rated: Not Yet, Emerging, Consistently, or Mastered. Greyed-out benchmarks have not yet been targeted by the class.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Parts of Plants We Can Eat (Concrete Jungle theme) Children learned about edible plant parts in Spanish and English: roots (raíces) like potato and carrot, leaves (hojas) like lettuce and spinach, stems (tallos) like celery and asparagus, seeds (semillas) like corn and beans, and fruits (frutas) like apples, bananas, strawberries, oranges, and blueberries.">
-      <div class="slbl c-spruce"><span class="sdot"></span>Science</div>
-      <div class="stopic">Parts of Plants We Can Eat (Concrete Jungle theme)</div>
-      <div class="sdetail">Children learned about edible plant parts in Spanish and English: roots (raíces) like potato and carrot, leaves (hojas) like lettuce and spinach, stems (tallos) like celery and asparagus, seeds (semillas) like corn and beans, and fruits (frutas) like apples, bananas, strawberries, oranges, and blueberries.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Letter of the Week: Xx Learned about the consonant letter Xx. Drew a xilófono for the ABC book. Vocabulary words: xilófono, saxofón, extraterrestre, taxi.">
-      <div class="slbl c-sky"><span class="sdot"></span>Reading</div>
-      <div class="stopic">Letter of the Week: Xx</div>
-      <div class="sdetail">Learned about the consonant letter Xx. Drew a xilófono for the ABC book. Vocabulary words: xilófono, saxofón, extraterrestre, taxi.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Letter of the Week: Zz Completed the alphabet by reaching the letter Zz. Children are proud of completing all 26 letters. Alphabet party planned for the following week.">
-      <div class="slbl c-sky"><span class="sdot"></span>Reading</div>
-      <div class="stopic">Letter of the Week: Zz</div>
-      <div class="sdetail">Completed the alphabet by reaching the letter Zz. Children are proud of completing all 26 letters. Alphabet party planned for the following week.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Sight Words Current sight word list: a, I, is, it, in, if, to, do, me, be, see, we, my, by, the, are, you, and, of, will, can, at, up, no, go, yes, love, as, all, have, am, or, has, he, she, so, day, was, had, like, get, how, now.">
-      <div class="slbl c-sky"><span class="sdot"></span>Reading</div>
-      <div class="stopic">Sight Words</div>
-      <div class="sdetail">Current sight word list: a, I, is, it, in, if, to, do, me, be, see, we, my, by, the, are, you, and, of, will, can, at, up, no, go, yes, love, as, all, have, am, or, has, he, she, so, day, was, had, like, get, how, now.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Día de Español – Spanish Language &amp; Performance Students have been learning lines and practicing dance moves for the Día de Español celebration, building Spanish language and performance skills.">
-      <div class="slbl c-bark"><span class="sdot"></span>Other</div>
-      <div class="stopic">Día de Español – Spanish Language &amp; Performance</div>
-      <div class="sdetail">Students have been learning lines and practicing dance moves for the Día de Español celebration, building Spanish language and performance skills.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Ballard" data-text="Non-Fiction Reading &amp; Decoding Students rotated through non-fiction text sets about animals with reading partners, practiced decoding skills, learned content knowledge, and analyzed non-fiction text features. Used a 'Wonder Wall' for vocabulary building.">
-      <div class="slbl c-sky"><span class="sdot"></span>Reading</div>
-      <div class="stopic">Non-Fiction Reading &amp; Decoding</div>
-      <div class="sdetail">Students rotated through non-fiction text sets about animals with reading partners, practiced decoding skills, learned content knowledge, and analyzed non-fiction text features. Used a 'Wonder Wall' for vocabulary building.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Ballard" data-text="Review Writing Anthologies Students are publishing anthologies of reviews on one topic (e.g. restaurants, vacation destinations, favorite games). Finished work will be on display in the classroom library.">
-      <div class="slbl c-sky"><span class="sdot"></span>Reading</div>
-      <div class="stopic">Review Writing Anthologies</div>
-      <div class="sdetail">Students are publishing anthologies of reviews on one topic (e.g. restaurants, vacation destinations, favorite games). Finished work will be on display in the classroom library.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Ballard" data-text="Place Value, Skip Counting &amp; 2-Digit Addition Working on counting by 2s, 5s, and 10s; adding and subtracting 10 and multiples of 10; developing strategies for adding 2-digit numbers. Advanced students exploring repeated addition and early multiplication concepts.">
-      <div class="slbl c-plum"><span class="sdot"></span>Math</div>
-      <div class="stopic">Place Value, Skip Counting &amp; 2-Digit Addition</div>
-      <div class="sdetail">Working on counting by 2s, 5s, and 10s; adding and subtracting 10 and multiples of 10; developing strategies for adding 2-digit numbers. Advanced students exploring repeated addition and early multiplication concepts.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Ballard" data-text="Urban Farm Study Class visited Battery Urban Farm and Farm One (indoor hydroponic farm). Upcoming field trips to Harlem Grown, One Love Community Fridge, Hell's Kitchen Farm Project, and a second Battery Urban Farm visit throughout May.">
-      <div class="slbl c-spruce"><span class="sdot"></span>Science</div>
-      <div class="stopic">Urban Farm Study</div>
-      <div class="sdetail">Class visited Battery Urban Farm and Farm One (indoor hydroponic farm). Upcoming field trips to Harlem Grown, One Love Community Fridge, Hell's Kitchen Farm Project, and a second Battery Urban Farm visit throughout May.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Earth Day &amp; Environmental Stewardship Children learned about Earth Day and the three R's: Reduce, Reuse, Recycle (in Spanish: Reducir, Reutilizar, Reciclar). They read 'Captain Verdeman,' took a neighborhood litter walk, and discussed ways to care for the planet.">
-      <div class="slbl c-spruce"><span class="sdot"></span>Science</div>
-      <div class="stopic">Earth Day &amp; Environmental Stewardship</div>
-      <div class="sdetail">Children learned about Earth Day and the three R's: Reduce, Reuse, Recycle (in Spanish: Reducir, Reutilizar, Reciclar). They read 'Captain Verdeman,' took a neighborhood litter walk, and discussed ways to care for the planet.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Parts of a Plant &amp; Seeds Explored parts of a plant in Spanish: La Raíz (root), El Tallo (stem), Las Hojas (leaves), La Semilla (seeds), La Flor (flower). Observed and compared seeds from strawberries, lemons, avocados, and apples.">
-      <div class="slbl c-spruce"><span class="sdot"></span>Science</div>
-      <div class="stopic">Parts of a Plant &amp; Seeds</div>
-      <div class="sdetail">Explored parts of a plant in Spanish: La Raíz (root), El Tallo (stem), Las Hojas (leaves), La Semilla (seeds), La Flor (flower). Observed and compared seeds from strawberries, lemons, avocados, and apples.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Kindness &amp; Social-Emotional Learning Read 'A Sprinkle of Kindness' and discussed ways to show kindness — helping friends, using kind words, and spreading love in the classroom and community.">
-      <div class="slbl c-teal"><span class="sdot"></span>Social Studies</div>
-      <div class="stopic">Kindness &amp; Social-Emotional Learning</div>
-      <div class="sdetail">Read 'A Sprinkle of Kindness' and discussed ways to show kindness — helping friends, using kind words, and spreading love in the classroom and community.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Pollination Learned how bees carry pollen from flower to flower to help new plants grow. Demonstrated pollination using jello powder and simulated bee legs.">
-      <div class="slbl c-spruce"><span class="sdot"></span>Science</div>
-      <div class="stopic">Pollination</div>
-      <div class="sdetail">Learned how bees carry pollen from flower to flower to help new plants grow. Demonstrated pollination using jello powder and simulated bee legs.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Letter of the Week: Ww Introduced the consonant Ww. Vocabulary words: Waffle, Wifi, Windsurf. Children drew a Wapati for their ABC book.">
-      <div class="slbl c-sky"><span class="sdot"></span>Reading</div>
-      <div class="stopic">Letter of the Week: Ww</div>
-      <div class="sdetail">Introduced the consonant Ww. Vocabulary words: Waffle, Wifi, Windsurf. Children drew a Wapati for their ABC book.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Sight Words Orange Room PM sight words list: a, I, is, it, in, if, to, do, me, be, see, we, my, by, the, are, you, and, of, will, can, at, up, no, go, yes, love, as, all, have, am, or, has, he, she, so, day, was, had, like, get, how, now.">
-      <div class="slbl c-sky"><span class="sdot"></span>Reading</div>
-      <div class="stopic">Sight Words</div>
-      <div class="sdetail">Orange Room PM sight words list: a, I, is, it, in, if, to, do, me, be, see, we, my, by, the, are, you, and, of, will, can, at, up, no, go, yes, love, as, all, have, am, or, has, he, she, so, day, was, had, like, get, how, now.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="At-Home Practice: Earth Day &amp; Kindness Ask your child how they can help care for the Earth or show kindness. Practice singing the Earth Day song (Tierra, Tierra hay que amar) and the Parts of the Plants song (to the tune of Head, Shoulders, Knees &amp; Toes) in Spanish.">
-      <div class="slbl c-bark"><span class="sdot"></span>Other</div>
-      <div class="stopic">At-Home Practice: Earth Day &amp; Kindness</div>
-      <div class="sdetail">Ask your child how they can help care for the Earth or show kindness. Practice singing the Earth Day song (Tierra, Tierra hay que amar) and the Parts of the Plants song (to the tune of Head, Shoulders, Knees &amp; Toes) in Spanish.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Elle" data-text="Goldfish and Livebearers Unit Kindergartners have been studying goldfish and livebearers (similar to guppies) as part of the K-2 science investigation unit run by Shannon Berkowsky.">
-      <div class="slbl c-spruce"><span class="sdot"></span>Science</div>
-      <div class="stopic">Goldfish and Livebearers Unit</div>
-      <div class="sdetail">Kindergartners have been studying goldfish and livebearers (similar to guppies) as part of the K-2 science investigation unit run by Shannon Berkowsky.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#F0EBF8;color:#6B3FA0;font-size:11px">Elle</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Ballard" data-text="Farmers and Seasonal Jobs – Pickling &amp; Canning Over the coming weeks, students will learn about jobs farmers complete in different seasons, including how pickling and canning are used to preserve fruits and vegetables.">
-      <div class="slbl c-spruce"><span class="sdot"></span>Science</div>
-      <div class="stopic">Farmers and Seasonal Jobs – Pickling &amp; Canning</div>
-      <div class="sdetail">Over the coming weeks, students will learn about jobs farmers complete in different seasons, including how pickling and canning are used to preserve fruits and vegetables.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E3EEF7;color:#2A5D8C;font-size:11px">Ballard</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Concrete Jungle Unit - Plants &amp; Urban Gardens Kicked off new unit 'Concrete Jungle.' Learned about urban farming and that plants can grow in cities. Studied what plants need to grow: sunlight, water, and air. Planted bean seeds and observed life cycle of a plant: seed, sprout, plant, flower.">
-      <div class="slbl c-spruce"><span class="sdot"></span>Science</div>
-      <div class="stopic">Concrete Jungle Unit - Plants &amp; Urban Gardens</div>
-      <div class="sdetail">Kicked off new unit 'Concrete Jungle.' Learned about urban farming and that plants can grow in cities. Studied what plants need to grow: sunlight, water, and air. Planted bean seeds and observed life cycle of a plant: seed, sprout, plant, flower.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Artist of the Month: Piet Oudolf Introduced artist Piet Oudolf, who designs natural-looking gardens. Children created their own garden drawings inspired by his work.">
-      <div class="slbl c-rust"><span class="sdot"></span>Art</div>
-      <div class="stopic">Artist of the Month: Piet Oudolf</div>
-      <div class="sdetail">Introduced artist Piet Oudolf, who designs natural-looking gardens. Children created their own garden drawings inspired by his work.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Letter of the Week: Vv (Red AM) / Xx (Orange PM) Red AM focused on consonant Vv with vocabulary: vampiro, vestido, violín, volcán, vuelo. Children drew a vaca for their ABC book. Orange PM focused on letter Xx. Orange PM also practiced an extensive sight word list.">
-      <div class="slbl c-sky"><span class="sdot"></span>Reading</div>
-      <div class="stopic">Letter of the Week: Vv (Red AM) / Xx (Orange PM)</div>
-      <div class="sdetail">Red AM focused on consonant Vv with vocabulary: vampiro, vestido, violín, volcán, vuelo. Children drew a vaca for their ABC book. Orange PM focused on letter Xx. Orange PM also practiced an extensive sight word list.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-
-    <div class="card"
-         data-child="Edie" data-text="Real-World Math &amp; Community Skills via Farmers Market Students are learning real-world math skills including counting money, setting prices, and making change using a play money system. They are also practicing communication and community skills by sorting and organizing produce, setting up farm stands, and running their own farmers market stalls.">
-      <div class="slbl c-plum"><span class="sdot"></span>Math</div>
-      <div class="stopic">Real-World Math &amp; Community Skills via Farmers Market</div>
-      <div class="sdetail">Students are learning real-world math skills including counting money, setting prices, and making change using a play money system. They are also practicing communication and community skills by sorting and organizing produce, setting up farm stands, and running their own farmers market stalls.</div>
-      <div style="margin-top:8px"><span class="ctag" style="background:#E4F0E8;color:#2E5C3E;font-size:11px">Edie</span></div>
-    </div>
-    </section>
+  <div id="loading">Loading school data…</div>
+  <div class="cols" id="main-cols" style="display:none">
+    <section><div class="section-title">Events</div><div id="events-list"></div></section>
+    <section><div class="section-title">Tasks</div><div id="tasks-list"></div></section>
+    <section><div class="section-title">Curriculum</div><div id="curriculum-list"></div></section>
   </div>
-
   <footer>Burnmark Productions · compiled from school emails · runs twice daily</footer>
 </div>
+<div class="toast" id="toast"></div>
 
-<script>
-  const searchEl = document.getElementById('search');
-  const pills = document.querySelectorAll('.fpill');
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  const sb = createClient(
+    'https://fwchltustcyrwtslhqcr.supabase.co',
+    'sb_publishable_KPWlRz16vmG4XylKdH-7Hg_TFE-JysD'
+  );
+
+  const TODAY = new Date().toISOString().split('T')[0];
+  let allItems = [];
   let activeChild = 'All';
+  let showDone = false;
+
+  const CHILD_FG = {Ballard:'#2A5D8C',Elle:'#6B3FA0',Edie:'#2E5C3E',All:'#8A5A00'};
+  const CHILD_BG = {Ballard:'#E3EEF7',Elle:'#F0EBF8',Edie:'#E4F0E8',All:'#FDF3E0'};
+  const SUBJ_CLS = {Math:'plum',Reading:'sky',Science:'spruce','Social Studies':'teal',Art:'rust',Music:'amber',PE:'green',Other:'bark'};
+
+  const esc = s => s ? s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '';
+  const ctag = c => { const fg=CHILD_FG[c]||CHILD_FG.All, bg=CHILD_BG[c]||CHILD_BG.All; return `<span class="ctag" style="background:${bg};color:${fg}">${c}</span>`; };
+  const fmtDate = d => d ? new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+  const fmtWday = d => d ? new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short'}).toUpperCase() : 'TBD';
+  const fmtDay  = d => d ? new Date(d+'T12:00:00').getDate() : '?';
+  const fmtMonth= d => d ? new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'}) : 'TBD';
+
+  async function toggle(id, current) {
+    const newVal = !current;
+    await sb.from('items').update({completed:newVal, completed_by:'family', completed_at: newVal ? new Date().toISOString() : null}).eq('id', id);
+    const i = allItems.find(x => x.id === id);
+    if (i) i.completed = newVal;
+    render();
+    toast(newVal ? 'Marked complete ✓' : 'Unmarked');
+  }
+  window._toggle = toggle;
+
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  function renderEvents(items) {
+    const future = items.filter(i => i.type==='event' && (i.date||'') >= TODAY)
+                        .sort((a,b) => (a.date||'9999') <= (b.date||'9999') ? -1 : 1);
+    if (!future.length) return '<p class="empty">No upcoming events.</p>';
+    const groups = {};
+    for (const e of future) { const m = fmtMonth(e.date); (groups[m]=groups[m]||[]).push(e); }
+    let html = '';
+    for (const [month, evts] of Object.entries(groups)) {
+      html += `<div class="cal-mo">${month}</div><div class="cal-list">`;
+      for (const e of evts) {
+        const color = CHILD_FG[e.child]||CHILD_FG.All;
+        const info  = [e.time, e.description].filter(Boolean).join(' · ');
+        const c     = e.child || 'All';
+        html += `
+        <div class="cal-row${e.completed?' done':''}" style="border-left-color:${color}"
+             data-child="${c}" data-search="${esc(e.title+' '+info+' '+c).toLowerCase()}">
+          <div class="cal-date">
+            <div class="cal-wday">${fmtWday(e.date)}</div>
+            <div class="cal-d" style="color:${color}">${fmtDay(e.date)}</div>
+          </div>
+          <div>
+            <div class="cal-name">${esc(e.title)}</div>
+            ${info?`<div class="cal-info">${esc(info)}</div>`:''}
+            <div class="cal-foot">
+              <div class="cal-tags">${ctag(c)}</div>
+              <button class="done-btn${e.completed?' undo':''}" onclick="window._toggle('${e.id}',${e.completed})">${e.completed?'Undo':'Done'}</button>
+            </div>
+          </div>
+        </div>`;
+      }
+      html += '</div>';
+    }
+    return html;
+  }
+
+  function renderTasks(items) {
+    const tasks = items.filter(i => i.type==='task')
+                       .sort((a,b) => (a.date||'9999') <= (b.date||'9999') ? -1 : 1);
+    if (!tasks.length) return '<p class="empty">No tasks.</p>';
+    return tasks.map(t => {
+      const color   = CHILD_FG[t.child]||CHILD_FG.All;
+      const urgent  = t.date && t.date <= TODAY && !t.completed;
+      const c       = t.child || 'All';
+      const dueBadge = t.date ? `<span class="due-badge${urgent?' urgent':''}">${fmtDate(t.date)}</span>` : '';
+      return `
+      <div class="task-row${t.completed?' done':urgent?' urgent':''}"
+           data-child="${c}" data-search="${esc(t.title+' '+(t.description||'')+' '+c).toLowerCase()}">
+        <div class="task-bar" style="background:${color}"></div>
+        <div class="task-body">
+          <div class="task-head">${ctag(c)} ${dueBadge}
+            <button class="done-btn${t.completed?' undo':''}" style="margin-left:auto" onclick="window._toggle('${t.id}',${t.completed})">${t.completed?'Undo':'Done'}</button>
+          </div>
+          <div class="task-title${t.completed?' struck':''}">${esc(t.title)}</div>
+          ${t.description?`<div class="task-desc">${esc(t.description)}</div>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderCurriculum(items) {
+    const curr = items.filter(i => i.type==='curriculum');
+    if (!curr.length) return '<p class="empty">No curriculum updates.</p>';
+    return curr.map(c => {
+      const sc = SUBJ_CLS[c.subject]||'bark';
+      const ch = c.child || 'All';
+      return `
+      <div class="card" data-child="${ch}" data-search="${esc(c.title+' '+(c.description||'')+' '+(c.subject||'')+' '+ch).toLowerCase()}">
+        <div class="slbl c-${sc}"><span class="sdot"></span>${c.subject||'Other'}</div>
+        <div class="stopic">${esc(c.title)}</div>
+        ${c.description?`<div class="sdetail">${esc(c.description)}</div>`:''}
+        <div style="margin-top:8px">${ctag(ch)}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function render() {
+    document.getElementById('events-list').innerHTML     = renderEvents(allItems);
+    document.getElementById('tasks-list').innerHTML      = renderTasks(allItems);
+    document.getElementById('curriculum-list').innerHTML = renderCurriculum(allItems);
+    applyFilters();
+  }
 
   function applyFilters() {
-    const q = searchEl.value.trim().toLowerCase();
+    const q = document.getElementById('search').value.trim().toLowerCase();
     document.querySelectorAll('[data-child]').forEach(el => {
-      const childMatch = activeChild === 'All' || el.dataset.child === activeChild || el.dataset.child === 'All';
-      const textMatch  = !q || (el.dataset.text || el.textContent).toLowerCase().includes(q);
-      el.classList.toggle('hidden', !(childMatch && textMatch));
+      const cm = activeChild==='All' || el.dataset.child===activeChild || el.dataset.child==='All';
+      const tm = !q || (el.dataset.search||'').includes(q);
+      const dm = showDone || !el.classList.contains('done');
+      el.classList.toggle('filtered', !(cm && tm && dm));
     });
   }
 
-  searchEl.addEventListener('input', applyFilters);
+  async function loadAll() {
+    const { data, error } = await sb.from('items').select('*').order('date', {ascending:true, nullsFirst:false});
+    if (error) { document.getElementById('loading').textContent = 'Error loading data.'; return; }
+    allItems = data;
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('main-cols').style.display = '';
+    document.getElementById('updated-ts').textContent = 'Updated ' + new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+    render();
+  }
 
-  pills.forEach(p => {
-    p.addEventListener('click', () => {
-      pills.forEach(x => x.classList.remove('active'));
-      p.classList.add('active');
-      activeChild = p.dataset.child;
-      applyFilters();
-    });
-  });
+  sb.channel('items').on('postgres_changes', {event:'*', schema:'public', table:'items'}, p => {
+    if (p.eventType==='UPDATE') { const i=allItems.findIndex(x=>x.id===p.new.id); if(i!==-1) allItems[i]=p.new; }
+    else if (p.eventType==='INSERT') allItems.push(p.new);
+    else if (p.eventType==='DELETE') allItems=allItems.filter(x=>x.id!==p.old.id);
+    render();
+  }).subscribe();
+
+  document.getElementById('search').addEventListener('input', applyFilters);
+  document.getElementById('show-done').addEventListener('change', e => { showDone=e.target.checked; applyFilters(); });
+  document.querySelectorAll('.fpill').forEach(p => p.addEventListener('click', () => {
+    document.querySelectorAll('.fpill').forEach(x=>x.classList.remove('active'));
+    p.classList.add('active'); activeChild=p.dataset.child; applyFilters();
+  }));
+
+  loadAll();
 </script>
 </body>
 </html>

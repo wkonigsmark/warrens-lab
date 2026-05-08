@@ -26,6 +26,7 @@ import requests
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from supabase import create_client
 
 # ---------------------------------------------------------------------------
 # Config
@@ -344,14 +345,48 @@ def _dedup(existing: list[dict], new_items: list[dict]) -> tuple[list[dict], int
     return merged, added
 
 
-def load_json(path: Path) -> list:
-    if path.exists():
-        return json.loads(path.read_text())
-    return []
+def item_to_row(item: dict, type_: str) -> dict:
+    return {
+        "id":                   item.get("id") or f"{type_}-{abs(hash(str(item))) % 99999:05d}",
+        "type":                 type_,
+        "title":                item.get("title") or item.get("topic") or "",
+        "date":                 item.get("date") or item.get("due_date"),
+        "time":                 item.get("time"),
+        "description":          item.get("description"),
+        "child":                item.get("child"),
+        "school":               item.get("school"),
+        "subject":              item.get("subject"),
+        "completed":            item.get("completed", False),
+        "source_email_subject": item.get("source_email_subject"),
+        "raw":                  item,
+    }
 
 
-def save_json(path: Path, data: list):
-    path.write_text(json.dumps(data, indent=2, ensure_ascii=False))
+def upsert_to_supabase(sb, new_items: list[dict], type_: str):
+    """Upsert extracted items — existing rows are updated, new ones inserted.
+    Completed status is preserved: we never overwrite completed=true."""
+    if not new_items:
+        return 0
+
+    deduped = _dedup_list(new_items)
+    rows = [item_to_row(i, type_) for i in deduped]
+
+    # Fetch existing IDs so we don't reset completed status
+    ids = [r["id"] for r in rows]
+    existing = sb.table("items").select("id,completed").in_("id", ids).execute().data
+    completed_ids = {r["id"] for r in existing if r["completed"]}
+
+    to_insert = []
+    for row in rows:
+        if row["id"] in completed_ids:
+            # Keep completed items but update content fields
+            row.pop("completed", None)
+        to_insert.append(row)
+
+    sb.table("items").upsert(to_insert, on_conflict="id",
+                             ignore_duplicates=False).execute()
+    new_count = len(rows) - len(existing)
+    return max(new_count, 0)
 
 
 # ---------------------------------------------------------------------------
@@ -364,6 +399,12 @@ def main(auth: bool = False):
         run_auth_flow()
         return
 
+    sb_url = os.environ.get("SUPABASE_URL", "")
+    sb_key = os.environ.get("SUPABASE_KEY", "")
+    if not sb_url or not sb_key:
+        sys.exit("Missing SUPABASE_URL or SUPABASE_KEY env vars")
+
+    sb = create_client(sb_url, sb_key)
     creds = _creds_from_env()
     gmail = build_gmail_service(creds)
     claude = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
@@ -381,19 +422,9 @@ def main(auth: bool = False):
         all_tasks.extend(extracted.get("tasks", []))
         all_curriculum.extend(extracted.get("curriculum", []))
 
-    # Merge with existing data (dedup by id)
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-
-    for filename, new_items in [
-        ("events.json", all_events),
-        ("tasks.json", all_tasks),
-        ("curriculum.json", all_curriculum),
-    ]:
-        path = DATA_DIR / filename
-        existing = load_json(path)
-        merged, added = _dedup(existing, new_items)
-        save_json(path, merged)
-        print(f"  {filename}: +{added} new items (total {len(merged)})")
+    for type_, items in [("event", all_events), ("task", all_tasks), ("curriculum", all_curriculum)]:
+        added = upsert_to_supabase(sb, items, type_)
+        print(f"  {type_}: +{added} new items")
 
     print("Done.")
 
