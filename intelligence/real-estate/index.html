@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Oak Listings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-left h1 {
+            font-size: 2.5rem;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .header-left p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: var(--shadow); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-label { color: var(--text-secondary); font-size: 0.875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .stat-value { font-size: 1.875rem; font-weight: 700; color: var(--text-primary); font-family: 'Outfit', sans-serif; }
+        .stat-subtext { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem; }
+
+        .filters-bar {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .filter-group label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; }
+        .filter-group input { padding: 0.6rem 1rem; border-radius: 8px; border: 1px solid var(--border); outline: none; }
+
+        .table-container {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f1f5f9; text-align: left; padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; cursor: pointer; }
+        th:hover { background: #e2e8f0; }
+        td { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); font-size: 0.95rem; color: var(--text-primary); }
+        .property-address { font-weight: 600; color: var(--accent); text-decoration: none; }
+        .badge { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: #f1f5f9; color: var(--text-secondary); }
+
+        #loader { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.9); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; }
+        .spinner { width: 50px; height: 50px; border: 4px solid var(--border); border-top: 4px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1rem; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .modelling-overlay { position: fixed; bottom: 2rem; right: 2rem; background: var(--accent); color: white; padding: 1.5rem; border-radius: 20px; box-shadow: var(--shadow-lg); display: none; z-index: 100; }
+
+        /* Modal Overlays */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 2rem; }
+        .modal-card { background: white; width: 100%; max-width: 1000px; max-height: 90vh; border-radius: 24px; box-shadow: var(--shadow-lg); overflow: hidden; display: flex; flex-direction: column; }
+        .modal-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { padding: 2rem; overflow-y: auto; display: grid; grid-template-columns: 1fr 340px; gap: 2rem; }
+        .model-section { margin-bottom: 2rem; }
+        .model-section-title { font-size: 0.875rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.5rem; }
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .model-field { display: flex; flex-direction: column; gap: 0.25rem; }
+        .model-field label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
+        .model-field input { padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; outline: none; }
+        .model-summary { background: #f8fafc; border-radius: 16px; padding: 1.5rem; position: sticky; top: 0; height: fit-content; }
+        .summary-stat { margin-bottom: 1.25rem; }
+        .summary-label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; }
+        .summary-val { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); font-family: 'Outfit'; }
+        .summary-val.positive { color: #10b981; }
+        .summary-val.negative { color: #f43f5e; }
+        .btn-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); }
+        .row-action-btn { background: #eff6ff; color: var(--accent); border: none; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .row-action-btn:hover { background: var(--accent); color: white; }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>Fetching Property Ecosystem...</p>
+    </div>
+
+    <!-- MODAL DEAL ANALYZER -->
+    <div class="modal-overlay" id="dealModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <img src="live_oak_logo.png" style="height: 40px; width: auto;">
+                    <div>
+                        <h2 id="modalAddress">Property Analysis</h2>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;" id="modalNeighborhood">Modeling Assumptions</p>
+                    </div>
+                </div>
+                <button class="btn-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="model-inputs">
+                    <div class="model-section">
+                        <div class="model-section-title">Acquisition & Financing</div>
+                        <div class="input-grid">
+                            <div class="model-field"><label>Offer Price</label><input type="number" id="m_price" oninput="runModel()"></div>
+                            <div class="model-field"><label>Down Payment (%)</label><input type="number" id="m_down_pct" value="25" oninput="runModel()"></div>
+                            <div class="model-field"><label>Interest Rate (%)</label><input type="number" id="m_rate" step="0.1" value="6.5" oninput="runModel()"></div>
+                            <div class="model-field"><label>Term (Months)</label><input type="number" id="m_term" value="360" oninput="runModel()"></div>
+                            <div class="model-field"><label>Rehab Budget ($)</label><input type="number" id="m_rehab" value="0" oninput="runModel()"></div>
+                        </div>
+                    </div>
+                    <div class="model-section">
+                        <div class="model-section-title">Closing Costs & Reserves</div>
+                        <div class="input-grid">
+                            <div class="model-field"><label>Loan Origination ($)</label><input type="number" id="c_origination" value="4000" oninput="runModel()"></div>
+                            <div class="model-field"><label>Title / Transfer ($)</label><input type="number" id="c_title" value="2000" oninput="runModel()"></div>
+                            <div class="model-field"><label>Prepaid Escrow ($)</label><input type="number" id="c_reserves" value="4500" oninput="runModel()"></div>
+                            <div class="model-field"><label>Inspection / Appraisal ($)</label><input type="number" id="c_inspection" value="750" oninput="runModel()"></div>
+                        </div>
+                    </div>
+                    <div class="model-section">
+                        <div class="model-section-title">Monthly Cash Flow</div>
+                        <div class="input-grid">
+                            <div class="model-field"><label>Gross Monthly Rent ($)</label><input type="number" id="r_rent" value="2500" oninput="runModel()"></div>
+                            <div class="model-field"><label>Management Fee (%)</label><input type="number" id="r_mgmt" value="10" oninput="runModel()"></div>
+                            <div class="model-field"><label>Taxes & Ins. (Monthly)</label><input type="number" id="r_taxins" oninput="runModel()"></div>
+                            <div class="model-field"><label>Maint. / Lawn (Monthly)</label><input type="number" id="r_maint" value="150" oninput="runModel()"></div>
+                        </div>
+                    </div>
+                    <div class="model-section">
+                        <div class="model-section-title">Exit Strategy</div>
+                        <div class="input-grid">
+                            <div class="model-field"><label>Projected Sale Price ($)</label><input type="number" id="e_sale" oninput="runModel()"></div>
+                            <div class="model-field"><label>Sales Comm. (%)</label><input type="number" id="e_comm" value="6" oninput="runModel()"></div>
+                            <div class="model-field"><label>Hold Period (Years)</label><input type="number" id="e_hold" value="3" oninput="runModel()"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="model-summary">
+                    <div class="summary-stat"><div class="summary-label">Total Cash To Close</div><div class="summary-val" id="res_cash">$0</div></div>
+                    <div class="summary-stat"><div class="summary-label">Mortgage (P&I)</div><div class="summary-val" id="res_mortgage">$0</div></div>
+                    <div class="summary-stat"><div class="summary-label">Net Monthly Cash Flow</div><div class="summary-val" id="res_net">$0</div><div style="font-size: 0.8rem; color: var(--text-secondary);" id="res_yield">0% Cap Rate</div></div>
+                    <div class="summary-stat" style="border-top: 1px solid #e2e8f0; padding-top: 1.5rem; margin-top: 1rem;">
+                        <div class="summary-label" title="Defaulted to 25% appreciation if not modified">Est. Total Profit at Exit</div>
+                        <div class="summary-val positive" id="res_profit">$0</div>
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);" id="res_roidisplay">0% ROI</div>
+                            <div style="font-size: 0.8rem; color: #6366f1; font-weight: 700; background: #eef2ff; padding: 2px 6px; border-radius: 4px;" id="res_irr">0% IRR</div>
+                        </div>
+                    </div>
+                    
+                    <button class="row-action-btn" style="width: 100%; margin-top: 2rem; background: var(--accent); color: white; padding: 1rem; font-size: 0.85rem;" onclick="copyDealData(event)">
+                        Copy Analysis to Clipboard
+                    </button>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <div>
+                            <label style="display: block; font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.25rem;">Maintenance/Lawn ($)</label>
+                            <input type="number" id="r_maint" value="150" style="width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 4px;" oninput="runModel()">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.25rem;">Rent Growth (%)</label>
+                            <input type="number" id="r_growth" value="2" step="0.1" style="width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 4px;" oninput="runModel()">
+                        </div>
+                    </div>
+                    <p style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 1rem; text-align: center; line-height: 1.4;">
+                        Includes assumptions, monthly cash flow breakdown, and terminal exit flows.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="fundModal" class="modal-overlay" style="z-index: 2000;">
+        <div class="modal-content fund-dashboard" style="max-width: 900px; padding: 0; overflow: hidden; border:none; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); max-height: 85vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="background: #1e293b; color: white; padding: 1.5rem 2.5rem; border-bottom: 1px solid #334155; flex-shrink: 0;">
+                <div style="display: flex; align-items: center; gap: 1.25rem;">
+                    <img src="live_oak_logo.png" style="height: 40px; filter: brightness(0) invert(1);" alt="Live Oak">
+                    <div>
+                        <h2 style="margin: 0; font-size: 1.4rem; letter-spacing: -0.02em;">Batch Portfolio Analysis</h2>
+                        <div id="f_count" style="font-size: 0.85rem; color: #94a3b8; font-weight: 500;">0 Properties Selected</div>
+                    </div>
+                </div>
+                <button class="close-btn" style="color: #94a3b8;" onclick="closeFundModal()">&times;</button>
+            </div>
+            
+            <div style="background: #f1f5f9; padding: 2.5rem; display: grid; grid-template-columns: 1.8fr 1fr; gap: 2.5rem; overflow-y: auto;">
+                <div>
+                    <h3 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 1.5rem; font-weight: 700;">Consolidated Performance</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+                        <div class="stat-card" style="margin:0; background: white; border: 1px solid #e2e8f0; padding: 1.5rem;">
+                            <div class="summary-label" style="color: #64748b; font-size: 0.75rem;">Total Acquisition Price</div>
+                            <div class="summary-val" id="f_price" style="color: #0f172a; font-size: 1.75rem;">$0</div>
+                        </div>
+                        <div class="stat-card" style="margin:0; background: #eef2ff; border: 1px solid #c7d2fe; padding: 1.5rem;">
+                            <div class="summary-label" style="color: #6366f1; font-size: 0.75rem;">Total Initial Capital (Cash)</div>
+                            <div class="summary-val" id="f_cash" style="color: #4338ca; font-size: 1.75rem;">$0</div>
+                        </div>
+                        <div class="stat-card" style="margin:0; background: white; border: 1px solid #e2e8f0; padding: 1.5rem;">
+                            <div class="summary-label" style="color: #64748b; font-size: 0.75rem;">Combined Monthly Net</div>
+                            <div class="summary-val" id="f_net" style="color: #0f172a; font-size: 1.75rem;">$0</div>
+                        </div>
+                        <div class="stat-card" style="margin:0; background: white; border: 1px solid #e2e8f0; padding: 1.5rem;">
+                            <div class="summary-label" style="color: #64748b; font-size: 0.75rem;">Total Projected Profit</div>
+                            <div class="summary-val positive" id="f_profit" style="color: #15803d; font-size: 1.75rem;">$0</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; background: white; padding: 2rem; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.5rem;">
+                             <h4 style="margin: 0; font-size: 0.85rem; color: #475569; font-weight: 700;">PORTFOLIO YIELD (3YR HOLD)</h4>
+                             <div style="font-size: 1.1rem; font-weight: 600; color: #64748b;" id="f_roi">0% ROI</div>
+                        </div>
+                        <div style="font-size: 4rem; font-weight: 900; color: #6366f1; line-height: 1;" id="f_irr">0% IRR</div>
+                        <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 1.5rem; line-height: 1.6;">
+                            This blended IRR accounts for monthly net carry and terminal equity harvest across the entire selection. 
+                            Assumes 75% LTV leverage and 2% rent escalations annually.
+                        </p>
+                    </div>
+                </div>
+                
+                <div style="background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <button class="row-action-btn" style="width: 100%; height: 64px; background: #6366f1; color: white; font-weight: 800; font-size: 1rem; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);" onclick="copyFundData(event)">
+                        Export Portfolio TSV
+                    </button>
+                    <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 1.25rem; text-align: center; font-weight: 500;">Direct Paste to Excel / Sheets</p>
+                    
+                    <div style="margin-top: 2.5rem; padding-top: 2.5rem; border-top: 1px solid #f1f5f9;">
+                        <h4 style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0;">Modeling Bounds</h4>
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin-top: 1rem;">
+                            <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                                <span style="color:#64748b;">Hold Period</span>
+                                <span style="font-weight:700; color:#1e293b;">36 Months</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                                <span style="color:#64748b;">Target Exit</span>
+                                <span style="font-weight:700; color:#1e293b;">25% Appreciation</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                                <span style="color:#64748b;">Leverage</span>
+                                <span style="font-weight:700; color:#1e293b;">75.0% LTV</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Batch Selection Bar -->
+    <div id="batchBar" style="position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e2e8f0; padding: 1.2rem 2rem; display: none; align-items: center; justify-content: space-between; box-shadow: 0 -10px 15px -3px rgba(0,0,0,0.1); z-index: 1000; animation: slideUp 0.3s ease-out;">
+        <div style="display: flex; align-items: center; gap: 2rem;">
+            <div style="background: #eef2ff; color: #6366f1; padding: 0.5rem 1.2rem; border-radius: 999px; font-weight: 700; font-size: 0.85rem; border: 1px solid #c7d2fe;">
+                <span id="batchCount">0</span> Properties Selected
+            </div>
+            <div id="batchTotal" style="font-size: 1rem; font-weight: 700; color: #1e293b;">Total Basis: $0</div>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <button class="row-action-btn" style="background: white; border: 1px solid #cbd5e1; color: var(--text-secondary); width: auto; padding: 0 1.5rem;" onclick="selectedIds.clear(); updateView();">Clear</button>
+            <button class="row-action-btn" style="background: #6366f1; color: white; width: auto; padding: 0 2rem; font-weight: 700;" onclick="openModeller()">Analyze Selection as Fund</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 0.5rem;">
+                    <img src="live_oak_logo.png" alt="Live Oak Logo" style="height: 60px; width: auto; object-fit: contain;">
+                    <div>
+                        <h1>Live Oak Listings</h1>
+                        <p>Advanced Real Estate Acquisition Logic</p>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right"><div class="tabs" id="neighborhoodTabs"></div></div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-label">Average Price</div><div class="stat-value" id="avgPrice">--</div><div class="stat-subtext">Active filter context</div></div>
+            <div class="stat-card"><div class="stat-label">Avg $/SqFt</div><div class="stat-value" id="avgPriceSqft">--</div><div class="stat-subtext">Price per internal space</div></div>
+            <div class="stat-card"><div class="stat-label">Median Land Yield</div><div class="stat-value" id="medianLot">--</div><div class="stat-subtext">Standardized land points</div></div>
+            <div class="stat-card"><div class="stat-label">Sample Variance</div><div class="stat-value" id="stdevPrice">--</div><div class="stat-subtext">Price Standard Deviation</div></div>
+        </div>
+
+        <div class="filters-bar">
+            <div class="filter-group"><label>Max Price</label><input type="number" id="filterPrice"></div>
+            <div class="filter-group"><label>Min SqFt</label><input type="number" id="filterSqft"></div>
+            <div class="filter-group"><label>Max $/SF</label><input type="number" id="filterPriceSF"></div>
+            <div class="filter-group"><label>Search Address</label><input type="text" id="filterSearch"></div>
+        </div>
+
+        <div class="table-container">
+            <table id="propertyTable">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;">Sel</th>
+                        <th onclick="sortTable(0)">Address</th>
+                        <th onclick="sortTable(1)">Price</th>
+                        <th onclick="sortTable(2)">SqFt</th>
+                        <th onclick="sortTable(3)">$/SF</th>
+                        <th onclick="sortTable(4)">Bed/Bath</th>
+                        <th onclick="sortTable(5)">Lot Size</th>
+                        <th onclick="sortTable(6)">Land Yield</th>
+                        <th onclick="sortTable(7)">Monthly</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modelling-overlay" id="modellingToolbar">
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <div>
+                <div style="font-size: 0.8rem; opacity: 0.8; font-weight: 500;">Selection Batch</div>
+                <div style="font-size: 1.1rem; font-weight: 700;"><span id="selectionCount">0</span> Properties Selected</div>
+            </div>
+            <button class="tab-btn" style="background: white; color: var(--accent); border: none;" onclick="openModeller()">Initialize Fund Analysis</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script>
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQTiWmdmfYW2JYzPAFIOoEuPpaTUtWKVAJ67gDk69eLH4phHNGaBCF3yUA44Keio0kxxVnUT3nfW7Zz/pub?gid=1060915410&single=true&output=csv';
+        let rawData = [], filteredData = [], selectedIds = new Set(), currentNeighborhood = '', neighborhoods = [], sortColumn = -1, sortDirection = 1, currentProp = null;
+
+        async function init() {
+            try {
+                const response = await fetch(CSV_URL);
+                const csvText = await response.text();
+                Papa.parse(csvText, { header: true, skipEmptyLines: true, complete: res => { processData(res.data); document.getElementById('loader').style.display = 'none'; } });
+            } catch (error) { alert("Error loading data."); }
+        }
+
+        function cleanNum(str) {
+            if (!str || str === "--") return 0;
+            if (typeof str === 'number') return str;
+            return parseFloat(str.replace(/[$,]/g, '')) || 0;
+        }
+
+        function processData(data) {
+            rawData = data.map((item, idx) => {
+                const price = cleanNum(item['List']), lot = cleanNum(item['Lot Size']);
+                let lotSqFt = (lot > 0 && lot < 50) ? lot * 43560 : lot;
+                return { ...item, id: item.zpid || `prop-${idx}`, priceNum: price, sqftNum: cleanNum(item['SqFt']), priceSfNum: cleanNum(item['$/SF']), monthlyNum: cleanNum(item['Monthly']), taxNum: cleanNum(item['Tax']), insNum: cleanNum(item['Insurance']), lotNum: lot, landYield: price > 0 ? (lotSqFt / price) * 1000 : 0 };
+            });
+            neighborhoods = [...new Set(rawData.map(i => i.Neighborhood))].filter(Boolean);
+            const tabContainer = document.getElementById('neighborhoodTabs');
+            
+            // Default to Fairhope if available
+            currentNeighborhood = neighborhoods.includes('Fairhope') ? 'Fairhope' : neighborhoods[0];
+
+            neighborhoods.forEach((n, index) => {
+                const btn = document.createElement('button');
+                btn.className = `tab-btn ${n === currentNeighborhood ? 'active' : ''}`; btn.innerText = n;
+                btn.onclick = () => { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentNeighborhood = n; updateView(); };
+                tabContainer.appendChild(btn);
+            });
+            updateView();
+        }
+
+        function toggleSelection(id) {
+            if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);
+            document.getElementById('selectionCount').innerText = selectedIds.size;
+            document.getElementById('modellingToolbar').style.display = selectedIds.size > 0 ? 'block' : 'none';
+        }
+        function getHeatmapColor(value, min, max, inverse = false) {
+            if (min === max || isNaN(value)) return 'transparent';
+            const ratio = (value - min) / (max - min);
+            const hue = (inverse ? (ratio * 120) : ((1 - ratio) * 120)).toString(10);
+            return `hsla(${hue}, 70%, 50%, 0.15)`;
+        }
+
+        function calcIRR(flows) {
+            let guess = 0.01;
+            for (let i = 0; i < 50; i++) {
+                let npv = 0, dnpv = 0;
+                for (let j = 0; j < flows.length; j++) {
+                    npv += flows[j] / Math.pow(1 + guess, j);
+                    dnpv -= j * flows[j] / Math.pow(1 + guess, j + 1);
+                }
+                if (Math.abs(dnpv) < 1e-10) break;
+                let nextGuess = guess - npv / dnpv;
+                if (Math.abs(nextGuess - guess) < 0.00001) break;
+                guess = nextGuess;
+            }
+            // Annualize and handle negative guests
+            return Math.pow(1 + Math.max(-0.99, guess), 12) - 1;
+        }
+
+        function toggleSelection(id) {
+            if (selectedIds.has(id)) selectedIds.delete(id);
+            else selectedIds.add(id);
+            updateView();
+        }
+
+        function updateView() {
+            const filterPrice = parseFloat(document.getElementById('filterPrice').value) || Infinity;
+            const filterSqft = parseFloat(document.getElementById('filterSqft').value) || 0;
+            const filterPriceSF = parseFloat(document.getElementById('filterPriceSF').value) || Infinity;
+            const filterSearch = document.getElementById('filterSearch').value.toLowerCase();
+
+            filteredData = rawData.filter(p => 
+                (currentNeighborhood === '' || p.Neighborhood === currentNeighborhood) &&
+                p.priceNum <= filterPrice &&
+                p.sqftNum >= filterSqft &&
+                p.priceSfNum <= filterPriceSF &&
+                (p.Address.toLowerCase().includes(filterSearch) || p.Neighborhood.toLowerCase().includes(filterSearch))
+            );
+
+            // RE-APPLY SORT: Selection resets should not kill the user's order
+            if (sortColumn !== -1) {
+                filteredData.sort((a, b) => {
+                    let vA, vB;
+                    switch(sortColumn) {
+                        case 0: vA = a.Address; vB = b.Address; break;
+                        case 1: vA = a.priceNum; vB = b.priceNum; break;
+                        case 2: vA = a.sqftNum; vB = b.sqftNum; break;
+                        case 3: vA = a.priceSfNum; vB = b.priceSfNum; break;
+                        case 5: vA = a.lotNum; vB = b.lotNum; break;
+                        case 6: vA = a.landYield; vB = b.landYield; break;
+                        case 7: vA = a.monthlyNum; vB = b.monthlyNum; break;
+                        default: vA = a.Address; vB = b.Address;
+                    }
+                    return (typeof vA === 'string' ? vA.localeCompare(vB) : vA - vB) * sortDirection;
+                });
+            }
+
+            renderTable();
+            calculateStats();
+
+            const bar = document.getElementById('batchBar');
+            if (selectedIds.size > 0) {
+                bar.style.display = 'flex';
+                document.getElementById('batchCount').innerText = selectedIds.size;
+                let totalBasis = 0, totalCash = 0;
+                selectedIds.forEach(id => {
+                    const p = rawData.find(x => x.id === id);
+                    if (p) {
+                        totalBasis += p.priceNum;
+                        // Simplified aggregate estimate: 25% down + 3.5% avg closing/rehab
+                        totalCash += (p.priceNum * 0.285);
+                    }
+                });
+                document.getElementById('batchTotal').innerHTML = `Basis: $${Math.round(totalBasis).toLocaleString()} <span style="margin: 0 1rem; color: #cbd5e1;">|</span> Cash to Close: $${Math.round(totalCash).toLocaleString()}`;
+            } else {
+                bar.style.display = 'none';
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody'); tbody.innerHTML = '';
+            const psfs = filteredData.map(i => i.priceSfNum).filter(n => n > 0);
+            const minPsf = Math.min(...psfs) || 0, maxPsf = Math.max(...psfs) || 0;
+            const yields = filteredData.map(i => i.landYield).filter(n => n > 0);
+            const minYield = Math.min(...yields) || 0, maxYield = Math.max(...yields) || 0;
+
+            filteredData.forEach(item => {
+                const tr = document.createElement('tr');
+                const psfColor = getHeatmapColor(item.priceSfNum, minPsf, maxPsf, false);
+                const yieldColor = getHeatmapColor(item.landYield, minYield, maxYield, true);
+                tr.innerHTML = `
+                    <td style="text-align: center;"><input type="checkbox" ${selectedIds.has(item.id) ? 'checked' : ''} onchange="toggleSelection('${item.id}')" style="width: 18px; height: 18px;"></td>
+                    <td><a href="${item.URL}" target="_blank" class="property-address">${item.Address}</a></td>
+                    <td style="font-weight: 600;">$${item.priceNum.toLocaleString()}</td>
+                    <td>${item.sqftNum.toLocaleString()}</td>
+                    <td style="background-color: ${psfColor};"><span class="badge" style="background:transparent;color:var(--text-primary);font-weight:700;">$${item.priceSfNum.toLocaleString()}</span></td>
+                    <td>${item['Bed-Bath'] || '--'}</td>
+                    <td>${item.lotNum > 0 ? (item.lotNum < 50 ? item.lotNum + ' ac' : item.lotNum.toLocaleString() + ' sf') : '--'}</td>
+                    <td style="background-color: ${yieldColor}; font-weight: 500;">${item.landYield > 0 ? item.landYield.toFixed(2) : '--'}</td>
+                    <td>$${item.monthlyNum.toLocaleString()}</td>
+                    <td><button class="row-action-btn" onclick="openDealModal('${item.id}')">Model Deal</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function calculateStats() {
+            const prices = filteredData.map(i => i.priceNum), psfs = filteredData.map(i => i.priceSfNum), yields = filteredData.map(i => i.landYield).filter(l => l > 0);
+            if (!prices.length) return;
+            const avg = arr => arr.reduce((a,b) => a + b, 0) / arr.length;
+            const stdev = arr => { const m = avg(arr); return Math.sqrt(arr.map(x => Math.pow(x - m, 2)).reduce((a, b) => a + b) / arr.length); };
+            document.getElementById('avgPrice').innerText = '$' + Math.round(avg(prices)).toLocaleString();
+            document.getElementById('avgPriceSqft').innerText = '$' + Math.round(avg(psfs)).toLocaleString();
+            document.getElementById('medianLot').innerText = yields.length > 0 ? avg(yields).toFixed(2) + ' pts' : '--';
+            document.getElementById('stdevPrice').innerText = prices.length > 1 ? '±$' + Math.round(stdev(prices)).toLocaleString() : '$0';
+        }
+
+        function sortTable(colIndex) {
+            if (sortColumn === colIndex) sortDirection *= -1; else { sortColumn = colIndex; sortDirection = 1; }
+            filteredData.sort((a, b) => {
+                let vA, vB;
+                switch(colIndex) {
+                    case 0: vA = a.Address; vB = b.Address; break;
+                    case 1: vA = a.priceNum; vB = b.priceNum; break;
+                    case 2: vA = a.sqftNum; vB = b.sqftNum; break;
+                    case 3: vA = a.priceSfNum; vB = b.priceSfNum; break;
+                    case 5: vA = a.lotNum; vB = b.lotNum; break;
+                    case 6: vA = a.landYield; vB = b.landYield; break;
+                    case 7: vA = a.monthlyNum; vB = b.monthlyNum; break;
+                    default: vA = a.Address; vB = b.Address;
+                }
+                return (typeof vA === 'string' ? vA.localeCompare(vB) : vA - vB) * sortDirection;
+            });
+            renderTable();
+        }
+
+        function openDealModal(id) {
+            currentProp = rawData.find(x => x.id === id);
+            document.getElementById('modalAddress').innerText = currentProp.Address;
+            document.getElementById('m_price').value = currentProp.priceNum;
+            document.getElementById('r_taxins').value = Math.round(currentProp.taxNum + currentProp.insNum);
+            document.getElementById('e_sale').value = Math.round(currentProp.priceNum * 1.25);
+            document.getElementById('dealModal').style.display = 'flex';
+            runModel();
+        }
+
+        function closeModal() {
+            document.getElementById('dealModal').style.display = 'none';
+            currentProp = null;
+        }
+        function runModel() {
+            if (!currentProp) return;
+            const price = parseFloat(document.getElementById('m_price').value) || 0;
+            const downPct = parseFloat(document.getElementById('m_down_pct').value) || 0;
+            const rate = (parseFloat(document.getElementById('m_rate').value) || 0) / 1200;
+            const term = parseFloat(document.getElementById('m_term').value) || 360;
+            const rehab = parseFloat(document.getElementById('m_rehab').value) || 0;
+            const growth = (parseFloat(document.getElementById('r_growth').value) || 0) / 100;
+            
+            const downAmt = price * downPct / 100, loanAmt = price - downAmt;
+            const c_org = parseFloat(document.getElementById('c_origination').value) || 0;
+            const c_tit = parseFloat(document.getElementById('c_title').value) || 0;
+            const c_res = parseFloat(document.getElementById('c_reserves').value) || 0;
+            const c_ins = parseFloat(document.getElementById('c_inspection').value) || 0;
+            const totCash = downAmt + c_org + c_tit + c_res + c_ins + rehab;
+            
+            let pi = (rate > 0 && term > 0) ? (loanAmt * rate) / (1 - Math.pow(1 + rate, -term)) : 0;
+            const baseRent = parseFloat(document.getElementById('r_rent').value) || 0;
+            const mgmtPct = (parseFloat(document.getElementById('r_mgmt').value) || 0) / 100;
+            const taxins = parseFloat(document.getElementById('r_taxins').value) || 0;
+            const maint = parseFloat(document.getElementById('r_maint').value) || 0;
+
+            const holdYears = parseFloat(document.getElementById('e_hold').value) || 3;
+            const holdMonths = Math.round(holdYears * 12);
+            
+            let currentBalance = loanAmt;
+            let cashFlows = [-totCash];
+            let cumulativeNet = 0;
+
+            for (let i = 0; i < holdMonths; i++) {
+                let interest = currentBalance * rate;
+                let principal = pi - interest;
+                currentBalance -= principal;
+                
+                // Compounding Annual Rent Growth
+                let monthRent = baseRent * Math.pow(1 + growth, Math.floor(i / 12));
+                let monthMgmt = monthRent * mgmtPct;
+                let monthNet = monthRent - (pi + taxins + monthMgmt + maint);
+                
+                cumulativeNet += monthNet;
+                let flow = monthNet;
+                if (i === holdMonths - 1) {
+                    const sale = parseFloat(document.getElementById('e_sale').value) || 0;
+                    const comm = sale * (parseFloat(document.getElementById('e_comm').value) || 0) / 100;
+                    flow += (sale - currentBalance - comm);
+                }
+                cashFlows.push(flow);
+            }
+
+            const sale = parseFloat(document.getElementById('e_sale').value) || 0;
+            const comm = sale * (parseFloat(document.getElementById('e_comm').value) || 0) / 100;
+            const saleProceeds = sale - currentBalance - comm;
+            const totalProfit = saleProceeds + cumulativeNet - totCash;
+
+            document.getElementById('res_cash').innerText = '$' + Math.round(totCash).toLocaleString();
+            document.getElementById('res_mortgage').innerText = '$' + Math.round(pi).toLocaleString();
+            document.getElementById('res_net').innerText = '$' + Math.round(baseRent - (pi+taxins+(baseRent*mgmtPct)+maint)).toLocaleString();
+            document.getElementById('res_profit').innerText = '$' + Math.round(totalProfit).toLocaleString();
+            document.getElementById('res_roidisplay').innerText = (totCash > 0 ? (totalProfit / totCash * 100).toFixed(1) : 0) + `% ROI (${holdYears}Yr)`;
+            
+            const irrValue = calcIRR(cashFlows);
+            document.getElementById('res_irr').innerText = (irrValue * 100).toFixed(1) + '% IRR';
+
+            const capRate = price > 0 ? ((baseRent - (baseRent * mgmtPct + taxins + maint)) * 12 / price) * 100 : 0;
+            document.getElementById('res_yield').innerText = capRate.toFixed(2) + '% Cap Rate';
+        }
+
+        function calcIRR(flows) {
+            let guess = 0.01;
+            for (let i = 0; i < 50; i++) {
+                let npv = 0, dnpv = 0;
+                for (let j = 0; j < flows.length; j++) {
+                    npv += flows[j] / Math.pow(1 + guess, j);
+                    dnpv -= j * flows[j] / Math.pow(1 + guess, j + 1);
+                }
+                if (Math.abs(dnpv) < 1e-10) break;
+                let nextGuess = guess - npv / dnpv;
+                if (Math.abs(nextGuess - guess) < 0.00001) break;
+                guess = nextGuess;
+            }
+            return Math.pow(1 + Math.max(-0.999, guess), 12) - 1;
+        }
+
+        function copyDealData(event) {
+            if (!currentProp) return;
+            const getVal = id => document.getElementById(id).value;
+            const getText = id => document.getElementById(id).innerText;
+            
+            const price = cleanNum(getVal('m_price')), downPct = cleanNum(getVal('m_down_pct')), downAmt = price * downPct / 100;
+            const loanAmt = price - downAmt, rate = (cleanNum(getVal('m_rate')) || 0) / 1200, pi = cleanNum(getText('res_mortgage'));
+            const rehab = cleanNum(getVal('m_rehab')), c_fees = cleanNum(getVal('c_origination')) + cleanNum(getVal('c_title')) + cleanNum(getVal('c_reserves')) + cleanNum(getVal('c_inspection'));
+            const cashToClose = downAmt + c_fees + rehab, taxins = cleanNum(getVal('r_taxins')), mgmtPct = cleanNum(getVal('r_mgmt')) / 100, maint = cleanNum(getVal('r_maint'));
+            const growth = cleanNum(getVal('r_growth')) / 100;
+            const holdYears = cleanNum(getVal('e_hold')), months = Math.round(holdYears * 12), sale = cleanNum(getVal('e_sale')), comm = sale * (cleanNum(getVal('e_comm')) / 100);
+
+            const assumptions = [
+                ["PROPERTY", getText('modalAddress')],
+                ["Neighborhood", currentProp.Neighborhood],
+                ["Bed-Bath", currentProp['Bed-Bath']],
+                ["Living Area", currentProp.sqftNum + " SqFt"],
+                ["$/SqFt", "$" + currentProp.priceSfNum],
+                ["Lot Size", currentProp.lotNum < 50 ? currentProp.lotNum + " Acres" : currentProp.lotNum.toLocaleString() + " SqFt"],
+                [""],
+                ["FINANCIAL SETUP"],
+                ["Purchase Price", price],
+                ["Rehab Budget", rehab],
+                ["Down Payment $", downAmt],
+                ["Loan Amount", loanAmt],
+                ["Interest Rate", getVal('m_rate') + "%"],
+                ["CASH TO CLOSE", -cashToClose],
+                [""],
+                ["OPERATIONS (Monthly)"],
+                ["Base Rent (Yr 1)", cleanNum(getVal('r_rent'))],
+                ["Annual Rent Growth", (growth * 100) + "%"],
+                ["OpEx (Initial)", -(taxins + (cleanNum(getVal('r_rent')) * mgmtPct) + maint)],
+                ["Mortgage P&I", -pi],
+                [""],
+                ["EXIT AT MONTH " + months],
+                ["Projected Sale", sale],
+                ["ESTIMATED PROFIT", getText('res_profit')],
+                ["ESTIMATED ROI", getText('res_roidisplay')],
+                ["ESTIMATED IRR", getText('res_irr')]
+            ];
+            
+            let rows = [["ANALYSIS RECAP", "", "", "AMORTIZATION & CASH FLOW WATERFALL", "", "", "", "", ""].join("\t")];
+            rows.push(["", "", "", "Month", "Interest", "Principal", "Balance", "Net Flow", "Total In/Out"].join("\t"));
+            
+            let currentBalance = loanAmt;
+            const maxRows = Math.max(assumptions.length, months + 1);
+            for (let i = 0; i <= maxRows; i++) {
+                let row = ["", "", "", "", "", "", "", "", ""];
+                if (i < assumptions.length) { row[0] = assumptions[i][0]; row[1] = assumptions[i][1]; }
+                if (i <= months) {
+                    row[3] = i;
+                    if (i === 0) { row[8] = (-cashToClose).toFixed(2); row[6] = loanAmt.toFixed(2); }
+                    else {
+                        let interest = currentBalance * rate, principal = pi - interest;
+                        currentBalance -= principal;
+                        
+                        let monthRent = cleanNum(getVal('r_rent')) * Math.pow(1 + growth, Math.floor((i-1) / 12));
+                        let monthMgmt = monthRent * mgmtPct;
+                        let monthNet = monthRent - (pi + taxins + monthMgmt + maint);
+                        
+                        row[4] = interest.toFixed(2); row[5] = principal.toFixed(2); row[6] = currentBalance.toFixed(2); row[7] = monthNet.toFixed(2);
+                        let totalCash = monthNet;
+                        if (i === months) { totalCash += (sale - currentBalance - comm); }
+                        row[8] = totalCash.toFixed(2);
+                    }
+                }
+                rows.push(row.join("\t"));
+            }
+
+            const clipboardText = rows.join("\n");
+            const executeCopy = (text) => {
+                if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+                const textArea = document.createElement("textarea"); textArea.value = text; textArea.style.position = "fixed"; textArea.style.left = "-9999px"; document.body.appendChild(textArea);
+                textArea.focus(); textArea.select();
+                return new Promise((res, rej) => { document.execCommand('copy') ? res() : rej(); textArea.remove(); });
+            };
+            executeCopy(clipboardText).then(() => {
+                const btn = (event && event.currentTarget) || event.target;
+                const originalText = btn.innerText; btn.innerText = "SPREADSHEET READY!"; setTimeout(() => btn.innerText = originalText, 2000);
+            }).catch(err => { console.error(err); });
+        }
+
+
+        document.getElementById('filterPrice').oninput = updateView;
+        document.getElementById('filterSqft').oninput = updateView;
+        document.getElementById('filterPriceSF').oninput = updateView;
+        document.getElementById('filterSearch').oninput = updateView;
+        init();
+
+        function openModeller() { 
+            if (selectedIds.size === 0) {
+                alert("Please select at least one property to analyze as a fund.");
+                return;
+            }
+            
+            const pList = Array.from(selectedIds).map(id => rawData.find(x => x.id === id));
+            let tPrice = 0, tCash = 0, tNet = 0, tRehab = 0;
+            let combinedFlows = null;
+            let holdYears = 3; // Default fund life
+            let holdMonths = holdYears * 12;
+
+            pList.forEach(p => {
+                // Run standard model for each property
+                const price = p.priceNum;
+                const downAmt = price * 0.25;
+                const loanAmt = price - downAmt;
+                const rate = 0.065 / 12; // 6.5% default fund rate
+                const term = 360;
+                const pi = (loanAmt * rate) / (1 - Math.pow(1 + rate, -term));
+                const growth = 0.02; // 2% growth
+                const mgmt = p.priceNum * 0.1 / 100; // Not quite right, using 10% of rent would be better
+                const rent = p.monthlyNum || 0;
+                const taxins = p.taxNum + p.insNum;
+                const maint = 150;
+                const fees = (price * 0.01) + 2000 + 4500 + 750; // Simplified estimate for fund view
+                const totPropCash = downAmt + fees;
+                
+                tPrice += price;
+                tCash += totPropCash;
+
+                let propFlows = [-totPropCash];
+                let balance = loanAmt;
+                for (let i = 0; i < holdMonths; i++) {
+                    let interest = balance * rate;
+                    let principal = pi - interest;
+                    balance -= principal;
+                    let monthRent = rent * Math.pow(1 + growth, Math.floor(i / 12));
+                    let monthNet = monthRent - (pi + taxins + (monthRent * 0.1) + maint);
+                    
+                    let flow = monthNet;
+                    if (i === holdMonths -1) {
+                        const sale = price * 1.25;
+                        const comm = sale * 0.06;
+                        flow += (sale - balance - comm);
+                    }
+                    propFlows.push(flow);
+                }
+
+                if (!combinedFlows) {
+                    combinedFlows = [...propFlows];
+                } else {
+                    propFlows.forEach((val, idx) => combinedFlows[idx] += val);
+                }
+            });
+
+            const fundIrr = calcIRR(combinedFlows);
+            const totalProfit = combinedFlows.reduce((a, b) => a + b, 0);
+
+            // Populate Fund Modal UI
+            const modal = document.getElementById('fundModal');
+            document.getElementById('f_count').innerText = pList.length + " Properties";
+            document.getElementById('f_price').innerText = "$" + Math.round(tPrice).toLocaleString();
+            document.getElementById('f_cash').innerText = "$" + Math.round(tCash).toLocaleString();
+            document.getElementById('f_net').innerText = "$" + Math.round(combinedFlows[1]).toLocaleString();
+            document.getElementById('f_profit').innerText = "$" + Math.round(totalProfit).toLocaleString();
+            document.getElementById('f_irr').innerText = (fundIrr * 100).toFixed(1) + "% IRR";
+            document.getElementById('f_roi').innerText = (totalProfit / tCash * 100).toFixed(1) + "% ROI";
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeFundModal() {
+            document.getElementById('fundModal').style.display = 'none';
+        }
+
+        function copyFundData(event) {
+            const pList = Array.from(selectedIds).map(id => rawData.find(x => x.id === id));
+            let rows = [["PORTFOLIO FUND RECAP", "", "Properties Selected: " + pList.length].join("\t")];
+            rows.push(["Address", "Neighborhood", "Price", "SqFt", "Bed-Bath"].join("\t"));
+            pList.forEach(p => {
+                rows.push([p.Address, p.Neighborhood, p.priceNum, p.sqftNum, p['Bed-Bath']].join("\t"));
+            });
+            rows.push([""]);
+            rows.push(["FUND SUMMARY"]);
+            rows.push(["Total Acquisition Price", document.getElementById('f_price').innerText].join("\t"));
+            rows.push(["Total Cash Invested", document.getElementById('f_cash').innerText].join("\t"));
+            rows.push(["Expected Fund ROI", document.getElementById('f_roi').innerText].join("\t"));
+            rows.push(["Expected Portfolio IRR", document.getElementById('f_irr').innerText].join("\t"));
+            
+            const clipboardText = rows.join("\n");
+            navigator.clipboard.writeText(clipboardText).then(() => {
+                const btn = event?.currentTarget || event?.target;
+                if(btn && btn.innerText) {
+                    const old = btn.innerText; btn.innerText = "BATCH EXPORTED!"; setTimeout(() => btn.innerText = old, 2000);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
