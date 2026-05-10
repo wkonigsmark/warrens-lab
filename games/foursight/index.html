@@ -10,12 +10,8 @@
             --bg-color: #180e08;
             --panel-bg: #2a1a0e;
             --panel-border: #4a3020;
-            --sq-light: #C8934A;
-            --sq-dark: #6B3A1A;
             --chip-red: #DC2626;
             --chip-black: #1a1a1a;
-            --chip-empty-light: rgba(0,0,0,0.25);
-            --chip-empty-dark: rgba(0,0,0,0.35);
             --text-primary: #f5e6d0;
             --text-secondary: #a08060;
             --board-frame: #2d1a08;
@@ -180,17 +176,11 @@
             transition: background-color 0.2s ease;
         }
 
-        /* Checkerboard empty cells */
-        .cell.sq-light {
-            background: radial-gradient(circle at 38% 35%, rgba(255,255,255,0.12) 0%, transparent 60%),
-                        var(--chip-empty-light);
-            box-shadow: inset 0 3px 6px rgba(0,0,0,0.4), inset 0 -1px 2px rgba(255,255,255,0.05);
-        }
-
-        .cell.sq-dark {
-            background: radial-gradient(circle at 38% 35%, rgba(255,255,255,0.06) 0%, transparent 60%),
-                        var(--chip-empty-dark);
-            box-shadow: inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -1px 2px rgba(255,255,255,0.03);
+        /* Empty cells — uniform */
+        .cell.empty {
+            background: radial-gradient(circle at 38% 35%, rgba(255,255,255,0.10) 0%, transparent 60%),
+                        rgba(0,0,0,0.30);
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.45), inset 0 -1px 2px rgba(255,255,255,0.04);
         }
 
         /* Hover previews */
@@ -479,8 +469,7 @@
                 for (let c = 0; c < COLS; c++) {
                     const cell = document.createElement('div');
                     cell.classList.add('cell');
-                    // Checkerboard square coloring
-                    cell.classList.add((r + c) % 2 === 0 ? 'sq-light' : 'sq-dark');
+                    cell.classList.add('empty');
                     cell.dataset.row = r;
                     cell.dataset.col = c;
 
@@ -521,7 +510,7 @@
                 if (!boardState[r][col]) {
                     boardState[r][col] = currentPlayer;
                     const cell = getCellElement(r, col);
-                    cell.classList.remove('sq-light', 'sq-dark', 'hover-red', 'hover-black');
+                    cell.classList.remove('empty', 'hover-red', 'hover-black');
                     cell.classList.add(currentPlayer);
 
                     const winResult = checkWin(boardState, currentPlayer);
