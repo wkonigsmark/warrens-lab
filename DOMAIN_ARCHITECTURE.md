@@ -34,7 +34,7 @@ This document outlines the strategic organization and categorization of projects
 ## games/
 **Focus:** Classic board games, logic puzzles, and skill-based stimulation.
 - **mancala**: Traditional stone game.
-- **connect-4**: Classic spatial strategy.
+- **foursight**: Classic spatial strategy.
 - **sudoku**: Logic and number grid.
 - **matching**: Kid-friendly memory game.
 - **abacus**: Calculation and math visualization.
