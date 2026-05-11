@@ -164,6 +164,45 @@
         </div>
 
         <div class="hero" style="margin: 60px 0 30px;">
+            <div class="tty-container">GAME CONCEPTS: BACKLOG</div>
+        </div>
+
+        <!-- Tangram -->
+        <div class="idea-card">
+            <div class="status-tag">Phase: Conceptual</div>
+            <h2>Tangram</h2>
+            <p>Drag and rotate geometric shapes to fill a target silhouette outline. Builds spatial reasoning and patience — feels satisfying when pieces snap together cleanly.</p>
+        </div>
+
+        <!-- Towers of Hanoi -->
+        <div class="idea-card">
+            <div class="status-tag">Phase: Conceptual</div>
+            <h2>Towers of Hanoi</h2>
+            <p>Move a stack of rings from one peg to another, never placing a larger ring on a smaller one. A pure sequential logic puzzle that scales naturally from 3 to 7 discs.</p>
+        </div>
+
+        <!-- Lights Out -->
+        <div class="idea-card">
+            <div class="status-tag">Phase: Conceptual</div>
+            <h2>Lights Out</h2>
+            <p>Toggle grid tiles to turn all lights off — each press flips the tile and its neighbors. Deceptively simple to understand, genuinely hard to solve. Great for pure logic development.</p>
+        </div>
+
+        <!-- Mastermind -->
+        <div class="idea-card">
+            <div class="status-tag">Phase: Conceptual</div>
+            <h2>Mastermind / Bulls & Cows</h2>
+            <p>Guess a hidden color or number sequence and receive feedback clues (right value, wrong position vs. right value, right position). Teaches deductive reasoning and process of elimination.</p>
+        </div>
+
+        <!-- Anagram Unscramble -->
+        <div class="idea-card">
+            <div class="status-tag">Phase: Conceptual</div>
+            <h2>Anagram Unscramble</h2>
+            <p>Rearrange scrambled letters to form a valid word. Drag-and-drop interface with tiered difficulty by word length and frequency. Natural complement to the Lexicon vocabulary work.</p>
+        </div>
+
+        <div class="hero" style="margin: 60px 0 30px;">
             <div class="tty-container">MAINTENANCE & DRAFTS</div>
         </div>
 
@@ -180,6 +219,7 @@
             <h2>Public Drafts</h2>
             <p>These tools are currently hidden from the main menus until they reach beta stability:</p>
             <ul style="color: rgba(255,255,255,0.6); font-size: 0.85rem; padding-left: 20px;">
+                <li><strong>The Chef</strong>: Culinary logic and recipe experimentation tool — needs significant development before re-publish.</li>
                 <li><strong>Chemistry Lab</strong>: Periodic table logic and synthesis quizzes.</li>
                 <li><strong>Orbis</strong>: Geography data and spatial mapping.</li>
                 <li><strong>Blackjack Pro</strong>: Card counting engine and risk simulator.</li>
@@ -226,6 +266,12 @@
         function updateDisplay() {
             display.textContent = "*".repeat(currentPin.length);
         }
+
+        document.addEventListener("keydown", function(e) {
+            if (document.getElementById("lock-screen").style.display === "none") return;
+            if (e.key >= "0" && e.key <= "9") press(parseInt(e.key));
+            if (e.key === "Backspace" || e.key === "Delete" || e.key === "Escape") clearPin();
+        });
 
         function checkPin() {
             if (currentPin === CORRECT_PIN) {
