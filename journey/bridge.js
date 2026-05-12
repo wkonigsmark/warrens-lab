@@ -76,6 +76,20 @@
         notes:     String(result?.notes || ''),
         finishedAt: Date.now()
       };
+
+      // Iframe mode: the runner is our parent — message it directly.
+      // This is the primary path now that the runner uses an iframe wrapper.
+      if (window.parent && window.parent !== window) {
+        try {
+          window.parent.postMessage(
+            { source: 'journey-bridge', type: 'complete', payload },
+            location.origin
+          );
+          return;
+        } catch (e) { /* fall through to legacy path */ }
+      }
+
+      // Legacy top-level mode: persist result and redirect back.
       try {
         localStorage.setItem(STORAGE_RESULT, JSON.stringify(payload));
       } catch (e) {
@@ -102,8 +116,11 @@
     }
   };
 
-  // Auto-banner when active so dogfooders can see we're in journey mode.
-  if (ctx) {
+  // Auto-banner only when running top-level. In iframe mode the runner's
+  // own topbar already shows the journey context, so a second banner would
+  // be redundant noise inside the game viewport.
+  const isFramed = window.parent && window.parent !== window;
+  if (ctx && !isFramed) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => window.JourneyBridge.showBanner());
     } else {

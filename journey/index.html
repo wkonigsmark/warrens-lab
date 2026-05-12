@@ -81,6 +81,21 @@
         <button id="reset-btn" class="btn-link">Start over</button>
     </section>
 
+    <!-- ---- STATE: PLAYING (iframe wrapper around the activity) ---- -->
+    <section class="screen" data-state="playing">
+        <div class="play-topbar">
+            <div class="play-topbar-left">
+                <span class="play-stop-meta" id="play-stop-meta">Stop · of ·</span>
+                <span class="play-stop-title" id="play-stop-title">Activity</span>
+            </div>
+            <div class="play-elapsed" id="play-elapsed" title="Time on task">0:00</div>
+            <button id="play-done-btn" class="btn-done">Done →</button>
+        </div>
+        <iframe id="play-frame" class="play-frame" title="Activity"
+                src="about:blank"
+                allow="autoplay; fullscreen; clipboard-read; clipboard-write"></iframe>
+    </section>
+
     <!-- ---- STATE: DIAGNOSTIC (the printable round readout) ---- -->
     <section class="screen" data-state="diagnostic">
         <header class="screen-head no-print">

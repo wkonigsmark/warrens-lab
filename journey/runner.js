@@ -251,8 +251,17 @@
 
   // ---- Flow controllers -----------------------------------------------------
 
-  function startActivity(session) {
+  // ---- Activity launch (iframe wrapper) -----------------------------------
+  // The runner now hosts the activity inside an iframe so the journey UI
+  // stays mounted — we own the "Done" button regardless of whether the game
+  // is bridge-integrated. Score auto-capture is opt-in via JourneyBridge.
+
+  let _elapsedTimerId = null;
+  let _messageListener = null;
+
+  function enterActivity(session) {
     const stop = session.plan[session.currentStopIndex];
+    session.currentLaunchAt = Date.now();
     saveSession(session);
 
     const params = new URLSearchParams({
@@ -263,19 +272,74 @@
       level: String(session.levels[stop.skill]),
       target: String(stop.target),
       childName: session.child.name,
+      // returnTo is only used by activities that fall back to top-level
+      // redirect mode (no postMessage). In iframe mode, postMessage wins.
       returnTo: '/journey/?resume=1'
     });
 
-    // Mark when the activity launched so we can compute time-on-task if the
-    // bridge doesn't include it (fallback heuristic).
-    sessionStorage.setItem('journey:launchAt', String(Date.now()));
-    window.location.href = stop.url + '?' + params.toString();
+    document.getElementById('play-stop-meta').textContent =
+      `Stop ${session.currentStopIndex + 1} of ${session.plan.length} · ${stop.skill}`;
+    document.getElementById('play-stop-title').textContent = stop.label;
+    document.getElementById('play-frame').src = stop.url + '?' + params.toString();
+
+    startElapsedTimer(session);
+    bindPlayingActions(session);
+    listenForBridgeMessage(session);
+    setActiveState('playing');
   }
 
-  function ingestRound(session, pending) {
+  function startElapsedTimer(session) {
+    stopElapsedTimer();
+    const tick = () => {
+      const ms = Date.now() - session.currentLaunchAt;
+      document.getElementById('play-elapsed').textContent = fmtTime(ms);
+    };
+    tick();
+    _elapsedTimerId = setInterval(tick, 1000);
+  }
+  function stopElapsedTimer() {
+    if (_elapsedTimerId) { clearInterval(_elapsedTimerId); _elapsedTimerId = null; }
+  }
+
+  function bindPlayingActions(session) {
+    document.getElementById('play-done-btn').onclick = () => {
+      // Manual exit — no score yet. The diagnostic's manual reporter takes over.
+      finishCurrentActivity(session, null);
+    };
+  }
+
+  function listenForBridgeMessage(session) {
+    removeBridgeListener();
+    _messageListener = (e) => {
+      const m = e?.data;
+      if (!m || m.source !== 'journey-bridge' || m.type !== 'complete') return;
+      // Optional sanity: confirm jid matches the current session
+      if (m.payload?.jid && m.payload.jid !== session.id) return;
+      finishCurrentActivity(session, m.payload);
+    };
+    window.addEventListener('message', _messageListener);
+  }
+  function removeBridgeListener() {
+    if (_messageListener) {
+      window.removeEventListener('message', _messageListener);
+      _messageListener = null;
+    }
+  }
+
+  function finishCurrentActivity(session, pending) {
+    stopElapsedTimer();
+    removeBridgeListener();
+    document.getElementById('play-frame').src = 'about:blank';
+    const launchAt = session.currentLaunchAt || (Date.now() - 60_000);
+    const round = ingestRound(session, pending, launchAt);
+    renderDiagnostic(session, round);
+    bindManualReporter(session);
+    setActiveState('diagnostic');
+  }
+
+  function ingestRound(session, pending, launchAt) {
     const stop = session.plan[session.currentStopIndex];
-    const launchAt = Number(sessionStorage.getItem('journey:launchAt')) || (Date.now() - 60_000);
-    sessionStorage.removeItem('journey:launchAt');
+    launchAt = launchAt || (Date.now() - 60_000);
 
     const round = {
       stopIndex: session.currentStopIndex,
@@ -367,8 +431,8 @@
         timeMs: Number.isFinite(mins) && mins > 0 ? mins * 60_000 : round.timeMs,
         notes
       };
-      sessionStorage.setItem('journey:launchAt', String(Date.now() - fakePending.timeMs));
-      const fresh = ingestRound(session, fakePending);
+      const fakeLaunchAt = Date.now() - fakePending.timeMs;
+      const fresh = ingestRound(session, fakePending, fakeLaunchAt);
       fresh.source = 'manual';
       saveSession(session);
       renderDiagnostic(session, fresh);
@@ -396,7 +460,7 @@
   function bindIntroActions() {
     document.getElementById('begin-stop-btn').onclick = () => {
       const session = loadSession();
-      if (session) startActivity(session);
+      if (session) enterActivity(session);
     };
 
     document.getElementById('skip-stop-btn').onclick = () => {
@@ -406,8 +470,8 @@
       const stop = session.plan[session.currentStopIndex];
       const fakeScore = Math.floor(Math.random() * (stop.target + 1));
       const fakeTime = stop.expectedMs * (0.5 + Math.random() * 1.2);
-      sessionStorage.setItem('journey:launchAt', String(Date.now() - fakeTime));
-      const round = ingestRound(session, { score: fakeScore, max: stop.target, timeMs: fakeTime });
+      const fakeLaunchAt = Date.now() - fakeTime;
+      const round = ingestRound(session, { score: fakeScore, max: stop.target, timeMs: fakeTime }, fakeLaunchAt);
       // Mark simulated rounds as bridge so the manual reporter stays hidden.
       round.source = 'bridge';
       round.notes = '(simulated for testing)';
@@ -463,13 +527,17 @@
 
     let session = loadSession();
 
-    // Returning from an activity?
+    // Returning from an activity in legacy top-level redirect mode.
+    // (Iframe mode never reaches this — it stays on the journey page.)
     if (params.has('resume') && session) {
       const pending = takePendingResult();
-      const round = ingestRound(session, pending);
+      const launchAt = session.currentLaunchAt || (Date.now() - 60_000);
+      const round = ingestRound(session, pending, launchAt);
       renderDiagnostic(session, round);
       bindManualReporter(session);
       setActiveState('diagnostic');
+      // Strip ?resume= so refreshes don't re-ingest.
+      history.replaceState(null, '', '/journey/');
       return;
     }
 
