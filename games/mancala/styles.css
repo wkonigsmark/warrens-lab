@@ -202,6 +202,31 @@ h2 {
   transform: translateY(-2px);
 }
 
+.pit.active-drop,
+.store.active-drop {
+  outline: 5px solid rgba(227, 180, 77, 0.72);
+  outline-offset: 2px;
+  animation: soft-drop 220ms ease-out;
+}
+
+@keyframes soft-drop {
+  0% {
+    transform: scale(0.98);
+    filter: brightness(1);
+  }
+
+  55% {
+    transform: scale(1.025);
+    filter: brightness(1.06);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+
 .pit:disabled,
 .store:disabled {
   cursor: default;
@@ -313,7 +338,7 @@ h2 {
 
   .controls {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     width: 100%;
   }
 
@@ -376,6 +401,12 @@ h2 {
   }
 
   .pit.legal {
+    outline-width: 3px;
+    outline-offset: 1px;
+  }
+
+  .pit.active-drop,
+  .store.active-drop {
     outline-width: 3px;
     outline-offset: 1px;
   }

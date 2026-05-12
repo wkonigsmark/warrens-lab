@@ -2,6 +2,7 @@ const appShell = document.querySelector(".app-shell");
 const board = document.querySelector("#board");
 const statusStrip = document.querySelector("#statusStrip");
 const newGameButton = document.querySelector("#newGame");
+const soundToggle = document.querySelector("#soundToggle");
 const mentorToggle = document.querySelector("#mentorToggle");
 const mentorPanel = document.querySelector("#mentorPanel");
 const lessonText = document.querySelector("#lessonText");
@@ -28,8 +29,18 @@ const oppositePit = {
 let pits = [];
 let currentPlayer = 1;
 let gameOver = false;
+let isAnimating = false;
+let activePitIndex = null;
+let soundEnabled = true;
+let audioContext = null;
+let moveToken = 0;
+
+const sowDelay = 260;
 
 function newGame() {
+  moveToken += 1;
+  isAnimating = false;
+  activePitIndex = null;
   pits = Array(14).fill(startingStones);
   pits[playerOneStore] = 0;
   pits[playerTwoStore] = 0;
@@ -60,7 +71,8 @@ function createPit(index, owner) {
   pit.type = "button";
   pit.className = `pit player-${owner === 1 ? "one" : "two"}`;
   pit.style.gridColumn = `${owner === 1 ? index + 2 : 14 - index}`;
-  pit.disabled = gameOver || owner !== currentPlayer || pits[index] === 0;
+  pit.classList.toggle("active-drop", activePitIndex === index);
+  pit.disabled = isAnimating || gameOver || owner !== currentPlayer || pits[index] === 0;
   pit.classList.toggle("legal", !pit.disabled);
   pit.setAttribute("aria-label", `Player ${owner} pit with ${pits[index]} stones`);
   pit.innerHTML = `
@@ -76,6 +88,7 @@ function createStore(owner) {
   const index = owner === 1 ? playerOneStore : playerTwoStore;
   const store = document.createElement("div");
   store.className = `store player-${owner === 1 ? "one" : "two"}`;
+  store.classList.toggle("active-drop", activePitIndex === index);
   store.setAttribute("aria-label", `Player ${owner} store with ${pits[index]} stones`);
   store.innerHTML = `
     <span class="store-label">P${owner} Store</span>
@@ -94,29 +107,80 @@ function renderStones(count) {
   return `<span class="stones">${stones}</span>`;
 }
 
-function playMove(startIndex) {
-  if (gameOver || !isOwnPit(startIndex) || pits[startIndex] === 0) return;
+async function playMove(startIndex) {
+  if (isAnimating || gameOver || !isOwnPit(startIndex) || pits[startIndex] === 0) return;
 
+  isAnimating = true;
+  const token = ++moveToken;
   let stones = pits[startIndex];
   pits[startIndex] = 0;
   let index = startIndex;
+
+  activePitIndex = startIndex;
+  setStatus(`Player ${currentPlayer} picked up ${stones} stones. Watch them drop one by one.`);
+  renderBoard();
+  await pause(180);
+  if (token !== moveToken) return;
 
   while (stones > 0) {
     index = (index + 1) % pits.length;
     if (currentPlayer === 1 && index === playerTwoStore) continue;
     if (currentPlayer === 2 && index === playerOneStore) continue;
+
     pits[index] += 1;
     stones -= 1;
+    activePitIndex = index;
+    renderBoard();
+    playStoneSound();
+    await pause(sowDelay);
+    if (token !== moveToken) return;
   }
 
+  activePitIndex = null;
   const message = resolveMove(index);
   if (isGameFinished()) {
     finishGame();
+    isAnimating = false;
     return;
   }
 
-  renderBoard();
   setStatus(message);
+  isAnimating = false;
+  renderBoard();
+}
+
+function pause(duration) {
+  return new Promise((resolve) => setTimeout(resolve, duration));
+}
+
+function playStoneSound() {
+  if (!soundEnabled) return;
+
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+
+  audioContext ||= new AudioContext();
+  if (audioContext.state === "suspended") audioContext.resume();
+
+  const now = audioContext.currentTime;
+  const oscillator = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  const filter = audioContext.createBiquadFilter();
+
+  oscillator.type = "triangle";
+  oscillator.frequency.setValueAtTime(260 + Math.random() * 70, now);
+  oscillator.frequency.exponentialRampToValueAtTime(120, now + 0.055);
+  filter.type = "lowpass";
+  filter.frequency.setValueAtTime(900, now);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.08, now + 0.008);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
+
+  oscillator.connect(filter);
+  filter.connect(gain);
+  gain.connect(audioContext.destination);
+  oscillator.start(now);
+  oscillator.stop(now + 0.08);
 }
 
 function resolveMove(lastIndex) {
@@ -194,6 +258,13 @@ function setLesson(message) {
 }
 
 newGameButton.addEventListener("click", newGame);
+
+soundToggle.addEventListener("click", () => {
+  soundEnabled = !soundEnabled;
+  soundToggle.classList.toggle("active", soundEnabled);
+  soundToggle.textContent = soundEnabled ? "SFX On" : "SFX Off";
+  soundToggle.setAttribute("aria-pressed", String(soundEnabled));
+});
 
 mentorToggle.addEventListener("click", () => {
   const hidden = mentorPanel.classList.toggle("mentor-hidden");

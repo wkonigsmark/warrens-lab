@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const gameMode = gameModeSelect.value;
 
         if (gameMode === 'princess' || gameMode === 'foods') {
-            const path = gameMode === 'princess' ? 'img-disney-princess/' : '../recipes/chef/img-tool/finished-img/';
+            const path = gameMode === 'princess' ? 'img-disney-princess/' : '../../health/chef/img-tool/finished-img/';
             const pool = themes[gameMode].map(img => path + img);
             
             if (totalPairs <= pool.length) {

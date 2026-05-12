@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kid-Code Board Builder</title>
+    <style>
+        :root {
+            --ink: #17202a;
+            --muted: #6b7280;
+            --paper: #fffaf0;
+            --panel: #ffffff;
+            --blue: #2563eb;
+            --green: #16a34a;
+            --yellow: #facc15;
+            --red: #ef4444;
+            --purple: #8b5cf6;
+            --line: #d8cdb8;
+            --shadow: 0 18px 45px rgba(34, 25, 10, 0.14);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                linear-gradient(90deg, rgba(23, 32, 42, 0.035) 1px, transparent 1px),
+                linear-gradient(rgba(23, 32, 42, 0.035) 1px, transparent 1px),
+                var(--paper);
+            background-size: 28px 28px;
+            color: var(--ink);
+        }
+
+        button,
+        select {
+            font: inherit;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
+        }
+
+        .lesson-panel {
+            background: rgba(255, 255, 255, 0.86);
+            border-right: 1px solid var(--line);
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            box-shadow: 8px 0 35px rgba(34, 25, 10, 0.08);
+            z-index: 2;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .badge {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--ink);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: var(--yellow);
+            font-weight: 900;
+            box-shadow: 4px 4px 0 var(--ink);
+        }
+
+        h1,
+        h2,
+        p {
+            margin: 0;
+        }
+
+        h1 {
+            font-size: clamp(1.45rem, 3vw, 2rem);
+            line-height: 1;
+        }
+
+        .subhead {
+            color: var(--muted);
+            line-height: 1.45;
+            max-width: 36rem;
+        }
+
+        .step-card,
+        .reference,
+        .code-card {
+            background: var(--panel);
+            border: 2px solid var(--ink);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .step-card {
+            padding: 18px;
+        }
+
+        .step-kicker {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--blue);
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .instruction {
+            color: var(--muted);
+            line-height: 1.45;
+            margin-bottom: 16px;
+        }
+
+        .picker-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: center;
+        }
+
+        select {
+            width: 100%;
+            min-height: 46px;
+            border: 2px solid var(--ink);
+            border-radius: 6px;
+            background: #fff;
+            color: var(--ink);
+            padding: 0 12px;
+            font-weight: 800;
+        }
+
+        .run-btn,
+        .reset-btn {
+            border: 2px solid var(--ink);
+            border-radius: 6px;
+            min-height: 46px;
+            padding: 0 16px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 var(--ink);
+            transform: translate(-2px, -2px);
+            transition: transform 140ms ease, box-shadow 140ms ease;
+        }
+
+        .run-btn {
+            background: var(--green);
+            color: white;
+        }
+
+        .reset-btn {
+            background: white;
+            color: var(--ink);
+        }
+
+        .run-btn:active,
+        .reset-btn:active {
+            transform: translate(0, 0);
+            box-shadow: 0 0 0 var(--ink);
+        }
+
+        .message {
+            min-height: 28px;
+            color: var(--muted);
+            font-weight: 800;
+            margin-top: 12px;
+        }
+
+        .message.good {
+            color: var(--green);
+        }
+
+        .message.try {
+            color: var(--red);
+        }
+
+        .code-card {
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--ink);
+            padding: 10px 14px;
+            background: #17202a;
+            color: white;
+            font-weight: 900;
+        }
+
+        .code-body {
+            margin: 0;
+            padding: 16px;
+            background: #111827;
+            color: #f8fafc;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+            font-size: 0.98rem;
+            line-height: 1.65;
+            overflow-x: auto;
+        }
+
+        .code-slot {
+            display: inline-block;
+            min-width: 88px;
+            color: #17202a;
+            background: var(--yellow);
+            border-radius: 4px;
+            padding: 0 6px;
+            text-align: center;
+            font-weight: 900;
+        }
+
+        .reference {
+            padding: 16px;
+        }
+
+        .reference h2 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 12px;
+        }
+
+        .reference-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .ref-pill {
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 8px 10px;
+            background: #fffdf7;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .ref-pill strong {
+            color: var(--ink);
+        }
+
+        .board-area {
+            padding: 28px;
+            display: grid;
+            grid-template-rows: auto minmax(0, 1fr);
+            gap: 18px;
+            min-width: 0;
+        }
+
+        .status-strip {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .progress {
+            display: flex;
+            gap: 7px;
+            align-items: center;
+        }
+
+        .dot {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--ink);
+            border-radius: 50%;
+            background: white;
+        }
+
+        .dot.done {
+            background: var(--green);
+        }
+
+        .moves {
+            border: 2px solid var(--ink);
+            border-radius: 999px;
+            background: white;
+            padding: 8px 14px;
+            font-weight: 900;
+        }
+
+        .board-shell {
+            min-height: 520px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 2px solid var(--ink);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            display: grid;
+            place-items: center;
+            padding: clamp(14px, 3vw, 30px);
+            overflow: hidden;
+        }
+
+        .game-board {
+            position: relative;
+            width: min(100%, 920px);
+            aspect-ratio: 16 / 10;
+            border: 3px solid var(--ink);
+            border-radius: 8px;
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.72)),
+                radial-gradient(circle at 20% 20%, #bfdbfe, transparent 28%),
+                radial-gradient(circle at 78% 74%, #fecaca, transparent 26%),
+                #f8fafc;
+        }
+
+        .tile {
+            position: absolute;
+            width: 9%;
+            aspect-ratio: 1;
+            border: var(--path-line-width, 0) solid var(--path-outline, transparent);
+            border-radius: var(--tile-radius, 999px);
+            background: var(--tile-fill, transparent);
+            display: grid;
+            place-items: center;
+            color: var(--ink);
+            font-weight: 900;
+            transition: background 350ms ease, border 350ms ease, border-radius 350ms ease, transform 350ms ease;
+        }
+
+        .tile.yellow {
+            background: var(--yellow-fill, var(--tile-fill, transparent));
+        }
+
+        .tile.special {
+            background: var(--special-fill, var(--tile-fill, transparent));
+        }
+
+        .tile.finish {
+            background: var(--finish-fill, var(--tile-fill, transparent));
+        }
+
+        .tile::after {
+            content: attr(data-label);
+            opacity: var(--numbers-opacity, 0);
+            transition: opacity 250ms ease;
+        }
+
+        .decoration {
+            position: absolute;
+            opacity: var(--shapes-opacity, 0);
+            transform: scale(var(--shapes-scale, 0.4));
+            transition: opacity 350ms ease, transform 350ms ease;
+        }
+
+        .star {
+            width: 8%;
+            aspect-ratio: 1;
+            background: var(--purple);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 56%, 79% 91%, 50% 70%, 21% 91%, 32% 56%, 2% 35%, 39% 35%);
+        }
+
+        .gate {
+            width: 9%;
+            aspect-ratio: 1;
+            border: 6px solid var(--blue);
+            border-bottom: 0;
+            border-radius: 60% 60% 0 0;
+        }
+
+        .player {
+            position: absolute;
+            width: 5.8%;
+            aspect-ratio: 1;
+            border: 3px solid var(--ink);
+            border-radius: 50%;
+            background: var(--player-fill, var(--red));
+            box-shadow: 3px 3px 0 var(--ink);
+            left: var(--player-x);
+            top: var(--player-y);
+            transform: translate(-50%, -50%);
+            transition: left 600ms cubic-bezier(.2,.9,.2,1), top 600ms cubic-bezier(.2,.9,.2,1), background 300ms ease;
+            z-index: 5;
+        }
+
+        .finish-text {
+            position: absolute;
+            right: 8%;
+            top: 10%;
+            font-size: clamp(1.6rem, 4vw, 4rem);
+            font-weight: 950;
+            color: var(--finish-word-color, transparent);
+            transform: rotate(-5deg);
+            -webkit-text-stroke: 2px var(--ink);
+        }
+
+        @media (max-width: 900px) {
+            .app {
+                grid-template-columns: 1fr;
+            }
+
+            .lesson-panel {
+                border-right: 0;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .board-area {
+                padding: 18px;
+            }
+
+            .board-shell {
+                min-height: auto;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .picker-row {
+                grid-template-columns: 1fr;
+            }
+
+            .reference-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <aside class="lesson-panel">
+            <div class="brand">
+                <div class="badge">KC</div>
+                <div>
+                    <h1>Board Builder</h1>
+                    <p class="subhead">Pick the value that matches the mission. The code fills in, the board changes, and your player moves.</p>
+                </div>
+            </div>
+
+            <section class="step-card">
+                <div class="step-kicker" id="step-kicker">Step 1 of 7</div>
+                <h2 class="step-title" id="step-title">Reveal the path</h2>
+                <p class="instruction" id="step-instruction">The path is invisible. Choose the color that makes the outline appear.</p>
+                <div class="picker-row">
+                    <select id="choice-select" aria-label="Choose code value"></select>
+                    <button class="run-btn" id="run-btn">Run</button>
+                </div>
+                <div class="message" id="message">Choose a value, then run the code.</div>
+            </section>
+
+            <section class="code-card">
+                <div class="code-header">
+                    <span>board-code.js</span>
+                    <button class="reset-btn" id="reset-btn">Reset</button>
+                </div>
+                <pre class="code-body" id="code-view"></pre>
+            </section>
+
+            <section class="reference">
+                <h2>Reference</h2>
+                <div class="reference-grid" id="reference-grid"></div>
+            </section>
+        </aside>
+
+        <main class="board-area">
+            <div class="status-strip">
+                <div class="progress" id="progress-dots" aria-label="Lesson progress"></div>
+                <div class="moves" id="moves-label">Space 0</div>
+            </div>
+
+            <section class="board-shell" aria-label="Game board preview">
+                <div class="game-board" id="game-board">
+                    <div class="finish-text" id="finish-text">WIN!</div>
+                    <div class="decoration star" style="left: 16%; top: 10%;"></div>
+                    <div class="decoration star" style="left: 70%; top: 48%;"></div>
+                    <div class="decoration gate" style="left: 42%; top: 68%;"></div>
+                    <div class="player" id="player"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const board = document.getElementById("game-board");
+        const player = document.getElementById("player");
+        const choiceSelect = document.getElementById("choice-select");
+        const runBtn = document.getElementById("run-btn");
+        const resetBtn = document.getElementById("reset-btn");
+        const codeView = document.getElementById("code-view");
+        const message = document.getElementById("message");
+        const stepKicker = document.getElementById("step-kicker");
+        const stepTitle = document.getElementById("step-title");
+        const stepInstruction = document.getElementById("step-instruction");
+        const progressDots = document.getElementById("progress-dots");
+        const movesLabel = document.getElementById("moves-label");
+        const referenceGrid = document.getElementById("reference-grid");
+
+        const path = [
+            [8, 76], [19, 76], [30, 70], [38, 60], [34, 47], [21, 42],
+            [14, 30], [24, 18], [38, 20], [50, 28], [61, 38], [74, 40],
+            [84, 30], [82, 17], [68, 12]
+        ];
+
+        const steps = [
+            {
+                title: "Reveal the path",
+                instruction: "The path is invisible. Choose the color that makes the outline appear.",
+                code: "path.outline = {value};",
+                key: "pathOutline",
+                correct: "black",
+                move: 3,
+                options: ["transparent", "black", "white"],
+                reference: [["transparent", "invisible"], ["black", "visible outline"], ["white", "hard to see"]],
+                apply: value => board.style.setProperty("--path-outline", value)
+            },
+            {
+                title: "Set the line weight",
+                instruction: "The outline needs a number. Choose the thickness that is easy to see.",
+                code: "path.lineWidth = {value};",
+                key: "lineWidth",
+                correct: "2",
+                move: 2,
+                options: ["0", "2", "12"],
+                reference: [["0", "no line"], ["2", "clean line"], ["12", "very chunky"]],
+                apply: value => board.style.setProperty("--path-line-width", `${value}px`)
+            },
+            {
+                title: "Color yellow spaces",
+                instruction: "Some tiles should become special yellow spaces.",
+                code: "yellowTiles.color = {value};",
+                key: "yellowFill",
+                correct: "yellow",
+                move: 2,
+                options: ["gray", "yellow", "blue"],
+                reference: [["yellow", "bonus spaces"], ["blue", "cool spaces"], ["gray", "quiet spaces"]],
+                apply: value => board.style.setProperty("--yellow-fill", colorValue(value))
+            },
+            {
+                title: "Choose the tile shape",
+                instruction: "A radius changes the shape. Pick the value that turns the spaces into squares.",
+                code: "tiles.cornerRadius = {value};",
+                key: "tileRadius",
+                correct: "8",
+                move: 2,
+                options: ["999", "40", "8"],
+                reference: [["999", "circle"], ["40", "rounded"], ["8", "square-ish"]],
+                apply: value => board.style.setProperty("--tile-radius", `${value}px`)
+            },
+            {
+                title: "Create board shapes",
+                instruction: "Turn on decorations so the board starts to feel like a game world.",
+                code: "decorations.visible = {value};",
+                key: "shapesVisible",
+                correct: "true",
+                move: 3,
+                options: ["false", "true"],
+                reference: [["false", "hide shapes"], ["true", "show shapes"]],
+                apply: value => {
+                    board.style.setProperty("--shapes-opacity", value === "true" ? "1" : "0");
+                    board.style.setProperty("--shapes-scale", value === "true" ? "1" : "0.4");
+                }
+            },
+            {
+                title: "Color your player",
+                instruction: "Pick a color for the game piece.",
+                code: "player.color = {value};",
+                key: "playerFill",
+                correct: "red",
+                move: 2,
+                options: ["red", "white", "black"],
+                reference: [["red", "player token"], ["white", "snow token"], ["black", "shadow token"]],
+                apply: value => board.style.setProperty("--player-fill", colorValue(value))
+            },
+            {
+                title: "Add the finish word",
+                instruction: "Make the goal label appear at the end of the board.",
+                code: "finish.textColor = {value};",
+                key: "finishWordColor",
+                correct: "purple",
+                move: 1,
+                options: ["transparent", "purple", "yellow"],
+                reference: [["transparent", "hidden text"], ["purple", "finish text"], ["yellow", "bright text"]],
+                apply: value => board.style.setProperty("--finish-word-color", colorValue(value))
+            }
+        ];
+
+        const state = {
+            currentStep: 0,
+            playerSpace: 0,
+            solved: new Set(),
+            choices: {}
+        };
+
+        function colorValue(value) {
+            const colors = {
+                yellow: "#facc15",
+                blue: "#60a5fa",
+                gray: "#d1d5db",
+                red: "#ef4444",
+                white: "#ffffff",
+                black: "#111827",
+                purple: "#8b5cf6",
+                transparent: "transparent"
+            };
+            return colors[value] || value;
+        }
+
+        function createBoard() {
+            path.forEach((point, index) => {
+                const tile = document.createElement("div");
+                tile.className = "tile";
+                if ([2, 6, 10].includes(index)) tile.classList.add("yellow");
+                if ([4, 11].includes(index)) tile.classList.add("special");
+                if (index === path.length - 1) tile.classList.add("finish");
+                tile.dataset.label = index + 1;
+                tile.style.left = `${point[0]}%`;
+                tile.style.top = `${point[1]}%`;
+                tile.style.transform = "translate(-50%, -50%)";
+                board.appendChild(tile);
+            });
+        }
+
+        function renderStep() {
+            const step = steps[state.currentStep];
+            stepKicker.textContent = `Step ${state.currentStep + 1} of ${steps.length}`;
+            stepTitle.textContent = step.title;
+            stepInstruction.textContent = step.instruction;
+
+            choiceSelect.innerHTML = "";
+            step.options.forEach(option => {
+                const item = document.createElement("option");
+                item.value = option;
+                item.textContent = option;
+                choiceSelect.appendChild(item);
+            });
+
+            if (state.choices[step.key]) {
+                choiceSelect.value = state.choices[step.key];
+            }
+
+            renderCode();
+            renderReference(step);
+            renderProgress();
+            updatePlayer();
+        }
+
+        function renderCode() {
+            const lines = steps.map((step, index) => {
+                const value = state.choices[step.key] || (index === state.currentStep ? choiceSelect.value : "____");
+                const display = step.code.replace("{value}", `<span class="code-slot">${formatCodeValue(value)}</span>`);
+                return index === state.currentStep ? `> ${display}` : `  ${display}`;
+            });
+            codeView.innerHTML = lines.join("\n");
+        }
+
+        function formatCodeValue(value) {
+            if (value === "____") return value;
+            if (value === "true" || value === "false") return value;
+            if (!Number.isNaN(Number(value))) return value;
+            return `"${value}"`;
+        }
+
+        function renderReference(step) {
+            referenceGrid.innerHTML = "";
+            step.reference.forEach(([value, meaning]) => {
+                const pill = document.createElement("div");
+                pill.className = "ref-pill";
+                pill.innerHTML = `<strong>${formatCodeValue(value)}</strong><br>${meaning}`;
+                referenceGrid.appendChild(pill);
+            });
+        }
+
+        function renderProgress() {
+            progressDots.innerHTML = "";
+            steps.forEach((_, index) => {
+                const dot = document.createElement("div");
+                dot.className = `dot ${state.solved.has(index) ? "done" : ""}`;
+                progressDots.appendChild(dot);
+            });
+            movesLabel.textContent = `Space ${state.playerSpace}`;
+        }
+
+        function updatePlayer() {
+            const [x, y] = path[Math.min(state.playerSpace, path.length - 1)];
+            player.style.setProperty("--player-x", `${x}%`);
+            player.style.setProperty("--player-y", `${y}%`);
+        }
+
+        function runChoice() {
+            const step = steps[state.currentStep];
+            const value = choiceSelect.value;
+            state.choices[step.key] = value;
+            step.apply(value);
+            renderCode();
+
+            if (value === step.correct) {
+                if (!state.solved.has(state.currentStep)) {
+                    state.solved.add(state.currentStep);
+                    state.playerSpace = Math.min(state.playerSpace + step.move, path.length - 1);
+                }
+                message.className = "message good";
+                message.textContent = `Nice. ${formatCodeValue(value)} changed the board. Move ${step.move} spaces.`;
+
+                if (state.currentStep < steps.length - 1) {
+                    state.currentStep += 1;
+                    setTimeout(() => {
+                        renderStep();
+                        message.className = "message";
+                        message.textContent = "Choose a value, then run the code.";
+                    }, 650);
+                } else {
+                    board.style.setProperty("--numbers-opacity", "1");
+                    message.textContent = "Board complete. You built the whole path with code values.";
+                    renderProgress();
+                    updatePlayer();
+                }
+            } else {
+                message.className = "message try";
+                message.textContent = `${formatCodeValue(value)} runs, but it is not the value this mission needs. Try the reference.`;
+            }
+
+            renderProgress();
+            updatePlayer();
+        }
+
+        function resetGame() {
+            state.currentStep = 0;
+            state.playerSpace = 0;
+            state.solved = new Set();
+            state.choices = {};
+            board.style.removeProperty("--path-outline");
+            board.style.removeProperty("--path-line-width");
+            board.style.removeProperty("--yellow-fill");
+            board.style.removeProperty("--tile-radius");
+            board.style.removeProperty("--shapes-opacity");
+            board.style.removeProperty("--shapes-scale");
+            board.style.removeProperty("--player-fill");
+            board.style.removeProperty("--finish-word-color");
+            board.style.removeProperty("--numbers-opacity");
+            message.className = "message";
+            message.textContent = "Choose a value, then run the code.";
+            renderStep();
+        }
+
+        choiceSelect.addEventListener("change", renderCode);
+        runBtn.addEventListener("click", runChoice);
+        resetBtn.addEventListener("click", resetGame);
+
+        createBoard();
+        resetGame();
+    </script>
+</body>
+</html>
