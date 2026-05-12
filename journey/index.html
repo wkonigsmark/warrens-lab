@@ -20,8 +20,25 @@
 
 <main id="journey-root">
 
+    <!-- ---- STATE: PIN GATE (beta-access guard) ---- -->
+    <section class="screen" data-state="pin">
+        <header class="screen-head">
+            <span class="beta-pill">BETA</span>
+            <h1 class="logo">Journey</h1>
+            <p class="tagline">Beta access PIN</p>
+        </header>
+
+        <div class="card pin-card">
+            <input id="pin-input" type="tel" inputmode="numeric" maxlength="4"
+                   pattern="[0-9]*" autocomplete="off"
+                   aria-label="Beta access PIN" placeholder="••••" />
+            <div id="pin-error" class="pin-error" hidden>Wrong PIN.</div>
+            <p class="pin-hint muted small">Beta gate — keeps casual visitors out while we tune the UX.</p>
+        </div>
+    </section>
+
     <!-- ---- STATE: ONBOARD ---- -->
-    <section class="screen" data-state="onboard" data-active>
+    <section class="screen" data-state="onboard">
         <header class="screen-head">
             <span class="beta-pill">BETA</span>
             <h1 class="logo">Journey</h1>
@@ -29,23 +46,51 @@
         </header>
 
         <form id="onboard-form" class="card form-card" autocomplete="off">
-            <h2>Let's get started</h2>
-            <p class="muted">We'll personalize the journey using your name &amp; age. Nothing leaves this device.</p>
+            <h2>About this explorer</h2>
+            <p class="muted">A short profile helps us plot a starting point.</p>
 
             <label>
-                <span>Your name</span>
+                <span>Name</span>
                 <input type="text" name="name" required maxlength="40" placeholder="e.g. Maya" />
             </label>
 
-            <label>
-                <span>Your age</span>
-                <input type="number" name="age" required min="4" max="18" placeholder="8" />
-            </label>
+            <fieldset class="toggle-fieldset">
+                <legend>Boy or girl?</legend>
+                <div class="toggle-group">
+                    <input type="radio" name="sex" id="sex-boy" value="boy" required>
+                    <label for="sex-boy">Boy</label>
+                    <input type="radio" name="sex" id="sex-girl" value="girl">
+                    <label for="sex-girl">Girl</label>
+                </div>
+            </fieldset>
 
-            <label>
-                <span>Parent email <em>(optional, for the worksheet pack)</em></span>
-                <input type="email" name="parentEmail" placeholder="parent@example.com" />
-            </label>
+            <div class="field-row">
+                <label class="field-half">
+                    <span>Birth month</span>
+                    <select name="birthMonth" required>
+                        <option value="">—</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </label>
+                <label class="field-half">
+                    <span>Birth year</span>
+                    <select name="birthYear" required id="birth-year-select">
+                        <option value="">—</option>
+                        <!-- populated by runner.js -->
+                    </select>
+                </label>
+            </div>
 
             <button type="submit" class="btn-primary">Begin the Journey →</button>
         </form>
@@ -96,8 +141,26 @@
                 allow="autoplay; fullscreen; clipboard-read; clipboard-write"></iframe>
     </section>
 
-    <!-- ---- STATE: DIAGNOSTIC (the printable round readout) ---- -->
+    <!-- ---- STATE: DIAGNOSTIC ---- -->
+    <!-- For beta, this state renders a passive shell so we can focus on
+         flow + gameplay. Flip PASSIVE_DIAGNOSTIC in runner.js to false to
+         re-enable the rich printable sheet below. -->
     <section class="screen" data-state="diagnostic">
+
+        <!-- Passive shell — shown by default while in beta -->
+        <div class="passive-shell">
+            <header class="screen-head no-print">
+                <span class="beta-pill">BETA</span>
+                <h1 class="logo">Round Complete</h1>
+            </header>
+            <div class="card passive-card">
+                <p class="lede" id="passive-line">Nice work — onward.</p>
+                <button id="passive-continue-btn" class="btn-primary">Continue Journey →</button>
+                <button id="passive-end-btn" class="btn-link">End session</button>
+            </div>
+        </div>
+
+        <!-- Rich diagnostic — hidden in passive mode -->
         <header class="screen-head no-print">
             <span class="beta-pill">BETA</span>
             <h1 class="logo">Round Diagnostic</h1>

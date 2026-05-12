@@ -16,8 +16,15 @@
 
   const STORAGE_SESSION = 'journey:session';
   const STORAGE_RESULT  = 'journey:lastResult';   // transient, written by bridge
+  const STORAGE_PIN     = 'journey:pinPassed';    // device-level beta gate flag
 
+  const BETA_PIN = '2026';
   const PARENTAL_GATE_MS = 20 * 60 * 1000;        // 20 min cumulative play
+
+  // While the diagnostic UX is being designed, we render a passive shell —
+  // "Round complete · Continue" — instead of the full rich sheet. The data
+  // pipeline (ingest, score, adaptive level bump) still runs underneath.
+  const PASSIVE_DIAGNOSTIC = true;
 
   // Beta plan. Hardcoded for v0; will move to plans/*.json later.
   // `url`     — path the runner will navigate to, with ?journey=... appended.
@@ -52,14 +59,14 @@
   function newSession(child) {
     return {
       id: 'j_' + Date.now().toString(36),
-      child,                          // { name, age, parentEmail }
+      child,                          // { name, sex, birthMonth, birthYear, ageYears }
       plan: DEFAULT_PLAN.slice(),
       currentStopIndex: 0,
       log: [],                        // array of round results
       cumulativePlayMs: 0,
       startedAt: Date.now(),
       // per-skill level 1–10 for the adaptive engine. Seeded from age.
-      levels: seedLevelsFromAge(child.age)
+      levels: seedLevelsFromAge(child.ageYears || child.age || 8)
     };
   }
 
@@ -67,6 +74,14 @@
     // Very coarse seed; adaptive engine refines from here.
     const base = Math.max(1, Math.min(8, Math.round((age - 4) * 1.1) + 1));
     return { math: base, vocab: base, logic: base, history: base, memory: base };
+  }
+
+  function computeAgeYears(birthMonth, birthYear) {
+    const now = new Date();
+    const cy = now.getFullYear(), cm = now.getMonth() + 1;
+    let years = cy - birthYear;
+    if (cm < birthMonth) years -= 1;
+    return Math.max(4, Math.min(18, years));
   }
 
   function clearSession() {
@@ -332,9 +347,34 @@
     document.getElementById('play-frame').src = 'about:blank';
     const launchAt = session.currentLaunchAt || (Date.now() - 60_000);
     const round = ingestRound(session, pending, launchAt);
-    renderDiagnostic(session, round);
-    bindManualReporter(session);
+    enterDiagnostic(session, round);
+  }
+
+  // Centralized entry into the diagnostic state. Honors PASSIVE_DIAGNOSTIC.
+  function enterDiagnostic(session, round) {
+    const screen = document.querySelector('.screen[data-state="diagnostic"]');
+    if (PASSIVE_DIAGNOSTIC) {
+      screen.classList.remove('diag-rich');
+      bindPassiveDiagnostic(session, round);
+    } else {
+      screen.classList.add('diag-rich');
+      renderDiagnostic(session, round);
+      bindManualReporter(session);
+    }
     setActiveState('diagnostic');
+  }
+
+  function bindPassiveDiagnostic(session, round) {
+    const stop = session.plan[round.stopIndex];
+    const lineEl = document.getElementById('passive-line');
+    if (lineEl) {
+      lineEl.textContent =
+        `${session.child.name}, you finished ${stop.label}. Onward to the next stop.`;
+    }
+    document.getElementById('passive-continue-btn').onclick = () => advance(session);
+    document.getElementById('passive-end-btn').onclick = () => {
+      if (confirm('End this session?')) { clearSession(); location.href = '/journey/'; }
+    };
   }
 
   function ingestRound(session, pending, launchAt) {
@@ -441,19 +481,84 @@
 
   // ---- Event wiring ---------------------------------------------------------
 
+  function populateBirthYearSelect() {
+    const sel = document.getElementById('birth-year-select');
+    if (!sel || sel.options.length > 1) return;
+    const currentYear = new Date().getFullYear();
+    // Reasonable bracket: kids roughly 4–18 → 14 years.
+    for (let y = currentYear - 4; y >= currentYear - 18; y--) {
+      const opt = document.createElement('option');
+      opt.value = String(y);
+      opt.textContent = String(y);
+      sel.appendChild(opt);
+    }
+  }
+
   function bindOnboard() {
+    populateBirthYearSelect();
     document.getElementById('onboard-form').addEventListener('submit', e => {
       e.preventDefault();
       const fd = new FormData(e.target);
+      const birthMonth = Number(fd.get('birthMonth'));
+      const birthYear  = Number(fd.get('birthYear'));
+      const ageYears   = computeAgeYears(birthMonth, birthYear);
       const child = {
         name: String(fd.get('name') || '').trim() || 'Friend',
-        age: Number(fd.get('age')) || 8,
-        parentEmail: String(fd.get('parentEmail') || '').trim()
+        sex: String(fd.get('sex') || ''),
+        birthMonth, birthYear, ageYears
       };
       const session = newSession(child);
       saveSession(session);
       renderIntro(session);
       setActiveState('intro');
+    });
+  }
+
+  // ---- PIN gate -----------------------------------------------------------
+  // Beta-only guard. Persisted in localStorage so re-visits on the same
+  // device don't re-prompt; clear with `localStorage.removeItem('journey:pinPassed')`.
+
+  function pinPassed() {
+    return localStorage.getItem(STORAGE_PIN) === '1';
+  }
+
+  function markPinPassed() {
+    localStorage.setItem(STORAGE_PIN, '1');
+  }
+
+  function bindPin() {
+    const input = document.getElementById('pin-input');
+    const err   = document.getElementById('pin-error');
+    if (!input) return;
+
+    input.value = '';
+    err.hidden = true;
+    setTimeout(() => input.focus(), 30);
+
+    input.addEventListener('input', () => {
+      // Strip any non-digit. Treat as plain numeric pin.
+      const v = input.value.replace(/\D/g, '').slice(0, 4);
+      if (v !== input.value) input.value = v;
+
+      if (v === BETA_PIN) {
+        markPinPassed();
+        // Drop straight into wherever the user belongs next.
+        const session = loadSession();
+        if (session) { renderIntro(session); setActiveState('intro'); }
+        else         { setActiveState('onboard'); }
+        return;
+      }
+      if (v.length === 4) {
+        // Wrong full attempt — shake + clear.
+        err.hidden = false;
+        input.classList.add('shake');
+        setTimeout(() => {
+          input.classList.remove('shake');
+          input.value = '';
+          err.hidden = true;
+          input.focus();
+        }, 500);
+      }
     });
   }
 
@@ -476,9 +581,7 @@
       round.source = 'bridge';
       round.notes = '(simulated for testing)';
       saveSession(session);
-      renderDiagnostic(session, round);
-      bindManualReporter(session);
-      setActiveState('diagnostic');
+      enterDiagnostic(session, round);
     };
 
     document.getElementById('reset-btn').onclick = () => {
@@ -527,16 +630,20 @@
 
     let session = loadSession();
 
+    // PIN gate — bounce here first if not yet unlocked on this device.
+    if (!pinPassed()) {
+      bindPin();
+      setActiveState('pin');
+      return;
+    }
+
     // Returning from an activity in legacy top-level redirect mode.
     // (Iframe mode never reaches this — it stays on the journey page.)
     if (params.has('resume') && session) {
       const pending = takePendingResult();
       const launchAt = session.currentLaunchAt || (Date.now() - 60_000);
       const round = ingestRound(session, pending, launchAt);
-      renderDiagnostic(session, round);
-      bindManualReporter(session);
-      setActiveState('diagnostic');
-      // Strip ?resume= so refreshes don't re-ingest.
+      enterDiagnostic(session, round);
       history.replaceState(null, '', '/journey/');
       return;
     }
