@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journey — Adaptive Curriculum [BETA]</title>
+    <meta name="description" content="A guided, adaptive learning journey through the lab.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- =========================================
+     Single-page state-driven runner.
+     One <section> per state; runner.js toggles
+     [data-active] on whichever should render.
+     ========================================= -->
+
+<main id="journey-root">
+
+    <!-- ---- STATE: ONBOARD ---- -->
+    <section class="screen" data-state="onboard" data-active>
+        <header class="screen-head">
+            <span class="beta-pill">BETA</span>
+            <h1 class="logo">Journey</h1>
+            <p class="tagline">An adaptive curriculum across the lab</p>
+        </header>
+
+        <form id="onboard-form" class="card form-card" autocomplete="off">
+            <h2>Let's get started</h2>
+            <p class="muted">We'll personalize the journey using your name &amp; age. Nothing leaves this device.</p>
+
+            <label>
+                <span>Your name</span>
+                <input type="text" name="name" required maxlength="40" placeholder="e.g. Maya" />
+            </label>
+
+            <label>
+                <span>Your age</span>
+                <input type="number" name="age" required min="4" max="18" placeholder="8" />
+            </label>
+
+            <label>
+                <span>Parent email <em>(optional, for the worksheet pack)</em></span>
+                <input type="email" name="parentEmail" placeholder="parent@example.com" />
+            </label>
+
+            <button type="submit" class="btn-primary">Begin the Journey →</button>
+        </form>
+    </section>
+
+    <!-- ---- STATE: INTRO (greeting + next-stop preview) ---- -->
+    <section class="screen" data-state="intro">
+        <header class="screen-head">
+            <span class="beta-pill">BETA</span>
+            <h1 class="logo">Journey</h1>
+        </header>
+
+        <div class="card intro-card">
+            <p class="muted small">Welcome back</p>
+            <h2 id="intro-greeting">Hi there!</h2>
+            <p id="intro-message" class="lede"></p>
+
+            <div class="stop-preview">
+                <div class="stop-meta">
+                    <span class="stop-index" id="intro-stop-index">Stop 1 of 6</span>
+                    <span class="stop-skill" id="intro-stop-skill">Math</span>
+                </div>
+                <div class="stop-title" id="intro-stop-title">Activity</div>
+                <div class="stop-blurb" id="intro-stop-blurb"></div>
+            </div>
+
+            <div class="actions">
+                <button id="begin-stop-btn" class="btn-primary">Begin Stop →</button>
+                <button id="skip-stop-btn" class="btn-ghost" title="For testing: skip and simulate a result">Simulate &amp; skip</button>
+            </div>
+        </div>
+
+        <button id="reset-btn" class="btn-link">Start over</button>
+    </section>
+
+    <!-- ---- STATE: DIAGNOSTIC (the printable round readout) ---- -->
+    <section class="screen" data-state="diagnostic">
+        <header class="screen-head no-print">
+            <span class="beta-pill">BETA</span>
+            <h1 class="logo">Round Diagnostic</h1>
+        </header>
+
+        <article id="diagnostic-sheet" class="card sheet">
+
+            <div class="sheet-head">
+                <div>
+                    <h2 id="diag-activity">Activity</h2>
+                    <p class="muted small" id="diag-meta">Stop 1 of 6 • Skill • Level</p>
+                </div>
+                <div class="sheet-stamp">
+                    <div id="diag-stamp-percent">—</div>
+                    <div class="sheet-stamp-label" id="diag-stamp-label">SCORE</div>
+                </div>
+            </div>
+
+            <div class="sheet-row">
+                <div class="sheet-cell">
+                    <div class="cell-label">Score</div>
+                    <div class="cell-value" id="diag-score">—</div>
+                </div>
+                <div class="sheet-cell">
+                    <div class="cell-label">Time on task</div>
+                    <div class="cell-value" id="diag-time">—</div>
+                </div>
+                <div class="sheet-cell">
+                    <div class="cell-label">Level</div>
+                    <div class="cell-value" id="diag-level">—</div>
+                </div>
+                <div class="sheet-cell">
+                    <div class="cell-label">Verdict</div>
+                    <div class="cell-value" id="diag-verdict">—</div>
+                </div>
+            </div>
+
+            <div class="sheet-row split">
+                <div class="sheet-block">
+                    <div class="block-label">What worked</div>
+                    <ul id="diag-worked"></ul>
+                </div>
+                <div class="sheet-block">
+                    <div class="block-label">What didn't</div>
+                    <ul id="diag-didnt"></ul>
+                </div>
+                <div class="sheet-block">
+                    <div class="block-label">Suggested next</div>
+                    <ul id="diag-next"></ul>
+                </div>
+            </div>
+
+            <div class="sheet-block">
+                <div class="block-label">Session progress</div>
+                <div id="diag-progress-strip" class="progress-strip"></div>
+            </div>
+
+            <!-- Source disclosure: shows whether we got a real bridge report or fallback -->
+            <div class="sheet-footnote">
+                <span id="diag-source">Result source: —</span>
+                <span class="dot">•</span>
+                <span id="diag-stamp-date"></span>
+            </div>
+
+            <!-- Manual reporter: visible only when no bridge result was received.
+                 Lets parent/observer record what they saw so we can dogfood
+                 the diagnostic format before games are bridge-integrated. -->
+            <div id="manual-report" class="manual-report no-print" hidden>
+                <div class="manual-head">No automatic result captured. Tell us how it went:</div>
+                <div class="manual-fields">
+                    <label><span>Score</span><input type="number" id="manual-score" min="0" placeholder="3" /></label>
+                    <label><span>Max</span><input type="number" id="manual-max" min="1" placeholder="5" /></label>
+                    <label><span>Minutes</span><input type="number" id="manual-mins" min="0" step="0.5" placeholder="3" /></label>
+                    <label class="wide"><span>Notes (optional)</span><input type="text" id="manual-notes" placeholder="Lost focus around question 4..." /></label>
+                </div>
+                <button id="manual-save-btn" class="btn-secondary">Save &amp; refresh diagnostic</button>
+            </div>
+        </article>
+
+        <div class="actions no-print">
+            <button id="print-btn" class="btn-secondary">🖨 Print this round</button>
+            <button id="continue-btn" class="btn-primary">Continue Journey →</button>
+        </div>
+
+        <button id="reset-btn-2" class="btn-link no-print">End session</button>
+    </section>
+
+    <!-- ---- STATE: PARENTAL GATE ---- -->
+    <section class="screen" data-state="parental">
+        <header class="screen-head">
+            <span class="beta-pill">BETA</span>
+            <h1 class="logo">Parent Check-in</h1>
+        </header>
+
+        <div class="card">
+            <p class="lede">Nice work, <span id="parental-name">friend</span>! You've been at it for <span id="parental-time">20</span> minutes.</p>
+            <p>Time to take a quick break and let a parent peek at how it's going.</p>
+
+            <div id="parental-summary" class="parental-summary"></div>
+
+            <div class="parental-gate">
+                <p class="muted small">Parent: solve to continue. <em>(Tiny gate, not a real lock — keeps the kid from clicking through.)</em></p>
+                <div class="gate-question">
+                    <span id="gate-q">7 × 8 = ?</span>
+                    <input id="gate-answer" type="number" inputmode="numeric" />
+                    <button id="gate-submit" class="btn-secondary">Unlock</button>
+                </div>
+                <div id="gate-error" class="gate-error" hidden>Not quite — try again.</div>
+            </div>
+
+            <div class="actions no-print">
+                <button id="print-recap-btn" class="btn-secondary">🖨 Print recap &amp; worksheets</button>
+                <button id="end-session-btn" class="btn-ghost">End for today</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ---- STATE: COMPLETE ---- -->
+    <section class="screen" data-state="complete">
+        <header class="screen-head">
+            <span class="beta-pill">BETA</span>
+            <h1 class="logo">Journey Complete</h1>
+        </header>
+        <div class="card">
+            <p class="lede">All stops finished. Here's the full session.</p>
+            <div id="complete-summary" class="parental-summary"></div>
+            <div class="actions no-print">
+                <button id="print-final-btn" class="btn-secondary">🖨 Print full session</button>
+                <button id="restart-btn" class="btn-primary">Start a new journey</button>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script src="runner.js"></script>
+</body>
+</html>
