@@ -34,9 +34,9 @@
   // `blurb`   — kid-facing one-liner.
   const DEFAULT_PLAN = [
     { id: 's1', activity: 'ants-apples', label: 'Ants & Apples', skill: 'math',    url: '/iq/ants-apples/',    target: 10, expectedMs: 4*60*1000, blurb: 'Warm up with arithmetic adventures.' },
-    { id: 's2', activity: 'lexicon',     label: 'Lexicon',       skill: 'vocab',   url: '/iq/lexicon/',        target: 8,  expectedMs: 3*60*1000, blurb: 'Roots, origins, and word puzzles.' },
+    { id: 's2', activity: 'abacus',      label: 'Abacus',        skill: 'math',    url: '/games/abacus/',      target: 8,  expectedMs: 4*60*1000, blurb: 'Bead-by-bead mental math.' },
     { id: 's3', activity: 'foursight',   label: 'FourSight',     skill: 'logic',   url: '/games/foursight/',   target: 1,  expectedMs: 3*60*1000, blurb: 'A friendly logic match against the computer.' },
-    { id: 's4', activity: 'abacus',      label: 'Abacus',        skill: 'math',    url: '/games/abacus/',      target: 8,  expectedMs: 4*60*1000, blurb: 'Bead-by-bead mental math.' },
+    { id: 's4', activity: 'lexicon',     label: 'Lexicon',       skill: 'vocab',   url: '/iq/lexicon/',        target: 8,  expectedMs: 3*60*1000, blurb: 'Roots, origins, and word puzzles.' },
     { id: 's5', activity: 'chronos',     label: 'Chronos',       skill: 'history', url: '/iq/chronos/',        target: 6,  expectedMs: 4*60*1000, blurb: 'A descent through historical time.' },
     { id: 's6', activity: 'matching',    label: 'Matching',      skill: 'memory',  url: '/games/matching/',    target: 12, expectedMs: 3*60*1000, blurb: 'A memory cool-down to finish.' }
   ];
@@ -292,15 +292,114 @@
       returnTo: '/journey/?resume=1'
     });
 
+    const frame = document.getElementById('play-frame');
+
+    // Auto-start: if this activity has an autostart handler, run it once the
+    // iframe finishes loading. The handler drives the game's DOM directly
+    // (same-origin), so no per-game source changes are required.
+    const autostart = AUTOSTART_HANDLERS[stop.activity];
+    if (autostart) {
+      const myStopId = stop.id;
+      const onLoad = () => {
+        frame.removeEventListener('load', onLoad);
+        // Discard stale fires: confirm we're still on the same stop.
+        const sess = loadSession();
+        if (sess?.plan?.[sess.currentStopIndex]?.id !== myStopId) return;
+        try { autostart(sess, stop, frame); }
+        catch (e) { console.warn('[journey] autostart failed', e); }
+      };
+      frame.addEventListener('load', onLoad);
+    }
+
     document.getElementById('play-stop-meta').textContent =
       `Stop ${session.currentStopIndex + 1} of ${session.plan.length} · ${stop.skill}`;
     document.getElementById('play-stop-title').textContent = stop.label;
-    document.getElementById('play-frame').src = stop.url + '?' + params.toString();
+    frame.src = stop.url + '?' + params.toString();
 
     startElapsedTimer(session);
     bindPlayingActions(session);
     listenForBridgeMessage(session);
     setActiveState('playing');
+  }
+
+  // ---- Per-activity autostart handlers ------------------------------------
+  // Each handler drives the game's existing DOM (no game source changes).
+  // Keep selectors here so we have one place to update if a game's IDs move.
+
+  const AUTOSTART_HANDLERS = {
+    'abacus': (session, stop, frame) => {
+      const doc = frame.contentWindow && frame.contentWindow.document;
+      if (!doc) return;
+
+      const cfg = abacusConfig(session.child);
+
+      const colSel = doc.getElementById('columnCount');
+      if (colSel) {
+        colSel.value = String(cfg.columns);
+        colSel.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      const quizBtn = doc.getElementById('quizButton');
+      if (quizBtn) quizBtn.click();
+    },
+
+    'ants-apples': (session, stop, frame) => {
+      const doc = frame.contentWindow && frame.contentWindow.document;
+      if (!doc) return;
+
+      const cfg = antsApplesConfig(session.child);
+
+      const sizeSel = doc.getElementById('ants-size-select');
+      if (sizeSel) {
+        sizeSel.value = String(cfg.size);
+        sizeSel.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      const opRadio = doc.querySelector(`input[name="ants-op"][value="${cfg.op}"]`);
+      if (opRadio) {
+        opRadio.checked = true;
+        opRadio.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      const lvlInput = doc.getElementById('ants-level-count-input');
+      if (lvlInput) lvlInput.value = String(cfg.levels);
+
+      const helperToggle = doc.getElementById('ants-show-helper-toggle');
+      if (helperToggle) helperToggle.checked = !!cfg.helper;
+
+      const startBtn = doc.getElementById('ants-size-start-btn');
+      if (startBtn) startBtn.click();
+    }
+  };
+
+  /**
+   * Age-based rubric for Ants & Apples auto-start. Coarse v0 — refine later.
+   *  4 → 9×9 +    (large grid, simplest op)
+   *  5 → 8×8 −    (regular minus, no negatives)
+   *  6 → 3×3 ×    (small grid, intro multiplication)
+   *  7 → 9×9 ×    (extended multiplication table)
+   *  8 → 4×4 ÷    (intro division)
+   * Outside 4–8 we clamp; extend the rubric as the scale matures.
+   */
+  /**
+   * Abacus auto-start config. v0 is fixed at 2 columns for every age while
+   * we validate the landing experience. Promote to a per-age rubric later.
+   */
+  function abacusConfig(child) {
+    return { columns: 2 };
+  }
+
+  function antsApplesConfig(child) {
+    const RUBRIC = {
+      4: { size: 9, op: 'add' },
+      5: { size: 8, op: 'subtract' },
+      6: { size: 3, op: 'multiply' },
+      7: { size: 9, op: 'multiply' },
+      8: { size: 4, op: 'divide' }
+    };
+    const age = child.ageYears ?? child.age ?? 8;
+    const clamped = Math.max(4, Math.min(8, age));
+    return { ...RUBRIC[clamped], levels: 3, helper: true };
   }
 
   function startElapsedTimer(session) {
