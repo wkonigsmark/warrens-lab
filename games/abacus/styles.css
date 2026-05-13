@@ -655,24 +655,30 @@ h2 {
   .print-view {
     display: block !important;
     padding: 0;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .print-view * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
   .print-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
   }
   .print-header h2 {
-    font-size: 24px;
-    margin: 0 0 10px;
+    font-size: 20px;
+    margin: 0 0 5px;
   }
   .print-header p {
-    font-size: 16px;
+    font-size: 14px;
     color: var(--muted);
     margin: 0;
   }
   .print-page {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px 30px;
+    gap: 20px 30px;
   }
   .print-item {
     display: flex;
@@ -683,21 +689,35 @@ h2 {
   }
   .print-abacus {
     width: 100%;
-    min-height: 220px !important;
-    border-width: 8px !important;
+    max-width: 320px;
+    min-height: 0 !important;
+    border-width: 6px !important;
     box-shadow: none !important;
   }
   .print-abacus .divider {
+    background: #6c4e31 !important;
     box-shadow: none !important;
+    height: 8px !important;
   }
   .print-blank {
-    margin-top: 20px;
+    margin-top: 15px;
     width: 60%;
     border-bottom: 2px solid #000;
-    height: 30px;
+    height: 20px;
   }
   .print-abacus .bead {
-    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5), 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+    width: 10% !important;
+    height: 8% !important;
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5) !important;
     border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  }
+  .print-abacus[data-columns="5"] .bead,
+  .print-abacus[data-columns="6"] .bead {
+    width: 8% !important;
+    height: 7% !important;
+  }
+  .print-abacus[data-columns="1"] .bead {
+    width: 12% !important;
+    height: 10% !important;
   }
 }
