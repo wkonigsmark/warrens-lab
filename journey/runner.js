@@ -719,12 +719,8 @@
 
   // ---- Audio persistence ---------------------------------------------------
   // Background music plays throughout the journey with a toggle FAB button.
-  // Auto-pauses after 15 seconds of idle (no user interaction).
 
   const STORAGE_SOUND_MUTED = 'journey:soundMuted';
-  const IDLE_TIMEOUT_MS = 15 * 1000; // 15 seconds
-  let _audioIdleTimer = null;
-  let _audioUserMuted = false; // tracks if user manually muted vs idle-paused
 
   function initAudio() {
     const audio = document.getElementById('journey-music');
@@ -733,44 +729,19 @@
 
     // Load saved mute state from localStorage.
     const isMuted = localStorage.getItem(STORAGE_SOUND_MUTED) === '1';
-    _audioUserMuted = isMuted;
     setAudioMuted(isMuted);
 
-    toggle.addEventListener('click', () => {
-      const nowMuted = audio.paused && _audioUserMuted;
-      _audioUserMuted = !nowMuted;
-      setAudioMuted(!nowMuted);
-    });
-
-    // Track user activity to auto-pause on idle.
-    const activityEvents = ['mousedown', 'keydown', 'touchstart', 'click'];
-    const resetIdleTimer = (e) => {
-      // Ignore activity from the FAB button itself.
-      if (e && e.target === toggle) return;
-
-      clearTimeout(_audioIdleTimer);
-      // Resume audio if it was paused due to idle (not user mute).
-      if (audio.paused && !_audioUserMuted) {
-        audio.play().catch(() => {});
-      }
-      // Set idle timer.
-      _audioIdleTimer = setTimeout(() => {
-        if (!_audioUserMuted) audio.pause();
-      }, IDLE_TIMEOUT_MS);
+    // Direct click handler for toggle button.
+    toggle.onclick = () => {
+      const willMute = !audio.paused;
+      setAudioMuted(willMute);
     };
-
-    activityEvents.forEach(event => {
-      document.addEventListener(event, resetIdleTimer, true);
-    });
-
-    // Start the idle timer on init.
-    resetIdleTimer();
   }
 
   function setAudioMuted(muted) {
     const audio = document.getElementById('journey-music');
     const toggle = document.getElementById('sound-toggle');
-    if (!audio) return;
+    if (!audio || !toggle) return;
 
     if (muted) {
       audio.pause();
