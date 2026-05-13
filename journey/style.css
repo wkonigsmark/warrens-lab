@@ -639,42 +639,6 @@ body {
     min-height: 0;
 }
 
-/* ---- Sound FAB button ---- */
-.sound-fab {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--gold);
-    color: var(--ink);
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-lift);
-    z-index: 200;
-    transition: var(--transition);
-}
-.sound-fab:hover {
-    transform: scale(1.1);
-    box-shadow: 0 12px 40px rgba(255,196,84,0.5);
-}
-.sound-fab:active {
-    transform: scale(0.95);
-}
-.sound-fab.muted::before {
-    content: '';
-    position: absolute;
-    width: 2px;
-    height: 100%;
-    background: var(--ink);
-    transform: rotate(-35deg);
-}
-
 /* ---- Animations ---- */
 @keyframes fadeUp {
     from { opacity: 0; transform: translateY(12px); }

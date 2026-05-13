@@ -15,8 +15,10 @@ const prevLesson = document.querySelector("#prevLesson");
 const nextLesson = document.querySelector("#nextLesson");
 const submitQuiz = document.querySelector("#submitQuiz");
 const submitQuizTop = document.querySelector("#submitQuizTop");
+const printButton = document.querySelector("#printButton");
 const quizTracker = document.querySelector("#quizTracker");
 const quizFeedbackContainer = document.querySelector("#quizFeedbackContainer");
+const printView = document.querySelector("#printView");
 
 const placeCatalog = [
   { name: "ones", label: "Ones", shortLabel: "1s", value: 1 },
@@ -740,6 +742,80 @@ document.addEventListener("keydown", (event) => {
     event.preventDefault();
     advanceLesson();
   }
+});
+
+function valueToState(value, colCount) {
+  let remaining = value;
+  const tempPlaces = placeCatalog.slice(0, colCount);
+  const st = [];
+  for (let i = colCount - 1; i >= 0; i--) {
+    const pVal = tempPlaces[i].value;
+    const digit = Math.floor(remaining / pVal);
+    remaining %= pVal;
+
+    const upper = digit >= 5;
+    const lower = digit % 5;
+    st[i] = { upper, lower };
+  }
+  return st;
+}
+
+function buildStaticAbacusHtml(target) {
+  const st = valueToState(target, places.length);
+  let html = '';
+
+  places.forEach((place, placeIndex) => {
+    const x = getRodPosition(placeIndex);
+
+    html += `<div class="rod" style="left: ${x}%"></div>`;
+    html += `<div class="place-label" style="left: ${x}%" data-short-label="${place.shortLabel}">${place.label}</div>`;
+
+    const placeState = st[placeIndex];
+    const upperTop = placeState.upper ? layout.upperActive : layout.upperHome;
+    html += `<div class="bead upper" data-place="${placeIndex}" data-section="upper" data-index="0" style="left: ${x}%; top: ${upperTop}%"></div>`;
+
+    for (let beadIndex = 0; beadIndex < 4; beadIndex++) {
+      const active = beadIndex < placeState.lower;
+      const lowerTop = active ? layout.lowerActiveTop + beadIndex * layout.lowerStep : layout.lowerHomeTop + beadIndex * layout.lowerStep;
+      html += `<div class="bead lower" data-place="${placeIndex}" data-section="lower" data-index="${beadIndex}" style="left: ${x}%; top: ${lowerTop}%"></div>`;
+    }
+  });
+  return html;
+}
+
+function generatePrintView() {
+  printView.innerHTML = `
+    <div class="print-header">
+      <h2>Abacus Worksheet - Level ${places.length}</h2>
+      <p>Write the number shown on each abacus.</p>
+    </div>
+    <div class="print-page"></div>
+  `;
+  const page = printView.querySelector(".print-page");
+
+  const maxValue = getQuizMaxValue();
+  const minValue = getQuizMinValue(maxValue);
+
+  for (let i = 0; i < 8; i++) {
+    const target = randomInteger(minValue, maxValue);
+    const item = document.createElement("div");
+    item.className = "print-item";
+
+    const abacusHtml = buildStaticAbacusHtml(target);
+    item.innerHTML = `
+      <div class="print-abacus abacus-frame" data-columns="${places.length}">
+        <div class="divider" aria-hidden="true"></div>
+        ${abacusHtml}
+      </div>
+      <div class="print-blank"></div>
+    `;
+    page.appendChild(item);
+  }
+}
+
+printButton.addEventListener("click", () => {
+  generatePrintView();
+  window.print();
 });
 
 buildAbacus();

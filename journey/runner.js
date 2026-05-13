@@ -717,45 +717,6 @@
     });
   }
 
-  // ---- Audio persistence ---------------------------------------------------
-  // Background music plays throughout the journey with a toggle FAB button.
-
-  const STORAGE_SOUND_MUTED = 'journey:soundMuted';
-
-  function initAudio() {
-    const audio = document.getElementById('journey-music');
-    const toggle = document.getElementById('sound-toggle');
-    if (!audio || !toggle) return;
-
-    // Load saved mute state from localStorage.
-    const isMuted = localStorage.getItem(STORAGE_SOUND_MUTED) === '1';
-    setAudioMuted(isMuted);
-
-    // Direct click handler for toggle button.
-    toggle.onclick = () => {
-      const willMute = !audio.paused;
-      setAudioMuted(willMute);
-    };
-  }
-
-  function setAudioMuted(muted) {
-    const audio = document.getElementById('journey-music');
-    const toggle = document.getElementById('sound-toggle');
-    if (!audio || !toggle) return;
-
-    if (muted) {
-      audio.pause();
-      toggle.classList.add('muted');
-      toggle.textContent = '🔇';
-      localStorage.setItem(STORAGE_SOUND_MUTED, '1');
-    } else {
-      audio.play().catch(() => {}); // autoplay may be blocked; silently fail
-      toggle.classList.remove('muted');
-      toggle.textContent = '🔊';
-      localStorage.setItem(STORAGE_SOUND_MUTED, '0');
-    }
-  }
-
   // ---- PIN gate -----------------------------------------------------------
   // Beta-only guard. Persisted in localStorage so re-visits on the same
   // device don't re-prompt; clear with `localStorage.removeItem('journey:pinPassed')`.
@@ -861,7 +822,6 @@
   // ---- Boot -----------------------------------------------------------------
 
   function boot() {
-    initAudio();
     bindOnboard();
     bindIntroActions();
     bindDiagnosticActions();
