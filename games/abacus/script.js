@@ -796,7 +796,7 @@ function generatePrintView() {
   const maxValue = getQuizMaxValue();
   const minValue = getQuizMinValue(maxValue);
 
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 6; i++) {
     const target = randomInteger(minValue, maxValue);
     const item = document.createElement("div");
     item.className = "print-item";
