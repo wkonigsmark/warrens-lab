@@ -37,8 +37,7 @@
     { id: 's2', activity: 'abacus',      label: 'Abacus',        skill: 'math',    url: '/games/abacus/',      target: 8,  expectedMs: 4*60*1000, blurb: 'Bead-by-bead mental math.' },
     { id: 's3', activity: 'foursight',   label: 'FourSight',     skill: 'logic',   url: '/games/foursight/',   target: 1,  expectedMs: 3*60*1000, blurb: 'A friendly logic match against the computer.' },
     { id: 's4', activity: 'sudoku',      label: 'Sudoku',        skill: 'logic',   url: '/games/sudoku/',      target: 1,  expectedMs: 3*60*1000, blurb: 'Grid puzzles that scale with your skill.' },
-    { id: 's5', activity: 'chronos',     label: 'Chronos',       skill: 'history', url: '/iq/chronos/',        target: 6,  expectedMs: 4*60*1000, blurb: 'A descent through historical time.' },
-    { id: 's6', activity: 'matching',    label: 'Matching',      skill: 'memory',  url: '/games/matching/',    target: 12, expectedMs: 3*60*1000, blurb: 'A memory cool-down to finish.' }
+    { id: 's5', activity: 'matching',    label: 'Matching',      skill: 'memory',  url: '/games/matching/',    target: 12, expectedMs: 3*60*1000, blurb: 'A memory cool-down to finish.' }
   ];
 
   // ---- Session model --------------------------------------------------------
@@ -718,6 +717,71 @@
     });
   }
 
+  // ---- Audio persistence ---------------------------------------------------
+  // Background music plays throughout the journey with a toggle FAB button.
+  // Auto-pauses after 15 seconds of idle (no user interaction).
+
+  const STORAGE_SOUND_MUTED = 'journey:soundMuted';
+  const IDLE_TIMEOUT_MS = 15 * 1000; // 15 seconds
+  let _audioIdleTimer = null;
+  let _audioUserMuted = false; // tracks if user manually muted vs idle-paused
+
+  function initAudio() {
+    const audio = document.getElementById('journey-music');
+    const toggle = document.getElementById('sound-toggle');
+    if (!audio || !toggle) return;
+
+    // Load saved mute state from localStorage.
+    const isMuted = localStorage.getItem(STORAGE_SOUND_MUTED) === '1';
+    _audioUserMuted = isMuted;
+    setAudioMuted(isMuted);
+
+    toggle.addEventListener('click', () => {
+      const nowMuted = audio.paused && _audioUserMuted;
+      _audioUserMuted = !nowMuted;
+      setAudioMuted(!nowMuted);
+    });
+
+    // Track user activity to auto-pause on idle.
+    const activityEvents = ['mousedown', 'keydown', 'touchstart', 'click'];
+    const resetIdleTimer = () => {
+      clearTimeout(_audioIdleTimer);
+      // Resume audio if it was paused due to idle (not user mute).
+      if (audio.paused && !_audioUserMuted) {
+        audio.play().catch(() => {});
+      }
+      // Set idle timer.
+      _audioIdleTimer = setTimeout(() => {
+        if (!_audioUserMuted) audio.pause();
+      }, IDLE_TIMEOUT_MS);
+    };
+
+    activityEvents.forEach(event => {
+      document.addEventListener(event, resetIdleTimer, true);
+    });
+
+    // Start the idle timer on init.
+    resetIdleTimer();
+  }
+
+  function setAudioMuted(muted) {
+    const audio = document.getElementById('journey-music');
+    const toggle = document.getElementById('sound-toggle');
+    if (!audio) return;
+
+    if (muted) {
+      audio.pause();
+      toggle.classList.add('muted');
+      toggle.textContent = '🔇';
+      localStorage.setItem(STORAGE_SOUND_MUTED, '1');
+    } else {
+      audio.play().catch(() => {}); // autoplay may be blocked; silently fail
+      toggle.classList.remove('muted');
+      toggle.textContent = '🔊';
+      localStorage.setItem(STORAGE_SOUND_MUTED, '0');
+    }
+  }
+
   // ---- PIN gate -----------------------------------------------------------
   // Beta-only guard. Persisted in localStorage so re-visits on the same
   // device don't re-prompt; clear with `localStorage.removeItem('journey:pinPassed')`.
@@ -823,6 +887,7 @@
   // ---- Boot -----------------------------------------------------------------
 
   function boot() {
+    initAudio();
     bindOnboard();
     bindIntroActions();
     bindDiagnosticActions();
