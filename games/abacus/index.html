@@ -35,13 +35,20 @@
             <button class="tool-button active" id="mentorButton" type="button" aria-pressed="true" title="Toggle mentor">
               Mentor
             </button>
+            <button class="primary-button mentor-hidden" id="submitQuizTop" type="button" title="Submit Answer">
+              Submit
+            </button>
           </div>
         </header>
+
+        <div id="quizTracker" class="quiz-tracker mentor-hidden"></div>
 
         <div class="value-strip" id="valueStrip" aria-live="polite">
           <span id="totalLabel">Total</span>
           <strong id="totalValue">0</strong>
         </div>
+        
+        <div id="quizFeedbackContainer" class="mentor-hidden" style="margin: 0 24px 16px;"></div>
 
         <div class="abacus-stage">
           <div class="abacus-frame" id="abacus" aria-label="Drag beads to use the abacus"></div>

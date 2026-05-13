@@ -1,3 +1,4 @@
+const appShell = document.querySelector(".app-shell");
 const abacus = document.querySelector("#abacus");
 const valueStrip = document.querySelector("#valueStrip");
 const totalLabel = document.querySelector("#totalLabel");
@@ -13,6 +14,9 @@ const lessonProgress = document.querySelector("#lessonProgress");
 const prevLesson = document.querySelector("#prevLesson");
 const nextLesson = document.querySelector("#nextLesson");
 const submitQuiz = document.querySelector("#submitQuiz");
+const submitQuizTop = document.querySelector("#submitQuizTop");
+const quizTracker = document.querySelector("#quizTracker");
+const quizFeedbackContainer = document.querySelector("#quizFeedbackContainer");
 
 const placeCatalog = [
   { name: "ones", label: "Ones", shortLabel: "1s", value: 1 },
@@ -213,8 +217,14 @@ function render() {
 
 function renderTotal() {
   valueStrip.classList.toggle("quiz-active", mentorMode === "quiz");
-  totalLabel.textContent = mentorMode === "quiz" ? "Quiz total" : "Total";
-  totalValue.textContent = mentorMode === "quiz" ? "Hidden" : calculateTotal().toLocaleString();
+  if (mentorMode === "quiz") {
+    totalLabel.textContent = "Make the number";
+    const question = quizQuestions[quizIndex];
+    totalValue.textContent = question ? question.answer.toLocaleString() : "";
+  } else {
+    totalLabel.textContent = "Total";
+    totalValue.textContent = calculateTotal().toLocaleString();
+  }
 }
 
 function calculateTotal() {
@@ -442,6 +452,10 @@ function renderLesson() {
 
 function startQuiz() {
   mentorMode = "quiz";
+  appShell.classList.add("quiz-mode-active");
+  quizTracker.classList.remove("mentor-hidden");
+  mentorButton.classList.add("mentor-hidden");
+  submitQuizTop.classList.remove("mentor-hidden");
   quizQuestions = buildQuizQuestions();
   quizIndex = 0;
   quizScore = 0;
@@ -479,9 +493,15 @@ function exitQuiz() {
   quizTimerStarted = false;
   quizElapsedMs = 0;
   quizFeedback = "";
+  quizFeedbackContainer.innerHTML = "";
+  quizFeedbackContainer.classList.add("mentor-hidden");
   selectedBeads.clear();
   resetAbacus();
+  appShell.classList.remove("quiz-mode-active");
+  quizTracker.classList.add("mentor-hidden");
+  submitQuizTop.classList.add("mentor-hidden");
   mentorPanel.classList.remove("mentor-hidden");
+  mentorButton.classList.remove("mentor-hidden");
   mentorButton.classList.add("active");
   mentorButton.setAttribute("aria-pressed", "true");
   renderLesson();
@@ -520,35 +540,46 @@ function randomInteger(minValue, maxValue) {
 function renderQuiz() {
   mentorMode = "quiz";
   renderTotal();
-  prevLesson.classList.add("mentor-hidden");
-  nextLesson.classList.add("mentor-hidden");
-  submitQuiz.classList.toggle("mentor-hidden", quizComplete);
-  lessonProgress.innerHTML = quizQuestions
-    .map((_, index) => `<span class="dot ${index === quizIndex ? "active" : ""}"></span>`)
-    .join("");
-
-  const question = quizQuestions[quizIndex];
-  lessonTitle.textContent = quizComplete ? "Quiz Complete" : `Quiz ${quizIndex + 1} of ${quizQuestions.length}`;
 
   if (quizComplete) {
-    lessonBody.innerHTML = `
-      <p class="quiz-score">Score: ${quizScore} of ${quizQuestions.length}</p>
-      <div class="quiz-time">Final time: ${formatElapsedTime(quizElapsedMs)}</div>
-      <p>You finished the speed round. Press Quiz to try a fresh set.</p>
-      <p class="quiz-hint-small">Remember to press Enter to submit your answer.</p>
+    submitQuizTop.classList.add("mentor-hidden");
+    quizTracker.innerHTML = `
+      <div class="quiz-tracker-left">
+        <strong>Quiz Complete</strong>
+        <span class="quiz-score" style="margin:0; min-height:auto;">Score: ${quizScore} of ${quizQuestions.length}</span>
+      </div>
+      <div class="quiz-tracker-right">
+        <span class="quiz-time" style="margin:0;">Final time: ${formatElapsedTime(quizElapsedMs)}</span>
+      </div>
+    `;
+    quizFeedbackContainer.innerHTML = `
+      <div class="quiz-feedback" style="margin-top:0;">
+        You finished the speed round. Press Quiz to try a fresh set.<br>
+        <span class="quiz-hint-small">Remember to press Enter to submit your answer.</span>
+      </div>
       ${quizFeedback}
     `;
+    quizFeedbackContainer.classList.remove("mentor-hidden");
     return;
   }
 
-  lessonBody.innerHTML = `
-    <p class="quiz-score">Score: ${quizScore} of ${quizQuestions.length}</p>
-    <div class="quiz-timer">Time: ${formatElapsedTime(quizElapsedMs)}</div>
-    ${quizTipVisible ? '<div class="quiz-tip">Timer starts when you move the first bead. Press Enter to submit.</div>' : ""}
-    <p>${question.prompt}</p>
-    <p>The total is hidden, so use the visible columns and trust the beads.</p>
-    ${quizFeedback}
+  submitQuizTop.classList.remove("mentor-hidden");
+  quizTracker.innerHTML = `
+    <div class="quiz-tracker-left">
+      <strong>Quiz ${quizIndex + 1} of ${quizQuestions.length}</strong>
+      <span class="quiz-score" style="margin:0; min-height:auto;">Score: ${quizScore}</span>
+    </div>
+    <div class="quiz-tracker-right">
+      <span class="quiz-timer" style="margin:0;">Time: ${formatElapsedTime(quizElapsedMs)}</span>
+    </div>
   `;
+  if (quizFeedback) {
+    quizFeedbackContainer.innerHTML = quizFeedback;
+    quizFeedbackContainer.classList.remove("mentor-hidden");
+  } else {
+    quizFeedbackContainer.innerHTML = "";
+    quizFeedbackContainer.classList.add("mentor-hidden");
+  }
 }
 
 function submitQuizAnswer() {
@@ -563,7 +594,7 @@ function submitQuizAnswer() {
     quizFeedback = "";
     advanceQuizAfterCorrect();
   } else {
-    quizFeedback = `<div class="quiz-feedback try-again">Good try. This board shows ${currentValue.toLocaleString()}; the target was ${question.answer.toLocaleString()}.</div>`;
+    quizFeedback = `<div class="quiz-feedback try-again" style="margin-top:0;">Good try. This board shows ${currentValue.toLocaleString()}; the target was ${question.answer.toLocaleString()}.</div>`;
     renderQuiz();
   }
 }
@@ -697,6 +728,7 @@ function advanceLesson() {
 nextLesson.addEventListener("click", advanceLesson);
 
 submitQuiz.addEventListener("click", submitQuizAnswer);
+submitQuizTop.addEventListener("click", submitQuizAnswer);
 
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Enter") return;
@@ -716,4 +748,4 @@ document.addEventListener("keydown", (event) => {
 });
 
 buildAbacus();
-renderLesson();
+startQuiz();

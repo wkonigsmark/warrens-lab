@@ -36,7 +36,7 @@
     { id: 's1', activity: 'ants-apples', label: 'Ants & Apples', skill: 'math',    url: '/iq/ants-apples/',    target: 10, expectedMs: 4*60*1000, blurb: 'Warm up with arithmetic adventures.' },
     { id: 's2', activity: 'abacus',      label: 'Abacus',        skill: 'math',    url: '/games/abacus/',      target: 8,  expectedMs: 4*60*1000, blurb: 'Bead-by-bead mental math.' },
     { id: 's3', activity: 'foursight',   label: 'FourSight',     skill: 'logic',   url: '/games/foursight/',   target: 1,  expectedMs: 3*60*1000, blurb: 'A friendly logic match against the computer.' },
-    { id: 's4', activity: 'lexicon',     label: 'Lexicon',       skill: 'vocab',   url: '/iq/lexicon/',        target: 8,  expectedMs: 3*60*1000, blurb: 'Roots, origins, and word puzzles.' },
+    { id: 's4', activity: 'sudoku',      label: 'Sudoku',        skill: 'logic',   url: '/games/sudoku/',      target: 1,  expectedMs: 3*60*1000, blurb: 'Grid puzzles that scale with your skill.' },
     { id: 's5', activity: 'chronos',     label: 'Chronos',       skill: 'history', url: '/iq/chronos/',        target: 6,  expectedMs: 4*60*1000, blurb: 'A descent through historical time.' },
     { id: 's6', activity: 'matching',    label: 'Matching',      skill: 'memory',  url: '/games/matching/',    target: 12, expectedMs: 3*60*1000, blurb: 'A memory cool-down to finish.' }
   ];
@@ -343,6 +343,27 @@
       if (quizBtn) quizBtn.click();
     },
 
+    'foursight': (session, stop, frame) => {
+      const doc = frame.contentWindow && frame.contentWindow.document;
+      if (!doc) return;
+
+      const cfg = foursightConfig(session.child);
+
+      // game-mode select fires resetGame() on change, which restarts in the
+      // selected mode. We dispatch a change event so the inline onchange runs.
+      const modeSel = doc.getElementById('game-mode');
+      if (modeSel) {
+        modeSel.value = cfg.mode;
+        modeSel.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      // Protégé defaults to OFF; click the toggle only if we want it ON.
+      if (cfg.protege) {
+        const btn = doc.getElementById('protege-toggle');
+        if (btn) btn.click();
+      }
+    },
+
     'ants-apples': (session, stop, frame) => {
       const doc = frame.contentWindow && frame.contentWindow.document;
       if (!doc) return;
@@ -369,6 +390,44 @@
 
       const startBtn = doc.getElementById('ants-size-start-btn');
       if (startBtn) startBtn.click();
+    },
+
+    'sudoku': (session, stop, frame) => {
+      const doc = frame.contentWindow && frame.contentWindow.document;
+      if (!doc) return;
+
+      const cfg = sudokuConfig(session.child);
+
+      const gridSel = doc.getElementById('gridSize');
+      if (gridSel) {
+        gridSel.value = cfg.size;
+        gridSel.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      const diffSel = doc.getElementById('difficulty');
+      if (diffSel) {
+        diffSel.value = cfg.difficulty;
+        diffSel.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      const newBtn = doc.getElementById('newPuzzle');
+      if (newBtn) newBtn.click();
+    },
+
+    'matching': (session, stop, frame) => {
+      const doc = frame.contentWindow && frame.contentWindow.document;
+      if (!doc) return;
+
+      const cfg = matchingConfig(session.child);
+
+      const sizeSel = doc.getElementById('grid-size');
+      if (sizeSel) {
+        sizeSel.value = cfg.size;
+        sizeSel.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      const resetBtn = doc.getElementById('reset-btn');
+      if (resetBtn) resetBtn.click();
     }
   };
 
@@ -382,11 +441,29 @@
    * Outside 4–8 we clamp; extend the rubric as the scale matures.
    */
   /**
-   * Abacus auto-start config. v0 is fixed at 2 columns for every age while
-   * we validate the landing experience. Promote to a per-age rubric later.
+   * Abacus auto-start config. One column per year of age 4–8, clamped at edges.
+   *  4 → 1col, 5 → 2col, 6 → 3col, 7 → 4col, 8 → 5col
    */
   function abacusConfig(child) {
-    return { columns: 2 };
+    const RUBRIC = { 4: 1, 5: 2, 6: 3, 7: 4, 8: 5 };
+    const age = child.ageYears ?? child.age ?? 8;
+    const clamped = Math.max(4, Math.min(8, age));
+    return { columns: RUBRIC[clamped] };
+  }
+
+  /**
+   * FourSight auto-start config — 1P vs AI, difficulty scaling by age.
+   *  4   → easy + Protégé ON  (extra training wheels)
+   *  5   → easy + Protégé OFF
+   *  6   → medium + Protégé OFF
+   *  7+  → hard + Protégé OFF
+   */
+  function foursightConfig(child) {
+    const age = child.ageYears ?? child.age ?? 8;
+    if (age <= 4)  return { mode: 'easy',   protege: true  };
+    if (age === 5) return { mode: 'easy',   protege: false };
+    if (age === 6) return { mode: 'medium', protege: false };
+    return                { mode: 'hard',   protege: false };
   }
 
   function antsApplesConfig(child) {
@@ -400,6 +477,34 @@
     const age = child.ageYears ?? child.age ?? 8;
     const clamped = Math.max(4, Math.min(8, age));
     return { ...RUBRIC[clamped], levels: 3, helper: true };
+  }
+
+  /**
+   * Sudoku auto-start config — size and difficulty scaled by age.
+   *  4   → 4x4 Beginner
+   *  5   → 4x4 Easy
+   *  6   → 6x6 Easy
+   *  7   → 6x6 Medium
+   *  8   → 9x9 Beginner
+   */
+  function sudokuConfig(child) {
+    const RUBRIC = {
+      4: { size: '4', difficulty: 'beginner' },
+      5: { size: '4', difficulty: 'easy' },
+      6: { size: '6', difficulty: 'easy' },
+      7: { size: '6', difficulty: 'medium' },
+      8: { size: '9', difficulty: 'beginner' }
+    };
+    const age = child.ageYears ?? child.age ?? 8;
+    const clamped = Math.max(4, Math.min(8, age));
+    return RUBRIC[clamped];
+  }
+
+  /**
+   * Matching auto-start config — 6x6 grid for all ages (end cap activity).
+   */
+  function matchingConfig(child) {
+    return { size: '6' };
   }
 
   function startElapsedTimer(session) {
