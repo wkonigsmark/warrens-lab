@@ -720,4 +720,12 @@ h2 {
     width: 12% !important;
     height: 10% !important;
   }
+  .print-abacus .place-label {
+    width: 32px !important;
+    font-size: 0 !important;
+  }
+  .print-abacus .place-label::after {
+    content: attr(data-short-label);
+    font-size: 0.55rem;
+  }
 }
