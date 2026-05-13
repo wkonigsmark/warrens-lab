@@ -744,7 +744,10 @@
 
     // Track user activity to auto-pause on idle.
     const activityEvents = ['mousedown', 'keydown', 'touchstart', 'click'];
-    const resetIdleTimer = () => {
+    const resetIdleTimer = (e) => {
+      // Ignore activity from the FAB button itself.
+      if (e && e.target === toggle) return;
+
       clearTimeout(_audioIdleTimer);
       // Resume audio if it was paused due to idle (not user mute).
       if (audio.paused && !_audioUserMuted) {

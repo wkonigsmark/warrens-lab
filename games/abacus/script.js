@@ -454,7 +454,6 @@ function startQuiz() {
   mentorMode = "quiz";
   appShell.classList.add("quiz-mode-active");
   quizTracker.classList.remove("mentor-hidden");
-  mentorButton.classList.add("mentor-hidden");
   submitQuizTop.classList.remove("mentor-hidden");
   quizQuestions = buildQuizQuestions();
   quizIndex = 0;
@@ -477,14 +476,7 @@ function startQuiz() {
   renderQuiz();
 }
 
-function toggleQuiz() {
-  if (mentorMode === "quiz") {
-    exitQuiz();
-    return;
-  }
 
-  startQuiz();
-}
 
 function exitQuiz() {
   stopQuizTimer();
@@ -501,7 +493,6 @@ function exitQuiz() {
   quizTracker.classList.add("mentor-hidden");
   submitQuizTop.classList.add("mentor-hidden");
   mentorPanel.classList.remove("mentor-hidden");
-  mentorButton.classList.remove("mentor-hidden");
   mentorButton.classList.add("active");
   mentorButton.setAttribute("aria-pressed", "true");
   renderLesson();
@@ -699,14 +690,18 @@ columnCount.addEventListener("change", updateColumnCount);
 
 quizButton.addEventListener("click", (event) => {
   event.currentTarget.blur();
-  toggleQuiz();
+  startQuiz();
 });
 
 mentorButton.addEventListener("click", (event) => {
   event.currentTarget.blur();
-  const hidden = mentorPanel.classList.toggle("mentor-hidden");
-  mentorButton.classList.toggle("active", !hidden);
-  mentorButton.setAttribute("aria-pressed", String(!hidden));
+  if (mentorMode === "quiz") {
+    exitQuiz();
+  } else {
+    const hidden = mentorPanel.classList.toggle("mentor-hidden");
+    mentorButton.classList.toggle("active", !hidden);
+    mentorButton.setAttribute("aria-pressed", String(!hidden));
+  }
 });
 
 prevLesson.addEventListener("click", () => {
