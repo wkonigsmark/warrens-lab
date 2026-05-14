@@ -1934,3 +1934,229 @@ footer {
   padding: 40px;
   color: var(--text-dim);
 }
+
+/* ════════════════════════════════════════════════
+   Quiz Sheet — Picker overlay + Spartan Worksheet
+   ════════════════════════════════════════════════ */
+
+.sheet-picker-card {
+  max-width: 460px;
+  padding: 40px;
+  text-align: left;
+}
+
+.sheet-picker-card h2 {
+  margin: 0 0 8px;
+}
+
+.sheet-picker-sub {
+  color: var(--text-dim);
+  margin: 0 0 24px;
+  font-size: 0.95rem;
+}
+
+.sheet-picker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.sheet-picker-row label {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.sheet-picker-row select {
+  flex: 1;
+  max-width: 280px;
+}
+
+.sheet-picker-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+#close-sheet-picker {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* Print-only worksheet root — hidden on screen */
+.sheet-print-root {
+  display: none;
+}
+
+/* ── Print rules ─────────────────────────────── */
+@page {
+  size: letter;
+  margin: 0.5in;
+}
+
+@media print {
+  /* When printing the sheet, hide everything else and show only the sheet */
+  body.printing-sheet > #app,
+  body.printing-sheet > #progress-container {
+    display: none !important;
+  }
+  body.printing-sheet {
+    background: #fff !important;
+    color: #000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  /* Reset the fixed-position screen preview so content paginates */
+  body.printing-sheet .sheet-print-root {
+    display: block !important;
+    position: static !important;
+    inset: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    z-index: auto !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Screen preview of sheet (only when printing-sheet class is on body — set right before print) */
+body.printing-sheet .sheet-print-root {
+  display: block;
+  background: #fff;
+  color: #000;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: auto;
+  padding: 0.5in;
+  font-family: 'Outfit', system-ui, sans-serif;
+}
+
+.qs-page {
+  background: #fff;
+  color: #000;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.35;
+  page-break-after: always;
+}
+.qs-page:last-child {
+  page-break-after: auto;
+}
+
+.qs-header {
+  border-bottom: 1.5px solid #000;
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+}
+
+.qs-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18pt;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.qs-meta {
+  font-size: 9pt;
+  color: #444;
+  display: flex;
+  gap: 6px;
+  margin-top: 2px;
+  flex-wrap: wrap;
+}
+
+.qs-fields {
+  margin-top: 8px;
+  display: flex;
+  gap: 24px;
+  font-size: 9.5pt;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.qs-line {
+  display: inline-block;
+  width: 180px;
+  border-bottom: 1px solid #000;
+  height: 1em;
+  vertical-align: bottom;
+  margin-left: 4px;
+}
+.qs-line.short  { width: 110px; }
+.qs-line.shorter { width: 50px; }
+
+.qs-list {
+  columns: 2;
+  column-gap: 28px;
+  padding: 0;
+  margin: 0;
+  list-style-position: outside;
+  padding-left: 22px;
+}
+
+.qs-q {
+  break-inside: avoid;
+  margin: 0 0 10px;
+  padding: 0;
+}
+
+.qs-prompt {
+  font-size: 10pt;
+}
+
+.qs-prompt b {
+  font-weight: 700;
+}
+
+.qs-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 2px;
+  padding-left: 4px;
+  font-size: 9.5pt;
+  color: #222;
+}
+
+.qs-letter {
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.qs-key-list {
+  columns: 2;
+  column-gap: 28px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-size: 10pt;
+}
+
+.qs-key-list li {
+  break-inside: avoid;
+  margin-bottom: 4px;
+}
+
+.qs-key-num {
+  display: inline-block;
+  width: 26px;
+  font-weight: 600;
+}

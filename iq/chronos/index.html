@@ -35,6 +35,7 @@
                     <div class="primary-buttons">
                         <button id="edu-module-btn" class="action-btn subtle">How Do We Know?</button>
                         <button id="print-quiz-btn" class="action-btn">Print Worksheet Quiz</button>
+                        <button id="print-sheet-btn" class="action-btn">Print Quiz Sheet</button>
                         <button id="curate-btn" class="action-btn">Curate Database</button>
                         <button id="start-quiz-btn" class="action-btn accent">Start Quiz</button>
                     </div>
@@ -142,6 +143,32 @@
             </div>
         </div>
 
+        <div id="sheet-picker-overlay" class="overlay no-print">
+            <div class="overlay-content sheet-picker-card">
+                <button id="close-sheet-picker" class="close-overlay" aria-label="Close">×</button>
+                <h2>Print Quiz Sheet</h2>
+                <p class="sheet-picker-sub">Generate a one-page worksheet (~20 questions) plus answer key.</p>
+                <div class="sheet-picker-row">
+                    <label for="sheet-level">Level</label>
+                    <select id="sheet-level" class="select-styled">
+                        <option value="1">Level 1 — Core</option>
+                        <option value="2">Level 2 — Dedicated</option>
+                    </select>
+                </div>
+                <div class="sheet-picker-row">
+                    <label for="sheet-difficulty">Difficulty</label>
+                    <select id="sheet-difficulty" class="select-styled">
+                        <option value="1">1 — Before / After</option>
+                        <option value="2">2 — Multiple choice (spread)</option>
+                        <option value="3">3 — Multiple choice (close)</option>
+                    </select>
+                </div>
+                <div class="sheet-picker-actions">
+                    <button id="generate-sheet-btn" class="action-btn accent">Generate &amp; Print</button>
+                </div>
+            </div>
+        </div>
+
         <div id="edu-overlay" class="overlay">
             <button id="close-edu-overlay" class="close-overlay" aria-label="Close">×</button>
             <div class="edu-modal-content">
@@ -153,6 +180,7 @@
             <p>Chronos Historical Engine &copy; 2026</p>
         </footer>
     </div>
+    <div id="sheet-print-root" class="sheet-print-root"></div>
     <script src="edu_module.js"></script>
     <script src="chronos_significance_engine.js"></script>
     <script src="seed_events.js"></script>

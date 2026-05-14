@@ -420,6 +420,19 @@ function initChronos() {
     if (startQuizBtn) startQuizBtn.onclick = startInteractiveQuiz;
     if (eduModuleBtn) eduModuleBtn.onclick = showEduModule;
 
+    // Quiz Sheet (spartan printable worksheet)
+    const sheetBtn = document.getElementById('print-sheet-btn');
+    const closeSheetBtn = document.getElementById('close-sheet-picker');
+    const generateSheetBtn = document.getElementById('generate-sheet-btn');
+    if (sheetBtn) sheetBtn.onclick = openSheetPicker;
+    if (closeSheetBtn) closeSheetBtn.onclick = closeSheetPicker;
+    if (generateSheetBtn) generateSheetBtn.onclick = () => {
+        const level = parseInt(document.getElementById('sheet-level').value, 10);
+        const difficulty = parseInt(document.getElementById('sheet-difficulty').value, 10);
+        closeSheetPicker();
+        renderQuizSheet(level, difficulty);
+    };
+
     // Overlay Close Buttons
     if (closeOverlayBtn) closeOverlayBtn.onclick = hideOverlay;
     if (closeEduOverlayBtn) closeEduOverlayBtn.onclick = hideEduModule;
@@ -1537,6 +1550,205 @@ function showEduModule() {
 function hideEduModule() {
     document.getElementById('edu-overlay').classList.remove('visible');
     document.body.style.overflow = 'auto';
+}
+
+// ════════════════════════════════════════════════
+// Quiz Sheet Generator — spartan printable worksheet
+// ════════════════════════════════════════════════
+
+const QUIZ_SHEET_QUESTION_COUNT = 20;
+
+function signedLog10(year) {
+    if (year === 0) return 0;
+    return Math.sign(year) * Math.log10(Math.abs(year) + 1);
+}
+
+function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function getSheetPool(level) {
+    return combinedTimeline.filter(e =>
+        e.significance === level &&
+        typeof e.startYear === 'number' &&
+        e.title
+    );
+}
+
+function buildD1Questions(pool, n) {
+    const questions = [];
+    const usedKeys = new Set();
+    let safety = 0;
+    while (questions.length < n && safety++ < n * 50) {
+        const [a, b] = shuffle(pool).slice(0, 2);
+        if (!a || !b || a.startYear === b.startYear) continue;
+        const key = [a.id, b.id].sort().join('|');
+        if (usedKeys.has(key)) continue;
+        usedKeys.add(key);
+        const earlier = a.startYear < b.startYear ? a : b;
+        questions.push({
+            type: 'd1',
+            prompt: `Which came first — <b>${a.title}</b> or <b>${b.title}</b>?`,
+            options: [a.title, b.title],
+            answer: earlier.title,
+            answerDetail: `${earlier.title} (${formatChronosDate(earlier.startYear)})`
+        });
+    }
+    return questions;
+}
+
+function pickDistractor(pool, answer, used, { minLog, maxLog }) {
+    const ansLog = signedLog10(answer.startYear);
+    const candidates = pool.filter(e => {
+        if (e.id === answer.id || used.has(e.id)) return false;
+        const d = Math.abs(signedLog10(e.startYear) - ansLog);
+        return d >= minLog && d <= maxLog;
+    });
+    if (!candidates.length) {
+        // Fallback: relax the window — take the closest to range
+        const fallback = pool
+            .filter(e => e.id !== answer.id && !used.has(e.id))
+            .sort((a, b) => {
+                const da = Math.abs(signedLog10(a.startYear) - ansLog);
+                const db = Math.abs(signedLog10(b.startYear) - ansLog);
+                return Math.abs(da - (minLog + maxLog) / 2) - Math.abs(db - (minLog + maxLog) / 2);
+            });
+        return fallback[0] || null;
+    }
+    return candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+function buildMCQuestions(pool, n, difficulty) {
+    // difficulty 2: both distractors FAR (log distance >= 0.6)
+    // difficulty 3: one CLOSE (0.04 – 0.20), one FAR (>= 0.6)
+    const questions = [];
+    const usedAnswers = new Set();
+    const candidates = shuffle(pool);
+    for (const answer of candidates) {
+        if (questions.length >= n) break;
+        if (usedAnswers.has(answer.id)) continue;
+
+        const used = new Set([answer.id]);
+        let d1, d2;
+        if (difficulty === 3) {
+            d1 = pickDistractor(pool, answer, used, { minLog: 0.04, maxLog: 0.22 });
+            if (d1) used.add(d1.id);
+            d2 = pickDistractor(pool, answer, used, { minLog: 0.6, maxLog: 99 });
+        } else {
+            d1 = pickDistractor(pool, answer, used, { minLog: 0.6, maxLog: 99 });
+            if (d1) used.add(d1.id);
+            d2 = pickDistractor(pool, answer, used, { minLog: 0.6, maxLog: 99 });
+        }
+        if (!d1 || !d2) continue;
+
+        usedAnswers.add(answer.id);
+        const opts = shuffle([answer, d1, d2]).map(e => e.title);
+        questions.push({
+            type: `d${difficulty}`,
+            prompt: `Which event occurred around <b>${formatChronosDate(answer.startYear)}</b>?`,
+            options: opts,
+            answer: answer.title,
+            answerDetail: `${answer.title} (${formatChronosDate(answer.startYear)})`
+        });
+    }
+    return questions;
+}
+
+function renderQuizSheet(level, difficulty) {
+    const pool = getSheetPool(level);
+    if (pool.length < 5) {
+        alert(`Not enough events in Level ${level} to build a worksheet.`);
+        return;
+    }
+
+    let questions;
+    if (difficulty === 1) questions = buildD1Questions(pool, QUIZ_SHEET_QUESTION_COUNT);
+    else questions = buildMCQuestions(pool, QUIZ_SHEET_QUESTION_COUNT, difficulty);
+
+    if (questions.length === 0) {
+        alert('Could not generate questions — pool too small or too clustered.');
+        return;
+    }
+
+    const root = document.getElementById('sheet-print-root');
+    const today = new Date().toISOString().slice(0, 10);
+    const diffLabel = {1: 'Before / After', 2: 'Multiple Choice (Spread)', 3: 'Multiple Choice (Close)'}[difficulty];
+
+    const optLetters = ['A', 'B', 'C', 'D'];
+
+    const questionHtml = questions.map((q, i) => {
+        const opts = q.options.map((o, idx) =>
+            `<span class="qs-opt"><span class="qs-letter">${optLetters[idx]}.</span> ${o}</span>`
+        ).join('');
+        return `
+            <li class="qs-q">
+                <div class="qs-prompt">${q.prompt}</div>
+                <div class="qs-opts">${opts}</div>
+            </li>`;
+    }).join('');
+
+    const keyHtml = questions.map((q, i) => {
+        const letter = optLetters[q.options.indexOf(q.answer)] || '?';
+        return `<li><span class="qs-key-num">${i + 1}.</span> <b>${letter}</b> — ${q.answerDetail}</li>`;
+    }).join('');
+
+    root.innerHTML = `
+        <div class="qs-page">
+            <header class="qs-header">
+                <div class="qs-title">Chronos Worksheet</div>
+                <div class="qs-meta">
+                    <span>Level ${level}</span>
+                    <span>·</span>
+                    <span>Difficulty ${difficulty} — ${diffLabel}</span>
+                    <span>·</span>
+                    <span>${today}</span>
+                </div>
+                <div class="qs-fields">
+                    <span>Name <span class="qs-line"></span></span>
+                    <span>Date <span class="qs-line short"></span></span>
+                    <span>Score <span class="qs-line shorter"></span>/${questions.length}</span>
+                </div>
+            </header>
+            <ol class="qs-list">${questionHtml}</ol>
+        </div>
+        <div class="qs-page qs-key-page">
+            <header class="qs-header">
+                <div class="qs-title">Answer Key</div>
+                <div class="qs-meta">
+                    <span>Level ${level}</span>
+                    <span>·</span>
+                    <span>Difficulty ${difficulty}</span>
+                    <span>·</span>
+                    <span>${today}</span>
+                </div>
+            </header>
+            <ol class="qs-key-list">${keyHtml}</ol>
+        </div>
+    `;
+
+    document.body.classList.add('printing-sheet');
+    // Defer to let layout settle before print dialog
+    setTimeout(() => {
+        window.print();
+        // Cleanup after print dialog closes
+        const cleanup = () => {
+            document.body.classList.remove('printing-sheet');
+            window.removeEventListener('afterprint', cleanup);
+        };
+        window.addEventListener('afterprint', cleanup);
+    }, 50);
+}
+
+function openSheetPicker() {
+    document.getElementById('sheet-picker-overlay').classList.add('visible');
+}
+function closeSheetPicker() {
+    document.getElementById('sheet-picker-overlay').classList.remove('visible');
 }
 
 // Start
