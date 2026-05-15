@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ants &amp; Acorns</title>
+  <style>
+    :root {
+      --bg-1: #faf5ec;
+      --bg-2: #f1e6cf;
+      --panel: #ffffff;
+      --soft: #fbf7ee;
+      --border: rgba(74, 56, 32, 0.12);
+      --text: #2a2418;
+      --dim: #7a6c55;
+      --accent: #b06d2e;
+      --accent-fg: #ffffff;
+      --good: #2d7a3e;
+      --bad: #b3402a;
+      --shadow: 0 2px 8px rgba(74, 56, 32, 0.06);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap {
+      max-width: 460px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      margin: 0 0 4px;
+      letter-spacing: -0.5px;
+    }
+    h1 .emoji { margin: 0 4px; }
+    .sub {
+      color: var(--dim);
+      font-size: 14px;
+      margin: 0 0 24px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+    .row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .row + .row { margin-top: 8px; }
+    label.mode {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--dim);
+      background: var(--soft);
+      user-select: none;
+      transition: all 0.15s;
+    }
+    label.mode input { display: none; }
+    label.mode.active {
+      background: rgba(176, 109, 46, 0.12);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    button {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--soft);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    button:hover:not(:disabled) {
+      background: #f4ecd9;
+    }
+    button.primary {
+      background: var(--accent);
+      color: var(--accent-fg);
+      border-color: var(--accent);
+    }
+    button.primary:hover:not(:disabled) {
+      filter: brightness(1.08);
+      background: var(--accent);
+    }
+    button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .guess-input {
+      flex: 1;
+      font-family: 'Menlo', 'Courier New', monospace;
+      font-size: 24px;
+      letter-spacing: 12px;
+      text-align: center;
+      padding: 12px 8px 12px 20px;
+      background: #fdfaf3;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      width: 100%;
+      outline: none;
+    }
+    .guess-input:focus {
+      border-color: var(--accent);
+      background: #ffffff;
+    }
+    .status {
+      text-align: center;
+      font-size: 13px;
+      color: var(--dim);
+      margin: 12px 0;
+    }
+    .status.win { color: var(--good); font-weight: 700; }
+    .status.lose { color: var(--bad); font-weight: 600; }
+    .history {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .history-empty {
+      text-align: center;
+      color: var(--dim);
+      font-size: 13px;
+      padding: 24px 0;
+    }
+    .guess-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Menlo', 'Courier New', monospace;
+    }
+    .guess-row .num {
+      color: var(--dim);
+      font-size: 12px;
+      min-width: 24px;
+    }
+    .guess-row .digits {
+      font-size: 20px;
+      letter-spacing: 6px;
+      flex: 1;
+    }
+    .guess-row.win {
+      background: rgba(45, 122, 62, 0.08);
+      border-color: rgba(45, 122, 62, 0.35);
+    }
+    .guess-row.win .digits { color: var(--good); font-weight: 700; }
+    .feedback {
+      display: flex;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .feedback span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .feedback .ico { font-size: 18px; line-height: 1; }
+    .legend {
+      display: flex;
+      justify-content: space-around;
+      font-size: 13px;
+      color: var(--dim);
+      margin-top: 10px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend .ico {
+      font-size: 18px;
+      line-height: 1;
+      color: initial;
+    }
+    details {
+      margin-top: 16px;
+      color: var(--dim);
+      font-size: 13px;
+    }
+    summary {
+      cursor: pointer;
+      user-select: none;
+      padding: 4px 0;
+    }
+    details p { margin: 8px 0; line-height: 1.5; }
+    .length-label {
+      font-size: 13px;
+      color: var(--dim);
+      padding-left: 4px;
+      flex-shrink: 0;
+    }
+    .length-select {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--soft);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .length-select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    details.mentor-panel {
+      padding: 14px 16px;
+    }
+    details.mentor-panel > summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--dim);
+      padding: 2px 0;
+      user-select: none;
+    }
+    details.mentor-panel > summary::-webkit-details-marker { display: none; }
+    details.mentor-panel > summary::after {
+      content: "▾";
+      font-size: 14px;
+      transition: transform 0.2s;
+    }
+    details.mentor-panel[open] > summary::after {
+      transform: rotate(180deg);
+    }
+    details.mentor-panel[open] > .mentor-toggles { margin-top: 12px; }
+    .play-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px -16px;
+    }
+    .mentor-toggles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .mentor-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--dim);
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--soft);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s;
+    }
+    .mentor-toggle input {
+      margin: 0;
+      accent-color: var(--accent);
+    }
+    .mentor-toggle:has(input:checked) {
+      background: rgba(176, 109, 46, 0.12);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .mentor-output {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mentor-output:empty { display: none; }
+    .mentor-line {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      padding: 8px 10px;
+      background: var(--soft);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .mentor-line .ico { font-size: 16px; line-height: 1.2; flex-shrink: 0; }
+    .mentor-line .label {
+      color: var(--dim);
+      margin-right: 2px;
+    }
+    .mentor-line .pill {
+      display: inline-block;
+      font-family: 'Menlo', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 1px 8px;
+      margin: 0 2px;
+      border-radius: 6px;
+    }
+    .mentor-line.confirmed .pill { background: rgba(45, 122, 62, 0.15); color: var(--good); }
+    .mentor-line.ruled .pill { background: rgba(179, 64, 42, 0.12); color: var(--bad); }
+    .mentor-line.locked .pill { background: rgba(176, 109, 46, 0.15); color: var(--accent); }
+    .mentor-line.nudge {
+      background: rgba(176, 109, 46, 0.10);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .print-sheet { display: none; }
+    @media print {
+      @page { margin: 0.4in; }
+      body { background: white !important; }
+      body > *:not(.print-sheet) { display: none !important; }
+      .print-sheet {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        color: #000;
+        font-family: 'Outfit', system-ui, sans-serif;
+      }
+      .print-sheet .card {
+        border: 1px dashed #888;
+        border-radius: 6px;
+        padding: 10px 12px 12px;
+        page-break-inside: avoid;
+      }
+      .print-sheet .card-title {
+        font-size: 13px;
+        font-weight: 800;
+        text-align: center;
+        margin: 0 0 2px;
+        letter-spacing: -0.2px;
+      }
+      .print-sheet .card-config {
+        font-size: 9px;
+        color: #666;
+        text-align: center;
+        margin-bottom: 8px;
+      }
+      .print-sheet .grid {
+        table-layout: fixed;
+        border-collapse: collapse;
+        margin: 0 auto;
+      }
+      .print-sheet .grid .col-num { width: 20px; }
+      .print-sheet .grid .col-score { width: 26px; }
+      .print-sheet .grid .col-digit { width: 26px; }
+      .print-sheet .grid th,
+      .print-sheet .grid td {
+        border: 1px solid #000;
+        padding: 0;
+        height: 24px;
+        text-align: center;
+      }
+      .print-sheet .grid thead th {
+        background: #eee;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 1px;
+        height: auto;
+      }
+      .print-sheet .grid td.num {
+        font-size: 9px;
+        color: #666;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1><span class="emoji">🐜</span>Ants &amp; Acorns<span class="emoji">🌰</span></h1>
+    <p class="sub">Crack the secret code.</p>
+
+    <div class="panel">
+      <div class="row">
+        <span class="length-label">Code length</span>
+        <select id="length-select" class="length-select">
+          <option value="2">2 digits</option>
+          <option value="3">3 digits</option>
+          <option value="4" selected>4 digits</option>
+        </select>
+      </div>
+      <div class="row">
+        <label class="mode active" data-mode="unique">
+          <input type="radio" name="mode" value="unique" checked>
+          No repeats
+        </label>
+        <label class="mode" data-mode="repeats">
+          <input type="radio" name="mode" value="repeats">
+          Repeats allowed
+        </label>
+      </div>
+      <div class="row">
+        <label class="mode active" data-limit="10">
+          <input type="radio" name="limit" value="10" checked>
+          10 guesses
+        </label>
+        <label class="mode" data-limit="unlimited">
+          <input type="radio" name="limit" value="unlimited">
+          Unlimited
+        </label>
+      </div>
+    </div>
+
+    <details class="panel mentor-panel">
+      <summary>Mentor hints</summary>
+      <div class="mentor-toggles">
+        <label class="mentor-toggle"><input type="checkbox" data-hint="digits"> Digits in/out</label>
+        <label class="mentor-toggle"><input type="checkbox" data-hint="positions"> Locked positions</label>
+        <label class="mentor-toggle"><input type="checkbox" data-hint="count"> Possibilities</label>
+        <label class="mentor-toggle"><input type="checkbox" data-hint="nudge"> Solvable nudge</label>
+      </div>
+      <div id="mentor-output" class="mentor-output"></div>
+    </details>
+
+    <div class="panel">
+      <div class="row">
+        <input
+          id="guess"
+          class="guess-input"
+          inputmode="numeric"
+          maxlength="4"
+          autocomplete="off"
+          placeholder="----"
+        >
+        <button id="submit" class="primary">Guess</button>
+      </div>
+      <div id="status" class="status">Guess #1 of 10</div>
+      <div class="row" style="justify-content: center; gap: 8px;">
+        <button id="new-game">New game</button>
+        <button id="print-btn">Print play sheet</button>
+      </div>
+      <div class="play-divider"></div>
+      <div id="history" class="history">
+        <div class="history-empty">No guesses yet.</div>
+      </div>
+      <div class="legend">
+        <span><span class="ico">🐜</span> right digit, right spot</span>
+        <span><span class="ico">🌰</span> right digit, wrong spot</span>
+      </div>
+    </div>
+
+    <details>
+      <summary>How to play</summary>
+      <p>I'm thinking of a secret 4-digit code. After each guess, I'll show you:</p>
+      <p><strong>🐜 Ants</strong> — how many digits you got exactly right (right digit in the right position).</p>
+      <p><strong>🌰 Acorns</strong> — how many digits are in the code but in a different position.</p>
+      <p>Use the clues to narrow it down. Pick 10 guesses for a real challenge, or Unlimited to crack it however long it takes.</p>
+    </details>
+  </div>
+
+  <div class="print-sheet" id="print-sheet"></div>
+
+  <script>
+    const state = {
+      secret: [],
+      mode: 'unique',
+      limit: '10',
+      maxGuesses: 10,
+      codeLength: 4,
+      guesses: [],
+      over: false,
+    };
+
+    const $guess = document.getElementById('guess');
+    const $submit = document.getElementById('submit');
+    const $newGame = document.getElementById('new-game');
+    const $status = document.getElementById('status');
+    const $history = document.getElementById('history');
+    const $modeLabels = document.querySelectorAll('label.mode[data-mode]');
+    const $limitLabels = document.querySelectorAll('label.mode[data-limit]');
+    const $lengthSelect = document.getElementById('length-select');
+    const $mentorOutput = document.getElementById('mentor-output');
+    const $mentorToggles = document.querySelectorAll('.mentor-toggle input[type="checkbox"]');
+
+    function generateSecret(mode, length) {
+      if (mode === 'unique') {
+        const digits = ['0','1','2','3','4','5','6','7','8','9'];
+        for (let i = digits.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [digits[i], digits[j]] = [digits[j], digits[i]];
+        }
+        return digits.slice(0, length);
+      } else {
+        return Array.from({length}, () => String(Math.floor(Math.random() * 10)));
+      }
+    }
+
+    function score(guess, secret) {
+      let ants = 0;
+      const secretRemaining = [];
+      const guessRemaining = [];
+      for (let i = 0; i < secret.length; i++) {
+        if (guess[i] === secret[i]) {
+          ants++;
+        } else {
+          secretRemaining.push(secret[i]);
+          guessRemaining.push(guess[i]);
+        }
+      }
+      let acorns = 0;
+      const pool = [...secretRemaining];
+      for (const d of guessRemaining) {
+        const idx = pool.indexOf(d);
+        if (idx !== -1) {
+          acorns++;
+          pool.splice(idx, 1);
+        }
+      }
+      return { ants, acorns };
+    }
+
+    function isValidGuess(value) {
+      const n = state.codeLength;
+      if (!new RegExp(`^\\d{${n}}$`).test(value)) return `Enter ${n} digits.`;
+      if (state.mode === 'unique' && new Set(value).size !== n) {
+        return 'No repeated digits in this mode.';
+      }
+      return null;
+    }
+
+    function enumerateCandidates(length, mode) {
+      const out = [];
+      const buf = [];
+      function recurse(used) {
+        if (buf.length === length) {
+          out.push([...buf]);
+          return;
+        }
+        for (let d = 0; d <= 9; d++) {
+          const s = String(d);
+          if (mode === 'unique' && used.has(s)) continue;
+          buf.push(s);
+          used.add(s);
+          recurse(used);
+          buf.pop();
+          used.delete(s);
+        }
+      }
+      recurse(new Set());
+      return out;
+    }
+
+    function computeMentor() {
+      const all = enumerateCandidates(state.codeLength, state.mode);
+      const consistent = all.filter(candidate =>
+        state.guesses.every(g => {
+          const r = score(g.value.split(''), candidate);
+          return r.ants === g.ants && r.acorns === g.acorns;
+        })
+      );
+      if (consistent.length === 0) {
+        return { remaining: 0, confirmed: [], ruledOut: [], locked: [] };
+      }
+      const confirmed = [];
+      const ruledOut = [];
+      for (let d = 0; d <= 9; d++) {
+        const s = String(d);
+        const inAll = consistent.every(c => c.includes(s));
+        const inNone = consistent.every(c => !c.includes(s));
+        if (inAll) confirmed.push(s);
+        if (inNone) ruledOut.push(s);
+      }
+      const locked = [];
+      for (let i = 0; i < state.codeLength; i++) {
+        const first = consistent[0][i];
+        if (consistent.every(c => c[i] === first)) {
+          locked.push({ pos: i, digit: first });
+        }
+      }
+      return { remaining: consistent.length, confirmed, ruledOut, locked };
+    }
+
+    function renderMentor() {
+      const flags = {};
+      $mentorToggles.forEach(cb => { flags[cb.dataset.hint] = cb.checked; });
+      const anyOn = Object.values(flags).some(Boolean);
+      if (!anyOn) {
+        $mentorOutput.innerHTML = '';
+        return;
+      }
+      const m = computeMentor();
+      const lines = [];
+      if (flags.count) {
+        const word = m.remaining === 1 ? 'code' : 'codes';
+        lines.push(`<div class="mentor-line"><span class="ico">🔎</span><span><span class="label">Possibilities:</span> <strong>${m.remaining}</strong> ${word} still match your clues.</span></div>`);
+      }
+      if (flags.digits) {
+        if (m.confirmed.length) {
+          const pills = m.confirmed.map(d => `<span class="pill">${d}</span>`).join('');
+          lines.push(`<div class="mentor-line confirmed"><span class="ico">✅</span><span><span class="label">In the code:</span>${pills}</span></div>`);
+        }
+        if (m.ruledOut.length) {
+          const pills = m.ruledOut.map(d => `<span class="pill">${d}</span>`).join('');
+          lines.push(`<div class="mentor-line ruled"><span class="ico">🚫</span><span><span class="label">Ruled out:</span>${pills}</span></div>`);
+        }
+        if (!m.confirmed.length && !m.ruledOut.length && state.guesses.length > 0) {
+          lines.push(`<div class="mentor-line"><span class="ico">🤔</span><span class="label">No digits confirmed or ruled out yet.</span></div>`);
+        }
+      }
+      if (flags.positions) {
+        if (m.locked.length) {
+          const parts = m.locked.map(l => `position ${l.pos + 1} is <span class="pill">${l.digit}</span>`).join(', ');
+          lines.push(`<div class="mentor-line locked"><span class="ico">📍</span><span><span class="label">Locked:</span> ${parts}.</span></div>`);
+        } else if (state.guesses.length > 0) {
+          lines.push(`<div class="mentor-line"><span class="ico">📍</span><span class="label">No positions locked in yet.</span></div>`);
+        }
+      }
+      if (flags.nudge && m.remaining === 1 && !state.over) {
+        lines.push(`<div class="mentor-line nudge"><span class="ico">💡</span><span>You have enough info to solve this — there's only one code left!</span></div>`);
+      }
+      $mentorOutput.innerHTML = lines.join('');
+    }
+
+    function render() {
+      const used = state.guesses.length;
+      const unlimited = state.maxGuesses === Infinity;
+      const lastGuess = state.guesses[state.guesses.length - 1];
+      const won = !!lastGuess && lastGuess.ants === state.codeLength;
+
+      if (state.over) {
+        if (won) {
+          $status.textContent = `Solved in ${used} guess${used === 1 ? '' : 'es'}!`;
+          $status.className = 'status win';
+        } else {
+          $status.innerHTML = `Out of guesses. The code was <span style="color:var(--accent);font-family:Menlo,monospace;letter-spacing:4px;font-weight:700;">${state.secret.join('')}</span>`;
+          $status.className = 'status lose';
+        }
+        $submit.disabled = true;
+        $guess.disabled = true;
+      } else {
+        $status.textContent = unlimited
+          ? `Guess #${used + 1}`
+          : `Guess #${used + 1} of ${state.maxGuesses}`;
+        $status.className = 'status';
+        $submit.disabled = false;
+        $guess.disabled = false;
+      }
+
+      if (state.guesses.length === 0) {
+        $history.innerHTML = '<div class="history-empty">No guesses yet.</div>';
+      } else {
+        $history.innerHTML = state.guesses.map((g, i) => `
+          <div class="guess-row${g.ants === state.codeLength ? ' win' : ''}">
+            <div class="num">#${i + 1}</div>
+            <div class="digits">${g.value}</div>
+            <div class="feedback">
+              <span><span class="ico">🐜</span> ${g.ants}</span>
+              <span><span class="ico">🌰</span> ${g.acorns}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      renderMentor();
+    }
+
+    function submitGuess() {
+      if (state.over) return;
+      const value = $guess.value.trim();
+      const err = isValidGuess(value);
+      if (err) {
+        $status.textContent = err;
+        $status.className = 'status lose';
+        return;
+      }
+      const guessArr = value.split('');
+      const { ants, acorns } = score(guessArr, state.secret);
+      state.guesses.push({ value, ants, acorns });
+      $guess.value = '';
+      if (ants === state.codeLength) {
+        state.over = true;
+      } else if (state.maxGuesses !== Infinity && state.guesses.length >= state.maxGuesses) {
+        state.over = true;
+      }
+      render();
+      if (!state.over) $guess.focus();
+    }
+
+    function newGame() {
+      state.secret = generateSecret(state.mode, state.codeLength);
+      state.maxGuesses = state.limit === 'unlimited' ? Infinity : Number(state.limit);
+      state.guesses = [];
+      state.over = false;
+      $guess.value = '';
+      $guess.maxLength = state.codeLength;
+      $guess.placeholder = '-'.repeat(state.codeLength);
+      $guess.disabled = false;
+      $submit.disabled = false;
+      render();
+      $guess.focus();
+    }
+
+    $submit.addEventListener('click', submitGuess);
+    $guess.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitGuess();
+    });
+    $guess.addEventListener('input', () => {
+      $guess.value = $guess.value.replace(/\D/g, '').slice(0, state.codeLength);
+    });
+
+    $newGame.addEventListener('click', newGame);
+
+    $lengthSelect.addEventListener('change', () => {
+      state.codeLength = Number($lengthSelect.value);
+      newGame();
+    });
+
+    $mentorToggles.forEach(cb => {
+      cb.addEventListener('change', renderMentor);
+    });
+
+    function buildPrintSheet() {
+      const n = state.codeLength;
+      const rows = state.limit === 'unlimited' ? 12 : Number(state.limit);
+      const modeLabel = state.mode === 'unique' ? 'no repeats' : 'repeats';
+      const limitLabel = state.limit === 'unlimited' ? '∞' : state.limit;
+      const config = `${n} digits · ${modeLabel} · ${limitLabel} guesses`;
+      const headerCells = Array.from({length: n}, (_, i) => `<th>${i + 1}</th>`).join('');
+      const colDigits = Array.from({length: n}, () => '<col class="col-digit">').join('');
+      const cellDigits = Array.from({length: n}, () => '<td></td>').join('');
+      const guessRows = Array.from({length: rows}, (_, i) => `
+        <tr>
+          <td class="num">${i + 1}</td>
+          <td class="score"></td>
+          <td class="score"></td>
+          ${cellDigits}
+        </tr>
+      `).join('');
+      const card = `
+        <div class="card">
+          <div class="card-title">🐜 Ants &amp; Acorns 🌰</div>
+          <div class="card-config">${config}</div>
+          <table class="grid">
+            <colgroup>
+              <col class="col-num">
+              <col class="col-score">
+              <col class="col-score">
+              ${colDigits}
+            </colgroup>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>🐜</th>
+                <th>🌰</th>
+                ${headerCells}
+              </tr>
+            </thead>
+            <tbody>${guessRows}</tbody>
+          </table>
+        </div>
+      `;
+      document.getElementById('print-sheet').innerHTML = card.repeat(4);
+    }
+
+    document.getElementById('print-btn').addEventListener('click', () => {
+      buildPrintSheet();
+      window.print();
+    });
+
+    $modeLabels.forEach(label => {
+      label.addEventListener('click', () => {
+        $modeLabels.forEach(l => l.classList.remove('active'));
+        label.classList.add('active');
+        const input = label.querySelector('input');
+        input.checked = true;
+        state.mode = input.value;
+        newGame();
+      });
+    });
+
+    $limitLabels.forEach(label => {
+      label.addEventListener('click', () => {
+        $limitLabels.forEach(l => l.classList.remove('active'));
+        label.classList.add('active');
+        const input = label.querySelector('input');
+        input.checked = true;
+        state.limit = input.value;
+        newGame();
+      });
+    });
+
+    newGame();
+  </script>
+</body>
+</html>
