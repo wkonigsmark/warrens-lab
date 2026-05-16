@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Word Weaver — Mini Crossword</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="game-panel" aria-label="Crossword puzzle">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Lexicon Crossword</p>
+            <h1>Word Weaver</h1>
+          </div>
+          <div class="controls" aria-label="Puzzle controls">
+            <label class="select-control" for="gradeLevel">
+              <span>Grade</span>
+              <select id="gradeLevel">
+                <option value="preK,K">Pre-K & K</option>
+                <option value="1,2" selected>1st – 2nd</option>
+                <option value="3,4">3rd – 4th</option>
+                <option value="5+">5th & up</option>
+                <option value="Adult">Adult</option>
+              </select>
+            </label>
+            <label class="select-control" for="puzzleSize">
+              <span>Size</span>
+              <select id="puzzleSize">
+                <option value="6">Small (6 words)</option>
+                <option value="10" selected>Medium (10 words)</option>
+                <option value="14">Large (14 words)</option>
+              </select>
+            </label>
+            <button id="newPuzzle" type="button">New Puzzle</button>
+            <button id="checkPuzzle" type="button">Check</button>
+            <button id="revealPuzzle" type="button" class="ghost">Reveal</button>
+          </div>
+        </header>
+
+        <div class="status-strip" id="statusStrip" aria-live="polite">
+          <span id="statusText">Pick a word in the grid and start typing.</span>
+          <strong id="progressText">0 / 0</strong>
+        </div>
+
+        <div class="board-wrap">
+          <div class="crossword-board" id="board" aria-label="Crossword grid"></div>
+          <p id="boardEmpty" class="board-empty" hidden>Loading lexicon…</p>
+        </div>
+      </section>
+
+      <aside class="clue-panel" aria-label="Clues">
+        <div class="clue-section">
+          <p class="eyebrow">Across</p>
+          <ol class="clue-list" id="acrossClues"></ol>
+        </div>
+        <div class="clue-section">
+          <p class="eyebrow">Down</p>
+          <ol class="clue-list" id="downClues"></ol>
+        </div>
+      </aside>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

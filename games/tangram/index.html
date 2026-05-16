@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title>Tangram</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <div class="game-column">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Seven Pieces</p>
+            <h1>Tangram</h1>
+          </div>
+          <div class="puzzle-pill" id="puzzleLabel">Square</div>
+        </header>
+
+        <div class="status-strip" id="statusStrip" aria-live="polite">
+          Tap a piece to select it, then use the small buttons that appear above it. Drag pieces into the dashed shape.
+        </div>
+
+        <div class="board-wrap">
+          <svg
+            id="board"
+            viewBox="0 0 600 760"
+            preserveAspectRatio="xMidYMid meet"
+            aria-label="Tangram board"
+          >
+            <g id="silhouette"></g>
+            <g id="pieces"></g>
+            <g id="handles"></g>
+          </svg>
+        </div>
+
+        <div class="controls">
+          <button id="resetBtn" type="button">Reset Pieces</button>
+          <button id="nextBtn" type="button">Next Puzzle →</button>
+        </div>
+      </div>
+
+      <aside class="mentor-panel" aria-label="Tangram mentor">
+        <p class="eyebrow">Mentor</p>
+        <h2>How To Play</h2>
+        <p>A tangram is a 7-piece puzzle: 5 triangles, 1 square, and 1 parallelogram. Arrange them so they exactly fill the dashed shape.</p>
+
+        <p class="mentor-section">Controls</p>
+        <ul class="mentor-list">
+          <li>Tap a piece to select it.</li>
+          <li>Use the <strong>↺</strong> and <strong>↻</strong> buttons above the selected piece to rotate by 45°.</li>
+          <li>The parallelogram also shows a <strong>⇆</strong> flip button &mdash; it's the only piece that ever needs flipping.</li>
+          <li>Drag pieces freely; they don't snap.</li>
+        </ul>
+
+        <p class="mentor-section">Hint for <span id="puzzleTipLabel">Square</span></p>
+        <p id="puzzleTip"></p>
+      </aside>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
