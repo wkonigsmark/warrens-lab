@@ -22,6 +22,11 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -68,6 +73,70 @@ button.ghost:hover {
   color: var(--ink);
 }
 
+.btn-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  box-shadow: inset 0 0 0 1.5px var(--line-strong);
+}
+
+.btn-link:hover {
+  color: var(--ink);
+}
+
+.id-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 2px 10px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+
+.id-chip:hover {
+  border-color: var(--accent);
+}
+
+.id-chip-label {
+  color: var(--muted);
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+}
+
+.id-chip code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+/* Hidden text input that captures keystrokes + opens soft keyboard on touch. */
+.hidden-input {
+  position: fixed;
+  top: 50%;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  font-size: 16px; /* prevent iOS zoom on focus */
+  border: 0;
+  background: transparent;
+  caret-color: transparent;
+  pointer-events: none;
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 340px;
@@ -87,7 +156,7 @@ button.ghost:hover {
 
 .game-panel {
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-rows: auto auto auto minmax(0, 1fr);
   min-width: 0;
   gap: 12px;
 }
@@ -152,6 +221,7 @@ h1 {
   border: 1px dashed var(--line-strong);
   border-radius: 8px;
   font-size: 0.92rem;
+  flex-wrap: wrap;
 }
 
 .status-strip.success {
@@ -166,12 +236,65 @@ h1 {
   color: var(--warn);
 }
 
+.active-clue {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 40px;
+  align-items: stretch;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.clue-nav {
+  background: transparent;
+  color: var(--muted);
+  box-shadow: inset 0 0 0 1.5px var(--line-strong);
+  border-radius: 999px;
+  padding: 4px 0;
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1;
+  min-width: 40px;
+}
+
+.clue-nav:hover {
+  color: var(--ink);
+}
+
+.active-clue-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.active-clue-label {
+  color: var(--accent-dark);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.active-clue-text {
+  font-size: 0.98rem;
+  line-height: 1.35;
+  color: var(--ink);
+  font-weight: 500;
+}
+
 .board-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 10px;
-  min-height: 360px;
+  min-height: 280px;
 }
 
 .crossword-board {
@@ -181,6 +304,9 @@ h1 {
   padding: 2px;
   border-radius: 4px;
   user-select: none;
+  width: min(560px, 100%);
+  max-width: 560px;
+  touch-action: manipulation;
 }
 
 .cw-cell {
@@ -191,7 +317,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(0.9rem, 2.4vw, 1.4rem);
+  font-size: clamp(0.9rem, 4.5vw, 1.4rem);
   font-weight: 700;
   text-transform: uppercase;
   color: var(--ink);
@@ -199,6 +325,8 @@ h1 {
   outline: none;
   cursor: pointer;
   transition: background-color 0.08s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .cw-cell.block {
@@ -241,8 +369,16 @@ h1 {
 
 .clue-panel {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+  overflow: hidden;
+}
+
+.clue-panel-body {
+  display: grid;
   grid-template-rows: 1fr 1fr;
   gap: 12px;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -287,11 +423,146 @@ h1 {
   font-variant-numeric: tabular-nums;
 }
 
+/* Drawer toggle is mobile-only — hidden on desktop */
+.clue-drawer-toggle {
+  display: none;
+}
+
+/* ---------- Mobile (< 880px) ---------- */
+
 @media (max-width: 880px) {
   .app-shell {
     grid-template-columns: 1fr;
+    padding: 10px;
+    gap: 10px;
   }
+
+  .game-panel,
   .clue-panel {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .game-panel {
+    gap: 10px;
+  }
+
+  .topbar {
+    gap: 8px;
+  }
+
+  .topbar h1 {
+    font-size: 1.4rem;
+  }
+
+  .topbar .eyebrow {
+    font-size: 0.68rem;
+  }
+
+  .controls {
+    width: 100%;
+    gap: 6px;
+  }
+
+  .controls button,
+  .controls .btn-link {
+    padding: 7px 12px;
+    font-size: 0.88rem;
+  }
+
+  .select-control {
+    flex: 1 1 auto;
+    font-size: 0.8rem;
+  }
+
+  .status-strip {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+
+  .id-chip {
+    font-size: 0.74rem;
+  }
+
+  .active-clue {
+    padding: 10px;
+  }
+
+  .active-clue-text {
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  .clue-nav {
+    min-width: 36px;
+    font-size: 1.1rem;
+  }
+
+  .board-wrap {
+    padding: 4px;
+  }
+
+  /* Clue panel becomes a collapsible drawer */
+  .clue-panel {
+    grid-template-rows: auto;
+    padding: 0;
+  }
+
+  .clue-drawer-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: transparent;
+    color: var(--ink);
+    box-shadow: none;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-align: left;
+  }
+
+  .clue-drawer-toggle:hover {
+    transform: none;
+    background: var(--highlight);
+  }
+
+  .clue-drawer-toggle .caret {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .clue-panel-body {
     grid-template-rows: auto auto;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease, padding 0.25s ease;
+    padding: 0 12px;
+  }
+
+  .clue-panel.expanded .clue-panel-body {
+    max-height: 60vh;
+    padding: 0 12px 12px;
+    overflow-y: auto;
+  }
+
+  .clue-list {
+    overflow-y: visible;
+  }
+}
+
+/* Extra-tight phones */
+@media (max-width: 420px) {
+  .topbar h1 {
+    font-size: 1.25rem;
+  }
+  .controls button,
+  .controls .btn-link {
+    padding: 6px 10px;
+    font-size: 0.82rem;
+  }
+  .cw-cell .cw-number {
+    font-size: 0.5rem;
   }
 }

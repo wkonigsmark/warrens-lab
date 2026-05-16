@@ -1,9 +1,5 @@
 (() => {
-  const LEXICON_URL =
-    "../../iq/lexicon/lexicon_seed_project/lexicon_seed.json";
-  const MAX_GRID = 15;
-  const MIN_WORD_LEN = 3;
-  const MAX_WORD_LEN = 9;
+  const WW = window.WordWeaver;
 
   const els = {
     board: document.getElementById("board"),
@@ -13,309 +9,35 @@
     newBtn: document.getElementById("newPuzzle"),
     checkBtn: document.getElementById("checkPuzzle"),
     revealBtn: document.getElementById("revealPuzzle"),
+    studyBtn: document.getElementById("studyBtn"),
+    openIdBtn: document.getElementById("openIdBtn"),
+    puzzleIdLabel: document.getElementById("puzzleIdLabel"),
     status: document.getElementById("statusText"),
     statusStrip: document.getElementById("statusStrip"),
     progress: document.getElementById("progressText"),
+    activeClue: document.getElementById("activeClue"),
+    activeLabel: document.getElementById("activeLabel"),
+    activeText: document.getElementById("activeText"),
+    prevClue: document.getElementById("prevClue"),
+    nextClue: document.getElementById("nextClue"),
     acrossClues: document.getElementById("acrossClues"),
     downClues: document.getElementById("downClues"),
+    cluePanel: document.getElementById("cluePanel"),
+    clueDrawerToggle: document.getElementById("clueDrawerToggle"),
+    hiddenInput: document.getElementById("hiddenInput"),
   };
 
-  /** @type {Array<any>} */
   let lexicon = [];
-  /** @type {{grid: string[][], words: PlacedWord[], cells: Cell[][], rows: number, cols: number}|null} */
   let puzzle = null;
-  let focused = null; // {row, col, dir}
+  let focused = null;
+  let currentId = null;
 
-  /**
-   * @typedef {{word: string, clue: string, row: number, col: number, dir: 'across'|'down', number: number}} PlacedWord
-   * @typedef {{letter: string, number: number|null, across: number|null, down: number|null, input: string}} Cell
-   */
-
-  // ---------- Lexicon ----------
-
-  async function loadLexicon() {
-    const res = await fetch(LEXICON_URL);
-    if (!res.ok) throw new Error(`Lexicon fetch failed: ${res.status}`);
-    lexicon = await res.json();
-  }
-
-  function pickCandidates(gradeValue, count) {
-    const grades = gradeValue.split(",");
-    const filtered = lexicon.filter((w) => {
-      if (!grades.includes(w.grade_level)) return false;
-      const word = (w.word || "").toUpperCase();
-      if (!/^[A-Z]+$/.test(word)) return false;
-      if (word.length < MIN_WORD_LEN || word.length > MAX_WORD_LEN) return false;
-      if (!w.senses || !w.senses[0] || !w.senses[0].definition) return false;
-      return true;
-    });
-    // Shuffle, then sort by length desc so we try longer words first.
-    shuffle(filtered);
-    filtered.sort((a, b) => b.word.length - a.word.length);
-    // Return a generous pool — algorithm uses what fits.
-    return filtered.slice(0, Math.max(count * 6, 40));
-  }
-
-  function shuffle(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-  }
-
-  // ---------- Grid placement ----------
-
-  function emptyGrid(n) {
-    return Array.from({ length: n }, () => Array(n).fill(""));
-  }
-
-  function fitsAt(grid, word, row, col, dir) {
-    const n = grid.length;
-    const dr = dir === "down" ? 1 : 0;
-    const dc = dir === "across" ? 1 : 0;
-    const endR = row + dr * (word.length - 1);
-    const endC = col + dc * (word.length - 1);
-    if (row < 0 || col < 0 || endR >= n || endC >= n) return -1;
-
-    // Cell immediately before start and after end must be empty (separation).
-    const beforeR = row - dr,
-      beforeC = col - dc;
-    const afterR = endR + dr,
-      afterC = endC + dc;
-    if (
-      beforeR >= 0 &&
-      beforeC >= 0 &&
-      beforeR < n &&
-      beforeC < n &&
-      grid[beforeR][beforeC] !== ""
-    )
-      return -1;
-    if (
-      afterR >= 0 &&
-      afterC >= 0 &&
-      afterR < n &&
-      afterC < n &&
-      grid[afterR][afterC] !== ""
-    )
-      return -1;
-
-    let crossings = 0;
-    for (let i = 0; i < word.length; i++) {
-      const r = row + dr * i;
-      const c = col + dc * i;
-      const existing = grid[r][c];
-      if (existing) {
-        if (existing !== word[i]) return -1;
-        crossings++;
-      } else {
-        // perpendicular neighbours must be empty unless this cell is a crossing
-        const pr1 = r + dc, // perpendicular = swap deltas
-          pc1 = c + dr;
-        const pr2 = r - dc,
-          pc2 = c - dr;
-        if (
-          pr1 >= 0 &&
-          pr1 < n &&
-          pc1 >= 0 &&
-          pc1 < n &&
-          grid[pr1][pc1] !== ""
-        )
-          return -1;
-        if (
-          pr2 >= 0 &&
-          pr2 < n &&
-          pc2 >= 0 &&
-          pc2 < n &&
-          grid[pr2][pc2] !== ""
-        )
-          return -1;
-      }
-    }
-    return crossings;
-  }
-
-  function place(grid, word, row, col, dir) {
-    const dr = dir === "down" ? 1 : 0;
-    const dc = dir === "across" ? 1 : 0;
-    for (let i = 0; i < word.length; i++) {
-      grid[row + dr * i][col + dc * i] = word[i];
-    }
-  }
-
-  function generate(candidates, targetCount) {
-    const n = MAX_GRID;
-    const grid = emptyGrid(n);
-    const placed = [];
-    if (candidates.length === 0) return { grid, placed };
-
-    // Seed: place the first (longest) word in the middle, across.
-    const first = candidates[0];
-    const firstWord = first.word.toUpperCase();
-    const startRow = Math.floor(n / 2);
-    const startCol = Math.floor((n - firstWord.length) / 2);
-    place(grid, firstWord, startRow, startCol, "across");
-    placed.push({
-      word: firstWord,
-      clue: clueFor(first),
-      row: startRow,
-      col: startCol,
-      dir: "across",
-      raw: first,
-    });
-
-    // Try the rest. For each, find any intersection with already-placed letters.
-    const pool = candidates.slice(1);
-    for (const entry of pool) {
-      if (placed.length >= targetCount) break;
-      const w = entry.word.toUpperCase();
-      if (placed.some((p) => p.word === w)) continue;
-
-      const tries = [];
-      // For each letter of candidate, scan grid for matching letter.
-      for (let i = 0; i < w.length; i++) {
-        for (let r = 0; r < n; r++) {
-          for (let c = 0; c < n; c++) {
-            if (grid[r][c] !== w[i]) continue;
-            // Try perpendicular to whatever the matching letter is part of:
-            // we don't know dir from letter alone, so try both orientations.
-            for (const dir of ["across", "down"]) {
-              const dr = dir === "down" ? 1 : 0;
-              const dc = dir === "across" ? 1 : 0;
-              const row = r - dr * i;
-              const col = c - dc * i;
-              const crossings = fitsAt(grid, w, row, col, dir);
-              if (crossings > 0) {
-                tries.push({ row, col, dir, crossings });
-              }
-            }
-          }
-        }
-      }
-      if (tries.length === 0) continue;
-      // Prefer placements with more crossings (denser puzzle).
-      tries.sort((a, b) => b.crossings - a.crossings);
-      const pick = tries[0];
-      place(grid, w, pick.row, pick.col, pick.dir);
-      placed.push({
-        word: w,
-        clue: clueFor(entry),
-        row: pick.row,
-        col: pick.col,
-        dir: pick.dir,
-        raw: entry,
-      });
-    }
-
-    return crop(grid, placed);
-  }
-
-  function crop(grid, placed) {
-    const n = grid.length;
-    let minR = n,
-      minC = n,
-      maxR = -1,
-      maxC = -1;
-    for (let r = 0; r < n; r++) {
-      for (let c = 0; c < n; c++) {
-        if (grid[r][c]) {
-          if (r < minR) minR = r;
-          if (c < minC) minC = c;
-          if (r > maxR) maxR = r;
-          if (c > maxC) maxC = c;
-        }
-      }
-    }
-    if (maxR === -1) return { grid: [[]], placed: [] };
-    const rows = maxR - minR + 1;
-    const cols = maxC - minC + 1;
-    const cropped = Array.from({ length: rows }, (_, r) =>
-      Array.from({ length: cols }, (_, c) => grid[r + minR][c + minC]),
-    );
-    const shifted = placed.map((p) => ({
-      ...p,
-      row: p.row - minR,
-      col: p.col - minC,
-    }));
-    return { grid: cropped, placed: shifted, rows, cols };
-  }
-
-  function numberPuzzle({ grid, placed, rows, cols }) {
-    const cells = Array.from({ length: rows }, (_, r) =>
-      Array.from({ length: cols }, (_, c) => ({
-        letter: grid[r][c] || "",
-        number: null,
-        across: null,
-        down: null,
-        input: "",
-      })),
-    );
-
-    // Determine starting cells per crossword conventions.
-    let counter = 0;
-    const wordsByStart = new Map(); // "r,c,dir" -> placed index
-    for (let i = 0; i < placed.length; i++) {
-      const p = placed[i];
-      wordsByStart.set(`${p.row},${p.col},${p.dir}`, i);
-    }
-    const wordsOrdered = []; // assigned numbers in order
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        if (!cells[r][c].letter) continue;
-        const startsAcross =
-          (c === 0 || !cells[r][c - 1].letter) &&
-          c + 1 < cols &&
-          cells[r][c + 1].letter;
-        const startsDown =
-          (r === 0 || !cells[r - 1][c].letter) &&
-          r + 1 < rows &&
-          cells[r + 1][c].letter;
-        if (startsAcross || startsDown) {
-          counter++;
-          cells[r][c].number = counter;
-          if (startsAcross && wordsByStart.has(`${r},${c},across`)) {
-            const idx = wordsByStart.get(`${r},${c},across`);
-            placed[idx].number = counter;
-            wordsOrdered.push(idx);
-          }
-          if (startsDown && wordsByStart.has(`${r},${c},down`)) {
-            const idx = wordsByStart.get(`${r},${c},down`);
-            placed[idx].number = counter;
-            wordsOrdered.push(idx);
-          }
-        }
-      }
-    }
-
-    // Record which word indices each cell belongs to.
-    for (let i = 0; i < placed.length; i++) {
-      const p = placed[i];
-      const dr = p.dir === "down" ? 1 : 0;
-      const dc = p.dir === "across" ? 1 : 0;
-      for (let k = 0; k < p.word.length; k++) {
-        const r = p.row + dr * k;
-        const c = p.col + dc * k;
-        if (p.dir === "across") cells[r][c].across = i;
-        else cells[r][c].down = i;
-      }
-    }
-
-    return { grid, words: placed, cells, rows, cols };
-  }
-
-  function clueFor(entry) {
-    const def = entry.senses?.[0]?.definition || "";
-    // Strip leading article echoes of the word itself if any (cheap dedupe).
-    return def;
-  }
-
-  // ---------- Rendering ----------
+  // ---------- Render ----------
 
   function render() {
-    const { rows, cols, cells, words } = puzzle;
+    const { rows, cols, cells } = puzzle;
     els.board.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
     els.board.style.gridTemplateRows = `repeat(${rows}, minmax(0, 1fr))`;
-    const size = Math.min(560, Math.max(280, cols * 38));
-    els.board.style.width = `${size}px`;
 
     els.board.innerHTML = "";
     for (let r = 0; r < rows; r++) {
@@ -330,7 +52,6 @@
         div.className = "cw-cell";
         div.dataset.row = r;
         div.dataset.col = c;
-        div.tabIndex = 0;
         if (cell.number !== null) {
           const n = document.createElement("span");
           n.className = "cw-number";
@@ -341,11 +62,10 @@
         letter.className = "cw-letter";
         letter.textContent = cell.input || "";
         div.appendChild(letter);
-        div.addEventListener("mousedown", (e) => {
+        div.addEventListener("pointerdown", (e) => {
           e.preventDefault();
-          onCellClick(r, c);
+          onCellTap(r, c);
         });
-        div.addEventListener("keydown", (e) => onKey(e, r, c));
         els.board.appendChild(div);
       }
     }
@@ -376,6 +96,7 @@
     li.addEventListener("click", () => {
       focused = { row: w.row, col: w.col, dir: w.dir };
       paintFocus();
+      focusHiddenInput();
     });
     return li;
   }
@@ -402,22 +123,23 @@
   }
 
   function paintFocus() {
-    const { rows, cols, cells } = puzzle;
+    const { cells } = puzzle;
     const cellEls = els.board.querySelectorAll(".cw-cell");
     cellEls.forEach((el) => el.classList.remove("focused", "highlighted"));
-    if (!focused) return;
+    if (!focused) {
+      updateActiveClue(null);
+      return;
+    }
     const { row, col, dir } = focused;
-    const wordIdx =
-      dir === "across" ? cells[row][col].across : cells[row][col].down;
+    const c = cells[row][col];
+    const wordIdx = dir === "across" ? c.across : c.down;
     if (wordIdx == null) {
-      // try the other direction
       const alt = dir === "across" ? "down" : "across";
-      const altIdx = cells[row][col][alt];
+      const altIdx = c[alt];
       if (altIdx != null) focused.dir = alt;
     }
-    const useDir = focused.dir;
     const w =
-      useDir === "across"
+      focused.dir === "across"
         ? puzzle.words[cells[row][col].across]
         : puzzle.words[cells[row][col].down];
     if (w) {
@@ -425,17 +147,13 @@
       const dc = w.dir === "across" ? 1 : 0;
       for (let k = 0; k < w.word.length; k++) {
         const r = w.row + dr * k;
-        const c = w.col + dc * k;
-        const el = cellAt(r, c);
+        const cc = w.col + dc * k;
+        const el = cellAt(r, cc);
         if (el) el.classList.add("highlighted");
       }
     }
     const focusedEl = cellAt(row, col);
-    if (focusedEl) {
-      focusedEl.classList.add("focused");
-      focusedEl.focus({ preventScroll: true });
-    }
-    // Active clue highlight
+    if (focusedEl) focusedEl.classList.add("focused");
     document
       .querySelectorAll(".clue-list li")
       .forEach((li) => li.classList.remove("active"));
@@ -443,13 +161,26 @@
       const sel = `.clue-list li[data-dir="${w.dir}"][data-number="${w.number}"]`;
       document.querySelector(sel)?.classList.add("active");
     }
+    updateActiveClue(w);
+  }
+
+  function updateActiveClue(w) {
+    if (!w) {
+      els.activeLabel.textContent = "";
+      els.activeText.textContent = "Tap a cell to begin.";
+      return;
+    }
+    els.activeLabel.textContent = `${w.number} ${w.dir === "across" ? "Across" : "Down"}`;
+    els.activeText.textContent = w.clue;
   }
 
   function cellAt(r, c) {
-    return els.board.querySelector(`.cw-cell[data-row="${r}"][data-col="${c}"]`);
+    return els.board.querySelector(
+      `.cw-cell[data-row="${r}"][data-col="${c}"]`,
+    );
   }
 
-  function onCellClick(r, c) {
+  function onCellTap(r, c) {
     if (
       focused &&
       focused.row === r &&
@@ -457,7 +188,6 @@
       puzzle.cells[r][c].across != null &&
       puzzle.cells[r][c].down != null
     ) {
-      // Toggle direction on second click of same cell.
       focused.dir = focused.dir === "across" ? "down" : "across";
     } else {
       const prevDir = focused?.dir || "across";
@@ -471,54 +201,145 @@
       focused = { row: r, col: c, dir };
     }
     paintFocus();
+    focusHiddenInput();
   }
 
-  function onKey(e, r, c) {
-    const key = e.key;
-    if (/^[a-zA-Z]$/.test(key)) {
-      puzzle.cells[r][c].input = key.toUpperCase();
-      refreshCell(r, c);
-      moveNext(r, c, false);
-      e.preventDefault();
-      updateProgress();
-    } else if (key === "Backspace") {
-      if (puzzle.cells[r][c].input) {
-        puzzle.cells[r][c].input = "";
-        refreshCell(r, c);
-      } else {
-        moveNext(r, c, true); // back up
-        const cur = focused;
+  function focusHiddenInput() {
+    if (!els.hiddenInput) return;
+    els.hiddenInput.value = "";
+    try {
+      els.hiddenInput.focus({ preventScroll: true });
+    } catch (_) {
+      els.hiddenInput.focus();
+    }
+  }
+
+  // ---------- Input handling (single hidden input handles all key + IME events) ----------
+
+  function consumeChar(ch) {
+    if (!focused || !puzzle) return;
+    if (!/^[a-z]$/i.test(ch)) return;
+    puzzle.cells[focused.row][focused.col].input = ch.toUpperCase();
+    refreshCell(focused.row, focused.col);
+    moveNext(focused.row, focused.col, false);
+    updateProgress();
+  }
+
+  function consumeBackspace() {
+    if (!focused || !puzzle) return;
+    const cell = puzzle.cells[focused.row][focused.col];
+    if (cell.input) {
+      cell.input = "";
+      refreshCell(focused.row, focused.col);
+    } else {
+      moveNext(focused.row, focused.col, true);
+      if (focused) {
+        const cur = puzzle.cells[focused.row][focused.col];
         if (cur) {
-          puzzle.cells[cur.row][cur.col].input = "";
-          refreshCell(cur.row, cur.col);
+          cur.input = "";
+          refreshCell(focused.row, focused.col);
         }
       }
-      e.preventDefault();
-      updateProgress();
-    } else if (key === "ArrowRight") {
-      focused = { row: r, col: Math.min(c + 1, puzzle.cols - 1), dir: "across" };
-      paintFocus();
-      e.preventDefault();
-    } else if (key === "ArrowLeft") {
-      focused = { row: r, col: Math.max(c - 1, 0), dir: "across" };
-      paintFocus();
-      e.preventDefault();
-    } else if (key === "ArrowDown") {
-      focused = { row: Math.min(r + 1, puzzle.rows - 1), col: c, dir: "down" };
-      paintFocus();
-      e.preventDefault();
-    } else if (key === "ArrowUp") {
-      focused = { row: Math.max(r - 1, 0), col: c, dir: "down" };
-      paintFocus();
-      e.preventDefault();
-    } else if (key === " " || key === "Tab") {
-      // Swap direction
-      const can = puzzle.cells[r][c];
-      if (can.across != null && can.down != null) {
-        focused.dir = focused.dir === "across" ? "down" : "across";
-        paintFocus();
+    }
+    updateProgress();
+  }
+
+  function bindInput() {
+    const input = els.hiddenInput;
+
+    input.addEventListener("input", () => {
+      const val = input.value;
+      input.value = "";
+      // Mobile soft keyboards can deliver multi-char chunks (autocomplete);
+      // just consume each letter in order.
+      for (const ch of val) consumeChar(ch);
+    });
+
+    input.addEventListener("beforeinput", (e) => {
+      if (e.inputType === "deleteContentBackward") {
+        e.preventDefault();
+        input.value = "";
+        consumeBackspace();
       }
-      e.preventDefault();
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (!focused || !puzzle) return;
+      const key = e.key;
+      if (key === "Backspace") {
+        e.preventDefault();
+        consumeBackspace();
+        return;
+      }
+      if (key === "ArrowRight") {
+        e.preventDefault();
+        focused = {
+          row: focused.row,
+          col: Math.min(focused.col + 1, puzzle.cols - 1),
+          dir: "across",
+        };
+        skipToLetter(1, 0);
+        paintFocus();
+      } else if (key === "ArrowLeft") {
+        e.preventDefault();
+        focused = {
+          row: focused.row,
+          col: Math.max(focused.col - 1, 0),
+          dir: "across",
+        };
+        skipToLetter(-1, 0);
+        paintFocus();
+      } else if (key === "ArrowDown") {
+        e.preventDefault();
+        focused = {
+          row: Math.min(focused.row + 1, puzzle.rows - 1),
+          col: focused.col,
+          dir: "down",
+        };
+        skipToLetter(0, 1);
+        paintFocus();
+      } else if (key === "ArrowUp") {
+        e.preventDefault();
+        focused = {
+          row: Math.max(focused.row - 1, 0),
+          col: focused.col,
+          dir: "down",
+        };
+        skipToLetter(0, -1);
+        paintFocus();
+      } else if (key === " " || key === "Tab") {
+        e.preventDefault();
+        const can = puzzle.cells[focused.row][focused.col];
+        if (can && can.across != null && can.down != null) {
+          focused.dir = focused.dir === "across" ? "down" : "across";
+          paintFocus();
+        }
+      }
+    });
+  }
+
+  function skipToLetter(dc, dr) {
+    // Skip over block cells in the desired direction (no-op if landed on a letter).
+    let { row, col } = focused;
+    while (
+      row >= 0 &&
+      row < puzzle.rows &&
+      col >= 0 &&
+      col < puzzle.cols &&
+      !puzzle.cells[row][col].letter
+    ) {
+      row += dr;
+      col += dc;
+    }
+    if (
+      row >= 0 &&
+      row < puzzle.rows &&
+      col >= 0 &&
+      col < puzzle.cols &&
+      puzzle.cells[row][col].letter
+    ) {
+      focused.row = row;
+      focused.col = col;
     }
   }
 
@@ -563,6 +384,39 @@
     els.progress.textContent = `${filled} / ${total}`;
   }
 
+  // ---------- Clue navigation ----------
+
+  function wordsLinear() {
+    const across = puzzle.words
+      .filter((w) => w.dir === "across")
+      .sort((a, b) => a.number - b.number);
+    const down = puzzle.words
+      .filter((w) => w.dir === "down")
+      .sort((a, b) => a.number - b.number);
+    return [...across, ...down];
+  }
+
+  function navClue(delta) {
+    if (!puzzle) return;
+    const list = wordsLinear();
+    if (!list.length) return;
+    let idx = -1;
+    if (focused) {
+      const c = puzzle.cells[focused.row][focused.col];
+      const wIdx = focused.dir === "across" ? c.across : c.down;
+      if (wIdx != null) {
+        const w = puzzle.words[wIdx];
+        idx = list.findIndex((x) => x === w);
+      }
+    }
+    if (idx < 0) idx = 0;
+    idx = (idx + delta + list.length) % list.length;
+    const w = list[idx];
+    focused = { row: w.row, col: w.col, dir: w.dir };
+    paintFocus();
+    focusHiddenInput();
+  }
+
   // ---------- Actions ----------
 
   function checkPuzzle() {
@@ -588,13 +442,9 @@
         }
       }
     }
-    if (allRight) {
-      setStatus("Solved! Beautiful work.", "success");
-    } else if (anyFilled) {
-      setStatus("Some letters need another look.", "error");
-    } else {
-      setStatus("Try filling in a few letters first.", "");
-    }
+    if (allRight) setStatus("Solved! Beautiful work.", "success");
+    else if (anyFilled) setStatus("Some letters need another look.", "error");
+    else setStatus("Try filling in a few letters first.", "");
   }
 
   function revealPuzzle() {
@@ -617,34 +467,76 @@
     if (kind) els.statusStrip.classList.add(kind);
   }
 
-  function newPuzzle() {
-    if (!lexicon.length) return;
-    const target = parseInt(els.size.value, 10);
-    const candidates = pickCandidates(els.grade.value, target);
-    if (candidates.length < 2) {
-      setStatus("Not enough words at this level — try another.", "error");
-      return;
-    }
-    // Some seeds may not chain; retry a few times for a denser puzzle.
-    let best = null;
-    for (let attempt = 0; attempt < 6; attempt++) {
-      shuffle(candidates);
-      candidates.sort((a, b) => b.word.length - a.word.length);
-      const result = generate(candidates, target);
-      if (!result.placed || result.placed.length === 0) continue;
-      if (!best || result.placed.length > best.placed.length) best = result;
-      if (best.placed.length >= target) break;
-    }
-    if (!best) {
+  // ---------- Puzzle lifecycle ----------
+
+  function buildPuzzle(grade, size, seed, { pushUrl = true } = {}) {
+    const result = WW.generatePuzzle(lexicon, grade, size, seed);
+    if (!result) {
       setStatus("Couldn't build a puzzle — try a different grade.", "error");
-      return;
+      return false;
     }
-    puzzle = numberPuzzle(best);
+    puzzle = result;
+    currentId = WW.encodeId(grade, size, seed);
     render();
+    updateIdDisplay();
+    if (pushUrl) {
+      const url = new URL(window.location);
+      url.searchParams.set("id", currentId);
+      window.history.replaceState({}, "", url);
+    }
     setStatus(
-      `${puzzle.words.length} words placed. Click a clue or a cell to start.`,
+      `${puzzle.words.length} words placed. Tap a cell to start.`,
       "",
     );
+    return true;
+  }
+
+  function updateIdDisplay() {
+    if (!currentId) return;
+    els.puzzleIdLabel.textContent = currentId;
+    els.studyBtn.dataset.id = currentId;
+    els.studyBtn.href = `study.html?id=${encodeURIComponent(currentId)}`;
+  }
+
+  function newPuzzle() {
+    if (!lexicon.length) return;
+    const grade = els.grade.value;
+    const size = parseInt(els.size.value, 10);
+    const seed = WW.pickRandomSeed();
+    buildPuzzle(grade, size, seed);
+  }
+
+  function openById(rawId) {
+    const parsed = WW.parseId(rawId);
+    if (!parsed) {
+      setStatus("That puzzle code doesn't look right. Try again.", "error");
+      return;
+    }
+    if (parsed.version !== WW.VERSION) {
+      setStatus(
+        `Puzzle code is for a different version (v${parsed.version}).`,
+        "error",
+      );
+      return;
+    }
+    els.grade.value = parsed.grade;
+    els.size.value = String(parsed.size);
+    buildPuzzle(parsed.grade, parsed.size, parsed.seed);
+  }
+
+  function copyId() {
+    if (!currentId) return;
+    navigator.clipboard?.writeText(currentId).then(
+      () => setStatus(`Copied ${currentId} to clipboard.`, "success"),
+      () => setStatus(`Puzzle code: ${currentId}`, ""),
+    );
+  }
+
+  function toggleClueDrawer() {
+    const expanded = els.cluePanel.classList.toggle("expanded");
+    els.clueDrawerToggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+    const caret = els.clueDrawerToggle.querySelector(".caret");
+    if (caret) caret.textContent = expanded ? "▴" : "▾";
   }
 
   // ---------- Boot ----------
@@ -652,18 +544,33 @@
   async function init() {
     els.boardEmpty.hidden = false;
     try {
-      await loadLexicon();
+      lexicon = await WW.loadLexicon(WW.LEXICON_URL);
     } catch (e) {
       els.boardEmpty.textContent = `Couldn't load lexicon: ${e.message}`;
       return;
     }
     els.boardEmpty.hidden = true;
+
+    bindInput();
+
     els.newBtn.addEventListener("click", newPuzzle);
     els.checkBtn.addEventListener("click", checkPuzzle);
     els.revealBtn.addEventListener("click", revealPuzzle);
     els.grade.addEventListener("change", newPuzzle);
     els.size.addEventListener("change", newPuzzle);
-    newPuzzle();
+    els.puzzleIdLabel.addEventListener("click", copyId);
+    els.openIdBtn.addEventListener("click", () => {
+      const code = prompt("Enter a puzzle code (e.g. WW2-ADM-K7F9P):");
+      if (code) openById(code);
+    });
+    els.prevClue.addEventListener("click", () => navClue(-1));
+    els.nextClue.addEventListener("click", () => navClue(1));
+    els.clueDrawerToggle.addEventListener("click", toggleClueDrawer);
+
+    const params = new URLSearchParams(window.location.search);
+    const idParam = params.get("id");
+    if (idParam && WW.parseId(idParam)) openById(idParam);
+    else newPuzzle();
   }
 
   init();

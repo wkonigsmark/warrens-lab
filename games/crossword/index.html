@@ -2,9 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Word Weaver — Mini Crossword</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=5" />
   </head>
   <body>
     <main class="app-shell">
@@ -36,12 +36,27 @@
             <button id="newPuzzle" type="button">New Puzzle</button>
             <button id="checkPuzzle" type="button">Check</button>
             <button id="revealPuzzle" type="button" class="ghost">Reveal</button>
+            <a id="studyBtn" class="btn-link" href="study.html" target="_blank" rel="noopener">Study Sheet ↗</a>
+            <button id="openIdBtn" type="button" class="ghost">Open by ID</button>
           </div>
         </header>
 
         <div class="status-strip" id="statusStrip" aria-live="polite">
           <span id="statusText">Pick a word in the grid and start typing.</span>
+          <span class="id-chip" title="Click to copy puzzle ID">
+            <span class="id-chip-label">Puzzle</span>
+            <code id="puzzleIdLabel">—</code>
+          </span>
           <strong id="progressText">0 / 0</strong>
+        </div>
+
+        <div class="active-clue" id="activeClue" aria-live="polite">
+          <button class="clue-nav" id="prevClue" type="button" aria-label="Previous clue">‹</button>
+          <div class="active-clue-body">
+            <span class="active-clue-label" id="activeLabel"></span>
+            <span class="active-clue-text" id="activeText">Tap a cell to begin.</span>
+          </div>
+          <button class="clue-nav" id="nextClue" type="button" aria-label="Next clue">›</button>
         </div>
 
         <div class="board-wrap">
@@ -50,18 +65,38 @@
         </div>
       </section>
 
-      <aside class="clue-panel" aria-label="Clues">
-        <div class="clue-section">
-          <p class="eyebrow">Across</p>
-          <ol class="clue-list" id="acrossClues"></ol>
-        </div>
-        <div class="clue-section">
-          <p class="eyebrow">Down</p>
-          <ol class="clue-list" id="downClues"></ol>
+      <aside class="clue-panel" id="cluePanel" aria-label="Clues">
+        <button class="clue-drawer-toggle" id="clueDrawerToggle" type="button" aria-expanded="false">
+          <span>All clues</span>
+          <span class="caret" aria-hidden="true">▾</span>
+        </button>
+        <div class="clue-panel-body">
+          <div class="clue-section">
+            <p class="eyebrow">Across</p>
+            <ol class="clue-list" id="acrossClues"></ol>
+          </div>
+          <div class="clue-section">
+            <p class="eyebrow">Down</p>
+            <ol class="clue-list" id="downClues"></ol>
+          </div>
         </div>
       </aside>
     </main>
 
-    <script src="script.js"></script>
+    <input
+      id="hiddenInput"
+      class="hidden-input"
+      type="text"
+      inputmode="text"
+      autocapitalize="characters"
+      autocomplete="off"
+      autocorrect="off"
+      spellcheck="false"
+      aria-hidden="true"
+      tabindex="-1"
+    />
+
+    <script src="generator.js?v=5"></script>
+    <script src="script.js?v=5"></script>
   </body>
 </html>

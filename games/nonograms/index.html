@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nonograms</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-container">
+      <header>
+        <h1>Nonograms</h1>
+        <p>A simple picture logic puzzle.</p>
+        <div class="level-selector">
+          <label for="gridSize">Grid Size: </label>
+          <select id="gridSize">
+            <option value="3">3x3 (Easiest)</option>
+            <option value="4">4x4 (Easy)</option>
+            <option value="5" selected>5x5 (Normal)</option>
+          </select>
+        </div>
+      </header>
+      
+      <section class="game-area">
+        <div id="nonogram-container" class="nonogram-container">
+          <!-- Grid will be injected here by JS -->
+        </div>
+        
+        <div class="controls">
+          <button id="checkButton" class="primary-button">Check Solution</button>
+          <button id="newPuzzleButton" class="secondary-button">New Puzzle</button>
+          <button id="resetButton" class="secondary-button">Reset</button>
+        </div>
+        
+        <div id="message" class="message"></div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

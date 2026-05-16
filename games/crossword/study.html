@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Word Weaver — Study Sheet</title>
+    <link rel="stylesheet" href="study.css?v=4" />
+  </head>
+  <body>
+    <div class="toolbar no-print">
+      <a id="backLink" href="index.html" class="btn ghost">← Back to Puzzle</a>
+      <button id="printBtn" type="button" class="btn">Print / Save PDF</button>
+    </div>
+
+    <article class="sheet" id="sheet" hidden>
+      <header class="sheet-header">
+        <p class="eyebrow">Word Weaver · Study List</p>
+        <h1 id="sheetTitle">Puzzle Study Sheet</h1>
+        <div class="meta-row">
+          <div class="meta-item">
+            <span class="meta-label">Grade</span>
+            <span class="meta-value" id="metaGrade">—</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Words</span>
+            <span class="meta-value" id="metaCount">—</span>
+          </div>
+          <div class="meta-item id-block" title="Type this code on the puzzle page to open this exact puzzle.">
+            <span class="meta-label">Puzzle Code</span>
+            <code class="meta-value puzzle-id" id="metaId">—</code>
+          </div>
+        </div>
+        <p class="instructions">
+          Study these words. When you're ready, go to the puzzle page and
+          enter the <strong>Puzzle Code</strong> above (or just scan/click the
+          link) to load this exact puzzle.
+        </p>
+      </header>
+
+      <section class="word-list" id="wordList" aria-label="Study words"></section>
+
+      <footer class="sheet-footer">
+        <span>Word Weaver · warrens-lab</span>
+        <span id="generatedOn"></span>
+      </footer>
+    </article>
+
+    <p class="sheet-error" id="sheetError" hidden></p>
+
+    <script src="generator.js?v=4"></script>
+    <script src="study.js?v=4"></script>
+  </body>
+</html>

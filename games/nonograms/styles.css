@@ -1,0 +1,222 @@
+:root {
+  --bg-color: #faf9f6;
+  --text-color: #333;
+  --grid-border: #333;
+  --cell-bg: #fff;
+  --cell-filled: #333;
+  --cell-cross: #ccc;
+  --clue-bg: #f0f0f0;
+  --primary-color: #4a90e2;
+  --primary-hover: #357abd;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  max-width: 100%;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2.5rem;
+}
+
+p {
+  margin: 0;
+  color: #666;
+}
+
+.level-selector {
+  margin-top: 1rem;
+}
+
+.level-selector label {
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.level-selector select {
+  padding: 6px 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  cursor: pointer;
+}
+
+.game-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nonogram-container {
+  display: grid;
+  gap: 1px;
+  background-color: var(--grid-border);
+  border: 2px solid var(--grid-border);
+}
+
+.cell {
+  background-color: var(--cell-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+  user-select: none;
+}
+
+.clue-cell {
+  background-color: var(--clue-bg);
+  font-weight: bold;
+  padding: 4px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 2px;
+}
+
+.clue-row {
+  flex-direction: row;
+  justify-content: flex-end;
+  padding-right: 8px;
+}
+
+.playable-cell {
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  transition: background-color 0.1s;
+}
+
+.playable-cell:hover {
+  background-color: #f5f5f5;
+}
+
+.playable-cell.filled {
+  background-color: var(--cell-filled);
+}
+
+.playable-cell.crossed {
+  position: relative;
+}
+
+.playable-cell.crossed::before,
+.playable-cell.crossed::after {
+  content: '';
+  position: absolute;
+  width: 80%;
+  height: 2px;
+  background-color: var(--cell-cross);
+  top: 50%;
+  left: 10%;
+}
+
+.playable-cell.crossed::before {
+  transform: rotate(45deg);
+}
+
+.playable-cell.crossed::after {
+  transform: rotate(-45deg);
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.primary-button {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.primary-button:hover {
+  background-color: var(--primary-hover);
+}
+
+.secondary-button {
+  background-color: #eee;
+  color: #333;
+}
+
+.secondary-button:hover {
+  background-color: #ddd;
+}
+
+.message {
+  font-weight: bold;
+  font-size: 1.2rem;
+  min-height: 1.5rem;
+}
+
+.success {
+  color: #27ae60;
+}
+
+.error {
+  color: #c0392b;
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    padding: 1rem;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  .playable-cell {
+    width: 34px;
+    height: 34px;
+  }
+  
+  .controls {
+    gap: 0.5rem;
+  }
+  
+  button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+}

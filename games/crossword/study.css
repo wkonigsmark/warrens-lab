@@ -1,0 +1,286 @@
+:root {
+  color-scheme: light;
+  --ink: #1f2330;
+  --muted: #6a7384;
+  --paper: #f6f1e7;
+  --panel: #fffdf9;
+  --line: #d9d3c4;
+  --line-strong: #b8b09f;
+  --accent: #e8763a;
+  --accent-dark: #b65621;
+  --highlight: #fff2d4;
+  font-family: "Outfit", Inter, ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    linear-gradient(135deg, rgba(232, 118, 58, 0.1), transparent 36%),
+    linear-gradient(225deg, rgba(80, 140, 200, 0.1), transparent 42%),
+    var(--paper);
+  color: var(--ink);
+  padding: 20px;
+}
+
+.toolbar {
+  max-width: 880px;
+  margin: 0 auto 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn {
+  border: 0;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 10px 18px;
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 2px 0 var(--accent-dark);
+  font-family: inherit;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--muted);
+  box-shadow: inset 0 0 0 1.5px var(--line-strong);
+}
+
+.btn.ghost:hover {
+  color: var(--ink);
+}
+
+.sheet {
+  max-width: 880px;
+  margin: 0 auto;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 18px 42px rgba(44, 36, 24, 0.12);
+  padding: 36px 44px 28px;
+}
+
+.sheet-header {
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 16px;
+  margin-bottom: 22px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.sheet h1 {
+  margin: 0 0 14px;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  align-items: flex-end;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.meta-label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.meta-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.id-block {
+  margin-left: auto;
+  background: var(--highlight);
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1.5px dashed var(--line-strong);
+}
+
+.puzzle-id {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--accent-dark);
+  letter-spacing: 0.04em;
+}
+
+.instructions {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.word-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 28px;
+}
+
+.word-card {
+  break-inside: avoid;
+  padding: 10px 0 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.word-card:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.word-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.word-text {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.word-pos {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.word-def {
+  margin: 0 0 4px;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.syn {
+  margin: 4px 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.syn-label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-right: 4px;
+}
+
+.sheet-footer {
+  margin-top: 24px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.sheet-error {
+  max-width: 880px;
+  margin: 40px auto;
+  padding: 18px;
+  background: rgba(217, 80, 67, 0.08);
+  border: 1px solid rgba(217, 80, 67, 0.4);
+  color: #b03b30;
+  border-radius: 10px;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .word-list {
+    grid-template-columns: 1fr;
+  }
+  .id-block {
+    margin-left: 0;
+  }
+}
+
+/* ---------- Print ---------- */
+
+@media print {
+  @page {
+    margin: 0.55in 0.55in 0.5in;
+  }
+  body {
+    background: white;
+    padding: 0;
+    color: black;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .sheet {
+    box-shadow: none;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    max-width: 100%;
+  }
+  .sheet-header {
+    border-color: black;
+  }
+  .sheet h1 {
+    font-size: 1.6rem;
+  }
+  .puzzle-id {
+    color: black;
+  }
+  .id-block {
+    background: transparent;
+    border-color: black;
+  }
+  .word-card {
+    border-color: #ccc;
+  }
+  .word-list {
+    gap: 8px 24px;
+  }
+  .word-def,
+  .syn {
+    font-size: 0.85rem;
+  }
+}
