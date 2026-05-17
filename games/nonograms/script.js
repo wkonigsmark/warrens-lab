@@ -2,7 +2,24 @@ const container = document.getElementById('nonogram-container');
 const checkBtn = document.getElementById('checkButton');
 const resetBtn = document.getElementById('resetButton');
 const newPuzzleBtn = document.getElementById('newPuzzleButton');
+const printBtn = document.getElementById('printButton');
 const messageDiv = document.getElementById('message');
+const printView = document.getElementById('printView');
+
+const antImages = [
+  '../../iq/ants-apples/assets/coloring-template-ants/ant_jazz_hands.png',
+  '../../iq/ants-apples/assets/coloring-template-ants/ants_apple_cart.png',
+  '../../iq/ants-apples/assets/coloring-template-ants/ants_apple_hoist.png',
+  '../../iq/ants-apples/assets/coloring-template-ants/ants_basket_apple.png',
+  '../../iq/ants-apples/assets/coloring-template-ants/ants_behind_apple.png',
+  '../../iq/ants-apples/assets/coloring-template-ants/ants_celebration.png',
+  '../../iq/ants-apples/assets/coloring-template-ants/ants_chalkboard.png',
+  '../../iq/ants-apples/assets/coloring-template-ants/ants_glasses.png',
+  '../../iq/ants-apples/assets/coloring-template-ants/ants_grad.png',
+  '../../iq/ants-apples/assets/coloring-template-ants/ants_homework.png',
+  '../../iq/ants-apples/assets/coloring-template-ants/ants_pencil.png',
+  '../../iq/ants-apples/assets/coloring-template-ants/ants_pencil_3.png'
+];
 
 const sizeSelect = document.getElementById('gridSize');
 
@@ -75,9 +92,11 @@ function initGrid() {
   // CSS Grid layout: (numCols + 1) columns
   container.style.gridTemplateColumns = `auto repeat(${numCols}, auto)`;
   
-  // Top-left corner (empty)
+  // Top-left corner (empty, but with ant image)
   const corner = document.createElement('div');
-  corner.className = 'cell clue-cell';
+  corner.className = 'cell clue-cell corner-cell';
+  const randomAnt = antImages[Math.floor(Math.random() * antImages.length)];
+  corner.innerHTML = `<img src="${randomAnt}" alt="Cute ant" style="width: 100%; height: 100%; object-fit: contain; padding: 2px; opacity: 0.8;" />`;
   container.appendChild(corner);
   
   // Top headers (Column clues)
@@ -116,9 +135,9 @@ function handleCellClick(e) {
   const r = parseInt(e.target.dataset.r);
   const c = parseInt(e.target.dataset.c);
   
-  // Left click cycles: 0 (empty) -> 1 (filled) -> 2 (crossed) -> 0
+  // Left click cycles: 0 (empty) -> 1 (filled) -> 2 (crossed) -> 3 (dot) -> 0
   if (e.button === 0) {
-    grid[r][c] = (grid[r][c] + 1) % 3;
+    grid[r][c] = (grid[r][c] + 1) % 4;
   } else if (e.button === 2) {
     // Right click still toggles between empty and crossed as a handy shortcut
     if (grid[r][c] === 2) {
@@ -138,6 +157,8 @@ function updateCellUI(cell, state) {
     cell.classList.add('filled');
   } else if (state === 2) {
     cell.classList.add('crossed');
+  } else if (state === 3) {
+    cell.classList.add('dotted');
   }
 }
 
@@ -192,9 +213,89 @@ function resetGame() {
   messageDiv.textContent = '';
 }
 
+function generatePrintView() {
+  const size = parseInt(sizeSelect.value);
+  
+  printView.innerHTML = `
+    <div class="print-header">
+      <h2>Nonograms Worksheet - ${size}x${size}</h2>
+      <p>Use logic to fill in the correct squares!</p>
+    </div>
+    <div class="print-page"></div>
+  `;
+  const page = printView.querySelector('.print-page');
+  
+  for (let i = 0; i < 6; i++) {
+    // Generate random solution
+    const pSol = Array(size).fill().map(() => Array(size).fill(0));
+    let filledCount = 0;
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (Math.random() > 0.45) {
+          pSol[r][c] = 1;
+          filledCount++;
+        }
+      }
+    }
+    if (filledCount === 0) pSol[0][0] = 1;
+    
+    // Calculate clues
+    const pRowClues = pSol.map(row => calculateClues(row));
+    const pColClues = [];
+    for (let c = 0; c < size; c++) {
+      const col = [];
+      for (let r = 0; r < size; r++) {
+        col.push(pSol[r][c]);
+      }
+      pColClues.push(calculateClues(col));
+    }
+    
+    // Build DOM
+    const item = document.createElement('div');
+    item.className = 'print-item';
+    
+    const pGrid = document.createElement('div');
+    pGrid.className = 'nonogram-container print-nonogram';
+    pGrid.style.gridTemplateColumns = `auto repeat(${size}, auto)`;
+    
+    const corner = document.createElement('div');
+    corner.className = 'cell clue-cell corner-cell';
+    const randomAnt = antImages[Math.floor(Math.random() * antImages.length)];
+    corner.innerHTML = `<img src="${randomAnt}" alt="Cute ant" style="width: 100%; height: 100%; object-fit: contain; padding: 2px; opacity: 0.8;" />`;
+    pGrid.appendChild(corner);
+    
+    for (let c = 0; c < size; c++) {
+      const clueCell = document.createElement('div');
+      clueCell.className = 'cell clue-cell';
+      clueCell.innerHTML = pColClues[c].map(num => `<span>${num}</span>`).join('');
+      pGrid.appendChild(clueCell);
+    }
+    
+    for (let r = 0; r < size; r++) {
+      const clueCell = document.createElement('div');
+      clueCell.className = 'cell clue-cell clue-row';
+      clueCell.innerHTML = pRowClues[r].map(num => `<span style="margin-right: 4px;">${num}</span>`).join('');
+      pGrid.appendChild(clueCell);
+      
+      for (let c = 0; c < size; c++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell playable-cell'; // keep class for sizing
+        pGrid.appendChild(cell);
+      }
+    }
+    
+    item.appendChild(pGrid);
+    page.appendChild(item);
+  }
+}
+
 checkBtn.addEventListener('click', checkSolution);
 resetBtn.addEventListener('click', resetGame);
 newPuzzleBtn.addEventListener('click', loadPuzzle);
+printBtn.addEventListener('click', () => {
+  generatePrintView();
+  window.print();
+});
 sizeSelect.addEventListener('change', loadPuzzle);
 
 // Disable right-click menu on container

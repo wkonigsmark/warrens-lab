@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Word Weaver — Print Puzzle</title>
+    <link rel="stylesheet" href="print.css?v=9" />
+  </head>
+  <body>
+    <div class="toolbar no-print">
+      <a id="backLink" href="index.html" class="btn ghost">← Back to Puzzle</a>
+      <label class="toggle" for="showAnswers">
+        <input type="checkbox" id="showAnswers" />
+        <span>Show answers</span>
+      </label>
+      <button id="printBtn" type="button" class="btn">Print / Save PDF</button>
+    </div>
+
+    <article class="sheet" id="sheet" hidden>
+      <header class="sheet-header">
+        <div class="head-titles">
+          <p class="eyebrow">Word Weaver · Mini Crossword</p>
+          <h1 id="sheetTitle">Crossword Puzzle</h1>
+          <p class="sheet-meta" id="sheetMeta">—</p>
+        </div>
+        <div class="head-id" title="Type this code at the puzzle page to open this exact puzzle.">
+          <span class="head-id-label">Puzzle Code</span>
+          <code class="head-id-code" id="metaId">—</code>
+        </div>
+      </header>
+
+      <section class="grid-section">
+        <div class="cw-print-board" id="board" aria-label="Crossword grid"></div>
+      </section>
+
+      <section class="clues">
+        <div class="clue-col">
+          <h2>Across</h2>
+          <ol class="clue-list" id="acrossClues"></ol>
+        </div>
+        <div class="clue-col">
+          <h2>Down</h2>
+          <ol class="clue-list" id="downClues"></ol>
+        </div>
+      </section>
+
+      <footer class="sheet-footer">
+        <span>Word Weaver · warrens-lab</span>
+        <span id="generatedOn"></span>
+      </footer>
+    </article>
+
+    <p class="sheet-error" id="sheetError" hidden></p>
+
+    <script src="generator.js?v=9"></script>
+    <script src="print.js?v=9"></script>
+  </body>
+</html>

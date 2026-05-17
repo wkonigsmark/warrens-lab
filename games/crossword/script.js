@@ -10,6 +10,7 @@
     checkBtn: document.getElementById("checkPuzzle"),
     revealBtn: document.getElementById("revealPuzzle"),
     studyBtn: document.getElementById("studyBtn"),
+    printBtn: document.getElementById("printBtn"),
     openIdBtn: document.getElementById("openIdBtn"),
     puzzleIdLabel: document.getElementById("puzzleIdLabel"),
     status: document.getElementById("statusText"),
@@ -496,6 +497,9 @@
     els.puzzleIdLabel.textContent = currentId;
     els.studyBtn.dataset.id = currentId;
     els.studyBtn.href = `study.html?id=${encodeURIComponent(currentId)}`;
+    if (els.printBtn) {
+      els.printBtn.href = `print.html?id=${encodeURIComponent(currentId)}`;
+    }
   }
 
   function newPuzzle() {
