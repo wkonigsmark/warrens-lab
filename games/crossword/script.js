@@ -65,7 +65,12 @@
         letter.className = "cw-letter";
         letter.textContent = cell.input || "";
         div.appendChild(letter);
-        div.addEventListener("pointerdown", (e) => {
+        // Use `click` (not pointerdown) so iOS Safari sees focus() called
+        // inside a proper user-gesture event. With `touch-action: manipulation`
+        // on .cw-cell, click fires immediately on tap with no 300ms delay.
+        // Pointerdown + preventDefault was breaking the gesture chain and
+        // causing iOS to dismiss the soft keyboard after every tap.
+        div.addEventListener("click", (e) => {
           e.preventDefault();
           onCellTap(r, c);
         });
@@ -249,6 +254,25 @@
 
   function bindInput() {
     const input = els.hiddenInput;
+
+    // Defensive blur recovery: if iOS auto-blurs the input (which dismisses
+    // the keyboard), re-focus IFF the user hasn't moved to a real control.
+    input.addEventListener("blur", () => {
+      setTimeout(() => {
+        if (!puzzle || !focused) return;
+        const ae = document.activeElement;
+        // Don't fight focus if user moved to a button, select, link, or another input
+        if (ae && ae !== input && (
+          ae.tagName === "BUTTON" ||
+          ae.tagName === "SELECT" ||
+          ae.tagName === "A" ||
+          ae.tagName === "INPUT" ||
+          ae.tagName === "TEXTAREA"
+        )) return;
+        // Otherwise restore focus to keep the soft keyboard up
+        focusHiddenInput();
+      }, 0);
+    });
 
     input.addEventListener("input", () => {
       const val = input.value;
