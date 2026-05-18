@@ -190,10 +190,12 @@ button.ghost:hover {
 }
 
 /* Hidden text input that captures keystrokes + opens soft keyboard on touch.
-   IMPORTANT: must be positioned inside the viewport — iOS Safari auto-blurs
-   inputs that are far off-screen (e.g. left:-9999px), which dismisses the
-   soft keyboard the instant a cell is tapped. We hide it via opacity+z-index
-   instead of off-screen positioning. */
+   IMPORTANT for iOS Safari:
+   - Must be inside the viewport (no left:-9999px tricks) or iOS auto-blurs it.
+   - Must NOT have pointer-events:none — iOS treats those as non-focusable and
+     dismisses the keyboard right after focusing.
+   - Must NOT carry aria-hidden — same effect on focus retention.
+   We hide it visually with opacity + z-index instead. */
 .hidden-input {
   position: fixed;
   top: 0;
@@ -205,7 +207,6 @@ button.ghost:hover {
   border: 0;
   background: transparent;
   caret-color: transparent;
-  pointer-events: none;
   z-index: -1;
 }
 
@@ -390,10 +391,7 @@ h1 {
   justify-content: center;
   padding: 0;
   min-height: 0;
-  overflow: hidden;
-  /* Become a size container so the board can use the smaller of its width or
-     height as its side length. */
-  container-type: size;
+  overflow: auto;
 }
 
 .crossword-board {
@@ -403,10 +401,10 @@ h1 {
   padding: 2px;
   border-radius: 4px;
   user-select: none;
-  /* Square sized to the smaller of container width, container height, or 560px.
-     Container queries on .board-wrap make 100cqw / 100cqh the inner content size. */
-  width: min(560px, 100cqw, 100cqh);
-  aspect-ratio: 1 / 1;
+  /* Width-driven sizing. The cells have aspect-ratio:1 individually, so the
+     board's height follows naturally from row count × cell width — no extra
+     aspect-ratio on the board (forcing it square would break non-square grids). */
+  width: min(560px, 100%);
   touch-action: manipulation;
 }
 
@@ -550,14 +548,6 @@ h1 {
 
   .board-wrap {
     overflow: visible;
-    /* Disable the container-query sizing on mobile. The mobile layout has no
-       definite height, so 100cqh would collapse the board to a sliver. */
-    container-type: normal;
-  }
-
-  .crossword-board {
-    /* Mobile sizes by container width only — page scrolls naturally */
-    width: min(560px, 100%);
   }
 
   .game-panel {
