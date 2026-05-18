@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Word Weaver — Mini Crossword</title>
-    <link rel="stylesheet" href="styles.css?v=6" />
+    <link rel="stylesheet" href="styles.css?v=7" />
   </head>
   <body>
     <main class="app-shell">
@@ -25,13 +25,9 @@
                 <option value="Adult">Adult</option>
               </select>
             </label>
-            <label class="select-control" for="puzzleSize">
-              <span>Size</span>
-              <select id="puzzleSize">
-                <option value="6">Small (6 words)</option>
-                <option value="10" selected>Medium (10 words)</option>
-                <option value="14">Large (14 words)</option>
-              </select>
+            <label class="select-control number-control" for="puzzleSize">
+              <span>Words</span>
+              <input id="puzzleSize" type="number" min="4" max="40" step="1" value="12" />
             </label>
             <button id="newPuzzle" type="button">New Puzzle</button>
             <button id="checkPuzzle" type="button">Check</button>
@@ -97,7 +93,7 @@
       tabindex="-1"
     />
 
-    <script src="generator.js?v=6"></script>
-    <script src="script.js?v=6"></script>
+    <script src="generator.js?v=7"></script>
+    <script src="script.js?v=7"></script>
   </body>
 </html>

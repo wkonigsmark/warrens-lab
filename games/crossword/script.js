@@ -505,7 +505,9 @@
   function newPuzzle() {
     if (!lexicon.length) return;
     const grade = els.grade.value;
-    const size = parseInt(els.size.value, 10);
+    const size = WW.clampSize(parseInt(els.size.value, 10));
+    // Reflect any clamping back to the input so it doesn't drift silently
+    if (String(size) !== els.size.value) els.size.value = String(size);
     const seed = WW.pickRandomSeed();
     buildPuzzle(grade, size, seed);
   }

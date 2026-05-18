@@ -30,9 +30,26 @@
     "5+": "5th & up",
     Adult: "Adult",
   };
-  const SIZE_CODES = { 6: "S", 10: "M", 14: "L" };
-  const SIZE_FROM_CODE = { S: 6, M: 10, L: 14 };
-  const SIZE_LABELS = { 6: "Small (6 words)", 10: "Medium (10 words)", 14: "Large (14 words)" };
+  // Size is an arbitrary integer in [MIN_SIZE, MAX_SIZE]. ID encodes it as a
+  // 2-digit zero-padded number. Old letter-coded IDs (S/M/L) still parse.
+  const MIN_SIZE = 4;
+  const MAX_SIZE = 40;
+  const LEGACY_SIZE_FROM_CODE = { S: 6, M: 10, L: 14 };
+
+  function clampSize(n) {
+    n = Math.round(Number(n) || 0);
+    if (n < MIN_SIZE) return MIN_SIZE;
+    if (n > MAX_SIZE) return MAX_SIZE;
+    return n;
+  }
+
+  function sizeLabel(n) {
+    if (n <= 8) return `Mini (${n} words)`;
+    if (n <= 14) return `Small (${n} words)`;
+    if (n <= 22) return `Medium (${n} words)`;
+    if (n <= 30) return `Large (${n} words)`;
+    return `Extra-large (${n} words)`;
+  }
 
   // 32-char alphabet (no 0/1/I/L/O) — easier for kids to read off a printed sheet.
   const SEED_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
@@ -79,22 +96,37 @@
 
   function encodeId(grade, size, seed) {
     const g = GRADE_CODES[grade];
-    const sz = SIZE_CODES[size];
-    if (!g || !sz) return null;
-    return `WW${VERSION}-${g}${sz}-${encodeSeed(seed)}`;
+    if (!g) return null;
+    const sz = String(clampSize(size)).padStart(2, "0");
+    return `WW${VERSION}-${g}-${sz}-${encodeSeed(seed)}`;
   }
 
   function parseId(rawId) {
     if (!rawId) return null;
     const id = String(rawId).trim().toUpperCase();
-    const m = /^WW(\d+)-([A-Z0-9]{2})([SML])-([A-Z0-9]{5})$/.exec(id);
-    if (!m) return null;
-    const version = parseInt(m[1], 10);
-    const grade = GRADE_FROM_CODE[m[2]];
-    const size = SIZE_FROM_CODE[m[3]];
-    const seed = decodeSeed(m[4]);
-    if (!grade || !size || seed === null) return null;
-    return { version, grade, size, seed, id };
+    // New format: WW{v}-{grade2}-{sizeNN}-{seed5}
+    let m = /^WW(\d+)-([A-Z0-9]{2})-(\d{2})-([A-Z0-9]{5})$/.exec(id);
+    if (m) {
+      const version = parseInt(m[1], 10);
+      const grade = GRADE_FROM_CODE[m[2]];
+      const size = clampSize(parseInt(m[3], 10));
+      const seed = decodeSeed(m[4]);
+      if (!grade || !size || seed === null) return null;
+      return { version, grade, size, seed, id };
+    }
+    // Legacy format: WW{v}-{grade2}{S|M|L}-{seed5}
+    m = /^WW(\d+)-([A-Z0-9]{2})([SML])-([A-Z0-9]{5})$/.exec(id);
+    if (m) {
+      const version = parseInt(m[1], 10);
+      const grade = GRADE_FROM_CODE[m[2]];
+      const size = LEGACY_SIZE_FROM_CODE[m[3]];
+      const seed = decodeSeed(m[4]);
+      if (!grade || !size || seed === null) return null;
+      // Re-emit in canonical new format for display
+      const canonical = `WW${version}-${m[2]}-${String(size).padStart(2, "0")}-${m[4]}`;
+      return { version, grade, size, seed, id: canonical };
+    }
+    return null;
   }
 
   // ---------- Lexicon filter (deterministic baseline order) ----------
@@ -403,13 +435,14 @@
 
   window.WordWeaver = {
     VERSION,
+    MIN_SIZE,
+    MAX_SIZE,
     GRADE_CODES,
     GRADE_FROM_CODE,
     GRADE_LABELS,
-    SIZE_CODES,
-    SIZE_FROM_CODE,
-    SIZE_LABELS,
     LEXICON_URL: "../../iq/lexicon/lexicon_seed_project/lexicon_seed.json",
+    clampSize,
+    sizeLabel,
     pickRandomSeed,
     encodeId,
     parseId,

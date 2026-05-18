@@ -95,7 +95,7 @@
 
   function renderSheet() {
     els.metaId.textContent = parsed.id;
-    els.sheetMeta.textContent = `${WW.GRADE_LABELS[parsed.grade] || parsed.grade} · ${WW.SIZE_LABELS[parsed.size] || parsed.size + " words"}`;
+    els.sheetMeta.textContent = `${WW.GRADE_LABELS[parsed.grade] || parsed.grade} · ${WW.sizeLabel(parsed.size)}`;
     els.sheetTitle.textContent = `Crossword · ${WW.GRADE_LABELS[parsed.grade] || parsed.grade}`;
     els.backLink.href = `index.html?id=${encodeURIComponent(parsed.id)}`;
     const today = new Date();

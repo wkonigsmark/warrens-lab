@@ -211,6 +211,24 @@ h1 {
   font-weight: 600;
 }
 
+.select-control input[type="number"] {
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-weight: 600;
+  font-family: inherit;
+  font-size: inherit;
+  width: 3em;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+
+.select-control input[type="number"]::-webkit-inner-spin-button,
+.select-control input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+  height: 22px;
+}
+
 .status-strip {
   display: flex;
   align-items: center;
