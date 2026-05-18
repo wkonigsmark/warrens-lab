@@ -12,6 +12,8 @@
     studyBtn: document.getElementById("studyBtn"),
     printBtn: document.getElementById("printBtn"),
     openIdBtn: document.getElementById("openIdBtn"),
+    overflowToggle: document.getElementById("overflowToggle"),
+    overflowMenu: document.getElementById("overflowMenu"),
     puzzleIdLabel: document.getElementById("puzzleIdLabel"),
     status: document.getElementById("statusText"),
     statusStrip: document.getElementById("statusStrip"),
@@ -545,6 +547,21 @@
     if (caret) caret.textContent = expanded ? "▴" : "▾";
   }
 
+  function openOverflowMenu() {
+    els.overflowMenu.hidden = false;
+    els.overflowToggle.setAttribute("aria-expanded", "true");
+  }
+
+  function closeOverflowMenu() {
+    els.overflowMenu.hidden = true;
+    els.overflowToggle.setAttribute("aria-expanded", "false");
+  }
+
+  function toggleOverflowMenu() {
+    if (els.overflowMenu.hidden) openOverflowMenu();
+    else closeOverflowMenu();
+  }
+
   // ---------- Boot ----------
 
   async function init() {
@@ -566,8 +583,26 @@
     els.size.addEventListener("change", newPuzzle);
     els.puzzleIdLabel.addEventListener("click", copyId);
     els.openIdBtn.addEventListener("click", () => {
-      const code = prompt("Enter a puzzle code (e.g. WW2-ADM-K7F9P):");
+      closeOverflowMenu();
+      const code = prompt("Enter a puzzle code (e.g. WW2-12-12-K7F9P):");
       if (code) openById(code);
+    });
+    els.studyBtn.addEventListener("click", closeOverflowMenu);
+    els.printBtn.addEventListener("click", closeOverflowMenu);
+    els.overflowToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleOverflowMenu();
+    });
+    document.addEventListener("click", (e) => {
+      if (!els.overflowMenu.hidden && !els.overflowMenu.contains(e.target)) {
+        closeOverflowMenu();
+      }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !els.overflowMenu.hidden) {
+        closeOverflowMenu();
+        els.overflowToggle.focus();
+      }
     });
     els.prevClue.addEventListener("click", () => navClue(-1));
     els.nextClue.addEventListener("click", () => navClue(1));

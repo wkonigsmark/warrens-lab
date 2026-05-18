@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Word Weaver — Mini Crossword</title>
-    <link rel="stylesheet" href="styles.css?v=10" />
+    <link rel="stylesheet" href="styles.css?v=11" />
   </head>
   <body>
     <main class="app-shell">
@@ -29,12 +29,31 @@
               <span>Words</span>
               <input id="puzzleSize" type="number" min="4" max="40" step="1" value="12" />
             </label>
-            <button id="newPuzzle" type="button">New Puzzle</button>
-            <button id="checkPuzzle" type="button">Check</button>
+            <button id="newPuzzle" type="button">New</button>
+            <button id="checkPuzzle" type="button" class="ghost">Check</button>
             <button id="revealPuzzle" type="button" class="ghost">Reveal</button>
-            <a id="studyBtn" class="btn-link" href="study.html" target="_blank" rel="noopener">Study Sheet ↗</a>
-            <a id="printBtn" class="btn-link" href="print.html" target="_blank" rel="noopener">Print Puzzle ↗</a>
-            <button id="openIdBtn" type="button" class="ghost">Open by ID</button>
+            <div class="overflow-menu">
+              <button
+                id="overflowToggle"
+                type="button"
+                class="ghost overflow-toggle"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-label="More actions"
+              >⋯</button>
+              <ul id="overflowMenu" class="overflow-menu-list" role="menu" hidden>
+                <li role="none">
+                  <a id="studyBtn" class="overflow-item" href="study.html" target="_blank" rel="noopener" role="menuitem">Study Sheet ↗</a>
+                </li>
+                <li role="none">
+                  <a id="printBtn" class="overflow-item" href="print.html" target="_blank" rel="noopener" role="menuitem">Print Puzzle ↗</a>
+                </li>
+                <li class="overflow-divider" role="separator"></li>
+                <li role="none">
+                  <button id="openIdBtn" type="button" class="overflow-item" role="menuitem">Open by ID…</button>
+                </li>
+              </ul>
+            </div>
           </div>
         </header>
 
@@ -93,7 +112,7 @@
       tabindex="-1"
     />
 
-    <script src="generator.js?v=10"></script>
-    <script src="script.js?v=10"></script>
+    <script src="generator.js?v=11"></script>
+    <script src="script.js?v=11"></script>
   </body>
 </html>
