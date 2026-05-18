@@ -189,11 +189,15 @@ button.ghost:hover {
   letter-spacing: 0.02em;
 }
 
-/* Hidden text input that captures keystrokes + opens soft keyboard on touch. */
+/* Hidden text input that captures keystrokes + opens soft keyboard on touch.
+   IMPORTANT: must be positioned inside the viewport — iOS Safari auto-blurs
+   inputs that are far off-screen (e.g. left:-9999px), which dismisses the
+   soft keyboard the instant a cell is tapped. We hide it via opacity+z-index
+   instead of off-screen positioning. */
 .hidden-input {
   position: fixed;
-  top: 50%;
-  left: -9999px;
+  top: 0;
+  left: 0;
   width: 1px;
   height: 1px;
   opacity: 0;
@@ -202,6 +206,7 @@ button.ghost:hover {
   background: transparent;
   caret-color: transparent;
   pointer-events: none;
+  z-index: -1;
 }
 
 .app-shell {
@@ -545,6 +550,14 @@ h1 {
 
   .board-wrap {
     overflow: visible;
+    /* Disable the container-query sizing on mobile. The mobile layout has no
+       definite height, so 100cqh would collapse the board to a sliver. */
+    container-type: normal;
+  }
+
+  .crossword-board {
+    /* Mobile sizes by container width only — page scrolls naturally */
+    width: min(560px, 100%);
   }
 
   .game-panel {
