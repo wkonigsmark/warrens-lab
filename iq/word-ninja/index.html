@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNAP Words - Speed Sight Word Challenge</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 2.5em;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 40px;
+      font-size: 1.1em;
+    }
+
+    /* Setup Screen */
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .setup-screen {
+      text-align: center;
+    }
+
+    .control-group {
+      margin: 30px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 12px;
+    }
+
+    .control-group label {
+      display: block;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .btn-option {
+      padding: 12px 16px;
+      border: 2px solid #ddd;
+      background: white;
+      color: #333;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-option:hover {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+
+    .btn-option.selected {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .btn-start {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 16px 40px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.2em;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-start:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-start:active {
+      transform: translateY(0);
+    }
+
+    /* Play Screen */
+    .play-screen {
+      text-align: center;
+    }
+
+    .timer-container {
+      margin-bottom: 30px;
+    }
+
+    .timer-bar {
+      width: 100%;
+      height: 12px;
+      background: #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .timer-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      border-radius: 6px;
+      transition: background 0.3s ease;
+      width: 100%;
+    }
+
+    .timer-fill.warning {
+      background: linear-gradient(90deg, #f39c12 0%, #e67e22 100%);
+    }
+
+    .timer-fill.danger {
+      background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+    }
+
+    .timer-text {
+      font-size: 1.1em;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .word-display {
+      margin: 40px 0 50px 0;
+    }
+
+    .word {
+      font-size: 5em;
+      font-weight: 700;
+      color: #333;
+      letter-spacing: 2px;
+      word-break: break-word;
+      line-height: 1.2;
+    }
+
+    .score-display {
+      font-size: 1.3em;
+      color: #667eea;
+      font-weight: 700;
+      margin-bottom: 40px;
+    }
+
+    .proctor-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .btn-action {
+      padding: 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.3em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-next {
+      background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+      color: white;
+      grid-column: span 1;
+    }
+
+    .btn-next:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+    }
+
+    .btn-skip {
+      background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+      color: white;
+    }
+
+    .btn-skip:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(149, 165, 166, 0.3);
+    }
+
+    .btn-action:active {
+      transform: translateY(-1px);
+    }
+
+    /* End Screen */
+    .end-screen {
+      text-align: center;
+    }
+
+    .end-score {
+      margin: 30px 0;
+    }
+
+    .final-score {
+      font-size: 3.5em;
+      font-weight: 700;
+      color: #667eea;
+      margin: 20px 0;
+    }
+
+    .best-score-info {
+      background: #f0f4ff;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      border-left: 4px solid #667eea;
+    }
+
+    .best-score-info p {
+      color: #666;
+      font-size: 1.1em;
+      margin: 5px 0;
+    }
+
+    .best-score-label {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .best-score-value {
+      font-size: 1.8em;
+      color: #667eea;
+      font-weight: 700;
+    }
+
+    .btn-play-again {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 16px 40px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.2em;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 30px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-play-again:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      .word {
+        font-size: 3.5em;
+      }
+
+      .proctor-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .btn-next {
+        grid-column: span 1;
+      }
+
+      .button-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
+
+      .subtitle {
+        font-size: 0.9em;
+      }
+
+      .word {
+        font-size: 2.5em;
+      }
+
+      .final-score {
+        font-size: 2.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚡ SNAP Words</h1>
+    <p class="subtitle">Speed Sight Word Challenge</p>
+
+    <!-- Setup Screen -->
+    <div class="screen setup-screen active">
+      <div class="control-group">
+        <label>Choose Time Limit:</label>
+        <div class="button-row">
+          <button class="btn-option" data-time="15">15s</button>
+          <button class="btn-option" data-time="30">30s</button>
+          <button class="btn-option" data-time="45">45s</button>
+          <button class="btn-option" data-time="60">60s</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>Choose Grade Level:</label>
+        <div class="button-row">
+          <button class="btn-option" data-grade="preK">preK</button>
+          <button class="btn-option" data-grade="K">K</button>
+          <button class="btn-option" data-grade="1">1st</button>
+          <button class="btn-option" data-grade="2">2nd</button>
+          <button class="btn-option" data-grade="3">3rd</button>
+          <button class="btn-option" data-grade="4">4th</button>
+          <button class="btn-option" data-grade="5+">5th</button>
+          <button class="btn-option" data-grade="Adult">Adult</button>
+        </div>
+      </div>
+
+      <button class="btn-start">Start Game</button>
+    </div>
+
+    <!-- Play Screen -->
+    <div class="screen play-screen">
+      <div class="timer-container">
+        <div class="timer-bar">
+          <div class="timer-fill"></div>
+        </div>
+        <div class="timer-text"><span class="time-remaining">60</span>s remaining</div>
+      </div>
+
+      <div class="score-display">
+        Score: <span class="current-score">0</span>
+      </div>
+
+      <div class="word-display">
+        <div class="word">-</div>
+      </div>
+
+      <div class="proctor-controls">
+        <button class="btn-action btn-next">✓ NEXT</button>
+        <button class="btn-action btn-skip">✗ SKIP</button>
+      </div>
+    </div>
+
+    <!-- End Screen -->
+    <div class="screen end-screen">
+      <div class="end-score">
+        <h2>Game Over!</h2>
+        <div class="final-score"><span class="final-score-value">0</span></div>
+        <p>words read correctly</p>
+      </div>
+
+      <div class="best-score-info">
+        <p class="best-score-label">Best Score for this Level:</p>
+        <p class="best-score-value">-</p>
+      </div>
+
+      <button class="btn-play-again">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    // Game state
+    let gameState = {
+      timeLimit: null,
+      gradeLevel: null,
+      currentScore: 0,
+      bestScore: 0,
+      timeRemaining: null,
+      gameActive: false,
+      wordList: [],
+      currentWordIndex: 0,
+      timerInterval: null,
+      lexiconLoaded: false
+    };
+
+    // Fallback word lists (Dolch/Fry sight words by grade)
+    const fallbackWords = {
+      preK: ['the', 'a', 'and', 'to', 'in', 'is', 'it', 'you', 'of', 'we', 'can', 'her', 'what', 'so', 'up', 'do', 'go', 'no', 'us', 'am'],
+      K: ['the', 'be', 'and', 'a', 'to', 'of', 'I', 'in', 'you', 'it', 'not', 'or', 'is', 'was', 'for', 'on', 'are', 'as', 'with', 'his'],
+      1: ['the', 'be', 'and', 'to', 'of', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at'],
+      2: ['the', 'be', 'and', 'of', 'to', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'or', 'had', 'they', 'can', 'will'],
+      3: ['the', 'be', 'and', 'of', 'to', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'or', 'had', 'they', 'can', 'will', 'one', 'all', 'would', 'there', 'their', 'what', 'which', 'when', 'who', 'been', 'has', 'had', 'were', 'said', 'each', 'about', 'other', 'out', 'made', 'more', 'work', 'first', 'after', 'back', 'little', 'only', 'new', 'number', 'way', 'could', 'people', 'than', 'then', 'them', 'these', 'think', 'where', 'how', 'its', 'our', 'see', 'time', 'such', 'take', 'very', 'just', 'know', 'good', 'day', 'even', 'how'],
+      4: ['the', 'be', 'and', 'of', 'to', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'or', 'had', 'they', 'can', 'will', 'one', 'all', 'would', 'there', 'their', 'what', 'which', 'when', 'who', 'been', 'has', 'had', 'were', 'said', 'each', 'about', 'other', 'out', 'made', 'more', 'work', 'first', 'after', 'back', 'little', 'only', 'new', 'number', 'way', 'could', 'people', 'than', 'then', 'them', 'these', 'think', 'where', 'how', 'its', 'our', 'see', 'time', 'such', 'take', 'very', 'just', 'know', 'good', 'day', 'even', 'should', 'get', 'any', 'come', 'right', 'may', 'down', 'use', 'also', 'through', 'want', 'need', 'tell', 'like', 'show', 'again', 'must', 'same', 'under', 'both', 'water', 'find', 'leave', 'still', 'mean', 'turn'],
+      '5+': ['the', 'be', 'and', 'of', 'to', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'or', 'had', 'they', 'can', 'will', 'one', 'all', 'would', 'there', 'their', 'what', 'which', 'when', 'who', 'been', 'has', 'had', 'were', 'said', 'each', 'about', 'other', 'out', 'made', 'more', 'work', 'first', 'after', 'back', 'little', 'only', 'new', 'number', 'way', 'could', 'people', 'than', 'then', 'them', 'these', 'think', 'where', 'how', 'its', 'our', 'see', 'time', 'such', 'take', 'very', 'just', 'know', 'good', 'day', 'even', 'should', 'get', 'any', 'come', 'right', 'may', 'down', 'use', 'also', 'through', 'want', 'need', 'tell', 'like', 'show', 'again', 'must', 'same', 'under', 'both', 'water', 'find', 'leave', 'still', 'mean', 'turn', 'give', 'great', 'high', 'live', 'move', 'open', 'place', 'said', 'same', 'seem', 'sound', 'tell', 'than', 'thank', 'their', 'them', 'there', 'these', 'they', 'thing', 'think', 'this', 'those', 'through', 'time', 'turn', 'under', 'until', 'upon', 'very', 'want', 'watch', 'water', 'well', 'were', 'what', 'which', 'while', 'who', 'will', 'wish', 'with', 'word', 'world', 'would', 'write', 'year', 'yellow', 'yes', 'you', 'young', 'your'],
+      Adult: ['the', 'be', 'and', 'of', 'to', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'or', 'had', 'they', 'can', 'will', 'one', 'all', 'would', 'there', 'their', 'what', 'which', 'when', 'who', 'been', 'has', 'had', 'were', 'said', 'each', 'about', 'other', 'out', 'made', 'more', 'work', 'first', 'after', 'back', 'little', 'only', 'new', 'number', 'way', 'could', 'people', 'than', 'then', 'them', 'these', 'think', 'where', 'how', 'its', 'our', 'see', 'time', 'such', 'take', 'very', 'just', 'know', 'good', 'day', 'even', 'should', 'get', 'any', 'come', 'right', 'may', 'down', 'use', 'also', 'through', 'want', 'need', 'tell', 'like', 'show', 'again', 'must', 'same', 'under', 'both', 'water', 'find', 'leave', 'still', 'mean', 'turn', 'give', 'great', 'high', 'live', 'move', 'open', 'place', 'seem', 'sound', 'thank', 'thing', 'those', 'watch', 'well', 'wish', 'word', 'world', 'write', 'year', 'young', 'abstruse', 'abstract', 'accentuate', 'accomplish', 'acknowledge', 'acquiesce', 'aesthetic', 'affable', 'aggregation', 'agilely', 'alternative', 'ambiguous', 'ameliorate', 'amiable', 'amicable', 'amorphous', 'anachronism', 'analogous', 'anarchy', 'analytical', 'ancestor', 'ancillary', 'anecdotal', 'animosity', 'annotate', 'anomalous', 'anonymous', 'antagonize', 'antecedent', 'antediluvian', 'antipathy', 'antiquated', 'anxiety', 'apathetic', 'apex', 'apologetic', 'apostle', 'appalling', 'apparel', 'apparent', 'appease', 'appellate', 'append', 'applaud', 'appreciate', 'apprehend', 'apprehensive', 'apprentice', 'apprise', 'approach', 'appropriate', 'approbation', 'approximate', 'apriori', 'apropos', 'aptitude', 'arbitrary', 'arboreal', 'ardent', 'arduous', 'arena', 'argon', 'argonaut', 'arguable', 'argument', 'arid', 'aristocrat', 'arithmetic', 'armada', 'arsenal', 'artemis', 'artful', 'article', 'articulate', 'artifice', 'artificial', 'artisan', 'artistic', 'artless', 'aryan', 'asbestos', 'ascend', 'ascendant', 'ascension', 'ascent', 'ascertain', 'ascetic', 'ascribe', 'aseptic', 'ashen', 'ashy', 'asinine', 'askance', 'askew', 'asocial', 'aspect', 'aspen', 'asperity', 'aspersion', 'asphalt', 'asphodel', 'asphyxiate', 'aspic', 'aspire', 'aspiring', 'asquint', 'ass', 'assay', 'assemblage', 'assemble', 'assembly', 'assent', 'assert', 'assertion', 'assess', 'assessment', 'asset', 'asseverate', 'assiduity', 'assiduous', 'assign', 'assignation', 'assignee', 'assigner', 'assignment', 'assimilate', 'assimilation', 'assist', 'assistance', 'assistant', 'assize', 'associate', 'association', 'assonance', 'assort', 'assorted', 'assortment', 'assuage', 'assume', 'assumption', 'assurance', 'assure', 'assured', 'astern', 'asterisk', 'asteroid', 'asthma', 'astigmatism', 'astir', 'astonish', 'astonishment', 'astound', 'astraddle', 'astrakhan', 'astral', 'astray', 'astrict', 'astriction', 'astride', 'astringency', 'astringent', 'astrolabe', 'astrologer', 'astrology', 'astronomer', 'astronomy', 'astrophysics', 'astute', 'asunder', 'asylum', 'asymmetry', 'asymptomatic', 'at', 'atavism', 'atavistic', 'ate', 'atelier', 'atheism', 'atheist', 'atheistic']
+    };
+
+    // Load lexicon from JSON file
+    async function loadLexicon() {
+      try {
+        const response = await fetch('../lexicon/lexicon_seed_project/lexicon_seed.json');
+        const lexicon = await response.json();
+        gameState.lexiconData = lexicon;
+        gameState.lexiconLoaded = true;
+      } catch (error) {
+        console.log('Lexicon not found, using fallback word lists');
+        gameState.lexiconLoaded = false;
+      }
+    }
+
+    // Get word list for grade level
+    function getWordList(gradeLevel) {
+      let words = [];
+
+      if (gameState.lexiconLoaded && gameState.lexiconData) {
+        // Filter lexicon by grade
+        words = gameState.lexiconData
+          .filter(item => item.grade_level === gradeLevel)
+          .map(item => item.word)
+          .filter(word => word.length < 20); // Limit word length for display
+      }
+
+      // Use fallback if no words found
+      if (words.length === 0) {
+        words = fallbackWords[gradeLevel] || fallbackWords.Adult;
+      }
+
+      return words;
+    }
+
+    // Shuffle array
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // Load best score from localStorage
+    function loadBestScore() {
+      const key = `snapwords_best_${gameState.gradeLevel}_${gameState.timeLimit}`;
+      const stored = localStorage.getItem(key);
+      return stored ? parseInt(stored) : 0;
+    }
+
+    // Save best score to localStorage
+    function saveBestScore() {
+      const key = `snapwords_best_${gameState.gradeLevel}_${gameState.timeLimit}`;
+      const currentBest = loadBestScore();
+      if (gameState.currentScore > currentBest) {
+        localStorage.setItem(key, gameState.currentScore);
+        gameState.bestScore = gameState.currentScore;
+      } else {
+        gameState.bestScore = currentBest;
+      }
+    }
+
+    // Update UI elements
+    function updateWord() {
+      const word = gameState.wordList[gameState.currentWordIndex];
+      document.querySelector('.word').textContent = word;
+    }
+
+    function updateScore() {
+      document.querySelector('.current-score').textContent = gameState.currentScore;
+    }
+
+    function updateTimer() {
+      const percent = (gameState.timeRemaining / gameState.timeLimit) * 100;
+      const fill = document.querySelector('.timer-fill');
+      const text = document.querySelector('.time-remaining');
+
+      fill.style.width = percent + '%';
+      text.textContent = gameState.timeRemaining;
+
+      fill.classList.remove('warning', 'danger');
+      if (gameState.timeRemaining <= gameState.timeLimit * 0.25) {
+        fill.classList.add('danger');
+      } else if (gameState.timeRemaining <= gameState.timeLimit * 0.5) {
+        fill.classList.add('warning');
+      }
+    }
+
+    // Show screen
+    function showScreen(screenClass) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelector('.' + screenClass).classList.add('active');
+    }
+
+    // Start game
+    function startGame() {
+      if (!gameState.timeLimit || !gameState.gradeLevel) {
+        alert('Please select both time limit and grade level');
+        return;
+      }
+
+      gameState.currentScore = 0;
+      gameState.timeRemaining = gameState.timeLimit;
+      gameState.gameActive = true;
+      gameState.currentWordIndex = 0;
+
+      // Get and shuffle word list
+      const words = getWordList(gameState.gradeLevel);
+      gameState.wordList = shuffle(words);
+
+      updateScore();
+      updateWord();
+      updateTimer();
+      showScreen('play-screen');
+
+      // Start timer
+      gameState.timerInterval = setInterval(() => {
+        gameState.timeRemaining--;
+        updateTimer();
+
+        if (gameState.timeRemaining <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    // Next word (correct)
+    function nextWord() {
+      if (!gameState.gameActive) return;
+
+      gameState.currentScore++;
+      gameState.currentWordIndex++;
+
+      // Loop word list if necessary
+      if (gameState.currentWordIndex >= gameState.wordList.length) {
+        gameState.wordList = shuffle(gameState.wordList);
+        gameState.currentWordIndex = 0;
+      }
+
+      updateScore();
+      updateWord();
+    }
+
+    // Skip word
+    function skipWord() {
+      if (!gameState.gameActive) return;
+
+      gameState.currentWordIndex++;
+
+      // Loop word list if necessary
+      if (gameState.currentWordIndex >= gameState.wordList.length) {
+        gameState.wordList = shuffle(gameState.wordList);
+        gameState.currentWordIndex = 0;
+      }
+
+      updateWord();
+    }
+
+    // End game
+    function endGame() {
+      gameState.gameActive = false;
+      clearInterval(gameState.timerInterval);
+
+      saveBestScore();
+
+      document.querySelector('.final-score-value').textContent = gameState.currentScore;
+
+      let bestLabel = document.querySelector('.best-score-value');
+      if (gameState.bestScore === gameState.currentScore && gameState.currentScore > 0) {
+        bestLabel.textContent = gameState.bestScore + ' 🎉';
+      } else {
+        bestLabel.textContent = gameState.bestScore;
+      }
+
+      showScreen('end-screen');
+    }
+
+    // Event listeners
+    document.querySelectorAll('.btn-option[data-time]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.btn-option[data-time]').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        gameState.timeLimit = parseInt(this.dataset.time);
+      });
+    });
+
+    document.querySelectorAll('.btn-option[data-grade]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.btn-option[data-grade]').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        gameState.gradeLevel = this.dataset.grade;
+      });
+    });
+
+    document.querySelector('.btn-start').addEventListener('click', startGame);
+    document.querySelector('.btn-next').addEventListener('click', nextWord);
+    document.querySelector('.btn-skip').addEventListener('click', skipWord);
+    document.querySelector('.btn-play-again').addEventListener('click', () => {
+      showScreen('setup-screen');
+    });
+
+    // Initialize
+    loadLexicon();
+  </script>
+</body>
+</html>
