@@ -368,13 +368,80 @@ function renderSearchResults(results, query) {
  * --- CURATION TABLE LOGIC ---
  */
 
+// Active sort for the curation table. Updated by clicking column headers.
+let curationSort = { col: 'word', dir: 'asc' };
+
+const GRADE_ORDER = ['preK', 'K', '1', '2', '3', '4', '5+', 'Adult'];
+
+const CURATION_SORT_COMPARATORS = {
+    word: (a, b) => a.word.localeCompare(b.word),
+    definition: (a, b) =>
+        (a.senses?.[0]?.definition || '').localeCompare(b.senses?.[0]?.definition || ''),
+    tags: (a, b) => {
+        const at = (a.senses?.[0]?.tags?.[0] || '').toLowerCase();
+        const bt = (b.senses?.[0]?.tags?.[0] || '').toLowerCase();
+        return at.localeCompare(bt);
+    },
+    history: (a, b) =>
+        (a.history?.root_language || '').localeCompare(b.history?.root_language || ''),
+    grade: (a, b) => {
+        const ai = GRADE_ORDER.indexOf(a.grade_level);
+        const bi = GRADE_ORDER.indexOf(b.grade_level);
+        // Unknown grades sort last
+        const aRank = ai === -1 ? GRADE_ORDER.length : ai;
+        const bRank = bi === -1 ? GRADE_ORDER.length : bi;
+        return aRank - bRank;
+    },
+    difficulty: (a, b) => (a.difficulty || 0) - (b.difficulty || 0),
+};
+
+function setCurationSort(col) {
+    if (!CURATION_SORT_COMPARATORS[col]) return;
+    if (curationSort.col === col) {
+        curationSort.dir = curationSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+        curationSort.col = col;
+        curationSort.dir = 'asc';
+    }
+    renderCurationTable();
+}
+
+function curationHeader(col, label) {
+    const isActive = curationSort.col === col;
+    const arrow = isActive ? (curationSort.dir === 'asc' ? ' ▲' : ' ▼') : '';
+    const cls = `sortable${isActive ? ' active-sort' : ''}`;
+    // Use a real anchor-style cursor + outline on focus for keyboard a11y
+    return `<th class="${cls}" data-sort-col="${col}" onclick="setCurationSort('${col}')"
+                role="button" tabindex="0"
+                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();setCurationSort('${col}');}"
+                style="cursor:pointer; user-select:none;">${label}<span class="sort-arrow">${arrow}</span></th>`;
+}
+
 function renderCurationTable() {
     currentMode = 'curation';
     appContainer.classList.add('wide-mode');
 
+    // Ensure filter bar is visible in this mode so Grade / POS / Root work.
+    const filterBar = document.getElementById('filter-bar');
+    if (filterBar) filterBar.style.display = 'flex';
+
+    // Apply the same Grade / Part-of-Speech / Root filters used everywhere else.
+    const pool = getFilteredPool();
+
+    // Sort by the active column. Stable sort + word-name tie-break keeps things predictable.
+    const cmp = CURATION_SORT_COMPARATORS[curationSort.col] || CURATION_SORT_COMPARATORS.word;
+    const sorted = [...pool].sort((a, b) => {
+        const r = cmp(a, b);
+        if (r !== 0) return r;
+        // Tie-break by word ascending (unless we're already sorting by word)
+        if (curationSort.col !== 'word') return a.word.localeCompare(b.word);
+        return 0;
+    });
+    if (curationSort.dir === 'desc') sorted.reverse();
+
     contentArea.innerHTML = `
         <div class="explorer-header">
-            <h3>Curation Dashboard (${masterLexicon.length} Total Nodes)</h3>
+            <h3>Curation Dashboard (${sorted.length} of ${masterLexicon.length} Nodes)</h3>
             <div>
                 <button onclick="showEtymologyStats()" class="tag" style="cursor:pointer; background: var(--gold); color: white; border:none; margin-right: 10px;">📊 Compare Etymology Stats</button>
                 <button onclick="window.location.reload()" class="tag" style="cursor:pointer; background: var(--accent-primary); color: white; border:none;">&larr; Exit Review</button>
@@ -384,17 +451,17 @@ function renderCurationTable() {
             <table class="curation-table">
                 <thead>
                     <tr>
-                        <th>Word</th>
-                        <th>Definition</th>
-                        <th>Tags</th>
-                        <th>History/Root</th>
-                        <th>Grade</th>
-                        <th>Diff</th>
+                        ${curationHeader('word', 'Word')}
+                        ${curationHeader('definition', 'Definition')}
+                        ${curationHeader('tags', 'Tags')}
+                        ${curationHeader('history', 'History/Root')}
+                        ${curationHeader('grade', 'Grade')}
+                        ${curationHeader('difficulty', 'Diff')}
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${masterLexicon.sort((a, b) => a.word.localeCompare(b.word)).map(word => {
+                    ${sorted.map(word => {
                         const inStudy = studyList[word.word];
                         return `
                         <tr>
@@ -413,7 +480,7 @@ function renderCurationTable() {
                             <td>${word.grade_level}</td>
                             <td><span class="difficulty-dot diff-${word.difficulty}"></span></td>
                             <td>
-                                <button onclick="setWordStatus('${word.word}', 'unknown'); renderCurationTable();" 
+                                <button onclick="setWordStatus('${word.word}', 'unknown'); renderCurationTable();"
                                         class="study-add-btn ${inStudy ? 'in-list' : ''}" style="font-size: 0.6rem; padding: 4px 8px;">
                                     ${inStudy ? 'Study' : '+ Add'}
                                 </button>

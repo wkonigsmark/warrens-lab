@@ -1000,6 +1000,34 @@ footer {
   z-index: 10;
 }
 
+.curation-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.curation-table th.sortable:hover {
+  background: #eef0f3;
+  color: var(--text);
+}
+
+.curation-table th.sortable.active-sort {
+  color: var(--accent-primary);
+  background: #eef0f3;
+}
+
+.curation-table th.sortable:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -2px;
+}
+
+.curation-table th .sort-arrow {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.7em;
+  opacity: 0.9;
+}
+
 .curation-table tbody tr {
   transition: background 0.15s ease;
 }
