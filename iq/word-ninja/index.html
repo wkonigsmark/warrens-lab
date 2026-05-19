@@ -41,35 +41,12 @@
       max-width: 100%;
       height: auto;
       object-fit: contain;
-      max-height: 120px;
+      max-height: 150px;
     }
 
     @media (max-width: 768px) {
       .banner {
         max-height: none;
-      }
-    }
-
-    .random-ant {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-      pointer-events: none;
-      animation: antPop 1s ease-out forwards;
-    }
-
-    @keyframes antPop {
-      0% {
-        opacity: 0;
-        transform: scale(0.5);
-      }
-      50% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-        transform: scale(1);
       }
     }
 
@@ -488,7 +465,6 @@
 
     <!-- Play Screen -->
     <div class="screen play-screen">
-      <div class="random-ants-container"></div>
       <div class="timer-container">
         <div class="timer-bar">
           <div class="timer-fill"></div>
@@ -696,35 +672,6 @@
       }, 1000);
     }
 
-    // Show random ant during gameplay
-    function showRandomAnt() {
-      // 35% chance to show an ant
-      if (Math.random() > 0.35) return;
-
-      const container = document.querySelector('.random-ants-container');
-      const antNum = Math.random() > 0.5 ? 1 : 2;
-      const img = document.createElement('img');
-
-      img.src = `assets/word-ninja-ant-${antNum}.png`;
-      img.className = 'random-ant';
-
-      // Random position around the word
-      const randomLeft = Math.random() * 60 - 30; // -30% to 30%
-      const randomTop = Math.random() * 80 + 20; // 20% to 100%
-
-      img.style.left = `calc(50% + ${randomLeft}px)`;
-      img.style.top = `${randomTop}px`;
-
-      if (antNum === 1) {
-        img.style.transform = 'scaleX(-1)';
-      }
-
-      container.appendChild(img);
-
-      // Remove after animation
-      setTimeout(() => img.remove(), 1000);
-    }
-
     // Next word (correct)
     function nextWord() {
       if (!gameState.gameActive) return;
@@ -740,7 +687,6 @@
 
       updateScore();
       updateWord();
-      showRandomAnt();
     }
 
     // Skip word
@@ -759,7 +705,6 @@
       }
 
       updateWord();
-      showRandomAnt();
     }
 
     // End game
