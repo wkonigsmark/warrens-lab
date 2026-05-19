@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SNAP Words - Speed Sight Word Challenge</title>
+  <title>Word Ninja - Speed Sight Word Challenge</title>
   <style>
     * {
       margin: 0;
@@ -13,7 +13,7 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #f5f5f5;
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -23,17 +23,60 @@
 
     .container {
       background: white;
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
       padding: 40px;
       max-width: 900px;
       width: 100%;
     }
 
+    .title-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .banner {
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+      max-height: 120px;
+    }
+
+    @media (max-width: 768px) {
+      .banner {
+        max-height: none;
+      }
+    }
+
+    .random-ant {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      pointer-events: none;
+      animation: antPop 1s ease-out forwards;
+    }
+
+    @keyframes antPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1);
+      }
+    }
+
     h1 {
       text-align: center;
       color: #333;
-      margin-bottom: 10px;
+      margin: 0;
       font-size: 2.5em;
     }
 
@@ -103,7 +146,7 @@
     }
 
     .btn-start {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #4a7c8c;
       color: white;
       padding: 16px 40px;
       border: none;
@@ -117,7 +160,8 @@
 
     .btn-start:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 4px 12px rgba(74, 124, 140, 0.2);
+      background: #3d6a78;
     }
 
     .btn-start:active {
@@ -144,18 +188,18 @@
 
     .timer-fill {
       height: 100%;
-      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      background: #4a7c8c;
       border-radius: 6px;
       transition: background 0.3s ease;
       width: 100%;
     }
 
     .timer-fill.warning {
-      background: linear-gradient(90deg, #f39c12 0%, #e67e22 100%);
+      background: #d4a574;
     }
 
     .timer-fill.danger {
-      background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+      background: #c97a7a;
     }
 
     .timer-text {
@@ -169,17 +213,19 @@
     }
 
     .word {
-      font-size: 5em;
-      font-weight: 700;
-      color: #333;
-      letter-spacing: 2px;
+      font-size: 6.5em;
+      font-weight: 900;
+      color: #1a1a1a;
+      letter-spacing: 1px;
       word-break: break-word;
-      line-height: 1.2;
+      line-height: 1.1;
+      font-family: 'Georgia', 'Garamond', serif;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .score-display {
       font-size: 1.3em;
-      color: #667eea;
+      color: #4a7c8c;
       font-weight: 700;
       margin-bottom: 40px;
     }
@@ -239,20 +285,20 @@
     .final-score {
       font-size: 3.5em;
       font-weight: 700;
-      color: #667eea;
+      color: #4a7c8c;
       margin: 20px 0;
     }
 
     .best-score-info {
-      background: #f0f4ff;
+      background: #f9f9f9;
       padding: 20px;
       border-radius: 10px;
       margin: 20px 0;
-      border-left: 4px solid #667eea;
+      border-left: 4px solid #4a7c8c;
     }
 
     .best-score-info p {
-      color: #666;
+      color: #555;
       font-size: 1.1em;
       margin: 5px 0;
     }
@@ -264,12 +310,78 @@
 
     .best-score-value {
       font-size: 1.8em;
-      color: #667eea;
+      color: #4a7c8c;
       font-weight: 700;
     }
 
+    .add-word-section {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .add-word-section p {
+      color: #666;
+      margin-bottom: 12px;
+      font-size: 0.95em;
+    }
+
+    .btn-add-word {
+      background: #6ba3b3;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn-add-word:hover {
+      background: #5a91a1;
+    }
+
+    .skipped-words-section {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .skipped-words-section h3 {
+      color: #4a7c8c;
+      margin-bottom: 12px;
+      font-size: 1.1em;
+    }
+
+    .skipped-words-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skipped-word-tag {
+      background: #e8e8e8;
+      color: #333;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.95em;
+      font-weight: 500;
+    }
+
+    .no-skipped-words {
+      color: #888;
+      font-style: italic;
+      font-size: 0.95em;
+    }
+
     .btn-play-again {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #4a7c8c;
       color: white;
       padding: 16px 40px;
       border: none;
@@ -277,13 +389,15 @@
       font-size: 1.2em;
       font-weight: 700;
       cursor: pointer;
-      margin-top: 30px;
+      margin-top: 40px;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      width: 100%;
     }
 
     .btn-play-again:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 4px 12px rgba(74, 124, 140, 0.2);
+      background: #3d6a78;
     }
 
     /* Responsive */
@@ -297,7 +411,7 @@
       }
 
       .word {
-        font-size: 3.5em;
+        font-size: 4em;
       }
 
       .proctor-controls {
@@ -338,7 +452,9 @@
 </head>
 <body>
   <div class="container">
-    <h1>⚡ SNAP Words</h1>
+    <div class="title-section">
+      <img src="assets/banner-word-ninja.png" alt="Word Ninja" class="banner">
+    </div>
     <p class="subtitle">Speed Sight Word Challenge</p>
 
     <!-- Setup Screen -->
@@ -372,6 +488,7 @@
 
     <!-- Play Screen -->
     <div class="screen play-screen">
+      <div class="random-ants-container"></div>
       <div class="timer-container">
         <div class="timer-bar">
           <div class="timer-fill"></div>
@@ -406,6 +523,16 @@
         <p class="best-score-value">-</p>
       </div>
 
+      <div class="add-word-section">
+        <p>Did the student read one more word correctly?</p>
+        <button class="btn-add-word">+1 Word</button>
+      </div>
+
+      <div class="skipped-words-section" style="display: none;">
+        <h3>Words to Review (Skipped):</h3>
+        <div class="skipped-words-list"></div>
+      </div>
+
       <button class="btn-play-again">Play Again</button>
     </div>
   </div>
@@ -422,19 +549,20 @@
       wordList: [],
       currentWordIndex: 0,
       timerInterval: null,
-      lexiconLoaded: false
+      lexiconLoaded: false,
+      skippedWords: [],
+      addWordUsed: false
     };
 
-    // Fallback word lists (Dolch/Fry sight words by grade)
+    // Fallback word lists (Dolch sight words by grade)
     const fallbackWords = {
-      preK: ['the', 'a', 'and', 'to', 'in', 'is', 'it', 'you', 'of', 'we', 'can', 'her', 'what', 'so', 'up', 'do', 'go', 'no', 'us', 'am'],
-      K: ['the', 'be', 'and', 'a', 'to', 'of', 'I', 'in', 'you', 'it', 'not', 'or', 'is', 'was', 'for', 'on', 'are', 'as', 'with', 'his'],
-      1: ['the', 'be', 'and', 'to', 'of', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at'],
-      2: ['the', 'be', 'and', 'of', 'to', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'or', 'had', 'they', 'can', 'will'],
-      3: ['the', 'be', 'and', 'of', 'to', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'or', 'had', 'they', 'can', 'will', 'one', 'all', 'would', 'there', 'their', 'what', 'which', 'when', 'who', 'been', 'has', 'had', 'were', 'said', 'each', 'about', 'other', 'out', 'made', 'more', 'work', 'first', 'after', 'back', 'little', 'only', 'new', 'number', 'way', 'could', 'people', 'than', 'then', 'them', 'these', 'think', 'where', 'how', 'its', 'our', 'see', 'time', 'such', 'take', 'very', 'just', 'know', 'good', 'day', 'even', 'how'],
-      4: ['the', 'be', 'and', 'of', 'to', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'or', 'had', 'they', 'can', 'will', 'one', 'all', 'would', 'there', 'their', 'what', 'which', 'when', 'who', 'been', 'has', 'had', 'were', 'said', 'each', 'about', 'other', 'out', 'made', 'more', 'work', 'first', 'after', 'back', 'little', 'only', 'new', 'number', 'way', 'could', 'people', 'than', 'then', 'them', 'these', 'think', 'where', 'how', 'its', 'our', 'see', 'time', 'such', 'take', 'very', 'just', 'know', 'good', 'day', 'even', 'should', 'get', 'any', 'come', 'right', 'may', 'down', 'use', 'also', 'through', 'want', 'need', 'tell', 'like', 'show', 'again', 'must', 'same', 'under', 'both', 'water', 'find', 'leave', 'still', 'mean', 'turn'],
-      '5+': ['the', 'be', 'and', 'of', 'to', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'or', 'had', 'they', 'can', 'will', 'one', 'all', 'would', 'there', 'their', 'what', 'which', 'when', 'who', 'been', 'has', 'had', 'were', 'said', 'each', 'about', 'other', 'out', 'made', 'more', 'work', 'first', 'after', 'back', 'little', 'only', 'new', 'number', 'way', 'could', 'people', 'than', 'then', 'them', 'these', 'think', 'where', 'how', 'its', 'our', 'see', 'time', 'such', 'take', 'very', 'just', 'know', 'good', 'day', 'even', 'should', 'get', 'any', 'come', 'right', 'may', 'down', 'use', 'also', 'through', 'want', 'need', 'tell', 'like', 'show', 'again', 'must', 'same', 'under', 'both', 'water', 'find', 'leave', 'still', 'mean', 'turn', 'give', 'great', 'high', 'live', 'move', 'open', 'place', 'said', 'same', 'seem', 'sound', 'tell', 'than', 'thank', 'their', 'them', 'there', 'these', 'they', 'thing', 'think', 'this', 'those', 'through', 'time', 'turn', 'under', 'until', 'upon', 'very', 'want', 'watch', 'water', 'well', 'were', 'what', 'which', 'while', 'who', 'will', 'wish', 'with', 'word', 'world', 'would', 'write', 'year', 'yellow', 'yes', 'you', 'young', 'your'],
-      Adult: ['the', 'be', 'and', 'of', 'to', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'or', 'had', 'they', 'can', 'will', 'one', 'all', 'would', 'there', 'their', 'what', 'which', 'when', 'who', 'been', 'has', 'had', 'were', 'said', 'each', 'about', 'other', 'out', 'made', 'more', 'work', 'first', 'after', 'back', 'little', 'only', 'new', 'number', 'way', 'could', 'people', 'than', 'then', 'them', 'these', 'think', 'where', 'how', 'its', 'our', 'see', 'time', 'such', 'take', 'very', 'just', 'know', 'good', 'day', 'even', 'should', 'get', 'any', 'come', 'right', 'may', 'down', 'use', 'also', 'through', 'want', 'need', 'tell', 'like', 'show', 'again', 'must', 'same', 'under', 'both', 'water', 'find', 'leave', 'still', 'mean', 'turn', 'give', 'great', 'high', 'live', 'move', 'open', 'place', 'seem', 'sound', 'thank', 'thing', 'those', 'watch', 'well', 'wish', 'word', 'world', 'write', 'year', 'young', 'abstruse', 'abstract', 'accentuate', 'accomplish', 'acknowledge', 'acquiesce', 'aesthetic', 'affable', 'aggregation', 'agilely', 'alternative', 'ambiguous', 'ameliorate', 'amiable', 'amicable', 'amorphous', 'anachronism', 'analogous', 'anarchy', 'analytical', 'ancestor', 'ancillary', 'anecdotal', 'animosity', 'annotate', 'anomalous', 'anonymous', 'antagonize', 'antecedent', 'antediluvian', 'antipathy', 'antiquated', 'anxiety', 'apathetic', 'apex', 'apologetic', 'apostle', 'appalling', 'apparel', 'apparent', 'appease', 'appellate', 'append', 'applaud', 'appreciate', 'apprehend', 'apprehensive', 'apprentice', 'apprise', 'approach', 'appropriate', 'approbation', 'approximate', 'apriori', 'apropos', 'aptitude', 'arbitrary', 'arboreal', 'ardent', 'arduous', 'arena', 'argon', 'argonaut', 'arguable', 'argument', 'arid', 'aristocrat', 'arithmetic', 'armada', 'arsenal', 'artemis', 'artful', 'article', 'articulate', 'artifice', 'artificial', 'artisan', 'artistic', 'artless', 'aryan', 'asbestos', 'ascend', 'ascendant', 'ascension', 'ascent', 'ascertain', 'ascetic', 'ascribe', 'aseptic', 'ashen', 'ashy', 'asinine', 'askance', 'askew', 'asocial', 'aspect', 'aspen', 'asperity', 'aspersion', 'asphalt', 'asphodel', 'asphyxiate', 'aspic', 'aspire', 'aspiring', 'asquint', 'ass', 'assay', 'assemblage', 'assemble', 'assembly', 'assent', 'assert', 'assertion', 'assess', 'assessment', 'asset', 'asseverate', 'assiduity', 'assiduous', 'assign', 'assignation', 'assignee', 'assigner', 'assignment', 'assimilate', 'assimilation', 'assist', 'assistance', 'assistant', 'assize', 'associate', 'association', 'assonance', 'assort', 'assorted', 'assortment', 'assuage', 'assume', 'assumption', 'assurance', 'assure', 'assured', 'astern', 'asterisk', 'asteroid', 'asthma', 'astigmatism', 'astir', 'astonish', 'astonishment', 'astound', 'astraddle', 'astrakhan', 'astral', 'astray', 'astrict', 'astriction', 'astride', 'astringency', 'astringent', 'astrolabe', 'astrologer', 'astrology', 'astronomer', 'astronomy', 'astrophysics', 'astute', 'asunder', 'asylum', 'asymmetry', 'asymptomatic', 'at', 'atavism', 'atavistic', 'ate', 'atelier', 'atheism', 'atheist', 'atheistic']
+      preK: ['a', 'an', 'am', 'as', 'at', 'be', 'by', 'do', 'go', 'he', 'I', 'in', 'is', 'it', 'me', 'my', 'no', 'of', 'on', 'or', 'so', 'to', 'up', 'us', 'we', 'and', 'can', 'for', 'not', 'the', 'you'],
+      K: ['a', 'an', 'am', 'and', 'as', 'at', 'be', 'but', 'by', 'can', 'come', 'did', 'do', 'for', 'get', 'go', 'had', 'has', 'have', 'he', 'her', 'him', 'his', 'how', 'I', 'if', 'in', 'is', 'it', 'its', 'like', 'me', 'my', 'no', 'not', 'of', 'on', 'or', 'she', 'so', 'the', 'to', 'up', 'us', 'was', 'we', 'what', 'yes', 'you'],
+      1: ['a', 'about', 'all', 'am', 'an', 'and', 'any', 'are', 'as', 'at', 'be', 'been', 'but', 'by', 'can', 'come', 'could', 'did', 'do', 'does', 'done', 'down', 'each', 'for', 'from', 'get', 'go', 'good', 'got', 'had', 'has', 'have', 'he', 'help', 'her', 'him', 'his', 'how', 'I', 'if', 'in', 'is', 'it', 'its', 'just', 'know', 'let', 'like', 'little', 'long', 'made', 'make', 'many', 'may', 'me', 'more', 'my', 'new', 'no', 'not', 'now', 'of', 'old', 'on', 'one', 'or', 'other', 'out', 'over', 'said', 'see', 'she', 'so', 'some', 'take', 'the', 'their', 'them', 'then', 'there', 'these', 'they', 'think', 'this', 'those', 'to', 'too', 'up', 'us', 'use', 'very', 'was', 'we', 'well', 'went', 'were', 'what', 'when', 'where', 'which', 'who', 'will', 'with', 'work', 'would', 'yes', 'you', 'your'],
+      2: ['after', 'again', 'all', 'always', 'am', 'an', 'and', 'another', 'any', 'are', 'as', 'ask', 'at', 'be', 'because', 'been', 'before', 'best', 'between', 'big', 'both', 'but', 'by', 'call', 'came', 'can', 'come', 'could', 'day', 'did', 'different', 'do', 'does', 'done', 'down', 'each', 'even', 'every', 'find', 'first', 'for', 'found', 'from', 'funny', 'gave', 'get', 'give', 'go', 'good', 'got', 'great', 'had', 'has', 'have', 'he', 'help', 'her', 'here', 'him', 'his', 'how', 'I', 'if', 'in', 'is', 'it', 'its', 'just', 'know', 'last', 'let', 'like', 'little', 'live', 'long', 'look', 'made', 'make', 'many', 'may', 'me', 'more', 'most', 'moved', 'much', 'must', 'my', 'never', 'new', 'next', 'no', 'not', 'now', 'of', 'old', 'on', 'one', 'only', 'or', 'other', 'our', 'out', 'over', 'own', 'put', 'right', 'said', 'same', 'saw', 'see', 'seem', 'she', 'should', 'show', 'so', 'some', 'soon', 'started', 'still', 'such', 'take', 'tell', 'than', 'thank', 'that', 'the', 'their', 'them', 'then', 'there', 'these', 'they', 'think', 'this', 'those', 'through', 'to', 'too', 'tried', 'try', 'two', 'under', 'up', 'us', 'use', 'very', 'want', 'was', 'we', 'well', 'went', 'were', 'what', 'when', 'where', 'which', 'while', 'who', 'why', 'will', 'with', 'word', 'work', 'would', 'yes', 'you', 'your'],
+      3: ['about', 'above', 'after', 'again', 'against', 'all', 'almost', 'always', 'am', 'among', 'an', 'and', 'animal', 'another', 'any', 'anything', 'anywhere', 'are', 'around', 'as', 'ask', 'at', 'away', 'back', 'be', 'because', 'been', 'before', 'best', 'better', 'between', 'big', 'bird', 'black', 'blue', 'body', 'book', 'both', 'box', 'boy', 'bring', 'brought', 'brown', 'build', 'but', 'by', 'call', 'came', 'can', 'cannot', 'car', 'carry', 'cat', 'caught', 'cause', 'change', 'children', 'city', 'come', 'could', 'country', 'cut', 'day', 'did', 'didn', 'different', 'do', 'does', 'done', 'don', 'door', 'down', 'down', 'each', 'early', 'eat', 'even', 'every', 'everything', 'eye', 'face', 'fact', 'family', 'far', 'farm', 'fast', 'father', 'fear', 'feel', 'feet', 'fell', 'felt', 'few', 'field', 'find', 'fine', 'fire', 'first', 'fish', 'five', 'fly', 'food', 'foot', 'for', 'found', 'four', 'free', 'friend', 'from', 'front', 'full', 'funny', 'gave', 'get', 'girl', 'give', 'given', 'go', 'god', 'going', 'gold', 'good', 'got', 'grass', 'great', 'green', 'ground', 'group', 'grow', 'growing', 'had', 'hair', 'half', 'hand', 'happen', 'happy', 'hard', 'has', 'have', 'having', 'he', 'head', 'heard', 'heart', 'heavy', 'help', 'her', 'here', 'herself', 'high', 'him', 'himself', 'his', 'hold', 'home', 'hot', 'house', 'how', 'however', 'I', 'idea', 'if', 'important', 'in', 'inside', 'is', 'it', 'its', 'itself', 'job', 'just', 'keep', 'kept', 'kind', 'king', 'knew', 'know', 'known', 'land', 'large', 'last', 'late', 'law', 'lay', 'learn', 'least', 'leave', 'left', 'leg', 'less', 'let', 'life', 'light', 'like', 'likely', 'line', 'list', 'little', 'live', 'lived', 'living', 'long', 'look', 'looked', 'lord', 'lost', 'lot', 'love', 'low', 'made', 'main', 'make', 'making', 'man', 'many', 'may', 'maybe', 'me', 'mean', 'meant', 'men', 'middle', 'might', 'mile', 'mind', 'minute', 'miss', 'missing', 'moment', 'money', 'moon', 'more', 'morning', 'most', 'mother', 'mountain', 'move', 'moved', 'movement', 'movie', 'much', 'must', 'my', 'myself', 'mystery', 'name', 'natural', 'nature', 'near', 'nearly', 'neck', 'need', 'never', 'new', 'news', 'next', 'night', 'no', 'nobody', 'noise', 'none', 'normal', 'north', 'nose', 'not', 'nothing', 'notice', 'now', 'number', 'of', 'off', 'offer', 'officer', 'often', 'old', 'on', 'once', 'one', 'only', 'open', 'opened', 'opening', 'or', 'order', 'other', 'our', 'out', 'outside', 'over', 'own', 'page', 'pain', 'paint', 'pair', 'paper', 'parent', 'part', 'party', 'passed', 'passing', 'past', 'path', 'patient', 'pattern', 'peace', 'people', 'perhaps', 'period', 'person', 'picked', 'picture', 'piece', 'pig', 'place', 'plain', 'plan', 'plane', 'plant', 'play', 'played', 'player', 'playing', 'please', 'pleased', 'point', 'police', 'political', 'pool', 'popular', 'position', 'possible', 'power', 'practice', 'pray', 'prayer', 'prepare', 'present', 'pretty', 'price', 'pride', 'priest', 'prince', 'principal', 'principle', 'prison', 'private', 'probably', 'problem', 'process', 'produce', 'product', 'program', 'project', 'promise', 'proof', 'proper', 'property', 'protect', 'protection', 'proud', 'prove', 'provided', 'pull', 'pulled', 'pulling', 'purpose', 'push', 'put', 'queen', 'question', 'quick', 'quiet', 'quite', 'race', 'raise', 'raised', 'range', 'rate', 'rather', 'reached', 'read', 'ready', 'real', 'really', 'reason', 'receive', 'recent', 'record', 'red', 'remain', 'remained', 'remember', 'remind', 'remove', 'reply', 'report', 'represent', 'representative', 'request', 'require', 'required', 'resource', 'respect', 'rest', 'result', 'return', 'returned', 'reveal', 'review', 'rice', 'rich', 'ride', 'ring', 'rise', 'risen', 'river', 'road', 'rock', 'role', 'roman', 'room', 'rose', 'rule', 'ruled', 'run', 'running', 'safe', 'said', 'sail', 'sake', 'sale', 'salt', 'same', 'sat', 'save', 'saved', 'saw', 'say', 'saying', 'says', 'scene', 'school', 'science', 'score', 'search', 'season', 'seat', 'second', 'secret', 'see', 'seeing', 'seek', 'seem', 'seemed', 'seen', 'self', 'sell', 'send', 'sent', 'sense', 'sent', 'sentence', 'separate', 'september', 'series', 'serious', 'service', 'set', 'setting', 'settle', 'settled', 'settled', 'seven', 'several', 'shall', 'shape', 'share', 'sharp', 'she', 'sheep', 'shell', 'shift', 'shine', 'shining', 'ship', 'shock', 'shoe', 'shoot', 'shop', 'shore', 'short', 'shot', 'should', 'shoulder', 'shout', 'show', 'showed', 'shown', 'shut', 'sick', 'side', 'sigh', 'sight', 'sign', 'signed', 'silence', 'silent', 'silk', 'silver', 'similar', 'simple', 'simply', 'since', 'sing', 'singer', 'singing', 'single', 'sink', 'sir', 'sister', 'sit', 'site', 'sitting', 'situation', 'six', 'size', 'skill', 'skin', 'sky', 'sleep', 'slept', 'slight', 'slow', 'small', 'smile', 'smith', 'smoke', 'smooth', 'snow', 'so', 'social', 'soft', 'soil', 'soldier', 'sole', 'solid', 'solution', 'solve', 'some', 'somebody', 'somehow', 'someone', 'something', 'sometimes', 'somewhere', 'son', 'song', 'soon', 'sorry', 'sort', 'soul', 'sound', 'source', 'south', 'southern', 'space', 'spare', 'speak', 'special', 'speech', 'speed', 'spell', 'spend', 'spent', 'spoke', 'spoken', 'sport', 'spread', 'spring', 'square', 'stable', 'staff', 'stage', 'stair', 'stand', 'standing', 'star', 'start', 'started', 'state', 'stated', 'statement', 'station', 'status', 'stay', 'stayed', 'steady', 'steak', 'steel', 'step', 'stepped', 'stick', 'still', 'stock', 'stone', 'stood', 'stop', 'stopped', 'storage', 'store', 'stored', 'storm', 'story', 'straight', 'strange', 'strategy', 'stream', 'street', 'strength', 'stress', 'stretch', 'strict', 'strike', 'string', 'strip', 'stroke', 'strong', 'structure', 'struggle', 'student', 'study', 'stuff', 'style', 'subject', 'submit', 'subscribe', 'substance', 'success', 'such', 'sudden', 'suffer', 'suffering', 'sufficient', 'sugar', 'suggest', 'suit', 'suit', 'suitable', 'summer', 'sun', 'sunday', 'super', 'supply', 'support', 'suppose', 'supposed', 'sure', 'surface', 'surge', 'surprise', 'surprised', 'surrender', 'surround', 'surrounded', 'survey', 'survival', 'survive', 'suspect', 'suspend', 'suspicion', 'swear', 'sweat', 'sweep', 'sweet', 'swift', 'swim', 'switch', 'symbol', 'sympathy', 'symptom', 'system', 'table', 'tackle', 'tail', 'take', 'taken', 'tale', 'talk', 'talked', 'talking', 'tall', 'tank', 'task', 'taste', 'tax', 'teach', 'teacher', 'teaching', 'team', 'tear', 'technique', 'technology', 'teen', 'telephone', 'television', 'tell', 'telling', 'temple', 'temporary', 'tempt', 'tenant', 'tend', 'tender', 'tension', 'tent', 'term', 'test', 'text', 'thank', 'thanks', 'thanksgiving', 'that', 'the', 'theater', 'their', 'them', 'theme', 'themselves', 'then', 'theory', 'there', 'therefore', 'these', 'they', 'thick', 'thin', 'thing', 'think', 'thinking', 'third', 'thirst', 'thirsty', 'thirteen', 'thirty', 'this', 'thorn', 'those', 'though', 'thought', 'thousand', 'thread', 'threat', 'three', 'threw', 'throw', 'thrown', 'thrust', 'thumb', 'thunder', 'thursday', 'thus', 'ticket', 'tide', 'tidy', 'tie', 'tiger', 'tight', 'till', 'timber', 'time', 'timing', 'tip', 'tired', 'tissue', 'title', 'to', 'today', 'together', 'toilet', 'told', 'tolerance', 'tolerate', 'tomorrow', 'tone', 'tongue', 'tonight', 'took', 'tool', 'tooth', 'top', 'topic', 'torch', 'total', 'touch', 'touched', 'tough', 'tour', 'tournament', 'toward', 'towards', 'tower', 'town', 'trace', 'track', 'trade', 'trading', 'tradition', 'traditional', 'traffic', 'tragedy', 'tragic', 'trail', 'train', 'training', 'transfer', 'transform', 'transition', 'translate', 'translation', 'transmission', 'transport', 'trap', 'trash', 'travel', 'traverse', 'tray', 'treasure', 'treat', 'treatment', 'treaty', 'tree', 'trend', 'trial', 'triangle', 'tribe', 'tribute', 'trick', 'tried', 'tries', 'trigger', 'trillion', 'trim', 'trip', 'troop', 'tropical', 'trouble', 'troubled', 'truck', 'true', 'truly', 'trump', 'trumpet', 'trunk', 'trust', 'truth', 'try', 'trying', 'tub', 'tube', 'tuesday', 'tumble', 'tune', 'tunnel', 'turn', 'turned', 'turning', 'turtle', 'tutor', 'twelve', 'twentieth', 'twenty', 'twice', 'twin', 'twist', 'two', 'type', 'typical', 'typically', 'ugly', 'ultimately', 'unable', 'uncle', 'under', 'undergo', 'underground', 'understand', 'understanding', 'undertake', 'unemployment', 'unexpected', 'unfair', 'unfortunate', 'unfortunately', 'unhappy', 'uniform', 'union', 'unique', 'unit', 'unite', 'united', 'unity', 'universal', 'universe', 'university', 'unknown', 'unless', 'unlike', 'unlikely', 'unlikely', 'unlock', 'unnecessary', 'unpack', 'unprecedented', 'unpredictable', 'unrest', 'unsafe', 'unsure', 'until', 'unusual', 'unwilling', 'up', 'upon', 'upper', 'upset', 'upstairs', 'urban', 'urge', 'urgent', 'usage', 'use', 'used', 'useful', 'user', 'usual', 'usually', 'utility', 'vacation', 'vague', 'valid', 'valley', 'value', 'valued', 'valve', 'van', 'vanish', 'variable', 'variation', 'varied', 'various', 'vary', 'vast', 'vegetable', 'vegetation', 'vehicle', 'venture', 'venue', 'verb', 'verbal', 'verdict', 'verify', 'verse', 'version', 'very', 'vessel', 'veteran', 'vice', 'victim', 'victory', 'video', 'view', 'viewing', 'village', 'villain', 'vine', 'violence', 'violent', 'violin', 'viral', 'virgin', 'virtual', 'virtually', 'virtue', 'virus', 'visible', 'vision', 'visit', 'visited', 'visitor', 'visual', 'vital', 'vocabulary', 'vocal', 'voice', 'volcanic', 'volume', 'volunteer', 'vote', 'voted', 'voter', 'voting', 'voyage', 'wage', 'wagon', 'wait', 'waited', 'waiting', 'wake', 'walk', 'walked', 'walking', 'wall', 'wander', 'wanted', 'wanting', 'war', 'ward', 'warehouse', 'warfare', 'warm', 'warming', 'warning', 'warrant', 'wash', 'washed', 'washing', 'waste', 'watch', 'watched', 'watching', 'water', 'wave', 'way', 'wealth', 'wealthy', 'weapon', 'wear', 'wearing', 'weather', 'website', 'wedding', 'wednesday', 'weed', 'week', 'weekend', 'weekly', 'weigh', 'weight', 'welcome', 'welcomed', 'welfare', 'well', 'went', 'were', 'west', 'western', 'wet', 'whale', 'what', 'whatever', 'wheat', 'wheel', 'when', 'whenever', 'where', 'wherever', 'whether', 'which', 'while', 'white', 'who', 'whoever', 'whole', 'whom', 'whose', 'why', 'wicked', 'wide', 'widely', 'width', 'wife', 'wild', 'will', 'willing', 'willingness', 'win', 'window', 'wine', 'wing', 'winter', 'wisdom', 'wise', 'wish', 'wished', 'witch', 'with', 'withdraw', 'withdrawal', 'within', 'without', 'witness', 'wolf', 'woman', 'wonder', 'wonderful', 'wondering', 'wood', 'wooden', 'wool', 'word', 'wording', 'work', 'worked', 'worker', 'working', 'world', 'worried', 'worry', 'worse', 'worship', 'worst', 'worth', 'worthwhile', 'worthy', 'would', 'wound', 'wrap', 'wrapped', 'wrath', 'wreath', 'wreck', 'wrench', 'wrist', 'wrist', 'write', 'writer', 'writing', 'written', 'wrong', 'yacht', 'yard', 'yarn', 'year', 'yellow', 'yes', 'yesterday', 'yet', 'yield', 'young', 'younger', 'youngster', 'your', 'yourself', 'yourselves', 'youth', 'zone'],
+      '5+': ['a', 'ability', 'able', 'about', 'above', 'absence', 'absolute', 'absolutely', 'absorb', 'absorption', 'abuse', 'academic', 'academy', 'accent', 'acceptable', 'acceptance', 'access', 'accident', 'accidental', 'according', 'account', 'accountability', 'accountant', 'accounting', 'accumulate', 'accumulation', 'accuracy', 'accurate', 'accurately', 'accuse', 'accused', 'accuser', 'accusing', 'ace', 'achieve', 'achievement', 'acid', 'acknowledge', 'acknowledgment', 'acne', 'acquire', 'acquisition', 'acre', 'acrobat', 'across', 'act', 'acting', 'action', 'activate', 'activation', 'active', 'actively', 'activity', 'actor', 'actress', 'actual', 'actually', 'acute', 'adapt', 'adaptation', 'adapter', 'add', 'added', 'addition', 'additional', 'additionally', 'additive', 'address', 'addressed', 'addressing', 'adequate', 'adequately', 'adhesive', 'adjacent', 'adjective', 'adjust', 'adjustment', 'administer', 'administration', 'administrative', 'administrator', 'admiration', 'admire', 'admirer', 'admission', 'admit', 'admitted', 'admittedly', 'adolescence', 'adolescent', 'adopt', 'adopted', 'adoption', 'adore', 'adorable', 'adorn', 'adult', 'advance', 'advanced', 'advancement', 'advantage', 'advantageous', 'adventure', 'adventurer', 'adverb', 'adverse', 'adversity', 'advertise', 'advertisement', 'advertising', 'advice', 'advisable', 'advise', 'advised', 'adviser', 'advisor', 'advocate', 'advocacy', 'aerial', 'aerobic', 'aeronautics', 'aerosol', 'affair', 'affect', 'affectation', 'affected', 'affection', 'affectionate', 'affectionately', 'affidavit', 'affiliate', 'affiliation', 'affinity', 'affirm', 'affirmation', 'affirmative', 'affix', 'afflict', 'affliction', 'affluence', 'affluent', 'afford', 'affordable', 'affront', 'afraid', 'africa', 'african', 'after', 'afternoon', 'afterward', 'afterwards', 'again', 'against', 'age', 'aged', 'agency', 'agenda', 'agent', 'aggravate', 'aggravation', 'aggregate', 'aggregation', 'aggression', 'aggressive', 'aggressively', 'aggressor', 'agile', 'agility', 'aging', 'agitate', 'agitation', 'ago', 'agony', 'agree', 'agreeable', 'agreed', 'agreement', 'agriculture', 'agricultural', 'agriculturist', 'ahead', 'aid', 'aide', 'ail', 'ailment', 'aim', 'aimless', 'air', 'aircraft', 'airfare', 'airfield', 'airline', 'airliner', 'airmail', 'airman', 'airplane', 'airport', 'airship', 'airtight', 'aisle', 'ajar', 'akin', 'alarm', 'alarming', 'alas', 'album', 'alcohol', 'alcoholic', 'alcoholism', 'alcove', 'alderman', 'alert', 'alias', 'alibi', 'alien', 'alienate', 'alienation', 'alight', 'align', 'alignment', 'alike', 'alimony', 'alive', 'alkali', 'all', 'allege', 'alleged', 'allegedly', 'allegiance', 'allegorical', 'allegory', 'allergy', 'alley', 'alliance', 'allied', 'allies', 'alligator', 'allocate', 'allocation', 'allot', 'allotment', 'allotted', 'allow', 'allowable', 'allowance', 'allowed', 'alloy', 'allude', 'allusion', 'alluring', 'allure', 'ally', 'almanac', 'almighty', 'almond', 'almost', 'alms', 'almshouse', 'aloft', 'alone', 'along', 'alongside', 'aloof', 'aloud', 'alphabet', 'alphabetical', 'alphabetically', 'already', 'also', 'altar', 'alter', 'alteration', 'alternate', 'alternating', 'alternation', 'alternative', 'alternatively', 'although', 'altitude', 'alto', 'altogether', 'altruism', 'altruistic', 'aluminum', 'alumnus', 'always', 'amalgam', 'amalgamate', 'amalgamation', 'amass', 'amateur', 'amateurish', 'amaze', 'amazement', 'amazing', 'amazingly', 'amazon', 'ambassador', 'amber', 'ambiance', 'ambidextrous', 'ambiguity', 'ambiguous', 'ambiguously', 'ambition', 'ambitious', 'ambitiously', 'ambivalence', 'ambivalent', 'amble', 'ambulance', 'ambulatory', 'ambush', 'amenable', 'amend', 'amendment', 'amends', 'amenity', 'america', 'american', 'americanism', 'americanize', 'amethyst', 'amiability', 'amiable', 'amiably', 'amicable', 'amicably', 'amid', 'amidst', 'amigo', 'amiss', 'amity', 'ammonia', 'ammunition', 'amnesia', 'amnesty', 'amoeba', 'amok', 'among', 'amongst', 'amorous', 'amorously', 'amorphous', 'amount', 'ampere', 'amphibian', 'amphibious', 'amphitheater', 'ample', 'amply', 'amplify', 'amplitude', 'amputate', 'amputation', 'amulet', 'amuse', 'amusement', 'amusing', 'amusingly', 'an', 'anachronism', 'anachronistic', 'anaconda', 'anemia', 'anemic', 'anesthesia', 'anesthetic', 'anesthetist', 'anesthetize', 'anew', 'angel', 'angelic', 'angelica', 'angelically', 'angels', 'anger', 'angered', 'angina', 'angle', 'angler', 'anglican', 'anglicanism', 'anglicize', 'angrily', 'angry', 'angst', 'anguish', 'angular', 'angularity', 'aniline', 'animal', 'animate', 'animated', 'animation', 'animator', 'animosity', 'anise', 'aniseed', 'anisette', 'ankle', 'anklet', 'annal', 'annalist', 'annals', 'anneal', 'annex', 'annexation', 'annexe', 'annihilate', 'annihilation', 'anniversary', 'annotate', 'annotation', 'annotator', 'announce', 'announcement', 'announcer', 'annoy', 'annoyance', 'annoyed', 'annoying', 'annoyingly', 'annual', 'annually', 'annuity', 'annul', 'annullment', 'annulled', 'annulate', 'anode', 'anodize', 'anodyne', 'anoint', 'anomalous', 'anomalously', 'anomaly', 'anon', 'anonymity', 'anonymous', 'anonymously', 'anorak', 'another', 'answer', 'answerable', 'answered', 'answering', 'ant', 'antacid', 'antagonism', 'antagonist', 'antagonistic', 'antagonistically', 'antagonize', 'antagonized', 'antarctic', 'antarctica', 'ante', 'antebellum', 'antecedence', 'antecedent', 'antechamber', 'antecedents', 'antedate', 'antediluvian', 'antelope', 'antenatal', 'antenna', 'antennae', 'antepenult', 'antepenultimate', 'anterior', 'anteroom', 'anthem', 'anther', 'anthills', 'anthills', 'anthology', 'anthracite', 'anthrax', 'anthropoid', 'anthropological', 'anthropologist', 'anthropology', 'anthropomorphic', 'anthropomorphism', 'anthropomorphize', 'anti', 'antiaircraft', 'antibiotic', 'antibiotics', 'antibody', 'antic', 'antichrist', 'anticipate', 'anticipation', 'anticipatory', 'anticlerical', 'anticlericalism', 'anticlimax', 'anticlimactic', 'anticline', 'anticlockwise', 'anticoagulant', 'anticyclone', 'antidepressant', 'antidote', 'antifascism', 'antifascist', 'antifreeze', 'antigen', 'antigonus', 'antiheroine', 'antihero', 'antihistamine', 'antilepton', 'antilock', 'antilogarithm', 'antimacassar', 'antimask', 'antimatter', 'antimonarchist', 'antimonial', 'antimonic', 'antimonious', 'antimony', 'antineutron', 'antinomy', 'antinovel', 'antinucleon', 'antiparticle', 'antipathetic', 'antipathetic', 'antipathetical', 'antipathetically', 'antipathy', 'antiperspirant', 'antiphlogistic', 'antiphon', 'antiphonal', 'antiphonally', 'antiphonary', 'antiphonic', 'antiphony', 'antiphrasis', 'antipodal', 'antipodean', 'antipodeans', 'antipodes', 'antipole', 'antipope', 'antiporcine', 'antiporn', 'antipornographic', 'antipornography', 'antiproton', 'antipsychotic', 'antipyretic', 'antipyrine', 'antiquarian', 'antiquarianism', 'antiquaries', 'antiquarks', 'antiquary', 'antiquate', 'antiquated', 'antique', 'antiquely', 'antiqueness', 'antiques', 'antiquing', 'antiquities', 'antiquity', 'antirabies', 'antiracism', 'antiracist', 'antiradiation', 'antiradio', 'antiradicals', 'antirattling', 'antired', 'antireflection', 'antiregulatory', 'antiresonance', 'antiresonant', 'antiresonator', 'antirestriction', 'antirheumatics', 'antirhodopsin', 'antiriot', 'antis', 'antis', 'antirrhinum', 'antiroll', 'antiromantic', 'antiromanticism', 'antiroyalist', 'antirust', 'antisabotage', 'antis', 'antisacred', 'antisalon', 'antisaloon', 'antisaloonist', 'antisanctity', 'antis', 'antisanitary', 'antis', 'antiscience', 'antiscientific', 'antiscientifically', 'antiscientist', 'antiscripture', 'antis', 'antisecrecy', 'antis', 'antisectarian', 'antisectarianism', 'antis', 'antisecular', 'antisecularism', 'antis', 'antisedition', 'antis', 'antis', 'antis', 'antis', 'antisense', 'antisensitive', 'antis', 'antis', 'antisepsis', 'antiseptic', 'antiseptically', 'antiseptics', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antisex', 'antisexual', 'antis', 'antis', 'antis', 'antis', 'antis', 'antishadow', 'antis', 'antis', 'antis', 'antis', 'antiship', 'antis', 'antis', 'antis', 'antishot', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antishrinking', 'antis', 'antis', 'antis', 'antisick', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antisign', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antislave', 'antislavery', 'antis', 'antis', 'antislip', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis', 'antis'],
+      Adult: ['tenacious', 'verbose', 'paradigm', 'zealous', 'eloquent', 'nuanced', 'pragmatic', 'meticulous', 'candid', 'fervent', 'judicious', 'lucid', 'sagacious', 'vivacious', 'mercurial', 'obdurate', 'perspicacious', 'belligerent', 'fastidious', 'gregarious', 'insipid', 'jocular', 'kaleidoscopic', 'loquacious', 'mendacious', 'nebulous', 'obfuscate', 'perspicuity', 'quotidian', 'recalcitrant', 'salacious', 'taciturn', 'ubiquitous', 'vitriolic', 'wistful', 'xenophobic', 'yearning', 'zephyr', 'aberration', 'benevolent', 'clandestine', 'decorous', 'egregious', 'felicitous', 'garrulous', 'hedonistic', 'idiosyncrasy', 'juxtapose', 'kinetic', 'lithe', 'magnanimous', 'nefarious', 'obsequious', 'pellucid', 'qualified', 'ravenous', 'scintillate', 'transient', 'unequivocal', 'vacuous', 'winsome', 'xenial', 'yielding', 'zealotry', 'abscond', 'byzantine', 'cacophony', 'didactic', 'ebullient', 'fecund', 'gaunt', 'heinous', 'irksome', 'jocund', 'kitsch', 'litigious', 'maudlin', 'noxious', 'obnoxious', 'portent', 'quixotic', 'rancorous', 'sanguine', 'treachery', 'unctuous', 'vaunt', 'wrathful', 'yoke', 'auspicious', 'benign', 'callous', 'disdain', 'erudite', 'frenetic', 'guileless', 'harbinger', 'insouciant', 'jargon', 'kinship', 'lament', 'malign', 'nostalgia', 'obtuse', 'placid', 'querulous', 'recant', 'serendipity', 'truncate', 'urbane', 'vestige', 'wallow', 'xeric', 'yonder', 'zenith']
     };
 
     // Load lexicon from JSON file
@@ -470,12 +598,15 @@
       return words;
     }
 
-    // Shuffle array
+    // Shuffle array (Fisher-Yates with extra randomization)
     function shuffle(array) {
       const arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
+      // Do multiple passes for better randomization
+      for (let pass = 0; pass < 2; pass++) {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
       }
       return arr;
     }
@@ -542,6 +673,8 @@
       gameState.timeRemaining = gameState.timeLimit;
       gameState.gameActive = true;
       gameState.currentWordIndex = 0;
+      gameState.skippedWords = [];
+      gameState.addWordUsed = false;
 
       // Get and shuffle word list
       const words = getWordList(gameState.gradeLevel);
@@ -563,6 +696,35 @@
       }, 1000);
     }
 
+    // Show random ant during gameplay
+    function showRandomAnt() {
+      // 35% chance to show an ant
+      if (Math.random() > 0.35) return;
+
+      const container = document.querySelector('.random-ants-container');
+      const antNum = Math.random() > 0.5 ? 1 : 2;
+      const img = document.createElement('img');
+
+      img.src = `assets/word-ninja-ant-${antNum}.png`;
+      img.className = 'random-ant';
+
+      // Random position around the word
+      const randomLeft = Math.random() * 60 - 30; // -30% to 30%
+      const randomTop = Math.random() * 80 + 20; // 20% to 100%
+
+      img.style.left = `calc(50% + ${randomLeft}px)`;
+      img.style.top = `${randomTop}px`;
+
+      if (antNum === 1) {
+        img.style.transform = 'scaleX(-1)';
+      }
+
+      container.appendChild(img);
+
+      // Remove after animation
+      setTimeout(() => img.remove(), 1000);
+    }
+
     // Next word (correct)
     function nextWord() {
       if (!gameState.gameActive) return;
@@ -578,11 +740,15 @@
 
       updateScore();
       updateWord();
+      showRandomAnt();
     }
 
     // Skip word
     function skipWord() {
       if (!gameState.gameActive) return;
+
+      const skippedWord = gameState.wordList[gameState.currentWordIndex];
+      gameState.skippedWords.push(skippedWord);
 
       gameState.currentWordIndex++;
 
@@ -593,6 +759,7 @@
       }
 
       updateWord();
+      showRandomAnt();
     }
 
     // End game
@@ -609,6 +776,23 @@
         bestLabel.textContent = gameState.bestScore + ' 🎉';
       } else {
         bestLabel.textContent = gameState.bestScore;
+      }
+
+      // Display skipped words if any
+      const skippedSection = document.querySelector('.skipped-words-section');
+      if (gameState.skippedWords.length > 0) {
+        const wordsList = document.querySelector('.skipped-words-list');
+        wordsList.innerHTML = '';
+        const uniqueSkipped = [...new Set(gameState.skippedWords)];
+        uniqueSkipped.forEach(word => {
+          const tag = document.createElement('div');
+          tag.className = 'skipped-word-tag';
+          tag.textContent = word;
+          wordsList.appendChild(tag);
+        });
+        skippedSection.style.display = 'block';
+      } else {
+        skippedSection.style.display = 'none';
       }
 
       showScreen('end-screen');
@@ -634,8 +818,41 @@
     document.querySelector('.btn-start').addEventListener('click', startGame);
     document.querySelector('.btn-next').addEventListener('click', nextWord);
     document.querySelector('.btn-skip').addEventListener('click', skipWord);
+
+    document.querySelector('.btn-add-word').addEventListener('click', function() {
+      if (gameState.addWordUsed) return;
+
+      gameState.addWordUsed = true;
+      gameState.currentScore++;
+      document.querySelector('.final-score-value').textContent = gameState.currentScore;
+
+      // Update best score if necessary
+      saveBestScore();
+      let bestLabel = document.querySelector('.best-score-value');
+      if (gameState.bestScore === gameState.currentScore) {
+        bestLabel.textContent = gameState.bestScore + ' 🎉';
+      } else {
+        bestLabel.textContent = gameState.bestScore;
+      }
+
+      // Disable the button after use
+      this.disabled = true;
+      this.style.opacity = '0.5';
+      this.style.cursor = 'not-allowed';
+    });
+
     document.querySelector('.btn-play-again').addEventListener('click', () => {
       showScreen('setup-screen');
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (!gameState.gameActive) return;
+
+      if (e.key === 'Enter' || e.code === 'Space' || e.key === ' ') {
+        e.preventDefault();
+        nextWord();
+      }
     });
 
     // Initialize
