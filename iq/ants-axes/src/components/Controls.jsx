@@ -6,6 +6,7 @@ export default function Controls({ points, onAddPoint, onDrawLine, onClear }) {
   const [y1, setY1] = useState('')
   const [x2, setX2] = useState('')
   const [y2, setY2] = useState('')
+  const [error, setError] = useState('')
 
   const handleDrawLine = () => {
     const x1Val = parseInt(x1)
@@ -15,11 +16,21 @@ export default function Controls({ points, onAddPoint, onDrawLine, onClear }) {
 
     if (!isNaN(x1Val) && !isNaN(y1Val) && !isNaN(x2Val) && !isNaN(y2Val)) {
       onDrawLine(x1Val, y1Val, x2Val, y2Val)
+      setError('')
       // Clear inputs
       setX1('')
       setY1('')
       setX2('')
       setY2('')
+    } else {
+      setError('Check inputs: all fields required (0-10)')
+    }
+  }
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleDrawLine()
     }
   }
 
@@ -43,6 +54,7 @@ export default function Controls({ points, onAddPoint, onDrawLine, onClear }) {
               max="10"
               value={x1}
               onChange={(e) => setX1(e.target.value)}
+              onKeyPress={handleKeyPress}
               placeholder="X"
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -52,6 +64,7 @@ export default function Controls({ points, onAddPoint, onDrawLine, onClear }) {
               max="10"
               value={y1}
               onChange={(e) => setY1(e.target.value)}
+              onKeyPress={handleKeyPress}
               placeholder="Y"
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -68,6 +81,7 @@ export default function Controls({ points, onAddPoint, onDrawLine, onClear }) {
               max="10"
               value={x2}
               onChange={(e) => setX2(e.target.value)}
+              onKeyPress={handleKeyPress}
               placeholder="X"
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
             />
@@ -77,6 +91,7 @@ export default function Controls({ points, onAddPoint, onDrawLine, onClear }) {
               max="10"
               value={y2}
               onChange={(e) => setY2(e.target.value)}
+              onKeyPress={handleKeyPress}
               placeholder="Y"
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
             />
@@ -102,6 +117,17 @@ export default function Controls({ points, onAddPoint, onDrawLine, onClear }) {
           >
             Clear
           </motion.button>
+
+          {/* Error message */}
+          {error && (
+            <motion.div
+              className="bg-red-100 border-l-4 border-red-500 text-red-700 p-3 rounded text-sm"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              {error}
+            </motion.div>
+          )}
         </div>
       </div>
 

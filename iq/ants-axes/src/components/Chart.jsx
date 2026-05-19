@@ -1,11 +1,12 @@
 import { useRef } from 'react'
 import { motion } from 'framer-motion'
 
-const GRID_SIZE = 400
+const GRID_SIZE = 480
 const CELL_SIZE = 40
-const MAX_VALUE = 10
+const MAX_VALUE = 12
+const TOP_PADDING = 25
 
-export default function Chart({ points, onPointClick }) {
+export default function Chart({ points, onPointClick, showCoordinates = true }) {
   const svgRef = useRef(null)
 
   const handleSvgClick = (e) => {
@@ -13,7 +14,7 @@ export default function Chart({ points, onPointClick }) {
 
     const rect = svgRef.current.getBoundingClientRect()
     const x = e.clientX - rect.left - 50 // offset for Y-axis labels
-    const y = e.clientY - rect.top
+    const y = e.clientY - rect.top - TOP_PADDING // offset for top padding
 
     // Convert pixel coords to grid coords
     const gridX = Math.round(x / CELL_SIZE)
@@ -32,9 +33,9 @@ export default function Chart({ points, onPointClick }) {
   // Calculate line coordinates if we have 2 points (flip Y-axis for proper math orientation)
   const lineData = points.length === 2 ? {
     x1: 50 + points[0].x * CELL_SIZE,
-    y1: (MAX_VALUE - points[0].y) * CELL_SIZE,
+    y1: TOP_PADDING + (MAX_VALUE - points[0].y) * CELL_SIZE,
     x2: 50 + points[1].x * CELL_SIZE,
-    y2: (MAX_VALUE - points[1].y) * CELL_SIZE
+    y2: TOP_PADDING + (MAX_VALUE - points[1].y) * CELL_SIZE
   } : null
 
   return (
@@ -45,7 +46,7 @@ export default function Chart({ points, onPointClick }) {
         <svg
           ref={svgRef}
           width={GRID_SIZE + 100}
-          height={GRID_SIZE + 60}
+          height={GRID_SIZE + 85}
           className="border-2 border-gray-300 bg-white rounded"
           onClick={handleSvgClick}
         >
@@ -55,18 +56,18 @@ export default function Chart({ points, onPointClick }) {
               {/* Vertical lines */}
               <line
                 x1={50 + i * CELL_SIZE}
-                y1={0}
+                y1={TOP_PADDING}
                 x2={50 + i * CELL_SIZE}
-                y2={GRID_SIZE}
+                y2={TOP_PADDING + GRID_SIZE}
                 stroke="#e5e7eb"
                 strokeWidth="1"
               />
               {/* Horizontal lines */}
               <line
                 x1={50}
-                y1={i * CELL_SIZE}
+                y1={TOP_PADDING + i * CELL_SIZE}
                 x2={50 + GRID_SIZE}
-                y2={i * CELL_SIZE}
+                y2={TOP_PADDING + i * CELL_SIZE}
                 stroke="#e5e7eb"
                 strokeWidth="1"
               />
@@ -74,8 +75,8 @@ export default function Chart({ points, onPointClick }) {
           ))}
 
           {/* Axes */}
-          <line x1={50} y1={GRID_SIZE} x2={50 + GRID_SIZE} y2={GRID_SIZE} stroke="#000" strokeWidth="2" />
-          <line x1={50} y1={0} x2={50} y2={GRID_SIZE} stroke="#000" strokeWidth="2" />
+          <line x1={50} y1={TOP_PADDING + GRID_SIZE} x2={50 + GRID_SIZE} y2={TOP_PADDING + GRID_SIZE} stroke="#000" strokeWidth="2" />
+          <line x1={50} y1={TOP_PADDING} x2={50} y2={TOP_PADDING + GRID_SIZE} stroke="#000" strokeWidth="2" />
 
           {/* Animated line if we have 2 points */}
           {lineData && (
@@ -97,8 +98,9 @@ export default function Chart({ points, onPointClick }) {
             <text
               key={`y-label-${i}`}
               x="20"
-              y={(MAX_VALUE - i) * CELL_SIZE + 5}
+              y={TOP_PADDING + (MAX_VALUE - i) * CELL_SIZE}
               textAnchor="end"
+              dominantBaseline="middle"
               fontSize="14"
               fill="#666"
               fontWeight="500"
@@ -112,7 +114,7 @@ export default function Chart({ points, onPointClick }) {
             <text
               key={`x-label-${i}`}
               x={50 + i * CELL_SIZE}
-              y={GRID_SIZE + 35}
+              y={TOP_PADDING + GRID_SIZE + 35}
               textAnchor="middle"
               fontSize="14"
               fill="#666"
@@ -132,7 +134,7 @@ export default function Chart({ points, onPointClick }) {
             >
               <circle
                 cx={50 + point.x * CELL_SIZE}
-                cy={(MAX_VALUE - point.y) * CELL_SIZE}
+                cy={TOP_PADDING + (MAX_VALUE - point.y) * CELL_SIZE}
                 r="6"
                 fill="#3b82f6"
                 stroke="#1e40af"
@@ -140,7 +142,7 @@ export default function Chart({ points, onPointClick }) {
               />
               <motion.circle
                 cx={50 + point.x * CELL_SIZE}
-                cy={(MAX_VALUE - point.y) * CELL_SIZE}
+                cy={TOP_PADDING + (MAX_VALUE - point.y) * CELL_SIZE}
                 r="6"
                 fill="none"
                 stroke="#3b82f6"
@@ -154,15 +156,17 @@ export default function Chart({ points, onPointClick }) {
       </div>
 
       {/* Coordinates display */}
-      <div className="text-sm text-gray-600">
-        {points.length === 0 && <p>Click on the grid to add a point</p>}
-        {points.length === 1 && <p>Added point: ({points[0].x}, {points[0].y})</p>}
-        {points.length === 2 && (
-          <p>
-            Points: ({points[0].x}, {points[0].y}) → ({points[1].x}, {points[1].y})
-          </p>
-        )}
-      </div>
+      {showCoordinates && (
+        <div className="text-sm text-gray-600">
+          {points.length === 0 && <p>Click on the grid to add a point</p>}
+          {points.length === 1 && <p>Added point: ({points[0].x}, {points[0].y})</p>}
+          {points.length === 2 && (
+            <p>
+              Points: ({points[0].x}, {points[0].y}) → ({points[1].x}, {points[1].y})
+            </p>
+          )}
+        </div>
+      )}
     </div>
   )
 }
