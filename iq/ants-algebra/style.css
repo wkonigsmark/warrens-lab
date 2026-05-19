@@ -64,6 +64,130 @@
   align-items: center;
 }
 
+/* Mode tabs */
+.mode-tabs {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 10px;
+}
+
+.mode-tab {
+  flex: 1;
+  border: 1px solid #d1d9e6;
+  background: #fff;
+  color: #555;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 8px 6px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.mode-tab:hover:not(.active) {
+  background: #f0f4f8;
+}
+
+.mode-tab.active {
+  background: #1976d2;
+  color: #fff;
+  border-color: #1976d2;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.35);
+}
+
+/* Settings rows (per-mode controls) */
+.settings-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #f0f4f8;
+  padding: 6px 10px;
+  border-radius: 14px;
+  border: 1px solid #d1d9e6;
+  margin-bottom: 12px;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+
+.settings-row .divider {
+  width: 1px;
+  height: 22px;
+  background: #d1d9e6;
+}
+
+.settings-row .label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #555;
+}
+
+.toggle-btn {
+  border: 1px solid #d1d9e6;
+  background: #fff;
+  color: #555;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  min-width: 84px;
+}
+
+.toggle-btn:hover {
+  background: #f0f4f8;
+}
+
+.toggle-btn.active {
+  background: #1976d2;
+  color: #fff;
+  border-color: #1976d2;
+}
+
+.toggle-btn.warn.active {
+  background: #c62828;
+  border-color: #c62828;
+}
+
+.len-btn {
+  border: 1px solid #d1d9e6;
+  background: #fff;
+  color: #555;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.len-btn.active {
+  background: #1976d2;
+  color: #fff;
+  border-color: #1976d2;
+}
+
+/* Make the problem font shrink for longer chain equations */
+.problem-text.compact {
+  font-size: 1.6rem;
+}
+
+.problem-text.tiny {
+  font-size: 1.3rem;
+}
+
+.problem-text .paren {
+  white-space: nowrap;
+}
+
+.problem-text .xvar {
+  color: #1976d2;
+}
+
 /* Operation picker */
 .op-settings {
   display: flex;

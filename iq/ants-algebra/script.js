@@ -16,17 +16,45 @@
       </header>
 
       <main>
-        <div class="op-settings" role="tablist" aria-label="Choose operation">
-          <button id="op-add" class="op-btn active" type="button" title="Addition">+</button>
-          <button id="op-sub" class="op-btn" type="button" title="Subtraction">−</button>
-          <button id="op-mul" class="op-btn" type="button" title="Multiplication">×</button>
-          <button id="op-div" class="op-btn" type="button" title="Division">÷</button>
+        <div class="mode-tabs" role="tablist" aria-label="Choose mode">
+          <button id="mode-solve" class="mode-tab active" type="button">Solve x</button>
+          <button id="mode-chain" class="mode-tab" type="button">Chains</button>
+          <button id="mode-chainx" class="mode-tab" type="button">Chains &amp; X</button>
+        </div>
+
+        <div id="settings-solve" class="settings-row">
+          <span class="label">Op:</span>
+          <div class="op-settings" style="margin:0;">
+            <button id="op-add" class="op-btn active" type="button" title="Addition">+</button>
+            <button id="op-sub" class="op-btn" type="button" title="Subtraction">−</button>
+            <button id="op-mul" class="op-btn" type="button" title="Multiplication">×</button>
+            <button id="op-div" class="op-btn" type="button" title="Division">÷</button>
+          </div>
+        </div>
+
+        <div id="settings-chain" class="settings-row" style="display:none;">
+          <div id="chain-len-group" style="display:flex; align-items:center; gap:6px;">
+            <span class="label">Len:</span>
+            <button class="len-btn active" data-len="3" type="button">3</button>
+            <button class="len-btn" data-len="4" type="button">4</button>
+            <button class="len-btn" data-len="5" type="button">5</button>
+          </div>
+          <span class="divider"></span>
+          <button id="chain-mode-toggle" class="toggle-btn" type="button">Simple</button>
+          <button id="chain-neg-toggle" class="toggle-btn" type="button">Pos only</button>
+        </div>
+
+        <div id="settings-chainx" class="settings-row" style="display:none;">
+          <span class="label">Solve for x</span>
+          <span class="divider"></span>
+          <button id="chainx-mode-toggle" class="toggle-btn" type="button">Simple</button>
+          <button id="chainx-neg-toggle" class="toggle-btn" type="button">Pos only</button>
         </div>
 
         <div class="problem-box">
           <div id="prob-text" class="problem-text">2 + x = 5</div>
           <div class="input-row">
-            <span class="x-label">x =</span>
+            <span id="input-label" class="x-label">x =</span>
             <input id="x-input" class="x-input" type="text" inputmode="none" readonly placeholder="?">
           </div>
         </div>
@@ -60,16 +88,45 @@
       </main>
     `;
 
-    let op = 'add';
-    let curA = 0, curX = 0, curB = 0;
+    // ---- Shared state ----
+    let mode = 'solve'; // 'solve' | 'chain' | 'chainx'
+    let correctAnswer = 0;
     let solved = 0, streak = 0, best = 0;
 
+    // Solve-mode state
+    let op = 'add';
+
+    // Chain-mode state
+    let chainLen = 3;
+    let chainComplex = false;
+    let chainAllowNeg = false;
+
+    // ChainsX-mode state
+    let chainxComplex = false;
+    let chainxAllowNeg = false;
+
+    // ---- Element refs ----
     const probEl = document.getElementById('prob-text');
     const xInput = document.getElementById('x-input');
+    const inputLabel = document.getElementById('input-label');
     const msgEl = document.getElementById('msg');
     const solvedEl = document.getElementById('solved');
     const streakEl = document.getElementById('streak');
     const bestEl = document.getElementById('best');
+
+    function rand(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function setMode(newMode) {
+      mode = newMode;
+      ['solve', 'chain', 'chainx'].forEach(m => {
+        document.getElementById('mode-' + m).classList.toggle('active', m === mode);
+        document.getElementById('settings-' + m).style.display = (m === mode ? 'flex' : 'none');
+      });
+      inputLabel.textContent = (mode === 'chain') ? '=' : 'x =';
+      newProblem();
+    }
 
     function setOp(newOp) {
       op = newOp;
@@ -80,34 +137,188 @@
       newProblem();
     }
 
-    function rand(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
+    function setProbDisplay(html, rawLen) {
+      probEl.classList.remove('compact', 'tiny');
+      if (rawLen > 22) probEl.classList.add('tiny');
+      else if (rawLen > 14) probEl.classList.add('compact');
+      probEl.innerHTML = html;
+    }
+
+    // ---- Solve x ----
+    function newSolveProblem() {
+      let a, x, b, eq;
+      if (op === 'add') {
+        a = rand(1, 12); x = rand(1, 12); b = a + x;
+        eq = `${a} + <span class="xvar">x</span> = ${b}`;
+      } else if (op === 'subtract') {
+        x = rand(1, 10); b = rand(1, 10); a = b + x;
+        eq = `${a} − <span class="xvar">x</span> = ${b}`;
+      } else if (op === 'multiply') {
+        a = rand(2, 6); x = rand(1, 9); b = a * x;
+        eq = `${a}<span class="xvar">x</span> = ${b}`;
+      } else {
+        x = rand(2, 6); b = rand(2, 6); a = b * x;
+        eq = `${a} ÷ <span class="xvar">x</span> = ${b}`;
+      }
+      correctAnswer = x;
+      setProbDisplay(eq, eq.length);
+    }
+
+    // ---- Chains (multi-number calc) ----
+    function newChainProblem() {
+      if (chainComplex) {
+        newComplexChainProblem();
+        return;
+      }
+      let terms = [];
+      let ops = [];
+      let result = rand(1, 10);
+      terms.push(result);
+
+      for (let i = 1; i < chainLen; i++) {
+        const sign = Math.random() > 0.5 ? '+' : '−';
+        let term = rand(1, 6);
+        if (sign === '−') {
+          if (!chainAllowNeg && term >= result) {
+            term = Math.max(1, Math.floor(result / 2));
+          }
+          result -= term;
+        } else {
+          result += term;
+        }
+        ops.push(sign);
+        terms.push(term);
+      }
+
+      let raw = '';
+      for (let i = 0; i < terms.length; i++) {
+        raw += terms[i];
+        if (i < ops.length) raw += ` ${ops[i]} `;
+      }
+      correctAnswer = result;
+      setProbDisplay(raw + ' =', raw.length + 2);
+    }
+
+    function newComplexChainProblem() {
+      // Form: a op1 (b op2 c)
+      const outerOps = ['+', '−'];
+      const innerOps = ['+', '−', '×', '÷'];
+      const op1 = outerOps[rand(0, 1)];
+      const op2 = innerOps[rand(0, 3)];
+
+      let a, b, c, inner;
+      if (op2 === '÷') {
+        c = rand(2, 4);
+        inner = rand(1, 4);
+        b = c * inner;
+      } else if (op2 === '×') {
+        b = rand(2, 5);
+        c = rand(1, 3);
+        inner = b * c;
+      } else if (op2 === '+') {
+        b = rand(1, 6);
+        c = rand(1, 6);
+        inner = b + c;
+      } else {
+        b = rand(4, 11);
+        c = rand(1, 4);
+        if (!chainAllowNeg && c > b) { const t = b; b = c; c = t; }
+        inner = b - c;
+      }
+
+      a = rand(5, 12);
+      let result;
+      if (op1 === '+') {
+        result = a + inner;
+      } else {
+        if (!chainAllowNeg && inner > a) {
+          a = inner + rand(1, 5);
+        }
+        result = a - inner;
+      }
+      correctAnswer = result;
+      const html = `${a} ${op1} <span class="paren">(${b} ${op2} ${c})</span> =`;
+      const raw = `${a} ${op1} (${b} ${op2} ${c}) =`;
+      setProbDisplay(html, raw.length);
+    }
+
+    // ---- Chains & X ----
+    function newChainsXProblem() {
+      if (chainxComplex) {
+        newComplexChainsXProblem(0);
+        return;
+      }
+      newSimpleChainsXProblem(0);
+    }
+
+    function newSimpleChainsXProblem(depth) {
+      // Form: a op1 x op2 b = result
+      const opsArr = ['+', '−'];
+      const op1 = opsArr[rand(0, 1)];
+      const op2 = opsArr[rand(0, 1)];
+      const a = rand(5, 14);
+      const b = rand(1, 8);
+      const x = chainxAllowNeg ? rand(-6, 6) : rand(1, 6);
+
+      const v1 = op1 === '+' ? a + x : a - x;
+      const result = op2 === '+' ? v1 + b : v1 - b;
+
+      if (!chainxAllowNeg && (v1 < 0 || result < 0 || x < 1)) {
+        if (depth < 20) { newSimpleChainsXProblem(depth + 1); return; }
+      }
+
+      correctAnswer = x;
+      const html = `${a} ${op1} <span class="xvar">x</span> ${op2} ${b} = ${result}`;
+      const raw = `${a} ${op1} x ${op2} ${b} = ${result}`;
+      setProbDisplay(html, raw.length);
+    }
+
+    function newComplexChainsXProblem(depth) {
+      // Form: a op1 (b op2 x) = result
+      const outerOps = ['+', '−'];
+      const innerOps = ['+', '−', '×'];
+      const op1 = outerOps[rand(0, 1)];
+      const op2 = innerOps[rand(0, 2)];
+
+      let x = chainxAllowNeg ? rand(-5, 5) : rand(1, 5);
+      let b = rand(1, 6);
+      let inner;
+
+      if (op2 === '+') {
+        inner = b + x;
+      } else if (op2 === '−') {
+        if (!chainxAllowNeg) b = x + rand(0, 4);
+        inner = b - x;
+      } else {
+        b = rand(2, 4);
+        inner = b * x;
+      }
+
+      let a = rand(5, 14);
+      let result;
+      if (op1 === '+') {
+        result = a + inner;
+      } else {
+        if (!chainxAllowNeg && inner > a) a = inner + rand(1, 6);
+        result = a - inner;
+      }
+
+      if (!chainxAllowNeg && (inner < 0 || result < 0 || x < 1)) {
+        if (depth < 20) { newComplexChainsXProblem(depth + 1); return; }
+      }
+
+      correctAnswer = x;
+      const html = `${a} ${op1} <span class="paren">(${b} ${op2} <span class="xvar">x</span>)</span> = ${result}`;
+      const raw = `${a} ${op1} (${b} ${op2} x) = ${result}`;
+      setProbDisplay(html, raw.length);
     }
 
     function newProblem() {
-      if (op === 'add') {
-        curA = rand(1, 12);
-        curX = rand(1, 12);
-        curB = curA + curX;
-        probEl.textContent = `${curA} + x = ${curB}`;
-      } else if (op === 'subtract') {
-        curX = rand(1, 10);
-        curB = rand(1, 10);
-        curA = curB + curX;
-        probEl.textContent = `${curA} − x = ${curB}`;
-      } else if (op === 'multiply') {
-        curA = rand(2, 6);
-        curX = rand(1, 9);
-        curB = curA * curX;
-        probEl.textContent = `${curA}x = ${curB}`;
-      } else {
-        curX = rand(2, 6);
-        curB = rand(2, 6);
-        curA = curB * curX;
-        probEl.textContent = `${curA} ÷ x = ${curB}`;
-      }
       xInput.value = '';
       msgEl.textContent = '';
+      if (mode === 'solve') newSolveProblem();
+      else if (mode === 'chain') newChainProblem();
+      else newChainsXProblem();
     }
 
     function checkAnswer() {
@@ -117,14 +328,15 @@
         msgEl.style.color = '#c62828';
         return;
       }
-      if (guess === curX) {
+      if (guess === correctAnswer) {
         solved += 1;
         streak += 1;
         if (streak > best) best = streak;
         solvedEl.textContent = solved;
         streakEl.textContent = streak;
         bestEl.textContent = best;
-        msgEl.textContent = `🎉 Yes! x = ${curX}`;
+        const label = (mode === 'chain') ? `= ${correctAnswer}` : `x = ${correctAnswer}`;
+        msgEl.textContent = `🎉 Yes! ${label}`;
         msgEl.style.color = '#2e7d32';
         setTimeout(newProblem, 1100);
       } else {
@@ -152,11 +364,64 @@
       xInput.value += k;
     }
 
+    // ---- Wire mode tabs ----
+    document.getElementById('mode-solve').addEventListener('click', () => setMode('solve'));
+    document.getElementById('mode-chain').addEventListener('click', () => setMode('chain'));
+    document.getElementById('mode-chainx').addEventListener('click', () => setMode('chainx'));
+
+    // ---- Wire Solve op buttons ----
     document.getElementById('op-add').addEventListener('click', () => setOp('add'));
     document.getElementById('op-sub').addEventListener('click', () => setOp('subtract'));
     document.getElementById('op-mul').addEventListener('click', () => setOp('multiply'));
     document.getElementById('op-div').addEventListener('click', () => setOp('divide'));
 
+    // ---- Wire Chain settings ----
+    document.querySelectorAll('#chain-len-group .len-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#chain-len-group .len-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        chainLen = parseInt(btn.dataset.len, 10);
+        newProblem();
+      });
+    });
+
+    const chainModeBtn = document.getElementById('chain-mode-toggle');
+    chainModeBtn.addEventListener('click', () => {
+      chainComplex = !chainComplex;
+      chainModeBtn.textContent = chainComplex ? 'Complex' : 'Simple';
+      chainModeBtn.classList.toggle('active', chainComplex);
+      document.getElementById('chain-len-group').style.display = chainComplex ? 'none' : 'flex';
+      newProblem();
+    });
+
+    const chainNegBtn = document.getElementById('chain-neg-toggle');
+    chainNegBtn.addEventListener('click', () => {
+      chainAllowNeg = !chainAllowNeg;
+      chainNegBtn.textContent = chainAllowNeg ? '± Neg' : 'Pos only';
+      chainNegBtn.classList.toggle('active', chainAllowNeg);
+      chainNegBtn.classList.toggle('warn', chainAllowNeg);
+      newProblem();
+    });
+
+    // ---- Wire ChainsX settings ----
+    const chainxModeBtn = document.getElementById('chainx-mode-toggle');
+    chainxModeBtn.addEventListener('click', () => {
+      chainxComplex = !chainxComplex;
+      chainxModeBtn.textContent = chainxComplex ? 'Complex' : 'Simple';
+      chainxModeBtn.classList.toggle('active', chainxComplex);
+      newProblem();
+    });
+
+    const chainxNegBtn = document.getElementById('chainx-neg-toggle');
+    chainxNegBtn.addEventListener('click', () => {
+      chainxAllowNeg = !chainxAllowNeg;
+      chainxNegBtn.textContent = chainxAllowNeg ? '± Neg' : 'Pos only';
+      chainxNegBtn.classList.toggle('active', chainxAllowNeg);
+      chainxNegBtn.classList.toggle('warn', chainxAllowNeg);
+      newProblem();
+    });
+
+    // ---- Action buttons ----
     document.getElementById('check-btn').addEventListener('click', checkAnswer);
     document.getElementById('next-btn').addEventListener('click', newProblem);
 
