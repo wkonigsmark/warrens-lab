@@ -7,23 +7,40 @@ const CELL_SIZE = 40
 const MAX_VALUE = 12
 const TOP_PADDING = 25
 
-export default function QuizLevel1({ mode = 'master', onBack }) {
+export default function QuizLevel3({ mode = 'master', onBack }) {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState([])
-  const [inputX, setInputX] = useState('')
-  const [inputY, setInputY] = useState('')
+  const [inputIntercept, setInputIntercept] = useState('')
   const [showResults, setShowResults] = useState(false)
   const [error, setError] = useState('')
-  const xInputRef = useRef(null)
+  const inputRef = useRef(null)
 
-  // Auto-focus X input when question changes
+  // Auto-focus input when question changes
   useEffect(() => {
-    if (xInputRef.current && !showResults) {
-      setTimeout(() => xInputRef.current?.focus(), 0)
+    if (inputRef.current && !showResults) {
+      setTimeout(() => inputRef.current?.focus(), 0)
     }
   }, [currentQuestion, showResults])
 
-  // Handle Enter key to trigger submit button
+  // Handle Enter key on results screen to trigger Try Again
+  useEffect(() => {
+    if (!showResults) return
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        setCurrentQuestion(0)
+        setAnswers([])
+        setInputIntercept('')
+        setShowResults(false)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [showResults])
+
+  // Handle Enter key to trigger submit button on quiz screens
   useEffect(() => {
     if (showResults) return
 
@@ -36,46 +53,60 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [showResults, inputX, inputY])
+  }, [showResults, inputIntercept])
 
-  // Generate 3 random questions with whole number coordinates
+  // Generate 3 random questions with whole number y-intercepts
   const questions = useMemo(() => {
     const generateQuestion = () => {
-      const x = Math.floor(Math.random() * (MAX_VALUE + 1))
-      const y = Math.floor(Math.random() * (MAX_VALUE + 1))
-      return { x, y }
+      let x1, y1, x2, y2, yIntercept, slope
+      let attempts = 0
+
+      do {
+        yIntercept = 1 + Math.floor(Math.random() * (MAX_VALUE - 2)) // 1-10
+        slope = -2 + Math.floor(Math.random() * 5) // slope from -2 to 2
+        if (slope === 0) slope = 1
+
+        // Generate two points on the line: y = mx + b
+        // where m = slope, b = yIntercept
+        const dx = 1 + Math.floor(Math.random() * 2)
+        x1 = 1 + Math.floor(Math.random() * (MAX_VALUE - 3))
+        y1 = Math.round(slope * x1 + yIntercept)
+        x2 = x1 + dx
+        y2 = Math.round(slope * x2 + yIntercept)
+        attempts++
+      } while ((y1 < 0 || y1 > MAX_VALUE || y2 < 0 || y2 > MAX_VALUE) && attempts < 10)
+
+      return { x1, y1, x2, y2, yIntercept }
     }
 
     return [generateQuestion(), generateQuestion(), generateQuestion()]
   }, [])
 
-  const currentPoint = questions[currentQuestion]
+  const currentQuestion_ = questions[currentQuestion]
   const isLastQuestion = currentQuestion === 2
 
   const handleSubmitAnswer = () => {
-    const xVal = parseInt(inputX)
-    const yVal = parseInt(inputY)
+    const interceptVal = parseInt(inputIntercept)
 
-    if (isNaN(xVal) || isNaN(yVal)) {
-      setError('Please enter both X and Y coordinates')
+    if (isNaN(interceptVal)) {
+      setError('Please enter the y-intercept')
       return
     }
 
-    if (xVal < 0 || xVal > MAX_VALUE || yVal < 0 || yVal > MAX_VALUE) {
-      setError(`Coordinates must be 0-${MAX_VALUE}`)
+    if (interceptVal < 0 || interceptVal > 12) {
+      setError('Y-intercept must be between 0 and 12')
       return
     }
 
     setError('')
-    const isCorrect = xVal === currentPoint.x && yVal === currentPoint.y
-    setAnswers([...answers, { x: xVal, y: yVal, correct: isCorrect }])
+    const isCorrect = interceptVal === currentQuestion_.yIntercept
+    setAnswers([...answers, { intercept: interceptVal, correct: isCorrect }])
 
     if (isLastQuestion) {
       setShowResults(true)
     } else {
       setCurrentQuestion(currentQuestion + 1)
-      setInputX('')
-      setInputY('')
+      setInputIntercept('')
     }
   }
 
@@ -106,7 +137,7 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
               {score === 3 && "Perfect! You got them all right!"}
               {score === 2 && "Great job! You got 2 out of 3."}
               {score === 1 && "Good effort! You got 1 out of 3. Keep practicing!"}
-              {score === 0 && "Don't worry! Review the coordinates and try again."}
+              {score === 0 && "Don't worry! Review the y-intercepts and try again."}
             </p>
 
             {/* Answer Review */}
@@ -120,11 +151,14 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
                 >
                   <p className="font-semibold text-gray-800">Question {idx + 1}</p>
                   <p className="text-sm text-gray-600">
-                    Correct answer: <span className="font-bold">({q.x}, {q.y})</span>
+                    Points: ({q.x1}, {q.y1}) and ({q.x2}, {q.y2})
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Correct y-intercept: <span className="font-bold">{q.yIntercept}</span>
                   </p>
                   {answers[idx] && (
                     <p className="text-sm text-gray-600">
-                      Your answer: <span className="font-bold">({answers[idx].x}, {answers[idx].y})</span>
+                      Your answer: <span className="font-bold">{answers[idx].intercept}</span>
                     </p>
                   )}
                 </div>
@@ -137,8 +171,7 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
                 onClick={() => {
                   setCurrentQuestion(0)
                   setAnswers([])
-                  setInputX('')
-                  setInputY('')
+                  setInputIntercept('')
                   setShowResults(false)
                 }}
                 className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 rounded-lg hover:shadow-lg transition-shadow"
@@ -168,7 +201,7 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
         {/* Header */}
         <motion.div className="mb-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-3xl font-bold text-gray-800">Level 1: Read Coordinates</h1>
+            <h1 className="text-3xl font-bold text-gray-800">Level 3: Find Y-Intercept</h1>
             <span className="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold">
               Question {currentQuestion + 1}/3
             </span>
@@ -189,8 +222,15 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <p className="text-gray-600 text-sm mb-4 font-semibold">Look at the blue point:</p>
-            <Chart points={[currentPoint]} onPointClick={() => {}} showCoordinates={false} />
+            <p className="text-gray-600 text-sm mb-4 font-semibold">Where does this line cross the Y-axis?</p>
+            <Chart
+              points={[
+                { x: currentQuestion_.x1, y: currentQuestion_.y1 },
+                { x: currentQuestion_.x2, y: currentQuestion_.y2 }
+              ]}
+              onPointClick={() => {}}
+              showCoordinates={false}
+            />
           </motion.div>
 
           {/* Input */}
@@ -199,30 +239,19 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h2 className="text-lg font-bold text-gray-800 mb-3">Coordinates?</h2>
+            <h2 className="text-lg font-bold text-gray-800 mb-3">Y-Intercept?</h2>
 
-            {/* X and Y inputs stacked vertically */}
-            <div className="space-y-2 mb-3">
+            {/* Intercept input */}
+            <div className="mb-3">
               <input
-                ref={xInputRef}
+                ref={inputRef}
                 type="number"
                 min="0"
                 max="12"
-                value={inputX}
-                onChange={(e) => setInputX(e.target.value)}
+                value={inputIntercept}
+                onChange={(e) => setInputIntercept(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="X (0-12)"
-                className="w-full px-2 py-1.5 border-2 border-gray-300 rounded text-sm focus:outline-none focus:border-blue-500"
-              />
-
-              <input
-                type="number"
-                min="0"
-                max="12"
-                value={inputY}
-                onChange={(e) => setInputY(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Y (0-12)"
+                placeholder="Y value at X=0"
                 className="w-full px-2 py-1.5 border-2 border-gray-300 rounded text-sm focus:outline-none focus:border-blue-500"
               />
             </div>
