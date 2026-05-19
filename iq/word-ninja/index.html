@@ -558,15 +558,18 @@
     function getWordList(gradeLevel) {
       let words = [];
 
-      if (gameState.lexiconLoaded && gameState.lexiconData) {
-        // Filter lexicon by grade
+      // For early grades, always use fallback sight words (not lexicon)
+      const earlyGrades = ['preK', 'K', '1'];
+
+      if (!earlyGrades.includes(gradeLevel) && gameState.lexiconLoaded && gameState.lexiconData) {
+        // Filter lexicon by grade for grades 2+
         words = gameState.lexiconData
           .filter(item => item.grade_level === gradeLevel)
           .map(item => item.word)
           .filter(word => word.length < 20); // Limit word length for display
       }
 
-      // Use fallback if no words found
+      // Use fallback if no words found or for early grades
       if (words.length === 0) {
         words = fallbackWords[gradeLevel] || fallbackWords.Adult;
       }
