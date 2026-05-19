@@ -257,7 +257,6 @@ const SETTING_OPTIONS = {
     mode: {
         title: "Game Mode",
         options: [
-            { label: 'Spelling', value: 'spelling', short: 'SPL' },
             { label: 'Vocabulary', value: 'vocabulary', short: 'VOC' },
             { label: 'Numbers', value: 'numbers', short: 'NUM' }
         ]
@@ -299,7 +298,6 @@ const DIFFICULTY_LABELS = {
 };
 
 const MODE_LABELS = {
-    'spelling': 'Spelling',
     'vocabulary': 'Vocabulary',
     'numbers': 'Numbers'
 };
@@ -345,7 +343,6 @@ function init() {
         forceNextWord();
         if (controlsContainer) controlsContainer.classList.remove('mobile-open');
     });
-    document.getElementById('printBtn').addEventListener('click', printWorksheet);
     document.getElementById('printDrawBtn').addEventListener('click', printDrawWriteWorksheet);
 
     const printVocabBtn = document.getElementById('printVocabBtn');
