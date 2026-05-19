@@ -12,6 +12,10 @@ export default function App() {
     }
   }
 
+  const drawLineWithTwoPoints = (x1, y1, x2, y2) => {
+    setPoints([{ x: x1, y: y1 }, { x: x2, y: y2 }])
+  }
+
   const clearPoints = () => {
     setPoints([])
   }
@@ -34,6 +38,7 @@ export default function App() {
             <Controls
               points={points}
               onAddPoint={addPoint}
+              onDrawLine={drawLineWithTwoPoints}
               onClear={clearPoints}
             />
           </div>

@@ -1,30 +1,26 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-export default function Controls({ points, onAddPoint, onClear }) {
+export default function Controls({ points, onAddPoint, onDrawLine, onClear }) {
   const [x1, setX1] = useState('')
   const [y1, setY1] = useState('')
   const [x2, setX2] = useState('')
   const [y2, setY2] = useState('')
 
-  const handleAddPoints = () => {
+  const handleDrawLine = () => {
     const x1Val = parseInt(x1)
     const y1Val = parseInt(y1)
     const x2Val = parseInt(x2)
     const y2Val = parseInt(y2)
 
-    if (!isNaN(x1Val) && !isNaN(y1Val)) {
-      onAddPoint(x1Val, y1Val)
+    if (!isNaN(x1Val) && !isNaN(y1Val) && !isNaN(x2Val) && !isNaN(y2Val)) {
+      onDrawLine(x1Val, y1Val, x2Val, y2Val)
+      // Clear inputs
+      setX1('')
+      setY1('')
+      setX2('')
+      setY2('')
     }
-    if (!isNaN(x2Val) && !isNaN(y2Val)) {
-      onAddPoint(x2Val, y2Val)
-    }
-
-    // Clear inputs
-    setX1('')
-    setY1('')
-    setX2('')
-    setY2('')
   }
 
   return (
@@ -90,7 +86,7 @@ export default function Controls({ points, onAddPoint, onClear }) {
         {/* Buttons */}
         <div className="pt-4 flex flex-col gap-2">
           <motion.button
-            onClick={handleAddPoints}
+            onClick={handleDrawLine}
             className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 rounded-lg hover:shadow-lg transition-shadow"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}

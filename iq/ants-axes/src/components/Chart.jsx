@@ -12,37 +12,40 @@ export default function Chart({ points, onPointClick }) {
     if (!svgRef.current) return
 
     const rect = svgRef.current.getBoundingClientRect()
-    const x = e.clientX - rect.left
+    const x = e.clientX - rect.left - 50 // offset for Y-axis labels
     const y = e.clientY - rect.top
 
     // Convert pixel coords to grid coords
     const gridX = Math.round(x / CELL_SIZE)
     const gridY = Math.round(y / CELL_SIZE)
 
+    // Convert screen Y to math Y (flip it)
+    const mathY = MAX_VALUE - gridY
+
     // Clamp to max values
-    const clampedX = Math.min(gridX, MAX_VALUE)
-    const clampedY = Math.min(gridY, MAX_VALUE)
+    const clampedX = Math.max(0, Math.min(gridX, MAX_VALUE))
+    const clampedY = Math.max(0, Math.min(mathY, MAX_VALUE))
 
     onPointClick(clampedX, clampedY)
   }
 
-  // Calculate line coordinates if we have 2 points
+  // Calculate line coordinates if we have 2 points (flip Y-axis for proper math orientation)
   const lineData = points.length === 2 ? {
-    x1: points[0].x * CELL_SIZE,
-    y1: points[0].y * CELL_SIZE,
-    x2: points[1].x * CELL_SIZE,
-    y2: points[1].y * CELL_SIZE
+    x1: 50 + points[0].x * CELL_SIZE,
+    y1: (MAX_VALUE - points[0].y) * CELL_SIZE,
+    x2: 50 + points[1].x * CELL_SIZE,
+    y2: (MAX_VALUE - points[1].y) * CELL_SIZE
   } : null
 
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-2xl font-bold text-gray-800">Chart</h2>
 
-      <div className="bg-gray-50 rounded-lg p-4 cursor-crosshair">
+      <div className="bg-gray-50 rounded-lg p-4 cursor-crosshair flex justify-center">
         <svg
           ref={svgRef}
-          width={GRID_SIZE}
-          height={GRID_SIZE}
+          width={GRID_SIZE + 100}
+          height={GRID_SIZE + 60}
           className="border-2 border-gray-300 bg-white rounded"
           onClick={handleSvgClick}
         >
@@ -51,18 +54,18 @@ export default function Chart({ points, onPointClick }) {
             <g key={`grid-${i}`}>
               {/* Vertical lines */}
               <line
-                x1={i * CELL_SIZE}
+                x1={50 + i * CELL_SIZE}
                 y1={0}
-                x2={i * CELL_SIZE}
+                x2={50 + i * CELL_SIZE}
                 y2={GRID_SIZE}
                 stroke="#e5e7eb"
                 strokeWidth="1"
               />
               {/* Horizontal lines */}
               <line
-                x1={0}
+                x1={50}
                 y1={i * CELL_SIZE}
-                x2={GRID_SIZE}
+                x2={50 + GRID_SIZE}
                 y2={i * CELL_SIZE}
                 stroke="#e5e7eb"
                 strokeWidth="1"
@@ -71,8 +74,8 @@ export default function Chart({ points, onPointClick }) {
           ))}
 
           {/* Axes */}
-          <line x1={0} y1={GRID_SIZE} x2={GRID_SIZE} y2={GRID_SIZE} stroke="#000" strokeWidth="2" />
-          <line x1={0} y1={0} x2={0} y2={GRID_SIZE} stroke="#000" strokeWidth="2" />
+          <line x1={50} y1={GRID_SIZE} x2={50 + GRID_SIZE} y2={GRID_SIZE} stroke="#000" strokeWidth="2" />
+          <line x1={50} y1={0} x2={50} y2={GRID_SIZE} stroke="#000" strokeWidth="2" />
 
           {/* Animated line if we have 2 points */}
           {lineData && (
@@ -89,6 +92,36 @@ export default function Chart({ points, onPointClick }) {
             />
           )}
 
+          {/* Y-axis labels */}
+          {Array.from({ length: MAX_VALUE + 1 }).map((_, i) => (
+            <text
+              key={`y-label-${i}`}
+              x="20"
+              y={(MAX_VALUE - i) * CELL_SIZE + 5}
+              textAnchor="end"
+              fontSize="14"
+              fill="#666"
+              fontWeight="500"
+            >
+              {i}
+            </text>
+          ))}
+
+          {/* X-axis labels */}
+          {Array.from({ length: MAX_VALUE + 1 }).map((_, i) => (
+            <text
+              key={`x-label-${i}`}
+              x={50 + i * CELL_SIZE}
+              y={GRID_SIZE + 35}
+              textAnchor="middle"
+              fontSize="14"
+              fill="#666"
+              fontWeight="500"
+            >
+              {i}
+            </text>
+          ))}
+
           {/* Points */}
           {points.map((point, idx) => (
             <motion.g
@@ -98,16 +131,16 @@ export default function Chart({ points, onPointClick }) {
               transition={{ duration: 0.3, delay: idx * 0.1 }}
             >
               <circle
-                cx={point.x * CELL_SIZE}
-                cy={point.y * CELL_SIZE}
+                cx={50 + point.x * CELL_SIZE}
+                cy={(MAX_VALUE - point.y) * CELL_SIZE}
                 r="6"
                 fill="#3b82f6"
                 stroke="#1e40af"
                 strokeWidth="2"
               />
               <motion.circle
-                cx={point.x * CELL_SIZE}
-                cy={point.y * CELL_SIZE}
+                cx={50 + point.x * CELL_SIZE}
+                cy={(MAX_VALUE - point.y) * CELL_SIZE}
                 r="6"
                 fill="none"
                 stroke="#3b82f6"
