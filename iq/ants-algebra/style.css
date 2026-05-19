@@ -1,0 +1,246 @@
+/* Ants & Algebra — sibling of Ants & Apples */
+#ants-algebra-root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #fdfaf5;
+  color: #222;
+  padding: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.banner-container {
+  margin: -16px -16px 16px -16px;
+  line-height: 0;
+}
+
+#ants-algebra-root #banner {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+#ants-algebra-root header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+#ants-algebra-root .header-left {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+#ants-algebra-root .pill-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  background: #ddd;
+  color: #222;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+#ants-algebra-root .pill-btn.primary {
+  background: #e3f2fd;
+  color: #1976d2;
+  font-weight: 600;
+}
+
+#ants-algebra-root .pill-btn:active {
+  transform: scale(0.97);
+}
+
+#ants-algebra-root main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Operation picker */
+.op-settings {
+  display: flex;
+  gap: 12px;
+  background: #f0f4f8;
+  padding: 6px;
+  border-radius: 999px;
+  border: 1px solid #d1d9e6;
+  margin: 8px 0 16px 0;
+}
+
+.op-btn {
+  border: none;
+  background: transparent;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.op-btn.active {
+  background: #1976d2;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.4);
+}
+
+.op-btn:hover:not(.active) {
+  background: #e1e7ef;
+}
+
+/* Problem box */
+.problem-box {
+  background: #fff;
+  border: 1px solid #e1e7ef;
+  border-radius: 24px;
+  padding: 28px 20px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.problem-text {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #333;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.x-label {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1976d2;
+}
+
+.x-input {
+  width: 70px;
+  height: 50px;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  border: 2px solid #1976d2;
+  border-radius: 10px;
+  background: #fff;
+  color: #1976d2;
+  caret-color: transparent;
+}
+
+.x-input:focus {
+  outline: none;
+  background: #e3f2fd;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 700;
+  background: #333;
+  color: #fdfaf5;
+  cursor: pointer;
+}
+
+.btn.secondary {
+  background: #777;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.message {
+  margin-top: 6px;
+  min-height: 22px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Status line */
+.status {
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+  margin-top: 12px;
+  line-height: 1.4;
+}
+
+.status .accent {
+  font-weight: 700;
+  color: #1976d2;
+}
+
+/* Keypad */
+.keypad {
+  margin-top: 14px;
+  width: 100%;
+  max-width: 320px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.key {
+  background: #fff;
+  border: 1px solid #d1d9e6;
+  border-radius: 12px;
+  padding: 14px 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #333;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+}
+
+.key:active {
+  transform: scale(0.96);
+  background: #f0f4f8;
+}
+
+.key.action {
+  background: #1976d2;
+  color: #fff;
+  border-color: #1976d2;
+}
+
+.key.action.clear {
+  background: #777;
+  border-color: #777;
+}
+
+.key.action.neg {
+  background: #555;
+  border-color: #555;
+}
