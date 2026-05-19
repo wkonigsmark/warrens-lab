@@ -15,6 +15,7 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
   const [showResults, setShowResults] = useState(false)
   const [error, setError] = useState('')
   const xInputRef = useRef(null)
+  const blockEnterRef = useRef(false)
 
   // Auto-focus X input when question changes
   useEffect(() => {
@@ -23,12 +24,33 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
     }
   }, [currentQuestion, showResults])
 
-  // Handle Enter key to trigger submit button
+  // Handle Enter key on results screen to trigger Try Again
+  useEffect(() => {
+    if (!showResults) return
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        blockEnterRef.current = true
+        setCurrentQuestion(0)
+        setAnswers([])
+        setInputX('')
+        setInputY('')
+        setShowResults(false)
+        setTimeout(() => { blockEnterRef.current = false }, 100)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [showResults])
+
+  // Handle Enter key to trigger submit button on quiz screens
   useEffect(() => {
     if (showResults) return
 
     const handleKeyDown = (e) => {
-      if (e.key === 'Enter' && !showResults) {
+      if (e.key === 'Enter' && !showResults && !blockEnterRef.current) {
         e.preventDefault()
         handleSubmitAnswer()
       }
@@ -53,6 +75,8 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
   const isLastQuestion = currentQuestion === 2
 
   const handleSubmitAnswer = () => {
+    if (blockEnterRef.current) return
+
     const xVal = parseInt(inputX)
     const yVal = parseInt(inputY)
 
@@ -81,7 +105,12 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      handleSubmitAnswer()
+      if (blockEnterRef.current) {
+        e.preventDefault()
+      } else {
+        e.preventDefault()
+        handleSubmitAnswer()
+      }
     }
   }
 

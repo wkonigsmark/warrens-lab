@@ -3,6 +3,7 @@ import Chart from './components/Chart'
 import Controls from './components/Controls'
 import Banner from './components/Banner'
 import QuizMode from './components/QuizMode'
+import Calculations from './components/Calculations'
 
 export default function App() {
   const [mode, setMode] = useState('dashboard') // 'dashboard' or 'quiz'
@@ -47,6 +48,11 @@ export default function App() {
             <div className="bg-white rounded-lg shadow-lg p-6">
               <Chart points={points} onPointClick={addPoint} />
             </div>
+
+            {/* Calculations Panel */}
+            {points.length === 2 && (
+              <Calculations points={points} />
+            )}
           </div>
 
           {/* Controls */}

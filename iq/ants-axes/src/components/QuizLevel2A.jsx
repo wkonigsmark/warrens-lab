@@ -23,6 +23,7 @@ export default function QuizLevel2A({ mode = 'master', onBack }) {
   const mentorXRef = useRef(null)
   const mentorYRef = useRef(null)
   const inputRef = useRef(null)
+  const blockEnterRef = useRef(false)
 
   // Auto-focus input when question changes
   useEffect(() => {
@@ -38,23 +39,34 @@ export default function QuizLevel2A({ mode = 'master', onBack }) {
     const handleKeyDown = (e) => {
       if (e.key === 'Enter') {
         e.preventDefault()
+        blockEnterRef.current = true
         setCurrentQuestion(0)
         setAnswers([])
         setInputSlope('')
         setShowResults(false)
+        if (mode === 'mentor') {
+          setMentorStep(0)
+          setMentorX1('')
+          setMentorY1('')
+          setMentorX2('')
+          setMentorY2('')
+          setMentorRise(null)
+          setMentorRun(null)
+        }
+        setTimeout(() => { blockEnterRef.current = false }, 100)
       }
     }
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [showResults])
+  }, [showResults, mode])
 
   // Handle Enter key to trigger submit button on quiz screens
   useEffect(() => {
     if (showResults) return
 
     const handleKeyDown = (e) => {
-      if (e.key === 'Enter' && !showResults) {
+      if (e.key === 'Enter' && !showResults && !blockEnterRef.current) {
         e.preventDefault()
         handleSubmitAnswer()
       }
@@ -99,6 +111,8 @@ export default function QuizLevel2A({ mode = 'master', onBack }) {
   const isLastQuestion = currentQuestion === 2
 
   const handleSubmitAnswer = () => {
+    if (blockEnterRef.current) return
+
     if (mode === 'mentor') {
       return handleMentorStep()
     }
@@ -267,7 +281,12 @@ export default function QuizLevel2A({ mode = 'master', onBack }) {
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      handleSubmitAnswer()
+      if (blockEnterRef.current) {
+        e.preventDefault()
+      } else {
+        e.preventDefault()
+        handleSubmitAnswer()
+      }
     }
   }
 
@@ -328,6 +347,15 @@ export default function QuizLevel2A({ mode = 'master', onBack }) {
                   setAnswers([])
                   setInputSlope('')
                   setShowResults(false)
+                  if (mode === 'mentor') {
+                    setMentorStep(0)
+                    setMentorX1('')
+                    setMentorY1('')
+                    setMentorX2('')
+                    setMentorY2('')
+                    setMentorRise(null)
+                    setMentorRun(null)
+                  }
                 }}
                 className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 rounded-lg hover:shadow-lg transition-shadow"
                 whileHover={{ scale: 1.02 }}
