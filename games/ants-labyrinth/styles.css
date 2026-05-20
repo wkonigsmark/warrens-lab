@@ -19,7 +19,6 @@
   --maze-start: #2d7a3e;
   --maze-end: #b3402a;
   --maze-solution: rgba(176, 109, 46, 0.55);
-  --maze-frame: rgba(74, 56, 32, 0.18);
 }
 
 /* ---------- Themes (only colors / filters — no layout) ---------- */
@@ -38,6 +37,7 @@ html, body {
   color: var(--text);
   font-family: 'Outfit', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
+  min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -46,6 +46,7 @@ html, body {
   grid-template-columns: 320px 1fr;
   grid-template-rows: 1fr auto;
   min-height: 100vh;
+  min-height: 100dvh;
   gap: 16px;
   padding: 16px;
 }
@@ -71,6 +72,7 @@ html, body {
   flex-direction: column;
   gap: 16px;
   min-width: 0;
+  min-height: 0;
 }
 
 .bottom-bar {
@@ -85,6 +87,15 @@ html, body {
   align-items: center;
   flex-wrap: wrap;
 }
+
+/* Welcome state hides the play-time chrome */
+.app[data-state="welcome"] .bottom-bar { display: none; }
+.app[data-state="welcome"] .print-header,
+.app[data-state="welcome"] .maze-frame,
+.app[data-state="welcome"] .print-footer { display: none; }
+
+/* Play state hides the welcome card */
+.app[data-state="play"] .welcome-card { display: none; }
 
 /* ---------- Brand ---------- */
 .brand {
@@ -122,6 +133,7 @@ html, body {
   color: var(--text);
   cursor: pointer;
   transition: all 0.15s ease;
+  min-height: 44px;
 }
 .age-btn:hover, .tab-btn:hover { background: #fff; border-color: var(--accent); }
 .age-btn.active, .tab-btn.active {
@@ -149,6 +161,7 @@ html, body {
   font-size: 14px;
   color: var(--text);
   cursor: pointer;
+  min-height: 44px;
 }
 .select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 
@@ -161,7 +174,7 @@ html, body {
   display: flex; justify-content: space-between;
 }
 .slider-label span { color: var(--text); font-weight: 600; }
-input[type="range"] { width: 100%; accent-color: var(--accent); }
+input[type="range"] { width: 100%; accent-color: var(--accent); height: 28px; }
 
 .seed-row { display: flex; gap: 6px; }
 .seed-input {
@@ -173,6 +186,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
   font-family: ui-monospace, Menlo, monospace;
   font-size: 12px;
   color: var(--text);
+  min-height: 44px;
 }
 .icon-btn {
   background: var(--soft);
@@ -182,6 +196,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
   font-size: 16px;
   cursor: pointer;
   transition: all 0.15s ease;
+  min-height: 44px;
+  min-width: 44px;
 }
 .icon-btn:hover { background: #fff; border-color: var(--accent); }
 
@@ -197,6 +213,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
   color: var(--text);
   cursor: pointer;
   transition: all 0.15s ease;
+  min-height: 44px;
 }
 .bar-btn:hover { background: #fff; border-color: var(--accent); }
 .bar-btn.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
@@ -212,18 +229,92 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 }
 .toast.show { opacity: 1; }
 
-/* ---------- Print header (visible on screen too, slim) ---------- */
+/* ---------- Welcome card ---------- */
+.welcome-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 8px;
+}
+.welcome-inner {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.welcome-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 4px;
+}
+.welcome-icon { font-size: 48px; line-height: 1; }
+.welcome-brand h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.welcome-brand p {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: var(--dim);
+}
+.welcome-group { display: flex; flex-direction: column; gap: 6px; }
+.welcome-age .age-btn { padding: 14px 4px; font-size: 15px; }
+.welcome-age-hint { margin: 4px 0 0; min-height: 1.4em; }
+.welcome-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.welcome-col { display: flex; flex-direction: column; gap: 6px; }
+.welcome-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
+  margin-top: 8px;
+}
+.big-cta {
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.link-cta {
+  background: transparent;
+  border-color: transparent;
+  color: var(--dim);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  padding: 6px 8px;
+  min-height: 32px;
+}
+.link-cta:hover {
+  background: transparent;
+  color: var(--accent);
+  border-color: transparent;
+  text-decoration-color: var(--accent);
+}
+
+/* ---------- Print + screen header ---------- */
 .print-header {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  gap: 12px;
   padding-bottom: 12px;
   border-bottom: 1px dashed var(--border);
   font-size: 14px;
   color: var(--dim);
+  flex-wrap: wrap;
 }
 .print-name { font-weight: 600; color: var(--text); }
-.print-meta { display: flex; gap: 16px; }
+.print-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
 .print-date { color: var(--dim); }
 #printTitle { font-weight: 700; color: var(--text); }
 
@@ -254,6 +345,48 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
   max-width: 100%;
   max-height: 100%;
 }
+
+/* ---------- Mobile adjust drawer (≤900px play state) ---------- */
+.adjust-drawer {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--soft);
+  overflow: hidden;
+}
+.adjust-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  padding: 14px 16px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+}
+.adjust-summary {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.adjust-caret {
+  font-size: 18px;
+  color: var(--dim);
+  transition: transform 0.2s ease;
+}
+.adjust-toggle[aria-expanded="true"] .adjust-caret { transform: rotate(180deg); }
+.adjust-body {
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--panel);
+}
+.adjust-body .brand { display: none; }
+.adjust-body .control-group:last-child { margin-bottom: 0; }
 
 /* ---------- Print stylesheet ---------- */
 @media print {
@@ -295,8 +428,68 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
   .print-footer { display: block; }
 }
 
-@media (max-width: 760px) {
-  .app { grid-template-columns: 1fr; }
-  .panel-left { grid-row: auto; max-height: none; }
-  .bottom-bar { grid-column: 1; }
+/* ---------- Tablet + mobile (≤900px) ---------- */
+@media (max-width: 900px) {
+  .app {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+    gap: 12px;
+    padding: 12px;
+  }
+  /* Welcome state: hide the desktop left panel entirely; welcome card covers it */
+  .app[data-state="welcome"] .panel-left { display: none; }
+  /* Play state: left panel relocates to the in-drawer mount, so hide its
+     desktop position. The drawer becomes visible. */
+  .app[data-state="play"] .panel-left { display: none; }
+  .app[data-state="play"] .adjust-drawer { display: block; }
+
+  .panel-main { padding: 16px; gap: 12px; }
+  .bottom-bar {
+    grid-column: 1;
+    position: sticky;
+    bottom: 8px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .bar-btn { flex: 1 1 auto; padding: 10px 12px; font-size: 13px; }
+  .toast { flex-basis: 100%; text-align: center; margin: 0; }
+
+  .welcome-card { padding: 16px 0; }
+  .welcome-row { grid-template-columns: 1fr; }
+
+  /* Print header on narrow widths: stack so nothing overflows */
+  .print-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 13px;
+  }
+  .print-name { flex: 0 0 auto; width: 100%; }
+  .print-meta {
+    flex: 0 0 auto;
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+}
+
+/* ---------- Phone only (≤480px) ---------- */
+@media (max-width: 480px) {
+  .app { padding: 8px; gap: 8px; }
+  .panel-main { padding: 12px; border-radius: 14px; }
+  .welcome-brand h2 { font-size: 22px; }
+  .welcome-icon { font-size: 40px; }
+  .welcome-age .age-btn { padding: 12px 2px; font-size: 14px; }
+  .bar-btn { font-size: 12px; padding: 10px 8px; }
+}
+
+/* iOS safe-area awareness for the sticky bottom bar (cheap insurance) */
+@supports (padding: env(safe-area-inset-bottom)) {
+  @media (max-width: 900px) {
+    .bottom-bar {
+      padding-bottom: max(10px, env(safe-area-inset-bottom));
+    }
+  }
 }

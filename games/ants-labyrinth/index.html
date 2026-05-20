@@ -10,8 +10,19 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app" data-theme="classic">
-    <!-- LEFT PANEL: CONTROLS -->
+  <!--
+    The app has two top-level states, switched via data-state on .app:
+      data-state="welcome" — first visit, no settings hash. Shows the welcome
+        card in place of the maze; on phone/tablet the left panel is hidden
+        (the card carries the essential controls).
+      data-state="play" — maze visible. On phone/tablet, the left panel
+        collapses into the #adjustDrawer below the maze; desktop keeps the
+        side-by-side layout.
+  -->
+  <div class="app" data-theme="classic" data-state="welcome">
+
+    <!-- LEFT PANEL: CONTROLS (desktop). On mobile, hidden in welcome state,
+         and contents are visually relocated below the maze in play state. -->
     <aside class="panel-left no-print">
       <header class="brand">
         <div class="brand-icon">🐜</div>
@@ -23,7 +34,7 @@
 
       <section class="control-group">
         <label class="group-label">Age</label>
-        <div class="age-row" id="ageButtons">
+        <div class="age-row">
           <button class="age-btn" data-age="3-4">3–4</button>
           <button class="age-btn active" data-age="5-6">5–6</button>
           <button class="age-btn" data-age="7-8">7–8</button>
@@ -34,7 +45,7 @@
 
       <section class="control-group">
         <label class="group-label" for="mazeType">Maze type</label>
-        <div class="tab-row" id="typeTabs">
+        <div class="tab-row">
           <button class="tab-btn active" data-type="rect">Rectangular</button>
           <button class="tab-btn" data-type="hex" title="Stub — coming soon">Hex</button>
           <button class="tab-btn" data-type="theta" title="Stub — coming soon">Circular</button>
@@ -89,9 +100,57 @@
       </section>
     </aside>
 
-    <!-- RIGHT PANEL: PREVIEW -->
+    <!-- RIGHT PANEL: PREVIEW + WELCOME CARD -->
     <main class="panel-main">
-      <div class="print-header">
+
+      <!-- Welcome card: visible only in data-state="welcome". -->
+      <div class="welcome-card no-print" id="welcomeCard">
+        <div class="welcome-inner">
+          <div class="welcome-brand">
+            <span class="welcome-icon">🐜</span>
+            <div>
+              <h2>Ant's Labyrinth</h2>
+              <p>Printable mazes for kids — set it up, print it out.</p>
+            </div>
+          </div>
+
+          <div class="welcome-group">
+            <label class="group-label">Pick an age</label>
+            <div class="age-row welcome-age">
+              <button class="age-btn" data-age="3-4">3–4</button>
+              <button class="age-btn active" data-age="5-6">5–6</button>
+              <button class="age-btn" data-age="7-8">7–8</button>
+              <button class="age-btn" data-age="9-10">9–10</button>
+            </div>
+            <p class="age-hint welcome-age-hint">Light braiding, clear markers — for kindergarten.</p>
+          </div>
+
+          <div class="welcome-row">
+            <div class="welcome-col">
+              <label class="group-label" for="welcomeAlgorithm">Algorithm</label>
+              <select id="welcomeAlgorithm" class="select"></select>
+            </div>
+            <div class="welcome-col">
+              <label class="group-label" for="welcomeTheme">Theme</label>
+              <select id="welcomeTheme" class="select">
+                <option value="classic">Classic</option>
+                <option value="dungeon">Dungeon</option>
+                <option value="forest">Forest</option>
+                <option value="space">Space</option>
+                <option value="handdrawn">Hand-drawn</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="welcome-actions">
+            <button id="btnMake" class="bar-btn primary big-cta">🐜 Make my maze →</button>
+            <button id="btnSurprise" class="bar-btn link-cta">🎲 Surprise me</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Print + on-screen header. Stacks on narrow widths via CSS. -->
+      <div class="print-header" id="printHeader">
         <div class="print-name">Name: ______________________________</div>
         <div class="print-meta">
           <span id="printTitle">Ant's Labyrinth</span>
@@ -103,13 +162,26 @@
         <!-- SVG injected here -->
       </div>
 
-      <div class="print-footer no-print-screen">
+      <!-- Mobile-only: collapsible drawer that hosts the controls below the
+           maze. The JS moves the .panel-left contents into here in play
+           state on small screens. -->
+      <section class="adjust-drawer no-print" id="adjustDrawer" hidden>
+        <button class="adjust-toggle" id="adjustToggle" aria-expanded="false">
+          <span class="adjust-summary" id="adjustSummary">5–6 · Recursive Backtracker · Classic</span>
+          <span class="adjust-caret">⌄</span>
+        </button>
+        <div class="adjust-body" id="adjustBody" hidden>
+          <!-- .panel-left contents are moved here on mobile -->
+        </div>
+      </section>
+
+      <div class="print-footer">
         <span>🐜 burnmark.games</span>
       </div>
     </main>
 
-    <!-- BOTTOM BAR -->
-    <nav class="bottom-bar no-print">
+    <!-- BOTTOM BAR: visible in play state -->
+    <nav class="bottom-bar no-print" id="bottomBar">
       <button id="btnNew" class="bar-btn primary">↻ New Maze</button>
       <button id="btnSolve" class="bar-btn">👁 Show Solution</button>
       <button id="btnPrint" class="bar-btn">🖨 Print</button>

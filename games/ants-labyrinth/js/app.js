@@ -1,14 +1,18 @@
 // Main UI controller.
 //
-// Single source of truth = `state`. Every control mutates state, then we
-// call regenerate() which re-runs the algorithm and re-renders. Cheap: even
-// 40x40 mazes regenerate in a couple of milliseconds.
+// State machine: the app has two visible states, tracked on .app[data-state]:
+//   "welcome" — first visit (no URL hash). Welcome card collects the essential
+//               choices; the maze is not generated until the user opts in.
+//   "play"    — maze is on screen. On phone/tablet, the desktop left panel
+//               relocates into the in-maze "Adjust" drawer below the maze.
+//
+// Returning visits with a populated URL hash skip welcome and go straight to
+// play, so share links work as expected.
 
 (function () {
 
   // ---------------------------------------------------------------------------
-  // Age presets — the most important UX hook. The user picks an age and all
-  // four key parameters jump to a coherent set; they can still fine-tune.
+  // Age presets — the most important UX hook.
   // ---------------------------------------------------------------------------
   const AGE_PRESETS = {
     '3-4': {
@@ -29,6 +33,8 @@
     },
   };
 
+  const THEME_IDS = ['classic', 'dungeon', 'forest', 'space', 'handdrawn'];
+
   // Defaults (overridden by URL hash if present).
   const state = {
     age: '5-6',
@@ -41,13 +47,14 @@
     wall: 3,
     seed: String(Math.floor(Math.random() * 1e9)),
     showSolution: false,
+    mode: 'welcome',     // 'welcome' | 'play'
   };
 
   // ---------------------------------------------------------------------------
   // URL state (hash params, so refresh keeps the maze).
   // ---------------------------------------------------------------------------
   function readUrl() {
-    if (!location.hash || location.hash.length < 2) return;
+    if (!location.hash || location.hash.length < 2) return false;
     const params = new URLSearchParams(location.hash.slice(1));
     for (const k of ['age', 'type', 'algorithm', 'theme', 'seed']) {
       if (params.has(k)) state[k] = params.get(k);
@@ -57,6 +64,7 @@
     }
     if (params.has('braid')) state.braid = +params.get('braid');
     if (params.has('solve')) state.showSolution = params.get('solve') === '1';
+    return true;
   }
   function writeUrl() {
     const p = new URLSearchParams();
@@ -78,6 +86,7 @@
   // ---------------------------------------------------------------------------
   const $ = id => document.getElementById(id);
   const app          = document.querySelector('.app');
+  const panelLeft    = document.querySelector('.panel-left');
   const algoSelect   = $('algorithm');
   const algoHint     = $('algoHint');
   const themeSelect  = $('theme');
@@ -95,29 +104,70 @@
   const printTitle   = $('printTitle');
   const btnSolve     = $('btnSolve');
   const toast        = $('toast');
+  const welcomeCard  = $('welcomeCard');
+  const welcomeAlgo  = $('welcomeAlgorithm');
+  const welcomeTheme = $('welcomeTheme');
+  const welcomeHint  = welcomeCard.querySelector('.welcome-age-hint');
+  const adjustDrawer = $('adjustDrawer');
+  const adjustToggle = $('adjustToggle');
+  const adjustBody   = $('adjustBody');
+  const adjustSumm   = $('adjustSummary');
 
-  // Populate algorithm dropdown from registry.
+  // Populate both algorithm dropdowns from the same registry.
   for (const a of Algorithms.list) {
-    const opt = document.createElement('option');
-    opt.value = a.id;
-    opt.textContent = a.label;
-    algoSelect.appendChild(opt);
+    const o1 = new Option(a.label, a.id);
+    algoSelect.appendChild(o1);
+    const o2 = new Option(a.label, a.id);
+    welcomeAlgo.appendChild(o2);
   }
+
+  // ---------------------------------------------------------------------------
+  // Mobile / desktop layout helpers.
+  // The panel-left contents need to live in two places: the desktop sidebar
+  // (default), or the drawer below the maze on small screens. We physically
+  // move the nodes between those two parents on resize so all the existing
+  // event listeners keep working.
+  // ---------------------------------------------------------------------------
+  const MOBILE_QUERY = window.matchMedia('(max-width: 900px)');
+
+  function syncLayoutForViewport() {
+    // Only relocate during play state — welcome state hides the left panel
+    // anyway and the welcome card carries its own copies.
+    if (state.mode !== 'play') return;
+    const isMobile = MOBILE_QUERY.matches;
+    if (isMobile) {
+      // Move every child of panelLeft into adjustBody (except brand header).
+      while (panelLeft.firstChild) {
+        adjustBody.appendChild(panelLeft.firstChild);
+      }
+    } else {
+      // Move them back to panelLeft on widening.
+      while (adjustBody.firstChild) {
+        panelLeft.appendChild(adjustBody.firstChild);
+      }
+    }
+  }
+  MOBILE_QUERY.addEventListener('change', syncLayoutForViewport);
 
   // ---------------------------------------------------------------------------
   // Sync DOM <- state.
   // ---------------------------------------------------------------------------
   function pushStateToDom() {
-    // Age buttons
+    app.dataset.state = state.mode;
+    app.dataset.theme = state.theme;
+
+    // All age buttons across both panels stay in sync via dataset.
     for (const btn of document.querySelectorAll('.age-btn')) {
       btn.classList.toggle('active', btn.dataset.age === state.age);
     }
-    // Type tabs
     for (const btn of document.querySelectorAll('.tab-btn')) {
       btn.classList.toggle('active', btn.dataset.type === state.type);
     }
-    algoSelect.value  = state.algorithm;
-    themeSelect.value = state.theme;
+
+    algoSelect.value   = state.algorithm;
+    welcomeAlgo.value  = state.algorithm;
+    themeSelect.value  = state.theme;
+    welcomeTheme.value = state.theme;
     colsInput.value   = state.cols;
     rowsInput.value   = state.rows;
     braidInput.value  = Math.round(state.braid * 100);
@@ -127,17 +177,25 @@
     braidVal.textContent = Math.round(state.braid * 100);
     wallVal.textContent  = state.wall;
     seedInput.value   = state.seed;
-    app.dataset.theme = state.theme;
-    ageHint.textContent = AGE_PRESETS[state.age].hint;
+
+    const ageHintText = AGE_PRESETS[state.age].hint;
+    ageHint.textContent = ageHintText;
+    if (welcomeHint) welcomeHint.textContent = ageHintText;
+
     const algo = Algorithms.list.find(a => a.id === state.algorithm);
     algoHint.textContent = algo ? algo.desc : '';
     printTitle.textContent = `Ant's Labyrinth — ${algo?.label || ''}`;
+
     btnSolve.classList.toggle('active', state.showSolution);
     btnSolve.textContent = state.showSolution ? '👁 Hide Solution' : '👁 Show Solution';
+
+    // Drawer summary chip
+    const themeLabel = welcomeTheme.options[welcomeTheme.selectedIndex]?.text ?? state.theme;
+    adjustSumm.textContent = `Age ${state.age} · ${algo?.label || ''} · ${themeLabel}`;
   }
 
   // ---------------------------------------------------------------------------
-  // Apply an age preset (overwrites grid + difficulty knobs, keeps theme/algo).
+  // Apply an age preset.
   // ---------------------------------------------------------------------------
   function applyAge(age) {
     state.age = age;
@@ -149,10 +207,11 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Regenerate maze + re-render.
+  // Regenerate maze + re-render. No-op in welcome state.
   // ---------------------------------------------------------------------------
   function regenerate() {
     pushStateToDom();
+    if (state.mode !== 'play') return;
     writeUrl();
     mazeFrame.innerHTML = '';
 
@@ -165,7 +224,6 @@
       Algorithms.braid(grid, rng, state.braid);
 
       const solution = state.showSolution ? Solver.solveBFS(grid) : null;
-      // Cell size is computed so the SVG roughly fits the viewport.
       const cellSize = clamp(560 / Math.max(state.cols, state.rows), 14, 60);
       svg = Renderer.rect(grid, {
         cellSize,
@@ -185,27 +243,60 @@
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
   // ---------------------------------------------------------------------------
-  // Event wiring.
+  // Enter play state from welcome (or from a direct URL load).
   // ---------------------------------------------------------------------------
-  document.querySelectorAll('.age-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      applyAge(btn.dataset.age);
+  function enterPlay() {
+    state.mode = 'play';
+    pushStateToDom();
+    syncLayoutForViewport();
+    regenerate();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Surprise me: randomize algorithm + theme so "you never get the same boring
+  // maze twice". Keeps age the user picked.
+  // ---------------------------------------------------------------------------
+  function surprise() {
+    const rng = new RNG(String(Date.now()));
+    state.algorithm = rng.pick(Algorithms.list).id;
+    state.theme     = rng.pick(THEME_IDS);
+    state.seed      = String(Math.floor(Math.random() * 1e9));
+  }
+
+  // ---------------------------------------------------------------------------
+  // Event wiring. Every age/type button (welcome or play panel) shares the
+  // same data-* attributes, so a single delegated handler covers both.
+  // ---------------------------------------------------------------------------
+  document.addEventListener('click', (e) => {
+    const ageBtn = e.target.closest('.age-btn');
+    if (ageBtn) {
+      applyAge(ageBtn.dataset.age);
       regenerate();
-    });
-  });
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      state.type = btn.dataset.type;
+      return;
+    }
+    const typeBtn = e.target.closest('.tab-btn');
+    if (typeBtn) {
+      state.type = typeBtn.dataset.type;
       regenerate();
-    });
+      return;
+    }
   });
+
   algoSelect.addEventListener('change', () => {
     state.algorithm = algoSelect.value;
     regenerate();
   });
+  welcomeAlgo.addEventListener('change', () => {
+    state.algorithm = welcomeAlgo.value;
+    pushStateToDom();
+  });
   themeSelect.addEventListener('change', () => {
     state.theme = themeSelect.value;
-    regenerate();   // re-render so hand-drawn jitter takes effect
+    regenerate();
+  });
+  welcomeTheme.addEventListener('change', () => {
+    state.theme = welcomeTheme.value;
+    pushStateToDom();
   });
   colsInput.addEventListener('input', () => {
     state.cols = +colsInput.value;
@@ -234,6 +325,22 @@
   $('reseed').addEventListener('click', () => {
     state.seed = String(Math.floor(Math.random() * 1e9));
     regenerate();
+  });
+
+  // Welcome card actions.
+  $('btnMake').addEventListener('click', () => {
+    enterPlay();
+  });
+  $('btnSurprise').addEventListener('click', () => {
+    surprise();
+    enterPlay();
+  });
+
+  // Adjust drawer toggle.
+  adjustToggle.addEventListener('click', () => {
+    const open = adjustToggle.getAttribute('aria-expanded') === 'true';
+    adjustToggle.setAttribute('aria-expanded', String(!open));
+    adjustBody.hidden = open;
   });
 
   // ---------------------------------------------------------------------------
@@ -268,25 +375,21 @@
   // ---------------------------------------------------------------------------
   // Stretch goal hooks — left as TODOs so the structure stays visible.
   //
-  // TODO: Batch PDF export. Add a "Make N mazes" control; for each, build the
-  //   SVG and feed into jsPDF (https://github.com/parallax/jsPDF) — one page
-  //   each, then prompt download.
-  //
-  // TODO: Special cells. Extend Cell with `marker: 'checkpoint' | 'key' | ...`
-  //   and a `passable(from)` predicate for one-way passages. Renderer would
-  //   draw an icon in the cell; solver would check `passable`.
-  //
-  // TODO: Interactive solve mode. Track a "player" cell, listen for arrow keys
-  //   / touch gestures, validate against `cell.isLinked(target)`. Lay it over
-  //   the existing SVG as a separate <g>.
-  //
-  // TODO: Theta + hex generation. The current generators use cell.neighbors,
-  //   which already abstracts direction. A theta grid would set up neighbors
-  //   as { CW, CCW, IN, OUT } and a theta renderer would draw arcs.
+  // TODO: Batch PDF export — see jsPDF (https://github.com/parallax/jsPDF).
+  // TODO: Special cells (checkpoints, keys, one-way).
+  // TODO: Interactive solve mode.
+  // TODO: Theta + hex full generation.
   // ---------------------------------------------------------------------------
 
   // Boot.
-  readUrl();
-  if (state.age && AGE_PRESETS[state.age] && !location.hash) applyAge(state.age);
-  regenerate();
+  const hadUrlState = readUrl();
+  applyAge(state.age);             // make sure rows/cols/braid match the default age
+  if (hadUrlState) {
+    // Returning visitor with a share link — skip welcome.
+    enterPlay();
+  } else {
+    // First visit — show welcome card with current defaults visible.
+    state.mode = 'welcome';
+    pushStateToDom();
+  }
 })();
