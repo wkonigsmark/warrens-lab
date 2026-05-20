@@ -57,17 +57,24 @@
       height: auto;
       display: block;
     }
-    h1 {
+    h1.fallback-title {
+      display: none;
       font-size: 32px;
       font-weight: 800;
-      margin: 0 0 4px;
+      margin: 0 0 12px;
       letter-spacing: -0.5px;
+      text-align: center;
     }
-    h1 .emoji { margin: 0 4px; }
-    .sub {
+    h1.fallback-title .emoji { margin: 0 4px; }
+    .intro-guide {
       color: var(--dim);
-      font-size: 14px;
+      font-size: 13.5px;
+      line-height: 1.5;
       margin: 0 0 24px;
+      background: rgba(176, 109, 46, 0.05);
+      padding: 12px 16px;
+      border-radius: 10px;
+      border-left: 3px solid var(--accent);
     }
     .panel {
       background: var(--panel);
@@ -425,10 +432,12 @@
 <body>
   <div class="wrap">
     <div class="banner-container">
-      <img src="assets/banner-ants-acorns-1.png" alt="Ants &amp; Acorns Banner" class="banner-img">
+      <img src="assets/banner-ants-acorns-1.png" alt="Ants &amp; Acorns Banner" class="banner-img" onerror="this.parentNode.style.display='none'; document.getElementById('fallback-title').style.display='block';">
     </div>
-    <h1><span class="emoji">🐜</span>Ants &amp; Acorns<span class="emoji">🌰</span></h1>
-    <p class="sub">Crack the secret code.</p>
+    <h1 id="fallback-title" class="fallback-title"><span class="emoji">🐜</span>Ants &amp; Acorns<span class="emoji">🌰</span></h1>
+    <p class="intro-guide">
+      Guess the secret code! <strong>🐜 Ants</strong> represent correct digits in the exact right spot. <strong>🌰 Acorns</strong> represent correct digits in the wrong spot. Use logic to crack the code!
+    </p>
 
     <div class="panel">
       <div class="row">

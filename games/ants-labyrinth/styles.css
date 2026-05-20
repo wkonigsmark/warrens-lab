@@ -137,23 +137,6 @@ html, body {
   line-height: 1.4;
 }
 
-/* ---------- Brand ---------- */
-.brand {
-  display: block;
-  padding-bottom: 14px;
-  margin-bottom: 14px;
-  border-bottom: 1px solid var(--border);
-}
-.brand-banner {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  /* The banner is a photographic illustration; a subtle shadow lifts it from
-     the panel and a tiny rounded corner ties it into the panel aesthetic. */
-  box-shadow: 0 2px 6px rgba(74, 56, 32, 0.10);
-}
-
 /* ---------- Controls ---------- */
 .control-group { margin-bottom: 18px; }
 .group-label {
@@ -458,7 +441,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 28px; }
   border-top: 1px solid var(--border);
   background: var(--panel);
 }
-.adjust-body .brand { display: none; }
 .adjust-body .control-group:last-child { margin-bottom: 0; }
 
 /* ---------- Print stylesheet ----------

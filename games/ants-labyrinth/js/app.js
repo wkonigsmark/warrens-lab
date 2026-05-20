@@ -217,7 +217,7 @@
     if (state.mode !== 'play') return;
     const isMobile = MOBILE_QUERY.matches;
     if (isMobile) {
-      // Move every child of panelLeft into adjustBody (except brand header).
+      // Move every child of panelLeft into adjustBody.
       while (panelLeft.firstChild) {
         adjustBody.appendChild(panelLeft.firstChild);
       }
