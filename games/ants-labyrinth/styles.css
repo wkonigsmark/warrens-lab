@@ -19,14 +19,15 @@
   --maze-start: #2d7a3e;
   --maze-end: #b3402a;
   --maze-solution: rgba(176, 109, 46, 0.55);
+  --maze-checkpoint: #d99012;
 }
 
 /* ---------- Themes (only colors / filters — no layout) ---------- */
-.app[data-theme="classic"]   { --maze-bg: #ffffff; --maze-wall: #1a1a1a; --maze-start: #2d7a3e; --maze-end: #b3402a; --maze-solution: rgba(176, 109, 46, 0.55); }
-.app[data-theme="dungeon"]   { --maze-bg: #1e1a17; --maze-wall: #d9b48a; --maze-start: #f3c969; --maze-end: #e35d49; --maze-solution: rgba(243, 201, 105, 0.45); }
-.app[data-theme="forest"]    { --maze-bg: #f0f6ec; --maze-wall: #2a5a36; --maze-start: #f0a830; --maze-end: #c33b3b; --maze-solution: rgba(42, 90, 54, 0.35); }
-.app[data-theme="space"]     { --maze-bg: #0b0e22; --maze-wall: #7be0ff; --maze-start: #b6ff6c; --maze-end: #ff5ec4; --maze-solution: rgba(123, 224, 255, 0.45); }
-.app[data-theme="handdrawn"] { --maze-bg: #fdfaf0; --maze-wall: #2a2418; --maze-start: #2d7a3e; --maze-end: #b3402a; --maze-solution: rgba(176, 109, 46, 0.5); }
+.app[data-theme="classic"]   { --maze-bg: #ffffff; --maze-wall: #1a1a1a; --maze-start: #2d7a3e; --maze-end: #b3402a; --maze-solution: rgba(176, 109, 46, 0.55); --maze-checkpoint: #d99012; }
+.app[data-theme="dungeon"]   { --maze-bg: #1e1a17; --maze-wall: #d9b48a; --maze-start: #f3c969; --maze-end: #e35d49; --maze-solution: rgba(243, 201, 105, 0.45); --maze-checkpoint: #9f7ce0; }
+.app[data-theme="forest"]    { --maze-bg: #f0f6ec; --maze-wall: #2a5a36; --maze-start: #f0a830; --maze-end: #c33b3b; --maze-solution: rgba(42, 90, 54, 0.35); --maze-checkpoint: #6a3aa8; }
+.app[data-theme="space"]     { --maze-bg: #0b0e22; --maze-wall: #7be0ff; --maze-start: #b6ff6c; --maze-end: #ff5ec4; --maze-solution: rgba(123, 224, 255, 0.45); --maze-checkpoint: #ffd154; }
+.app[data-theme="handdrawn"] { --maze-bg: #fdfaf0; --maze-wall: #2a2418; --maze-start: #2d7a3e; --maze-end: #b3402a; --maze-solution: rgba(176, 109, 46, 0.5); --maze-checkpoint: #d99012; }
 
 /* ---------- Layout ---------- */
 * { box-sizing: border-box; }
@@ -100,16 +101,58 @@ html, body {
 /* Maze-type-conditional controls */
 .theta-only { display: none; }
 .app[data-type="theta"] .theta-only { display: block; }
+.app[data-type="theta"] .rect-hex-only { display: none; }
+
+/* Checkbox row + small inline pill hint + slider help text */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  padding: 6px 0 10px;
+}
+.checkbox-row input[type="checkbox"] {
+  width: 18px; height: 18px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+.pill-hint {
+  display: inline-block;
+  font-size: 11px;
+  color: var(--dim);
+  background: var(--soft);
+  border-radius: 999px;
+  padding: 1px 8px;
+  margin-left: 4px;
+  font-weight: 500;
+}
+.slider-help {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: var(--dim);
+  font-style: italic;
+  line-height: 1.4;
+}
 
 /* ---------- Brand ---------- */
 .brand {
-  display: flex; align-items: center; gap: 12px;
-  padding-bottom: 16px; margin-bottom: 16px;
+  display: block;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
   border-bottom: 1px solid var(--border);
 }
-.brand-icon { font-size: 36px; line-height: 1; }
-.brand h1 { font-size: 22px; font-weight: 800; margin: 0; letter-spacing: -0.01em; }
-.brand-sub { margin: 0; font-size: 12px; color: var(--dim); }
+.brand-banner {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  /* The banner is a photographic illustration; a subtle shadow lifts it from
+     the panel and a tiny rounded corner ties it into the panel aesthetic. */
+  box-shadow: 0 2px 6px rgba(74, 56, 32, 0.10);
+}
 
 /* ---------- Controls ---------- */
 .control-group { margin-bottom: 18px; }
@@ -125,6 +168,11 @@ html, body {
 
 .age-row, .tab-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 .tab-row { grid-template-columns: repeat(3, 1fr); }
+.age-row-6 { grid-template-columns: repeat(6, 1fr); }
+/* On phones, six chips don't fit in one row; wrap to 3-per-row. */
+@media screen and (max-width: 480px) {
+  .age-row-6 { grid-template-columns: repeat(3, 1fr); }
+}
 
 .age-btn, .tab-btn {
   background: var(--soft);
@@ -250,21 +298,24 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 28px; }
 }
 .welcome-brand {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   margin-bottom: 4px;
 }
-.welcome-icon { font-size: 48px; line-height: 1; }
-.welcome-brand h2 {
-  margin: 0;
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
+.welcome-banner {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(74, 56, 32, 0.12);
 }
-.welcome-brand p {
-  margin: 2px 0 0;
+.welcome-tagline {
+  margin: 0;
   font-size: 14px;
   color: var(--dim);
+  text-align: center;
 }
 .welcome-group { display: flex; flex-direction: column; gap: 6px; }
 .welcome-age .age-btn { padding: 14px 4px; font-size: 15px; }
@@ -320,7 +371,25 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 28px; }
   justify-content: flex-end;
 }
 .print-date { color: var(--dim); }
-#printTitle { font-weight: 700; color: var(--text); }
+/* Title block: text logo on top, algorithm name as a small subtitle below.
+   Keeps inline next to the date on wide screens; stacks on narrow widths. */
+.print-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  line-height: 1;
+}
+.print-logo {
+  display: block;
+  height: 32px;
+  width: auto;
+}
+.print-algo {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text);
+}
 
 .print-footer {
   text-align: center;
@@ -392,48 +461,120 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 28px; }
 .adjust-body .brand { display: none; }
 .adjust-body .control-group:last-child { margin-bottom: 0; }
 
-/* ---------- Print stylesheet ---------- */
+/* ---------- Print stylesheet ----------
+   PRODUCT INVARIANT: the maze MUST fit on one printed page in either
+   orientation. To guarantee that, we make .panel-main exactly one page tall
+   (100vh in print = the printable area: paper minus @page margins) and lay
+   it out as a flex column with the maze-frame as the flexing child. The SVG
+   inside uses preserveAspectRatio="xMidYMid meet" so it scales down to the
+   container, never overflowing. We pair that with page-break-inside: avoid
+   on every container in the chain so no browser can ever split the maze
+   across pages.
+
+   We deliberately do NOT set @page { size: ... } so the browser respects
+   whatever orientation the user picks in the print dialog — the flex layout
+   adapts automatically to portrait or landscape.                            */
 @media print {
-  @page { margin: 14mm; }
-  body {
+  @page { margin: 12mm; }
+  html, body {
+    height: 100%;
     background: #fff !important;
     background-image: none !important;
   }
   .no-print { display: none !important; }
+
   .app {
     display: block;
     padding: 0;
     gap: 0;
-  }
-  .panel-main {
-    border: none;
-    box-shadow: none;
-    border-radius: 0;
-    padding: 0;
-    background: #fff;
-  }
-  .print-header {
-    border-bottom: 1px solid #333;
-    margin-bottom: 12mm;
-    font-size: 12pt;
-  }
-  .maze-frame {
-    background: #fff !important;
-    padding: 0;
-  }
-  /* Force classic colors for print regardless of theme */
-  .app {
+    /* Fill the page so .panel-main's 100vh resolves against a real height. */
+    height: 100vh;
+    height: 100dvh;
+    /* No theme: force the classic, ink-friendly palette on paper regardless
+       of what the user has selected on screen. */
     --maze-bg: #ffffff;
     --maze-wall: #000000;
     --maze-start: #1a7a2d;
     --maze-end: #b3402a;
     --maze-solution: rgba(180, 100, 40, 0.55);
   }
-  .print-footer { display: block; }
+
+  .panel-main {
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    background: #fff;
+    /* The KEY rule: exactly one page tall, flex column so the maze-frame
+       below grows into all remaining space after the header. Use `gap`
+       instead of child margins so total height equals exactly the sum of
+       children — no surprise margin-collapsing or overflow. */
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 6mm;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  .print-header {
+    flex: 0 0 auto;
+    border-bottom: 1px solid #333;
+    margin-bottom: 0;
+    font-size: 12pt;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  /* Print logo gets a bit bigger on paper, and we force its colors to print
+     correctly (some browsers strip image colors by default for "save ink"). */
+  .print-logo {
+    height: 48px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .maze-frame {
+    /* Flex into the remaining vertical space and clip anything that tries
+       to exceed it. min-height: 0 is required so this child can actually
+       shrink (default flex item min-height is auto, which can overflow). */
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    background: #fff !important;
+    padding: 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .maze-frame svg {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    /* SVG preserveAspectRatio="xMidYMid meet" is set in the renderer; that
+       attribute does the actual fitting work. These width/height: 100% just
+       give it a defined box to fit inside. */
+  }
+
+  .print-footer {
+    flex: 0 0 auto;
+    display: block;
+    margin-top: 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
 }
 
-/* ---------- Tablet + mobile (≤900px) ---------- */
-@media (max-width: 900px) {
+/* ---------- Tablet + mobile (≤900px) ----------
+   Scoped to `screen` so these don't bleed into the print stylesheet — A4
+   portrait at 96dpi is ~794px wide, which would otherwise match these rules
+   during print and override the carefully-tuned print layout. */
+@media screen and (max-width: 900px) {
   .app {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr auto;
@@ -480,7 +621,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 28px; }
 }
 
 /* ---------- Phone only (≤480px) ---------- */
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
   .app { padding: 8px; gap: 8px; }
   .panel-main { padding: 12px; border-radius: 14px; }
   .welcome-brand h2 { font-size: 22px; }
@@ -491,7 +632,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 28px; }
 
 /* iOS safe-area awareness for the sticky bottom bar (cheap insurance) */
 @supports (padding: env(safe-area-inset-bottom)) {
-  @media (max-width: 900px) {
+  @media screen and (max-width: 900px) {
     .bottom-bar {
       padding-bottom: max(10px, env(safe-area-inset-bottom));
     }

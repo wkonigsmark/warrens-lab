@@ -220,6 +220,62 @@ def clear_small_light_components(
                     pixels[x, y] = (r, g, b, 0)
 
 
+def clear_checker_components(
+    img: Image.Image,
+    dark_barrier: int,
+    checker_ratio: float,
+    max_channel_spread: int,
+) -> None:
+    pixels = img.load()
+    seen: set[tuple[int, int]] = set()
+
+    def is_non_dark(x: int, y: int) -> bool:
+        r, g, b, a = pixels[x, y]
+        return a > 0 and max(r, g, b) >= dark_barrier
+
+    for start_y in range(img.height):
+        for start_x in range(img.width):
+            start = (start_x, start_y)
+            if start in seen or not is_non_dark(start_x, start_y):
+                continue
+
+            component: list[tuple[int, int]] = []
+            queue: deque[tuple[int, int]] = deque([start])
+            seen.add(start)
+            touches_edge = False
+            checker_pixels = 0
+
+            while queue:
+                x, y = queue.popleft()
+                component.append((x, y))
+                if x == 0 or y == 0 or x == img.width - 1 or y == img.height - 1:
+                    touches_edge = True
+
+                r, g, b, _ = pixels[x, y]
+                lightness = max(r, g, b)
+                if 235 <= lightness <= 252 and lightness - min(r, g, b) <= max_channel_spread:
+                    checker_pixels += 1
+
+                for dx, dy in NEIGHBORS_8:
+                    nx = x + dx
+                    ny = y + dy
+                    point = (nx, ny)
+                    if nx < 0 or ny < 0 or nx >= img.width or ny >= img.height:
+                        continue
+                    if point in seen or not is_non_dark(nx, ny):
+                        continue
+                    seen.add(point)
+                    queue.append(point)
+
+            if touches_edge or not component:
+                continue
+
+            if checker_pixels / len(component) >= checker_ratio:
+                for x, y in component:
+                    r, g, b, _ = pixels[x, y]
+                    pixels[x, y] = (r, g, b, 0)
+
+
 def clear_background(
     src_path: Path,
     dst_path: Path,
@@ -236,6 +292,8 @@ def clear_background(
     trapped_backdrop_cleanup: bool,
     dark_barrier: int,
     small_light_component_limit: int,
+    checker_component_cleanup: bool,
+    checker_component_ratio: float,
 ) -> None:
     img = Image.open(src_path).convert("RGBA")
     pixels = img.load()
@@ -257,6 +315,14 @@ def clear_background(
             min_lightness=min_lightness,
             max_channel_spread=max_channel_spread,
             dark_barrier=dark_barrier,
+        )
+
+    if checker_component_cleanup:
+        clear_checker_components(
+            img=img,
+            dark_barrier=dark_barrier,
+            checker_ratio=checker_component_ratio,
+            max_channel_spread=max_channel_spread,
         )
 
     if interior_gray_cleanup:
@@ -339,6 +405,8 @@ def process_all(args: argparse.Namespace) -> int:
             trapped_backdrop_cleanup=not args.no_trapped_backdrop_cleanup,
             dark_barrier=args.dark_barrier,
             small_light_component_limit=args.small_light_component_limit,
+            checker_component_cleanup=not args.no_checker_component_cleanup,
+            checker_component_ratio=args.checker_component_ratio,
         )
         completed += 1
         print(f"done {src_path.name} -> {dst_path.name}")
@@ -371,6 +439,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-trapped-backdrop-cleanup", action="store_true", help="Skip the black-outline bounded backdrop cleanup pass.")
     parser.add_argument("--dark-barrier", type=int, default=120, help="Pixels darker than this block trapped-backdrop cleanup.")
     parser.add_argument("--small-light-component-limit", type=int, default=0, help="Remove isolated light remnants up to this many pixels.")
+    parser.add_argument("--no-checker-component-cleanup", action="store_true", help="Skip enclosed checker-region cleanup.")
+    parser.add_argument("--checker-component-ratio", type=float, default=0.35, help="Checker-tone share needed to remove an enclosed light region.")
     return parser.parse_args()
 
 

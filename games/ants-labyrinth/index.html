@@ -25,20 +25,18 @@
          and contents are visually relocated below the maze in play state. -->
     <aside class="panel-left no-print">
       <header class="brand">
-        <div class="brand-icon">🐜</div>
-        <div>
-          <h1>Ant's Labyrinth</h1>
-          <p class="brand-sub">Printable maze generator</p>
-        </div>
+        <img class="brand-banner" src="banners/banner-ants-labyrinth-3.png" alt="Ant's Labyrinth — printable maze generator">
       </header>
 
       <section class="control-group">
         <label class="group-label">Age</label>
-        <div class="age-row">
+        <div class="age-row age-row-6">
           <button class="age-btn" data-age="3-4">3–4</button>
           <button class="age-btn active" data-age="5-6">5–6</button>
           <button class="age-btn" data-age="7-8">7–8</button>
           <button class="age-btn" data-age="9-10">9–10</button>
+          <button class="age-btn" data-age="11-13">11–13</button>
+          <button class="age-btn" data-age="expert">Expert</button>
         </div>
         <p class="age-hint" id="ageHint">Light braiding, clear markers — for kindergarten.</p>
       </section>
@@ -100,6 +98,31 @@
         </select>
       </section>
 
+      <!-- Difficulty levers — hidden for theta (which has its own S/E logic). -->
+      <section class="control-group rect-hex-only">
+        <label class="group-label">Difficulty</label>
+        <label class="checkbox-row">
+          <input type="checkbox" id="interiorSE">
+          <span>Hide S/E from edges <span class="pill-hint">defeats wall-following</span></span>
+        </label>
+        <div class="slider-row">
+          <span class="slider-label">Path length <span id="pathBiasVal">0</span>%</span>
+          <input id="pathBias" type="range" min="0" max="120" value="0" step="5">
+        </div>
+        <p class="slider-help">Higher = longer winding solution (regenerates seeds to find one).</p>
+      </section>
+
+      <section class="control-group">
+        <label class="group-label" for="checkpoints">Checkpoints</label>
+        <select id="checkpoints" class="select">
+          <option value="0">None</option>
+          <option value="1">1 — visit in order</option>
+          <option value="2">2 — visit in order</option>
+          <option value="3">3 — visit in order</option>
+        </select>
+        <p class="slider-help">Must visit numbered checkpoints in order before reaching E.</p>
+      </section>
+
       <section class="control-group">
         <label class="group-label">Seed</label>
         <div class="seed-row">
@@ -116,20 +139,19 @@
       <div class="welcome-card no-print" id="welcomeCard">
         <div class="welcome-inner">
           <div class="welcome-brand">
-            <span class="welcome-icon">🐜</span>
-            <div>
-              <h2>Ant's Labyrinth</h2>
-              <p>Printable mazes for kids — set it up, print it out.</p>
-            </div>
+            <img class="welcome-banner" src="banners/banner-ants-labyrinth-3.png" alt="Ant's Labyrinth">
+            <p class="welcome-tagline">Printable mazes for kids — set it up, print it out.</p>
           </div>
 
           <div class="welcome-group">
             <label class="group-label">Pick an age</label>
-            <div class="age-row welcome-age">
+            <div class="age-row welcome-age age-row-6">
               <button class="age-btn" data-age="3-4">3–4</button>
               <button class="age-btn active" data-age="5-6">5–6</button>
               <button class="age-btn" data-age="7-8">7–8</button>
               <button class="age-btn" data-age="9-10">9–10</button>
+              <button class="age-btn" data-age="11-13">11–13</button>
+              <button class="age-btn" data-age="expert">Expert</button>
             </div>
             <p class="age-hint welcome-age-hint">Light braiding, clear markers — for kindergarten.</p>
           </div>
@@ -162,7 +184,10 @@
       <div class="print-header" id="printHeader">
         <div class="print-name">Name: ______________________________</div>
         <div class="print-meta">
-          <span id="printTitle">Ant's Labyrinth</span>
+          <div class="print-title-block">
+            <img class="print-logo" src="banners/text_logo_ants_labyrinth.png" alt="Ant's Labyrinth">
+            <span id="printTitle" class="print-algo">Recursive Backtracker</span>
+          </div>
           <span class="print-date">Date: __________</span>
         </div>
       </div>
@@ -199,11 +224,13 @@
     </nav>
   </div>
 
-  <script src="js/rng.js"></script>
-  <script src="js/grid.js"></script>
-  <script src="js/algorithms.js"></script>
-  <script src="js/solver.js"></script>
-  <script src="js/render.js"></script>
-  <script src="js/app.js"></script>
+  <!-- Bump the v= query when JS changes; this defeats caching during dev. -->
+  <script src="js/rng.js?v=9"></script>
+  <script src="js/grid.js?v=9"></script>
+  <script src="js/algorithms.js?v=9"></script>
+  <script src="js/solver.js?v=9"></script>
+  <script src="js/placement.js?v=9"></script>
+  <script src="js/render.js?v=9"></script>
+  <script src="js/app.js?v=9"></script>
 </body>
 </html>

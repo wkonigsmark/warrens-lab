@@ -236,6 +236,184 @@
   }
 
   // ---------------------------------------------------------------------------
+  // 8. Hunt-and-Kill
+  //    Walk randomly carving passages like the backtracker, but when stuck
+  //    (no unvisited neighbor), "hunt" — scan the grid for the first
+  //    unvisited cell adjacent to a visited cell, link them, and resume.
+  //    Produces tight dead-end clusters without long corridors. Visually
+  //    denser than DFS; harder to scan because there are no straight runs.
+  // ---------------------------------------------------------------------------
+  function huntAndKill(grid, rng) {
+    const visited = new Set();
+    const cells = grid.allCells();
+    let current = rng.pick(cells);
+    visited.add(current);
+
+    while (true) {
+      const unvisitedNeighbors = current.allNeighbors().filter(n => !visited.has(n));
+      if (unvisitedNeighbors.length) {
+        const next = rng.pick(unvisitedNeighbors);
+        current.link(next);
+        visited.add(next);
+        current = next;
+      } else {
+        // Hunt: scan in deterministic order for an unvisited cell adjacent to
+        // a visited one. Carve a passage between them and resume from there.
+        let found = null;
+        for (const cell of cells) {
+          if (visited.has(cell)) continue;
+          const visitedNeighbors = cell.allNeighbors().filter(n => visited.has(n));
+          if (visitedNeighbors.length) {
+            found = cell;
+            cell.link(rng.pick(visitedNeighbors));
+            visited.add(cell);
+            break;
+          }
+        }
+        if (!found) break;        // every cell visited → done
+        current = found;
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 9. Recursive Division (rect-only)
+  //    Inverse of every other algorithm in this file: starts with the entire
+  //    grid open (every neighbor linked) and recursively adds dividing walls
+  //    with exactly one passage. Produces very uniform texture without long
+  //    natural corridors — visually flat and disorienting.
+  // ---------------------------------------------------------------------------
+  function recursiveDivision(grid, rng) {
+    // 1) Start with every cell linked to every neighbor.
+    grid.eachCell(cell => {
+      for (const n of cell.allNeighbors()) cell.link(n);
+    });
+    // 2) Recursively split the working rectangle in two, unlinking across the
+    //    chosen wall except for one randomly-placed passage.
+    function divide(r0, c0, r1, c1) {
+      const h = r1 - r0;
+      const w = c1 - c0;
+      if (h < 2 && w < 2) return;
+      const horizontal = (h === w) ? rng.int(2) === 0 : (h > w);
+      if (horizontal) {
+        const wallRow = r0 + rng.int(h - 1);            // between wallRow and wallRow+1
+        const passCol = c0 + rng.int(w);
+        for (let c = c0; c < c1; c++) {
+          if (c === passCol) continue;
+          const a = grid.cells[wallRow][c];
+          const b = grid.cells[wallRow + 1][c];
+          a.unlink(b);
+        }
+        divide(r0, c0, wallRow + 1, c1);
+        divide(wallRow + 1, c0, r1, c1);
+      } else {
+        const wallCol = c0 + rng.int(w - 1);
+        const passRow = r0 + rng.int(h);
+        for (let r = r0; r < r1; r++) {
+          if (r === passRow) continue;
+          const a = grid.cells[r][wallCol];
+          const b = grid.cells[r][wallCol + 1];
+          a.unlink(b);
+        }
+        divide(r0, c0, r1, wallCol + 1);
+        divide(r0, wallCol + 1, r1, c1);
+      }
+    }
+    divide(0, 0, grid.rows, grid.cols);
+  }
+
+  // ---------------------------------------------------------------------------
+  // 10. Recursive Backtracker WITH WEAVES (rect-only)
+  //
+  //     A DFS variant that occasionally tunnels *under* a visited cell to
+  //     reach an unvisited cell two steps away. The cell we tunnel through
+  //     becomes a "weave" cell: it has crossings in both axes (NS and EW)
+  //     that do NOT connect to each other in the maze graph.
+  //
+  //     This single change defeats every common solving heuristic — you can
+  //     no longer follow a wall, you can no longer trace a line, because the
+  //     paths cross without joining.
+  //
+  //     Weaves are marked on the cell:
+  //       cell.weave === 'NS-over' — existing N-S pass is on top, the new
+  //                                  E-W pass goes underneath.
+  //       cell.weave === 'EW-over' — existing E-W pass is on top, the new
+  //                                  N-S pass goes underneath.
+  //     The solver respects this: at a weave cell, you must continue along
+  //     the same axis you entered.
+  // ---------------------------------------------------------------------------
+  function weaveBacktracker(grid, rng) {
+    // Helper: given a cell, find which named direction (N/S/E/W) a target
+    // neighbor lives in. Returns null if not a direct neighbor.
+    function dirTo(cell, target) {
+      for (const d of ['N', 'S', 'E', 'W']) {
+        if (cell.neighbors[d] === target) return d;
+      }
+      return null;
+    }
+    const OPP = { N: 'S', S: 'N', E: 'W', W: 'E' };
+
+    const visited = new Set();
+    const stack = [grid.cells[0][0]];
+    visited.add(stack[0]);
+
+    while (stack.length) {
+      const current = stack[stack.length - 1];
+
+      // Collect candidate next steps. A candidate is either:
+      //   • a regular adjacent unvisited cell (1-step move), or
+      //   • a 2-step move via a weave: jump over a visited cell that has
+      //     only a perpendicular passage so far, landing on an unvisited
+      //     cell on the other side.
+      const candidates = [];
+      for (const dir of ['N', 'S', 'E', 'W']) {
+        const mid = current.neighbors[dir];
+        if (!mid) continue;
+        if (!visited.has(mid)) {
+          // 1-step move into an unvisited cell.
+          candidates.push({ kind: 'direct', next: mid });
+          continue;
+        }
+        // 2-step weave: mid is visited. Need mid to be a *regular* cell with
+        // a perpendicular straight pass and no existing weave.
+        if (mid.weave) continue;
+        const horizontalDir = (dir === 'E' || dir === 'W');
+        const perpAxisLinks = horizontalDir
+          ? [mid.neighbors.N, mid.neighbors.S]
+          : [mid.neighbors.E, mid.neighbors.W];
+        const parallelAxisLinks = horizontalDir
+          ? [mid.neighbors.E, mid.neighbors.W]
+          : [mid.neighbors.N, mid.neighbors.S];
+        const perpLinked = perpAxisLinks.every(n => n && mid.isLinked(n));
+        const parallelLinked = parallelAxisLinks.some(n => n && mid.isLinked(n));
+        if (!perpLinked || parallelLinked) continue;
+        // Look 2 cells away in the same direction.
+        const far = mid.neighbors[dir];
+        if (!far || visited.has(far)) continue;
+        candidates.push({ kind: 'weave', mid, next: far, axis: horizontalDir ? 'EW' : 'NS' });
+      }
+
+      if (candidates.length === 0) { stack.pop(); continue; }
+
+      const chosen = rng.pick(candidates);
+      if (chosen.kind === 'direct') {
+        current.link(chosen.next);
+        visited.add(chosen.next);
+        stack.push(chosen.next);
+      } else {
+        // Carve the weave: link current↔mid and mid↔next along the new axis.
+        // mid already had a perpendicular pass; we add this axis.
+        current.link(chosen.mid);
+        chosen.mid.link(chosen.next);
+        // The pre-existing axis is the one going *over*.
+        chosen.mid.weave = chosen.axis === 'EW' ? 'NS-over' : 'EW-over';
+        visited.add(chosen.next);
+        stack.push(chosen.next);
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
   // Braiding pass.
   // Remove `ratio` fraction of dead ends by linking each picked dead end to a
   // random not-yet-linked neighbor. ratio=0 leaves a perfect maze; ratio=1
@@ -285,6 +463,15 @@
     { id: 'ellers',  label: "Eller's Algorithm",
       desc: 'Row-by-row streaming generation — diverse texture, mild horizontal feel.',
       fn: ellersAlgorithm, supports: ['rect'] },
+    { id: 'huntkill', label: 'Hunt-and-Kill',
+      desc: 'Tight dead-end clusters, no long corridors — visually denser than DFS.',
+      fn: huntAndKill, supports: ['rect', 'hex', 'theta'] },
+    { id: 'recdiv', label: 'Recursive Division',
+      desc: 'Very uniform texture without visual landmarks — disorienting.',
+      fn: recursiveDivision, supports: ['rect'] },
+    { id: 'weave', label: 'Weave Backtracker',
+      desc: 'Passages cross over/under each other — defeats every wall-following heuristic.',
+      fn: weaveBacktracker, supports: ['rect'] },
   ];
 
   global.Algorithms = { list, braid };

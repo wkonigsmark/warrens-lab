@@ -14,22 +14,39 @@
   // ---------------------------------------------------------------------------
   // Age presets — the most important UX hook.
   // ---------------------------------------------------------------------------
+  // Each preset bakes in grid size + braid + wall thickness AND difficulty
+  // levers (interior start/end, long-path bias). The higher presets crank
+  // those harder-maze knobs that strong solvers can't easily defeat.
   const AGE_PRESETS = {
     '3-4': {
       rows: 6, cols: 6, braid: 1.0, wall: 4,
+      interior: false, pathBias: 0,
       hint: 'Tiny grid, no dead ends, big markers — toddler-friendly.',
     },
     '5-6': {
       rows: 7, cols: 10, braid: 0.3, wall: 3,
+      interior: false, pathBias: 0,
       hint: 'Light braiding, clear markers — for kindergarten.',
     },
     '7-8': {
       rows: 12, cols: 15, braid: 0.1, wall: 2,
+      interior: false, pathBias: 0,
       hint: 'Minimal braiding, standard passage width.',
     },
     '9-10': {
       rows: 18, cols: 22, braid: 0.0, wall: 1.5,
-      hint: 'Perfect maze, narrow passages, long solution.',
+      interior: true, pathBias: 50,
+      hint: 'Perfect maze, interior S/E, long winding solution.',
+    },
+    '11-13': {
+      rows: 28, cols: 36, braid: 0.0, wall: 1.5,
+      interior: true, pathBias: 70,
+      hint: 'Big grid, interior S/E, defeats wall-following.',
+    },
+    'expert': {
+      rows: 40, cols: 50, braid: 0.0, wall: 1,
+      interior: true, pathBias: 90,
+      hint: 'Brutally long solution, interior S/E — for serious solvers.',
     },
   };
 
@@ -41,15 +58,15 @@
   const TYPE_CONFIG = {
     rect: {
       rowsLabel: 'Rows', colsLabel: 'Cols',
-      rowsMin: 3, rowsMax: 40, colsMin: 3, colsMax: 40,
+      rowsMin: 3, rowsMax: 60, colsMin: 3, colsMax: 60,
     },
     theta: {
       rowsLabel: 'Rings', colsLabel: 'Base sectors',
-      rowsMin: 3, rowsMax: 12, colsMin: 4, colsMax: 12,
+      rowsMin: 3, rowsMax: 15, colsMin: 4, colsMax: 12,
     },
     hex: {
       rowsLabel: 'Rows', colsLabel: 'Cols',
-      rowsMin: 3, rowsMax: 20, colsMin: 3, colsMax: 20,
+      rowsMin: 3, rowsMax: 30, colsMin: 3, colsMax: 30,
     },
   };
 
@@ -67,6 +84,9 @@
     showSolution: false,
     mode: 'welcome',     // 'welcome' | 'play'
     thetaSE: 'center-out',  // 'center-out' | 'outer-opposite'
+    interiorSE: false,      // when true, place S/E at random non-edge cells
+    pathBias: 0,            // 0 = off; >0 = target solution length as % of cells
+    checkpoints: 0,         // 0..3 — visit in order before reaching E
   };
 
   // ---------------------------------------------------------------------------
@@ -84,6 +104,9 @@
     if (params.has('braid')) state.braid = +params.get('braid');
     if (params.has('solve')) state.showSolution = params.get('solve') === '1';
     if (params.has('thetaSE')) state.thetaSE = params.get('thetaSE');
+    if (params.has('interior')) state.interiorSE = params.get('interior') === '1';
+    if (params.has('pathBias')) state.pathBias = +params.get('pathBias');
+    if (params.has('cps')) state.checkpoints = +params.get('cps');
     return true;
   }
   function writeUrl() {
@@ -99,6 +122,9 @@
     p.set('seed', state.seed);
     if (state.showSolution) p.set('solve', '1');
     if (state.type === 'theta') p.set('thetaSE', state.thetaSE);
+    if (state.interiorSE) p.set('interior', '1');
+    if (state.pathBias > 0) p.set('pathBias', state.pathBias);
+    if (state.checkpoints > 0) p.set('cps', state.checkpoints);
     history.replaceState(null, '', '#' + p.toString());
   }
 
@@ -136,6 +162,10 @@
   const thetaSESel   = $('thetaSE');
   const colsName     = $('colsName');
   const rowsName     = $('rowsName');
+  const interiorChk  = $('interiorSE');
+  const pathBiasInp  = $('pathBias');
+  const pathBiasVal  = $('pathBiasVal');
+  const cpSel        = $('checkpoints');
 
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
@@ -230,6 +260,10 @@
     braidVal.textContent = Math.round(state.braid * 100);
     wallVal.textContent  = state.wall;
     seedInput.value   = state.seed;
+    interiorChk.checked    = state.interiorSE;
+    pathBiasInp.value      = state.pathBias;
+    pathBiasVal.textContent = state.pathBias;
+    cpSel.value            = String(state.checkpoints);
 
     const ageHintText = AGE_PRESETS[state.age].hint;
     ageHint.textContent = ageHintText;
@@ -237,7 +271,9 @@
 
     const algo = Algorithms.list.find(a => a.id === state.algorithm);
     algoHint.textContent = algo ? algo.desc : '';
-    printTitle.textContent = `Ant's Labyrinth — ${algo?.label || ''}`;
+    // The brand wordmark lives in the logo image now, so the title slot is
+    // just the algorithm name (acts as a subtitle on the print sheet).
+    printTitle.textContent = algo?.label || '';
 
     btnSolve.classList.toggle('active', state.showSolution);
     btnSolve.textContent = state.showSolution ? '👁 Hide Solution' : '👁 Show Solution';
@@ -253,10 +289,12 @@
   function applyAge(age) {
     state.age = age;
     const p = AGE_PRESETS[age];
-    state.rows  = p.rows;
-    state.cols  = p.cols;
-    state.braid = p.braid;
-    state.wall  = p.wall;
+    state.rows       = p.rows;
+    state.cols       = p.cols;
+    state.braid      = p.braid;
+    state.wall       = p.wall;
+    state.interiorSE = p.interior;
+    state.pathBias   = p.pathBias;
   }
 
   // ---------------------------------------------------------------------------
@@ -268,31 +306,52 @@
     writeUrl();
     mazeFrame.innerHTML = '';
 
-    const rng  = new RNG(state.seed);
     const algo = Algorithms.list.find(a => a.id === state.algorithm) || Algorithms.list[0];
+
+    // Shared closure that builds + carves + braids a grid given a seed. Used
+    // by the path-bias retry loop for rect and hex.
+    function buildGrid(GridClass, seed) {
+      const grid = new GridClass(state.rows, state.cols);
+      const r = new RNG(seed);
+      algo.fn(grid, r);
+      Algorithms.braid(grid, r, state.braid);
+      return grid;
+    }
+
+    // Place checkpoints (if requested) and compute the solution chained
+    // through them. solveFor() returns the full S→...→E path, or null.
+    function applyExtras(grid) {
+      const placeRng = new RNG(state.seed + ':cps');
+      Placement.placeCheckpoints(grid, state.checkpoints, placeRng);
+      const solution = state.showSolution
+        ? (state.checkpoints > 0 ? Placement.solveThroughCheckpoints(grid) : Solver.solveBFS(grid))
+        : null;
+      return { solution, checkpoints: grid.checkpoints || [] };
+    }
 
     let svg;
     if (state.type === 'rect') {
-      const grid = new RectGrid(state.rows, state.cols);
-      algo.fn(grid, rng);
-      Algorithms.braid(grid, rng, state.braid);
-
-      const solution = state.showSolution ? Solver.solveBFS(grid) : null;
-      const cellSize = clamp(560 / Math.max(state.cols, state.rows), 14, 60);
+      const { grid } = Placement.generateWithPathBias(state.seed, {
+        targetFrac: state.pathBias / 100,
+        interior: state.interiorSE,
+        maxTries: 30,
+      }, (s) => buildGrid(RectGrid, s));
+      const { solution, checkpoints } = applyExtras(grid);
+      const cellSize = clamp(560 / Math.max(state.cols, state.rows), 8, 60);
       svg = Renderer.rect(grid, {
         cellSize,
         wallThick: state.wall,
         theme: state.theme,
         seed: state.seed,
-        solution,
+        solution, checkpoints,
       });
     } else if (state.type === 'theta') {
       // For theta: state.rows = rings, state.cols = baseSectors.
       const grid = new ThetaGrid(state.rows, state.cols, { startEnd: state.thetaSE });
+      const rng = new RNG(state.seed);
       algo.fn(grid, rng);
       Algorithms.braid(grid, rng, state.braid);
-
-      const solution = state.showSolution ? Solver.solveBFS(grid) : null;
+      const { solution, checkpoints } = applyExtras(grid);
       // Scale ring depth so the whole maze fits comfortably in the panel.
       const ringDepth = clamp(540 / (state.rows * 2), 22, 50);
       svg = Renderer.theta(grid, {
@@ -300,21 +359,22 @@
         wallThick: state.wall,
         theme: state.theme,
         seed: state.seed,
-        solution,
+        solution, checkpoints,
       });
     } else if (state.type === 'hex') {
-      const grid = new HexGrid(state.rows, state.cols);
-      algo.fn(grid, rng);
-      Algorithms.braid(grid, rng, state.braid);
-
-      const solution = state.showSolution ? Solver.solveBFS(grid) : null;
-      const size = clamp(540 / (Math.max(state.cols * 1.732, state.rows * 1.5)), 14, 50);
+      const { grid } = Placement.generateWithPathBias(state.seed, {
+        targetFrac: state.pathBias / 100,
+        interior: state.interiorSE,
+        maxTries: 30,
+      }, (s) => buildGrid(HexGrid, s));
+      const { solution, checkpoints } = applyExtras(grid);
+      const size = clamp(540 / (Math.max(state.cols * 1.732, state.rows * 1.5)), 8, 50);
       svg = Renderer.hex(grid, {
         size,
         wallThick: state.wall,
         theme: state.theme,
         seed: state.seed,
-        solution,
+        solution, checkpoints,
       });
     } else {
       svg = Renderer.hex();  // shouldn't happen, but harmless fallback
@@ -366,6 +426,22 @@
 
   thetaSESel.addEventListener('change', () => {
     state.thetaSE = thetaSESel.value;
+    regenerate();
+  });
+
+  interiorChk.addEventListener('change', () => {
+    state.interiorSE = interiorChk.checked;
+    regenerate();
+  });
+
+  pathBiasInp.addEventListener('input', () => {
+    state.pathBias = +pathBiasInp.value;
+    pathBiasVal.textContent = state.pathBias;
+    regenerate();
+  });
+
+  cpSel.addEventListener('change', () => {
+    state.checkpoints = +cpSel.value;
     regenerate();
   });
 
@@ -470,7 +546,9 @@
 
   // Boot.
   const hadUrlState = readUrl();
-  applyAge(state.age);             // make sure rows/cols/braid match the default age
+  // Only apply the age preset when there's no URL state. Otherwise we'd
+  // clobber the explicit rows/cols/interior/etc that the share link carries.
+  if (!hadUrlState) applyAge(state.age);
   syncAlgoSelectsToType();         // type read from URL may differ from default
   applyTypeSliders();              // relabel + retune sliders for the active type
   if (hadUrlState) {

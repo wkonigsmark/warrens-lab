@@ -98,6 +98,26 @@
       fill: 'var(--maze-bg)',
     })).textContent = 'E';
 
+    // Checkpoint markers (numbered 1..N in order).
+    if (opts.checkpoints && opts.checkpoints.length) {
+      const cpR = cellSize * 0.28;
+      opts.checkpoints.forEach((cp, i) => {
+        const cx = px(cp.col) + cellSize / 2;
+        const cy = py(cp.row) + cellSize / 2;
+        svg.appendChild(el('circle', { cx, cy, r: cpR, fill: 'var(--maze-checkpoint)' }));
+        const t = el('text', {
+          x: cx, y: cy + cpR * 0.45,
+          'text-anchor': 'middle',
+          'font-size': cpR * 1.2,
+          'font-family': 'Outfit, sans-serif',
+          'font-weight': '700',
+          fill: 'var(--maze-bg)',
+        });
+        t.textContent = String(i + 1);
+        svg.appendChild(t);
+      });
+    }
+
     // Walls. For each cell, draw N + W if absent (covers shared edges once),
     // then draw S + E for cells on the bottom/right boundary.
     const wallGroup = el('g', {
@@ -120,6 +140,10 @@
 
     grid.eachCell(cell => {
       const x = px(cell.col), y = py(cell.row);
+      // Weave cells: all four perimeter sides are open (both axes pass
+      // through). Skip the normal wall logic — we draw bridge edges below
+      // to indicate which axis goes over.
+      if (cell.weave) return;
       // North wall
       if (!cell.neighbors.N || !cell.isLinked(cell.neighbors.N)) {
         line(x, y, x + cellSize, y);
@@ -135,6 +159,31 @@
       // East wall (only for right column)
       if (!cell.neighbors.E) {
         line(x + cellSize, y, x + cellSize, y + cellSize);
+      }
+    });
+
+    // Weave bridge edges. For each weave cell, draw two short walls inside
+    // the cell perpendicular to the OVER axis. These mark the "ceiling" and
+    // "floor" of the over-passage, so the under-passage visually appears to
+    // dip beneath them.
+    grid.eachCell(cell => {
+      if (!cell.weave) return;
+      const x = px(cell.col), y = py(cell.row);
+      // Each bridge edge spans 60% of the cell width, centered.
+      const margin = cellSize * 0.2;
+      if (cell.weave === 'EW-over') {
+        // EW passage goes across the cell; the bridge edges are horizontal
+        // lines marking the top and bottom of that pass.
+        const yTop = y + cellSize * 0.32;
+        const yBot = y + cellSize * 0.68;
+        line(x + margin, yTop, x + cellSize - margin, yTop);
+        line(x + margin, yBot, x + cellSize - margin, yBot);
+      } else {
+        // NS-over: NS passage goes up-down; bridge edges are vertical lines.
+        const xL = x + cellSize * 0.32;
+        const xR = x + cellSize * 0.68;
+        line(xL, y + margin, xL, y + cellSize - margin);
+        line(xR, y + margin, xR, y + cellSize - margin);
       }
     });
 
@@ -240,6 +289,25 @@
     }
     drawMarker(grid.start, 'var(--maze-start)', 'S');
     drawMarker(grid.end,   'var(--maze-end)',   'E');
+
+    // Checkpoint markers (numbered 1..N).
+    if (opts.checkpoints && opts.checkpoints.length) {
+      const cpR = ringDepth * 0.28;
+      opts.checkpoints.forEach((cp, i) => {
+        const [x, y] = cellCenter(cp);
+        svg.appendChild(el('circle', { cx: x, cy: y, r: cpR, fill: 'var(--maze-checkpoint)' }));
+        const t = el('text', {
+          x, y: y + cpR * 0.4,
+          'text-anchor': 'middle',
+          'font-size': cpR * 1.3,
+          'font-family': 'Outfit, sans-serif',
+          'font-weight': '700',
+          fill: 'var(--maze-bg)',
+        });
+        t.textContent = String(i + 1);
+        svg.appendChild(t);
+      });
+    }
 
     // Walls -----------------------------------------------------------------
     const rng = handDrawn ? new RNG(opts.seed + ':jitter') : null;
@@ -391,6 +459,25 @@
     }
     drawMarker(grid.start, 'var(--maze-start)', 'S');
     drawMarker(grid.end,   'var(--maze-end)',   'E');
+
+    // Checkpoint markers (numbered 1..N).
+    if (opts.checkpoints && opts.checkpoints.length) {
+      const cpR = size * 0.4;
+      opts.checkpoints.forEach((cp, i) => {
+        const [x, y] = cellCenter(cp.row, cp.col);
+        svg.appendChild(el('circle', { cx: x, cy: y, r: cpR, fill: 'var(--maze-checkpoint)' }));
+        const t = el('text', {
+          x, y: y + cpR * 0.4,
+          'text-anchor': 'middle',
+          'font-size': cpR * 1.3,
+          'font-family': 'Outfit, sans-serif',
+          'font-weight': '700',
+          fill: 'var(--maze-bg)',
+        });
+        t.textContent = String(i + 1);
+        svg.appendChild(t);
+      });
+    }
 
     // Walls. We draw each cell's NW, NE, W edges (the "owned" sides), plus
     // boundary edges (E, SE, SW) for cells whose neighbor in that direction
