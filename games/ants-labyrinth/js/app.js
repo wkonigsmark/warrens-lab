@@ -35,6 +35,24 @@
 
   const THEME_IDS = ['classic', 'dungeon', 'forest', 'space', 'handdrawn'];
 
+  // Per-maze-type slider ranges + labels. The `rows` and `cols` state fields
+  // are reused across types — they just mean different things (rect cols vs.
+  // theta base sectors).
+  const TYPE_CONFIG = {
+    rect: {
+      rowsLabel: 'Rows', colsLabel: 'Cols',
+      rowsMin: 3, rowsMax: 40, colsMin: 3, colsMax: 40,
+    },
+    theta: {
+      rowsLabel: 'Rings', colsLabel: 'Base sectors',
+      rowsMin: 3, rowsMax: 12, colsMin: 4, colsMax: 12,
+    },
+    hex: {
+      rowsLabel: 'Rows', colsLabel: 'Cols',
+      rowsMin: 3, rowsMax: 20, colsMin: 3, colsMax: 20,
+    },
+  };
+
   // Defaults (overridden by URL hash if present).
   const state = {
     age: '5-6',
@@ -48,6 +66,7 @@
     seed: String(Math.floor(Math.random() * 1e9)),
     showSolution: false,
     mode: 'welcome',     // 'welcome' | 'play'
+    thetaSE: 'center-out',  // 'center-out' | 'outer-opposite'
   };
 
   // ---------------------------------------------------------------------------
@@ -64,6 +83,7 @@
     }
     if (params.has('braid')) state.braid = +params.get('braid');
     if (params.has('solve')) state.showSolution = params.get('solve') === '1';
+    if (params.has('thetaSE')) state.thetaSE = params.get('thetaSE');
     return true;
   }
   function writeUrl() {
@@ -78,6 +98,7 @@
     p.set('wall', state.wall);
     p.set('seed', state.seed);
     if (state.showSolution) p.set('solve', '1');
+    if (state.type === 'theta') p.set('thetaSE', state.thetaSE);
     history.replaceState(null, '', '#' + p.toString());
   }
 
@@ -112,13 +133,43 @@
   const adjustToggle = $('adjustToggle');
   const adjustBody   = $('adjustBody');
   const adjustSumm   = $('adjustSummary');
+  const thetaSESel   = $('thetaSE');
+  const colsName     = $('colsName');
+  const rowsName     = $('rowsName');
 
-  // Populate both algorithm dropdowns from the same registry.
-  for (const a of Algorithms.list) {
-    const o1 = new Option(a.label, a.id);
-    algoSelect.appendChild(o1);
-    const o2 = new Option(a.label, a.id);
-    welcomeAlgo.appendChild(o2);
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+  // Populate algorithm dropdowns. We refill these on type change so only
+  // algorithms supporting the current shape are shown.
+  function refillAlgoSelect(sel, type) {
+    const prev = sel.value;
+    sel.innerHTML = '';
+    const allowed = Algorithms.list.filter(a => a.supports.includes(type));
+    for (const a of allowed) sel.appendChild(new Option(a.label, a.id));
+    // Keep the user's prior pick if still valid; otherwise fall back.
+    if (allowed.some(a => a.id === prev)) sel.value = prev;
+    else if (allowed.some(a => a.id === state.algorithm)) sel.value = state.algorithm;
+    else sel.value = allowed[0].id;
+  }
+  function syncAlgoSelectsToType() {
+    refillAlgoSelect(algoSelect, state.type);
+    refillAlgoSelect(welcomeAlgo, state.type);
+    // If the previously-selected algorithm isn't supported, fall back.
+    const supported = Algorithms.list.find(a => a.id === state.algorithm)?.supports.includes(state.type);
+    if (!supported) state.algorithm = algoSelect.value;
+  }
+  syncAlgoSelectsToType();
+
+  // Relabel & retune sliders based on the active maze type.
+  function applyTypeSliders() {
+    const cfg = TYPE_CONFIG[state.type] || TYPE_CONFIG.rect;
+    rowsName.textContent = cfg.rowsLabel;
+    colsName.textContent = cfg.colsLabel;
+    rowsInput.min = cfg.rowsMin; rowsInput.max = cfg.rowsMax;
+    colsInput.min = cfg.colsMin; colsInput.max = cfg.colsMax;
+    // Clamp current values into the new range.
+    state.rows = clamp(state.rows, cfg.rowsMin, cfg.rowsMax);
+    state.cols = clamp(state.cols, cfg.colsMin, cfg.colsMax);
   }
 
   // ---------------------------------------------------------------------------
@@ -155,6 +206,7 @@
   function pushStateToDom() {
     app.dataset.state = state.mode;
     app.dataset.theme = state.theme;
+    app.dataset.type  = state.type;
 
     // All age buttons across both panels stay in sync via dataset.
     for (const btn of document.querySelectorAll('.age-btn')) {
@@ -167,6 +219,7 @@
     algoSelect.value   = state.algorithm;
     welcomeAlgo.value  = state.algorithm;
     themeSelect.value  = state.theme;
+    thetaSESel.value   = state.thetaSE;
     welcomeTheme.value = state.theme;
     colsInput.value   = state.cols;
     rowsInput.value   = state.rows;
@@ -215,11 +268,12 @@
     writeUrl();
     mazeFrame.innerHTML = '';
 
+    const rng  = new RNG(state.seed);
+    const algo = Algorithms.list.find(a => a.id === state.algorithm) || Algorithms.list[0];
+
     let svg;
     if (state.type === 'rect') {
-      const grid = new Grid(state.rows, state.cols);
-      const rng  = new RNG(state.seed);
-      const algo = Algorithms.list.find(a => a.id === state.algorithm) || Algorithms.list[0];
+      const grid = new RectGrid(state.rows, state.cols);
       algo.fn(grid, rng);
       Algorithms.braid(grid, rng, state.braid);
 
@@ -232,15 +286,41 @@
         seed: state.seed,
         solution,
       });
+    } else if (state.type === 'theta') {
+      // For theta: state.rows = rings, state.cols = baseSectors.
+      const grid = new ThetaGrid(state.rows, state.cols, { startEnd: state.thetaSE });
+      algo.fn(grid, rng);
+      Algorithms.braid(grid, rng, state.braid);
+
+      const solution = state.showSolution ? Solver.solveBFS(grid) : null;
+      // Scale ring depth so the whole maze fits comfortably in the panel.
+      const ringDepth = clamp(540 / (state.rows * 2), 22, 50);
+      svg = Renderer.theta(grid, {
+        ringDepth,
+        wallThick: state.wall,
+        theme: state.theme,
+        seed: state.seed,
+        solution,
+      });
     } else if (state.type === 'hex') {
-      svg = Renderer.hex();
+      const grid = new HexGrid(state.rows, state.cols);
+      algo.fn(grid, rng);
+      Algorithms.braid(grid, rng, state.braid);
+
+      const solution = state.showSolution ? Solver.solveBFS(grid) : null;
+      const size = clamp(540 / (Math.max(state.cols * 1.732, state.rows * 1.5)), 14, 50);
+      svg = Renderer.hex(grid, {
+        size,
+        wallThick: state.wall,
+        theme: state.theme,
+        seed: state.seed,
+        solution,
+      });
     } else {
-      svg = Renderer.theta();
+      svg = Renderer.hex();  // shouldn't happen, but harmless fallback
     }
     mazeFrame.appendChild(svg);
   }
-
-  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
   // ---------------------------------------------------------------------------
   // Enter play state from welcome (or from a direct URL load).
@@ -277,9 +357,16 @@
     const typeBtn = e.target.closest('.tab-btn');
     if (typeBtn) {
       state.type = typeBtn.dataset.type;
+      applyTypeSliders();
+      syncAlgoSelectsToType();
       regenerate();
       return;
     }
+  });
+
+  thetaSESel.addEventListener('change', () => {
+    state.thetaSE = thetaSESel.value;
+    regenerate();
   });
 
   algoSelect.addEventListener('change', () => {
@@ -384,6 +471,8 @@
   // Boot.
   const hadUrlState = readUrl();
   applyAge(state.age);             // make sure rows/cols/braid match the default age
+  syncAlgoSelectsToType();         // type read from URL may differ from default
+  applyTypeSliders();              // relabel + retune sliders for the active type
   if (hadUrlState) {
     // Returning visitor with a share link — skip welcome.
     enterPlay();

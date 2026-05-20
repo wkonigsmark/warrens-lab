@@ -97,6 +97,10 @@ html, body {
 /* Play state hides the welcome card */
 .app[data-state="play"] .welcome-card { display: none; }
 
+/* Maze-type-conditional controls */
+.theta-only { display: none; }
+.app[data-type="theta"] .theta-only { display: block; }
+
 /* ---------- Brand ---------- */
 .brand {
   display: flex; align-items: center; gap: 12px;

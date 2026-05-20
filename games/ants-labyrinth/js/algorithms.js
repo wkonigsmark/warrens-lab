@@ -14,7 +14,7 @@
   // ---------------------------------------------------------------------------
   function recursiveBacktracker(grid, rng) {
     const visited = new Set();
-    const stack = [grid.cells[0][0]];
+    const stack = [grid.start || grid.allCells()[0]];
     visited.add(stack[0]);
 
     while (stack.length) {
@@ -40,7 +40,7 @@
     const inMaze = new Set();
     const frontier = new Set();
 
-    const start = grid.cells[rng.int(grid.rows)][rng.int(grid.cols)];
+    const start = rng.pick(grid.allCells());
     inMaze.add(start);
     start.allNeighbors().forEach(n => frontier.add(n));
 
@@ -77,11 +77,7 @@
     };
     const union = (a, b) => { parent.set(find(a), find(b)); };
 
-    const edges = [];
-    grid.eachCell(cell => {
-      if (cell.neighbors.E) edges.push([cell, cell.neighbors.E]);
-      if (cell.neighbors.S) edges.push([cell, cell.neighbors.S]);
-    });
+    const edges = grid.edges();
     rng.shuffle(edges);
 
     for (const [a, b] of edges) {
@@ -264,28 +260,31 @@
   // ---------------------------------------------------------------------------
   // Algorithm registry — drives the dropdown + descriptions.
   // ---------------------------------------------------------------------------
+  // `supports` lists the maze types each algorithm can run on. The UI uses
+  // this to filter the dropdown; the three rect-specific algorithms reference
+  // cell.neighbors.N / .E by name and aren't meaningful on other shapes.
   const list = [
     { id: 'backtracker', label: 'Recursive Backtracker',
       desc: 'Long winding corridors with few branches — feels like a classic maze.',
-      fn: recursiveBacktracker },
+      fn: recursiveBacktracker, supports: ['rect', 'hex', 'theta'] },
     { id: 'prims', label: "Prim's Algorithm",
       desc: 'Many short dead-ends, bushy and uniform.',
-      fn: primsAlgorithm },
+      fn: primsAlgorithm, supports: ['rect', 'hex', 'theta'] },
     { id: 'kruskals', label: "Kruskal's Algorithm",
       desc: 'Very even texture — no detectable bias anywhere.',
-      fn: kruskalsAlgorithm },
+      fn: kruskalsAlgorithm, supports: ['rect', 'hex', 'theta'] },
     { id: 'wilsons', label: "Wilson's Algorithm",
       desc: 'Mathematically unbiased — every possible maze equally likely.',
-      fn: wilsonsAlgorithm },
+      fn: wilsonsAlgorithm, supports: ['rect', 'hex', 'theta'] },
     { id: 'binarytree', label: 'Binary Tree',
       desc: 'Strong NE diagonal bias — top row and right column are corridors.',
-      fn: binaryTree },
+      fn: binaryTree, supports: ['rect'] },
     { id: 'sidewinder', label: 'Sidewinder',
       desc: 'Horizontal bias — long east-west runs, top row is open.',
-      fn: sidewinder },
+      fn: sidewinder, supports: ['rect'] },
     { id: 'ellers',  label: "Eller's Algorithm",
       desc: 'Row-by-row streaming generation — diverse texture, mild horizontal feel.',
-      fn: ellersAlgorithm },
+      fn: ellersAlgorithm, supports: ['rect'] },
   ];
 
   global.Algorithms = { list, braid };
