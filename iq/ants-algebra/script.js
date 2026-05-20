@@ -12,9 +12,12 @@
         <div class="header-left">
           <a class="pill-btn" href="../ants-apples/index.html" title="Back to Ants & Apples">← Ants & Apples</a>
           <a class="pill-btn primary" href="../index.html" title="IQ Toolkit">IQ</a>
+          <button id="music-toggle-btn" class="pill-btn music" type="button" title="Toggle background music">Music: On</button>
           <button id="print-worksheet-btn" class="pill-btn print" type="button" title="Print a worksheet for the current mode">Print Worksheet</button>
         </div>
       </header>
+
+      <audio id="bg-music" src="../ants-apples/assets/hyrule_theme.mp3" preload="auto" loop></audio>
 
       <main>
         <div class="mode-tabs" role="tablist" aria-label="Choose mode">
@@ -55,7 +58,7 @@
         <div class="problem-box">
           <div id="prob-text" class="problem-text">2 + x = 5</div>
           <div class="input-row">
-            <span id="input-label" class="x-label">x =</span>
+            <span id="input-label" class="x-label"><span class="xvar">x</span> =</span>
             <input id="x-input" class="x-input" type="text" inputmode="none" readonly placeholder="?">
           </div>
         </div>
@@ -125,7 +128,7 @@
         document.getElementById('mode-' + m).classList.toggle('active', m === mode);
         document.getElementById('settings-' + m).style.display = (m === mode ? 'flex' : 'none');
       });
-      inputLabel.textContent = (mode === 'chain') ? '=' : 'x =';
+      inputLabel.innerHTML = (mode === 'chain') ? '=' : '<span class="xvar">x</span> =';
       newProblem();
     }
 
@@ -440,6 +443,67 @@
       else if (e.key === 'Enter') checkAnswer();
       else if (e.key === 'Escape') xInput.value = '';
     });
+
+    // ---- Background music + idle timeout (parent-friendly auto-off) ----
+    const musicEl = document.getElementById('bg-music');
+    let musicEnabled = true;
+    let idleTimer = null;
+    const IDLE_LIMIT = 30000; // 30s — matches Ants & Apples
+
+    function playMusic() {
+      if (!musicEl) return;
+      const p = musicEl.play();
+      if (p && p.catch) p.catch(() => { /* ignore autoplay rejections */ });
+    }
+
+    function pauseMusic() {
+      if (!musicEl) return;
+      musicEl.pause();
+    }
+
+    function updateMusicToggleLabel() {
+      const btn = document.getElementById('music-toggle-btn');
+      if (!btn) return;
+      btn.textContent = musicEnabled ? 'Music: On' : 'Music: Off';
+    }
+
+    function resetIdleTimer() {
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(autoStopMusic, IDLE_LIMIT);
+    }
+
+    function autoStopMusic() {
+      if (musicEnabled) {
+        pauseMusic();
+        musicEnabled = false;
+        updateMusicToggleLabel();
+        msgEl.textContent = 'Music paused due to inactivity.';
+        msgEl.style.color = '#666';
+      }
+    }
+
+    document.getElementById('music-toggle-btn').addEventListener('click', () => {
+      musicEnabled = !musicEnabled;
+      if (musicEnabled) playMusic(); else pauseMusic();
+      updateMusicToggleLabel();
+      resetIdleTimer();
+    });
+
+    // Start music on first user interaction (browser autoplay policy)
+    function tryStartMusicOnce() {
+      if (musicEnabled) playMusic();
+      window.removeEventListener('pointerdown', tryStartMusicOnce, true);
+      window.removeEventListener('keydown', tryStartMusicOnce, true);
+    }
+    window.addEventListener('pointerdown', tryStartMusicOnce, true);
+    window.addEventListener('keydown', tryStartMusicOnce, true);
+
+    // Reset idle timer on any activity
+    window.addEventListener('pointerdown', resetIdleTimer, true);
+    window.addEventListener('keydown', resetIdleTimer, true);
+
+    updateMusicToggleLabel();
+    resetIdleTimer();
 
     // ---- Worksheet printing ----
     const ANT_ASSETS = [
