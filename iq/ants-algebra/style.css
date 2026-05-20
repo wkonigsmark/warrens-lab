@@ -54,6 +54,14 @@
   font-weight: 600;
 }
 
+#ants-algebra-root .pill-btn.print {
+  background: #e0f5e5;
+  color: #2e7d32;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
 #ants-algebra-root .pill-btn:active {
   transform: scale(0.97);
 }

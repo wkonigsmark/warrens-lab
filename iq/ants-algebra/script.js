@@ -12,6 +12,7 @@
         <div class="header-left">
           <a class="pill-btn" href="../ants-apples/index.html" title="Back to Ants & Apples">← Ants & Apples</a>
           <a class="pill-btn primary" href="../index.html" title="IQ Toolkit">IQ</a>
+          <button id="print-worksheet-btn" class="pill-btn print" type="button" title="Print a worksheet for the current mode">Print Worksheet</button>
         </div>
       </header>
 
@@ -424,6 +425,7 @@
     // ---- Action buttons ----
     document.getElementById('check-btn').addEventListener('click', checkAnswer);
     document.getElementById('next-btn').addEventListener('click', newProblem);
+    document.getElementById('print-worksheet-btn').addEventListener('click', printWorksheet);
 
     document.getElementById('keypad').addEventListener('click', (e) => {
       const target = e.target.closest('.key');
@@ -438,6 +440,241 @@
       else if (e.key === 'Enter') checkAnswer();
       else if (e.key === 'Escape') xInput.value = '';
     });
+
+    // ---- Worksheet printing ----
+    const ANT_ASSETS = [
+      'ant_jazz_hands.png', 'ants_apple_cart.png', 'ants_apple_hoist.png',
+      'ants_basket_apple.png', 'ants_behind_apple.png', 'ants_celebration.png',
+      'ants_chalkboard.png', 'ants_glasses.png', 'ants_grad.png',
+      'ants_homework.png', 'ants_pencil.png', 'ants_pencil_3.png'
+    ];
+    const ANT_ASSET_BASE = '../ants-apples/assets/coloring-template-ants/';
+
+    function printWorksheet() {
+      if (mode === 'solve') {
+        printSolveWorksheet();
+      } else if (mode === 'chain') {
+        printChainWorksheet();
+      } else {
+        printChainsXWorksheet();
+      }
+    }
+
+    function printSolveWorksheet() {
+      const numProblems = 12;
+      const opLabel = { add: 'Addition', subtract: 'Subtraction', multiply: 'Multiplication', divide: 'Division' }[op];
+      const probs = [];
+      for (let i = 0; i < numProblems; i++) {
+        let a, x, b, p;
+        if (op === 'add') {
+          a = rand(1, 15); x = rand(1, 15); b = a + x;
+          p = `${a} + <span class="math-var">x</span> = ${b}`;
+        } else if (op === 'subtract') {
+          x = rand(1, 12); b = rand(1, 12); a = b + x;
+          p = `${a} − <span class="math-var">x</span> = ${b}`;
+        } else if (op === 'multiply') {
+          a = rand(2, 7); x = rand(1, 10); b = a * x;
+          p = `${a}<span class="math-var">x</span> = ${b}`;
+        } else {
+          x = rand(2, 6); b = rand(2, 7); a = b * x;
+          p = `${a} ÷ <span class="math-var">x</span> = ${b}`;
+        }
+        probs.push(`<div style="display:inline-block; text-align:left;">${p}<br><span class="math-var">x</span> = ___</div>`);
+      }
+      openWorksheet(probs, [`Solve for x — ${opLabel}`], 4);
+    }
+
+    function printChainWorksheet() {
+      const numProblems = 12;
+      const probs = [];
+
+      function buildSimple() {
+        let result = rand(1, 10);
+        let eq = String(result);
+        for (let j = 1; j < chainLen; j++) {
+          const sign = Math.random() > 0.5 ? '+' : '−';
+          let term = rand(1, 9);
+          if (sign === '−') {
+            if (!chainAllowNeg && term >= result) term = Math.max(1, Math.floor(result / 2));
+            result -= term;
+          } else {
+            result += term;
+          }
+          eq += ` ${sign} ${term}`;
+        }
+        return eq + ' = ___';
+      }
+
+      function buildComplex() {
+        const outerOps = ['+', '−'];
+        const innerOps = ['+', '−', '×', '÷'];
+        const op1 = outerOps[rand(0, 1)];
+        const op2 = innerOps[rand(0, 3)];
+        let a, b, c, inner;
+        if (op2 === '÷') {
+          c = rand(2, 4); inner = rand(1, 4); b = c * inner;
+        } else if (op2 === '×') {
+          b = rand(2, 5); c = rand(1, 3); inner = b * c;
+        } else if (op2 === '+') {
+          b = rand(1, 8); c = rand(1, 8); inner = b + c;
+        } else {
+          b = rand(4, 11); c = rand(1, 4);
+          if (!chainAllowNeg && c > b) { const t = b; b = c; c = t; }
+          inner = b - c;
+        }
+        a = rand(5, 14);
+        if (op1 === '−' && !chainAllowNeg && inner > a) a = inner + rand(1, 5);
+        const mulOp2 = (op2 === '×') ? '<span class="math-op-mul">×</span>' : op2;
+        return `${a} ${op1} (${b} ${mulOp2} ${c}) = ___`;
+      }
+
+      for (let i = 0; i < numProblems; i++) {
+        probs.push(chainComplex ? buildComplex() : buildSimple());
+      }
+
+      const modeLabel = chainComplex ? 'Complex' : `Length ${chainLen}`;
+      const resLabel = chainAllowNeg ? '± Negatives' : 'Positive Only';
+      openWorksheet(probs, [`Math Chains — ${modeLabel} (${resLabel})`], 4);
+    }
+
+    function printChainsXWorksheet() {
+      const numProblems = 12;
+      const probs = [];
+
+      function buildSimple() {
+        for (let tries = 0; tries < 50; tries++) {
+          const opsArr = ['+', '−'];
+          const o1 = opsArr[rand(0, 1)], o2 = opsArr[rand(0, 1)];
+          const a = rand(5, 15);
+          const b = rand(1, 9);
+          const x = chainxAllowNeg ? rand(-6, 6) : rand(1, 8);
+          const v1 = (o1 === '+') ? a + x : a - x;
+          const result = (o2 === '+') ? v1 + b : v1 - b;
+          if (!chainxAllowNeg && (v1 < 0 || result < 0 || x < 1)) continue;
+          return `${a} ${o1} <span class="math-var">x</span> ${o2} ${b} = ${result}`;
+        }
+        return `5 + <span class="math-var">x</span> + 1 = 10`; // safety fallback
+      }
+
+      function buildComplex() {
+        for (let tries = 0; tries < 50; tries++) {
+          const outerOps = ['+', '−'];
+          const innerOps = ['+', '−', '×'];
+          const op1 = outerOps[rand(0, 1)];
+          const op2 = innerOps[rand(0, 2)];
+          let x = chainxAllowNeg ? rand(-5, 5) : rand(1, 6);
+          let b = rand(1, 6);
+          let inner;
+          if (op2 === '+') {
+            inner = b + x;
+          } else if (op2 === '−') {
+            if (!chainxAllowNeg) b = x + rand(0, 4);
+            inner = b - x;
+          } else {
+            b = rand(2, 4);
+            inner = b * x;
+          }
+          let a = rand(5, 14);
+          if (op1 === '−' && !chainxAllowNeg && inner > a) a = inner + rand(1, 6);
+          const result = (op1 === '+') ? a + inner : a - inner;
+          if (!chainxAllowNeg && (inner < 0 || result < 0 || x < 1)) continue;
+          const mulOp2 = (op2 === '×') ? '<span class="math-op-mul">×</span>' : op2;
+          return `${a} ${op1} (${b} ${mulOp2} <span class="math-var">x</span>) = ${result}`;
+        }
+        return `5 + (2 + <span class="math-var">x</span>) = 10`;
+      }
+
+      for (let i = 0; i < numProblems; i++) {
+        const eq = chainxComplex ? buildComplex() : buildSimple();
+        probs.push(`<div style="display:inline-block; text-align:left;">${eq}<br><span class="math-var">x</span> = ___</div>`);
+      }
+
+      const modeLabel = chainxComplex ? 'Complex' : 'Simple';
+      const resLabel = chainxAllowNeg ? '± Negatives' : 'Positive Only';
+      openWorksheet(probs, [`Chains & X — ${modeLabel} (${resLabel})`], 3);
+    }
+
+    function openWorksheet(problems, metaLines, numCols) {
+      numCols = numCols || 4;
+      let selectedAnts;
+      // 10% chance for the "Math Master" easter egg
+      if (Math.random() < 0.10) {
+        selectedAnts = ['math_master.png'];
+        const others = [...ANT_ASSETS].sort(() => 0.5 - Math.random()).slice(0, 2);
+        selectedAnts.push(...others);
+        selectedAnts.sort(() => 0.5 - Math.random());
+      } else {
+        selectedAnts = [...ANT_ASSETS].sort(() => 0.5 - Math.random()).slice(0, 3);
+      }
+
+      const win = window.open('', '_blank');
+      if (!win) {
+        alert('Please allow popups to print the worksheet.');
+        return;
+      }
+      const baseUrl = window.location.href.split('index.html')[0];
+
+      win.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <base href="${baseUrl}">
+          <title> </title>
+          <style>
+            @page { margin: 0; }
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; color: #222; background: #fff; }
+            .page-container { padding: 0.5in; min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; position: relative; margin: 0; }
+            .worksheet-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; border-bottom: 3px solid #333; padding-bottom: 20px; }
+            .header-left { flex: 0 0 210px; text-align: left; }
+            .header-logo { max-width: 210px; height: auto; display: block; }
+            .header-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 8px; font-weight: bold; font-size: 1.1rem; text-align: center; }
+            .header-right { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; font-weight: bold; font-size: 1.1rem; text-align: right; }
+            h1 { margin: 0; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 2px; }
+            .grid { display: grid; grid-template-columns: repeat(${numCols}, 1fr); gap: 18px; flex-grow: 0; align-content: start; margin-top: 20px; width: 100%; }
+            .problem { font-size: 1.2rem; padding: 14px 2px; white-space: nowrap; text-align: center; border-bottom: 2px dashed #f0f0f0; display: flex; align-items: center; justify-content: center; gap: 5px; }
+            .math-var { font-family: "Times New Roman", serif; font-style: italic; font-weight: 800; color: #1976d2; }
+            .math-op-mul { font-weight: 900; font-size: 0.8em; vertical-align: middle; padding: 0 4px; display: inline-block; transform: translateY(-1px); }
+            .coloring-section { margin-top: 10px; display: flex; justify-content: space-around; align-items: flex-end; flex-grow: 1; padding-bottom: 10px; }
+            .ant-illustration { max-width: 180px; max-height: 180px; height: auto; opacity: 0.7; filter: grayscale(1); }
+            .footer { margin-top: 15px; display: flex; justify-content: space-between; font-size: 0.75rem; color: #888; }
+            .no-print { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+            @media print { .no-print { display: none; } }
+          </style>
+        </head>
+        <body>
+          <div class="no-print">
+            <button onclick="window.print()" style="padding: 12px 24px; background: #2e7d32; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">Print / Save PDF</button>
+          </div>
+          <div class="page-container">
+            <header class="worksheet-header">
+              <div class="header-left">
+                <img src="ants_algebra.png" class="header-logo" alt="Ants & Algebra"
+                     onerror="this.style.display='none'; document.getElementById('fallback-title').style.display='block';">
+                <h1 id="fallback-title" style="display:none;">Ants &amp; Algebra</h1>
+              </div>
+              <div class="header-center">
+                ${metaLines.map(line => `<span>${line}</span>`).join('')}
+              </div>
+              <div class="header-right">
+                <span>Name: ______________________</span>
+                <span>Date: ___________</span>
+              </div>
+            </header>
+            <div class="grid">
+              ${problems.map(p => `<div class="problem">${p}</div>`).join('')}
+            </div>
+            <div class="coloring-section">
+              ${selectedAnts.map(img => `<img src="${ANT_ASSET_BASE}${img}" class="ant-illustration" alt="Ant Art">`).join('')}
+            </div>
+            <div class="footer">
+              <span>Ants &amp; Algebra · Solve for x · Page 1/1</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `);
+      win.document.close();
+    }
 
     newProblem();
   }
