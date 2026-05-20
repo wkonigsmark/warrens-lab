@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Ants &amp; Acorns</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-1: #faf5ec;
@@ -34,6 +37,25 @@
       max-width: 460px;
       margin: 0 auto;
       padding: 32px 20px 80px;
+    }
+    .banner-container {
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(74, 56, 32, 0.12);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      background: var(--panel);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+    }
+    .banner-container:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px rgba(74, 56, 32, 0.18);
+    }
+    .banner-img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
     h1 {
       font-size: 32px;
@@ -354,12 +376,16 @@
         padding: 10px 12px 12px;
         page-break-inside: avoid;
       }
-      .print-sheet .card-title {
-        font-size: 13px;
-        font-weight: 800;
+      .print-sheet .print-logo-container {
         text-align: center;
-        margin: 0 0 2px;
-        letter-spacing: -0.2px;
+        margin-bottom: 4px;
+      }
+      .print-sheet .print-logo {
+        height: 30px;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
+        display: inline-block;
       }
       .print-sheet .card-config {
         font-size: 9px;
@@ -398,6 +424,9 @@
 </head>
 <body>
   <div class="wrap">
+    <div class="banner-container">
+      <img src="assets/banner-ants-acorns-1.png" alt="Ants &amp; Acorns Banner" class="banner-img">
+    </div>
     <h1><span class="emoji">🐜</span>Ants &amp; Acorns<span class="emoji">🌰</span></h1>
     <p class="sub">Crack the secret code.</p>
 
@@ -759,7 +788,9 @@
       `).join('');
       const card = `
         <div class="card">
-          <div class="card-title">🐜 Ants &amp; Acorns 🌰</div>
+          <div class="print-logo-container">
+            <img src="assets/text_logo_ants_acorns.png" alt="Ants &amp; Acorns" class="print-logo">
+          </div>
           <div class="card-config">${config}</div>
           <table class="grid">
             <colgroup>
