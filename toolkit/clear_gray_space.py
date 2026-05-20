@@ -87,6 +87,139 @@ def find_connected_background(img: Image.Image, min_lightness: int, max_channel_
     return background
 
 
+def clear_interior_checker_gray(
+    img: Image.Image,
+    min_lightness: int,
+    max_lightness: int,
+    max_channel_spread: int,
+    dark_guard_radius: int,
+) -> None:
+    pixels = img.load()
+
+    def near_dark_ink(px: int, py: int) -> bool:
+        left = max(0, px - dark_guard_radius)
+        top = max(0, py - dark_guard_radius)
+        right = min(img.width, px + dark_guard_radius + 1)
+        bottom = min(img.height, py + dark_guard_radius + 1)
+        for ny in range(top, bottom):
+            for nx in range(left, right):
+                r, g, b, a = pixels[nx, ny]
+                if a > 0 and max(r, g, b) < 90:
+                    return True
+        return False
+
+    for y in range(img.height):
+        for x in range(img.width):
+            r, g, b, a = pixels[x, y]
+            if a == 0:
+                continue
+
+            lightness = max(r, g, b)
+            channel_spread = lightness - min(r, g, b)
+            if (
+                min_lightness <= lightness <= max_lightness
+                and channel_spread <= max_channel_spread
+                and not near_dark_ink(x, y)
+            ):
+                pixels[x, y] = (r, g, b, 0)
+
+
+def clear_trapped_backdrop(
+    img: Image.Image,
+    min_lightness: int,
+    max_channel_spread: int,
+    dark_barrier: int,
+) -> None:
+    width, height = img.size
+    pixels = img.load()
+    outside: set[tuple[int, int]] = set()
+    queue: deque[tuple[int, int]] = deque()
+
+    def can_flow(x: int, y: int) -> bool:
+        r, g, b, a = pixels[x, y]
+        return a == 0 or max(r, g, b) >= dark_barrier
+
+    def seed(x: int, y: int) -> None:
+        point = (x, y)
+        if point not in outside and can_flow(x, y):
+            outside.add(point)
+            queue.append(point)
+
+    for x in range(width):
+        seed(x, 0)
+        seed(x, height - 1)
+    for y in range(height):
+        seed(0, y)
+        seed(width - 1, y)
+
+    while queue:
+        x, y = queue.popleft()
+        for dx, dy in NEIGHBORS_8:
+            nx = x + dx
+            ny = y + dy
+            if nx < 0 or ny < 0 or nx >= width or ny >= height:
+                continue
+            point = (nx, ny)
+            if point in outside or not can_flow(nx, ny):
+                continue
+            outside.add(point)
+            queue.append(point)
+
+    for x, y in outside:
+        r, g, b, a = pixels[x, y]
+        if a > 0 and is_background_like((r, g, b, a), min_lightness, max_channel_spread):
+            pixels[x, y] = (r, g, b, 0)
+
+
+def clear_small_light_components(
+    img: Image.Image,
+    max_area: int,
+    min_lightness: int,
+    max_channel_spread: int,
+) -> None:
+    if max_area <= 0:
+        return
+
+    pixels = img.load()
+    seen: set[tuple[int, int]] = set()
+
+    def is_light_artifact(x: int, y: int) -> bool:
+        r, g, b, a = pixels[x, y]
+        if a == 0:
+            return False
+        lightness = max(r, g, b)
+        return lightness >= min_lightness and lightness - min(r, g, b) <= max_channel_spread
+
+    for start_y in range(img.height):
+        for start_x in range(img.width):
+            start = (start_x, start_y)
+            if start in seen or not is_light_artifact(start_x, start_y):
+                continue
+
+            component: list[tuple[int, int]] = []
+            queue: deque[tuple[int, int]] = deque([start])
+            seen.add(start)
+
+            while queue:
+                x, y = queue.popleft()
+                component.append((x, y))
+                for dx, dy in NEIGHBORS_8:
+                    nx = x + dx
+                    ny = y + dy
+                    point = (nx, ny)
+                    if nx < 0 or ny < 0 or nx >= img.width or ny >= img.height:
+                        continue
+                    if point in seen or not is_light_artifact(nx, ny):
+                        continue
+                    seen.add(point)
+                    queue.append(point)
+
+            if len(component) <= max_area:
+                for x, y in component:
+                    r, g, b, _ = pixels[x, y]
+                    pixels[x, y] = (r, g, b, 0)
+
+
 def clear_background(
     src_path: Path,
     dst_path: Path,
@@ -96,6 +229,13 @@ def clear_background(
     padding: int,
     no_center: bool,
     extra_passes: int,
+    interior_gray_cleanup: bool,
+    interior_min_lightness: int,
+    interior_max_lightness: int,
+    dark_guard_radius: int,
+    trapped_backdrop_cleanup: bool,
+    dark_barrier: int,
+    small_light_component_limit: int,
 ) -> None:
     img = Image.open(src_path).convert("RGBA")
     pixels = img.load()
@@ -110,6 +250,30 @@ def clear_background(
         for x, y in background:
             r, g, b, _ = pixels[x, y]
             pixels[x, y] = (r, g, b, 0)
+
+    if trapped_backdrop_cleanup:
+        clear_trapped_backdrop(
+            img=img,
+            min_lightness=min_lightness,
+            max_channel_spread=max_channel_spread,
+            dark_barrier=dark_barrier,
+        )
+
+    if interior_gray_cleanup:
+        clear_interior_checker_gray(
+            img=img,
+            min_lightness=interior_min_lightness,
+            max_lightness=interior_max_lightness,
+            max_channel_spread=max_channel_spread,
+            dark_guard_radius=dark_guard_radius,
+        )
+
+    clear_small_light_components(
+        img=img,
+        max_area=small_light_component_limit,
+        min_lightness=interior_min_lightness,
+        max_channel_spread=max_channel_spread,
+    )
 
     alpha = img.getchannel("A")
     bbox = alpha.getbbox()
@@ -168,6 +332,13 @@ def process_all(args: argparse.Namespace) -> int:
             padding=args.padding,
             no_center=args.no_center,
             extra_passes=args.extra_passes,
+            interior_gray_cleanup=args.interior_gray_cleanup,
+            interior_min_lightness=args.interior_min_lightness,
+            interior_max_lightness=args.interior_max_lightness,
+            dark_guard_radius=args.dark_guard_radius,
+            trapped_backdrop_cleanup=not args.no_trapped_backdrop_cleanup,
+            dark_barrier=args.dark_barrier,
+            small_light_component_limit=args.small_light_component_limit,
         )
         completed += 1
         print(f"done {src_path.name} -> {dst_path.name}")
@@ -193,6 +364,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-lightness", type=int, default=205, help="Lower values remove darker gray background.")
     parser.add_argument("--max-channel-spread", type=int, default=28, help="Higher values allow less neutral background colors.")
     parser.add_argument("--extra-passes", type=int, default=1, help="Additional edge-connected cleanup passes.")
+    parser.add_argument("--interior-gray-cleanup", action="store_true", help="Also remove mid-light enclosed gray pixels; useful for stubborn checker remnants.")
+    parser.add_argument("--interior-min-lightness", type=int, default=230, help="Lowest gray value removed by interior cleanup.")
+    parser.add_argument("--interior-max-lightness", type=int, default=252, help="Highest gray value removed by interior cleanup.")
+    parser.add_argument("--dark-guard-radius", type=int, default=2, help="Keep gray antialias pixels this close to dark artwork.")
+    parser.add_argument("--no-trapped-backdrop-cleanup", action="store_true", help="Skip the black-outline bounded backdrop cleanup pass.")
+    parser.add_argument("--dark-barrier", type=int, default=120, help="Pixels darker than this block trapped-backdrop cleanup.")
+    parser.add_argument("--small-light-component-limit", type=int, default=0, help="Remove isolated light remnants up to this many pixels.")
     return parser.parse_args()
 
 
