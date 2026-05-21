@@ -50,7 +50,7 @@ export default function Chart({ points, onPointClick, showCoordinates = true }) 
       <div className="bg-gray-50 rounded-lg p-4 cursor-crosshair flex justify-center">
         <svg
           ref={svgRef}
-          viewBox={`0 0 ${GRID_SIZE + 100} ${GRID_SIZE + 85}`}
+          viewBox={`0 -30 ${GRID_SIZE + 100} ${GRID_SIZE + 115}`}
           preserveAspectRatio="xMidYMid meet"
           className="border-2 border-gray-300 bg-white rounded w-full h-auto max-w-[580px]"
           onClick={handleSvgClick}
@@ -128,6 +128,32 @@ export default function Chart({ points, onPointClick, showCoordinates = true }) 
               {i}
             </text>
           ))}
+
+          {/* X-axis title (at the end of the x-axis) */}
+          <text
+            x={50 + GRID_SIZE + 20}
+            y={TOP_PADDING + GRID_SIZE}
+            textAnchor="start"
+            dominantBaseline="middle"
+            fontSize="22"
+            fontWeight="bold"
+            fill="#1f2937"
+          >
+            X
+          </text>
+
+          {/* Y-axis title (upright, above the y-axis) */}
+          <text
+            x={50}
+            y={-10}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize="22"
+            fontWeight="bold"
+            fill="#1f2937"
+          >
+            Y
+          </text>
 
           {/* Points */}
           {points.map((point, idx) => (

@@ -20,6 +20,7 @@ export default function QuizLevel2B({ mode = 'master', onBack }) {
   const [mentorY2, setMentorY2] = useState('')
   const [mentorRise, setMentorRise] = useState(null)
   const [mentorRun, setMentorRun] = useState(null)
+  const [quizSeed, setQuizSeed] = useState(0)
   const mentorXRef = useRef(null)
   const mentorYRef = useRef(null)
   const inputRef = useRef(null)
@@ -53,6 +54,7 @@ export default function QuizLevel2B({ mode = 'master', onBack }) {
           setMentorRise(null)
           setMentorRun(null)
         }
+        setQuizSeed((s) => s + 1)
         setTimeout(() => { blockEnterRef.current = false }, 100)
       }
     }
@@ -76,7 +78,7 @@ export default function QuizLevel2B({ mode = 'master', onBack }) {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [showResults, inputSlope])
 
-  // Generate 3 random questions with positive or negative whole number slopes
+  // Generate 3 random, non-duplicate questions with positive or negative whole number slopes
   const questions = useMemo(() => {
     const generateQuestion = () => {
       let x1, y1, x2, y2, slope
@@ -97,8 +99,18 @@ export default function QuizLevel2B({ mode = 'master', onBack }) {
       return { x1, y1, x2, y2, slope }
     }
 
-    return [generateQuestion(), generateQuestion(), generateQuestion()]
-  }, [])
+    const result = []
+    let attempts = 0
+    while (result.length < 3 && attempts < 100) {
+      const q = generateQuestion()
+      const dup = result.some(
+        (r) => r.x1 === q.x1 && r.y1 === q.y1 && r.x2 === q.x2 && r.y2 === q.y2
+      )
+      if (!dup) result.push(q)
+      attempts++
+    }
+    return result
+  }, [quizSeed])
 
   const currentQuestion_ = questions[currentQuestion]
   const isLastQuestion = currentQuestion === 2
@@ -331,6 +343,7 @@ export default function QuizLevel2B({ mode = 'master', onBack }) {
                     setMentorRise(null)
                     setMentorRun(null)
                   }
+                  setQuizSeed((s) => s + 1)
                 }}
                 className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 rounded-lg hover:shadow-lg transition-shadow"
                 whileHover={{ scale: 1.02 }}

@@ -22,6 +22,7 @@ export default function QuizLevel3({ mode = 'master', onBack }) {
   const [mentorRun, setMentorRun] = useState(null)
   const [mentorSlope, setMentorSlope] = useState(null)
   const [mentorMX1, setMentorMX1] = useState(null)
+  const [quizSeed, setQuizSeed] = useState(0)
   const mentorXRef = useRef(null)
   const mentorYRef = useRef(null)
   const inputRef = useRef(null)
@@ -57,6 +58,7 @@ export default function QuizLevel3({ mode = 'master', onBack }) {
           setMentorSlope(null)
           setMentorMX1(null)
         }
+        setQuizSeed((s) => s + 1)
         setTimeout(() => { blockEnterRef.current = false }, 100)
       }
     }
@@ -80,7 +82,7 @@ export default function QuizLevel3({ mode = 'master', onBack }) {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [showResults, inputIntercept, mentorX1, mentorY1, mentorX2, mentorY2])
 
-  // Generate 3 random questions with whole number y-intercepts
+  // Generate 3 random, non-duplicate questions with whole number y-intercepts
   const questions = useMemo(() => {
     const generateQuestion = () => {
       let x1, y1, x2, y2, yIntercept, slope
@@ -104,8 +106,18 @@ export default function QuizLevel3({ mode = 'master', onBack }) {
       return { x1, y1, x2, y2, yIntercept }
     }
 
-    return [generateQuestion(), generateQuestion(), generateQuestion()]
-  }, [])
+    const result = []
+    let attempts = 0
+    while (result.length < 3 && attempts < 100) {
+      const q = generateQuestion()
+      const dup = result.some(
+        (r) => r.x1 === q.x1 && r.y1 === q.y1 && r.x2 === q.x2 && r.y2 === q.y2
+      )
+      if (!dup) result.push(q)
+      attempts++
+    }
+    return result
+  }, [quizSeed])
 
   const currentQuestion_ = questions[currentQuestion]
   const isLastQuestion = currentQuestion === 2
@@ -374,6 +386,18 @@ export default function QuizLevel3({ mode = 'master', onBack }) {
                   setAnswers([])
                   setInputIntercept('')
                   setShowResults(false)
+                  if (mode === 'mentor') {
+                    setMentorStep(0)
+                    setMentorX1('')
+                    setMentorY1('')
+                    setMentorX2('')
+                    setMentorY2('')
+                    setMentorRise(null)
+                    setMentorRun(null)
+                    setMentorSlope(null)
+                    setMentorMX1(null)
+                  }
+                  setQuizSeed((s) => s + 1)
                 }}
                 className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 rounded-lg hover:shadow-lg transition-shadow"
                 whileHover={{ scale: 1.02 }}

@@ -14,6 +14,7 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
   const [inputY, setInputY] = useState('')
   const [showResults, setShowResults] = useState(false)
   const [error, setError] = useState('')
+  const [quizSeed, setQuizSeed] = useState(0)
   const xInputRef = useRef(null)
   const blockEnterRef = useRef(false)
 
@@ -37,6 +38,7 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
         setInputX('')
         setInputY('')
         setShowResults(false)
+        setQuizSeed((s) => s + 1)
         setTimeout(() => { blockEnterRef.current = false }, 100)
       }
     }
@@ -60,7 +62,7 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [showResults, inputX, inputY])
 
-  // Generate 3 random questions with whole number coordinates
+  // Generate 3 random, non-duplicate questions with whole number coordinates
   const questions = useMemo(() => {
     const generateQuestion = () => {
       const x = Math.floor(Math.random() * (MAX_VALUE + 1))
@@ -68,8 +70,17 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
       return { x, y }
     }
 
-    return [generateQuestion(), generateQuestion(), generateQuestion()]
-  }, [])
+    const result = []
+    let attempts = 0
+    while (result.length < 3 && attempts < 100) {
+      const q = generateQuestion()
+      if (!result.some((r) => r.x === q.x && r.y === q.y)) {
+        result.push(q)
+      }
+      attempts++
+    }
+    return result
+  }, [quizSeed])
 
   const currentPoint = questions[currentQuestion]
   const isLastQuestion = currentQuestion === 2
@@ -169,6 +180,7 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
                   setInputX('')
                   setInputY('')
                   setShowResults(false)
+                  setQuizSeed((s) => s + 1)
                 }}
                 className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 rounded-lg hover:shadow-lg transition-shadow"
                 whileHover={{ scale: 1.02 }}
