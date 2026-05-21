@@ -12,9 +12,14 @@ export default function Chart({ points, onPointClick, showCoordinates = true }) 
   const handleSvgClick = (e) => {
     if (!svgRef.current) return
 
-    const rect = svgRef.current.getBoundingClientRect()
-    const x = e.clientX - rect.left - 50 // offset for Y-axis labels
-    const y = e.clientY - rect.top - TOP_PADDING // offset for top padding
+    // Convert screen coords to SVG viewBox coords (works regardless of display size)
+    const pt = svgRef.current.createSVGPoint()
+    pt.x = e.clientX
+    pt.y = e.clientY
+    const svgP = pt.matrixTransform(svgRef.current.getScreenCTM().inverse())
+
+    const x = svgP.x - 50 // offset for Y-axis labels
+    const y = svgP.y - TOP_PADDING // offset for top padding
 
     // Convert pixel coords to grid coords
     const gridX = Math.round(x / CELL_SIZE)
@@ -45,9 +50,9 @@ export default function Chart({ points, onPointClick, showCoordinates = true }) 
       <div className="bg-gray-50 rounded-lg p-4 cursor-crosshair flex justify-center">
         <svg
           ref={svgRef}
-          width={GRID_SIZE + 100}
-          height={GRID_SIZE + 85}
-          className="border-2 border-gray-300 bg-white rounded"
+          viewBox={`0 0 ${GRID_SIZE + 100} ${GRID_SIZE + 85}`}
+          preserveAspectRatio="xMidYMid meet"
+          className="border-2 border-gray-300 bg-white rounded w-full h-auto max-w-[580px]"
           onClick={handleSvgClick}
         >
           {/* Grid lines */}
