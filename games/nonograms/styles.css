@@ -42,11 +42,19 @@ body {
 header {
   text-align: center;
   margin-bottom: 2rem;
+  width: 100%;
 }
 
 h1 {
   margin: 0 0 0.5rem 0;
   font-size: 2.5rem;
+}
+
+.game-banner {
+  display: block;
+  width: min(100%, 430px);
+  height: auto;
+  margin: 0 auto 0.75rem;
 }
 
 p {
@@ -309,6 +317,12 @@ button {
     font-size: 12px;
     color: var(--muted);
     margin: 0;
+  }
+  .print-logo {
+    display: block;
+    width: 2.35in;
+    height: auto;
+    margin: 0 auto 0.03in;
   }
   .print-page {
     display: grid;

@@ -365,65 +365,99 @@
       color: var(--accent);
       font-weight: 600;
     }
+    .mentor-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .mentor-reason {
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.55;
+      padding: 8px 12px;
+      background: rgba(176, 109, 46, 0.04);
+      border-left: 3px solid var(--accent);
+      margin-left: 14px;
+      border-radius: 0 6px 6px 0;
+    }
+    .mentor-reason code {
+      font-family: 'Menlo', monospace;
+      background: rgba(0, 0, 0, 0.06);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+    .mentor-reason strong {
+      color: var(--accent);
+      font-weight: 700;
+    }
     .print-sheet { display: none; }
     @media print {
-      @page { margin: 0.4in; }
+      @page { size: letter; margin: 0.4in; }
       body { background: white !important; }
       body > *:not(.print-sheet) { display: none !important; }
       .print-sheet {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
+        display: block !important;
         color: #000;
         font-family: 'Outfit', system-ui, sans-serif;
+      }
+      .print-sheet .print-header {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .print-sheet .print-logo {
+        height: 64px;
+        width: auto;
+        max-width: 70%;
+        object-fit: contain;
+        display: inline-block;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .print-sheet .card-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
       }
       .print-sheet .card {
         border: 1px dashed #888;
         border-radius: 6px;
-        padding: 10px 12px 12px;
+        padding: 8px 14px 12px;
         page-break-inside: avoid;
       }
-      .print-sheet .print-logo-container {
-        text-align: center;
-        margin-bottom: 4px;
-      }
-      .print-sheet .print-logo {
-        height: 30px;
-        width: auto;
-        max-width: 100%;
-        object-fit: contain;
-        display: inline-block;
-      }
       .print-sheet .card-config {
-        font-size: 9px;
-        color: #666;
+        font-size: 11px;
+        color: #555;
         text-align: center;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
       }
       .print-sheet .grid {
         table-layout: fixed;
         border-collapse: collapse;
         margin: 0 auto;
       }
-      .print-sheet .grid .col-num { width: 20px; }
-      .print-sheet .grid .col-score { width: 26px; }
-      .print-sheet .grid .col-digit { width: 26px; }
+      .print-sheet .grid .col-num { width: 38px; }
+      .print-sheet .grid .col-score { width: 56px; }
+      .print-sheet .grid .col-digit { width: 64px; }
       .print-sheet .grid th,
       .print-sheet .grid td {
-        border: 1px solid #000;
+        border: 1.5px solid #000;
         padding: 0;
-        height: 24px;
+        height: 46px;
         text-align: center;
       }
       .print-sheet .grid thead th {
         background: #eee;
-        font-size: 10px;
+        font-size: 14px;
         font-weight: 700;
-        padding: 3px 1px;
+        padding: 6px 2px;
         height: auto;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
       }
       .print-sheet .grid td.num {
-        font-size: 9px;
+        font-size: 13px;
         color: #666;
       }
     }
@@ -477,6 +511,7 @@
         <label class="mentor-toggle"><input type="checkbox" data-hint="positions"> Locked positions</label>
         <label class="mentor-toggle"><input type="checkbox" data-hint="count"> Possibilities</label>
         <label class="mentor-toggle"><input type="checkbox" data-hint="nudge"> Solvable nudge</label>
+        <label class="mentor-toggle"><input type="checkbox" data-hint="reasoning"> Show reasoning</label>
       </div>
       <div id="mentor-output" class="mentor-output"></div>
     </details>
@@ -510,7 +545,7 @@
 
     <details>
       <summary>How to play</summary>
-      <p>I'm thinking of a secret 4-digit code. After each guess, I'll show you:</p>
+      <p>I'm thinking of a secret <span id="howto-length">4</span>-digit code. After each guess, I'll show you:</p>
       <p><strong>🐜 Ants</strong> — how many digits you got exactly right (right digit in the right position).</p>
       <p><strong>🌰 Acorns</strong> — how many digits are in the code but in a different position.</p>
       <p>Use the clues to narrow it down. Pick 10 guesses for a real challenge, or Unlimited to crack it however long it takes.</p>
@@ -639,6 +674,83 @@
       return { remaining: consistent.length, confirmed, ruledOut, locked };
     }
 
+    function reasonForRuledOut(ruledOutDigits) {
+      const setRO = new Set(ruledOutDigits);
+      const zeroZero = state.guesses
+        .map((g, i) => ({ g, i, covers: [...new Set(g.value.split(''))].filter(d => setRO.has(d)) }))
+        .filter(c => c.g.ants === 0 && c.g.acorns === 0 && c.covers.length > 0)
+        .sort((a, b) => b.covers.length - a.covers.length);
+      if (zeroZero.length > 0) {
+        const top = zeroZero[0];
+        const digits = [...new Set(top.g.value.split(''))].join(', ');
+        const others = ruledOutDigits.filter(d => !top.covers.includes(d));
+        let txt = `Guess #${top.i + 1} (<code>${top.g.value}</code>) had <strong>0 ants and 0 acorns</strong>, so none of its digits (${digits}) are in the code.`;
+        if (others.length > 0) {
+          txt += ` (Other ruled-out digits — ${others.join(', ')} — come from combining several guesses.)`;
+        }
+        return txt;
+      }
+      const containing = state.guesses
+        .map((g, i) => ({ g, i }))
+        .filter(({ g }) => ruledOutDigits.some(d => g.value.includes(d)));
+      if (containing.length > 0) {
+        const cites = containing.slice(0, 3).map(({ i }) => `#${i + 1}`).join(', ');
+        return `Combining clues from guesses ${cites}, these digits can't fit any consistent code.`;
+      }
+      return null;
+    }
+
+    function reasonForConfirmed(confirmedDigits, mentor) {
+      const setRO = new Set(mentor.ruledOut);
+      for (let i = 0; i < state.guesses.length; i++) {
+        const g = state.guesses[i];
+        const hits = g.ants + g.acorns;
+        if (hits === 0) continue;
+        const uniqueGuessDigits = [...new Set(g.value.split(''))];
+        const nonRuled = uniqueGuessDigits.filter(d => !setRO.has(d));
+        const ruledInGuess = uniqueGuessDigits.filter(d => setRO.has(d));
+        const coversConfirmed = nonRuled.filter(d => confirmedDigits.includes(d));
+        if (nonRuled.length === hits && coversConfirmed.length > 0 && ruledInGuess.length > 0) {
+          const ruledList = ruledInGuess.join(', ');
+          const verb = ruledInGuess.length === 1 ? "isn't" : "aren't";
+          const remainList = nonRuled.join(', ');
+          return `Guess #${i + 1} (<code>${g.value}</code>) had <strong>${hits}</strong> total hit${hits > 1 ? 's' : ''} (ants + acorns). Since ${ruledList} ${verb} in the code, the remaining digit${nonRuled.length > 1 ? 's — ' + remainList + ' — must all be' : ' (' + remainList + ') must be'} in the code.`;
+        }
+      }
+      return `Across every code that still fits your clues, ${confirmedDigits.map(d => '<strong>' + d + '</strong>').join(', ')} always appear${confirmedDigits.length === 1 ? 's' : ''}.`;
+    }
+
+    function reasonForLocked(pos, digit, mentor) {
+      const setRO = new Set(mentor.ruledOut);
+      for (let i = 0; i < state.guesses.length; i++) {
+        const g = state.guesses[i];
+        if (g.ants === state.codeLength && g.value[pos] === digit) {
+          return `Guess #${i + 1} (<code>${g.value}</code>) had all ${state.codeLength} ants — every digit landed in the right spot, so position ${pos + 1} is <strong>${digit}</strong>.`;
+        }
+      }
+      for (let i = 0; i < state.guesses.length; i++) {
+        const g = state.guesses[i];
+        if (g.value[pos] !== digit || g.ants < 1) continue;
+        const others = g.value.split('').map((d, idx) => ({ d, idx })).filter(x => x.idx !== pos);
+        const otherDigits = [...new Set(others.map(o => o.d))];
+        const allRuled = otherDigits.every(d => setRO.has(d));
+        if (allRuled && g.ants === 1) {
+          const verb = otherDigits.length === 1 ? "isn't" : "aren't";
+          return `Guess #${i + 1} (<code>${g.value}</code>) had <strong>1 ant</strong>. Since ${otherDigits.join(', ')} ${verb} in the code (other guesses), the ant must be <strong>${digit}</strong> at position ${pos + 1}.`;
+        }
+      }
+      for (let i = 0; i < state.guesses.length; i++) {
+        const g = state.guesses[i];
+        if (g.value[pos] === digit) continue;
+        if (!g.value.includes(digit)) continue;
+        if (g.acorns >= 1) {
+          const guessPos = g.value.indexOf(digit);
+          return `Guess #${i + 1} (<code>${g.value}</code>) put <strong>${digit}</strong> at position ${guessPos + 1} and scored an acorn — meaning ${digit} is in the code but not there. Combined with other clues, position ${pos + 1} is the only spot left for it.`;
+        }
+      }
+      return `Combining clues across your guesses, position ${pos + 1} must be <strong>${digit}</strong>.`;
+    }
+
     function renderMentor() {
       const flags = {};
       $mentorToggles.forEach(cb => { flags[cb.dataset.hint] = cb.checked; });
@@ -648,36 +760,60 @@
         return;
       }
       const m = computeMentor();
-      const lines = [];
+      const showReason = !!flags.reasoning && state.guesses.length > 0;
+      const groups = [];
+      const push = (line, reason) => groups.push({ line, reason });
+
       if (flags.count) {
         const word = m.remaining === 1 ? 'code' : 'codes';
-        lines.push(`<div class="mentor-line"><span class="ico">🔎</span><span><span class="label">Possibilities:</span> <strong>${m.remaining}</strong> ${word} still match your clues.</span></div>`);
+        push(`<div class="mentor-line"><span class="ico">🔎</span><span><span class="label">Possibilities:</span> <strong>${m.remaining}</strong> ${word} still match your clues.</span></div>`, null);
       }
       if (flags.digits) {
         if (m.confirmed.length) {
           const pills = m.confirmed.map(d => `<span class="pill">${d}</span>`).join('');
-          lines.push(`<div class="mentor-line confirmed"><span class="ico">✅</span><span><span class="label">In the code:</span>${pills}</span></div>`);
+          push(
+            `<div class="mentor-line confirmed"><span class="ico">✅</span><span><span class="label">In the code:</span>${pills}</span></div>`,
+            showReason ? reasonForConfirmed(m.confirmed, m) : null
+          );
         }
         if (m.ruledOut.length) {
           const pills = m.ruledOut.map(d => `<span class="pill">${d}</span>`).join('');
-          lines.push(`<div class="mentor-line ruled"><span class="ico">🚫</span><span><span class="label">Ruled out:</span>${pills}</span></div>`);
+          push(
+            `<div class="mentor-line ruled"><span class="ico">🚫</span><span><span class="label">Ruled out:</span>${pills}</span></div>`,
+            showReason ? reasonForRuledOut(m.ruledOut) : null
+          );
         }
         if (!m.confirmed.length && !m.ruledOut.length && state.guesses.length > 0) {
-          lines.push(`<div class="mentor-line"><span class="ico">🤔</span><span class="label">No digits confirmed or ruled out yet.</span></div>`);
+          push(`<div class="mentor-line"><span class="ico">🤔</span><span class="label">No digits confirmed or ruled out yet.</span></div>`, null);
         }
       }
       if (flags.positions) {
         if (m.locked.length) {
-          const parts = m.locked.map(l => `position ${l.pos + 1} is <span class="pill">${l.digit}</span>`).join(', ');
-          lines.push(`<div class="mentor-line locked"><span class="ico">📍</span><span><span class="label">Locked:</span> ${parts}.</span></div>`);
+          if (showReason) {
+            for (const l of m.locked) {
+              push(
+                `<div class="mentor-line locked"><span class="ico">📍</span><span><span class="label">Locked:</span> position ${l.pos + 1} is <span class="pill">${l.digit}</span></span></div>`,
+                reasonForLocked(l.pos, l.digit, m)
+              );
+            }
+          } else {
+            const parts = m.locked.map(l => `position ${l.pos + 1} is <span class="pill">${l.digit}</span>`).join(', ');
+            push(`<div class="mentor-line locked"><span class="ico">📍</span><span><span class="label">Locked:</span> ${parts}.</span></div>`, null);
+          }
         } else if (state.guesses.length > 0) {
-          lines.push(`<div class="mentor-line"><span class="ico">📍</span><span class="label">No positions locked in yet.</span></div>`);
+          push(`<div class="mentor-line"><span class="ico">📍</span><span class="label">No positions locked in yet.</span></div>`, null);
         }
       }
       if (flags.nudge && m.remaining === 1 && !state.over) {
-        lines.push(`<div class="mentor-line nudge"><span class="ico">💡</span><span>You have enough info to solve this — there's only one code left!</span></div>`);
+        push(`<div class="mentor-line nudge"><span class="ico">💡</span><span>You have enough info to solve this — there's only one code left!</span></div>`, null);
       }
-      $mentorOutput.innerHTML = lines.join('');
+
+      $mentorOutput.innerHTML = groups.map(g => `
+        <div class="mentor-group">
+          ${g.line}
+          ${g.reason ? `<div class="mentor-reason">${g.reason}</div>` : ''}
+        </div>
+      `).join('');
     }
 
     function render() {
@@ -721,6 +857,9 @@
       }
 
       renderMentor();
+
+      const $howtoLen = document.getElementById('howto-length');
+      if ($howtoLen) $howtoLen.textContent = state.codeLength;
     }
 
     function submitGuess() {
@@ -780,10 +919,10 @@
 
     function buildPrintSheet() {
       const n = state.codeLength;
-      const rows = state.limit === 'unlimited' ? 12 : Number(state.limit);
-      const modeLabel = state.mode === 'unique' ? 'no repeats' : 'repeats';
-      const limitLabel = state.limit === 'unlimited' ? '∞' : state.limit;
-      const config = `${n} digits · ${modeLabel} · ${limitLabel} guesses`;
+      const rows = 8;
+      const cardsPerPage = 2;
+      const modeLabel = state.mode === 'unique' ? 'no repeats' : 'repeats allowed';
+      const config = `${n} digits · ${modeLabel} · ${rows} guesses`;
       const headerCells = Array.from({length: n}, (_, i) => `<th>${i + 1}</th>`).join('');
       const colDigits = Array.from({length: n}, () => '<col class="col-digit">').join('');
       const cellDigits = Array.from({length: n}, () => '<td></td>').join('');
@@ -797,9 +936,6 @@
       `).join('');
       const card = `
         <div class="card">
-          <div class="print-logo-container">
-            <img src="assets/text_logo_ants_acorns.png" alt="Ants &amp; Acorns" class="print-logo">
-          </div>
           <div class="card-config">${config}</div>
           <table class="grid">
             <colgroup>
@@ -820,12 +956,29 @@
           </table>
         </div>
       `;
-      document.getElementById('print-sheet').innerHTML = card.repeat(4);
+      document.getElementById('print-sheet').innerHTML = `
+        <div class="print-header">
+          <img src="assets/text_logo_ants_acorns.png" alt="Ants &amp; Acorns" class="print-logo">
+        </div>
+        <div class="card-grid">
+          ${card.repeat(cardsPerPage)}
+        </div>
+      `;
     }
+
+    // Preload the logo so it's cached and ready when print is triggered.
+    const _preloadLogo = new Image();
+    _preloadLogo.src = 'assets/text_logo_ants_acorns.png';
 
     document.getElementById('print-btn').addEventListener('click', () => {
       buildPrintSheet();
-      window.print();
+      const img = document.querySelector('#print-sheet .print-logo');
+      if (img && !img.complete) {
+        img.addEventListener('load', () => window.print(), { once: true });
+        img.addEventListener('error', () => window.print(), { once: true });
+      } else {
+        window.print();
+      }
     });
 
     $modeLabels.forEach(label => {

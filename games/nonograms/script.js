@@ -219,7 +219,7 @@ function generatePrintView() {
   printView.innerHTML = `
     <div class="print-sheet">
       <div class="print-header">
-        <h2>Nonograms Worksheet - ${size}x${size}</h2>
+        <img class="print-logo" src="assets/text_logo_nonograms.png" alt="Nonograms" />
         <p>Use logic to fill in the correct squares!</p>
       </div>
       <div class="print-page"></div>

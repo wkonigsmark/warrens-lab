@@ -1,0 +1,191 @@
+:root {
+    --bg-color: #f0fdf4; /* Light green/outdoor tint */
+    --container-bg: rgba(255, 255, 255, 0.85);
+    --board-bg: #78350f; /* Wood/dirt brown */
+    --light-off: #a8a29e; /* Unlit glass/stone */
+    --light-on: #fef08a; /* Warm bright lamp */
+    --light-on-glow: rgba(253, 224, 71, 0.8);
+    --text-primary: #1c1917;
+    --text-secondary: #57534e;
+    --btn-bg: #16a34a; /* Leaf green */
+    --btn-hover: #15803d;
+    --accent: #ca8a04;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    /* Soft leaf pattern or texture could go here later with the branding images */
+    background-image: radial-gradient(#dcfce7 2px, transparent 2px);
+    background-size: 30px 30px;
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 2.5rem;
+    background: var(--container-bg);
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid #e7e5e4;
+}
+
+header {
+    text-align: center;
+}
+
+.banner-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    color: #422006; /* Dark wood text */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.6rem;
+    padding: 1.2rem;
+    background-color: var(--board-bg);
+    border-radius: 1rem;
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.4), 0 4px 6px rgba(0,0,0,0.1);
+    /* Adds a bit of wood texture feel */
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(0,0,0,0.05),
+        rgba(0,0,0,0.05) 10px,
+        transparent 10px,
+        transparent 20px
+    );
+}
+
+.cell {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%; /* Round bulbs */
+    background-color: var(--light-off);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 -4px 6px rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.cell:hover {
+    transform: scale(1.05);
+    box-shadow: inset 0 -4px 6px rgba(0,0,0,0.2), 0 6px 10px rgba(0,0,0,0.4);
+}
+
+.cell.is-on {
+    background-color: var(--light-on);
+    box-shadow: 0 0 25px var(--light-on-glow), inset 0 0 15px rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    background-color: var(--btn-bg);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    border-radius: 2rem; /* Pill shape */
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.4), 0 2px 4px -1px rgba(22, 163, 74, 0.2);
+    border: 2px solid #14532d;
+}
+
+.btn:hover {
+    background-color: var(--btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px -1px rgba(22, 163, 74, 0.5);
+}
+
+.btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px -1px rgba(22, 163, 74, 0.4);
+}
+
+.hidden {
+    display: none !important;
+}
+
+#win-message {
+    margin-top: -1rem;
+}
+
+#win-message h2 {
+    color: #16a34a;
+    font-size: 2rem;
+    text-shadow: 0 0 10px rgba(22, 163, 74, 0.3);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@media (max-width: 500px) {
+    .app-container {
+        padding: 1.5rem 1rem;
+        gap: 1.5rem;
+        width: 95%; /* ensure it doesn't touch the edges */
+    }
+
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    .board {
+        padding: 0.8rem;
+        gap: 0.4rem;
+    }
+
+    .cell {
+        /* Fluid sizing to prevent overflow on very small devices */
+        width: 13vw;
+        height: 13vw;
+        max-width: 55px;
+        max-height: 55px;
+    }
+    
+    .btn {
+        padding: 0.6rem 1.5rem;
+        font-size: 1rem;
+    }
+}
