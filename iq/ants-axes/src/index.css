@@ -15,3 +15,36 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Print styles for worksheets */
+@media print {
+  @page {
+    size: letter landscape;
+    margin: 0.4in;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  body, html {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Make worksheet fill the printable area (the @page margin handles whitespace) */
+  .worksheet-page {
+    background: white !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 0 !important;
+  }
+
+  .worksheet-problem {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}

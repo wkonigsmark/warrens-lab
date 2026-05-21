@@ -150,6 +150,23 @@
       text-align: center;
     }
 
+    .passage-info {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .passage-source {
+      color: #4a7c8c;
+      font-size: 0.95em;
+      margin: 0;
+    }
+
+    .passage-source em {
+      font-style: italic;
+      font-weight: 600;
+    }
+
     .timer-container {
       margin-bottom: 30px;
     }
@@ -460,11 +477,23 @@
         </div>
       </div>
 
+      <div class="control-group" id="mode-control" style="display: none;">
+        <label>Choose Mode:</label>
+        <div class="button-row">
+          <button class="btn-option" data-mode="sightwords">Sight Words</button>
+          <button class="btn-option" data-mode="literature">Literature</button>
+        </div>
+      </div>
+
       <button class="btn-start">Start Game</button>
     </div>
 
     <!-- Play Screen -->
     <div class="screen play-screen">
+      <div class="passage-info" style="display: none;">
+        <p class="passage-source">From: <em id="passage-title">-</em> by <span id="passage-author">-</span></p>
+      </div>
+
       <div class="timer-container">
         <div class="timer-bar">
           <div class="timer-fill"></div>
@@ -518,6 +547,7 @@
     let gameState = {
       timeLimit: null,
       gradeLevel: null,
+      mode: null,                // 'sightwords' or 'literature'
       currentScore: 0,
       bestScore: 0,
       timeRemaining: null,
@@ -527,7 +557,120 @@
       timerInterval: null,
       lexiconLoaded: false,
       skippedWords: [],
-      addWordUsed: false
+      addWordUsed: false,
+      passageInfo: null           // { title, author } for literature mode
+    };
+
+    // Literature passages for Literature mode
+    const literaturePassages = {
+      K: [
+        {
+          title: 'Mother Goose',
+          author: 'Traditional',
+          passage: 'Mary had a little lamb, little lamb, little lamb. Mary had a little lamb, its fleece was white as snow.'
+        },
+        {
+          title: 'Mother Goose',
+          author: 'Traditional',
+          passage: 'Jack and Jill went up the hill to fetch a pail of water. Jack fell down and broke his crown, and Jill came tumbling after.'
+        },
+        {
+          title: 'Mother Goose',
+          author: 'Traditional',
+          passage: 'Humpty Dumpty sat on a wall. Humpty Dumpty had a great fall. All the king\'s horses and all the king\'s men could not put Humpty together again.'
+        },
+        {
+          title: 'Aesop\'s Fables',
+          author: 'Aesop',
+          passage: 'The Ant and the Grasshopper. In a field one summer\'s day a Grasshopper was hopping about, chirping and singing to its heart\'s content. An Ant passed by, bearing along with great toil an ear of corn he was taking to the nest.'
+        },
+        {
+          title: 'Aesop\'s Fables',
+          author: 'Aesop',
+          passage: 'The Tortoise and the Hare. A Hare one day ridiculed the short feet and slow pace of the Tortoise. The Tortoise laughed and said, I will race you. The Hare agreed, and off they went together.'
+        },
+        {
+          title: 'Traditional Fairy Tales',
+          author: 'Traditional',
+          passage: 'Goldilocks and the Three Bears. Once upon a time there were Three Bears who lived in a little house in the woods. One day Goldilocks came to their house. She knocked on the door, but no one answered.'
+        }
+      ],
+      1: [
+        {
+          title: 'The Tale of Peter Rabbit',
+          author: 'Beatrix Potter',
+          passage: 'Once upon a time there were four little rabbits whose names were Flopsy, Mopsy, Cotton-tail, and Peter. They lived with their mother in a sand-bank underneath the root of a very big fir-tree.'
+        },
+        {
+          title: 'The Tale of Peter Rabbit',
+          author: 'Beatrix Potter',
+          passage: 'Now, my dears, said old Mrs. Rabbit, you may go into the fields or down the lane, but don\'t go into Mr. McGregor\'s garden. Your Father had an accident there; he was put in Mrs. McGregor\'s pie by Mrs. McGregor.'
+        },
+        {
+          title: 'The Tale of Peter Rabbit',
+          author: 'Beatrix Potter',
+          passage: 'Flopsy, Mopsy, and Cotton-tail, who were good little bunnies, went down the lane to gather blackberries. But Peter, who was very naughty, ran straight away to Mr. McGregor\'s garden and squeezed under the gate.'
+        },
+        {
+          title: 'Aesop\'s Fables',
+          author: 'Aesop',
+          passage: 'The Lion and the Mouse. A mighty Lion was sleeping in the sun. A little Mouse, not seeing the Lion, ran across his paw and woke him up. The Lion grabbed the Mouse and was about to swallow him.'
+        },
+        {
+          title: 'Aesop\'s Fables',
+          author: 'Aesop',
+          passage: 'The Boy Who Cried Wolf. A shepherd boy tended his flock near a dark forest. One day he cried out, Wolf! Wolf! The villagers came running to help him, but there was no wolf.'
+        },
+        {
+          title: 'Hans Christian Andersen',
+          author: 'Hans Christian Andersen',
+          passage: 'The Ugly Duckling. It was beautiful summer weather in the country. The wheat was golden, the oats were still green, and the grass grew thick around the little pools. There sat a duck on her nest, watching her eggs.'
+        },
+        {
+          title: 'A Child\'s Garden of Verses',
+          author: 'Robert Louis Stevenson',
+          passage: 'The Land of Nod. From breakfast on through all the day at home among my friends I stay. But every night I go away to the Land of Nod.'
+        }
+      ],
+      '5+': [
+        {
+          title: 'A Tale of Two Cities',
+          author: 'Charles Dickens',
+          passage: 'It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way—in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only.'
+        },
+        {
+          title: 'The Adventures of Sherlock Holmes',
+          author: 'Arthur Conan Doyle',
+          passage: 'To Sherlock Holmes she is always the woman. I have seldom heard him mention her under any other name. In his eyes she eclipses and predominates the whole of her sex. It was not that he felt any emotion akin to love for Irene Adler. All emotions, and that one particularly, were abhorrent to his cold, precise but admirably balanced mind. He was, I take it, the most perfect reasoning and observing machine that the world has seen, but as a lover he would have placed himself in a false position. He never spoke of the softer passions, save with a gibe and a sneer.'
+        },
+        {
+          title: 'The Adventures of Huckleberry Finn',
+          author: 'Mark Twain',
+          passage: 'You don\'t know about me without you have read a book by the name of The Adventures of Tom Sawyer; but that ain\'t no matter. That book was made by Mr. Mark Twain, and he told the truth, mainly. There was things which he stretched, but mainly he told the truth. That is nothing. I never seen anybody but lied one time or another, without it was Aunt Polly, or the widow Douglas. It is the best way; the way it ought to be.'
+        },
+        {
+          title: 'The Grimm\'s Fairy Tales',
+          author: 'Brothers Grimm',
+          passage: 'In a certain kingdom there lived a king who had twelve daughters, each one more beautiful than the other. They slept together in a large hall, and every night the doors were locked and barred. But in the morning it was found that their shoes had been worn into holes during the night, as if they had been danced in. How this happened no one could explain, and the king became deeply troubled. He sent out a proclamation that whosoever could discover where the princesses danced during the night should have one of them for his wife.'
+        }
+      ],
+      'Adult': [
+        {
+          title: 'A Tale of Two Cities',
+          author: 'Charles Dickens',
+          passage: 'It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way—in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only. There were a king with a large jaw and a queen with a plain face, on the throne of England; there were a king with a large jaw and a queen with a fair face, on the throne of France.'
+        },
+        {
+          title: 'Pride and Prejudice',
+          author: 'Jane Austen',
+          passage: 'It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife. However little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so well fixed in the minds of the surrounding families, that he is considered as the rightful property of some one or other of their daughters. My dear Mr. Bennet, said his lady to him one day, have you heard that Netherfield Park is let at last?'
+        },
+        {
+          title: 'The Strange Case of Dr Jekyll and Mr Hyde',
+          author: 'Robert Louis Stevenson',
+          passage: 'Mr. Utterson the lawyer was a man of rugged countenance that was never lighted by a smile; cold, scanty and embarrassed in discourse; backward in sentiment; lean, long, dusty, dreary and yet somehow lovable. At friendly meetings, and when the wine was to his taste, something eminently human beaconed from his eye; something indeed which never found its way into his talk, but which spoke not only in these silent symbols of the after-dinner face, but more often and loudly in the acts of his life.'
+        }
+      ]
     };
 
     // Fallback word lists (Dolch sight words by grade)
@@ -590,16 +733,49 @@
       return arr;
     }
 
+    // Parse passage text into individual words
+    function parsePassageToWords(passageText) {
+      // Split by whitespace and remove empty strings
+      const words = passageText
+        .split(/\s+/)
+        .filter(word => word.length > 0)
+        .map(word => {
+          // Remove trailing punctuation like commas, periods, dashes
+          return word.replace(/[,\.\!?—\-;:'"]+$/g, '');
+        })
+        .filter(word => word.length > 0); // Remove any empty words after punctuation removal
+
+      return words;
+    }
+
+    // Get a random literature passage for the given grade level
+    function getLiteraturePassage(gradeLevel) {
+      const passages = literaturePassages[gradeLevel] || literaturePassages['5+'];
+
+      if (!passages || passages.length === 0) {
+        return null;
+      }
+
+      const passage = passages[Math.floor(Math.random() * passages.length)];
+      return {
+        words: parsePassageToWords(passage.passage),
+        title: passage.title,
+        author: passage.author
+      };
+    }
+
     // Load best score from localStorage
     function loadBestScore() {
-      const key = `snapwords_best_${gameState.gradeLevel}_${gameState.timeLimit}`;
+      const modeStr = gameState.mode || 'sightwords';
+      const key = `snapwords_best_${gameState.gradeLevel}_${modeStr}_${gameState.timeLimit}`;
       const stored = localStorage.getItem(key);
       return stored ? parseInt(stored) : 0;
     }
 
     // Save best score to localStorage
     function saveBestScore() {
-      const key = `snapwords_best_${gameState.gradeLevel}_${gameState.timeLimit}`;
+      const modeStr = gameState.mode || 'sightwords';
+      const key = `snapwords_best_${gameState.gradeLevel}_${modeStr}_${gameState.timeLimit}`;
       const currentBest = loadBestScore();
       if (gameState.currentScore > currentBest) {
         localStorage.setItem(key, gameState.currentScore);
@@ -613,6 +789,17 @@
     function updateWord() {
       const word = gameState.wordList[gameState.currentWordIndex];
       document.querySelector('.word').textContent = word;
+    }
+
+    function updatePassageInfo() {
+      const passageInfoDiv = document.querySelector('.passage-info');
+      if (gameState.mode === 'literature' && gameState.passageInfo) {
+        document.getElementById('passage-title').textContent = gameState.passageInfo.title;
+        document.getElementById('passage-author').textContent = gameState.passageInfo.author;
+        passageInfoDiv.style.display = 'block';
+      } else {
+        passageInfoDiv.style.display = 'none';
+      }
     }
 
     function updateScore() {
@@ -643,8 +830,8 @@
 
     // Start game
     function startGame() {
-      if (!gameState.timeLimit || !gameState.gradeLevel) {
-        alert('Please select both time limit and grade level');
+      if (!gameState.timeLimit || !gameState.gradeLevel || !gameState.mode) {
+        alert('Please select time limit, grade level, and mode');
         return;
       }
 
@@ -655,13 +842,30 @@
       gameState.skippedWords = [];
       gameState.addWordUsed = false;
 
-      // Get and shuffle word list
-      const words = getWordList(gameState.gradeLevel);
-      gameState.wordList = shuffle(words);
+      // Get word list based on mode
+      let words = [];
+      if (gameState.mode === 'literature') {
+        // Literature mode: get passage and keep words sequential
+        const passage = getLiteraturePassage(gameState.gradeLevel);
+        if (passage) {
+          words = passage.words;
+          gameState.passageInfo = { title: passage.title, author: passage.author };
+        } else {
+          alert('No literature passages available for this grade level');
+          return;
+        }
+      } else {
+        // Sight Words mode: get word list and shuffle
+        words = getWordList(gameState.gradeLevel);
+        words = shuffle(words);
+      }
+
+      gameState.wordList = words;
 
       updateScore();
       updateWord();
       updateTimer();
+      updatePassageInfo();
       showScreen('play-screen');
 
       // Start timer
@@ -760,6 +964,31 @@
         document.querySelectorAll('.btn-option[data-grade]').forEach(b => b.classList.remove('selected'));
         this.classList.add('selected');
         gameState.gradeLevel = this.dataset.grade;
+
+        // Show mode control only for grades that support literature mode (K, 1, 5+ and Adult)
+        const modeControl = document.getElementById('mode-control');
+        const literatureEligible = ['K', '1', '5+', 'Adult'].includes(this.dataset.grade);
+        if (literatureEligible) {
+          modeControl.style.display = 'block';
+          // Default to sightwords if mode not selected
+          if (!gameState.mode) {
+            gameState.mode = 'sightwords';
+            document.querySelector('.btn-option[data-mode="sightwords"]').classList.add('selected');
+          }
+        } else {
+          modeControl.style.display = 'none';
+          gameState.mode = 'sightwords';
+          // Clear mode selection for non-eligible grades
+          document.querySelectorAll('.btn-option[data-mode]').forEach(b => b.classList.remove('selected'));
+        }
+      });
+    });
+
+    document.querySelectorAll('.btn-option[data-mode]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.btn-option[data-mode]').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        gameState.mode = this.dataset.mode;
       });
     });
 

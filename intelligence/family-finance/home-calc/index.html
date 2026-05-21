@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Purchase Calculator — House Konigsmark</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --bg-main: #0d1117;
+            --bg-surface: #161b22;
+            --bg-surface-hover: #21262d;
+            --border-color: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent: #3fb950;
+            --accent-hover: #2ea043;
+            --accent-light: rgba(63, 185, 80, 0.1);
+            --danger: #f85149;
+            --danger-light: rgba(248, 81, 73, 0.1);
+            --warning: #d29922;
+            --warning-light: rgba(210, 153, 34, 0.1);
+            --info: #58a6ff;
+            --info-light: rgba(88, 166, 255, 0.1);
+            --radius: 12px;
+            --radius-sm: 6px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: var(--font-stack);
+            -webkit-font-smoothing: antialiased;
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
+        }
+
+        header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header h1 i { color: var(--accent); }
+
+        header .subtitle {
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            transition: all .15s;
+        }
+        .back-link:hover { color: var(--text-primary); background: var(--bg-surface-hover); }
+
+        .scenario-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0;
+            overflow-x: auto;
+        }
+        .scenario-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 12px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color .15s, border-color .15s;
+        }
+        .scenario-tab:hover { color: var(--text-primary); }
+        .scenario-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+        .scenario-tab small {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 12px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+            gap: 24px;
+        }
+        @media (max-width: 980px) {
+            .layout { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 20px 22px;
+            margin-bottom: 16px;
+        }
+
+        .panel h2 {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .panel h2 i { color: var(--accent); }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 16px;
+        }
+        .field-grid.single { grid-template-columns: 1fr; }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .field label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .field label .hint {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 11px;
+        }
+        .field-input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .field-input-wrap .prefix,
+        .field-input-wrap .suffix {
+            position: absolute;
+            color: var(--text-muted);
+            font-size: 13px;
+            pointer-events: none;
+        }
+        .field-input-wrap .prefix { left: 10px; }
+        .field-input-wrap .suffix { right: 10px; }
+        .field input {
+            width: 100%;
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 9px 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            transition: border-color .15s;
+        }
+        .field.has-prefix input { padding-left: 24px; }
+        .field.has-suffix input { padding-right: 30px; }
+        .field input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .field input.derived {
+            color: var(--text-secondary);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .checkbox-field {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .checkbox-field input { width: 14px; height: 14px; accent-color: var(--accent); }
+
+        .hero-card {
+            background: linear-gradient(135deg, rgba(63, 185, 80, 0.08), rgba(63, 185, 80, 0.02));
+            border: 1px solid rgba(63, 185, 80, 0.3);
+            border-radius: var(--radius);
+            padding: 24px 26px;
+            margin-bottom: 16px;
+        }
+        .hero-card.over { background: linear-gradient(135deg, rgba(248, 81, 73, 0.1), rgba(248, 81, 73, 0.02)); border-color: rgba(248, 81, 73, 0.35); }
+        .hero-card.warn { background: linear-gradient(135deg, rgba(210, 153, 34, 0.1), rgba(210, 153, 34, 0.02)); border-color: rgba(210, 153, 34, 0.35); }
+
+        .hero-card h3 {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .hero-card .big {
+            font-size: 40px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            color: var(--text-primary);
+        }
+        .hero-card .delta {
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .hero-card .delta strong { color: var(--text-primary); }
+        .hero-card .delta.under strong { color: var(--accent); }
+        .hero-card .delta.over strong { color: var(--danger); }
+
+        .gauge {
+            margin-top: 14px;
+            height: 8px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 999px;
+            overflow: hidden;
+            position: relative;
+        }
+        .gauge-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 999px;
+            transition: width .3s, background .3s;
+        }
+        .gauge-fill.warn { background: var(--warning); }
+        .gauge-fill.over { background: var(--danger); }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .summary-table tr td {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 13.5px;
+        }
+        .summary-table tr:last-child td { border-bottom: none; }
+        .summary-table td.label {
+            color: var(--text-secondary);
+        }
+        .summary-table td.label .meta {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+        .summary-table td.val {
+            text-align: right;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+        }
+        .summary-table tr.total td {
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 15px;
+        }
+        .summary-table tr.total td.val { color: var(--accent); }
+        .summary-table tr.subhead td {
+            padding-top: 14px;
+            color: var(--text-muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+        }
+
+        .salary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 600px) { .salary-grid { grid-template-columns: 1fr; } }
+        .salary-card {
+            padding: 14px 16px;
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+        }
+        .salary-card .label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+        .salary-card .val {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent);
+            font-variant-numeric: tabular-nums;
+        }
+        .salary-card .meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .compare-panel { margin-top: 24px; }
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .compare-table th, .compare-table td {
+            padding: 10px 12px;
+            text-align: right;
+            font-size: 13.5px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .compare-table th { color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .compare-table th:first-child, .compare-table td:first-child { text-align: left; color: var(--text-secondary); }
+        .compare-table td { font-variant-numeric: tabular-nums; }
+        .compare-table tr.highlight td { color: var(--text-primary); font-weight: 600; }
+        .compare-table .over { color: var(--danger) !important; }
+        .compare-table .under { color: var(--accent) !important; }
+        .compare-table .scenario-link {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 400;
+            display: block;
+            margin-top: 2px;
+        }
+        .compare-table .scenario-link a { color: var(--info); }
+
+        .note {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            line-height: 1.5;
+        }
+        .note strong { color: var(--text-secondary); }
+
+        .reset-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .reset-btn:hover { color: var(--text-primary); background: var(--bg-surface-hover); }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <header>
+            <div>
+                <h1><i class="ph-fill ph-house-line"></i> Home Purchase Calculator</h1>
+                <p class="subtitle">Working backwards from a number that lets us actually live</p>
+            </div>
+            <a href="../index.html" class="back-link"><i class="ph ph-arrow-left"></i> Family Finance</a>
+        </header>
+
+        <div class="scenario-tabs" id="scenario-tabs">
+            <button class="scenario-tab active" data-scenario="franklin">
+                <i class="ph ph-map-pin"></i> 137 Franklin St <small>Tribeca</small>
+            </button>
+            <button class="scenario-tab" data-scenario="warren">
+                <i class="ph ph-map-pin"></i> 92 Warren St <small>Tribeca</small>
+            </button>
+        </div>
+
+        <div class="layout">
+            <!-- INPUTS -->
+            <div>
+                <div class="panel">
+                    <h2><i class="ph ph-buildings"></i> Property</h2>
+                    <div class="field-grid">
+                        <div class="field has-prefix">
+                            <label>Purchase price <span class="hint" id="price-pct"></span></label>
+                            <div class="field-input-wrap">
+                                <span class="prefix">$</span>
+                                <input type="number" id="price" step="50000" placeholder="e.g. 4500000">
+                            </div>
+                        </div>
+                        <div class="field has-prefix">
+                            <label>Common charges <span class="hint">/ month</span></label>
+                            <div class="field-input-wrap">
+                                <span class="prefix">$</span>
+                                <input type="number" id="common" step="100" placeholder="HOA / mo">
+                            </div>
+                        </div>
+                        <div class="field has-prefix">
+                            <label>Property tax <span class="hint">/ month</span></label>
+                            <div class="field-input-wrap">
+                                <span class="prefix">$</span>
+                                <input type="number" id="tax" step="100" placeholder="RE tax / mo">
+                            </div>
+                        </div>
+                        <div class="field has-prefix">
+                            <label>Insurance <span class="hint">/ month</span></label>
+                            <div class="field-input-wrap">
+                                <span class="prefix">$</span>
+                                <input type="number" id="insurance" step="25" value="150">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2><i class="ph ph-wallet"></i> Down Payment Sources</h2>
+                    <div class="field-grid">
+                        <div class="field has-suffix">
+                            <label>Bank required down payment</label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="downPct" step="1" min="10" max="100" value="25">
+                                <span class="suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Total down payment $ <span class="hint">derived</span></label>
+                            <div class="field-input-wrap">
+                                <input type="text" id="downAmount" class="derived" readonly>
+                            </div>
+                        </div>
+                        <div class="field has-prefix">
+                            <label>Our cash (Fairhope rental)</label>
+                            <div class="field-input-wrap">
+                                <span class="prefix">$</span>
+                                <input type="number" id="ourCash" step="10000" value="500000">
+                            </div>
+                        </div>
+                        <div class="field has-prefix">
+                            <label>In-laws contribution</label>
+                            <div class="field-input-wrap">
+                                <span class="prefix">$</span>
+                                <input type="number" id="inLaws" step="10000" value="500000">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2><i class="ph ph-bank"></i> Bank Mortgage</h2>
+                    <div class="field-grid">
+                        <div class="field has-suffix">
+                            <label>Interest rate</label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="bankRate" step="0.05" value="6.75">
+                                <span class="suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="field has-suffix">
+                            <label>Term</label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="bankTerm" step="1" value="30">
+                                <span class="suffix">yrs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2><i class="ph ph-handshake"></i> Boss Loan Terms</h2>
+                    <div class="field-grid">
+                        <div class="field has-suffix">
+                            <label>Interest rate <span class="hint">AFR-ish</span></label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="bossRate" step="0.25" value="4.0">
+                                <span class="suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="field has-suffix">
+                            <label>Term</label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="bossTerm" step="1" value="10">
+                                <span class="suffix">yrs</span>
+                            </div>
+                        </div>
+                        <div class="field" style="grid-column: 1 / -1;">
+                            <label class="checkbox-field">
+                                <input type="checkbox" id="bossInterestOnly">
+                                Interest-only payments (balloon at end of term)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2><i class="ph ph-target"></i> Salary Targets</h2>
+                    <div class="field-grid">
+                        <div class="field has-prefix">
+                            <label>Monthly housing cap</label>
+                            <div class="field-input-wrap">
+                                <span class="prefix">$</span>
+                                <input type="number" id="cap" step="500" value="20000">
+                            </div>
+                        </div>
+                        <div class="field has-suffix">
+                            <label>Housing / take-home</label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="housingPct" step="1" value="35">
+                                <span class="suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="field has-suffix">
+                            <label>Effective tax rate <span class="hint">NYC + NYS + Fed</span></label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="taxRate" step="1" value="45">
+                                <span class="suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="field" style="align-self: end;">
+                            <button class="reset-btn" id="reset-btn">
+                                <i class="ph ph-arrow-counter-clockwise"></i> Reset this scenario
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESULTS -->
+            <div>
+                <div class="hero-card" id="hero">
+                    <h3>All-in monthly housing cost</h3>
+                    <div class="big" id="monthlyTotal">$0</div>
+                    <div class="delta" id="capDelta">vs $20,000 cap</div>
+                    <div class="gauge"><div class="gauge-fill" id="capGauge" style="width:0%"></div></div>
+                </div>
+
+                <div class="panel">
+                    <h2><i class="ph ph-calendar"></i> Monthly Breakdown</h2>
+                    <table class="summary-table">
+                        <tr>
+                            <td class="label">Bank mortgage P&amp;I <span class="meta" id="bankMortgageMeta"></span></td>
+                            <td class="val" id="bankPI">$0</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Boss loan payment <span class="meta" id="bossLoanMeta"></span></td>
+                            <td class="val" id="bossPmt">$0</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Property tax</td>
+                            <td class="val" id="taxOut">$0</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Common charges</td>
+                            <td class="val" id="commonOut">$0</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Insurance</td>
+                            <td class="val" id="insOut">$0</td>
+                        </tr>
+                        <tr class="total">
+                            <td>Total</td>
+                            <td class="val" id="monthlyTotal2">$0</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="panel">
+                    <h2><i class="ph ph-coins"></i> Cash Needed at Closing</h2>
+                    <table class="summary-table">
+                        <tr>
+                            <td class="label">Down payment</td>
+                            <td class="val" id="downOut">$0</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Mansion tax <span class="meta" id="mansionMeta"></span></td>
+                            <td class="val" id="mansionOut">$0</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Mortgage recording tax <span class="meta">~1.925% on mortgage</span></td>
+                            <td class="val" id="recordingOut">$0</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Other closing costs <span class="meta">legal, title, ~1.5%</span></td>
+                            <td class="val" id="closingOut">$0</td>
+                        </tr>
+                        <tr class="total">
+                            <td>Total cash at closing</td>
+                            <td class="val" id="closingTotal">$0</td>
+                        </tr>
+                        <tr class="subhead"><td colspan="2">Sources</td></tr>
+                        <tr>
+                            <td class="label">Our cash + in-laws</td>
+                            <td class="val" id="familyOut">$0</td>
+                        </tr>
+                        <tr class="total">
+                            <td>👉 Borrow from boss</td>
+                            <td class="val" id="bossLoanOut">$0</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="panel">
+                    <h2><i class="ph ph-currency-circle-dollar"></i> Required Salary</h2>
+                    <div class="salary-grid">
+                        <div class="salary-card">
+                            <div class="label">Stay under cap</div>
+                            <div class="val" id="salCap">$0</div>
+                            <div class="meta">Gross annual to make total housing ≤ cap, at <span id="housingPctEcho">35</span>% of take-home</div>
+                        </div>
+                        <div class="salary-card">
+                            <div class="label">Cover actual cost</div>
+                            <div class="val" id="salActual">$0</div>
+                            <div class="meta">Gross annual so actual housing = <span id="housingPctEcho2">35</span>% of take-home</div>
+                        </div>
+                    </div>
+                    <p class="note">
+                        <strong>How it works:</strong> Required gross = (annual housing ÷ housing-%-of-take-home) ÷ (1 − tax rate).
+                        Tax rate defaults to 45% (Fed top + NY State + NYC, blended effective at $1M+ income).
+                        Lenders typically want housing ≤ 28% of <em>gross</em>; this view uses <em>take-home</em>, which is harder but more honest.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel compare-panel">
+            <h2><i class="ph ph-scales"></i> Side-by-Side Comparison</h2>
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>137 Franklin
+                            <span class="scenario-link"><a href="https://streeteasy.com/building/137-franklin-street-new_york/1" target="_blank">listing ↗</a></span>
+                        </th>
+                        <th>92 Warren
+                            <span class="scenario-link"><a href="https://streeteasy.com/building/92-warren-street-new_york/9" target="_blank">listing ↗</a></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Price</td><td id="cmp-franklin-price">—</td><td id="cmp-warren-price">—</td></tr>
+                    <tr class="highlight"><td>Monthly total</td><td id="cmp-franklin-monthly">—</td><td id="cmp-warren-monthly">—</td></tr>
+                    <tr><td>vs $20k cap</td><td id="cmp-franklin-delta">—</td><td id="cmp-warren-delta">—</td></tr>
+                    <tr><td>Cash needed at closing</td><td id="cmp-franklin-cash">—</td><td id="cmp-warren-cash">—</td></tr>
+                    <tr class="highlight"><td>Borrow from boss</td><td id="cmp-franklin-boss">—</td><td id="cmp-warren-boss">—</td></tr>
+                    <tr><td>Required salary (under cap)</td><td id="cmp-franklin-sal">—</td><td id="cmp-warren-sal">—</td></tr>
+                </tbody>
+            </table>
+            <p class="note">
+                <strong>Note:</strong> Both scenarios save independently in your browser. Edit each one with real listing
+                numbers and switch between them to compare. Nothing is uploaded anywhere.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // ---------- Math helpers ----------
+        function amortizedMonthly(principal, annualRatePct, years) {
+            if (principal <= 0) return 0;
+            const r = (annualRatePct / 100) / 12;
+            const n = years * 12;
+            if (n <= 0) return 0;
+            if (r === 0) return principal / n;
+            return principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+        }
+        function interestOnlyMonthly(principal, annualRatePct) {
+            if (principal <= 0) return 0;
+            return principal * (annualRatePct / 100) / 12;
+        }
+        // NYC + NYS combined mansion tax tiers (effective 2026)
+        function mansionTax(price) {
+            if (price < 1_000_000) return { rate: 0, amount: 0 };
+            let rate;
+            if (price < 2_000_000) rate = 0.01;
+            else if (price < 3_000_000) rate = 0.0125;
+            else if (price < 5_000_000) rate = 0.015;
+            else if (price < 10_000_000) rate = 0.0225;
+            else if (price < 15_000_000) rate = 0.0325;
+            else if (price < 20_000_000) rate = 0.035;
+            else if (price < 25_000_000) rate = 0.0375;
+            else rate = 0.039;
+            return { rate, amount: price * rate };
+        }
+        function mortgageRecordingTax(mortgageAmount) {
+            if (mortgageAmount <= 0) return 0;
+            // NYC residential, simplified. Buyer typically pays this minus 0.25% the lender pays.
+            if (mortgageAmount <= 500_000) return mortgageAmount * 0.018;
+            return mortgageAmount * 0.01925;
+        }
+        function fmt$(n) {
+            if (!isFinite(n) || isNaN(n)) return '$0';
+            const sign = n < 0 ? '-' : '';
+            const abs = Math.abs(n);
+            return sign + '$' + Math.round(abs).toLocaleString('en-US');
+        }
+        function fmt$K(n) {
+            if (!isFinite(n) || isNaN(n)) return '$0';
+            if (Math.abs(n) >= 1_000_000) return '$' + (n / 1_000_000).toFixed(2) + 'M';
+            if (Math.abs(n) >= 10_000) return '$' + Math.round(n / 1000) + 'K';
+            return fmt$(n);
+        }
+
+        // ---------- State ----------
+        const FIELDS = ['price', 'common', 'tax', 'insurance', 'downPct', 'ourCash', 'inLaws',
+            'bankRate', 'bankTerm', 'bossRate', 'bossTerm', 'bossInterestOnly',
+            'cap', 'housingPct', 'taxRate'];
+
+        const DEFAULTS = {
+            franklin: { insurance: 150, downPct: 25, ourCash: 500000, inLaws: 500000,
+                bankRate: 6.75, bankTerm: 30, bossRate: 4.0, bossTerm: 10, bossInterestOnly: false,
+                cap: 20000, housingPct: 35, taxRate: 45 },
+            warren: { insurance: 150, downPct: 25, ourCash: 500000, inLaws: 500000,
+                bankRate: 6.75, bankTerm: 30, bossRate: 4.0, bossTerm: 10, bossInterestOnly: false,
+                cap: 20000, housingPct: 35, taxRate: 45 }
+        };
+
+        const STORAGE_KEY = 'hk-home-calc-v1';
+
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) return JSON.parse(raw);
+            } catch (e) {}
+            return { franklin: { ...DEFAULTS.franklin }, warren: { ...DEFAULTS.warren } };
+        }
+        function saveState(state) {
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+        }
+
+        let state = loadState();
+        let active = 'franklin';
+
+        // ---------- DOM wiring ----------
+        function readForm() {
+            const obj = {};
+            FIELDS.forEach(f => {
+                const el = document.getElementById(f);
+                if (!el) return;
+                if (el.type === 'checkbox') obj[f] = el.checked;
+                else {
+                    const v = el.value;
+                    obj[f] = v === '' ? null : Number(v);
+                }
+            });
+            return obj;
+        }
+        function writeForm(values) {
+            FIELDS.forEach(f => {
+                const el = document.getElementById(f);
+                if (!el) return;
+                const v = values[f];
+                if (el.type === 'checkbox') el.checked = !!v;
+                else el.value = (v === null || v === undefined) ? '' : v;
+            });
+        }
+
+        // ---------- Calc ----------
+        function computeScenario(v) {
+            const price = v.price || 0;
+            const downPct = (v.downPct || 0) / 100;
+            const downAmount = price * downPct;
+            const familyContribution = (v.ourCash || 0) + (v.inLaws || 0);
+
+            const bankMortgage = Math.max(0, price - downAmount);
+            const bankPI = amortizedMonthly(bankMortgage, v.bankRate || 0, v.bankTerm || 30);
+
+            const mansion = mansionTax(price);
+            const recording = mortgageRecordingTax(bankMortgage);
+            const otherClosing = price * 0.015;
+            const cashAtClosing = downAmount + mansion.amount + recording + otherClosing;
+
+            const bossLoan = Math.max(0, cashAtClosing - familyContribution);
+
+            const bossPmt = v.bossInterestOnly
+                ? interestOnlyMonthly(bossLoan, v.bossRate || 0)
+                : amortizedMonthly(bossLoan, v.bossRate || 0, v.bossTerm || 10);
+
+            const tax = v.tax || 0;
+            const common = v.common || 0;
+            const insurance = v.insurance || 0;
+            const monthlyTotal = bankPI + bossPmt + tax + common + insurance;
+
+            // Salary back-solve
+            const housingPctTake = (v.housingPct || 35) / 100;
+            const effTax = (v.taxRate || 45) / 100;
+            const cap = v.cap || 0;
+
+            const targetMonthly = Math.min(cap > 0 ? cap : Infinity, monthlyTotal);
+            const annualHousingAtCap = (cap > 0 ? cap : monthlyTotal) * 12;
+            const annualHousingActual = monthlyTotal * 12;
+
+            const salCap = (annualHousingAtCap / housingPctTake) / Math.max(0.01, 1 - effTax);
+            const salActual = (annualHousingActual / housingPctTake) / Math.max(0.01, 1 - effTax);
+
+            return {
+                price, downAmount, familyContribution, bankMortgage, bankPI,
+                bossLoan, bossPmt, mansion, recording, otherClosing, cashAtClosing,
+                tax, common, insurance, monthlyTotal,
+                cap, salCap, salActual
+            };
+        }
+
+        // ---------- Render ----------
+        function render() {
+            const v = readForm();
+            const r = computeScenario(v);
+
+            // Property echo
+            const pricePctEl = document.getElementById('price-pct');
+            pricePctEl.textContent = v.price ? fmt$K(v.price) : '';
+
+            // Down payment derived
+            document.getElementById('downAmount').value = fmt$(r.downAmount);
+
+            // Monthly breakdown
+            document.getElementById('bankPI').textContent = fmt$(r.bankPI);
+            document.getElementById('bankMortgageMeta').textContent =
+                r.bankMortgage > 0 ? `Mortgage ${fmt$K(r.bankMortgage)} @ ${v.bankRate}% / ${v.bankTerm}yr` : '';
+            document.getElementById('bossPmt').textContent = fmt$(r.bossPmt);
+            document.getElementById('bossLoanMeta').textContent =
+                r.bossLoan > 0
+                    ? `${fmt$K(r.bossLoan)} @ ${v.bossRate}%${v.bossInterestOnly ? ' (interest-only)' : ' / ' + v.bossTerm + 'yr'}`
+                    : '';
+            document.getElementById('taxOut').textContent = fmt$(r.tax);
+            document.getElementById('commonOut').textContent = fmt$(r.common);
+            document.getElementById('insOut').textContent = fmt$(r.insurance);
+            document.getElementById('monthlyTotal').textContent = fmt$(r.monthlyTotal);
+            document.getElementById('monthlyTotal2').textContent = fmt$(r.monthlyTotal);
+
+            // Cash at closing
+            document.getElementById('downOut').textContent = fmt$(r.downAmount);
+            document.getElementById('mansionOut').textContent = fmt$(r.mansion.amount);
+            document.getElementById('mansionMeta').textContent = r.mansion.rate
+                ? `${(r.mansion.rate * 100).toFixed(2)}% (NYC + NYS combined)`
+                : '';
+            document.getElementById('recordingOut').textContent = fmt$(r.recording);
+            document.getElementById('closingOut').textContent = fmt$(r.otherClosing);
+            document.getElementById('closingTotal').textContent = fmt$(r.cashAtClosing);
+            document.getElementById('familyOut').textContent = fmt$(r.familyContribution);
+            document.getElementById('bossLoanOut').textContent = fmt$(r.bossLoan);
+
+            // Salary
+            document.getElementById('salCap').textContent = fmt$(r.salCap);
+            document.getElementById('salActual').textContent = fmt$(r.salActual);
+            document.getElementById('housingPctEcho').textContent = v.housingPct;
+            document.getElementById('housingPctEcho2').textContent = v.housingPct;
+
+            // Hero card vs cap
+            const hero = document.getElementById('hero');
+            const delta = document.getElementById('capDelta');
+            const gauge = document.getElementById('capGauge');
+            const cap = v.cap || 0;
+            const diff = r.monthlyTotal - cap;
+            const pct = cap > 0 ? Math.min(150, (r.monthlyTotal / cap) * 100) : 0;
+
+            hero.classList.remove('over', 'warn');
+            gauge.classList.remove('warn', 'over');
+            if (cap > 0) {
+                if (diff > 0) {
+                    hero.classList.add('over');
+                    gauge.classList.add('over');
+                    delta.className = 'delta over';
+                    delta.innerHTML = `<strong>${fmt$(diff)} over</strong> the ${fmt$(cap)} cap`;
+                } else if (r.monthlyTotal / cap > 0.9) {
+                    hero.classList.add('warn');
+                    gauge.classList.add('warn');
+                    delta.className = 'delta';
+                    delta.innerHTML = `<strong>${fmt$(-diff)} under</strong> the ${fmt$(cap)} cap (tight)`;
+                } else {
+                    delta.className = 'delta under';
+                    delta.innerHTML = `<strong>${fmt$(-diff)} under</strong> the ${fmt$(cap)} cap`;
+                }
+            } else {
+                delta.textContent = '';
+            }
+            gauge.style.width = Math.min(100, pct) + '%';
+
+            // Persist
+            state[active] = v;
+            saveState(state);
+
+            // Compare table
+            renderCompare();
+        }
+
+        function renderCompare() {
+            ['franklin', 'warren'].forEach(s => {
+                const r = computeScenario(state[s]);
+                const v = state[s];
+                document.getElementById(`cmp-${s}-price`).textContent = v.price ? fmt$K(v.price) : '—';
+                document.getElementById(`cmp-${s}-monthly`).textContent = r.monthlyTotal ? fmt$(r.monthlyTotal) : '—';
+                const dEl = document.getElementById(`cmp-${s}-delta`);
+                if (v.cap && r.monthlyTotal) {
+                    const diff = r.monthlyTotal - v.cap;
+                    if (diff > 0) { dEl.textContent = `+${fmt$(diff)}`; dEl.className = 'over'; }
+                    else { dEl.textContent = `−${fmt$(-diff)}`; dEl.className = 'under'; }
+                } else { dEl.textContent = '—'; dEl.className = ''; }
+                document.getElementById(`cmp-${s}-cash`).textContent = r.cashAtClosing ? fmt$(r.cashAtClosing) : '—';
+                document.getElementById(`cmp-${s}-boss`).textContent = r.bossLoan ? fmt$(r.bossLoan) : '$0';
+                document.getElementById(`cmp-${s}-sal`).textContent = r.salCap && isFinite(r.salCap) ? fmt$(r.salCap) : '—';
+            });
+        }
+
+        // ---------- Tab switching ----------
+        function switchTo(scenario) {
+            // save current form into state under current `active`
+            state[active] = readForm();
+            saveState(state);
+            active = scenario;
+            writeForm(state[active]);
+            document.querySelectorAll('.scenario-tab').forEach(b => {
+                b.classList.toggle('active', b.dataset.scenario === scenario);
+            });
+            render();
+        }
+
+        document.querySelectorAll('.scenario-tab').forEach(b => {
+            b.addEventListener('click', () => switchTo(b.dataset.scenario));
+        });
+
+        FIELDS.forEach(f => {
+            const el = document.getElementById(f);
+            if (!el) return;
+            const evt = el.type === 'checkbox' ? 'change' : 'input';
+            el.addEventListener(evt, render);
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            state[active] = { ...DEFAULTS[active] };
+            writeForm(state[active]);
+            render();
+        });
+
+        // ---------- Init ----------
+        writeForm(state[active]);
+        render();
+    </script>
+</body>
+
+</html>
