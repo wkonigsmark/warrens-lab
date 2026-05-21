@@ -264,15 +264,17 @@ button {
 
 @media print {
   @page {
-    margin: 0.35in;
+    size: letter portrait;
+    margin: 0;
   }
 
+  html,
   body {
     background: white;
     display: block;
-    min-height: auto;
+    min-height: 11in;
     margin: 0;
-    width: auto;
+    width: 8.5in;
     overflow-x: visible;
   }
   .app-container {
@@ -281,7 +283,7 @@ button {
   .print-view {
     display: block !important;
     padding: 0;
-    width: 100%;
+    width: 8.5in;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -289,16 +291,22 @@ button {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
+  .print-sheet {
+    width: 8.5in;
+    min-height: 11in;
+    padding: 0.35in 0.45in;
+  }
   .print-header {
+    display: block;
     text-align: center;
-    margin-bottom: 22px;
+    margin-bottom: 0.22in;
   }
   .print-header h2 {
-    font-size: 22px;
-    margin: 0 0 5px;
+    font-size: 20px;
+    margin: 0 0 0.04in;
   }
   .print-header p {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--muted);
     margin: 0;
   }
@@ -306,8 +314,9 @@ button {
     display: grid;
     grid-template-columns: repeat(2, max-content);
     justify-content: center;
-    gap: 34px 44px;
-    width: 100%;
+    align-content: start;
+    gap: 0.22in 0.35in;
+    width: 7.6in;
   }
   .print-item {
     display: flex;
@@ -317,8 +326,9 @@ button {
     page-break-inside: avoid;
   }
   .print-nonogram {
-    --print-cell-size: 46px;
-    --print-clue-size: 50px;
+    --print-cell-size: 0.525in;
+    --print-clue-size: 0.65in;
+    --print-top-clue-size: 0.65in;
     background-color: transparent !important;
     gap: 0 !important;
     border: 2px solid #333 !important;
@@ -334,8 +344,8 @@ button {
     background-color: white !important;
   }
   .print-nonogram .corner-ant {
-    width: 42px !important;
-    height: 42px !important;
+    width: 0.52in !important;
+    height: 0.52in !important;
     opacity: 0.9 !important;
   }
   .print-nonogram .clue-cell {
@@ -343,8 +353,15 @@ button {
     min-height: var(--print-cell-size);
     height: var(--print-cell-size);
     padding: 2px;
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     background-color: #f2f2f2 !important;
+  }
+  .print-nonogram > .clue-cell:not(.clue-row) {
+    min-height: var(--print-top-clue-size);
+    height: var(--print-top-clue-size);
+  }
+  .print-nonogram > .corner-cell {
+    width: var(--print-clue-size);
   }
   .print-nonogram .clue-row {
     width: var(--print-clue-size);

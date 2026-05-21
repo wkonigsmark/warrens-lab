@@ -217,11 +217,13 @@ function generatePrintView() {
   const size = parseInt(sizeSelect.value);
   
   printView.innerHTML = `
-    <div class="print-header">
-      <h2>Nonograms Worksheet - ${size}x${size}</h2>
-      <p>Use logic to fill in the correct squares!</p>
+    <div class="print-sheet">
+      <div class="print-header">
+        <h2>Nonograms Worksheet - ${size}x${size}</h2>
+        <p>Use logic to fill in the correct squares!</p>
+      </div>
+      <div class="print-page"></div>
     </div>
-    <div class="print-page"></div>
   `;
   const page = printView.querySelector('.print-page');
   
