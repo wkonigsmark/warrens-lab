@@ -279,8 +279,7 @@
     btnSolve.textContent = state.showSolution ? '👁 Hide Solution' : '👁 Show Solution';
 
     // Drawer summary chip
-    const themeLabel = welcomeTheme.options[welcomeTheme.selectedIndex]?.text ?? state.theme;
-    adjustSumm.textContent = `Age ${state.age} · ${algo?.label || ''} · ${themeLabel}`;
+    adjustSumm.textContent = 'Maze Configuration';
   }
 
   // ---------------------------------------------------------------------------

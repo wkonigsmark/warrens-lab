@@ -334,6 +334,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 28px; }
   text-decoration-color: var(--accent);
 }
 
+/* Hide welcome card age/algorithm/theme on desktop; they're in the left panel.
+   Show them only on mobile where the left panel isn't accessible. */
+@media screen and (min-width: 901px) {
+  .welcome-group, .welcome-row { display: none !important; }
+}
+
 /* ---------- Print + screen header ---------- */
 .print-header {
   display: flex;
@@ -499,6 +505,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 28px; }
     display: flex;
     flex-direction: column;
     gap: 6mm;
+    position: relative;
     page-break-inside: avoid;
     break-inside: avoid;
     page-break-after: avoid;
@@ -513,12 +520,22 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 28px; }
     page-break-inside: avoid;
     break-inside: avoid;
   }
-  /* Print logo gets a bit bigger on paper, and we force its colors to print
-     correctly (some browsers strip image colors by default for "save ink"). */
+  /* Hide the title block (logo + algo) from the print header; we'll move it to the footer */
+  .print-title-block {
+    display: none;
+  }
+
+  /* Print logo: absolutely positioned at the bottom center */
   .print-logo {
     height: 48px;
+    width: auto;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    display: block;
+    position: absolute;
+    bottom: 12mm;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .maze-frame {
@@ -545,10 +562,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 28px; }
 
   .print-footer {
     flex: 0 0 auto;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 0;
     page-break-inside: avoid;
     break-inside: avoid;
+  }
+  /* Hide the text content (🐜 burnmark.games); the logo will be displayed here */
+  .print-footer span {
+    display: none;
   }
 }
 

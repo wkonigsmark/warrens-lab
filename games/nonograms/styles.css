@@ -119,6 +119,19 @@ p {
   min-height: auto;
 }
 
+.corner-cell {
+  justify-content: center;
+  align-items: center;
+}
+
+.corner-ant {
+  display: block;
+  width: min(58px, 92%);
+  height: min(58px, 92%);
+  object-fit: contain;
+  opacity: 0.86;
+}
+
 .playable-cell {
   cursor: pointer;
   width: 40px;
@@ -250,8 +263,15 @@ button {
 }
 
 @media print {
+  @page {
+    margin: 0.35in;
+  }
+
   body {
     background: white;
+    display: block;
+    min-height: auto;
+    margin: 0;
     width: auto;
     overflow-x: visible;
   }
@@ -260,7 +280,8 @@ button {
   }
   .print-view {
     display: block !important;
-    padding: 20px;
+    padding: 0;
+    width: 100%;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -270,21 +291,23 @@ button {
   }
   .print-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 22px;
   }
   .print-header h2 {
-    font-size: 28px;
-    margin: 0 0 10px;
+    font-size: 22px;
+    margin: 0 0 5px;
   }
   .print-header p {
-    font-size: 16px;
+    font-size: 13px;
     color: var(--muted);
     margin: 0;
   }
   .print-page {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 50px 30px;
+    grid-template-columns: repeat(2, max-content);
+    justify-content: center;
+    gap: 34px 44px;
+    width: 100%;
   }
   .print-item {
     display: flex;
@@ -294,21 +317,37 @@ button {
     page-break-inside: avoid;
   }
   .print-nonogram {
+    --print-cell-size: 46px;
+    --print-clue-size: 50px;
     background-color: transparent !important;
     gap: 0 !important;
     border: 2px solid #333 !important;
+    overflow: visible;
   }
   .print-nonogram .cell {
     border-right: 1px solid #333;
     border-bottom: 1px solid #333;
   }
   .print-nonogram .playable-cell {
-    width: 35px !important;
-    height: 35px !important;
+    width: var(--print-cell-size) !important;
+    height: var(--print-cell-size) !important;
     background-color: white !important;
   }
+  .print-nonogram .corner-ant {
+    width: 42px !important;
+    height: 42px !important;
+    opacity: 0.9 !important;
+  }
   .print-nonogram .clue-cell {
-    font-size: 0.9rem;
+    width: var(--print-cell-size);
+    min-height: var(--print-cell-size);
+    height: var(--print-cell-size);
+    padding: 2px;
+    font-size: 0.78rem;
     background-color: #f2f2f2 !important;
+  }
+  .print-nonogram .clue-row {
+    width: var(--print-clue-size);
+    min-width: var(--print-clue-size);
   }
 }

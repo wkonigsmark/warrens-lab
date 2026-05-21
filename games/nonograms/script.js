@@ -96,7 +96,7 @@ function initGrid() {
   const corner = document.createElement('div');
   corner.className = 'cell clue-cell corner-cell';
   const randomAnt = antImages[Math.floor(Math.random() * antImages.length)];
-  corner.innerHTML = `<img src="${randomAnt}" alt="Cute ant" style="width: 100%; height: 100%; object-fit: contain; padding: 2px; opacity: 0.8;" />`;
+  corner.innerHTML = `<img class="corner-ant" src="${randomAnt}" alt="Cute ant" />`;
   container.appendChild(corner);
   
   // Top headers (Column clues)
@@ -256,12 +256,12 @@ function generatePrintView() {
     
     const pGrid = document.createElement('div');
     pGrid.className = 'nonogram-container print-nonogram';
-    pGrid.style.gridTemplateColumns = `auto repeat(${size}, auto)`;
+    pGrid.style.gridTemplateColumns = `var(--print-clue-size) repeat(${size}, var(--print-cell-size))`;
     
     const corner = document.createElement('div');
     corner.className = 'cell clue-cell corner-cell';
     const randomAnt = antImages[Math.floor(Math.random() * antImages.length)];
-    corner.innerHTML = `<img src="${randomAnt}" alt="Cute ant" style="width: 100%; height: 100%; object-fit: contain; padding: 2px; opacity: 0.8;" />`;
+    corner.innerHTML = `<img class="corner-ant" src="${randomAnt}" alt="Cute ant" />`;
     pGrid.appendChild(corner);
     
     for (let c = 0; c < size; c++) {
@@ -289,11 +289,23 @@ function generatePrintView() {
   }
 }
 
+function waitForPrintImages() {
+  const images = Array.from(printView.querySelectorAll('img'));
+  return Promise.all(images.map(img => {
+    if (img.complete) return Promise.resolve();
+    return new Promise(resolve => {
+      img.addEventListener('load', resolve, { once: true });
+      img.addEventListener('error', resolve, { once: true });
+    });
+  }));
+}
+
 checkBtn.addEventListener('click', checkSolution);
 resetBtn.addEventListener('click', resetGame);
 newPuzzleBtn.addEventListener('click', loadPuzzle);
-printBtn.addEventListener('click', () => {
+printBtn.addEventListener('click', async () => {
   generatePrintView();
+  await waitForPrintImages();
   window.print();
 });
 sizeSelect.addEventListener('change', loadPuzzle);
