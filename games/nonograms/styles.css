@@ -95,6 +95,8 @@ p {
   border: 2px solid var(--grid-border);
   max-width: 100%;
   overflow-x: auto;
+  --cell-size: 40px;
+  --clue-size: 60px;
 }
 
 .cell {
@@ -116,14 +118,14 @@ p {
   justify-content: flex-end;
   align-items: center;
   gap: 2px;
-  min-height: 60px;
+  min-height: var(--clue-size);
 }
 
 .clue-row {
   flex-direction: row;
   justify-content: flex-end;
   padding-right: 8px;
-  min-width: 60px;
+  min-width: var(--clue-size);
   min-height: auto;
 }
 
@@ -142,8 +144,8 @@ p {
 
 .playable-cell {
   cursor: pointer;
-  width: 40px;
-  height: 40px;
+  width: var(--cell-size);
+  height: var(--cell-size);
   transition: background-color 0.1s;
 }
 

@@ -23,8 +23,6 @@ const antImages = [
 
 const sizeSelect = document.getElementById('gridSize');
 
-
-
 let solution = [];
 let numRows = 0;
 let numCols = 0;
@@ -89,6 +87,10 @@ function loadPuzzle() {
 
 function initGrid() {
   container.innerHTML = '';
+  const cellSize = Math.max(24, Math.min(40, Math.floor(280 / numCols)));
+  const clueSize = numCols >= 9 ? 54 : 60;
+  container.style.setProperty('--cell-size', `${cellSize}px`);
+  container.style.setProperty('--clue-size', `${clueSize}px`);
   // CSS Grid layout: (numCols + 1) columns
   container.style.gridTemplateColumns = `auto repeat(${numCols}, auto)`;
   
