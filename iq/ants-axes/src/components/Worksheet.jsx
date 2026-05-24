@@ -167,34 +167,38 @@ function FormulaKey({ level }) {
   return null
 }
 
-// A reusable inline blank (for filling in)
-function Blank({ width = '2.5em' }) {
+// A reusable inline blank (for filling in).
+// Uses absolute inch dimensions so the printed size is consistent
+// regardless of font scaling differences between screen and print.
+function Blank({ width = '0.8in', height = '0.45in' }) {
   return (
     <span
       className="inline-block border-b-2 border-gray-800 align-baseline"
-      style={{ width, height: '1.1em' }}
+      style={{ width, height, minWidth: width }}
     />
   )
 }
 
 function ProblemBlanks({ level, index }) {
   return (
-    <div className="text-sm leading-relaxed">
-      <p className="font-bold mb-1">#{index + 1}</p>
-      <p className="mb-1">
+    <div className="leading-relaxed" style={{ fontSize: '14pt' }}>
+      <p className="font-bold mb-3" style={{ fontSize: '18pt' }}>
+        #{index + 1}
+      </p>
+      <p className="mb-4">
         P₁ = ( <Blank /> , <Blank /> )
       </p>
-      <p className="mb-1">
+      <p className="mb-4">
         P₂ = ( <Blank /> , <Blank /> )
       </p>
       {(level === '2a' || level === '2b' || level === 3) && (
-        <p className="mb-1">
-          m = <Blank width="3em" />
+        <p className="mb-4">
+          m = <Blank width="1in" />
         </p>
       )}
       {level === 3 && (
         <p>
-          b = <Blank width="3em" />
+          b = <Blank width="1in" />
         </p>
       )}
     </div>
@@ -243,18 +247,25 @@ export default function Worksheet({ level, mode, onBack }) {
           style={{ width: '11in', maxWidth: '100%', minHeight: '8.5in' }}
         >
           {/* Header */}
-          <div className="border-b-2 border-gray-800 pb-2 mb-3 flex items-end justify-between">
-            <div>
-              <h1 className="text-xl font-bold">{LEVEL_TITLES[level]}</h1>
-              <p className="text-sm text-gray-700">
-                {level === 1 && 'Write the coordinates of each labeled point.'}
-                {(level === '2a' || level === '2b') &&
-                  'Identify the two points, then calculate the slope (m).'}
-                {level === 3 &&
-                  'Identify the points, calculate the slope, then find the y-intercept (b).'}
-              </p>
+          <div className="border-b-2 border-gray-800 pb-2 mb-3 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <img
+                src="/text_logo_ants_axes.png"
+                alt="Ants & Axes"
+                className="h-12 w-auto"
+              />
+              <div>
+                <h1 className="text-lg font-bold leading-tight">{LEVEL_TITLES[level]}</h1>
+                <p className="text-sm text-gray-700 leading-tight">
+                  {level === 1 && 'Write the coordinates of each labeled point.'}
+                  {(level === '2a' || level === '2b') &&
+                    'Identify the two points, then calculate the slope (m).'}
+                  {level === 3 &&
+                    'Identify the points, calculate the slope, then find the y-intercept (b).'}
+                </p>
+              </div>
             </div>
-            <div className="text-sm flex gap-4 items-end">
+            <div className="text-sm flex gap-4 items-center flex-shrink-0">
               <span>
                 Name: <Blank width="7em" />
               </span>
@@ -284,7 +295,7 @@ export default function Worksheet({ level, mode, onBack }) {
                 <div className="flex-1 min-w-0">
                   <WorksheetChart points={[problem.p1, problem.p2]} />
                 </div>
-                <div className="flex-shrink-0" style={{ width: '40%' }}>
+                <div className="flex-shrink-0" style={{ width: '52%' }}>
                   <ProblemBlanks level={level} index={idx} />
                 </div>
               </div>
