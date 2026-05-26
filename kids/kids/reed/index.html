@@ -29,7 +29,7 @@
       color: var(--text-main);
       font-family: 'Outfit', sans-serif;
       -webkit-font-smoothing: antialiased;
-      padding: 40px 20px 200px;
+      padding: 40px 20px 40px;
       overflow-x: hidden;
     }
 
@@ -48,7 +48,7 @@
 
     .header {
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 220px;
     }
 
     .header h1 {
@@ -120,7 +120,6 @@
 
   <div class="header">
     <h1>Reed's Lab</h1>
-    <p>Pick a challenge</p>
   </div>
 
   <div class="grid">
@@ -129,7 +128,7 @@
       <span class="label">Ant's Apples</span>
     </a>
     <a href="/iq/ants-algebra/index.html" class="tile">
-      <span class="icon">➕</span>
+      <span class="icon">𝑥²</span>
       <span class="label">Ant's Algebra</span>
     </a>
     <a href="https://ants-axes.vercel.app/" class="tile">
@@ -207,58 +206,34 @@
       }
 
       // Render text offscreen → sample pixel positions
-      // Anchored to the empty space beside + below the last tile row
+      // Centered between the header and the grid
       function sampleText() {
         const offscreen = document.createElement('canvas');
         const octx = offscreen.getContext('2d');
         offscreen.width = W;
         offscreen.height = H;
 
-        // Find the grid and its last tile to position text in the open space
-        const grid = document.querySelector('.grid');
-        const tiles = grid.querySelectorAll('.tile');
-        const lastTile = tiles[tiles.length - 1];
         const sy = window.scrollY;
-        const lastRect = lastTile.getBoundingClientRect();
-        const gridRect = grid.getBoundingClientRect();
+        const header = document.querySelector('.header');
+        const grid = document.querySelector('.grid');
+        const headerBottom = header.getBoundingClientRect().bottom + sy;
+        const gridTop = grid.getBoundingClientRect().top + sy;
 
-        // Convert viewport coords → document coords
-        const textLeftEdge = lastRect.right + 20;
-        const textRightEdge = gridRect.right;
-        const textAvailW = textRightEdge - textLeftEdge;
-
-        // Start text at the same Y as the last tile, right beside it
-        const textTopEdge = lastRect.top + sy + 10;
-
-        // If not enough horizontal room (mobile), place below entire grid instead
-        let anchorX, anchorY, maxTextW, align;
-        if (textAvailW < 160) {
-          // Below grid, centered
-          anchorX = W / 2;
-          anchorY = gridRect.bottom + sy + 30;
-          maxTextW = W - 40;
-          align = 'center';
-        } else {
-          // Right of last tile, left-aligned
-          anchorX = textLeftEdge + 10;
-          anchorY = textTopEdge;
-          maxTextW = textAvailW - 20;
-          align = 'left';
-        }
-
-        // Size font to fit available width
-        let fontSize = Math.min(34, maxTextW / 8);
+        // Center text in the gap between header and grid
+        const availW = W - 40;
+        let fontSize = Math.min(38, availW / 10);
         fontSize = Math.max(14, fontSize);
-
         const lineHeight = fontSize * 1.45;
+        const blockHeight = TEXT_LINES.length * lineHeight;
+        const anchorY = headerBottom + (gridTop - headerBottom - blockHeight) / 2;
 
         octx.font = `800 ${fontSize}px Outfit, sans-serif`;
-        octx.textAlign = align;
+        octx.textAlign = 'center';
         octx.textBaseline = 'top';
         octx.fillStyle = '#fff';
 
         for (let i = 0; i < TEXT_LINES.length; i++) {
-          octx.fillText(TEXT_LINES[i], anchorX, anchorY + i * lineHeight);
+          octx.fillText(TEXT_LINES[i], W / 2, anchorY + i * lineHeight);
         }
 
         // Sample filled pixels
