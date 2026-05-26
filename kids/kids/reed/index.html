@@ -22,13 +22,28 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
+      position: relative;
       background: #000;
       background: radial-gradient(circle at top right, #1a1e26, #000);
       min-height: 100vh;
       color: var(--text-main);
       font-family: 'Outfit', sans-serif;
       -webkit-font-smoothing: antialiased;
-      padding: 40px 20px;
+      padding: 40px 20px 200px;
+      overflow-x: hidden;
+    }
+
+    #particle-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .header, .grid {
+      position: relative;
+      z-index: 1;
     }
 
     .header {
@@ -62,8 +77,10 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
+      position: relative;
+      z-index: 2;
       padding: 24px 12px;
-      background: var(--glass-bg);
+      background: rgb(12, 14, 20);
       border: 1px solid var(--glass-border);
       border-radius: 14px;
       text-decoration: none;
@@ -99,6 +116,8 @@
 </head>
 
 <body>
+  <canvas id="particle-canvas"></canvas>
+
   <div class="header">
     <h1>Reed's Lab</h1>
     <p>Pick a challenge</p>
@@ -142,6 +161,263 @@
       <span class="label">Ant's Labyrinth</span>
     </a>
   </div>
+  <script>
+    (() => {
+      const canvas = document.getElementById('particle-canvas');
+      const ctx = canvas.getContext('2d');
+
+      const TEXT_LINES = [
+        'The Amazing, Inimitable,',
+        'Incredible, Brilliant,',
+        'Charming, Wonderful',
+        'Mary Reed',
+      ];
+
+      // Neon palette
+      const NEON = [
+        [255, 30, 120],   // hot pink
+        [255, 230, 0],    // yellow
+        [0, 180, 255],    // electric blue
+        [0, 255, 100],    // neon green
+        [255, 120, 0],    // orange
+        [180, 50, 255],   // purple
+      ];
+
+      // Physics
+      const MAX_SPEED = 4.0;
+      const HOMING_FORCE = 0.04;       // pull toward text position
+      const SEPARATION_RADIUS = 4;
+      const SEPARATION_FORCE = 0.15;
+      const DAMPING = 0.90;
+
+      // Cursor — scatter away then regroup
+      const CURSOR_RADIUS = 120;
+      const CURSOR_SCATTER = 8;
+
+      let W, H;
+      let mouse = { x: -9999, y: -9999, active: false };
+      let particles = [];
+      let textTargets = [];
+
+      function resize() {
+        W = canvas.width = document.body.scrollWidth;
+        H = canvas.height = document.body.scrollHeight;
+        textTargets = sampleText();
+        assignTargets();
+      }
+
+      // Render text offscreen → sample pixel positions
+      // Anchored to the empty space beside + below the last tile row
+      function sampleText() {
+        const offscreen = document.createElement('canvas');
+        const octx = offscreen.getContext('2d');
+        offscreen.width = W;
+        offscreen.height = H;
+
+        // Find the grid and its last tile to position text in the open space
+        const grid = document.querySelector('.grid');
+        const tiles = grid.querySelectorAll('.tile');
+        const lastTile = tiles[tiles.length - 1];
+        const sy = window.scrollY;
+        const lastRect = lastTile.getBoundingClientRect();
+        const gridRect = grid.getBoundingClientRect();
+
+        // Convert viewport coords → document coords
+        const textLeftEdge = lastRect.right + 20;
+        const textRightEdge = gridRect.right;
+        const textAvailW = textRightEdge - textLeftEdge;
+
+        // Start text at the same Y as the last tile, right beside it
+        const textTopEdge = lastRect.top + sy + 10;
+
+        // If not enough horizontal room (mobile), place below entire grid instead
+        let anchorX, anchorY, maxTextW, align;
+        if (textAvailW < 160) {
+          // Below grid, centered
+          anchorX = W / 2;
+          anchorY = gridRect.bottom + sy + 30;
+          maxTextW = W - 40;
+          align = 'center';
+        } else {
+          // Right of last tile, left-aligned
+          anchorX = textLeftEdge + 10;
+          anchorY = textTopEdge;
+          maxTextW = textAvailW - 20;
+          align = 'left';
+        }
+
+        // Size font to fit available width
+        let fontSize = Math.min(34, maxTextW / 8);
+        fontSize = Math.max(14, fontSize);
+
+        const lineHeight = fontSize * 1.45;
+
+        octx.font = `800 ${fontSize}px Outfit, sans-serif`;
+        octx.textAlign = align;
+        octx.textBaseline = 'top';
+        octx.fillStyle = '#fff';
+
+        for (let i = 0; i < TEXT_LINES.length; i++) {
+          octx.fillText(TEXT_LINES[i], anchorX, anchorY + i * lineHeight);
+        }
+
+        // Sample filled pixels
+        const data = octx.getImageData(0, 0, W, H).data;
+        const points = [];
+        const gap = 2;
+        for (let y = 0; y < H; y += gap) {
+          for (let x = 0; x < W; x += gap) {
+            if (data[(y * W + x) * 4 + 3] > 128) {
+              points.push({ x, y });
+            }
+          }
+        }
+        return points;
+      }
+
+      // Assign each particle a target point from the text
+      function assignTargets() {
+        if (textTargets.length === 0) return;
+        // Resize particle array to match available targets
+        const count = textTargets.length;
+        while (particles.length < count) {
+          particles.push(makeParticle(particles.length));
+        }
+        particles.length = count;
+
+        // Shuffle targets so assignment looks organic
+        const shuffled = [...textTargets];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].tx = shuffled[i].x;
+          particles[i].ty = shuffled[i].y;
+        }
+      }
+
+      function makeParticle(index) {
+        const a = Math.random() * Math.PI * 2;
+        const r = Math.random() * Math.max(W, H) * 0.5;
+        return {
+          x: W / 2 + Math.cos(a) * r,
+          y: H / 2 + Math.sin(a) * r,
+          vx: (Math.random() - 0.5) * 2,
+          vy: (Math.random() - 0.5) * 2,
+          tx: 0,
+          ty: 0,
+          size: Math.random() * 1.0 + 0.8,
+          alpha: Math.random() * 0.25 + 0.55,
+          colorOffset: Math.random() * 10000,
+        };
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, W, H);
+        const now = performance.now();
+
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+
+          // Homing force — pull toward text target
+          const hdx = p.tx - p.x;
+          const hdy = p.ty - p.y;
+          p.vx += hdx * HOMING_FORCE;
+          p.vy += hdy * HOMING_FORCE;
+
+          // Separation from very close neighbors (check a few nearby, not all)
+          // Use spatial trick: only check ±20 indices for perf
+          const lo = Math.max(0, i - 20);
+          const hi = Math.min(particles.length, i + 20);
+          for (let j = lo; j < hi; j++) {
+            if (i === j) continue;
+            const o = particles[j];
+            const dx = o.x - p.x;
+            const dy = o.y - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+            if (dist < SEPARATION_RADIUS) {
+              p.vx -= (dx / dist) * SEPARATION_FORCE;
+              p.vy -= (dy / dist) * SEPARATION_FORCE;
+            }
+          }
+
+          // Cursor interaction — scatter away from cursor
+          if (mouse.active) {
+            const dx = p.x - mouse.x;
+            const dy = p.y - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < CURSOR_RADIUS && dist > 1) {
+              const force = (1 - dist / CURSOR_RADIUS) * CURSOR_SCATTER;
+              p.vx += (dx / dist) * force;
+              p.vy += (dy / dist) * force;
+            }
+          }
+
+          // Damping
+          p.vx *= DAMPING;
+          p.vy *= DAMPING;
+
+          // Clamp speed
+          const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          if (speed > MAX_SPEED) {
+            p.vx = (p.vx / speed) * MAX_SPEED;
+            p.vy = (p.vy / speed) * MAX_SPEED;
+          }
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // Color cycling
+          const t = (now * 0.0003 + p.colorOffset) % NEON.length;
+          const ci = Math.floor(t);
+          const frac = t - ci;
+          const c1 = NEON[ci % NEON.length];
+          const c2 = NEON[(ci + 1) % NEON.length];
+          const cr = Math.round(c1[0] + (c2[0] - c1[0]) * frac);
+          const cg = Math.round(c1[1] + (c2[1] - c1[1]) * frac);
+          const cb = Math.round(c1[2] + (c2[2] - c1[2]) * frac);
+
+          // Draw
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${cr},${cg},${cb},${p.alpha})`;
+          ctx.fill();
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      // --- Events ---
+      window.addEventListener('resize', () => {
+        resize();
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY + window.scrollY;
+        mouse.active = true;
+      });
+      document.addEventListener('mouseleave', () => {
+        mouse.active = false;
+      });
+      document.addEventListener('touchmove', (e) => {
+        mouse.x = e.touches[0].clientX;
+        mouse.y = e.touches[0].clientY + window.scrollY;
+        mouse.active = true;
+      }, { passive: true });
+      document.addEventListener('touchend', () => {
+        mouse.active = false;
+      });
+
+      // Wait for font to load, then init
+      document.fonts.ready.then(() => {
+        resize();
+        animate();
+      });
+    })();
+  </script>
 </body>
 
 </html>
