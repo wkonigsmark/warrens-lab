@@ -112,7 +112,144 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
+
+    /* Flashcards */
+    .flashcard-section {
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+      margin: 40px auto 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .flashcard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 4px;
+    }
+
+    .flashcard-header h2 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+
+    .shuffle-btn {
+      padding: 8px 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .shuffle-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .flashcard-stack {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      perspective: 1000px;
+    }
+
+    .flashcard {
+      width: 100%;
+      height: 160px;
+      cursor: pointer;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border: 1px solid var(--glass-border);
+    }
+
+    .card-front {
+      background: #fff;
+      font-family: 'Handlee', cursive;
+      font-size: 1.8rem;
+      color: #444;
+      text-align: center;
+    }
+
+    .card-front .pos {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-top: 6px;
+    }
+
+    .card-back {
+      background-color: #fff;
+      background-image:
+        linear-gradient(rgba(180, 220, 255, 0.5) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 180, 200, 0.4) 2px, transparent 2px);
+      background-size: 100% 24px, 100% 100%;
+      background-position: 0 10px, 40px 0;
+      background-repeat: repeat, no-repeat;
+      transform: rotateY(180deg);
+      padding: 14px 16px 14px 50px;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .card-back .definition {
+      font-family: 'Gochi Hand', cursive;
+      font-size: 1rem;
+      line-height: 24px;
+      margin-top: 14px;
+      color: #1e293b;
+    }
+
+    .card-back .root-note {
+      font-size: 0.6rem;
+      color: var(--accent);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: auto;
+    }
+
+    @media (max-width: 400px) {
+      .flashcard { height: 140px; }
+      .card-front { font-size: 1.4rem; }
+    }
   </style>
+
+  <!-- Flashcard fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Gochi+Hand&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -160,6 +297,85 @@
       <span class="label">Ant's Labyrinth</span>
     </a>
   </div>
+
+  <div class="flashcard-section">
+    <div class="flashcard-header">
+      <h2>Word of the Day</h2>
+      <button class="shuffle-btn" onclick="shuffleCards()">Shuffle</button>
+    </div>
+    <div class="flashcard-stack" id="flashcard-stack">
+      <!-- Cards injected by JS -->
+    </div>
+  </div>
+
+  <script>
+    // --- Flashcard system ---
+    // Reed's vocab list — sourced from Lexicon database
+    const VOCAB = [
+      { word: "Courage", pos: "noun", definition: "The ability to face danger or fear with bravery.", root: "Old French: corage" },
+      { word: "Diligent", pos: "adj", definition: "Careful and steady in doing work or trying to reach a goal.", root: "Latin: diligens" },
+      { word: "Humble", pos: "adj", definition: "Not thinking of yourself as better than others; modest about your abilities.", root: "Latin: humilis" },
+      { word: "Imperturbable", pos: "adj", definition: "Not easily upset, disturbed, or thrown off balance.", root: "Latin: perturbare" },
+      { word: "Integrity", pos: "noun", definition: "The quality of being honest, whole, and doing what is right even when no one is watching.", root: "Latin: integritas" },
+      { word: "Steadfast", pos: "adj", definition: "Loyal, steady, and firm in purpose or belief.", root: "Old English: stedefæst" },
+      { word: "Empathy", pos: "noun", definition: "The ability to understand and share the feelings of another person.", root: "Greek: empatheia" },
+      { word: "Equanimity", pos: "noun", definition: "Mental calmness and balance, especially in a difficult situation.", root: "Latin: aequanimitas" },
+      { word: "Forbearance", pos: "noun", definition: "Patient self-control and restraint, especially when provoked.", root: "Old English: forberan" },
+      { word: "Fortitude", pos: "noun", definition: "Strength of mind that helps someone face pain, fear, or hardship bravely.", root: "Latin: fortitudo" },
+      { word: "Indomitable", pos: "adj", definition: "Impossible to defeat, discourage, or control by force.", root: "Latin: indomitus" },
+      { word: "Intrepid", pos: "adj", definition: "Fearless and ready to face danger or uncertainty.", root: "Latin: intrepidus" },
+      { word: "Magnanimous", pos: "adj", definition: "Showing a noble spirit and being generous or forgiving toward a rival or less powerful person.", root: "Latin: magnanimus" },
+      { word: "Mettle", pos: "noun", definition: "Strength of spirit shown in the way a person faces pressure or challenge.", root: "Old French: metal" },
+      { word: "Probity", pos: "noun", definition: "Complete honesty and strong moral integrity.", root: "Latin: probitas" },
+      { word: "Resilient", pos: "adj", definition: "Able to recover and keep going after difficulty or setbacks.", root: "Latin: resilire" },
+      { word: "Stalwart", pos: "adj", definition: "Strong, dependable, and loyal in a way that others can rely on.", root: "Old English: stalworth" },
+      { word: "Wisdom", pos: "noun", definition: "Good judgment built from knowledge, thought, and experience.", root: "Old English: wisdom" },
+      { word: "Adamantine", pos: "adj", definition: "Unbreakably firm in strength, will, or resolve.", root: "Latin: adamantinus" },
+      { word: "Assiduous", pos: "adj", definition: "Showing steady, careful, and persistent effort.", root: "Latin: assiduus" },
+      { word: "Benevolent", pos: "adj", definition: "Kind and well-meaning in a way that seeks to help others.", root: "Latin: benevolens" },
+      { word: "Ethical", pos: "adj", definition: "Following accepted ideas of right and wrong.", root: "Greek: ἠθικός" },
+      { word: "Indefatigable", pos: "adj", definition: "Never seeming to grow tired in effort or energy.", root: "Latin: defatigare" },
+      { word: "Initiative", pos: "noun", definition: "The habit of acting and getting started without waiting to be told.", root: "Latin: initium" },
+      { word: "Mettlesome", pos: "adj", definition: "Full of energy, courage, and spirited force.", root: "English: mettle + some" },
+      { word: "Munificent", pos: "adj", definition: "Very generous in giving money, help, or gifts.", root: "Latin: munificus" },
+      { word: "Rectitude", pos: "noun", definition: "Morally correct behavior and principled uprightness.", root: "Latin: rectitudo" },
+      { word: "Sagacious", pos: "adj", definition: "Showing keen wisdom, sound judgment, and clear understanding.", root: "Latin: sagax" },
+      { word: "Sanguine", pos: "adj", definition: "Confidently hopeful and positive, even in difficulty.", root: "Latin: sanguineus" },
+      { word: "Unflappable", pos: "adj", definition: "Staying calm and in control when other people would get upset.", root: "English: un + flap" },
+      { word: "Valiant", pos: "adj", definition: "Showing bold courage and determination in difficulty or danger.", root: "Old French: vaillant" },
+      { word: "Alacrity", pos: "noun", definition: "Eager and cheerful readiness to act.", root: "Latin: alacritas" },
+      { word: "Canny", pos: "adj", definition: "Shrewd, careful, and good at making practical judgments.", root: "Scots: canny" },
+      { word: "Industrious", pos: "adj", definition: "Working hard and staying busy in a useful way.", root: "Latin: industria" },
+      { word: "Judicious", pos: "adj", definition: "Showing careful thought and good sense in making decisions.", root: "Latin: judicium" },
+      { word: "Vigilant", pos: "adj", definition: "Carefully watchful and paying close attention to possible problems or dangers.", root: "Latin: vigilans" },
+    ];
+
+    const CARD_COUNT = 3;
+
+    function shuffleCards() {
+      const stack = document.getElementById('flashcard-stack');
+      // Pick CARD_COUNT random words without repeats
+      const shuffled = [...VOCAB].sort(() => Math.random() - 0.5);
+      const picked = shuffled.slice(0, CARD_COUNT);
+
+      stack.innerHTML = picked.map(v => `
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="card-front">
+            ${v.word}
+            <span class="pos">${v.pos}</span>
+          </div>
+          <div class="card-back">
+            <div class="definition">${v.definition}</div>
+            <div class="root-note">${v.root}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Initial render
+    shuffleCards();
+  </script>
+
   <script>
     (() => {
       const canvas = document.getElementById('particle-canvas');
