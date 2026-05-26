@@ -368,7 +368,7 @@ export default function QuizLevel2B({ mode = 'master', onBack }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100 p-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div className="mb-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <div className="flex justify-between items-center mb-4">
@@ -390,8 +390,8 @@ export default function QuizLevel2B({ mode = 'master', onBack }) {
           </div>
         </motion.div>
 
-        {/* Quiz Container - Single column */}
-        <div className="space-y-4 max-w-2xl mx-auto">
+        {/* Quiz Container - Chart left, input right on desktop; stacked on mobile */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
           {/* Chart */}
           <motion.div
             className="bg-white rounded-lg shadow-lg p-6"
@@ -419,9 +419,14 @@ export default function QuizLevel2B({ mode = 'master', onBack }) {
               <>
                 {mentorStep === 0 && (
                   <>
-                    <h2 className="text-lg font-bold text-gray-800 mb-3">Let's find the slope!</h2>
-                    <p className="text-sm text-gray-600 mb-3">We'll use the formula: slope = (Y₂ - Y₁) ÷ (X₂ - X₁)</p>
-                    <p className="text-sm text-gray-600">First, read the coordinates from the chart above.</p>
+                    <h2 className="text-xl font-bold text-gray-800 mb-3">Let's find the slope!</h2>
+                    <p className="text-base text-gray-700 mb-2">We'll use this formula:</p>
+                    <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-4">
+                      <p className="text-2xl font-bold text-gray-800 text-center">
+                        slope = (Y₂ − Y₁) ÷ (X₂ − X₁)
+                      </p>
+                    </div>
+                    <p className="text-base text-gray-700">First, read the coordinates from the chart above.</p>
                   </>
                 )}
                 {mentorStep === 1 && (
@@ -486,8 +491,12 @@ export default function QuizLevel2B({ mode = 'master', onBack }) {
                 )}
                 {mentorStep === 3 && (
                   <>
-                    <h2 className="text-lg font-bold text-gray-800 mb-3">Step 3: Calculate the Rise</h2>
-                    <p className="text-sm text-gray-600 mb-2">Y₂ - Y₁ = {mentorY2} - {mentorY1} = ?</p>
+                    <h2 className="text-xl font-bold text-gray-800 mb-3">Step 3: Calculate the Rise</h2>
+                    <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-4">
+                      <p className="text-3xl font-bold text-gray-800 text-center">
+                        Y₂ − Y₁ = {mentorY2} − {mentorY1} = ?
+                      </p>
+                    </div>
                     <div className="mb-3">
                       <input
                         ref={inputRef}
@@ -496,15 +505,19 @@ export default function QuizLevel2B({ mode = 'master', onBack }) {
                         onChange={(e) => setInputSlope(e.target.value)}
                         onKeyPress={handleKeyPress}
                         placeholder="Enter the answer"
-                        className="w-full px-2 py-1.5 border-2 border-gray-300 rounded text-sm focus:outline-none focus:border-blue-500"
+                        className="w-full px-3 py-2 border-2 border-gray-300 rounded text-lg focus:outline-none focus:border-blue-500"
                       />
                     </div>
                   </>
                 )}
                 {mentorStep === 4 && (
                   <>
-                    <h2 className="text-lg font-bold text-gray-800 mb-3">Step 4: Calculate the Run</h2>
-                    <p className="text-sm text-gray-600 mb-2">X₂ - X₁ = {mentorX2} - {mentorX1} = ?</p>
+                    <h2 className="text-xl font-bold text-gray-800 mb-3">Step 4: Calculate the Run</h2>
+                    <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-4">
+                      <p className="text-3xl font-bold text-gray-800 text-center">
+                        X₂ − X₁ = {mentorX2} − {mentorX1} = ?
+                      </p>
+                    </div>
                     <div className="mb-3">
                       <input
                         ref={inputRef}
@@ -513,15 +526,19 @@ export default function QuizLevel2B({ mode = 'master', onBack }) {
                         onChange={(e) => setInputSlope(e.target.value)}
                         onKeyPress={handleKeyPress}
                         placeholder="Enter the answer"
-                        className="w-full px-2 py-1.5 border-2 border-gray-300 rounded text-sm focus:outline-none focus:border-blue-500"
+                        className="w-full px-3 py-2 border-2 border-gray-300 rounded text-lg focus:outline-none focus:border-blue-500"
                       />
                     </div>
                   </>
                 )}
                 {mentorStep === 5 && (
                   <>
-                    <h2 className="text-lg font-bold text-gray-800 mb-3">Step 5: Calculate the Slope</h2>
-                    <p className="text-sm text-gray-600 mb-2">Slope = Rise ÷ Run = {mentorRise} ÷ {mentorRun} = ?</p>
+                    <h2 className="text-xl font-bold text-gray-800 mb-3">Step 5: Calculate the Slope</h2>
+                    <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-4">
+                      <p className="text-3xl font-bold text-gray-800 text-center">
+                        Slope = Rise ÷ Run = {mentorRise} ÷ {mentorRun} = ?
+                      </p>
+                    </div>
                     <div className="mb-3">
                       <input
                         ref={inputRef}
@@ -530,7 +547,7 @@ export default function QuizLevel2B({ mode = 'master', onBack }) {
                         onChange={(e) => setInputSlope(e.target.value)}
                         onKeyPress={handleKeyPress}
                         placeholder="Enter the slope"
-                        className="w-full px-2 py-1.5 border-2 border-gray-300 rounded text-sm focus:outline-none focus:border-blue-500"
+                        className="w-full px-3 py-2 border-2 border-gray-300 rounded text-lg focus:outline-none focus:border-blue-500"
                       />
                     </div>
                   </>

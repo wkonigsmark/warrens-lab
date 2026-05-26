@@ -145,6 +145,213 @@
       transform: translateY(0);
     }
 
+    /* Instructions Section */
+    .instructions-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f0f8fb;
+      border: 2px solid #4a7c8c;
+      border-radius: 12px;
+    }
+
+    .btn-toggle-instructions {
+      width: 100%;
+      padding: 14px 16px;
+      background: white;
+      color: #4a7c8c;
+      border: 2px solid #4a7c8c;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.05em;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-align: left;
+    }
+
+    .btn-toggle-instructions:hover {
+      background: #4a7c8c;
+      color: white;
+    }
+
+    .instructions-content {
+      margin-top: 15px;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+      }
+      to {
+        opacity: 1;
+        max-height: 1000px;
+      }
+    }
+
+    .instructions-text {
+      color: #333;
+      font-size: 0.95em;
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    .instructions-text p {
+      margin: 12px 0;
+    }
+
+    .instructions-text h4 {
+      color: #4a7c8c;
+      font-size: 1.05em;
+      margin: 15px 0 10px 0;
+    }
+
+    .instructions-text ul, .instructions-text ol {
+      margin: 10px 0 10px 20px;
+      padding: 0;
+    }
+
+    .instructions-text li {
+      margin: 8px 0;
+    }
+
+    /* Bibliography Screen */
+    .bibliography-screen {
+      text-align: left;
+      overflow-y: auto;
+      max-height: 80vh;
+    }
+
+    .btn-back {
+      background: #666;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95em;
+      font-weight: 600;
+      margin-bottom: 20px;
+      transition: background 0.2s ease;
+    }
+
+    .btn-back:hover {
+      background: #555;
+    }
+
+    .btn-close-bibliography {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+      z-index: 1000;
+    }
+
+    .btn-close-bibliography:hover {
+      background: #c0392b;
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);
+    }
+
+    .btn-close-bibliography:active {
+      transform: scale(0.95);
+    }
+
+    .bibliography-screen h2 {
+      color: #333;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .passages-by-grade {
+      display: grid;
+      gap: 30px;
+    }
+
+    .grade-section {
+      margin-bottom: 20px;
+    }
+
+    .grade-section h3 {
+      background: #f0f4ff;
+      color: #4a7c8c;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border-left: 4px solid #4a7c8c;
+    }
+
+    .passage-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .passage-card:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .passage-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .passage-card-title {
+      color: #333;
+      font-weight: 600;
+      font-size: 1.05em;
+      margin: 0;
+    }
+
+    .passage-card-author {
+      color: #666;
+      font-size: 0.9em;
+      font-style: italic;
+      margin: 5px 0 0 0;
+    }
+
+    .passage-card-text {
+      color: #555;
+      font-size: 0.95em;
+      line-height: 1.6;
+      margin: 10px 0;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    @media (max-width: 768px) {
+      .bibliography-screen {
+        text-align: left;
+      }
+
+      .passage-card {
+        padding: 12px;
+      }
+
+      .instructions-text {
+        font-size: 0.9em;
+      }
+    }
+
     /* Play Screen */
     .play-screen {
       text-align: center;
@@ -453,6 +660,33 @@
 
     <!-- Setup Screen -->
     <div class="screen setup-screen active">
+      <div class="instructions-section">
+        <button class="btn-toggle-instructions">✕ How to Use Word Ninja</button>
+        <div class="instructions-content" style="display: none;">
+          <div class="instructions-text">
+            <p><strong>Word Ninja</strong> is a reading fluency tool that builds speed and confidence with sight words and classic literature.</p>
+
+            <h4>Two Modes:</h4>
+            <ul>
+              <li><strong>Sight Words:</strong> Random drill words from your grade level to build vocabulary speed</li>
+              <li><strong>Literature:</strong> Sequential passages from classic public domain books (available for K, 1st, 5th+, and Adult)</li>
+            </ul>
+
+            <h4>How to Play:</h4>
+            <ol>
+              <li>Select a <strong>Time Limit</strong> (15, 30, 45, or 60 seconds)</li>
+              <li>Choose your <strong>Grade Level</strong></li>
+              <li>Pick a <strong>Mode</strong> (if available for your grade)</li>
+              <li>Click <strong>Start Game</strong></li>
+              <li>Click <strong>NEXT ✓</strong> for correct words or <strong>SKIP ✗</strong> for words to review</li>
+              <li>Beat your best score!</li>
+            </ol>
+
+            <p><strong>Tip:</strong> Best scores are tracked separately for each mode, grade, and time limit. Want to preview passages? Click "View All Passages" below!</p>
+          </div>
+        </div>
+      </div>
+
       <div class="control-group">
         <label>Choose Time Limit:</label>
         <div class="button-row">
@@ -483,6 +717,10 @@
           <button class="btn-option" data-mode="sightwords">Sight Words</button>
           <button class="btn-option" data-mode="literature">Literature</button>
         </div>
+      </div>
+
+      <div class="control-group">
+        <button class="btn-option" id="btn-view-passages">📖 View All Passages</button>
       </div>
 
       <button class="btn-start">Start Game</button>
@@ -539,6 +777,16 @@
       </div>
 
       <button class="btn-play-again">Play Again</button>
+    </div>
+
+    <!-- Bibliography Screen -->
+    <div class="screen bibliography-screen">
+      <button class="btn-close-bibliography">✕</button>
+      <button class="btn-back">← Back to Setup</button>
+      <h2>Literature Passages Library</h2>
+      <div class="passages-by-grade">
+        <!-- Dynamically populated by JavaScript -->
+      </div>
     </div>
   </div>
 
@@ -630,6 +878,117 @@
           title: 'A Child\'s Garden of Verses',
           author: 'Robert Louis Stevenson',
           passage: 'The Land of Nod. From breakfast on through all the day at home among my friends I stay. But every night I go away to the Land of Nod.'
+        }
+      ],
+      2: [
+        {
+          title: 'The Velveteen Rabbit',
+          author: 'Margery Williams',
+          passage: 'What is real? asked the Rabbit one day. Does it mean having things that buzz inside you and a stick-out handle? Real isn\'t how you are made, said the Skin Horse. It\'s a thing that happens to you.'
+        },
+        {
+          title: 'The Velveteen Rabbit',
+          author: 'Margery Williams',
+          passage: 'The Boy loved the Velveteen Rabbit so hard that he loved all his hair off, and the pink came off the end of his nose where the Boy\'s cheek had rubbed against it. But the Rabbit didn\'t mind.'
+        },
+        {
+          title: 'The Jungle Book',
+          author: 'Rudyard Kipling',
+          passage: 'Now Chil the Kite brings home the night that Mang the Bat set free. The herds are shut in byre and hut for loosed till dawn are we. This is the hour of pride and power, talon and tush and claw.'
+        },
+        {
+          title: 'Just So Stories',
+          author: 'Rudyard Kipling',
+          passage: 'How the Leopard Got His Spots. In the days when everybody started fair, Best Beloved, the Leopard lived in a place called the High Veldt.'
+        },
+        {
+          title: 'Hans Christian Andersen',
+          author: 'Hans Christian Andersen',
+          passage: 'The Emperor\'s New Clothes. There was once a vain Emperor who cared for nothing but his appearance. He spent all his money on fine clothes and wanted a new suit every day.'
+        },
+        {
+          title: 'Traditional Fairy Tales',
+          author: 'Traditional',
+          passage: 'Cinderella. Once upon a time there lived a beautiful girl named Cinderella. She lived with her stepmother and two stepsisters who were very unkind to her and made her do all the work.'
+        },
+        {
+          title: 'Aesop\'s Fables',
+          author: 'Aesop',
+          passage: 'The Fox and the Grapes. A hungry Fox saw some ripe grapes hanging high on a vine. He jumped again and again, trying to reach them, but they were too high.'
+        }
+      ],
+      3: [
+        {
+          title: 'Alice\'s Adventures in Wonderland',
+          author: 'Lewis Carroll',
+          passage: 'Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do. Once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it.'
+        },
+        {
+          title: 'Alice\'s Adventures in Wonderland',
+          author: 'Lewis Carroll',
+          passage: 'So she was considering in her own mind whether the pleasure of making a daisy-chain would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.'
+        },
+        {
+          title: 'The Jungle Book',
+          author: 'Rudyard Kipling',
+          passage: 'Mowgli was a boy who lived in the jungle with the wolves. Baloo the bear was teaching him the Law of the Jungle. All the jungle folk knew Mowgli and he knew them.'
+        },
+        {
+          title: 'Just So Stories',
+          author: 'Rudyard Kipling',
+          passage: 'How the Whale Got His Throat. In the sea, once upon a time, there was a Whale who ate all the fishes. The fishes were much displeased at this, and they held a meeting.'
+        },
+        {
+          title: 'Hans Christian Andersen',
+          author: 'Hans Christian Andersen',
+          passage: 'The Little Mermaid. Far out in the deep sea where the water is as blue as the prettiest cornflower and as clear as crystal, there lived the Sea King with his mermaid daughters.'
+        },
+        {
+          title: 'The Tale of Peter Rabbit',
+          author: 'Beatrix Potter',
+          passage: 'Peter\'s mother said, You may go anywhere in the meadow or down the lane, but you must NOT go into Mr. McGregor\'s garden. The other rabbits obeyed, but Peter was always a naughty little rabbit.'
+        },
+        {
+          title: 'Aesop\'s Fables',
+          author: 'Aesop',
+          passage: 'The Crow and the Pitcher. A thirsty Crow found a pitcher with a little water at the bottom. He tried to drink from it, but his beak was too long and could not reach the water.'
+        }
+      ],
+      4: [
+        {
+          title: 'Alice\'s Adventures in Wonderland',
+          author: 'Lewis Carroll',
+          passage: 'Down the Rabbit-Hole. I shall be late! thought Alice as she hurried along. But when the Rabbit actually took a watch out of its waistcoat-pocket, she thought: This is curious! What an odd thing a watch is!'
+        },
+        {
+          title: 'Alice\'s Adventures in Wonderland',
+          author: 'Lewis Carroll',
+          passage: 'Alice fell down, down, down. The Rabbit-hole went straight on like a tunnel and then dipped suddenly down. She had not a moment to think about stopping herself before she found herself falling down a very deep well.'
+        },
+        {
+          title: 'The Jungle Book',
+          author: 'Rudyard Kipling',
+          passage: 'Shere Khan the Tiger was lame in one foot, and so he roamed the jungle slowly. All the creatures feared him. But Mowgli, the boy raised by wolves, did not know fear as other animals knew it.'
+        },
+        {
+          title: 'Robinson Crusoe',
+          author: 'Daniel Defoe',
+          passage: 'I was born in York, in a good family, though not of that country. My father being a merchant of great repute, he desired that I should learn a trade or go to sea.'
+        },
+        {
+          title: 'Just So Stories',
+          author: 'Rudyard Kipling',
+          passage: 'How the Camel Got His Hump. Now this is the next tale, and it tells how the Camel got his big hump. The Camel lived in the Howling Desert. The Horse came to him on Monday morning.'
+        },
+        {
+          title: 'Hans Christian Andersen',
+          author: 'Hans Christian Andersen',
+          passage: 'The Steadfast Tin Soldier. There were once five-and-twenty tin soldiers, all brothers, for they had been made out of the same old tin spoon. They were dressed in blue and red uniforms and stood straight with their guns.'
+        },
+        {
+          title: 'The Tale of a Tail',
+          author: 'Traditional',
+          passage: 'The Three Little Pigs. Once upon a time there were three little pigs who lived with their mother. When they grew up, she said to them, The world is a big place. Go out and build houses of your own.'
         }
       ],
       '5+': [
@@ -828,6 +1187,74 @@
       document.querySelector('.' + screenClass).classList.add('active');
     }
 
+    // Populate bibliography with all passages
+    function populateBibliography() {
+      const container = document.querySelector('.passages-by-grade');
+      container.innerHTML = '';
+
+      // Define grade levels in order with labels
+      const gradeMap = {
+        'preK': 'PreK',
+        'K': 'Kindergarten',
+        '1': '1st Grade',
+        '2': '2nd Grade',
+        '3': '3rd Grade',
+        '4': '4th Grade',
+        '5+': '5th Grade & Up',
+        'Adult': 'Adult'
+      };
+
+      const gradeOrder = ['preK', 'K', '1', '2', '3', '4', '5+', 'Adult'];
+
+      gradeOrder.forEach(grade => {
+        if (!literaturePassages[grade] || literaturePassages[grade].length === 0) {
+          return; // Skip grades with no passages
+        }
+
+        // Create grade section
+        const gradeSection = document.createElement('div');
+        gradeSection.className = 'grade-section';
+
+        // Grade heading
+        const gradeHeading = document.createElement('h3');
+        gradeHeading.textContent = gradeMap[grade];
+        gradeSection.appendChild(gradeHeading);
+
+        // Add each passage as a card
+        literaturePassages[grade].forEach(passage => {
+          const card = document.createElement('div');
+          card.className = 'passage-card';
+
+          // Card header with title and author
+          const header = document.createElement('div');
+          header.className = 'passage-card-header';
+
+          const title = document.createElement('h4');
+          title.className = 'passage-card-title';
+          title.textContent = passage.title;
+
+          header.appendChild(title);
+          card.appendChild(header);
+
+          // Author
+          const author = document.createElement('p');
+          author.className = 'passage-card-author';
+          author.textContent = 'by ' + passage.author;
+          card.appendChild(author);
+
+          // Passage text
+          const text = document.createElement('div');
+          text.className = 'passage-card-text';
+          text.textContent = passage.passage;
+          card.appendChild(text);
+
+          gradeSection.appendChild(card);
+        });
+
+        container.appendChild(gradeSection);
+      });
+    }
+
     // Start game
     function startGame() {
       if (!gameState.timeLimit || !gameState.gradeLevel || !gameState.mode) {
@@ -1022,8 +1449,45 @@
       showScreen('setup-screen');
     });
 
+    // Bibliography and Instructions
+    document.getElementById('btn-view-passages').addEventListener('click', () => {
+      populateBibliography();
+      showScreen('bibliography-screen');
+    });
+
+    document.querySelector('.btn-back').addEventListener('click', () => {
+      showScreen('setup-screen');
+    });
+
+    document.querySelector('.btn-close-bibliography').addEventListener('click', () => {
+      showScreen('setup-screen');
+    });
+
+    document.querySelector('.btn-toggle-instructions').addEventListener('click', function() {
+      const content = document.querySelector('.instructions-content');
+      const isHidden = content.style.display === 'none';
+      content.style.display = isHidden ? 'block' : 'none';
+
+      // Update button text based on state
+      if (isHidden) {
+        this.textContent = '✓ How to Use Word Ninja';
+      } else {
+        this.textContent = '✕ How to Use Word Ninja';
+      }
+    });
+
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
+      // ESC key to close bibliography screen
+      if (e.key === 'Escape') {
+        const bibliographyScreen = document.querySelector('.bibliography-screen');
+        if (bibliographyScreen.classList.contains('active')) {
+          e.preventDefault();
+          showScreen('setup-screen');
+          return;
+        }
+      }
+
       if (!gameState.gameActive) return;
 
       if (e.key === 'Enter' || e.code === 'Space' || e.key === ' ') {

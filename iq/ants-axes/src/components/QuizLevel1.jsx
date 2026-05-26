@@ -205,7 +205,7 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100 p-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div className="mb-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <div className="flex justify-between items-center mb-4">
@@ -222,8 +222,8 @@ export default function QuizLevel1({ mode = 'master', onBack }) {
           </div>
         </motion.div>
 
-        {/* Quiz Container - Single column */}
-        <div className="space-y-4 max-w-2xl mx-auto">
+        {/* Quiz Container - Chart left, input right on desktop; stacked on mobile */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
           {/* Chart */}
           <motion.div
             className="bg-white rounded-lg shadow-lg p-6"
