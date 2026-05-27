@@ -125,15 +125,20 @@ function setupPlateDragDrop() {
 }
 
 function getSmartDropPosition() {
+    const plate = document.getElementById('mainPlate');
     const itemSize = 160;
     let safeMinX, safeMaxX, safeMinY, safeMaxY;
-    
+
     if (isSmoothieMode) {
         safeMinX = 10; safeMaxX = 160;
         safeMinY = 10; safeMaxY = 280;
     } else {
-        safeMinX = 40; safeMaxX = 320;
-        safeMinY = 40; safeMaxY = 320;
+        const pw = plate.offsetWidth;
+        const ph = plate.offsetHeight;
+        safeMinX = 20;
+        safeMaxX = pw - itemSize - 20;
+        safeMinY = 20;
+        safeMaxY = ph - itemSize - 20;
     }
     const minDistance = 130; // Minimum distance between centers to avoid bad overlap
 
