@@ -19,7 +19,7 @@ const rankingByName = new Map(rankings.map(team => [team.name, team]));
 const groups = buildGroupsFromSchedule();
 
 const state = {
-  step: 'intro',
+  step: 'welcome',
   activeGroupIndex: 0,
   activeKnockoutRound: 'r32',
   entry: {
@@ -69,6 +69,7 @@ function teamFlag(teamName, size = 80) {
 }
 
 function render(resetScroll = false) {
+  if (state.step === 'welcome') renderWelcome();
   if (state.step === 'intro') renderIntro();
   if (state.step === 'groups') renderGroupPicker();
   if (state.step === 'thirds') renderThirdPlacePicker();
@@ -77,13 +78,59 @@ function render(resetScroll = false) {
   if (resetScroll) window.scrollTo(0, 0);
 }
 
+function renderWelcome() {
+  app.innerHTML = `
+    <section class="welcome-screen">
+      <div class="brand-lockup">
+        <span class="eyebrow">World Cup Pool</span>
+        <h1>Build your bracket.</h1>
+        <p>Fast picks, clean bracket, no spreadsheet nonsense.</p>
+      </div>
+
+      <div class="welcome-steps" aria-label="How to enter">
+        <article>
+          <span class="rank-number">1</span>
+          <div>
+            <strong>Fill out your picks</strong>
+            <small>Rank the groups, choose the best third-place teams, then pick every knockout winner.</small>
+          </div>
+        </article>
+        <article>
+          <span class="rank-number">2</span>
+          <div>
+            <strong>Name your bracket</strong>
+            <small>Add a unique bracket name and Venmo handle so payment can be matched later.</small>
+          </div>
+        </article>
+        <article>
+          <span class="rank-number">3</span>
+          <div>
+            <strong>Send Venmo</strong>
+            <small>Once your bracket is in, send payment separately.</small>
+          </div>
+        </article>
+      </div>
+
+      <div class="welcome-actions">
+        <button class="primary-action" id="welcome-start-btn" type="button">Start My Bracket</button>
+        <a class="rules-link" href="#rules">Pool rules</a>
+      </div>
+    </section>
+  `;
+
+  document.getElementById('welcome-start-btn').addEventListener('click', () => {
+    state.step = 'intro';
+    render(true);
+  });
+}
+
 function renderIntro() {
   app.innerHTML = `
     <section class="intro-screen">
       <div class="brand-lockup">
         <span class="eyebrow">World Cup Pool</span>
-        <h1>Make your picks.</h1>
-        <p>One bracket name, one payment handle, then rank each group from 1 to 4.</p>
+        <h1>Who’s picking?</h1>
+        <p>Add the name and Venmo handle for this bracket.</p>
       </div>
 
       <form id="entry-form" class="entry-card">
@@ -615,6 +662,7 @@ window.addEventListener('keydown', event => {
   if (event.target instanceof HTMLInputElement) return;
 
   const advanceButton = document.getElementById('next-btn')
+    || document.getElementById('welcome-start-btn')
     || document.getElementById('finish-btn')
     || document.getElementById('review-btn');
 
