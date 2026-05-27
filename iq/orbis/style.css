@@ -473,9 +473,18 @@ body {
     transform: translateX(100%);
     transition: transform 0.4s var(--transition);
     z-index: 200;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
     overflow: hidden;
+}
+
+#geocode-panel .gc-header,
+#geocode-panel .gc-stats,
+#geocode-panel .gc-footer { flex-shrink: 0; }
+
+#geocode-panel .gc-scroll {
+    overflow-y: auto;
+    min-height: 0;
 }
 
 #geocode-panel.open { transform: translateX(0); }
@@ -553,11 +562,7 @@ body {
 .gc-section {
     padding: 16px 24px;
     border-bottom: 1px solid var(--glass-border);
-    overflow-y: auto;
-    flex-shrink: 0;
 }
-.gc-section:nth-child(4) { flex: 1; min-height: 0; }   /* clue log scrolls */
-.gc-section:nth-child(5) { flex: 1; min-height: 0; }   /* guess log scrolls */
 
 .gc-section-title {
     font-size: 0.6rem;
@@ -709,6 +714,9 @@ body {
     opacity: 1;
     transform: translate(-50%, 0);
 }
+
+/* Recenter toast over the visible map area when the panel is open */
+#app:has(#geocode-panel.open) .distance-toast { left: calc(50% - 180px); }
 .toast-emoji { font-size: 1.6rem; }
 .toast-text { display: flex; flex-direction: column; line-height: 1.1; }
 .toast-label {
