@@ -21,24 +21,13 @@ const groups = buildGroupsFromSchedule();
 const state = {
   step: 'welcome',
   activeGroupIndex: 0,
-  activeKnockoutRound: 'r32',
   entry: {
     bracketName: '',
     venmo: ''
   },
   groupPicks: Object.fromEntries(GROUPS.map(group => [group, []])),
-  thirdPicks: [],
-  knockoutPicks: {}
+  thirdPicks: []
 };
-
-const KNOCKOUT_ROUNDS = [
-  { key: 'r32', label: 'Round of 32', pickLabel: 'Pick Round of 32', total: 16 },
-  { key: 'r16', label: 'Round of 16', pickLabel: 'Pick Round of 16', total: 8 },
-  { key: 'qf', label: 'Quarterfinals', pickLabel: 'Pick Quarterfinals', total: 4 },
-  { key: 'sf', label: 'Semifinals', pickLabel: 'Pick Semifinals', total: 2 },
-  { key: 'third', label: 'Third Place', pickLabel: 'Pick Third Place', total: 1 },
-  { key: 'final', label: 'Final', pickLabel: 'Pick Champion', total: 1 }
-];
 
 function buildGroupsFromSchedule() {
   const schedule = parseCSV(FALLBACK_SCHEDULE);
@@ -73,8 +62,7 @@ function render(resetScroll = false) {
   if (state.step === 'intro') renderIntro();
   if (state.step === 'groups') renderGroupPicker();
   if (state.step === 'thirds') renderThirdPlacePicker();
-  if (state.step === 'bracket') renderKnockoutPicker();
-  if (state.step === 'summary') renderSummary();
+  if (state.step === 'bracket') renderBracketPreview();
   if (resetScroll) window.scrollTo(0, 0);
 }
 
@@ -92,7 +80,7 @@ function renderWelcome() {
           <span class="rank-number">1</span>
           <div>
             <strong>Fill out your picks</strong>
-            <small>Rank the groups, choose the best third-place teams, then pick every knockout winner.</small>
+            <small>Rank all 12 groups, then choose which third-place teams advance.</small>
           </div>
         </article>
         <article>
@@ -251,7 +239,7 @@ function renderThirdPlacePicker() {
     <nav class="bottom-nav">
       <button class="secondary-action" id="back-btn">Back</button>
       <button class="ghost-action" id="clear-btn" ${state.thirdPicks.length === 0 ? 'disabled' : ''}>Clear</button>
-      <button class="primary-action compact" id="finish-btn" ${state.thirdPicks.length !== 8 ? 'disabled' : ''}>Build Bracket</button>
+      <button class="primary-action compact" id="finish-btn" ${state.thirdPicks.length !== 8 ? 'disabled' : ''}>Build R32</button>
     </nav>
   `;
 
@@ -285,113 +273,49 @@ function renderThirdPlacePicker() {
   document.getElementById('finish-btn').addEventListener('click', () => {
     if (state.thirdPicks.length !== 8) return;
     state.step = 'bracket';
-    state.activeKnockoutRound = 'r32';
     render(true);
   });
 }
 
-function renderKnockoutPicker() {
-  const round = getRoundConfig(state.activeKnockoutRound);
-  const roundIndex = KNOCKOUT_ROUNDS.findIndex(item => item.key === round.key);
-  const matches = buildKnockoutRound(round.key);
-  const orderedMatches = orderMatchesForPicking(matches);
-  const pickedCount = matches.filter(match => state.knockoutPicks[match.id]).length;
-  const isComplete = pickedCount === matches.length;
+function renderBracketPreview() {
+  const bracket = buildRoundOf32();
+  const topThirdGroups = state.thirdPicks.map(teamName => getTeam(teamName).group).sort().join('');
 
   app.innerHTML = `
-    ${renderTopBar(round.label, pickedCount, matches.length)}
+    ${renderTopBar('Round of 32', 1, 1)}
     <section class="bracket-screen">
       <div class="screen-copy">
         <span class="eyebrow">${escapeHtml(state.entry.bracketName)} · ${escapeHtml(state.entry.venmo)}</span>
-        <h1>${round.pickLabel}</h1>
+        <h1>Group-stage entry built</h1>
+        <p class="subtle">Third-place key: ${topThirdGroups}</p>
       </div>
 
-      <div class="knockout-list">
-        ${orderedMatches.map(match => renderPickMatch(match)).join('')}
-      </div>
-    </section>
-
-    <nav class="bottom-nav">
-      <button class="secondary-action" id="back-btn">Back</button>
-      <button class="ghost-action" id="clear-round-btn" ${pickedCount === 0 ? 'disabled' : ''}>Clear</button>
-      <button class="primary-action compact" id="next-btn" ${!isComplete ? 'disabled' : ''}>${round.key === 'final' ? 'Finish' : KNOCKOUT_ROUNDS[roundIndex + 1].label}</button>
-    </nav>
-  `;
-
-  app.querySelectorAll('[data-winner]').forEach(button => {
-    button.addEventListener('click', () => {
-      state.knockoutPicks[button.dataset.matchId] = button.dataset.winner;
-      clearDownstreamPicks(round.key);
-      render();
-    });
-  });
-
-  document.getElementById('back-btn').addEventListener('click', () => {
-    if (roundIndex === 0) {
-      state.step = 'thirds';
-    } else {
-      state.activeKnockoutRound = KNOCKOUT_ROUNDS[roundIndex - 1].key;
-    }
-    render(true);
-  });
-
-  document.getElementById('clear-round-btn').addEventListener('click', () => {
-    matches.forEach(match => {
-      delete state.knockoutPicks[match.id];
-    });
-    clearDownstreamPicks(round.key);
-    render();
-  });
-
-  document.getElementById('next-btn').addEventListener('click', () => {
-    if (!isComplete) return;
-    if (round.key === 'final') {
-      state.step = 'summary';
-    } else {
-      state.activeKnockoutRound = KNOCKOUT_ROUNDS[roundIndex + 1].key;
-    }
-    render(true);
-  });
-}
-
-function renderSummary() {
-  const champion = state.knockoutPicks[104];
-  const finalMatch = buildKnockoutRound('final')[0];
-  const runnerUp = getLoser(finalMatch);
-  const thirdPlaceWinner = state.knockoutPicks[103];
-  const thirdPlaceLoser = getLoser(buildKnockoutRound('third')[0]);
-
-  app.innerHTML = `
-    ${renderTopBar('Complete', 6, 6)}
-    <section class="bracket-screen">
-      <div class="screen-copy">
-        <span class="eyebrow">${escapeHtml(state.entry.bracketName)} · ${escapeHtml(state.entry.venmo)}</span>
-        <h1>Bracket complete</h1>
-      </div>
-
-      <div class="podium-list">
-        ${renderPodiumTeam(1, champion, 'Champion')}
-        ${renderPodiumTeam(2, runnerUp, 'Runner-up')}
-        ${renderPodiumTeam(3, thirdPlaceWinner, 'Third place')}
-        ${renderPodiumTeam(4, thirdPlaceLoser, 'Fourth place')}
+      <div class="bracket-list">
+        ${bracket.map(match => `
+          <article class="match-card">
+            <div class="match-number">Match ${match.id}</div>
+            ${renderMatchTeam(match.t1, match.t1Desc)}
+            <div class="versus">vs</div>
+            ${renderMatchTeam(match.t2, match.t2Desc)}
+          </article>
+        `).join('')}
       </div>
     </section>
 
     <nav class="bottom-nav two-up">
       <button class="secondary-action" id="back-btn">Back</button>
-      <button class="primary-action compact" id="review-btn">Review Picks</button>
+      <button class="primary-action compact" id="review-btn">Review Groups</button>
     </nav>
   `;
 
   document.getElementById('back-btn').addEventListener('click', () => {
-    state.step = 'bracket';
-    state.activeKnockoutRound = 'final';
+    state.step = 'thirds';
     render(true);
   });
 
   document.getElementById('review-btn').addEventListener('click', () => {
-    state.step = 'bracket';
-    state.activeKnockoutRound = 'r32';
+    state.step = 'groups';
+    state.activeGroupIndex = 0;
     render(true);
   });
 }
@@ -459,45 +383,6 @@ function renderMatchTeam(teamName, descriptor) {
   `;
 }
 
-function renderPickMatch(match) {
-  const winner = state.knockoutPicks[match.id];
-  return `
-    <article class="match-card pick-match">
-      <div class="match-number">Match ${match.id}</div>
-      <div class="winner-grid">
-        ${renderWinnerButton(match, match.t1, match.t1Desc, winner)}
-        ${renderWinnerButton(match, match.t2, match.t2Desc, winner)}
-      </div>
-    </article>
-  `;
-}
-
-function renderWinnerButton(match, teamName, descriptor, winner) {
-  const isSelected = winner === teamName;
-  return `
-    <button class="winner-pick ${isSelected ? 'selected' : ''}" type="button" data-match-id="${match.id}" data-winner="${escapeAttr(teamName)}" aria-pressed="${isSelected}">
-      <img src="${teamFlag(teamName)}" alt="">
-      <span>
-        <strong>${escapeHtml(teamName)}</strong>
-        <small>${escapeHtml(descriptor)}</small>
-      </span>
-    </button>
-  `;
-}
-
-function renderPodiumTeam(place, teamName, label) {
-  return `
-    <article class="podium-card place-${place}">
-      <span class="rank-number">${place}</span>
-      <img src="${teamFlag(teamName)}" alt="">
-      <span>
-        <strong>${escapeHtml(teamName)}</strong>
-        <small>${label}</small>
-      </span>
-    </article>
-  `;
-}
-
 function getThirdPlaceTeams() {
   return GROUPS.map(group => {
     const teamName = state.groupPicks[group][2];
@@ -545,94 +430,6 @@ function buildRoundOf32() {
     { id: 87, t1Desc: 'Winner J', t2Desc: 'Runner-up H', t1: getSeed(1, 'J'), t2: getSeed(2, 'H') },
     { id: 88, t1Desc: 'Runner-up D', t2Desc: 'Runner-up G', t1: getSeed(2, 'D'), t2: getSeed(2, 'G') }
   ];
-}
-
-function buildKnockoutRound(roundKey) {
-  if (roundKey === 'r32') return buildRoundOf32();
-
-  if (roundKey === 'r16') {
-    return buildFromPreviousWinners([
-      [89, 73, 74],
-      [90, 75, 76],
-      [91, 77, 78],
-      [92, 79, 80],
-      [93, 81, 82],
-      [94, 83, 84],
-      [95, 85, 86],
-      [96, 87, 88]
-    ]);
-  }
-
-  if (roundKey === 'qf') {
-    return buildFromPreviousWinners([
-      [97, 89, 90],
-      [98, 91, 92],
-      [99, 93, 94],
-      [100, 95, 96]
-    ]);
-  }
-
-  if (roundKey === 'sf') {
-    return buildFromPreviousWinners([
-      [101, 97, 98],
-      [102, 99, 100]
-    ]);
-  }
-
-  if (roundKey === 'third') {
-    const semiMatches = buildKnockoutRound('sf');
-    return [{
-      id: 103,
-      t1Desc: 'Loser Match 101',
-      t2Desc: 'Loser Match 102',
-      t1: getLoser(semiMatches[0]),
-      t2: getLoser(semiMatches[1])
-    }];
-  }
-
-  if (roundKey === 'final') {
-    return buildFromPreviousWinners([[104, 101, 102]]);
-  }
-
-  return [];
-}
-
-function orderMatchesForPicking(matches) {
-  return [...matches].sort((a, b) => {
-    const aPicked = Boolean(state.knockoutPicks[a.id]);
-    const bPicked = Boolean(state.knockoutPicks[b.id]);
-    if (aPicked !== bPicked) return aPicked ? 1 : -1;
-    return a.id - b.id;
-  });
-}
-
-function buildFromPreviousWinners(matchPairs) {
-  return matchPairs.map(([id, match1Id, match2Id]) => ({
-    id,
-    t1Desc: `Winner Match ${match1Id}`,
-    t2Desc: `Winner Match ${match2Id}`,
-    t1: state.knockoutPicks[match1Id] || 'TBD',
-    t2: state.knockoutPicks[match2Id] || 'TBD'
-  }));
-}
-
-function getLoser(match) {
-  const winner = state.knockoutPicks[match.id];
-  if (!winner) return 'TBD';
-  return winner === match.t1 ? match.t2 : match.t1;
-}
-
-function getRoundConfig(roundKey) {
-  return KNOCKOUT_ROUNDS.find(round => round.key === roundKey) || KNOCKOUT_ROUNDS[0];
-}
-
-function clearDownstreamPicks(roundKey) {
-  const roundIndex = KNOCKOUT_ROUNDS.findIndex(round => round.key === roundKey);
-  KNOCKOUT_ROUNDS.slice(roundIndex + 1).forEach(round => {
-    buildKnockoutRound(round.key).forEach(match => {
-      delete state.knockoutPicks[match.id];
-    });
-  });
 }
 
 function getTeam(teamName) {

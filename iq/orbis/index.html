@@ -21,8 +21,10 @@
             </div>
             <nav class="header-actions">
                 <button class="action-btn" id="view-continents-btn">Continents</button>
+                <button class="action-btn" id="view-countries-btn">Countries</button>
                 <button class="action-btn" id="view-oceans-btn">Oceans</button>
-                <button class="action-btn accent" id="start-exploration">START QUIZ</button>
+                <button class="action-btn" id="start-exploration">Mission Quiz</button>
+                <button class="action-btn accent" id="play-geocode-btn">🕵️ Geocode</button>
                 <a href="../iq/index.html" class="action-btn subtle">Exit to IQ</a>
             </nav>
         </header>
@@ -90,8 +92,71 @@
                 <span>VERIFIED SPATIAL DATA</span>
             </div>
         </footer>
+
+        <!-- Geocode side panel -->
+        <aside id="geocode-panel">
+            <header class="gc-header">
+                <div class="gc-title">
+                    <span class="gc-eye">🕵️</span>
+                    <div>
+                        <h2>GEOCODE</h2>
+                        <span class="gc-sub">Decode the mystery country</span>
+                    </div>
+                </div>
+                <button id="geocode-exit" aria-label="Exit Geocode">×</button>
+            </header>
+
+            <section class="gc-stats">
+                <div class="gc-stat">
+                    <span class="gc-stat-val" id="hints-remaining">5</span>
+                    <span class="gc-stat-lbl">Hints left</span>
+                </div>
+                <div class="gc-stat">
+                    <span class="gc-stat-val" id="guess-count">0</span>
+                    <span class="gc-stat-lbl">Guesses</span>
+                </div>
+            </section>
+
+            <section class="gc-section">
+                <h3 class="gc-section-title">Ask a clue</h3>
+                <div id="hint-chips" class="hint-chips"></div>
+            </section>
+
+            <section class="gc-section">
+                <h3 class="gc-section-title">What you know</h3>
+                <ul id="clue-list" class="clue-list"></ul>
+            </section>
+
+            <section class="gc-section">
+                <h3 class="gc-section-title">Your guesses</h3>
+                <ul id="guess-list" class="guess-list"></ul>
+            </section>
+
+            <footer class="gc-footer">
+                <button id="geocode-give-up" class="gc-btn-secondary">Give up</button>
+            </footer>
+        </aside>
+
+        <!-- Distance toast (floats above the map) -->
+        <div id="distance-toast" class="distance-toast"></div>
+
+        <!-- Result modal -->
+        <div id="geocode-result-overlay" class="overlay geocode-result">
+            <div class="modal-content glass">
+                <button id="geocode-result-close" aria-label="Close">×</button>
+                <div class="result-inner">
+                    <div id="geocode-result-flag" class="result-flag">🌍</div>
+                    <h2 id="geocode-result-title">Decoded!</h2>
+                    <div id="geocode-result-body"></div>
+                    <button id="geocode-result-play-again" class="primary-action">Play again</button>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <script src="orbis_countries.js"></script>
+    <script src="orbis_quiz.js"></script>
+    <script src="orbis_geocode_ui.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

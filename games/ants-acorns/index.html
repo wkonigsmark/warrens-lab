@@ -262,10 +262,10 @@
       outline: none;
       border-color: var(--accent);
     }
-    details.mentor-panel {
+    details.panel {
       padding: 14px 16px;
     }
-    details.mentor-panel > summary {
+    details.panel > summary {
       cursor: pointer;
       list-style: none;
       display: flex;
@@ -279,13 +279,13 @@
       padding: 2px 0;
       user-select: none;
     }
-    details.mentor-panel > summary::-webkit-details-marker { display: none; }
-    details.mentor-panel > summary::after {
+    details.panel > summary::-webkit-details-marker { display: none; }
+    details.panel > summary::after {
       content: "▾";
       font-size: 14px;
       transition: transform 0.2s;
     }
-    details.mentor-panel[open] > summary::after {
+    details.panel[open] > summary::after {
       transform: rotate(180deg);
     }
     details.mentor-panel[open] > .mentor-toggles { margin-top: 12px; }
@@ -467,11 +467,52 @@
       <img src="assets/banner-ants-acorns-1.png" alt="Ants &amp; Acorns Banner" class="banner-img" onerror="this.parentNode.style.display='none'; document.getElementById('fallback-title').style.display='block';">
     </div>
     <h1 id="fallback-title" class="fallback-title"><span class="emoji">🐜</span>Ants &amp; Acorns<span class="emoji">🌰</span></h1>
-    <p class="intro-guide">
-      Guess the secret code! <strong>🐜 Ants</strong> represent correct digits in the exact right spot. <strong>🌰 Acorns</strong> represent correct digits in the wrong spot. Use logic to crack the code!
-    </p>
 
     <div class="panel">
+      <div class="row">
+        <input
+          id="guess"
+          class="guess-input"
+          inputmode="numeric"
+          maxlength="4"
+          autocomplete="off"
+          placeholder="----"
+        >
+        <button id="submit" class="primary">Guess</button>
+      </div>
+      <div id="status" class="status">Guess #1 of 10</div>
+      <div id="history" class="history">
+        <div class="history-empty">No guesses yet.</div>
+      </div>
+      <div class="play-divider"></div>
+      <div class="row" style="justify-content: center; gap: 8px;">
+        <button id="new-game">New game</button>
+        <button id="print-btn">Print play sheet</button>
+      </div>
+      <div class="legend">
+        <span><span class="ico">🐜</span> right digit, right spot</span>
+        <span><span class="ico">🌰</span> right digit, wrong spot</span>
+      </div>
+    </div>
+
+    <details class="panel mentor-panel">
+      <summary>Mentor hints</summary>
+      <div class="mentor-toggles">
+        <label class="mentor-toggle"><input type="checkbox" data-hint="digits"> Digits in/out</label>
+        <label class="mentor-toggle"><input type="checkbox" data-hint="positions"> Locked positions</label>
+        <label class="mentor-toggle"><input type="checkbox" data-hint="count"> Possibilities</label>
+        <label class="mentor-toggle"><input type="checkbox" data-hint="nudge"> Solvable nudge</label>
+        <label class="mentor-toggle"><input type="checkbox" data-hint="reasoning"> Show reasoning</label>
+      </div>
+      <div id="mentor-output" class="mentor-output"></div>
+    </details>
+
+    <details id="settings-panel" class="panel settings-panel" open>
+      <summary>Settings & How to Play</summary>
+      <p class="intro-guide" style="margin-top: 12px;">
+        Guess the secret code! <strong>🐜 Ants</strong> represent correct digits in the exact right spot. <strong>🌰 Acorns</strong> represent correct digits in the wrong spot. Use logic to crack the code!
+      </p>
+
       <div class="row">
         <span class="length-label">Code length</span>
         <select id="length-select" class="length-select">
@@ -500,46 +541,7 @@
           Unlimited
         </label>
       </div>
-    </div>
-
-    <details class="panel mentor-panel">
-      <summary>Mentor hints</summary>
-      <div class="mentor-toggles">
-        <label class="mentor-toggle"><input type="checkbox" data-hint="digits"> Digits in/out</label>
-        <label class="mentor-toggle"><input type="checkbox" data-hint="positions"> Locked positions</label>
-        <label class="mentor-toggle"><input type="checkbox" data-hint="count"> Possibilities</label>
-        <label class="mentor-toggle"><input type="checkbox" data-hint="nudge"> Solvable nudge</label>
-        <label class="mentor-toggle"><input type="checkbox" data-hint="reasoning"> Show reasoning</label>
-      </div>
-      <div id="mentor-output" class="mentor-output"></div>
     </details>
-
-    <div class="panel">
-      <div class="row">
-        <input
-          id="guess"
-          class="guess-input"
-          inputmode="numeric"
-          maxlength="4"
-          autocomplete="off"
-          placeholder="----"
-        >
-        <button id="submit" class="primary">Guess</button>
-      </div>
-      <div id="status" class="status">Guess #1 of 10</div>
-      <div class="row" style="justify-content: center; gap: 8px;">
-        <button id="new-game">New game</button>
-        <button id="print-btn">Print play sheet</button>
-      </div>
-      <div class="play-divider"></div>
-      <div id="history" class="history">
-        <div class="history-empty">No guesses yet.</div>
-      </div>
-      <div class="legend">
-        <span><span class="ico">🐜</span> right digit, right spot</span>
-        <span><span class="ico">🌰</span> right digit, wrong spot</span>
-      </div>
-    </div>
 
     <details>
       <summary>How to play</summary>
@@ -873,6 +875,10 @@
       const { ants, acorns } = score(guessArr, state.secret);
       state.guesses.push({ value, ants, acorns });
       $guess.value = '';
+      if (state.guesses.length === 1) {
+        const settingsPanel = document.getElementById('settings-panel');
+        if (settingsPanel) settingsPanel.open = false;
+      }
       if (ants === state.codeLength) {
         state.over = true;
       } else if (state.maxGuesses !== Infinity && state.guesses.length >= state.maxGuesses) {
@@ -892,6 +898,8 @@
       $guess.placeholder = '-'.repeat(state.codeLength);
       $guess.disabled = false;
       $submit.disabled = false;
+      const settingsPanel = document.getElementById('settings-panel');
+      if (settingsPanel) settingsPanel.open = true;
       render();
       $guess.focus();
     }

@@ -304,9 +304,69 @@ function renderMap(view) {
 
     if (view === 'continents') {
         renderContinents(regionGroup, labelGroup);
+    } else if (view === 'countries') {
+        renderCountries(regionGroup, labelGroup);
     } else {
         renderOceans(regionGroup, labelGroup);
     }
+}
+
+async function renderCountries(regionGroup, labelGroup) {
+    try {
+        await OrbisCountries.load();
+    } catch (err) {
+        console.error('Orbis: failed to load country data', err);
+        return;
+    }
+
+    OrbisCountries.renderInto(regionGroup, {
+        onHover: (iso2, country) => {
+            if (quizActive || (window.OrbisGeocode && OrbisGeocode.isActive())) return;
+            const name = country?.name || iso2;
+            updateStatus(name);
+        },
+        onUnhover: () => {
+            if (!quizActive && !(window.OrbisGeocode && OrbisGeocode.isActive())) {
+                updateStatus('PLANET EARTH');
+            }
+        },
+        onClick: (iso2, country) => {
+            if (quizActive) return;
+            if (window.OrbisGeocode && OrbisGeocode.isActive()) {
+                OrbisGeocode.handleMapClick(iso2, country);
+                return;
+            }
+            if (country) showCountryDiscovery(country);
+        }
+    });
+
+    // Labels for Famous 20 — emoji + ISO into the labelGroup so they stay on top
+    for (const country of OrbisCountries.allCountries()) {
+        const feature = OrbisCountries.getFeature(country.iso_a2);
+        if (!feature) continue;
+        const [cx, cy] = OrbisCountries.centroidOfFeature(feature);
+        if (cx == null) continue;
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', cx);
+        text.setAttribute('y', -cy);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('class', 'country-label');
+        text.textContent = country.iso_a2;
+        labelGroup.appendChild(text);
+    }
+}
+
+function showCountryDiscovery(country) {
+    const overlay = document.getElementById('discovery-overlay');
+    document.getElementById('modal-category').textContent = 'COUNTRY';
+    document.getElementById('modal-title').textContent = country.name;
+    document.getElementById('modal-description').textContent = country.fact_card;
+    document.getElementById('stat-area').textContent = country.capital || '—';
+    document.getElementById('stat-count').textContent = country.languages.join(', ');
+    document.querySelector('#modal-stats .stat-item:nth-child(1) .lbl').textContent = 'Capital';
+    document.querySelector('#modal-stats .stat-item:nth-child(2) .lbl').textContent = 'Language';
+    document.getElementById('modal-image-wrap').textContent = country.flag_emoji || '🌍';
+    overlay.classList.add('visible');
 }
 
 function renderContinents(regionGroup, labelGroup) {
@@ -421,12 +481,14 @@ function updateStatus(name) {
 function showDiscovery(data) {
     const overlay = document.getElementById('discovery-overlay');
     const type = currentView === 'continents' ? 'CONTINENT' : 'OCEAN';
-    
+
     document.getElementById('modal-category').textContent = type;
     document.getElementById('modal-title').textContent = data.name;
     document.getElementById('modal-description').textContent = data.description;
     document.getElementById('stat-area').textContent = data.area;
     document.getElementById('stat-count').textContent = data.countries;
+    document.querySelector('#modal-stats .stat-item:nth-child(1) .lbl').textContent = 'Area';
+    document.querySelector('#modal-stats .stat-item:nth-child(2) .lbl').textContent = 'Countries';
     document.getElementById('modal-image-wrap').textContent = data.icon;
 
     overlay.classList.add('visible');
@@ -444,6 +506,25 @@ function setupEventListeners() {
         if (quizActive) return; // Disable switching during quiz
         currentView = 'oceans';
         renderMap('oceans');
+    };
+
+    document.getElementById('view-countries-btn').onclick = () => {
+        if (quizActive) return;
+        currentView = 'countries';
+        renderMap('countries');
+    };
+
+    document.getElementById('play-geocode-btn').onclick = async () => {
+        if (quizActive) return;
+        if (currentView !== 'countries') {
+            currentView = 'countries';
+            renderMap('countries');
+            // Wait a tick so the country paths exist before Geocode starts.
+            await new Promise(r => setTimeout(r, 50));
+        }
+        OrbisGeocode.start();
+        document.querySelector('.status-label').textContent = 'MYSTERY COUNTRY';
+        updateStatus('?????');
     };
 
     // Quiz Button

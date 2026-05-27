@@ -1,0 +1,297 @@
+{
+  "__doc": {
+    "purpose": "Hand-curated soft fields for Orbis atlas. Merged with REST Countries data by build_atlas.mjs to produce atlas.json.",
+    "color_palette": ["red", "white", "blue", "green", "yellow", "orange", "black", "light-blue"],
+    "motif_palette": ["stripes", "stars", "cross", "crescent", "sun", "eagle", "maple-leaf", "dragon", "circle", "sword", "text", "coat-of-arms", "wheel", "trigrams", "sphere", "Y-shape"],
+    "climate_bands": ["tropical", "temperate", "arid", "polar", "mixed"]
+  },
+
+  "continents": {
+    "africa": {
+      "name": "Africa",
+      "icon": "🐘",
+      "signature_animal": "elephant",
+      "signature_biome": "savanna",
+      "bordering_oceans": ["Atlantic", "Indian"],
+      "hemispheres": ["N", "S", "E", "W"],
+      "description": "The cradle of humanity — home to the Sahara, the Nile, and the savanna."
+    },
+    "antarctica": {
+      "name": "Antarctica",
+      "icon": "🐧",
+      "signature_animal": "penguin",
+      "signature_biome": "ice-sheet",
+      "bordering_oceans": ["Southern", "Atlantic", "Pacific", "Indian"],
+      "hemispheres": ["S"],
+      "description": "The frozen southernmost continent — no countries, just research stations."
+    },
+    "asia": {
+      "name": "Asia",
+      "icon": "🏮",
+      "signature_animal": "tiger",
+      "signature_biome": "varied",
+      "bordering_oceans": ["Arctic", "Pacific", "Indian"],
+      "hemispheres": ["N", "E"],
+      "description": "The largest and most populous continent — home to the world's highest peak, Mount Everest."
+    },
+    "europe": {
+      "name": "Europe",
+      "icon": "🏛️",
+      "signature_animal": "brown bear",
+      "signature_biome": "temperate forest",
+      "bordering_oceans": ["Atlantic", "Arctic"],
+      "hemispheres": ["N", "E", "W"],
+      "description": "A continent of many small countries packed with old cities, castles, and rivers."
+    },
+    "north_america": {
+      "name": "North America",
+      "icon": "🦅",
+      "signature_animal": "bison",
+      "signature_biome": "varied",
+      "bordering_oceans": ["Atlantic", "Pacific", "Arctic"],
+      "hemispheres": ["N", "W"],
+      "description": "From the Arctic to the Caribbean — home of the Grand Canyon and the Great Lakes."
+    },
+    "oceania": {
+      "name": "Oceania",
+      "icon": "🦘",
+      "signature_animal": "kangaroo",
+      "signature_biome": "outback",
+      "bordering_oceans": ["Pacific", "Indian"],
+      "hemispheres": ["S", "E"],
+      "description": "Australia plus thousands of Pacific islands."
+    },
+    "south_america": {
+      "name": "South America",
+      "icon": "🐆",
+      "signature_animal": "jaguar",
+      "signature_biome": "rainforest",
+      "bordering_oceans": ["Atlantic", "Pacific"],
+      "hemispheres": ["N", "S", "W"],
+      "description": "Home to the Amazon rainforest and the Andes mountains."
+    }
+  },
+
+  "countries": {
+    "US": {
+      "flag_colors": ["red", "white", "blue"],
+      "flag_motifs": ["stars", "stripes"],
+      "climate_band": "temperate",
+      "terrain_headline": "varied",
+      "landmark": "Grand Canyon",
+      "famous_food": "hamburger",
+      "fact_card": "Spans four time zones in the mainland and includes the world's first national park, Yellowstone.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean", "Pacific Ocean", "Gulf of Mexico"]
+    },
+    "CA": {
+      "flag_colors": ["red", "white"],
+      "flag_motifs": ["maple-leaf"],
+      "climate_band": "polar",
+      "terrain_headline": "forested",
+      "landmark": "Niagara Falls",
+      "famous_food": "poutine",
+      "fact_card": "The world's second-largest country by area, with more lakes than the rest of the world combined.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean", "Pacific Ocean", "Arctic Ocean"]
+    },
+    "MX": {
+      "flag_colors": ["green", "white", "red"],
+      "flag_motifs": ["eagle", "stripes"],
+      "climate_band": "tropical",
+      "terrain_headline": "mountainous",
+      "landmark": "Chichen Itza",
+      "famous_food": "tacos",
+      "fact_card": "Home of the ancient Maya and Aztec civilizations and the birthplace of chocolate.",
+      "island": false,
+      "bordering_waters": ["Pacific Ocean", "Gulf of Mexico", "Caribbean Sea"]
+    },
+    "BR": {
+      "flag_colors": ["green", "yellow", "blue", "white"],
+      "flag_motifs": ["stars", "sphere"],
+      "climate_band": "tropical",
+      "terrain_headline": "rainforest",
+      "landmark": "Christ the Redeemer",
+      "famous_food": "feijoada",
+      "fact_card": "Holds most of the Amazon rainforest and is the only country in South America that speaks Portuguese.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean"]
+    },
+    "AR": {
+      "flag_colors": ["light-blue", "white"],
+      "flag_motifs": ["sun", "stripes"],
+      "climate_band": "temperate",
+      "terrain_headline": "pampas",
+      "landmark": "Iguazu Falls",
+      "famous_food": "asado",
+      "fact_card": "Stretches from subtropical jungle in the north to the icy edge of Antarctica in the south.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean"]
+    },
+    "GB": {
+      "flag_colors": ["red", "white", "blue"],
+      "flag_motifs": ["cross"],
+      "climate_band": "temperate",
+      "terrain_headline": "rolling hills",
+      "landmark": "Big Ben",
+      "famous_food": "fish and chips",
+      "fact_card": "An island nation made of four countries: England, Scotland, Wales, and Northern Ireland.",
+      "island": true,
+      "bordering_waters": ["Atlantic Ocean", "North Sea", "English Channel"]
+    },
+    "FR": {
+      "flag_colors": ["blue", "white", "red"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "temperate",
+      "terrain_headline": "varied",
+      "landmark": "Eiffel Tower",
+      "famous_food": "baguette",
+      "fact_card": "The world's most-visited country, with mountains, coastlines, and overseas territories on five continents.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean", "Mediterranean Sea", "English Channel"]
+    },
+    "DE": {
+      "flag_colors": ["black", "red", "yellow"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "temperate",
+      "terrain_headline": "forested",
+      "landmark": "Brandenburg Gate",
+      "famous_food": "bratwurst",
+      "fact_card": "Once split in two by a wall through Berlin; reunified in 1990.",
+      "island": false,
+      "bordering_waters": ["North Sea", "Baltic Sea"]
+    },
+    "ES": {
+      "flag_colors": ["red", "yellow"],
+      "flag_motifs": ["coat-of-arms", "stripes"],
+      "climate_band": "temperate",
+      "terrain_headline": "peninsula",
+      "landmark": "Sagrada Família",
+      "famous_food": "paella",
+      "fact_card": "Sits on the Iberian Peninsula and once ruled an empire that spanned the Americas.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean", "Mediterranean Sea"]
+    },
+    "IT": {
+      "flag_colors": ["green", "white", "red"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "temperate",
+      "terrain_headline": "peninsula",
+      "landmark": "Colosseum",
+      "famous_food": "pizza",
+      "fact_card": "Shaped like a boot kicking the island of Sicily; home of the Roman Empire.",
+      "island": false,
+      "bordering_waters": ["Mediterranean Sea", "Adriatic Sea", "Tyrrhenian Sea"]
+    },
+    "RU": {
+      "flag_colors": ["white", "blue", "red"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "polar",
+      "terrain_headline": "vast",
+      "landmark": "Red Square",
+      "famous_food": "borscht",
+      "fact_card": "The largest country on Earth, stretching across 11 time zones.",
+      "island": false,
+      "bordering_waters": ["Arctic Ocean", "Pacific Ocean", "Baltic Sea", "Black Sea", "Caspian Sea"]
+    },
+    "CN": {
+      "flag_colors": ["red", "yellow"],
+      "flag_motifs": ["stars"],
+      "climate_band": "mixed",
+      "terrain_headline": "mountainous",
+      "landmark": "Great Wall",
+      "famous_food": "dumplings",
+      "fact_card": "Home to the world's longest wall and, for centuries, the world's largest population.",
+      "island": false,
+      "bordering_waters": ["Pacific Ocean", "South China Sea", "Yellow Sea", "East China Sea"]
+    },
+    "JP": {
+      "flag_colors": ["white", "red"],
+      "flag_motifs": ["sun", "circle"],
+      "climate_band": "temperate",
+      "terrain_headline": "archipelago",
+      "landmark": "Mount Fuji",
+      "famous_food": "sushi",
+      "fact_card": "A chain of more than 14,000 islands; the sun on its flag represents Japan as 'land of the rising sun.'",
+      "island": true,
+      "bordering_waters": ["Pacific Ocean", "Sea of Japan"]
+    },
+    "IN": {
+      "flag_colors": ["orange", "white", "green", "blue"],
+      "flag_motifs": ["wheel", "stripes"],
+      "climate_band": "tropical",
+      "terrain_headline": "subcontinent",
+      "landmark": "Taj Mahal",
+      "famous_food": "curry",
+      "fact_card": "The world's most populous democracy and home to 22 official languages.",
+      "island": false,
+      "bordering_waters": ["Indian Ocean", "Arabian Sea", "Bay of Bengal"]
+    },
+    "KR": {
+      "flag_colors": ["white", "red", "blue", "black"],
+      "flag_motifs": ["circle", "trigrams"],
+      "climate_band": "temperate",
+      "terrain_headline": "peninsula",
+      "landmark": "Gyeongbokgung Palace",
+      "famous_food": "kimchi",
+      "fact_card": "Famous worldwide for K-pop and K-dramas; shares a tense border with North Korea.",
+      "island": false,
+      "bordering_waters": ["Sea of Japan", "Yellow Sea"]
+    },
+    "SA": {
+      "flag_colors": ["green", "white"],
+      "flag_motifs": ["text", "sword"],
+      "climate_band": "arid",
+      "terrain_headline": "desert",
+      "landmark": "Kaaba in Mecca",
+      "famous_food": "kabsa",
+      "fact_card": "Holds Islam's two holiest cities, Mecca and Medina, and vast deserts of sand and oil.",
+      "island": false,
+      "bordering_waters": ["Red Sea", "Persian Gulf"]
+    },
+    "EG": {
+      "flag_colors": ["red", "white", "black"],
+      "flag_motifs": ["eagle", "stripes"],
+      "climate_band": "arid",
+      "terrain_headline": "desert",
+      "landmark": "Pyramids of Giza",
+      "famous_food": "koshari",
+      "fact_card": "Built one of the world's oldest civilizations along the Nile, the longest river on Earth.",
+      "island": false,
+      "bordering_waters": ["Mediterranean Sea", "Red Sea"]
+    },
+    "ZA": {
+      "flag_colors": ["red", "white", "blue", "green", "yellow", "black"],
+      "flag_motifs": ["Y-shape", "stripes"],
+      "climate_band": "temperate",
+      "terrain_headline": "plateau",
+      "landmark": "Table Mountain",
+      "famous_food": "bobotie",
+      "fact_card": "Has three capital cities and is home to the world's deepest gold mines.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean", "Indian Ocean"]
+    },
+    "NG": {
+      "flag_colors": ["green", "white"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "tropical",
+      "terrain_headline": "coastal",
+      "landmark": "Aso Rock",
+      "famous_food": "jollof rice",
+      "fact_card": "Africa's most populous country, with over 500 languages spoken.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean", "Gulf of Guinea"]
+    },
+    "AU": {
+      "flag_colors": ["blue", "white", "red"],
+      "flag_motifs": ["stars", "cross"],
+      "climate_band": "arid",
+      "terrain_headline": "outback",
+      "landmark": "Sydney Opera House",
+      "famous_food": "vegemite",
+      "fact_card": "Both a country and a continent — home to kangaroos, koalas, and the Great Barrier Reef.",
+      "island": true,
+      "bordering_waters": ["Pacific Ocean", "Indian Ocean", "Coral Sea", "Tasman Sea"]
+    }
+  }
+}

@@ -1,0 +1,1225 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-27T18:53:52.619Z",
+  "sources": {
+    "countries": "https://restcountries.com/v3.1",
+    "soft_fields": "atlas_soft.json (hand-curated)"
+  },
+  "continents": [
+    {
+      "id": "africa",
+      "name": "Africa",
+      "icon": "🐘",
+      "signature_animal": "elephant",
+      "signature_biome": "savanna",
+      "bordering_oceans": [
+        "Atlantic",
+        "Indian"
+      ],
+      "hemispheres": [
+        "N",
+        "S",
+        "E",
+        "W"
+      ],
+      "description": "The cradle of humanity — home to the Sahara, the Nile, and the savanna.",
+      "country_count_in_atlas": 3
+    },
+    {
+      "id": "antarctica",
+      "name": "Antarctica",
+      "icon": "🐧",
+      "signature_animal": "penguin",
+      "signature_biome": "ice-sheet",
+      "bordering_oceans": [
+        "Southern",
+        "Atlantic",
+        "Pacific",
+        "Indian"
+      ],
+      "hemispheres": [
+        "S"
+      ],
+      "description": "The frozen southernmost continent — no countries, just research stations.",
+      "country_count_in_atlas": 0
+    },
+    {
+      "id": "asia",
+      "name": "Asia",
+      "icon": "🏮",
+      "signature_animal": "tiger",
+      "signature_biome": "varied",
+      "bordering_oceans": [
+        "Arctic",
+        "Pacific",
+        "Indian"
+      ],
+      "hemispheres": [
+        "N",
+        "E"
+      ],
+      "description": "The largest and most populous continent — home to the world's highest peak, Mount Everest.",
+      "country_count_in_atlas": 5
+    },
+    {
+      "id": "europe",
+      "name": "Europe",
+      "icon": "🏛️",
+      "signature_animal": "brown bear",
+      "signature_biome": "temperate forest",
+      "bordering_oceans": [
+        "Atlantic",
+        "Arctic"
+      ],
+      "hemispheres": [
+        "N",
+        "E",
+        "W"
+      ],
+      "description": "A continent of many small countries packed with old cities, castles, and rivers.",
+      "country_count_in_atlas": 6
+    },
+    {
+      "id": "north_america",
+      "name": "North America",
+      "icon": "🦅",
+      "signature_animal": "bison",
+      "signature_biome": "varied",
+      "bordering_oceans": [
+        "Atlantic",
+        "Pacific",
+        "Arctic"
+      ],
+      "hemispheres": [
+        "N",
+        "W"
+      ],
+      "description": "From the Arctic to the Caribbean — home of the Grand Canyon and the Great Lakes.",
+      "country_count_in_atlas": 3
+    },
+    {
+      "id": "oceania",
+      "name": "Oceania",
+      "icon": "🦘",
+      "signature_animal": "kangaroo",
+      "signature_biome": "outback",
+      "bordering_oceans": [
+        "Pacific",
+        "Indian"
+      ],
+      "hemispheres": [
+        "S",
+        "E"
+      ],
+      "description": "Australia plus thousands of Pacific islands.",
+      "country_count_in_atlas": 1
+    },
+    {
+      "id": "south_america",
+      "name": "South America",
+      "icon": "🐆",
+      "signature_animal": "jaguar",
+      "signature_biome": "rainforest",
+      "bordering_oceans": [
+        "Atlantic",
+        "Pacific"
+      ],
+      "hemispheres": [
+        "N",
+        "S",
+        "W"
+      ],
+      "description": "Home to the Amazon rainforest and the Andes mountains.",
+      "country_count_in_atlas": 2
+    }
+  ],
+  "countries": [
+    {
+      "iso_a2": "US",
+      "iso_a3": "USA",
+      "name": "United States",
+      "official_name": "United States of America",
+      "continent": "north_america",
+      "subregion": "North America",
+      "capital": "Washington, D.C.",
+      "languages": [
+        "English"
+      ],
+      "currency": "USD",
+      "currency_name": "United States dollar",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "CAN",
+        "MEX"
+      ],
+      "area_km2": 9525067,
+      "population": 340110988,
+      "latlng": [
+        38,
+        -97
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "mega",
+      "area_bucket": "huge",
+      "flag_emoji": "🇺🇸",
+      "flag_svg": "https://flagcdn.com/us.svg",
+      "flag_colors": [
+        "red",
+        "white",
+        "blue"
+      ],
+      "flag_motifs": [
+        "stars",
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "varied",
+      "bordering_waters": [
+        "Atlantic Ocean",
+        "Pacific Ocean",
+        "Gulf of Mexico"
+      ],
+      "landmark": "Grand Canyon",
+      "famous_food": "hamburger",
+      "fact_card": "Spans four time zones in the mainland and includes the world's first national park, Yellowstone."
+    },
+    {
+      "iso_a2": "CA",
+      "iso_a3": "CAN",
+      "name": "Canada",
+      "official_name": "Canada",
+      "continent": "north_america",
+      "subregion": "North America",
+      "capital": "Ottawa",
+      "languages": [
+        "English",
+        "French"
+      ],
+      "currency": "CAD",
+      "currency_name": "Canadian dollar",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "USA"
+      ],
+      "area_km2": 9984670,
+      "population": 41651653,
+      "latlng": [
+        60,
+        -95
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "medium",
+      "area_bucket": "huge",
+      "flag_emoji": "🇨🇦",
+      "flag_svg": "https://flagcdn.com/ca.svg",
+      "flag_colors": [
+        "red",
+        "white"
+      ],
+      "flag_motifs": [
+        "maple-leaf"
+      ],
+      "climate_band": "polar",
+      "terrain_headline": "forested",
+      "bordering_waters": [
+        "Atlantic Ocean",
+        "Pacific Ocean",
+        "Arctic Ocean"
+      ],
+      "landmark": "Niagara Falls",
+      "famous_food": "poutine",
+      "fact_card": "The world's second-largest country by area, with more lakes than the rest of the world combined."
+    },
+    {
+      "iso_a2": "MX",
+      "iso_a3": "MEX",
+      "name": "Mexico",
+      "official_name": "United Mexican States",
+      "continent": "north_america",
+      "subregion": "North America",
+      "capital": "Mexico City",
+      "languages": [
+        "Spanish"
+      ],
+      "currency": "MXN",
+      "currency_name": "Mexican peso",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "BLZ",
+        "GTM",
+        "USA"
+      ],
+      "area_km2": 1964375,
+      "population": 130575786,
+      "latlng": [
+        23,
+        -102
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "large",
+      "area_bucket": "medium",
+      "flag_emoji": "🇲🇽",
+      "flag_svg": "https://flagcdn.com/mx.svg",
+      "flag_colors": [
+        "green",
+        "white",
+        "red"
+      ],
+      "flag_motifs": [
+        "eagle",
+        "stripes"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "mountainous",
+      "bordering_waters": [
+        "Pacific Ocean",
+        "Gulf of Mexico",
+        "Caribbean Sea"
+      ],
+      "landmark": "Chichen Itza",
+      "famous_food": "tacos",
+      "fact_card": "Home of the ancient Maya and Aztec civilizations and the birthplace of chocolate."
+    },
+    {
+      "iso_a2": "BR",
+      "iso_a3": "BRA",
+      "name": "Brazil",
+      "official_name": "Federative Republic of Brazil",
+      "continent": "south_america",
+      "subregion": "South America",
+      "capital": "Brasília",
+      "languages": [
+        "Portuguese"
+      ],
+      "currency": "BRL",
+      "currency_name": "Brazilian real",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "ARG",
+        "BOL",
+        "COL",
+        "GUF",
+        "GUY",
+        "PRY",
+        "PER",
+        "SUR",
+        "URY",
+        "VEN"
+      ],
+      "area_km2": 8515767,
+      "population": 213421037,
+      "latlng": [
+        -10,
+        -55
+      ],
+      "hemisphere_ns": "S",
+      "hemisphere_ew": "W",
+      "population_bucket": "mega",
+      "area_bucket": "huge",
+      "flag_emoji": "🇧🇷",
+      "flag_svg": "https://flagcdn.com/br.svg",
+      "flag_colors": [
+        "green",
+        "yellow",
+        "blue",
+        "white"
+      ],
+      "flag_motifs": [
+        "stars",
+        "sphere"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "rainforest",
+      "bordering_waters": [
+        "Atlantic Ocean"
+      ],
+      "landmark": "Christ the Redeemer",
+      "famous_food": "feijoada",
+      "fact_card": "Holds most of the Amazon rainforest and is the only country in South America that speaks Portuguese."
+    },
+    {
+      "iso_a2": "AR",
+      "iso_a3": "ARG",
+      "name": "Argentina",
+      "official_name": "Argentine Republic",
+      "continent": "south_america",
+      "subregion": "South America",
+      "capital": "Buenos Aires",
+      "languages": [
+        "Guaraní",
+        "Spanish"
+      ],
+      "currency": "ARS",
+      "currency_name": "Argentine peso",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "BOL",
+        "BRA",
+        "CHL",
+        "PRY",
+        "URY"
+      ],
+      "area_km2": 2780400,
+      "population": 46735004,
+      "latlng": [
+        -34,
+        -64
+      ],
+      "hemisphere_ns": "S",
+      "hemisphere_ew": "W",
+      "population_bucket": "medium",
+      "area_bucket": "large",
+      "flag_emoji": "🇦🇷",
+      "flag_svg": "https://flagcdn.com/ar.svg",
+      "flag_colors": [
+        "light-blue",
+        "white"
+      ],
+      "flag_motifs": [
+        "sun",
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "pampas",
+      "bordering_waters": [
+        "Atlantic Ocean"
+      ],
+      "landmark": "Iguazu Falls",
+      "famous_food": "asado",
+      "fact_card": "Stretches from subtropical jungle in the north to the icy edge of Antarctica in the south."
+    },
+    {
+      "iso_a2": "GB",
+      "iso_a3": "GBR",
+      "name": "United Kingdom",
+      "official_name": "United Kingdom of Great Britain and Northern Ireland",
+      "continent": "europe",
+      "subregion": "Northern Europe",
+      "capital": "London",
+      "languages": [
+        "English"
+      ],
+      "currency": "GBP",
+      "currency_name": "British pound",
+      "landlocked": false,
+      "island": true,
+      "borders": [
+        "IRL"
+      ],
+      "area_km2": 244376,
+      "population": 69281437,
+      "latlng": [
+        54,
+        -2
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "large",
+      "area_bucket": "small",
+      "flag_emoji": "🇬🇧",
+      "flag_svg": "https://flagcdn.com/gb.svg",
+      "flag_colors": [
+        "red",
+        "white",
+        "blue"
+      ],
+      "flag_motifs": [
+        "cross"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "rolling hills",
+      "bordering_waters": [
+        "Atlantic Ocean",
+        "North Sea",
+        "English Channel"
+      ],
+      "landmark": "Big Ben",
+      "famous_food": "fish and chips",
+      "fact_card": "An island nation made of four countries: England, Scotland, Wales, and Northern Ireland."
+    },
+    {
+      "iso_a2": "FR",
+      "iso_a3": "FRA",
+      "name": "France",
+      "official_name": "French Republic",
+      "continent": "europe",
+      "subregion": "Western Europe",
+      "capital": "Paris",
+      "languages": [
+        "French"
+      ],
+      "currency": "EUR",
+      "currency_name": "euro",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "AND",
+        "BEL",
+        "DEU",
+        "ITA",
+        "LUX",
+        "MCO",
+        "ESP",
+        "CHE"
+      ],
+      "area_km2": 543908,
+      "population": 66351959,
+      "latlng": [
+        46,
+        2
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "large",
+      "area_bucket": "medium",
+      "flag_emoji": "🇫🇷",
+      "flag_svg": "https://flagcdn.com/fr.svg",
+      "flag_colors": [
+        "blue",
+        "white",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "varied",
+      "bordering_waters": [
+        "Atlantic Ocean",
+        "Mediterranean Sea",
+        "English Channel"
+      ],
+      "landmark": "Eiffel Tower",
+      "famous_food": "baguette",
+      "fact_card": "The world's most-visited country, with mountains, coastlines, and overseas territories on five continents."
+    },
+    {
+      "iso_a2": "DE",
+      "iso_a3": "DEU",
+      "name": "Germany",
+      "official_name": "Federal Republic of Germany",
+      "continent": "europe",
+      "subregion": "Western Europe",
+      "capital": "Berlin",
+      "languages": [
+        "German"
+      ],
+      "currency": "EUR",
+      "currency_name": "euro",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "AUT",
+        "BEL",
+        "CZE",
+        "DNK",
+        "FRA",
+        "LUX",
+        "NLD",
+        "POL",
+        "CHE"
+      ],
+      "area_km2": 357114,
+      "population": 83491249,
+      "latlng": [
+        51,
+        9
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "large",
+      "area_bucket": "small",
+      "flag_emoji": "🇩🇪",
+      "flag_svg": "https://flagcdn.com/de.svg",
+      "flag_colors": [
+        "black",
+        "red",
+        "yellow"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "forested",
+      "bordering_waters": [
+        "North Sea",
+        "Baltic Sea"
+      ],
+      "landmark": "Brandenburg Gate",
+      "famous_food": "bratwurst",
+      "fact_card": "Once split in two by a wall through Berlin; reunified in 1990."
+    },
+    {
+      "iso_a2": "ES",
+      "iso_a3": "ESP",
+      "name": "Spain",
+      "official_name": "Kingdom of Spain",
+      "continent": "europe",
+      "subregion": "Southern Europe",
+      "capital": "Madrid",
+      "languages": [
+        "Spanish",
+        "Catalan",
+        "Basque",
+        "Galician"
+      ],
+      "currency": "EUR",
+      "currency_name": "euro",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "AND",
+        "FRA",
+        "GIB",
+        "PRT",
+        "MAR"
+      ],
+      "area_km2": 505992,
+      "population": 49315949,
+      "latlng": [
+        40,
+        -4
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "medium",
+      "area_bucket": "medium",
+      "flag_emoji": "🇪🇸",
+      "flag_svg": "https://flagcdn.com/es.svg",
+      "flag_colors": [
+        "red",
+        "yellow"
+      ],
+      "flag_motifs": [
+        "coat-of-arms",
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "peninsula",
+      "bordering_waters": [
+        "Atlantic Ocean",
+        "Mediterranean Sea"
+      ],
+      "landmark": "Sagrada Família",
+      "famous_food": "paella",
+      "fact_card": "Sits on the Iberian Peninsula and once ruled an empire that spanned the Americas."
+    },
+    {
+      "iso_a2": "IT",
+      "iso_a3": "ITA",
+      "name": "Italy",
+      "official_name": "Italian Republic",
+      "continent": "europe",
+      "subregion": "Southern Europe",
+      "capital": "Rome",
+      "languages": [
+        "Italian",
+        "Catalan"
+      ],
+      "currency": "EUR",
+      "currency_name": "euro",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "AUT",
+        "FRA",
+        "SMR",
+        "SVN",
+        "CHE",
+        "VAT"
+      ],
+      "area_km2": 301336,
+      "population": 58927633,
+      "latlng": [
+        42.83333333,
+        12.83333333
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "large",
+      "area_bucket": "small",
+      "flag_emoji": "🇮🇹",
+      "flag_svg": "https://flagcdn.com/it.svg",
+      "flag_colors": [
+        "green",
+        "white",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "peninsula",
+      "bordering_waters": [
+        "Mediterranean Sea",
+        "Adriatic Sea",
+        "Tyrrhenian Sea"
+      ],
+      "landmark": "Colosseum",
+      "famous_food": "pizza",
+      "fact_card": "Shaped like a boot kicking the island of Sicily; home of the Roman Empire."
+    },
+    {
+      "iso_a2": "RU",
+      "iso_a3": "RUS",
+      "name": "Russia",
+      "official_name": "Russian Federation",
+      "continent": "europe",
+      "subregion": "Eastern Europe",
+      "capital": "Moscow",
+      "languages": [
+        "Russian"
+      ],
+      "currency": "RUB",
+      "currency_name": "Russian ruble",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "AZE",
+        "BLR",
+        "CHN",
+        "EST",
+        "FIN",
+        "GEO",
+        "KAZ",
+        "PRK",
+        "LVA",
+        "LTU",
+        "MNG",
+        "NOR",
+        "POL",
+        "UKR"
+      ],
+      "area_km2": 17098246,
+      "population": 146028325,
+      "latlng": [
+        60,
+        100
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "large",
+      "area_bucket": "huge",
+      "flag_emoji": "🇷🇺",
+      "flag_svg": "https://flagcdn.com/ru.svg",
+      "flag_colors": [
+        "white",
+        "blue",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "polar",
+      "terrain_headline": "vast",
+      "bordering_waters": [
+        "Arctic Ocean",
+        "Pacific Ocean",
+        "Baltic Sea",
+        "Black Sea",
+        "Caspian Sea"
+      ],
+      "landmark": "Red Square",
+      "famous_food": "borscht",
+      "fact_card": "The largest country on Earth, stretching across 11 time zones."
+    },
+    {
+      "iso_a2": "CN",
+      "iso_a3": "CHN",
+      "name": "China",
+      "official_name": "People's Republic of China",
+      "continent": "asia",
+      "subregion": "Eastern Asia",
+      "capital": "Beijing",
+      "languages": [
+        "Chinese"
+      ],
+      "currency": "CNY",
+      "currency_name": "Chinese yuan",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "AFG",
+        "BTN",
+        "MMR",
+        "HKG",
+        "IND",
+        "KAZ",
+        "NPL",
+        "PRK",
+        "KGZ",
+        "LAO",
+        "MAC",
+        "MNG",
+        "PAK",
+        "RUS",
+        "TJK",
+        "VNM"
+      ],
+      "area_km2": 9706961,
+      "population": 1408280000,
+      "latlng": [
+        35,
+        105
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "mega",
+      "area_bucket": "huge",
+      "flag_emoji": "🇨🇳",
+      "flag_svg": "https://flagcdn.com/cn.svg",
+      "flag_colors": [
+        "red",
+        "yellow"
+      ],
+      "flag_motifs": [
+        "stars"
+      ],
+      "climate_band": "mixed",
+      "terrain_headline": "mountainous",
+      "bordering_waters": [
+        "Pacific Ocean",
+        "South China Sea",
+        "Yellow Sea",
+        "East China Sea"
+      ],
+      "landmark": "Great Wall",
+      "famous_food": "dumplings",
+      "fact_card": "Home to the world's longest wall and, for centuries, the world's largest population."
+    },
+    {
+      "iso_a2": "JP",
+      "iso_a3": "JPN",
+      "name": "Japan",
+      "official_name": "Japan",
+      "continent": "asia",
+      "subregion": "Eastern Asia",
+      "capital": "Tokyo",
+      "languages": [
+        "Japanese"
+      ],
+      "currency": "JPY",
+      "currency_name": "Japanese yen",
+      "landlocked": false,
+      "island": true,
+      "borders": [],
+      "area_km2": 377930,
+      "population": 123210000,
+      "latlng": [
+        36,
+        138
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "large",
+      "area_bucket": "small",
+      "flag_emoji": "🇯🇵",
+      "flag_svg": "https://flagcdn.com/jp.svg",
+      "flag_colors": [
+        "white",
+        "red"
+      ],
+      "flag_motifs": [
+        "sun",
+        "circle"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "archipelago",
+      "bordering_waters": [
+        "Pacific Ocean",
+        "Sea of Japan"
+      ],
+      "landmark": "Mount Fuji",
+      "famous_food": "sushi",
+      "fact_card": "A chain of more than 14,000 islands; the sun on its flag represents Japan as 'land of the rising sun.'"
+    },
+    {
+      "iso_a2": "IN",
+      "iso_a3": "IND",
+      "name": "India",
+      "official_name": "Republic of India",
+      "continent": "asia",
+      "subregion": "Southern Asia",
+      "capital": "New Delhi",
+      "languages": [
+        "English",
+        "Hindi",
+        "Tamil"
+      ],
+      "currency": "INR",
+      "currency_name": "Indian rupee",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "BGD",
+        "BTN",
+        "MMR",
+        "CHN",
+        "NPL",
+        "PAK"
+      ],
+      "area_km2": 3287263,
+      "population": 1417492000,
+      "latlng": [
+        20,
+        77
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "mega",
+      "area_bucket": "large",
+      "flag_emoji": "🇮🇳",
+      "flag_svg": "https://flagcdn.com/in.svg",
+      "flag_colors": [
+        "orange",
+        "white",
+        "green",
+        "blue"
+      ],
+      "flag_motifs": [
+        "wheel",
+        "stripes"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "subcontinent",
+      "bordering_waters": [
+        "Indian Ocean",
+        "Arabian Sea",
+        "Bay of Bengal"
+      ],
+      "landmark": "Taj Mahal",
+      "famous_food": "curry",
+      "fact_card": "The world's most populous democracy and home to 22 official languages."
+    },
+    {
+      "iso_a2": "KR",
+      "iso_a3": "KOR",
+      "name": "South Korea",
+      "official_name": "Republic of Korea",
+      "continent": "asia",
+      "subregion": "Eastern Asia",
+      "capital": "Seoul",
+      "languages": [
+        "Korean"
+      ],
+      "currency": "KRW",
+      "currency_name": "South Korean won",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "PRK"
+      ],
+      "area_km2": 100210,
+      "population": 51159889,
+      "latlng": [
+        37,
+        127.5
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "large",
+      "area_bucket": "small",
+      "flag_emoji": "🇰🇷",
+      "flag_svg": "https://flagcdn.com/kr.svg",
+      "flag_colors": [
+        "white",
+        "red",
+        "blue",
+        "black"
+      ],
+      "flag_motifs": [
+        "circle",
+        "trigrams"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "peninsula",
+      "bordering_waters": [
+        "Sea of Japan",
+        "Yellow Sea"
+      ],
+      "landmark": "Gyeongbokgung Palace",
+      "famous_food": "kimchi",
+      "fact_card": "Famous worldwide for K-pop and K-dramas; shares a tense border with North Korea."
+    },
+    {
+      "iso_a2": "SA",
+      "iso_a3": "SAU",
+      "name": "Saudi Arabia",
+      "official_name": "Kingdom of Saudi Arabia",
+      "continent": "asia",
+      "subregion": "Western Asia",
+      "capital": "Riyadh",
+      "languages": [
+        "Arabic"
+      ],
+      "currency": "SAR",
+      "currency_name": "Saudi riyal",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "IRQ",
+        "JOR",
+        "KWT",
+        "OMN",
+        "QAT",
+        "ARE",
+        "YEM"
+      ],
+      "area_km2": 2149690,
+      "population": 35300280,
+      "latlng": [
+        25,
+        45
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "large",
+      "flag_emoji": "🇸🇦",
+      "flag_svg": "https://flagcdn.com/sa.svg",
+      "flag_colors": [
+        "green",
+        "white"
+      ],
+      "flag_motifs": [
+        "text",
+        "sword"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "desert",
+      "bordering_waters": [
+        "Red Sea",
+        "Persian Gulf"
+      ],
+      "landmark": "Kaaba in Mecca",
+      "famous_food": "kabsa",
+      "fact_card": "Holds Islam's two holiest cities, Mecca and Medina, and vast deserts of sand and oil."
+    },
+    {
+      "iso_a2": "EG",
+      "iso_a3": "EGY",
+      "name": "Egypt",
+      "official_name": "Arab Republic of Egypt",
+      "continent": "africa",
+      "subregion": "Northern Africa",
+      "capital": "Cairo",
+      "languages": [
+        "Arabic"
+      ],
+      "currency": "EGP",
+      "currency_name": "Egyptian pound",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "ISR",
+        "LBY",
+        "PSE",
+        "SDN"
+      ],
+      "area_km2": 1002450,
+      "population": 107271260,
+      "latlng": [
+        27,
+        30
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "large",
+      "area_bucket": "medium",
+      "flag_emoji": "🇪🇬",
+      "flag_svg": "https://flagcdn.com/eg.svg",
+      "flag_colors": [
+        "red",
+        "white",
+        "black"
+      ],
+      "flag_motifs": [
+        "eagle",
+        "stripes"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "desert",
+      "bordering_waters": [
+        "Mediterranean Sea",
+        "Red Sea"
+      ],
+      "landmark": "Pyramids of Giza",
+      "famous_food": "koshari",
+      "fact_card": "Built one of the world's oldest civilizations along the Nile, the longest river on Earth."
+    },
+    {
+      "iso_a2": "ZA",
+      "iso_a3": "ZAF",
+      "name": "South Africa",
+      "official_name": "Republic of South Africa",
+      "continent": "africa",
+      "subregion": "Southern Africa",
+      "capital": "Pretoria",
+      "languages": [
+        "Afrikaans",
+        "English",
+        "Southern Ndebele",
+        "Northern Sotho",
+        "Southern Sotho",
+        "Swazi",
+        "Tswana",
+        "Tsonga",
+        "Venda",
+        "Xhosa",
+        "Zulu"
+      ],
+      "currency": "ZAR",
+      "currency_name": "South African rand",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "BWA",
+        "LSO",
+        "MOZ",
+        "NAM",
+        "SWZ",
+        "ZWE"
+      ],
+      "area_km2": 1221037,
+      "population": 63100945,
+      "latlng": [
+        -29,
+        24
+      ],
+      "hemisphere_ns": "S",
+      "hemisphere_ew": "E",
+      "population_bucket": "large",
+      "area_bucket": "medium",
+      "flag_emoji": "🇿🇦",
+      "flag_svg": "https://flagcdn.com/za.svg",
+      "flag_colors": [
+        "red",
+        "white",
+        "blue",
+        "green",
+        "yellow",
+        "black"
+      ],
+      "flag_motifs": [
+        "Y-shape",
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "plateau",
+      "bordering_waters": [
+        "Atlantic Ocean",
+        "Indian Ocean"
+      ],
+      "landmark": "Table Mountain",
+      "famous_food": "bobotie",
+      "fact_card": "Has three capital cities and is home to the world's deepest gold mines."
+    },
+    {
+      "iso_a2": "NG",
+      "iso_a3": "NGA",
+      "name": "Nigeria",
+      "official_name": "Federal Republic of Nigeria",
+      "continent": "africa",
+      "subregion": "Western Africa",
+      "capital": "Abuja",
+      "languages": [
+        "English"
+      ],
+      "currency": "NGN",
+      "currency_name": "Nigerian naira",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "BEN",
+        "CMR",
+        "TCD",
+        "NER"
+      ],
+      "area_km2": 923768,
+      "population": 223800000,
+      "latlng": [
+        10,
+        8
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "mega",
+      "area_bucket": "medium",
+      "flag_emoji": "🇳🇬",
+      "flag_svg": "https://flagcdn.com/ng.svg",
+      "flag_colors": [
+        "green",
+        "white"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "coastal",
+      "bordering_waters": [
+        "Atlantic Ocean",
+        "Gulf of Guinea"
+      ],
+      "landmark": "Aso Rock",
+      "famous_food": "jollof rice",
+      "fact_card": "Africa's most populous country, with over 500 languages spoken."
+    },
+    {
+      "iso_a2": "AU",
+      "iso_a3": "AUS",
+      "name": "Australia",
+      "official_name": "Commonwealth of Australia",
+      "continent": "oceania",
+      "subregion": "Australia and New Zealand",
+      "capital": "Canberra",
+      "languages": [
+        "English"
+      ],
+      "currency": "AUD",
+      "currency_name": "Australian dollar",
+      "landlocked": false,
+      "island": true,
+      "borders": [],
+      "area_km2": 7692024,
+      "population": 27536874,
+      "latlng": [
+        -27,
+        133
+      ],
+      "hemisphere_ns": "S",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "huge",
+      "flag_emoji": "🇦🇺",
+      "flag_svg": "https://flagcdn.com/au.svg",
+      "flag_colors": [
+        "blue",
+        "white",
+        "red"
+      ],
+      "flag_motifs": [
+        "stars",
+        "cross"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "outback",
+      "bordering_waters": [
+        "Pacific Ocean",
+        "Indian Ocean",
+        "Coral Sea",
+        "Tasman Sea"
+      ],
+      "landmark": "Sydney Opera House",
+      "famous_food": "vegemite",
+      "fact_card": "Both a country and a continent — home to kangaroos, koalas, and the Great Barrier Reef."
+    }
+  ]
+}

@@ -383,6 +383,44 @@ body {
     filter: drop-shadow(0 0 2px rgba(0,0,0,0.8));
 }
 
+/* Country-level paths (Countries view) */
+.country-path {
+    fill: rgba(255, 255, 255, 0.55);
+    stroke: rgba(15, 23, 42, 0.6);
+    stroke-width: 3;
+    cursor: default;
+    transition: 0.25s var(--transition);
+    vector-effect: non-scaling-stroke;
+}
+
+.country-path.in-atlas {
+    fill: rgba(255, 255, 255, 0.95);
+    cursor: pointer;
+}
+
+.country-path.dim {
+    fill: rgba(148, 163, 184, 0.35);
+    pointer-events: none;
+}
+
+.country-path.in-atlas:hover {
+    fill: var(--accent-gold);
+    stroke: #fff;
+    filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.5));
+}
+
+.country-label {
+    fill: var(--bg-dark);
+    font-family: var(--font-main);
+    font-size: 140px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    pointer-events: none;
+    paint-order: stroke;
+    stroke: rgba(255, 255, 255, 0.6);
+    stroke-width: 8;
+}
+
 .ocean-node {
     fill: rgba(59, 130, 246, 0.1);
     stroke: var(--primary-blue);
@@ -417,4 +455,342 @@ body {
 .shake {
     animation: shake 0.4s ease-in-out;
     color: #ef4444 !important;
+}
+
+/* ===========================================================
+   GEOCODE — side panel, clue cards, breadcrumbs, distance toast
+   =========================================================== */
+#geocode-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 360px;
+    background: linear-gradient(180deg, rgba(10, 12, 16, 0.95), rgba(15, 23, 42, 0.95));
+    backdrop-filter: blur(16px);
+    border-left: 1px solid var(--glass-border);
+    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.4);
+    transform: translateX(100%);
+    transition: transform 0.4s var(--transition);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#geocode-panel.open { transform: translateX(0); }
+
+.gc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 24px 16px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.gc-title { display: flex; align-items: center; gap: 14px; }
+.gc-eye { font-size: 2rem; }
+.gc-title h2 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 4px;
+    color: var(--text-primary);
+    line-height: 1;
+}
+.gc-sub {
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--primary-blue);
+    opacity: 0.85;
+}
+
+#geocode-exit {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 2rem;
+    font-weight: 200;
+    line-height: 1;
+    cursor: pointer;
+    transition: 0.2s;
+}
+#geocode-exit:hover { color: var(--text-primary); }
+
+.gc-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--glass-border);
+}
+.gc-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 14px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+}
+.gc-stat-val {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--accent-gold);
+}
+.gc-stat-lbl {
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+.gc-section {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--glass-border);
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+.gc-section:nth-child(4) { flex: 1; min-height: 0; }   /* clue log scrolls */
+.gc-section:nth-child(5) { flex: 1; min-height: 0; }   /* guess log scrolls */
+
+.gc-section-title {
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.hint-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.hint-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    color: var(--text-primary);
+    font-family: var(--font-main);
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.hint-chip:hover:not(:disabled) {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: var(--primary-blue);
+    transform: translateY(-1px);
+}
+.hint-chip .chip-icon { font-size: 0.95rem; }
+.hint-chip.used {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.4);
+    color: var(--accent-emerald);
+    opacity: 0.85;
+}
+.hint-chip.disabled { opacity: 0.3; cursor: not-allowed; }
+
+.clue-list, .guess-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.clue-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(59, 130, 246, 0.08);
+    border-left: 3px solid var(--primary-blue);
+    border-radius: 8px;
+    animation: clue-in 0.3s var(--transition);
+}
+.clue-icon { font-size: 1.1rem; line-height: 1.2; }
+.clue-body { display: flex; flex-direction: column; gap: 2px; }
+.clue-cat {
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+.clue-text { font-size: 0.85rem; color: var(--text-primary); line-height: 1.4; }
+
+@keyframes clue-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.guess-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--glass-bg);
+    border-left: 3px solid var(--text-muted);
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+.guess-emoji { font-size: 1.1rem; }
+.guess-name { color: var(--text-primary); font-weight: 600; }
+.guess-dist { color: var(--text-muted); font-size: 0.75rem; font-weight: 600; }
+
+.guess-row.burning { border-left-color: #ef4444; }
+.guess-row.warm    { border-left-color: var(--accent-gold); }
+.guess-row.cool    { border-left-color: #38bdf8; }
+.guess-row.cold    { border-left-color: #475569; }
+
+.gc-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--glass-border);
+    display: flex;
+    gap: 8px;
+}
+
+.gc-btn-secondary {
+    flex: 1;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 10px;
+    border-radius: 24px;
+    font-family: var(--font-main);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.gc-btn-secondary:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+/* Distance toast — floats over the map */
+.distance-toast {
+    position: fixed;
+    top: 110px;
+    left: 50%;
+    transform: translate(-50%, -10px);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 22px;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    color: var(--text-primary);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s var(--transition);
+    z-index: 150;
+}
+.distance-toast.visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+.toast-emoji { font-size: 1.6rem; }
+.toast-text { display: flex; flex-direction: column; line-height: 1.1; }
+.toast-label {
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+.toast-sub {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+}
+.distance-toast.burning { border-color: #ef4444; }
+.distance-toast.burning .toast-label { color: #fca5a5; }
+.distance-toast.warm    { border-color: var(--accent-gold); }
+.distance-toast.warm .toast-label { color: var(--accent-gold); }
+.distance-toast.cool    { border-color: #38bdf8; }
+.distance-toast.cool .toast-label { color: #38bdf8; }
+.distance-toast.cold    { border-color: #475569; }
+.distance-toast.cold .toast-label { color: #94a3b8; }
+
+/* Map breadcrumb markers (SVG) */
+.breadcrumb-dot {
+    stroke: rgba(255, 255, 255, 0.9);
+    stroke-width: 8;
+    opacity: 0.85;
+}
+.breadcrumb-dot.burning { fill: #ef4444; }
+.breadcrumb-dot.warm    { fill: var(--accent-gold); }
+.breadcrumb-dot.cool    { fill: #38bdf8; }
+.breadcrumb-dot.cold    { fill: #475569; }
+
+.breadcrumb-label {
+    font-size: 120px;
+    font-weight: 800;
+    fill: #fff;
+    paint-order: stroke;
+    stroke: rgba(0, 0, 0, 0.7);
+    stroke-width: 6;
+    pointer-events: none;
+}
+
+/* Geocode result modal */
+.overlay.geocode-result .modal-content { max-width: 560px; padding: 50px; text-align: center; }
+.result-inner { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.result-flag { font-size: 5rem; line-height: 1; }
+.result-name {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    margin-top: -4px;
+}
+.result-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+.result-fact {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+    max-width: 400px;
+}
+.result-stats {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+#geocode-result-title {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* When the geocode panel is open, give the map room to breathe */
+@media (min-width: 900px) {
+    #app:has(#geocode-panel.open) #globe-container { padding-right: 380px; }
 }
