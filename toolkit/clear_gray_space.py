@@ -11,6 +11,8 @@ Workflow:
 from __future__ import annotations
 
 import argparse
+import base64
+import io
 import re
 import sys
 import time
@@ -40,7 +42,7 @@ NEIGHBORS_8 = (
 )
 
 
-def is_background_like(pixel, min_lightness: int, max_channel_spread: int) -> bool:
+def is_background_like(pixel, min_lightness: int, max_channel_spread: int, max_lightness: int | None = None) -> bool:
     r, g, b, a = pixel
     if a == 0:
         return True
@@ -48,10 +50,53 @@ def is_background_like(pixel, min_lightness: int, max_channel_spread: int) -> bo
     lightness = max(r, g, b)
     darkness = min(r, g, b)
     channel_spread = lightness - darkness
+    if max_lightness is not None and lightness > max_lightness:
+        return False
     return lightness >= min_lightness and channel_spread <= max_channel_spread
 
 
-def find_connected_background(img: Image.Image, min_lightness: int, max_channel_spread: int) -> set[tuple[int, int]]:
+def estimate_background_lightness_bounds(
+    img: Image.Image,
+    min_lightness: int,
+    max_channel_spread: int,
+    manual_max_lightness: int | None,
+) -> tuple[int, int | None]:
+    if manual_max_lightness is not None:
+        return min_lightness, manual_max_lightness
+
+    pixels = img.load()
+    values: list[int] = []
+
+    def collect(x: int, y: int) -> None:
+        r, g, b, a = pixels[x, y]
+        if a == 0:
+            return
+        lightness = max(r, g, b)
+        if lightness >= min_lightness and lightness - min(r, g, b) <= max_channel_spread:
+            values.append(lightness)
+
+    for x in range(img.width):
+        collect(x, 0)
+        collect(x, img.height - 1)
+    for y in range(img.height):
+        collect(0, y)
+        collect(img.width - 1, y)
+
+    if not values:
+        return min_lightness, None
+
+    values.sort()
+    low = values[int(len(values) * 0.05)]
+    high = values[int(len(values) * 0.95)]
+    return max(0, min(min_lightness, low - 18)), min(255, high + 18)
+
+
+def find_connected_background(
+    img: Image.Image,
+    min_lightness: int,
+    max_channel_spread: int,
+    max_lightness: int | None,
+) -> set[tuple[int, int]]:
     width, height = img.size
     pixels = img.load()
     background: set[tuple[int, int]] = set()
@@ -59,7 +104,7 @@ def find_connected_background(img: Image.Image, min_lightness: int, max_channel_
 
     def seed(x: int, y: int) -> None:
         point = (x, y)
-        if point not in background and is_background_like(pixels[x, y], min_lightness, max_channel_spread):
+        if point not in background and is_background_like(pixels[x, y], min_lightness, max_channel_spread, max_lightness):
             background.add(point)
             queue.append(point)
 
@@ -80,7 +125,7 @@ def find_connected_background(img: Image.Image, min_lightness: int, max_channel_
             point = (nx, ny)
             if point in background:
                 continue
-            if is_background_like(pixels[nx, ny], min_lightness, max_channel_spread):
+            if is_background_like(pixels[nx, ny], min_lightness, max_channel_spread, max_lightness):
                 background.add(point)
                 queue.append(point)
 
@@ -128,6 +173,7 @@ def clear_trapped_backdrop(
     img: Image.Image,
     min_lightness: int,
     max_channel_spread: int,
+    max_lightness: int | None,
     dark_barrier: int,
 ) -> None:
     width, height = img.size
@@ -167,7 +213,7 @@ def clear_trapped_backdrop(
 
     for x, y in outside:
         r, g, b, a = pixels[x, y]
-        if a > 0 and is_background_like((r, g, b, a), min_lightness, max_channel_spread):
+        if a > 0 and is_background_like((r, g, b, a), min_lightness, max_channel_spread, max_lightness):
             pixels[x, y] = (r, g, b, 0)
 
 
@@ -224,6 +270,7 @@ def clear_checker_components(
     img: Image.Image,
     dark_barrier: int,
     checker_ratio: float,
+    max_white_ratio: float,
     max_channel_spread: int,
 ) -> None:
     pixels = img.load()
@@ -244,6 +291,7 @@ def clear_checker_components(
             seen.add(start)
             touches_edge = False
             checker_pixels = 0
+            white_pixels = 0
 
             while queue:
                 x, y = queue.popleft()
@@ -255,6 +303,8 @@ def clear_checker_components(
                 lightness = max(r, g, b)
                 if 235 <= lightness <= 252 and lightness - min(r, g, b) <= max_channel_spread:
                     checker_pixels += 1
+                if lightness >= 253 and lightness - min(r, g, b) <= max_channel_spread:
+                    white_pixels += 1
 
                 for dx, dy in NEIGHBORS_8:
                     nx = x + dx
@@ -270,7 +320,7 @@ def clear_checker_components(
             if touches_edge or not component:
                 continue
 
-            if checker_pixels / len(component) >= checker_ratio:
+            if checker_pixels / len(component) >= checker_ratio and white_pixels / len(component) <= max_white_ratio:
                 for x, y in component:
                     r, g, b, _ = pixels[x, y]
                     pixels[x, y] = (r, g, b, 0)
@@ -278,7 +328,6 @@ def clear_checker_components(
 
 def clear_background(
     src_path: Path,
-    dst_path: Path,
     min_lightness: int,
     max_channel_spread: int,
     crop: bool,
@@ -294,14 +343,22 @@ def clear_background(
     small_light_component_limit: int,
     checker_component_cleanup: bool,
     checker_component_ratio: float,
-) -> None:
+    checker_component_max_white_ratio: float,
+    background_max_lightness: int | None,
+) -> Image.Image:
     img = Image.open(src_path).convert("RGBA")
     pixels = img.load()
+    background_min_lightness, background_max_lightness = estimate_background_lightness_bounds(
+        img,
+        min_lightness=min_lightness,
+        max_channel_spread=max_channel_spread,
+        manual_max_lightness=background_max_lightness,
+    )
 
     for pass_index in range(extra_passes + 1):
-        pass_lightness = max(0, min_lightness - (pass_index * 10))
+        pass_lightness = max(0, background_min_lightness - (pass_index * 10))
         pass_spread = max_channel_spread + (pass_index * 4)
-        background = find_connected_background(img, pass_lightness, pass_spread)
+        background = find_connected_background(img, pass_lightness, pass_spread, background_max_lightness)
         if not background:
             break
 
@@ -312,8 +369,9 @@ def clear_background(
     if trapped_backdrop_cleanup:
         clear_trapped_backdrop(
             img=img,
-            min_lightness=min_lightness,
+            min_lightness=background_min_lightness,
             max_channel_spread=max_channel_spread,
+            max_lightness=background_max_lightness,
             dark_barrier=dark_barrier,
         )
 
@@ -322,6 +380,7 @@ def clear_background(
             img=img,
             dark_barrier=dark_barrier,
             checker_ratio=checker_component_ratio,
+            max_white_ratio=checker_component_max_white_ratio,
             max_channel_spread=max_channel_spread,
         )
 
@@ -361,16 +420,32 @@ def clear_background(
             bottom = min(img.height, bottom + padding)
             img = img.crop((left, top, right, bottom))
 
+    return img
+
+
+def save_png(img: Image.Image, dst_path: Path) -> None:
     dst_path.parent.mkdir(parents=True, exist_ok=True)
     img.save(dst_path, "PNG", optimize=True)
 
 
-def output_name(src_path: Path) -> str:
+def save_svg(img: Image.Image, dst_path: Path) -> None:
+    dst_path.parent.mkdir(parents=True, exist_ok=True)
+    buffer = io.BytesIO()
+    img.save(buffer, "PNG", optimize=True)
+    encoded = base64.b64encode(buffer.getvalue()).decode("ascii")
+    svg = f"""<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{img.width}" height="{img.height}" viewBox="0 0 {img.width} {img.height}">
+  <image width="{img.width}" height="{img.height}" href="data:image/png;base64,{encoded}" xlink:href="data:image/png;base64,{encoded}"/>
+</svg>
+"""
+    dst_path.write_text(svg)
+
+
+def output_name(src_path: Path, suffix: str) -> str:
     cleaned_stem = src_path.stem.strip().lower()
     cleaned_stem = re.sub(r"[^a-z0-9]+", "_", cleaned_stem).strip("_")
     if cleaned_stem.startswith("raw_"):
         cleaned_stem = cleaned_stem[4:]
-    return f"{cleaned_stem}.png"
+    return f"{cleaned_stem}.{suffix}"
 
 
 def process_all(args: argparse.Namespace) -> int:
@@ -384,14 +459,15 @@ def process_all(args: argparse.Namespace) -> int:
 
     completed = 0
     for src_path in sources:
-        dst_path = FINISHED_DIR / output_name(src_path)
-        if dst_path.exists() and not args.force:
-            print(f"skip {src_path.name} -> {dst_path.name} already exists")
+        output_suffixes = ["png", "svg"] if args.format == "both" else [args.format]
+        dst_paths = [FINISHED_DIR / output_name(src_path, suffix) for suffix in output_suffixes]
+        if all(dst_path.exists() for dst_path in dst_paths) and not args.force:
+            names = ", ".join(dst_path.name for dst_path in dst_paths)
+            print(f"skip {src_path.name} -> {names} already exists")
             continue
 
-        clear_background(
+        img = clear_background(
             src_path=src_path,
-            dst_path=dst_path,
             min_lightness=args.min_lightness,
             max_channel_spread=args.max_channel_spread,
             crop=args.crop,
@@ -405,11 +481,20 @@ def process_all(args: argparse.Namespace) -> int:
             trapped_backdrop_cleanup=not args.no_trapped_backdrop_cleanup,
             dark_barrier=args.dark_barrier,
             small_light_component_limit=args.small_light_component_limit,
-            checker_component_cleanup=not args.no_checker_component_cleanup,
+            checker_component_cleanup=args.checker_component_cleanup,
             checker_component_ratio=args.checker_component_ratio,
+            checker_component_max_white_ratio=args.checker_component_max_white_ratio,
+            background_max_lightness=args.background_max_lightness,
         )
+
+        for dst_path in dst_paths:
+            if dst_path.suffix == ".svg":
+                save_svg(img, dst_path)
+            else:
+                save_png(img, dst_path)
         completed += 1
-        print(f"done {src_path.name} -> {dst_path.name}")
+        names = ", ".join(dst_path.name for dst_path in dst_paths)
+        print(f"done {src_path.name} -> {names}")
 
     return completed
 
@@ -425,12 +510,14 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Remove connected light gray/checker background from raw images.")
     parser.add_argument("--watch", action="store_true", help="Keep checking raw-img for new files.")
     parser.add_argument("--force", action="store_true", help="Overwrite files already in finished-img.")
+    parser.add_argument("--format", choices=("png", "svg", "both"), default="png", help="Output format.")
     parser.add_argument("--crop", action="store_true", help="Crop output to the non-transparent artwork.")
     parser.add_argument("--no-center", action="store_true", help="Leave artwork in its original canvas position.")
     parser.add_argument("--padding", type=int, default=24, help="Pixels of padding when using --crop.")
     parser.add_argument("--interval", type=float, default=2.0, help="Seconds between scans in --watch mode.")
-    parser.add_argument("--min-lightness", type=int, default=205, help="Lower values remove darker gray background.")
-    parser.add_argument("--max-channel-spread", type=int, default=28, help="Higher values allow less neutral background colors.")
+    parser.add_argument("--min-lightness", type=int, default=150, help="Lower values remove darker gray background.")
+    parser.add_argument("--max-channel-spread", type=int, default=24, help="Higher values allow less neutral background colors.")
+    parser.add_argument("--background-max-lightness", type=int, default=None, help="Optional upper brightness limit for background removal.")
     parser.add_argument("--extra-passes", type=int, default=1, help="Additional edge-connected cleanup passes.")
     parser.add_argument("--interior-gray-cleanup", action="store_true", help="Also remove mid-light enclosed gray pixels; useful for stubborn checker remnants.")
     parser.add_argument("--interior-min-lightness", type=int, default=230, help="Lowest gray value removed by interior cleanup.")
@@ -439,8 +526,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-trapped-backdrop-cleanup", action="store_true", help="Skip the black-outline bounded backdrop cleanup pass.")
     parser.add_argument("--dark-barrier", type=int, default=120, help="Pixels darker than this block trapped-backdrop cleanup.")
     parser.add_argument("--small-light-component-limit", type=int, default=0, help="Remove isolated light remnants up to this many pixels.")
-    parser.add_argument("--no-checker-component-cleanup", action="store_true", help="Skip enclosed checker-region cleanup.")
+    parser.add_argument("--checker-component-cleanup", action="store_true", help="Remove enclosed checker-like regions; useful for black-outline text logos.")
     parser.add_argument("--checker-component-ratio", type=float, default=0.35, help="Checker-tone share needed to remove an enclosed light region.")
+    parser.add_argument("--checker-component-max-white-ratio", type=float, default=0.20, help="Do not remove checker-like regions with more true-white fill than this.")
     return parser.parse_args()
 
 
