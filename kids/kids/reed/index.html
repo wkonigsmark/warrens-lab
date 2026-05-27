@@ -7,7 +7,7 @@
   <title>Reed's Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Cormorant+Garamond:ital,wght@0,600;1,600;1,700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-color: #0c0e12;
@@ -48,13 +48,29 @@
 
     .header {
       text-align: center;
-      margin-bottom: 220px;
+      margin-bottom: 240px;
     }
 
     .header h1 {
-      font-size: clamp(24px, 5vw, 36px);
-      font-weight: 800;
-      letter-spacing: -0.5px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 5.5vw, 44px);
+      font-weight: 300;
+      font-style: normal;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .header h1::before,
+    .header h1::after {
+      content: '';
+      height: 1px;
+      width: 40px;
+      background: rgba(0, 0, 0, 0.2);
+      flex-shrink: 0;
     }
 
     .header p {
@@ -64,8 +80,9 @@
     }
 
     .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 14px;
       max-width: 720px;
       margin: 0 auto;
@@ -79,6 +96,7 @@
       gap: 10px;
       position: relative;
       z-index: 2;
+      width: 160px;
       padding: 24px 12px;
       background: rgb(253, 249, 250);
       border: 1px solid var(--glass-border);
@@ -262,15 +280,15 @@
   <div class="grid">
     <a href="/iq/ants-apples/index.html" class="tile">
       <span class="icon">🍎</span>
-      <span class="label">Ant's Apples</span>
+      <span class="label">Ants & Apples</span>
     </a>
     <a href="/iq/ants-algebra/index.html" class="tile">
       <span class="icon">𝑥²</span>
-      <span class="label">Ant's Algebra</span>
+      <span class="label">Ants & Algebra</span>
     </a>
     <a href="https://ants-axes.vercel.app/" class="tile">
       <span class="icon">📊</span>
-      <span class="label">Ant's Axes</span>
+      <span class="label">Ants & Axes</span>
     </a>
     <a href="/iq/lexicon/index.html" class="tile">
       <span class="icon">📖</span>
@@ -281,8 +299,8 @@
       <span class="label">Crossword</span>
     </a>
     <a href="/games/ants-acorns/index.html" class="tile">
-      <span class="icon">🌰</span>
-      <span class="label">Ant's Acorns</span>
+      <span class="icon">🐜</span>
+      <span class="label">Ants & Acorns</span>
     </a>
     <a href="/games/sudoku/index.html" class="tile">
       <span class="icon">🔢</span>
@@ -293,8 +311,12 @@
       <span class="label">Abacus</span>
     </a>
     <a href="/games/ants-labyrinth/index.html" class="tile">
-      <span class="icon">🏰</span>
+      <span class="icon">🌀</span>
       <span class="label">Ant's Labyrinth</span>
+    </a>
+    <a href="/games/matching/index.html" class="tile">
+      <span class="icon">🧩</span>
+      <span class="label">Memory Match</span>
     </a>
   </div>
 
