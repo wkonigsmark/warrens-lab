@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reed's Dashboard</title>
+  <title>Jude's Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Cormorant+Garamond:ital,wght@0,600;1,600;1,700&display=swap" rel="stylesheet">
@@ -264,6 +264,41 @@
       .flashcard { height: 140px; }
       .card-front { font-size: 1.4rem; }
     }
+
+    /* Homeroom nav */
+    .homeroom-nav {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .homeroom-nav a {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      padding: 5px 14px;
+      border-radius: 20px;
+      color: rgba(0,0,0,0.35);
+      border: 1px solid rgba(0,0,0,0.08);
+      transition: all 0.2s;
+    }
+
+    .homeroom-nav a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .homeroom-nav a.active {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      pointer-events: none;
+    }
   </style>
 
   <!-- Flashcard fonts -->
@@ -273,8 +308,14 @@
 <body>
   <canvas id="particle-canvas"></canvas>
 
+  <nav class="homeroom-nav">
+    <a href="../reed/">Reed</a>
+    <a href="../jude/" class="active">Jude</a>
+    <a href="../louisa/">Louisa</a>
+  </nav>
+
   <div class="header">
-    <h1>Reed's Lab</h1>
+    <h1>Jude's Lab</h1>
   </div>
 
   <div class="grid">
@@ -332,7 +373,7 @@
 
   <script>
     // --- Flashcard system ---
-    // Reed's vocab list — sourced from Lexicon database
+    // Jude's vocab list — sourced from Lexicon database
     const VOCAB = [
       { word: "Courage", pos: "noun", definition: "The ability to face danger or fear with bravery.", root: "Old French: corage" },
       { word: "Diligent", pos: "adj", definition: "Careful and steady in doing work or trying to reach a goal.", root: "Latin: diligens" },
@@ -404,10 +445,10 @@
       const ctx = canvas.getContext('2d');
 
       const TEXT_LINES = [
-        'The Amazing, Inimitable,',
-        'Incredible, Brilliant,',
-        'Charming, Wonderful',
-        'Mary Reed',
+        'The Extraordinary, Singular,',
+        'Remarkable, Dazzling,',
+        'Captivating, Magnificent',
+        'Judith Grace',
       ];
 
       // Neon palette
@@ -459,7 +500,7 @@
 
         // Center text in the gap between header and grid
         const availW = W - 40;
-        let fontSize = Math.min(38, availW / 10);
+        let fontSize = Math.min(38, availW / 12);
         fontSize = Math.max(14, fontSize);
         const lineHeight = fontSize * 1.45;
         const blockHeight = TEXT_LINES.length * lineHeight;

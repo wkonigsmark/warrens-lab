@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reed's Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Cormorant+Garamond:ital,wght@0,600;1,600;1,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0c0e12;
+      --text-main: #2d2d2d;
+      --text-dim: rgba(0, 0, 0, 0.35);
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(0, 0, 0, 0.08);
+      --accent: #e8638a;
+      --accent-glow: rgba(232, 99, 138, 0.2);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      position: relative;
+      background: #faf5f6;
+      background: radial-gradient(circle at top right, #fff0f3, #faf5f6);
+      min-height: 100vh;
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      padding: 40px 20px 40px;
+      overflow-x: hidden;
+    }
+
+    #particle-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .header, .grid {
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 240px;
+    }
+
+    .header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 5.5vw, 44px);
+      font-weight: 300;
+      font-style: normal;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .header h1::before,
+    .header h1::after {
+      content: '';
+      height: 1px;
+      width: 40px;
+      background: rgba(0, 0, 0, 0.2);
+      flex-shrink: 0;
+    }
+
+    .header p {
+      color: var(--text-dim);
+      font-weight: 300;
+      margin-top: 4px;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      z-index: 2;
+      width: 160px;
+      padding: 24px 12px;
+      background: rgb(253, 249, 250);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--text-main);
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      aspect-ratio: 1;
+    }
+
+    .tile:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 4px 24px var(--accent-glow);
+    }
+
+    .tile .icon {
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    .tile .label {
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    @media (max-width: 400px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Flashcards */
+    .flashcard-section {
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+      margin: 40px auto 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .flashcard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 4px;
+    }
+
+    .flashcard-header h2 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+
+    .shuffle-btn {
+      padding: 8px 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .shuffle-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .flashcard-stack {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      perspective: 1000px;
+    }
+
+    .flashcard {
+      width: 100%;
+      height: 160px;
+      cursor: pointer;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border: 1px solid var(--glass-border);
+    }
+
+    .card-front {
+      background: #fff;
+      font-family: 'Handlee', cursive;
+      font-size: 1.8rem;
+      color: #444;
+      text-align: center;
+    }
+
+    .card-front .pos {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-top: 6px;
+    }
+
+    .card-back {
+      background-color: #fff;
+      background-image:
+        linear-gradient(rgba(180, 220, 255, 0.5) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 180, 200, 0.4) 2px, transparent 2px);
+      background-size: 100% 24px, 100% 100%;
+      background-position: 0 10px, 40px 0;
+      background-repeat: repeat, no-repeat;
+      transform: rotateY(180deg);
+      padding: 14px 16px 14px 50px;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .card-back .definition {
+      font-family: 'Gochi Hand', cursive;
+      font-size: 1rem;
+      line-height: 24px;
+      margin-top: 14px;
+      color: #1e293b;
+    }
+
+    .card-back .root-note {
+      font-size: 0.6rem;
+      color: var(--accent);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: auto;
+    }
+
+    @media (max-width: 400px) {
+      .flashcard { height: 140px; }
+      .card-front { font-size: 1.4rem; }
+    }
+
+    /* Homeroom nav */
+    .homeroom-nav {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .homeroom-nav a {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      padding: 5px 14px;
+      border-radius: 20px;
+      color: rgba(0,0,0,0.35);
+      border: 1px solid rgba(0,0,0,0.08);
+      transition: all 0.2s;
+    }
+
+    .homeroom-nav a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .homeroom-nav a.active {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      pointer-events: none;
+    }
+  </style>
+
+  <!-- Flashcard fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Gochi+Hand&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <canvas id="particle-canvas"></canvas>
+
+  <nav class="homeroom-nav">
+    <a href="../reed/" class="active">Reed</a>
+    <a href="../jude/">Jude</a>
+    <a href="../louisa/">Louisa</a>
+  </nav>
+
+  <div class="header">
+    <h1>Reed's Lab</h1>
+  </div>
+
+  <div class="grid">
+    <a href="/iq/ants-apples/index.html" class="tile">
+      <span class="icon">🍎</span>
+      <span class="label">Ants & Apples</span>
+    </a>
+    <a href="/iq/ants-algebra/index.html" class="tile">
+      <span class="icon">𝑥²</span>
+      <span class="label">Ants & Algebra</span>
+    </a>
+    <a href="https://ants-axes.vercel.app/" class="tile">
+      <span class="icon">📊</span>
+      <span class="label">Ants & Axes</span>
+    </a>
+    <a href="/iq/lexicon/index.html" class="tile">
+      <span class="icon">📖</span>
+      <span class="label">Lexicon</span>
+    </a>
+    <a href="/games/crossword/index.html" class="tile">
+      <span class="icon">🔤</span>
+      <span class="label">Crossword</span>
+    </a>
+    <a href="/games/ants-acorns/index.html" class="tile">
+      <span class="icon">🐜</span>
+      <span class="label">Ants & Acorns</span>
+    </a>
+    <a href="/games/sudoku/index.html" class="tile">
+      <span class="icon">🔢</span>
+      <span class="label">Sudoku</span>
+    </a>
+    <a href="/games/abacus/index.html" class="tile">
+      <span class="icon">🧮</span>
+      <span class="label">Abacus</span>
+    </a>
+    <a href="/games/ants-labyrinth/index.html" class="tile">
+      <span class="icon">🌀</span>
+      <span class="label">Ant's Labyrinth</span>
+    </a>
+    <a href="/games/matching/index.html" class="tile">
+      <span class="icon">🧩</span>
+      <span class="label">Memory Match</span>
+    </a>
+  </div>
+
+  <div class="flashcard-section">
+    <div class="flashcard-header">
+      <h2>Word of the Day</h2>
+      <button class="shuffle-btn" onclick="shuffleCards()">Shuffle</button>
+    </div>
+    <div class="flashcard-stack" id="flashcard-stack">
+      <!-- Cards injected by JS -->
+    </div>
+  </div>
+
+  <script>
+    // --- Flashcard system ---
+    // Reed's vocab list — sourced from Lexicon database
+    const VOCAB = [
+      { word: "Courage", pos: "noun", definition: "The ability to face danger or fear with bravery.", root: "Old French: corage" },
+      { word: "Diligent", pos: "adj", definition: "Careful and steady in doing work or trying to reach a goal.", root: "Latin: diligens" },
+      { word: "Humble", pos: "adj", definition: "Not thinking of yourself as better than others; modest about your abilities.", root: "Latin: humilis" },
+      { word: "Imperturbable", pos: "adj", definition: "Not easily upset, disturbed, or thrown off balance.", root: "Latin: perturbare" },
+      { word: "Integrity", pos: "noun", definition: "The quality of being honest, whole, and doing what is right even when no one is watching.", root: "Latin: integritas" },
+      { word: "Steadfast", pos: "adj", definition: "Loyal, steady, and firm in purpose or belief.", root: "Old English: stedefæst" },
+      { word: "Empathy", pos: "noun", definition: "The ability to understand and share the feelings of another person.", root: "Greek: empatheia" },
+      { word: "Equanimity", pos: "noun", definition: "Mental calmness and balance, especially in a difficult situation.", root: "Latin: aequanimitas" },
+      { word: "Forbearance", pos: "noun", definition: "Patient self-control and restraint, especially when provoked.", root: "Old English: forberan" },
+      { word: "Fortitude", pos: "noun", definition: "Strength of mind that helps someone face pain, fear, or hardship bravely.", root: "Latin: fortitudo" },
+      { word: "Indomitable", pos: "adj", definition: "Impossible to defeat, discourage, or control by force.", root: "Latin: indomitus" },
+      { word: "Intrepid", pos: "adj", definition: "Fearless and ready to face danger or uncertainty.", root: "Latin: intrepidus" },
+      { word: "Magnanimous", pos: "adj", definition: "Showing a noble spirit and being generous or forgiving toward a rival or less powerful person.", root: "Latin: magnanimus" },
+      { word: "Mettle", pos: "noun", definition: "Strength of spirit shown in the way a person faces pressure or challenge.", root: "Old French: metal" },
+      { word: "Probity", pos: "noun", definition: "Complete honesty and strong moral integrity.", root: "Latin: probitas" },
+      { word: "Resilient", pos: "adj", definition: "Able to recover and keep going after difficulty or setbacks.", root: "Latin: resilire" },
+      { word: "Stalwart", pos: "adj", definition: "Strong, dependable, and loyal in a way that others can rely on.", root: "Old English: stalworth" },
+      { word: "Wisdom", pos: "noun", definition: "Good judgment built from knowledge, thought, and experience.", root: "Old English: wisdom" },
+      { word: "Adamantine", pos: "adj", definition: "Unbreakably firm in strength, will, or resolve.", root: "Latin: adamantinus" },
+      { word: "Assiduous", pos: "adj", definition: "Showing steady, careful, and persistent effort.", root: "Latin: assiduus" },
+      { word: "Benevolent", pos: "adj", definition: "Kind and well-meaning in a way that seeks to help others.", root: "Latin: benevolens" },
+      { word: "Ethical", pos: "adj", definition: "Following accepted ideas of right and wrong.", root: "Greek: ἠθικός" },
+      { word: "Indefatigable", pos: "adj", definition: "Never seeming to grow tired in effort or energy.", root: "Latin: defatigare" },
+      { word: "Initiative", pos: "noun", definition: "The habit of acting and getting started without waiting to be told.", root: "Latin: initium" },
+      { word: "Mettlesome", pos: "adj", definition: "Full of energy, courage, and spirited force.", root: "English: mettle + some" },
+      { word: "Munificent", pos: "adj", definition: "Very generous in giving money, help, or gifts.", root: "Latin: munificus" },
+      { word: "Rectitude", pos: "noun", definition: "Morally correct behavior and principled uprightness.", root: "Latin: rectitudo" },
+      { word: "Sagacious", pos: "adj", definition: "Showing keen wisdom, sound judgment, and clear understanding.", root: "Latin: sagax" },
+      { word: "Sanguine", pos: "adj", definition: "Confidently hopeful and positive, even in difficulty.", root: "Latin: sanguineus" },
+      { word: "Unflappable", pos: "adj", definition: "Staying calm and in control when other people would get upset.", root: "English: un + flap" },
+      { word: "Valiant", pos: "adj", definition: "Showing bold courage and determination in difficulty or danger.", root: "Old French: vaillant" },
+      { word: "Alacrity", pos: "noun", definition: "Eager and cheerful readiness to act.", root: "Latin: alacritas" },
+      { word: "Canny", pos: "adj", definition: "Shrewd, careful, and good at making practical judgments.", root: "Scots: canny" },
+      { word: "Industrious", pos: "adj", definition: "Working hard and staying busy in a useful way.", root: "Latin: industria" },
+      { word: "Judicious", pos: "adj", definition: "Showing careful thought and good sense in making decisions.", root: "Latin: judicium" },
+      { word: "Vigilant", pos: "adj", definition: "Carefully watchful and paying close attention to possible problems or dangers.", root: "Latin: vigilans" },
+    ];
+
+    const CARD_COUNT = 3;
+
+    function shuffleCards() {
+      const stack = document.getElementById('flashcard-stack');
+      // Pick CARD_COUNT random words without repeats
+      const shuffled = [...VOCAB].sort(() => Math.random() - 0.5);
+      const picked = shuffled.slice(0, CARD_COUNT);
+
+      stack.innerHTML = picked.map(v => `
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="card-front">
+            ${v.word}
+            <span class="pos">${v.pos}</span>
+          </div>
+          <div class="card-back">
+            <div class="definition">${v.definition}</div>
+            <div class="root-note">${v.root}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Initial render
+    shuffleCards();
+  </script>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById('particle-canvas');
+      const ctx = canvas.getContext('2d');
+
+      const TEXT_LINES = [
+        'The Amazing, Inimitable,',
+        'Incredible, Brilliant,',
+        'Charming, Wonderful',
+        'Mary Reed',
+      ];
+
+      // Neon palette
+      const NEON = [
+        [255, 30, 120],   // hot pink
+        [255, 230, 0],    // yellow
+        [0, 180, 255],    // electric blue
+        [0, 255, 100],    // neon green
+        [255, 120, 0],    // orange
+        [180, 50, 255],   // purple
+      ];
+
+      // Physics
+      const MAX_SPEED = 4.0;
+      const HOMING_FORCE = 0.04;       // pull toward text position
+      const SEPARATION_RADIUS = 4;
+      const SEPARATION_FORCE = 0.15;
+      const DAMPING = 0.90;
+
+      // Cursor — scatter away then regroup
+      const CURSOR_RADIUS = 120;
+      const CURSOR_SCATTER = 8;
+
+      let W, H;
+      let mouse = { x: -9999, y: -9999, active: false };
+      let particles = [];
+      let textTargets = [];
+
+      function resize() {
+        W = canvas.width = document.body.scrollWidth;
+        H = canvas.height = document.body.scrollHeight;
+        textTargets = sampleText();
+        assignTargets();
+      }
+
+      // Render text offscreen → sample pixel positions
+      // Centered between the header and the grid
+      function sampleText() {
+        const offscreen = document.createElement('canvas');
+        const octx = offscreen.getContext('2d');
+        offscreen.width = W;
+        offscreen.height = H;
+
+        const sy = window.scrollY;
+        const header = document.querySelector('.header');
+        const grid = document.querySelector('.grid');
+        const headerBottom = header.getBoundingClientRect().bottom + sy;
+        const gridTop = grid.getBoundingClientRect().top + sy;
+
+        // Center text in the gap between header and grid
+        const availW = W - 40;
+        let fontSize = Math.min(38, availW / 10);
+        fontSize = Math.max(14, fontSize);
+        const lineHeight = fontSize * 1.45;
+        const blockHeight = TEXT_LINES.length * lineHeight;
+        const anchorY = headerBottom + (gridTop - headerBottom - blockHeight) / 2;
+
+        octx.font = `800 ${fontSize}px Outfit, sans-serif`;
+        octx.textAlign = 'center';
+        octx.textBaseline = 'top';
+        octx.fillStyle = '#fff';
+
+        for (let i = 0; i < TEXT_LINES.length; i++) {
+          octx.fillText(TEXT_LINES[i], W / 2, anchorY + i * lineHeight);
+        }
+
+        // Sample filled pixels
+        const data = octx.getImageData(0, 0, W, H).data;
+        const points = [];
+        const gap = 2;
+        for (let y = 0; y < H; y += gap) {
+          for (let x = 0; x < W; x += gap) {
+            if (data[(y * W + x) * 4 + 3] > 128) {
+              points.push({ x, y });
+            }
+          }
+        }
+        return points;
+      }
+
+      // Assign each particle a target point from the text
+      function assignTargets() {
+        if (textTargets.length === 0) return;
+        // Resize particle array to match available targets
+        const count = textTargets.length;
+        while (particles.length < count) {
+          particles.push(makeParticle(particles.length));
+        }
+        particles.length = count;
+
+        // Shuffle targets so assignment looks organic
+        const shuffled = [...textTargets];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].tx = shuffled[i].x;
+          particles[i].ty = shuffled[i].y;
+        }
+      }
+
+      function makeParticle(index) {
+        const a = Math.random() * Math.PI * 2;
+        const r = Math.random() * Math.max(W, H) * 0.5;
+        return {
+          x: W / 2 + Math.cos(a) * r,
+          y: H / 2 + Math.sin(a) * r,
+          vx: (Math.random() - 0.5) * 2,
+          vy: (Math.random() - 0.5) * 2,
+          tx: 0,
+          ty: 0,
+          size: Math.random() * 1.0 + 0.8,
+          alpha: Math.random() * 0.25 + 0.55,
+          colorOffset: Math.random() * 10000,
+        };
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, W, H);
+        const now = performance.now();
+
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+
+          // Homing force — pull toward text target
+          const hdx = p.tx - p.x;
+          const hdy = p.ty - p.y;
+          p.vx += hdx * HOMING_FORCE;
+          p.vy += hdy * HOMING_FORCE;
+
+          // Separation from very close neighbors (check a few nearby, not all)
+          // Use spatial trick: only check ±20 indices for perf
+          const lo = Math.max(0, i - 20);
+          const hi = Math.min(particles.length, i + 20);
+          for (let j = lo; j < hi; j++) {
+            if (i === j) continue;
+            const o = particles[j];
+            const dx = o.x - p.x;
+            const dy = o.y - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+            if (dist < SEPARATION_RADIUS) {
+              p.vx -= (dx / dist) * SEPARATION_FORCE;
+              p.vy -= (dy / dist) * SEPARATION_FORCE;
+            }
+          }
+
+          // Cursor interaction — scatter away from cursor
+          if (mouse.active) {
+            const dx = p.x - mouse.x;
+            const dy = p.y - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < CURSOR_RADIUS && dist > 1) {
+              const force = (1 - dist / CURSOR_RADIUS) * CURSOR_SCATTER;
+              p.vx += (dx / dist) * force;
+              p.vy += (dy / dist) * force;
+            }
+          }
+
+          // Damping
+          p.vx *= DAMPING;
+          p.vy *= DAMPING;
+
+          // Clamp speed
+          const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          if (speed > MAX_SPEED) {
+            p.vx = (p.vx / speed) * MAX_SPEED;
+            p.vy = (p.vy / speed) * MAX_SPEED;
+          }
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // Color cycling
+          const t = (now * 0.0003 + p.colorOffset) % NEON.length;
+          const ci = Math.floor(t);
+          const frac = t - ci;
+          const c1 = NEON[ci % NEON.length];
+          const c2 = NEON[(ci + 1) % NEON.length];
+          const cr = Math.round(c1[0] + (c2[0] - c1[0]) * frac);
+          const cg = Math.round(c1[1] + (c2[1] - c1[1]) * frac);
+          const cb = Math.round(c1[2] + (c2[2] - c1[2]) * frac);
+
+          // Draw
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${cr},${cg},${cb},${p.alpha})`;
+          ctx.fill();
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      // --- Events ---
+      window.addEventListener('resize', () => {
+        resize();
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY + window.scrollY;
+        mouse.active = true;
+      });
+      document.addEventListener('mouseleave', () => {
+        mouse.active = false;
+      });
+      document.addEventListener('touchmove', (e) => {
+        mouse.x = e.touches[0].clientX;
+        mouse.y = e.touches[0].clientY + window.scrollY;
+        mouse.active = true;
+      }, { passive: true });
+      document.addEventListener('touchend', () => {
+        mouse.active = false;
+      });
+
+      // Wait for font to load, then init
+      document.fonts.ready.then(() => {
+        resize();
+        animate();
+      });
+    })();
+  </script>
+</body>
+
+</html>
