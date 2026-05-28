@@ -250,9 +250,13 @@
       align-items: center;
       width: max-content;
       min-height: 52px;
-      transform: translateX(-50%);
-      animation: ticker-left-to-right 96s linear infinite;
+      transform: translateX(0);
+      animation: ticker-right-to-left 96s linear infinite;
       will-change: transform;
+    }
+
+    .ticker-track.is-entering {
+      animation: ticker-enter-from-right 16s linear 1 forwards;
     }
 
     .ticker-window:hover .ticker-track {
@@ -287,9 +291,19 @@
       text-transform: uppercase;
     }
 
-    @keyframes ticker-left-to-right {
+    @keyframes ticker-right-to-left {
       from {
+        transform: translateX(0);
+      }
+
+      to {
         transform: translateX(-50%);
+      }
+    }
+
+    @keyframes ticker-enter-from-right {
+      from {
+        transform: translateX(100vw);
       }
 
       to {
@@ -343,7 +357,7 @@
         <h1 id="page-title" class="fallback-title">Warren's<br>World Cup<br>Pool</h1>
       </div>
 
-      <p class="subtitle">Pool entries, rankings, fixtures, news, commentary, and scoreboard. Coming soon.</p>
+      <p class="subtitle">Pool entries, scoreboard, rankings, fixtures, and analysis. Coming soon.</p>
 
       <div class="countdown" aria-label="Countdown to World Cup kickoff">
         <div class="time-card">
@@ -368,7 +382,7 @@
         <a href="pool/">Pool</a>
         <a href="meta/#group-fixtures">Fixtures</a>
         <a href="rankings-odds/">W-Index</a>
-        <a href="groups/">Groups</a>
+        <a href="groups/">Group Analysis</a>
         <span>Odds</span>
         <span>News</span>
         <span>Scoreboard</span>
@@ -516,7 +530,13 @@
           </span>
         `).join('');
 
+        ticker.classList.remove('is-entering');
         ticker.innerHTML = items + items;
+        void ticker.offsetWidth;
+        ticker.classList.add('is-entering');
+        window.setTimeout(() => {
+          ticker.classList.remove('is-entering');
+        }, 16000);
       }
 
       async function loadTicker() {
