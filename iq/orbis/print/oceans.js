@@ -103,7 +103,7 @@
         const circle = document.createElementNS(SVG_NS, "circle");
         circle.setAttribute("cx", x);
         circle.setAttribute("cy", y);
-        circle.setAttribute("r", 620);
+        circle.setAttribute("r", 380);
         circle.setAttribute("class", "number-bg");
         ng.appendChild(circle);
 

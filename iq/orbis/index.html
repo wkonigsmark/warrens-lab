@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=25">
+    <link rel="stylesheet" href="style.css?v=26">
 </head>
 <body>
 
@@ -240,11 +240,11 @@
                     <div class="roadmap-update">
                         <span class="update-tag">🖨 Latest update</span>
                         <p>
-                            <strong>First print quiz shipped — The 7 Continents.</strong> A kid-friendly worksheet at <code>print/continents.html</code> with a black-and-white world map, numbered circles (1-7) on each continent, a word bank, answer lines, and a name/date footer. Patrick Hand font for the playful bits, Outfit for structure. Uses a <code>@media print</code> stylesheet that hides the screen-only nav and prints clean to US Letter portrait. New <strong>🖨 Print</strong> toolbar button on Orbis opens it in a new tab.
+                            <strong>Print pipeline scaled up + Orbis nav cleaned up.</strong> Two print quizzes live now: <strong>🌍 The 7 Continents</strong> and <strong>🌊 The 5 Oceans</strong>. Both share the same kid-friendly worksheet template (Patrick Hand + Outfit, paper-tone screen preview, <code>@media print</code> for clean Letter output). Oceans adds a soft-blue water backdrop; continents added a hand-drawn Antarctica strip (Natural Earth's medium-res data omits Antarctica entirely — verified empirically). Number badges are now subtle (radius 380 vs the original 620) so they don't dominate small continents like South America.
                             <br><br>
-                            This is the proof-of-concept for the print pipeline: every digital mode will have a pen-and-paper counterpart. Next print quizzes likely: Famous 20 trading-card deck, continent-coloring sheet, blank country labeling, flag-coloring templates.
+                            <strong>Nav redesign:</strong> 9 buttons collapsed to 6 visible elements. Continents/Countries/Oceans joined into a segmented control with active-state highlighting. Atlas/Roadmap/Exit moved into a ⋯ More dropdown. 🖨 Print is now a dropdown listing all available worksheets — adding new ones is a one-line HTML change. A shared <code>wireDropdown()</code> helper handles open/close/click-outside for both menus.
                             <br><br>
-                            Atlas remains at <strong>196 sovereign nations</strong> (L1-L4), Geocode + Mission play across the full tier ladder, and the <strong>📊 Atlas Data Table</strong> shows curation coverage at a glance — currently 74 fully curated, 6 partial, 116 sparse (Tier 4 curation runway).
+                            <strong>Next:</strong> more print quizzes (Animals of the World, Color the Continents, Hemispheres, Famous Landmarks → Continents), plus the Tier 4 curation runway (116 sparse countries still need hand-curated soft fields).
                         </p>
                     </div>
 
@@ -285,7 +285,15 @@
                                 <strong>Overlay system polish</strong> — five overlays (Discovery, Roadmap, Mission Summary, Geocode Result, Atlas Data Table) share consistent close buttons (circular, top-right). ESC and backdrop click close any open overlay. Summary modals use a HOME (secondary outline) + primary action button pattern. Cache-busting query strings on every script/style tag so dev edits show on reload.
                             </li>
                             <li>
-                                <strong>Print quiz: The 7 Continents</strong> 🆕 — first printable worksheet at <code>print/continents.html</code>. B&amp;W world map with numbered circles 1-7 on each continent, word bank, answer lines, name/date footer. Kid-friendly typography (Patrick Hand + Outfit). <code>@media print</code> stylesheet hides screen-only nav and renders clean to US Letter portrait. Linked from the new 🖨 Print toolbar button on Orbis.
+                                <strong>Print quizzes (2 worksheets, growing)</strong> — kid-friendly Letter-portrait worksheets sharing one template:
+                                <ul class="sub-list">
+                                    <li><em>🌍 The 7 Continents</em> — numbered circles 1-7 on each continent, hand-drawn Antarctica strip (Natural Earth omits Antarctica).</li>
+                                    <li><em>🌊 The 5 Oceans</em> — soft-blue water backdrop, numbered circles 1-5 on Arctic / Atlantic / Indian / Pacific / Southern.</li>
+                                </ul>
+                                Patrick Hand + Outfit typography. <code>@media print</code> for clean print output. Number badges sized so they don't dominate continents.
+                            </li>
+                            <li>
+                                <strong>Cleaner Orbis nav</strong> — 9 toolbar buttons collapsed to 6 visible elements. Continents/Countries/Oceans joined into a segmented control with active-state highlighting. Utility items (Atlas Data, Roadmap, Exit to IQ) moved into a ⋯ More dropdown. 🖨 Print became a dropdown listing every available worksheet — extensible as more land. Shared <code>wireDropdown()</code> JS helper handles open/close/click-outside for both menus.
                             </li>
                         </ul>
                     </section>
@@ -294,7 +302,17 @@
                         <h3><span class="status-dot"></span>Build next (queued)</h3>
                         <ul>
                             <li>
-                                <strong>More print quizzes (after the 7 Continents pilot)</strong> <span class="item-badge needs-testing">🎯 Up next</span> — Famous 20 trading-card deck (doubles as physical Geocode game board), Trace/Label/Recall blank-map worksheets per region, flag-coloring templates with proportion guides, blank country-labeling sheets per continent, two-player Geocode boards, and an Answer Key generator for parents/teachers. Also: a print-menu modal on Orbis as the print library grows.
+                                <strong>More print quizzes</strong> <span class="item-badge needs-testing">🎯 Up next</span> — next candidates in pedagogical order:
+                                <ul class="sub-list">
+                                    <li><em>🐘 Animals of the World</em> — match-and-draw (animals at top, lines to continents).</li>
+                                    <li><em>🎨 Color the Continents</em> — pure coloring sheet with continent names pre-labeled.</li>
+                                    <li><em>🧭 Hemispheres</em> — color Northern vs Southern, Eastern vs Western.</li>
+                                    <li><em>🏛 Famous Landmarks → Continents</em> — match landmarks to continents.</li>
+                                    <li>Famous 20 trading-card deck (doubles as physical Geocode board), Trace/Label/Recall blank maps, flag-coloring templates, two-player Geocode boards, Answer-Key generator for parents/teachers.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>Tier 4 curation runway</strong> — 116 countries currently sparse (auto-pulled from REST Countries with no hand-curated soft fields). The Atlas Data Table surfaces every gap. Goal: incrementally enrich Tier 4 with the same soft palette (flag colors, motifs, climate, terrain, landmark, food, fact card, bordering waters, island flag) so Geocode L4 plays as deeply as L1-L3.
                             </li>
                         </ul>
                     </section>
@@ -491,10 +509,10 @@
         </div>
     </div>
 
-    <script src="orbis_countries.js?v=25"></script>
-    <script src="orbis_quiz.js?v=25"></script>
-    <script src="orbis_geocode_ui.js?v=25"></script>
-    <script src="orbis_mission_ui.js?v=25"></script>
-    <script src="script.js?v=25"></script>
+    <script src="orbis_countries.js?v=26"></script>
+    <script src="orbis_quiz.js?v=26"></script>
+    <script src="orbis_geocode_ui.js?v=26"></script>
+    <script src="orbis_mission_ui.js?v=26"></script>
+    <script src="script.js?v=26"></script>
 </body>
 </html>
