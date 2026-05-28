@@ -6,6 +6,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Group Analysis | Warren's World Cup Pool</title>
   <link rel="stylesheet" href="../shared/world-cup.css">
+  <style>
+    .histogram {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 200px;
+      padding-top: 20px;
+      border-bottom: 1px solid var(--wc-line);
+      margin-bottom: 10px;
+    }
+    .histogram-bar {
+      flex: 1;
+      background: var(--wc-gold);
+      opacity: 0.8;
+      border-radius: 4px 4px 0 0;
+      position: relative;
+      transition: opacity 0.2s;
+    }
+    .histogram-bar:hover {
+      opacity: 1;
+    }
+    .histogram-label {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      color: var(--wc-ink);
+      font-weight: 900;
+    }
+    .histogram-axis {
+      display: flex;
+      gap: 4px;
+    }
+    .histogram-axis span {
+      flex: 1;
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--wc-muted);
+    }
+  </style>
 </head>
 
 <body>
@@ -74,6 +115,16 @@
         </article>
       </div>
       <div class="wc-status" id="status">Loading W-Index group analysis...</div>
+    </section>
+
+    <section class="wc-section" id="matchup-distribution">
+      <div class="wc-section-header">
+        <div>
+          <h2>Matchup Parity Distribution</h2>
+          <p>Histogram of the W-Index differences across all 72 group stage games.</p>
+        </div>
+      </div>
+      <div class="wc-card wc-card-pad" id="histogram-container"></div>
     </section>
 
     <section class="wc-section">
@@ -446,6 +497,42 @@
       `).join("");
     }
 
+    function renderHistogram(analyses) {
+      const container = document.getElementById("histogram-container");
+      if (!container) return;
+      
+      const allPairs = analyses.flatMap((a) => a.pairs);
+      const maxDiff = Math.max(...allPairs.map((p) => p.diff));
+      const bucketSize = 5;
+      const numBuckets = Math.ceil(maxDiff / bucketSize) || 1;
+      const buckets = new Array(numBuckets).fill(0);
+      
+      for (const pair of allPairs) {
+        const index = Math.min(Math.floor(pair.diff / bucketSize), numBuckets - 1);
+        buckets[index]++;
+      }
+
+      const maxCount = Math.max(...buckets) || 1;
+
+      const barsHtml = buckets.map((count, i) => {
+        const heightPct = (count / maxCount) * 100;
+        return `
+          <div class="histogram-bar" style="height: ${heightPct}%;" title="${count} games with difference ${i * bucketSize}-${(i + 1) * bucketSize}">
+            ${count > 0 ? `<span class="histogram-label">${count}</span>` : ""}
+          </div>
+        `;
+      }).join("");
+
+      const axisHtml = buckets.map((_, i) => `
+        <span>${i * bucketSize}-${(i + 1) * bucketSize}</span>
+      `).join("");
+
+      container.innerHTML = `
+        <div class="histogram">${barsHtml}</div>
+        <div class="histogram-axis">${axisHtml}</div>
+      `;
+    }
+
     function renderTable(analyses) {
       const maxTotal = Math.max(...analyses.map((analysis) => analysis.total));
       elements.groupTable.innerHTML = [...analyses]
@@ -528,6 +615,7 @@
         const analyses = analyzeGroups(map);
 
         renderInsights(analyses);
+        renderHistogram(analyses);
         renderTable(analyses);
         renderPathTable(analyses);
         renderGroupCards(analyses);

@@ -6,6 +6,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>World Cup 2026 Meta | Warren's World Cup Pool</title>
   <link rel="stylesheet" href="../shared/world-cup.css">
+  <style>
+    .wc-table th[data-sort] {
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .wc-table th[data-sort]:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .wc-table th[data-sort]::after {
+      content: " ↕";
+      opacity: 0.3;
+      font-size: 0.8em;
+      margin-left: 4px;
+    }
+    .wc-table th[data-sort].sort-asc::after {
+      content: " ↑";
+      opacity: 1;
+    }
+    .wc-table th[data-sort].sort-desc::after {
+      content: " ↓";
+      opacity: 1;
+    }
+    .wc-select {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--wc-ink);
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .wc-select option {
+      background: #111;
+      color: #fff;
+    }
+    .wc-mini-flag {
+      width: 24px;
+      aspect-ratio: 3 / 2;
+      display: inline-block;
+      margin-right: 7px;
+      overflow: hidden;
+      border: 1px solid rgba(247, 244, 235, 0.18);
+      border-radius: 3px;
+      vertical-align: -3px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .wc-mini-flag img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+  </style>
 </head>
 
 <body>
@@ -98,16 +152,23 @@
           <p>Venue-local kickoff is preserved. Viewer time converts automatically using the browser timezone.</p>
         </div>
       </div>
-      <div class="wc-filter-row" id="group-filter" aria-label="Filter group fixtures"></div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px;">
+        <div class="wc-filter-row" id="group-filter" aria-label="Filter group fixtures" style="margin-bottom: 0;"></div>
+        <select id="venue-filter" class="wc-select">
+          <option value="All">All Venues</option>
+        </select>
+      </div>
       <div class="wc-table-wrap">
         <table class="wc-table">
-          <thead>
+          <thead id="group-fixtures-head">
             <tr>
-              <th>Match</th>
-              <th>Fixture</th>
-              <th>Viewer Time</th>
-              <th>Venue Local</th>
-              <th>Venue</th>
+              <th data-sort="Match">Match</th>
+              <th data-sort="Fixture">Fixture</th>
+              <th data-sort="Viewer Time">Viewer Time</th>
+              <th data-sort="Venue">Venue</th>
+              <th data-sort="Total W-Index">Total W-Index</th>
+              <th data-sort="Diff">Diff</th>
+              <th data-sort="Rating">Rating</th>
             </tr>
           </thead>
           <tbody id="group-fixtures-body"></tbody>
@@ -130,7 +191,6 @@
               <th>Match</th>
               <th>Slot</th>
               <th>Viewer Time</th>
-              <th>Venue Local</th>
               <th>Venue</th>
             </tr>
           </thead>
@@ -226,19 +286,156 @@
     document.getElementById("group-count").textContent = tournament.groupsCount;
     document.getElementById("match-count").textContent = tournament.matchesCount;
 
-    function flag(countryCode) {
-      if (!countryCode || countryCode.length !== 2) return "";
-      return countryCode
-        .toUpperCase()
-        .split("")
-        .map((char) => String.fromCodePoint(127397 + char.charCodeAt(0)))
-        .join("");
+    const W_INDEX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
+    let wIndexByTeam = new Map();
+    let matchRatings = new Map();
+    let groupFixturesSortColumn = "Match";
+    let groupFixturesSortAscending = true;
+
+    function parseCsv(text) {
+      const rows = [];
+      let row = [];
+      let field = "";
+      let inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const next = text[i + 1];
+        if (char === '"' && inQuotes && next === '"') {
+          field += '"';
+          i++;
+        } else if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === "," && !inQuotes) {
+          row.push(field);
+          field = "";
+        } else if ((char === "\n" || char === "\r") && !inQuotes) {
+          if (char === "\r" && next === "\n") i++;
+          row.push(field);
+          if (row.some((value) => value.trim() !== "")) rows.push(row);
+          row = [];
+          field = "";
+        } else {
+          field += char;
+        }
+      }
+      row.push(field);
+      if (row.some((value) => value.trim() !== "")) rows.push(row);
+      return rows;
+    }
+
+    function rowsToObjects(rows) {
+      const headers = rows[0].map((header) => header.trim());
+      return rows.slice(1).map((row) => Object.fromEntries(headers.map((header, index) => [header, row[index]?.trim() || ""])));
+    }
+
+    function parsePercent(value) {
+      const number = Number(String(value).replace("%", "").trim());
+      return Number.isFinite(number) ? number : null;
+    }
+
+    function normalizeName(name) {
+      return String(name || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/&/g, "and")
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+    }
+
+    const teamAliases = new Map();
+    for (const team of teams) {
+      const names = [team.name, team.shortName, team.id];
+      if (team.id === "USA") names.push("USA", "United States of America", "USMNT");
+      if (team.id === "KOR") names.push("South Korea");
+      if (team.id === "CIV") names.push("Cote d Ivoire", "Côte d'Ivoire");
+      if (team.id === "COD") names.push("Congo DR", "Democratic Republic of Congo");
+      if (team.id === "TUR") names.push("Turkey", "Türkiye");
+      if (team.id === "IRN") names.push("IR Iran", "Iran");
+      if (team.id === "CPV") names.push("Cabo Verde", "Cape Verde");
+      if (team.id === "CUW") names.push("Curaçao", "Curacao");
+      for (const name of names.filter(Boolean)) teamAliases.set(normalizeName(name), team.id);
+    }
+
+    function findTeamId(name) {
+      return teamAliases.get(normalizeName(name)) || null;
+    }
+
+    function calculateMatchStats() {
+      let minTotal = Infinity, maxTotal = -Infinity;
+      let minDiff = Infinity, maxDiff = -Infinity;
+
+      for (const match of groupStageMatches) {
+        const homeScore = wIndexByTeam.get(match.home)?.score;
+        const awayScore = wIndexByTeam.get(match.away)?.score;
+        if (Number.isFinite(homeScore) && Number.isFinite(awayScore)) {
+          const total = homeScore + awayScore;
+          const diff = Math.abs(homeScore - awayScore);
+          if (total < minTotal) minTotal = total;
+          if (total > maxTotal) maxTotal = total;
+          if (diff < minDiff) minDiff = diff;
+          if (diff > maxDiff) maxDiff = diff;
+        }
+      }
+
+      for (const match of groupStageMatches) {
+        const homeScore = wIndexByTeam.get(match.home)?.score;
+        const awayScore = wIndexByTeam.get(match.away)?.score;
+        if (Number.isFinite(homeScore) && Number.isFinite(awayScore)) {
+          const total = homeScore + awayScore;
+          const diff = Math.abs(homeScore - awayScore);
+          
+          const tNorm = maxTotal === minTotal ? 0.5 : (total - minTotal) / (maxTotal - minTotal);
+          const dNorm = maxDiff === minDiff ? 0.5 : (maxDiff - diff) / (maxDiff - minDiff);
+          
+          const rating = (tNorm + dNorm) / 2;
+          matchRatings.set(match.matchNumber, { total, diff, rating });
+        }
+      }
+    }
+
+    async function loadWIndex() {
+      try {
+        const response = await fetch(`${W_INDEX_URL}&cacheBust=${Date.now()}`);
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        const csv = await response.text();
+        const rows = rowsToObjects(parseCsv(csv));
+        for (const row of rows) {
+          const teamId = findTeamId(row.Team);
+          if (teamId) {
+            wIndexByTeam.set(teamId, { score: parsePercent(row["W-Index"]) });
+          }
+        }
+        calculateMatchStats();
+        const activeFilter = document.querySelector("#group-filter .is-active")?.dataset?.value || "All";
+        renderGroupFixtures(activeFilter);
+      } catch (error) {
+        console.error("W-Index load failed", error);
+      }
+    }
+
+    function flagCode(team) {
+      if (team.id === "ENG") return "gb-eng";
+      if (team.id === "SCO") return "gb-sct";
+      return team.countryCode.toLowerCase();
+    }
+
+    function flagUrl(team, width = 80) {
+      return `https://flagcdn.com/w${width}/${flagCode(team)}.png`;
+    }
+
+    function flagImage(team, className = "wc-mini-flag", width = 80) {
+      return `
+        <span class="${className}" aria-hidden="true">
+          <img src="${flagUrl(team, width)}" alt="" loading="lazy">
+        </span>
+      `;
     }
 
     function teamLabel(id) {
       const team = teamsById[id];
       if (!team) return id;
-      return `<span class="wc-flag">${flag(team.countryCode)}</span>${team.name}`;
+      return `${flagImage(team)}${team.name}`;
     }
 
     function formatViewerTime(match) {
@@ -269,7 +466,40 @@
     }
 
     function fixtureLabel(match) {
-      return `${teamLabel(match.home)} <span class="wc-muted">v</span> ${teamLabel(match.away)}`;
+      return `
+        <div style="display: flex; flex-direction: column; gap: 3px;">
+          <div>${teamLabel(match.home)}</div>
+          <div class="wc-muted" style="font-size: 0.85em; padding-left: 2px;">v</div>
+          <div>${teamLabel(match.away)}</div>
+        </div>
+      `;
+    }
+
+    function groupRowFor(match) {
+      const stats = matchRatings.get(match.matchNumber);
+      const totalStr = stats ? `${stats.total.toFixed(1)}%` : "—";
+      const diffStr = stats ? `${stats.diff.toFixed(1)}%` : "—";
+      
+      let ratingStr = "—";
+      if (stats) {
+        const r = stats.rating;
+        const normalized = r.toFixed(3);
+        // Interpolate hue from 0 (red) to 120 (green)
+        const hue = r * 120;
+        ratingStr = `<strong style="color: hsl(${hue}, 85%, 60%);">${normalized}</strong>`;
+      }
+
+      return `
+        <tr>
+          <td><strong>${match.matchNumber}</strong><br><span class="wc-small">${match.stage}</span></td>
+          <td>${fixtureLabel(match)}</td>
+          <td>${formatViewerTime(match)}</td>
+          <td>${venueLabel(match)}</td>
+          <td class="wc-number">${totalStr}</td>
+          <td class="wc-number">${diffStr}</td>
+          <td class="wc-number">${ratingStr}</td>
+        </tr>
+      `;
     }
 
     function rowFor(match) {
@@ -278,7 +508,6 @@
           <td><strong>${match.matchNumber}</strong><br><span class="wc-small">${match.stage}</span></td>
           <td>${fixtureLabel(match)}</td>
           <td>${formatViewerTime(match)}</td>
-          <td>${formatVenueTime(match)}</td>
           <td>${venueLabel(match)}</td>
         </tr>
       `;
@@ -310,15 +539,101 @@
       };
     }
 
-    function renderGroupFixtures(group = "All") {
-      const filtered = group === "All" ? groupStageMatches : groupStageMatches.filter((match) => match.group === group);
-      document.getElementById("group-fixtures-body").innerHTML = filtered.map(rowFor).join("");
-      renderFilter("group-filter", ["All", ...Object.keys(groups)], group, renderGroupFixtures);
+    let selectedVenue = "All";
+
+    function initVenueFilter() {
+      const select = document.getElementById("venue-filter");
+      const options = Object.entries(venues).map(([id, v]) => `<option value="${id}">${v.name} (${v.city})</option>`);
+      select.innerHTML = `<option value="All">All Venues</option>` + options.join("");
+      
+      select.addEventListener("change", (e) => {
+        selectedVenue = e.target.value;
+        const activeGroupFilter = document.querySelector("#group-filter .is-active")?.dataset?.value || "All";
+        renderGroupFixtures(activeGroupFilter);
+        const activeStageFilter = document.querySelector("#stage-filter .is-active")?.dataset?.value || "All";
+        renderKnockout(activeStageFilter);
+      });
     }
+
+    function renderGroupFixtures(group = "All") {
+      let filtered = groupStageMatches;
+      if (group === "Top Rated") {
+        filtered = filtered.filter(match => matchRatings.get(match.matchNumber)?.rating >= 0.75);
+      } else if (group !== "All") {
+        filtered = filtered.filter((match) => match.group === group);
+      }
+      
+      if (selectedVenue !== "All") {
+        filtered = filtered.filter((match) => match.venueId === selectedVenue);
+      }
+
+      filtered.sort((a, b) => {
+        let valA, valB;
+        if (groupFixturesSortColumn === "Match") {
+          valA = a.matchNumber;
+          valB = b.matchNumber;
+        } else if (groupFixturesSortColumn === "Fixture") {
+          const aTeam = teamsById[a.home]?.name || a.home;
+          const bTeam = teamsById[b.home]?.name || b.home;
+          valA = aTeam;
+          valB = bTeam;
+        } else if (groupFixturesSortColumn === "Viewer Time") {
+          valA = new Date(a.utc).getTime();
+          valB = new Date(b.utc).getTime();
+        } else if (groupFixturesSortColumn === "Venue") {
+          valA = a.venue.name;
+          valB = b.venue.name;
+        } else if (groupFixturesSortColumn === "Total W-Index") {
+          valA = matchRatings.get(a.matchNumber)?.total ?? -999;
+          valB = matchRatings.get(b.matchNumber)?.total ?? -999;
+        } else if (groupFixturesSortColumn === "Diff") {
+          valA = matchRatings.get(a.matchNumber)?.diff ?? 999;
+          valB = matchRatings.get(b.matchNumber)?.diff ?? 999;
+        } else if (groupFixturesSortColumn === "Rating") {
+          valA = matchRatings.get(a.matchNumber)?.rating ?? -999;
+          valB = matchRatings.get(b.matchNumber)?.rating ?? -999;
+        }
+
+        if (valA < valB) return groupFixturesSortAscending ? -1 : 1;
+        if (valA > valB) return groupFixturesSortAscending ? 1 : -1;
+        return a.matchNumber - b.matchNumber;
+      });
+
+      document.getElementById("group-fixtures-body").innerHTML = filtered.map(groupRowFor).join("");
+      
+      const filterValues = ["All", "Top Rated", ...Object.keys(groups)];
+      renderFilter("group-filter", filterValues, group, renderGroupFixtures);
+
+      document.querySelectorAll("#group-fixtures-head th[data-sort]").forEach(th => {
+        th.classList.remove("sort-asc", "sort-desc");
+        if (th.dataset.sort === groupFixturesSortColumn) {
+          th.classList.add(groupFixturesSortAscending ? "sort-asc" : "sort-desc");
+        }
+      });
+    }
+
+    document.getElementById("group-fixtures-head").addEventListener("click", (e) => {
+      const th = e.target.closest("th[data-sort]");
+      if (!th) return;
+      const column = th.dataset.sort;
+      if (groupFixturesSortColumn === column) {
+        groupFixturesSortAscending = !groupFixturesSortAscending;
+      } else {
+        groupFixturesSortColumn = column;
+        groupFixturesSortAscending = (column !== "Rating" && column !== "Total W-Index");
+      }
+      const activeFilter = document.querySelector("#group-filter .is-active")?.dataset?.value || "All";
+      renderGroupFixtures(activeFilter);
+    });
 
     function renderKnockout(stage = "All") {
       const stages = [...new Set(knockoutMatches.map((match) => match.stage))];
-      const filtered = stage === "All" ? knockoutMatches : knockoutMatches.filter((match) => match.stage === stage);
+      let filtered = stage === "All" ? knockoutMatches : knockoutMatches.filter((match) => match.stage === stage);
+      
+      if (selectedVenue !== "All") {
+        filtered = filtered.filter((match) => match.venueId === selectedVenue);
+      }
+      
       document.getElementById("knockout-body").innerHTML = filtered.map(rowFor).join("");
       renderFilter("stage-filter", ["All", ...stages], stage, renderKnockout);
     }
@@ -358,11 +673,13 @@
     }
 
     renderGroups();
+    initVenueFilter();
     renderGroupFixtures();
     renderKnockout();
     renderTeams();
     renderVenues();
     renderSources();
+    loadWIndex();
   </script>
 </body>
 

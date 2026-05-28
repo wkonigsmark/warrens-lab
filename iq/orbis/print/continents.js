@@ -29,7 +29,7 @@
     // Tweak these to move a numbered badge into a more centered/readable spot.
     const POSITIONS = {
         africa:        [4400, -6300],
-        antarctica:    [4600, -4500],
+        antarctica:    [4500, -3950],  // on the thin strip at the bottom
         asia:          [7300, -7800],
         europe:        [4400, -9000],
         north_america: [2000, -8600],
@@ -69,12 +69,13 @@
     }
 
     // ---- Paint each country, classed by continent ---------------------
-    // Antarctica is rendered separately in the inset below the map — the Miller
-    // projection squashes it into an unreadable strip here.
+    // Antarctica shows up as a thin strip at the bottom (Miller projection
+    // squashes it). The inset below the map shows its real shape; the strip
+    // here teaches kids "this is where Antarctica sits on the world map."
     for (const feature of geo.features) {
         const ne = feature.properties.continent;
         const id = NE_TO_ID[ne];
-        if (!id || id === "antarctica") continue;
+        if (!id) continue;
         const d = featureToPathD(feature);
         if (!d) continue;
         const path = document.createElementNS(SVG_NS, "path");
@@ -85,16 +86,22 @@
     }
 
     // ---- Place numbered circles ----------------------------------------
-    // Skip Antarctica's number on the world map — it lives in the inset below.
+    // Antarctica's strip is too thin for a full-size badge, so it gets a smaller one.
+    const NORMAL_RADIUS = 620;
+    const NORMAL_FONT = 520;
+    const ANTARCTICA_RADIUS = 220;
+    const ANTARCTICA_FONT = 220;
+
     ORDER.forEach((id, i) => {
-        if (id === "antarctica") return;
         const pos = POSITIONS[id];
         if (!pos) return;
         const [x, y] = pos;
+        const isAntarctica = id === "antarctica";
+
         const circle = document.createElementNS(SVG_NS, "circle");
         circle.setAttribute("cx", x);
         circle.setAttribute("cy", y);
-        circle.setAttribute("r", 620);
+        circle.setAttribute("r", isAntarctica ? ANTARCTICA_RADIUS : NORMAL_RADIUS);
         circle.setAttribute("class", "number-bg");
         ng.appendChild(circle);
 
@@ -102,6 +109,9 @@
         text.setAttribute("x", x);
         text.setAttribute("y", y);
         text.setAttribute("class", "number-text");
+        if (isAntarctica) {
+            text.setAttribute("font-size", String(ANTARCTICA_FONT));
+        }
         text.textContent = String(i + 1);
         ng.appendChild(text);
     });

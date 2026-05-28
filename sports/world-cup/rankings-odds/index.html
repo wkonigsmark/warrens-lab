@@ -179,12 +179,50 @@
       min-width: 700px;
     }
 
-    .windex-table .wc-table th:nth-child(8),
-    .windex-table .wc-table td:nth-child(8),
     .windex-table .wc-table th:nth-child(9),
-    .windex-table .wc-table td:nth-child(9) {
+    .windex-table .wc-table td:nth-child(9),
+    .windex-table .wc-table th:nth-child(10),
+    .windex-table .wc-table td:nth-child(10) {
       display: none;
     }
+
+    .windex-table .wc-table th[data-sort] {
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .windex-table .wc-table th[data-sort]:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .windex-table .wc-table th[data-sort]::after {
+      content: " ↕";
+      opacity: 0.3;
+      font-size: 0.8em;
+      margin-left: 4px;
+    }
+    .windex-table .wc-table th[data-sort].sort-asc::after {
+      content: " ↑";
+      opacity: 1;
+    }
+    .windex-table .wc-table th[data-sort].sort-desc::after {
+      content: " ↓";
+      opacity: 1;
+    }
+
+    .wc-select {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--wc-ink);
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .wc-select option {
+      background: #111;
+      color: #fff;
+    }
+
 
     @media (max-width: 900px) {
       .windex-topline {
@@ -254,19 +292,37 @@
           <h2>Team Rankings</h2>
           <p class="wc-muted">All 48 teams ranked on the W-Index scale.</p>
         </div>
-        <div class="windex-status" id="status">Loading W-Index feed...</div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+          <select id="group-filter" class="wc-select">
+            <option value="All">All Groups</option>
+            <option value="A">Group A</option>
+            <option value="B">Group B</option>
+            <option value="C">Group C</option>
+            <option value="D">Group D</option>
+            <option value="E">Group E</option>
+            <option value="F">Group F</option>
+            <option value="G">Group G</option>
+            <option value="H">Group H</option>
+            <option value="I">Group I</option>
+            <option value="J">Group J</option>
+            <option value="K">Group K</option>
+            <option value="L">Group L</option>
+          </select>
+          <div class="windex-status" id="status">Loading W-Index feed...</div>
+        </div>
       </div>
       <div class="wc-table-wrap windex-table">
         <table class="wc-table">
           <thead>
             <tr>
-              <th>Rank</th>
+              <th data-sort="Rank">Rank</th>
               <th>Flag</th>
-              <th>Team</th>
-              <th>Group</th>
-              <th>W-Index</th>
-              <th>Group Path</th>
-              <th>Path-Adjusted</th>
+              <th data-sort="Team">Team</th>
+              <th data-sort="Group">Group</th>
+              <th data-sort="W-Index">W-Index</th>
+              <th data-sort="Group Path">Group Path</th>
+              <th data-sort="Path-Adjusted">Path-Adjusted</th>
+              <th data-sort="Diff">Diff</th>
               <th>Status</th>
               <th>Canonical Match</th>
             </tr>
@@ -321,6 +377,9 @@
     let wIndexByTeam = new Map();
     let pathByTeam = new Map();
     let fixtureFilter = "All";
+    let sortColumn = "Rank";
+    let sortAscending = true;
+    let groupFilter = "All";
 
     const elements = {
       status: $("status"),
@@ -329,6 +388,7 @@
       matchupsBody: $("matchups-body"),
       fixtureFilter: $("fixture-filter"),
       pathStoryGrid: $("path-story-grid"),
+      groupFilter: $("group-filter"),
     };
 
     function flag(countryCode) {
@@ -457,6 +517,18 @@
       return Number.isFinite(score) ? `${score.toFixed(1)}%` : "—";
     }
 
+    function diffLabel(row) {
+      const score = row.data?.score;
+      const adjusted = pathByTeam.get(row.team.id)?.pathAdjusted;
+      if (!Number.isFinite(score) || !Number.isFinite(adjusted)) return "—";
+      const diff = adjusted - score;
+      const sign = diff > 0 ? "+" : "";
+      let colorClass = "";
+      if (diff > 0) colorClass = "wc-trend-good";
+      else if (diff < 0) colorClass = "wc-trend-watch";
+      return `<span class="${colorClass}">${sign}${diff.toFixed(1)}</span>`;
+    }
+
     function computePathContext() {
       const groupIds = [...new Set(teams.map((team) => team.group))];
       const nextPath = new Map();
@@ -515,19 +587,63 @@
     }
 
     function renderRankings() {
-      const rows = teams.map((team) => ({
+      let rows = teams.map((team) => ({
         team,
         data: wIndexByTeam.get(team.id),
-      })).sort((a, b) => {
-        if (a.data?.rank && b.data?.rank) return a.data.rank - b.data.rank;
-        if (a.data?.rank) return -1;
-        if (b.data?.rank) return 1;
-        return a.team.group.localeCompare(b.team.group) || a.team.name.localeCompare(b.team.name);
+      }));
+
+      if (groupFilter !== "All") {
+        rows = rows.filter(row => row.team.group === groupFilter);
+      }
+
+      rows.sort((a, b) => {
+        let valA, valB;
+        if (sortColumn === "Rank") {
+          valA = a.data?.rank ?? 999;
+          valB = b.data?.rank ?? 999;
+        } else if (sortColumn === "Team") {
+          valA = a.team.name;
+          valB = b.team.name;
+        } else if (sortColumn === "Group") {
+          valA = a.team.group;
+          valB = b.team.group;
+        } else if (sortColumn === "W-Index") {
+          valA = a.data?.score ?? -999;
+          valB = b.data?.score ?? -999;
+        } else if (sortColumn === "Group Path") {
+          valA = pathByTeam.get(a.team.id)?.pathEdge ?? -999;
+          valB = pathByTeam.get(b.team.id)?.pathEdge ?? -999;
+        } else if (sortColumn === "Path-Adjusted") {
+          valA = pathByTeam.get(a.team.id)?.pathAdjusted ?? -999;
+          valB = pathByTeam.get(b.team.id)?.pathAdjusted ?? -999;
+        } else if (sortColumn === "Diff") {
+          const scoreA = a.data?.score;
+          const adjA = pathByTeam.get(a.team.id)?.pathAdjusted;
+          valA = (Number.isFinite(scoreA) && Number.isFinite(adjA)) ? adjA - scoreA : -999;
+          const scoreB = b.data?.score;
+          const adjB = pathByTeam.get(b.team.id)?.pathAdjusted;
+          valB = (Number.isFinite(scoreB) && Number.isFinite(adjB)) ? adjB - scoreB : -999;
+        }
+
+        if (valA < valB) return sortAscending ? -1 : 1;
+        if (valA > valB) return sortAscending ? 1 : -1;
+        
+        // tiebreaker
+        const tbA = a.data?.rank ?? 999;
+        const tbB = b.data?.rank ?? 999;
+        return tbA - tbB;
+      });
+
+      document.querySelectorAll(".windex-table .wc-table th[data-sort]").forEach(th => {
+        th.classList.remove("sort-asc", "sort-desc");
+        if (th.dataset.sort === sortColumn) {
+          th.classList.add(sortAscending ? "sort-asc" : "sort-desc");
+        }
       });
 
       elements.rankingsBody.innerHTML = rows.map((row, index) => `
         <tr>
-          <td class="wc-number">${row.data?.rank || index + 1}</td>
+          <td class="wc-number">${row.data?.rank || "—"}</td>
           <td class="windex-flag-cell">
             <span class="windex-flag-thumb" aria-label="${row.team.name} flag">
               <img src="${flagUrl(row.team, 160)}" alt="" loading="lazy">
@@ -541,6 +657,7 @@
             ${positionTag(pathByTeam.get(row.team.id))}
           </td>
           <td class="wc-number">${scoreLabel(pathByTeam.get(row.team.id)?.pathAdjusted)}</td>
+          <td class="wc-number"><strong>${diffLabel(row)}</strong></td>
           <td>${row.data?.status || '<span class="wc-empty">Missing from feed</span>'}</td>
           <td>${row.data ? '<span class="wc-trend-good">Matched</span>' : '<span class="wc-trend-watch">Needs alias</span>'}</td>
         </tr>
@@ -726,6 +843,24 @@
       fixtureFilter = button.dataset.stage;
       renderFixtureFilter();
       renderMatchups();
+    });
+
+    document.querySelector(".windex-table .wc-table thead").addEventListener("click", (e) => {
+      const th = e.target.closest("th[data-sort]");
+      if (!th) return;
+      const column = th.dataset.sort;
+      if (sortColumn === column) {
+        sortAscending = !sortAscending;
+      } else {
+        sortColumn = column;
+        sortAscending = (column === "Rank" || column === "Team" || column === "Group");
+      }
+      renderRankings();
+    });
+
+    elements.groupFilter.addEventListener("change", (e) => {
+      groupFilter = e.target.value;
+      renderRankings();
     });
 
     renderRankings();

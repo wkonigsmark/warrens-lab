@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="continents.css?v=3">
+    <link rel="stylesheet" href="continents.css?v=5">
 </head>
 <body>
 
@@ -35,28 +35,26 @@
         </section>
 
         <!-- Antarctica gets squashed into a thin strip by the Miller projection,
-             so we show it separately as a labeled inset. -->
+             so we show it separately as a labeled inset with a stylized shape. -->
         <section class="ws-antarctica-inset">
-            <div class="inset-tag">Don't forget...</div>
+            <div class="inset-tag">Don't forget continent #2…</div>
             <div class="inset-body">
-                <svg class="inset-shape" viewBox="0 0 200 200" aria-label="Stylized Antarctica">
-                    <!-- Stylized Antarctica blob with a peninsula -->
-                    <path d="M 100 30
-                             C 50 30, 30 70, 35 105
-                             C 38 130, 55 155, 90 165
-                             C 105 168, 125 168, 145 162
-                             C 170 154, 178 130, 175 105
-                             C 172 75, 155 45, 130 35
-                             L 120 25
-                             L 110 35
-                             Z"
+                <svg class="inset-shape" viewBox="0 0 200 140" aria-label="Stylized Antarctica with the Antarctic Peninsula">
+                    <!-- Body: roughly oval. Peninsula: small triangle sticking up-left. -->
+                    <path d="M 28 90
+                             C 28 55, 55 38, 92 44
+                             L 70 18
+                             L 88 22
+                             L 105 42
+                             C 145 38, 178 60, 178 92
+                             C 178 118, 148 130, 110 128
+                             C 70 126, 28 118, 28 90 Z"
                           class="continent-shape" />
-                    <circle cx="100" cy="100" r="48" class="number-bg" />
-                    <text x="100" y="100" class="inset-number-text">2</text>
                 </svg>
+                <div class="inset-number-badge">2</div>
                 <div class="inset-text">
                     <strong>Antarctica</strong> is the frozen continent at the very bottom of the world.
-                    <br><span class="inset-note">(Flat maps make it look smaller than it really is!)</span>
+                    <span class="inset-note">Flat maps make it look smaller than it really is!</span>
                 </div>
             </div>
         </section>
@@ -103,6 +101,6 @@
 
     </article>
 
-    <script src="continents.js?v=3"></script>
+    <script src="continents.js?v=5"></script>
 </body>
 </html>
