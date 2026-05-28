@@ -325,6 +325,34 @@ function renderMap(view) {
 
 let currentFocus = 'all';
 
+// ----- Tier (difficulty level) selection ---------------------------------
+// L1=Famous 20, L2=Top 40, L3=Top 80 (soon), L4=World Tour (soon).
+// Persisted to localStorage so the user's choice survives reloads.
+const LEVEL_STORAGE_KEY = 'orbis.selectedLevel';
+let selectedLevel = (() => {
+    const stored = parseInt(localStorage.getItem(LEVEL_STORAGE_KEY), 10);
+    return Number.isFinite(stored) && stored >= 1 && stored <= 2 ? stored : 1;
+})();
+
+function setSelectedLevel(level) {
+    if (level < 1 || level > 4) return;
+    selectedLevel = level;
+    localStorage.setItem(LEVEL_STORAGE_KEY, String(level));
+    document.querySelectorAll('.tier-chip').forEach(c => {
+        c.classList.toggle('active', Number(c.dataset.level) === level);
+    });
+    // Re-render the country layer so highlighting reflects the new tier.
+    // We deliberately only re-render the country paths (not the whole map) so the
+    // current Region Focus zoom is preserved.
+    if (currentView === 'countries') {
+        const regionGroup = document.getElementById('map-regions');
+        const labelGroup = document.getElementById('map-labels');
+        if (regionGroup) regionGroup.innerHTML = '';
+        if (labelGroup) labelGroup.innerHTML = '';
+        renderCountries(regionGroup, labelGroup);
+    }
+}
+
 async function setFocusRegion(region) {
     // Click the currently-active region chip to zoom back out to the world
     if (region !== 'all' && region === currentFocus) region = 'all';
@@ -354,6 +382,7 @@ async function renderCountries(regionGroup, labelGroup) {
     }
 
     OrbisCountries.renderInto(regionGroup, {
+        levelFilter: selectedLevel,
         onHover: (iso2, country) => {
             if (anyQuizActive()) return;
             const name = country?.name || iso2;
@@ -375,8 +404,9 @@ async function renderCountries(regionGroup, labelGroup) {
         }
     });
 
-    // Labels for Famous 20 — emoji + ISO into the labelGroup so they stay on top
+    // ISO labels — only for countries inside the active tier
     for (const country of OrbisCountries.allCountries()) {
+        if (country.level > selectedLevel) continue;
         const feature = OrbisCountries.getFeature(country.iso_a2);
         if (!feature) continue;
         const [cx, cy] = OrbisCountries.centroidOfFeature(feature);
@@ -564,6 +594,19 @@ function setupEventListeners() {
         });
     }
 
+    // Tier picker — clicking an enabled chip changes the active level
+    const tierBar = document.getElementById('tier-picker');
+    if (tierBar) {
+        tierBar.addEventListener('click', e => {
+            const chip = e.target.closest('.tier-chip');
+            if (!chip || chip.disabled) return;
+            const level = Number(chip.dataset.level);
+            setSelectedLevel(level);
+        });
+        // Reflect persisted level on load
+        setSelectedLevel(selectedLevel);
+    }
+
     document.getElementById('play-geocode-btn').onclick = async () => {
         if (window.OrbisMission && OrbisMission.isActive()) OrbisMission.stop();
         if (currentView !== 'countries') {
@@ -572,7 +615,7 @@ function setupEventListeners() {
             // Wait a tick so the country paths exist before Geocode starts.
             await new Promise(r => setTimeout(r, 50));
         }
-        OrbisGeocode.start();
+        OrbisGeocode.start(selectedLevel);
         document.querySelector('.status-label').textContent = 'MYSTERY COUNTRY';
         updateStatus('?????');
     };
@@ -589,7 +632,7 @@ function setupEventListeners() {
             // Let the country paths render before Mission attaches click handlers
             await new Promise(r => setTimeout(r, 60));
         }
-        OrbisMission.start();
+        OrbisMission.start(selectedLevel);
     };
 
     // Modal Close

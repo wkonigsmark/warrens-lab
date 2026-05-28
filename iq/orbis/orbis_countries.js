@@ -23,9 +23,11 @@
 
   async function load() {
     if (state.loaded) return;
+    // cache: "no-store" forces a fresh fetch — these JSON files change as we expand
+    // the atlas; without this, browsers serve stale copies even after script reloads.
     const [atlas, geo] = await Promise.all([
-      fetch(`${DATA_DIR}/atlas.json`).then(r => r.json()),
-      fetch(`${DATA_DIR}/world.geo.json`).then(r => r.json())
+      fetch(`${DATA_DIR}/atlas.json`, { cache: "no-store" }).then(r => r.json()),
+      fetch(`${DATA_DIR}/world.geo.json`, { cache: "no-store" }).then(r => r.json())
     ]);
 
     state.atlas = atlas;
@@ -70,14 +72,19 @@
   /**
    * Render country paths into the given SVG <g> element.
    * options.filter      — (iso2, feature) => bool. If omitted, renders all.
+   * options.levelFilter — number. If set, only countries with level <= this get the
+   *                       `in-atlas` class (others dim as context). Countries not in
+   *                       the atlas at all also stay dim. Defaults to "all in-atlas".
    * options.onClick     — (iso2, country?, ev) => void
    * options.onHover     — (iso2, country?) => void  (fires on mouseenter)
    * options.onUnhover   — () => void  (fires on mouseleave)
-   * options.labelAtlas  — bool. When true, draw a tiny label at the centroid for in-atlas countries.
+   * options.labelAtlas  — bool. When true, draw a tiny label at the centroid for in-atlas (in-tier) countries.
    */
   function renderInto(group, options = {}) {
     if (!state.loaded) throw new Error("OrbisCountries: call load() first");
     group.innerHTML = "";
+
+    const levelFilter = options.levelFilter;
 
     for (const f of state.geo.features) {
       const iso2 = (f.properties["iso-a2"] || f.properties["hc-a2"] || "").toUpperCase();
@@ -86,13 +93,15 @@
       const d = featureToPathD(f);
       if (!d) continue;
 
+      const country = state.byIso2.get(iso2) || null;
+      const inAtlas = !!country;
+      const inTier = inAtlas && (levelFilter == null || country.level <= levelFilter);
+
       const path = document.createElementNS(SVG_NS, "path");
       path.setAttribute("d", d);
-      path.setAttribute("class", "country-path" + (state.inAtlas.has(iso2) ? " in-atlas" : " dim"));
+      path.setAttribute("class", "country-path" + (inTier ? " in-atlas" : " dim"));
       path.setAttribute("data-iso2", iso2);
       path.setAttribute("data-name", f.properties.name || "");
-
-      const country = state.byIso2.get(iso2) || null;
 
       if (options.onClick) {
         path.addEventListener("click", ev => options.onClick(iso2, country, ev));
@@ -107,11 +116,12 @@
       group.appendChild(path);
     }
 
-    if (options.labelAtlas) drawAtlasLabels(group);
+    if (options.labelAtlas) drawAtlasLabels(group, levelFilter);
   }
 
-  function drawAtlasLabels(group) {
+  function drawAtlasLabels(group, levelFilter) {
     for (const country of state.atlas.countries) {
+      if (levelFilter != null && country.level > levelFilter) continue;
       const f = state.featByIso2.get(country.iso_a2);
       if (!f) continue;
       const [cx, cy] = centroidOfFeature(f);

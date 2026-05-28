@@ -269,7 +269,7 @@
       gap: 8px;
       min-height: 34px;
       margin-right: 10px;
-      padding: 0 12px;
+      padding: 0 12px 0 6px;
       border: 1px solid rgba(247, 244, 235, 0.14);
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.055);
@@ -277,6 +277,12 @@
       font-size: 0.82rem;
       font-weight: 850;
       white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .ticker-item:hover {
+      border-color: rgba(244, 201, 93, 0.38);
+      background: rgba(244, 201, 93, 0.09);
     }
 
     .ticker-item strong {
@@ -289,6 +295,140 @@
       font-size: 0.72rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+    }
+
+    .ticker-flag {
+      width: 34px;
+      aspect-ratio: 3 / 2;
+      display: inline-block;
+      overflow: hidden;
+      border: 1px solid rgba(247, 244, 235, 0.2);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+      flex: 0 0 auto;
+    }
+
+    .ticker-flag img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .wc-modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background: rgba(0, 0, 0, 0.58);
+      backdrop-filter: blur(12px);
+    }
+
+    .wc-modal-overlay[hidden] {
+      display: none;
+    }
+
+    .wc-modal {
+      position: relative;
+      width: min(100%, 720px);
+      max-height: min(86vh, 880px);
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 16% 0%, rgba(36, 180, 126, 0.16), transparent 32%),
+        linear-gradient(145deg, rgba(18, 37, 31, 0.98), rgba(8, 20, 17, 0.98));
+      box-shadow: 0 30px 120px rgba(0, 0, 0, 0.45);
+    }
+
+    .wc-modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 2;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.065);
+      color: var(--ink);
+      font: inherit;
+      font-size: 1.2rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .wc-card-pad {
+      padding: 24px;
+    }
+
+    .wc-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 20px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.075);
+      color: var(--ink);
+      font-size: clamp(1.05rem, 3vw, 1.45rem);
+      font-weight: 950;
+    }
+
+    .wc-rank-note {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: clamp(0.95rem, 2vw, 1.08rem);
+      font-weight: 900;
+    }
+
+    .wc-small {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 900;
+    }
+
+    .wc-team-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 13px 0;
+      border-top: 1px solid var(--line);
+      color: rgba(247, 244, 235, 0.9);
+      font-size: clamp(1rem, 3vw, 1.25rem);
+      line-height: 1.2;
+    }
+
+    .wc-team-row strong {
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .wc-flag-img {
+      width: 42px;
+      aspect-ratio: 3 / 2;
+      display: inline-block;
+      margin-right: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(247, 244, 235, 0.18);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+      vertical-align: -7px;
+    }
+
+    .wc-flag-img img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
     }
 
     @keyframes ticker-right-to-left {
@@ -341,6 +481,10 @@
       .ticker-item {
         min-height: 32px;
         font-size: 0.78rem;
+      }
+
+      .ticker-flag {
+        width: 30px;
       }
     }
   </style>
@@ -404,6 +548,13 @@
     </div>
   </aside>
 
+  <div class="wc-modal-overlay" id="group-modal-overlay" hidden>
+    <section class="wc-modal" role="dialog" aria-modal="true" aria-labelledby="group-modal-title">
+      <button class="wc-modal-close" id="group-modal-close" type="button" aria-label="Close group analysis">×</button>
+      <div class="wc-card-pad" id="group-modal-content"></div>
+    </section>
+  </div>
+
   <script>
     (() => {
       const kickoff = new Date('2026-06-11T15:00:00-04:00').getTime();
@@ -433,18 +584,29 @@
   </script>
 
   <script type="module">
-    import { teams } from './data/world-cup-2026.js';
+    import { groups, teams, teamsById } from './data/world-cup-2026.js';
 
     (() => {
       const W_INDEX_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv';
       const ticker = document.getElementById('w-index-ticker');
+      const modalOverlay = document.getElementById('group-modal-overlay');
+      const modalContent = document.getElementById('group-modal-content');
+      const modalClose = document.getElementById('group-modal-close');
+      let analysesByGroup = new Map();
+      let lastFocusedTickerItem = null;
 
-      function flag(countryCode) {
-        return countryCode
-          .toUpperCase()
-          .split('')
-          .map((char) => String.fromCodePoint(127397 + char.charCodeAt(0)))
-          .join('');
+      function flagCode(team) {
+        if (team.id === 'ENG') return 'gb-eng';
+        if (team.id === 'SCO') return 'gb-sct';
+        return team.countryCode.toLowerCase();
+      }
+
+      function flagUrl(team, width = 80) {
+        return `https://flagcdn.com/w${width}/${flagCode(team)}.png`;
+      }
+
+      function flagImage(team) {
+        return `<span class="wc-flag-img" aria-hidden="true"><img src="${flagUrl(team)}" alt="" loading="lazy"></span>`;
       }
 
       function normalizeName(name) {
@@ -510,6 +672,94 @@
         return rows.slice(1).map((row) => Object.fromEntries(headers.map((header, index) => [header, row[index]?.trim() || ''])));
       }
 
+      function parsePercent(value) {
+        const number = Number(String(value).replace('%', '').trim());
+        return Number.isFinite(number) ? number : null;
+      }
+
+      function scoreLabel(score) {
+        return Number.isFinite(score) ? `${score.toFixed(1)}%` : '—';
+      }
+
+      function pairwise(teamRows) {
+        const pairs = [];
+        for (let i = 0; i < teamRows.length; i++) {
+          for (let j = i + 1; j < teamRows.length; j++) {
+            const a = teamRows[i];
+            const b = teamRows[j];
+            pairs.push({ a, b, diff: Math.abs(a.score - b.score) });
+          }
+        }
+        return pairs;
+      }
+
+      function analyzeGroups(rows) {
+        const wIndex = new Map();
+        for (const row of rows) {
+          const team = teamAliases.get(normalizeName(row.Team));
+          if (!team) continue;
+          wIndex.set(team.id, {
+            score: parsePercent(row['W-Index']),
+            rank: Number(row.Rank),
+          });
+        }
+
+        return new Map(Object.entries(groups).map(([group, teamIds]) => {
+          const teamRows = teamIds.map((id) => {
+            const team = teamsById[id];
+            return { ...team, score: wIndex.get(id)?.score, rank: wIndex.get(id)?.rank };
+          }).sort((a, b) => b.score - a.score);
+          const pairs = pairwise(teamRows).sort((a, b) => a.diff - b.diff);
+          const total = teamRows.reduce((sum, team) => sum + team.score, 0);
+          const pairwiseDiffSum = pairs.reduce((sum, pair) => sum + pair.diff, 0);
+          const close10 = pairs.filter((pair) => pair.diff <= 10).length;
+          return [group, { group, teamRows, pairs, total, pairwiseDiffSum, close10 }];
+        }));
+      }
+
+      function renderGroupModal(analysis) {
+        return `
+          <span class="wc-chip" id="group-modal-title">Group ${analysis.group}</span>
+          <div class="wc-rank-note" style="margin: 18px 0 12px;">
+            <span class="wc-small">Total ${scoreLabel(analysis.total)}</span>
+            <span class="wc-small">Parity ${analysis.pairwiseDiffSum.toFixed(1)}</span>
+            <span class="wc-small">≤10 close ${analysis.close10}/6</span>
+          </div>
+          <div>
+            ${analysis.teamRows.map((team) => `
+              <div class="wc-team-row">
+                <span>${flagImage(team)}${team.name}</span>
+                <strong>${scoreLabel(team.score)}</strong>
+              </div>
+            `).join('')}
+          </div>
+          <div style="margin-top: 12px;">
+            ${analysis.pairs.map((pair) => `
+              <div class="wc-team-row">
+                <span>${pair.a.name} v ${pair.b.name}</span>
+                <strong>${pair.diff.toFixed(1)}</strong>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      function openGroupModal(group) {
+        const analysis = analysesByGroup.get(group);
+        if (!analysis) return;
+        modalContent.innerHTML = renderGroupModal(analysis);
+        modalOverlay.hidden = false;
+        document.body.style.overflow = 'hidden';
+        modalClose.focus();
+      }
+
+      function closeGroupModal() {
+        if (modalOverlay.hidden) return;
+        modalOverlay.hidden = true;
+        document.body.style.overflow = '';
+        if (lastFocusedTickerItem) lastFocusedTickerItem.focus();
+      }
+
       function renderTicker(rows) {
         const ranked = rows
           .map((row) => ({ row, team: teamAliases.get(normalizeName(row.Team)) }))
@@ -522,12 +772,12 @@
         }
 
         const items = ranked.map(({ row, team }) => `
-          <span class="ticker-item">
+          <button class="ticker-item" type="button" data-group="${team.group}" data-team="${team.id}">
             <span class="ticker-rank">#${row.Rank}</span>
-            <span>${flag(team.countryCode)}</span>
+            <span class="ticker-flag" aria-hidden="true"><img src="${flagUrl(team)}" alt="" loading="lazy"></span>
             <span>${team.name}</span>
             <strong>${row['W-Index']}</strong>
-          </span>
+          </button>
         `).join('');
 
         ticker.classList.remove('is-entering');
@@ -543,11 +793,31 @@
         try {
           const response = await fetch(`${W_INDEX_URL}&tickerBust=${Date.now()}`);
           if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-          renderTicker(rowsToObjects(parseCsv(await response.text())));
+          const rows = rowsToObjects(parseCsv(await response.text()));
+          analysesByGroup = analyzeGroups(rows);
+          renderTicker(rows);
         } catch (error) {
           ticker.innerHTML = '<span class="ticker-item">W-Index rankings unavailable</span>';
         }
       }
+
+      ticker.addEventListener('click', (event) => {
+        const item = event.target.closest('.ticker-item');
+        if (!item?.dataset.group) return;
+        lastFocusedTickerItem = item;
+        openGroupModal(item.dataset.group);
+      });
+
+      modalClose.addEventListener('click', closeGroupModal);
+      modalOverlay.addEventListener('click', (event) => {
+        if (event.target === modalOverlay) closeGroupModal();
+      });
+      modalOverlay.addEventListener('pointerdown', (event) => {
+        if (event.target === modalOverlay) closeGroupModal();
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeGroupModal();
+      });
 
       loadTicker();
     })();

@@ -66,9 +66,10 @@
 
   // ----- Lifecycle -------------------------------------------------------
 
-  function start() {
+  function start(level = 1) {
     init();
     if (state.active) return; // already running
+    state.level = level;
 
     state.active = true;
     state.totalAttempts = 0;
@@ -86,7 +87,7 @@
 
     state.session = OrbisQuiz.start({
       mode: "mission",
-      pool: { type: "all" },
+      pool: { type: "level", value: level },
       rounds: 10,
       autoStart: false,  // we'll kick off the first round manually so state.session is assigned first
       hooks: {

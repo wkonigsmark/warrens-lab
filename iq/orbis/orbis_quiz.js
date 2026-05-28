@@ -202,6 +202,12 @@
       const set = new Set(spec.value.map(s => s.toUpperCase()));
       return all.filter(c => set.has(c.iso_a2));
     }
+    // Tier ladder: { type: 'level', value: N } returns every country with level <= N.
+    // L1 = Famous 20, L2 = top 40, L3 = top 80, L4 = all ~195.
+    if (spec.type === "level") {
+      const maxLevel = Number(spec.value);
+      return all.filter(c => (c.level || 4) <= maxLevel);
+    }
     if (spec.type === "predicate") return all.filter(spec.predicate);
     return all.slice();
   }

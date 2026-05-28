@@ -6,6 +6,214 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>W-Index Rankings | Warren's World Cup Pool</title>
   <link rel="stylesheet" href="../shared/world-cup.css">
+  <style>
+    .windex-hero {
+      min-height: 58vh;
+      display: grid;
+      align-items: end;
+      margin-bottom: 24px;
+      padding: 34px 0 12px;
+    }
+
+    .windex-title {
+      max-width: 780px;
+      margin: 8px 0 0;
+      font-size: clamp(4.1rem, 15vw, 10rem);
+      line-height: 0.78;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .windex-method {
+      max-width: 760px;
+      margin-top: 24px;
+      padding: 13px 16px;
+      border: 1px solid rgba(244, 201, 93, 0.24);
+      border-radius: var(--wc-radius);
+      background: rgba(244, 201, 93, 0.065);
+      color: rgba(247, 244, 235, 0.78);
+      font-size: clamp(0.98rem, 2vw, 1.1rem);
+      line-height: 1.45;
+    }
+
+    .windex-topline {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0 34px;
+    }
+
+    .windex-team-card {
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+      padding: 15px;
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.045));
+      box-shadow: var(--wc-shadow);
+    }
+
+    .windex-team-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -28px -40px auto;
+      width: 148px;
+      height: 100px;
+      border-radius: 8px;
+      background: var(--flag-image) center / cover no-repeat;
+      opacity: 0.18;
+      transform: rotate(-9deg);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
+    }
+
+    .windex-team-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .windex-flag-large {
+      width: 100%;
+      aspect-ratio: 3 / 2;
+      margin: 12px 0 14px;
+      overflow: hidden;
+      border: 1px solid rgba(247, 244, 235, 0.22);
+      border-radius: var(--wc-radius);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.2);
+    }
+
+    .windex-flag-large img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .windex-flag-cell {
+      width: 82px;
+    }
+
+    .windex-flag-thumb {
+      width: 62px;
+      aspect-ratio: 3 / 2;
+      display: block;
+      overflow: hidden;
+      border: 1px solid rgba(247, 244, 235, 0.2);
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+    }
+
+    .windex-flag-thumb img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .windex-mini-flag {
+      width: 24px;
+      aspect-ratio: 3 / 2;
+      display: inline-block;
+      margin-right: 7px;
+      overflow: hidden;
+      border: 1px solid rgba(247, 244, 235, 0.18);
+      border-radius: 3px;
+      vertical-align: -3px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .windex-mini-flag img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .windex-rank {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 0 9px;
+      border: 1px solid rgba(244, 201, 93, 0.28);
+      border-radius: 999px;
+      color: var(--wc-gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .windex-team-card h3 {
+      margin: 14px 0 7px;
+      color: var(--wc-ink);
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      line-height: 1.04;
+    }
+
+    .windex-score {
+      color: var(--wc-ink);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 0.95;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .windex-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      margin: 26px 0 12px;
+    }
+
+    .windex-status {
+      color: var(--wc-faint);
+      font-size: 0.78rem;
+      line-height: 1.4;
+      text-align: right;
+    }
+
+    .windex-table .wc-table {
+      min-width: 700px;
+    }
+
+    .windex-table .wc-table th:nth-child(6),
+    .windex-table .wc-table td:nth-child(6),
+    .windex-table .wc-table th:nth-child(7),
+    .windex-table .wc-table td:nth-child(7) {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .windex-topline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .windex-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .windex-status {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .windex-hero {
+        min-height: 44vh;
+      }
+
+      .windex-title {
+        font-size: clamp(3.55rem, 23vw, 6rem);
+      }
+
+      .windex-topline {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -22,69 +230,38 @@
       </nav>
     </header>
 
-    <section class="wc-hero">
+    <section class="windex-hero">
       <div>
         <div class="wc-eyebrow">Proprietary Ranking Layer</div>
-        <h1 class="wc-title">W-Index Rankings</h1>
-        <p class="wc-copy">
-          Live pull from Warren's published W-Index sheet, normalized against the canonical 48-team tournament data and
-          applied to every scheduled matchup.
+        <h1 class="windex-title">W-Index</h1>
+        <p class="windex-method">
+          The W-Index is a composite of odds and FIFA rankings meant to provide a scale by which to view each of the matchups.
         </p>
       </div>
-      <div class="wc-pill" id="source-pill">Source: Google Sheet CSV</div>
     </section>
 
-    <section class="wc-stat-row" aria-label="W-Index coverage totals">
-      <div class="wc-stat">
-        <strong id="team-count">48</strong>
-        <span>Teams</span>
-      </div>
-      <div class="wc-stat">
-        <strong id="ranked-count">0</strong>
-        <span>Ranked</span>
-      </div>
-      <div class="wc-stat">
-        <strong id="matchup-count">0</strong>
-        <span>Rated Fixtures</span>
-      </div>
-      <div class="wc-stat">
-        <strong id="top-score">0%</strong>
-        <span>Top W-Index</span>
-      </div>
-    </section>
-
-    <section class="wc-card wc-card-pad">
-      <div class="wc-section-header">
-        <div>
-          <h2>Published W-Index Feed</h2>
-          <p>
-            This page fetches the CSV directly from your published Google Sheet and recalculates team and matchup views
-            in the browser.
-          </p>
-        </div>
-      </div>
-      <div class="wc-control-grid">
-        <div class="wc-field" style="grid-column: span 3;">
-          <label for="w-index-url">CSV Source</label>
-          <input class="wc-input" id="w-index-url" type="url" readonly>
-        </div>
-        <button class="wc-button" id="refresh-w-index" type="button">Refresh W-Index</button>
-      </div>
-      <div class="wc-status" id="status">Loading W-Index feed...</div>
+    <section class="windex-topline" id="topline" aria-label="Top W-Index teams">
+      <article class="windex-team-card">
+        <span class="windex-rank">Loading</span>
+        <h3>W-Index</h3>
+        <div class="windex-score">—</div>
+      </article>
     </section>
 
     <section class="wc-section" id="rankings">
-      <div class="wc-section-header">
+      <div class="windex-panel">
         <div>
           <h2>Team Rankings</h2>
-          <p>All 48 teams sorted by the published W-Index rank.</p>
+          <p class="wc-muted">All 48 teams ranked on the W-Index scale.</p>
         </div>
+        <div class="windex-status" id="status">Loading W-Index feed...</div>
       </div>
-      <div class="wc-table-wrap">
+      <div class="wc-table-wrap windex-table">
         <table class="wc-table">
           <thead>
             <tr>
               <th>Rank</th>
+              <th>Flag</th>
               <th>Team</th>
               <th>Group</th>
               <th>W-Index</th>
@@ -121,29 +298,6 @@
         </table>
       </div>
     </section>
-
-    <section class="wc-section">
-      <div class="wc-section-header">
-        <div>
-          <h2>How This Feeds The Pool</h2>
-          <p>Useful ways this ranking layer can support the next tools.</p>
-        </div>
-      </div>
-      <div class="wc-grid">
-        <article class="wc-card wc-card-pad">
-          <span class="wc-chip">Entry UX</span>
-          <p class="wc-copy">Show a lightweight W-Index hint next to each team when users rank groups or third-place teams.</p>
-        </article>
-        <article class="wc-card wc-card-pad">
-          <span class="wc-chip">Simulation</span>
-          <p class="wc-copy">Use the W-Index edge as the first baseline win probability for matchup simulations.</p>
-        </article>
-        <article class="wc-card wc-card-pad">
-          <span class="wc-chip">Scoring</span>
-          <p class="wc-copy">Highlight where a bracket pick went against the W-Index favorite for contrarian-pick analysis.</p>
-        </article>
-      </div>
-    </section>
   </main>
 
   <script type="module">
@@ -156,18 +310,12 @@
     let fixtureFilter = "All";
 
     const elements = {
-      sourceUrl: $("w-index-url"),
-      refresh: $("refresh-w-index"),
       status: $("status"),
-      rankedCount: $("ranked-count"),
-      matchupCount: $("matchup-count"),
-      topScore: $("top-score"),
+      topline: $("topline"),
       rankingsBody: $("rankings-body"),
       matchupsBody: $("matchups-body"),
       fixtureFilter: $("fixture-filter"),
     };
-
-    elements.sourceUrl.value = W_INDEX_URL;
 
     function flag(countryCode) {
       return countryCode
@@ -175,6 +323,24 @@
         .split("")
         .map((char) => String.fromCodePoint(127397 + char.charCodeAt(0)))
         .join("");
+    }
+
+    function flagCode(team) {
+      if (team.id === "ENG") return "gb-eng";
+      if (team.id === "SCO") return "gb-sct";
+      return team.countryCode.toLowerCase();
+    }
+
+    function flagUrl(team, width = 160) {
+      return `https://flagcdn.com/w${width}/${flagCode(team)}.png`;
+    }
+
+    function flagImage(team, className = "windex-mini-flag", width = 80) {
+      return `
+        <span class="${className}" aria-hidden="true">
+          <img src="${flagUrl(team, width)}" alt="" loading="lazy">
+        </span>
+      `;
     }
 
     function normalizeName(name) {
@@ -256,7 +422,7 @@
 
     function teamLabel(teamId) {
       const team = teamsById[teamId];
-      return `${flag(team.countryCode)} ${team.name}`;
+      return `${flagImage(team)}${team.name}`;
     }
 
     function formatDate(iso) {
@@ -291,12 +457,39 @@
       elements.rankingsBody.innerHTML = rows.map((row, index) => `
         <tr>
           <td class="wc-number">${row.data?.rank || index + 1}</td>
-          <td><strong>${flag(row.team.countryCode)} ${row.team.name}</strong><br><span class="wc-small">${row.team.confederation}</span></td>
+          <td class="windex-flag-cell">
+            <span class="windex-flag-thumb" aria-label="${row.team.name} flag">
+              <img src="${flagUrl(row.team, 160)}" alt="" loading="lazy">
+            </span>
+          </td>
+          <td><strong>${row.team.name}</strong><br><span class="wc-small">${row.team.confederation}</span></td>
           <td>Group ${row.team.group}</td>
           <td class="wc-number"><strong>${scoreLabel(row.data?.score)}</strong></td>
           <td>${row.data?.status || '<span class="wc-empty">Missing from feed</span>'}</td>
           <td>${row.data ? '<span class="wc-trend-good">Matched</span>' : '<span class="wc-trend-watch">Needs alias</span>'}</td>
         </tr>
+      `).join("");
+    }
+
+    function renderTopline() {
+      const topRows = teams.map((team) => ({
+        team,
+        data: wIndexByTeam.get(team.id),
+      }))
+        .filter((row) => row.data)
+        .sort((a, b) => a.data.rank - b.data.rank)
+        .slice(0, 5);
+
+      elements.topline.innerHTML = topRows.map((row) => `
+        <article class="windex-team-card" style="--flag-image: url('${flagUrl(row.team, 320)}');">
+          <span class="windex-rank">#${row.data.rank}</span>
+          <div class="windex-flag-large" aria-label="${row.team.name} flag">
+            <img src="${flagUrl(row.team, 320)}" alt="" loading="lazy">
+          </div>
+          <h3>${row.team.name}</h3>
+          <div class="windex-score">${scoreLabel(row.data.score)}</div>
+          <div class="wc-small">Group ${row.team.group}</div>
+        </article>
       `).join("");
     }
 
@@ -346,11 +539,9 @@
         `;
       }).join("");
 
-      elements.matchupCount.textContent = ratedCount;
     }
 
     async function loadWIndex() {
-      elements.refresh.disabled = true;
       setStatus("Refreshing W-Index feed...");
       try {
         const response = await fetch(`${W_INDEX_URL}&cacheBust=${Date.now()}`);
@@ -376,16 +567,13 @@
         }
 
         wIndexByTeam = nextMap;
+        renderTopline();
         renderRankings();
         renderMatchups();
 
-        const scores = [...wIndexByTeam.values()].map((entry) => entry.score).filter(Number.isFinite);
-        elements.rankedCount.textContent = wIndexByTeam.size;
-        elements.topScore.textContent = scores.length ? `${Math.max(...scores).toFixed(1)}%` : "0%";
-
         const missing = teams.filter((team) => !wIndexByTeam.has(team.id)).map((team) => team.name);
         setStatus(`
-          Loaded <strong>${wIndexByTeam.size}</strong> W-Index rows.
+          ${wIndexByTeam.size} teams loaded.
           ${missing.length ? `<br><strong>Missing canonical teams:</strong> ${missing.join(", ")}` : ""}
           ${unmatched.length ? `<br><strong>Unmatched feed names:</strong> ${unmatched.join(", ")}` : ""}
         `);
@@ -394,11 +582,9 @@
         renderMatchups();
         setStatus(`W-Index feed failed to load: ${error.message}. If you opened this as a file, use localhost.`, true);
       } finally {
-        elements.refresh.disabled = false;
       }
     }
 
-    elements.refresh.addEventListener("click", loadWIndex);
     elements.fixtureFilter.addEventListener("click", (event) => {
       const button = event.target.closest("button");
       if (!button) return;

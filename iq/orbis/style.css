@@ -176,6 +176,78 @@ body {
 #app[data-view="countries"] #status-display { display: none; }
 body.geocode-active #status-display { display: block !important; }
 
+/* Tier picker — global level selector. Hidden during an active quiz. */
+#tier-picker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    max-width: min(1600px, 96vw);
+    margin: 0 auto 10px;
+    flex-wrap: wrap;
+}
+body.mission-active #tier-picker,
+body.geocode-active #tier-picker { display: none; }
+
+.tier-label {
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+.tier-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.tier-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 6px 14px;
+    border-radius: 18px;
+    font-family: var(--font-main);
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s var(--transition);
+}
+.tier-chip .tier-num {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0;
+}
+.tier-chip .tier-name {
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+}
+.tier-chip:hover:not(:disabled) {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: var(--accent-gold);
+    transform: translateY(-1px);
+}
+.tier-chip.active {
+    background: var(--accent-gold);
+    border-color: var(--accent-gold);
+    color: var(--bg-dark);
+}
+.tier-chip.active .tier-num,
+.tier-chip.active .tier-name { color: var(--bg-dark); }
+.tier-chip.disabled,
+.tier-chip:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
 /* Region focus chips — only in Countries view, hidden during a quiz */
 #region-focus {
     display: none;

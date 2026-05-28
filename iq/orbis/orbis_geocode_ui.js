@@ -96,8 +96,9 @@
 
   // ----- Lifecycle -------------------------------------------------------
 
-  function start() {
+  function start(level = 1) {
     init();
+    state.level = level;
     state.dom.panel.classList.add("open");
     state.active = true;
     document.body.classList.add("geocode-active");
@@ -128,7 +129,7 @@
     resetPanel();
     state.session = OrbisQuiz.start({
       mode: "geocode",
-      pool: { type: "all" },
+      pool: { type: "level", value: state.level || 1 },
       hintBudget: 5,
       autoStart: false,
       hooks: {

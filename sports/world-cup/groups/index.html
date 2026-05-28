@@ -141,12 +141,22 @@
       groupCardGrid: $("group-card-grid"),
     };
 
-    function flag(countryCode) {
-      return countryCode
-        .toUpperCase()
-        .split("")
-        .map((char) => String.fromCodePoint(127397 + char.charCodeAt(0)))
-        .join("");
+    function flagCode(team) {
+      if (team.id === "ENG") return "gb-eng";
+      if (team.id === "SCO") return "gb-sct";
+      return team.countryCode.toLowerCase();
+    }
+
+    function flagUrl(team, width = 80) {
+      return `https://flagcdn.com/w${width}/${flagCode(team)}.png`;
+    }
+
+    function flagImage(team) {
+      return `<span class="wc-flag-img" aria-hidden="true"><img src="${flagUrl(team)}" alt="" loading="lazy"></span>`;
+    }
+
+    function teamName(team) {
+      return `${flagImage(team)}${team.name}`;
     }
 
     function normalizeName(name) {
@@ -380,7 +390,7 @@
         .map((analysis) => `
           <tr>
             <td><strong>Group ${analysis.group}</strong><br><span class="wc-small">Death score ${(analysis.deathScore * 100).toFixed(0)}</span></td>
-            <td>${analysis.teamRows.map((team) => `${flag(team.countryCode)} ${team.name}`).join("<br>")}</td>
+            <td>${analysis.teamRows.map((team) => teamName(team)).join("<br>")}</td>
             <td class="wc-number"><strong>${scoreLabel(analysis.total)}</strong><div class="wc-meter"><span style="--value: ${(analysis.total / maxTotal) * 100}%"></span></div></td>
             <td class="wc-number">${scoreLabel(analysis.avg)}</td>
             <td class="wc-number">${analysis.pairwiseDiffSum.toFixed(1)}<br><span class="wc-small">avg ${analysis.avgPairwiseDiff.toFixed(1)}</span></td>
@@ -404,7 +414,7 @@
           <div style="margin-top: 12px;">
             ${analysis.teamRows.map((team) => `
               <div class="wc-team-row">
-                <span>${flag(team.countryCode)} ${team.name}</span>
+                <span>${teamName(team)}</span>
                 <strong>${scoreLabel(team.score)}</strong>
               </div>
             `).join("")}
