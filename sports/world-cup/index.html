@@ -580,6 +580,7 @@
       let tickerDragStartX = 0;
       let tickerDragStartOffset = 0;
       let tickerDragMoved = false;
+      let tickerClickSuppressed = false;
 
       function flagCode(team) {
         if (team.id === 'ENG') return 'gb-eng';
@@ -777,7 +778,6 @@
       function normalizeTickerX() {
         if (!tickerLoopWidth) return;
         while (tickerX <= -tickerLoopWidth) tickerX += tickerLoopWidth;
-        while (tickerX > 0) tickerX -= tickerLoopWidth;
       }
 
       function animateTicker(now) {
@@ -812,10 +812,10 @@
       }
 
       ticker.addEventListener('click', (event) => {
-        if (tickerDragMoved) {
+        if (tickerClickSuppressed) {
           event.preventDefault();
           event.stopPropagation();
-          tickerDragMoved = false;
+          tickerClickSuppressed = false;
           return;
         }
         const item = event.target.closest('.ticker-item');
@@ -846,6 +846,12 @@
       function endTickerDrag(event) {
         if (!tickerDragging) return;
         tickerDragging = false;
+        if (tickerDragMoved) {
+          tickerClickSuppressed = true;
+          window.setTimeout(() => {
+            tickerClickSuppressed = false;
+          }, 0);
+        }
         tickerPausedUntil = performance.now() + 1800;
         tickerWindow.classList.remove('is-dragging');
         tickerWindow.releasePointerCapture?.(event.pointerId);

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T17:52:47.663Z",
+  "generated_at": "2026-05-28T18:19:08.360Z",
   "sources": {
     "countries": "https://restcountries.com/v3.1",
     "soft_fields": "atlas_soft.json (hand-curated)"
@@ -23,7 +23,7 @@
         "W"
       ],
       "description": "The cradle of humanity — home to the Sahara, the Nile, and the savanna.",
-      "country_count_in_atlas": 6
+      "country_count_in_atlas": 16
     },
     {
       "id": "antarctica",
@@ -59,7 +59,7 @@
         "E"
       ],
       "description": "The largest and most populous continent — home to the world's highest peak, Mount Everest.",
-      "country_count_in_atlas": 12
+      "country_count_in_atlas": 22
     },
     {
       "id": "europe",
@@ -77,7 +77,7 @@
         "W"
       ],
       "description": "A continent of many small countries packed with old cities, castles, and rivers.",
-      "country_count_in_atlas": 13
+      "country_count_in_atlas": 21
     },
     {
       "id": "north_america",
@@ -95,7 +95,7 @@
         "W"
       ],
       "description": "From the Arctic to the Caribbean — home of the Grand Canyon and the Great Lakes.",
-      "country_count_in_atlas": 4
+      "country_count_in_atlas": 9
     },
     {
       "id": "oceania",
@@ -112,7 +112,7 @@
         "E"
       ],
       "description": "Australia plus thousands of Pacific islands.",
-      "country_count_in_atlas": 2
+      "country_count_in_atlas": 4
     },
     {
       "id": "south_america",
@@ -130,7 +130,7 @@
         "W"
       ],
       "description": "Home to the Amazon rainforest and the Andes mountains.",
-      "country_count_in_atlas": 3
+      "country_count_in_atlas": 8
     }
   ],
   "countries": [
@@ -2279,6 +2279,2078 @@
       "landmark": "Milford Sound",
       "famous_food": "pavlova",
       "fact_card": "Two main islands shaped by volcanoes and glaciers — home of the kiwi bird and the Māori people."
+    },
+    {
+      "iso_a2": "DZ",
+      "iso_a3": "DZA",
+      "name": "Algeria",
+      "official_name": "People's Democratic Republic of Algeria",
+      "level": 3,
+      "continent": "africa",
+      "subregion": "Northern Africa",
+      "capital": "Algiers",
+      "languages": [
+        "Arabic"
+      ],
+      "currency": "DZD",
+      "currency_name": "Algerian dinar",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "TUN",
+        "LBY",
+        "NER",
+        "ESH",
+        "MRT",
+        "MLI",
+        "MAR"
+      ],
+      "area_km2": 2381741,
+      "population": 47400000,
+      "latlng": [
+        28,
+        3
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "large",
+      "flag_emoji": "🇩🇿",
+      "flag_svg": "https://flagcdn.com/dz.svg",
+      "flag_colors": [
+        "green",
+        "white",
+        "red"
+      ],
+      "flag_motifs": [
+        "crescent",
+        "star"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "desert",
+      "bordering_waters": [
+        "Mediterranean Sea"
+      ],
+      "landmark": "Casbah of Algiers",
+      "famous_food": "couscous",
+      "fact_card": "Africa's largest country by area, with 80% of its land covered by the Sahara Desert."
+    },
+    {
+      "iso_a2": "TN",
+      "iso_a3": "TUN",
+      "name": "Tunisia",
+      "official_name": "Tunisian Republic",
+      "level": 3,
+      "continent": "africa",
+      "subregion": "Northern Africa",
+      "capital": "Tunis",
+      "languages": [
+        "Arabic"
+      ],
+      "currency": "TND",
+      "currency_name": "Tunisian dinar",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "DZA",
+        "LBY"
+      ],
+      "area_km2": 163610,
+      "population": 11972169,
+      "latlng": [
+        34,
+        9
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "small",
+      "flag_emoji": "🇹🇳",
+      "flag_svg": "https://flagcdn.com/tn.svg",
+      "flag_colors": [
+        "red",
+        "white"
+      ],
+      "flag_motifs": [
+        "crescent",
+        "star",
+        "circle"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "coastal",
+      "bordering_waters": [
+        "Mediterranean Sea"
+      ],
+      "landmark": "Carthage ruins",
+      "famous_food": "brik",
+      "fact_card": "Africa's northernmost country, where ancient Carthage once challenged the Roman Empire."
+    },
+    {
+      "iso_a2": "GH",
+      "iso_a3": "GHA",
+      "name": "Ghana",
+      "official_name": "Republic of Ghana",
+      "level": 3,
+      "continent": "africa",
+      "subregion": "Western Africa",
+      "capital": "Accra",
+      "languages": [
+        "English"
+      ],
+      "currency": "GHS",
+      "currency_name": "Ghanaian cedi",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "BFA",
+        "CIV",
+        "TGO"
+      ],
+      "area_km2": 238533,
+      "population": 33742380,
+      "latlng": [
+        8,
+        -2
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "medium",
+      "area_bucket": "small",
+      "flag_emoji": "🇬🇭",
+      "flag_svg": "https://flagcdn.com/gh.svg",
+      "flag_colors": [
+        "red",
+        "yellow",
+        "green",
+        "black"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "star"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "coastal",
+      "bordering_waters": [
+        "Atlantic Ocean",
+        "Gulf of Guinea"
+      ],
+      "landmark": "Cape Coast Castle",
+      "famous_food": "jollof rice",
+      "fact_card": "The first sub-Saharan African country to win independence; producer of some of the world's best cocoa."
+    },
+    {
+      "iso_a2": "TZ",
+      "iso_a3": "TZA",
+      "name": "Tanzania",
+      "official_name": "United Republic of Tanzania",
+      "level": 3,
+      "continent": "africa",
+      "subregion": "Eastern Africa",
+      "capital": "Dodoma",
+      "languages": [
+        "English",
+        "Swahili"
+      ],
+      "currency": "TZS",
+      "currency_name": "Tanzanian shilling",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "BDI",
+        "COD",
+        "KEN",
+        "MWI",
+        "MOZ",
+        "RWA",
+        "UGA",
+        "ZMB"
+      ],
+      "area_km2": 947303,
+      "population": 68153004,
+      "latlng": [
+        -6,
+        35
+      ],
+      "hemisphere_ns": "S",
+      "hemisphere_ew": "E",
+      "population_bucket": "large",
+      "area_bucket": "medium",
+      "flag_emoji": "🇹🇿",
+      "flag_svg": "https://flagcdn.com/tz.svg",
+      "flag_colors": [
+        "green",
+        "yellow",
+        "black",
+        "blue"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "savanna",
+      "bordering_waters": [
+        "Indian Ocean"
+      ],
+      "landmark": "Mount Kilimanjaro",
+      "famous_food": "ugali",
+      "fact_card": "Home of Mount Kilimanjaro — Africa's highest peak — and the Serengeti's great wildebeest migration."
+    },
+    {
+      "iso_a2": "UG",
+      "iso_a3": "UGA",
+      "name": "Uganda",
+      "official_name": "Republic of Uganda",
+      "level": 3,
+      "continent": "africa",
+      "subregion": "Eastern Africa",
+      "capital": "Kampala",
+      "languages": [
+        "English",
+        "Swahili"
+      ],
+      "currency": "UGX",
+      "currency_name": "Ugandan shilling",
+      "landlocked": true,
+      "island": false,
+      "borders": [
+        "COD",
+        "KEN",
+        "RWA",
+        "SSD",
+        "TZA"
+      ],
+      "area_km2": 241550,
+      "population": 45905417,
+      "latlng": [
+        1,
+        32
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "small",
+      "flag_emoji": "🇺🇬",
+      "flag_svg": "https://flagcdn.com/ug.svg",
+      "flag_colors": [
+        "black",
+        "yellow",
+        "red",
+        "white"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "circle"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "highlands",
+      "bordering_waters": [],
+      "landmark": "Bwindi Impenetrable Forest",
+      "famous_food": "matoke",
+      "fact_card": "Source of the Nile and a refuge for mountain gorillas in the misty Bwindi Forest."
+    },
+    {
+      "iso_a2": "SN",
+      "iso_a3": "SEN",
+      "name": "Senegal",
+      "official_name": "Republic of Senegal",
+      "level": 3,
+      "continent": "africa",
+      "subregion": "Western Africa",
+      "capital": "Dakar",
+      "languages": [
+        "French"
+      ],
+      "currency": "XOF",
+      "currency_name": "West African CFA franc",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "GMB",
+        "GIN",
+        "GNB",
+        "MLI",
+        "MRT"
+      ],
+      "area_km2": 196722,
+      "population": 18593258,
+      "latlng": [
+        14,
+        -14
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "medium",
+      "area_bucket": "small",
+      "flag_emoji": "🇸🇳",
+      "flag_svg": "https://flagcdn.com/sn.svg",
+      "flag_colors": [
+        "green",
+        "yellow",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "star"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "coastal",
+      "bordering_waters": [
+        "Atlantic Ocean"
+      ],
+      "landmark": "Gorée Island",
+      "famous_food": "thieboudienne",
+      "fact_card": "Westernmost country in mainland Africa, famous for music, wrestling, and the welcoming spirit of 'teranga.'"
+    },
+    {
+      "iso_a2": "CI",
+      "iso_a3": "CIV",
+      "name": "Ivory Coast",
+      "official_name": "Republic of Côte d'Ivoire",
+      "level": 3,
+      "continent": "africa",
+      "subregion": "Western Africa",
+      "capital": "Yamoussoukro",
+      "languages": [
+        "French"
+      ],
+      "currency": "XOF",
+      "currency_name": "West African CFA franc",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "BFA",
+        "GHA",
+        "GIN",
+        "LBR",
+        "MLI"
+      ],
+      "area_km2": 322463,
+      "population": 31719275,
+      "latlng": [
+        8,
+        -5
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "medium",
+      "area_bucket": "small",
+      "flag_emoji": "🇨🇮",
+      "flag_svg": "https://flagcdn.com/ci.svg",
+      "flag_colors": [
+        "orange",
+        "white",
+        "green"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "coastal",
+      "bordering_waters": [
+        "Atlantic Ocean",
+        "Gulf of Guinea"
+      ],
+      "landmark": "Basilica of Our Lady of Peace",
+      "famous_food": "attiéké",
+      "fact_card": "The world's largest producer of cocoa beans, home of the planet's biggest church by area."
+    },
+    {
+      "iso_a2": "SD",
+      "iso_a3": "SDN",
+      "name": "Sudan",
+      "official_name": "Republic of the Sudan",
+      "level": 3,
+      "continent": "africa",
+      "subregion": "Northern Africa",
+      "capital": "Khartoum",
+      "languages": [
+        "Arabic",
+        "English"
+      ],
+      "currency": "SDG",
+      "currency_name": "Sudanese pound",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "CAF",
+        "TCD",
+        "EGY",
+        "ERI",
+        "ETH",
+        "LBY",
+        "SSD"
+      ],
+      "area_km2": 1886068,
+      "population": 51662000,
+      "latlng": [
+        15,
+        30
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "large",
+      "area_bucket": "medium",
+      "flag_emoji": "🇸🇩",
+      "flag_svg": "https://flagcdn.com/sd.svg",
+      "flag_colors": [
+        "red",
+        "white",
+        "black",
+        "green"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "desert",
+      "bordering_waters": [
+        "Red Sea"
+      ],
+      "landmark": "Pyramids of Meroë",
+      "famous_food": "ful medames",
+      "fact_card": "Holds more pyramids than Egypt — built by the ancient Kingdom of Kush along the Nile."
+    },
+    {
+      "iso_a2": "CM",
+      "iso_a3": "CMR",
+      "name": "Cameroon",
+      "official_name": "Republic of Cameroon",
+      "level": 3,
+      "continent": "africa",
+      "subregion": "Middle Africa",
+      "capital": "Yaoundé",
+      "languages": [
+        "English",
+        "French"
+      ],
+      "currency": "XAF",
+      "currency_name": "Central African CFA franc",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "CAF",
+        "TCD",
+        "COG",
+        "GNQ",
+        "GAB",
+        "NGA"
+      ],
+      "area_km2": 475442,
+      "population": 29442327,
+      "latlng": [
+        6,
+        12
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "small",
+      "flag_emoji": "🇨🇲",
+      "flag_svg": "https://flagcdn.com/cm.svg",
+      "flag_colors": [
+        "green",
+        "red",
+        "yellow"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "star"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "varied",
+      "bordering_waters": [
+        "Atlantic Ocean",
+        "Gulf of Guinea"
+      ],
+      "landmark": "Mount Cameroon",
+      "famous_food": "ndolé",
+      "fact_card": "Nicknamed 'Africa in miniature' for packing deserts, rainforests, beaches, and mountains into one country."
+    },
+    {
+      "iso_a2": "MG",
+      "iso_a3": "MDG",
+      "name": "Madagascar",
+      "official_name": "Republic of Madagascar",
+      "level": 3,
+      "continent": "africa",
+      "subregion": "Eastern Africa",
+      "capital": "Antananarivo",
+      "languages": [
+        "French",
+        "Malagasy"
+      ],
+      "currency": "MGA",
+      "currency_name": "Malagasy ariary",
+      "landlocked": false,
+      "island": true,
+      "borders": [],
+      "area_km2": 587041,
+      "population": 31727042,
+      "latlng": [
+        -20,
+        47
+      ],
+      "hemisphere_ns": "S",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "medium",
+      "flag_emoji": "🇲🇬",
+      "flag_svg": "https://flagcdn.com/mg.svg",
+      "flag_colors": [
+        "white",
+        "red",
+        "green"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "island",
+      "bordering_waters": [
+        "Indian Ocean",
+        "Mozambique Channel"
+      ],
+      "landmark": "Avenue of the Baobabs",
+      "famous_food": "romazava",
+      "fact_card": "The world's fourth-largest island, where most plants and animals — including lemurs — exist nowhere else."
+    },
+    {
+      "iso_a2": "IQ",
+      "iso_a3": "IRQ",
+      "name": "Iraq",
+      "official_name": "Republic of Iraq",
+      "level": 3,
+      "continent": "asia",
+      "subregion": "Western Asia",
+      "capital": "Baghdad",
+      "languages": [
+        "Arabic",
+        "Aramaic",
+        "Sorani"
+      ],
+      "currency": "IQD",
+      "currency_name": "Iraqi dinar",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "IRN",
+        "JOR",
+        "KWT",
+        "SAU",
+        "SYR",
+        "TUR"
+      ],
+      "area_km2": 438317,
+      "population": 46118793,
+      "latlng": [
+        33,
+        44
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "small",
+      "flag_emoji": "🇮🇶",
+      "flag_svg": "https://flagcdn.com/iq.svg",
+      "flag_colors": [
+        "red",
+        "white",
+        "black",
+        "green"
+      ],
+      "flag_motifs": [
+        "text",
+        "stripes"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "desert",
+      "bordering_waters": [
+        "Persian Gulf"
+      ],
+      "landmark": "Ziggurat of Ur",
+      "famous_food": "masgouf",
+      "fact_card": "Birthplace of civilization in Mesopotamia, the 'land between two rivers' — the Tigris and the Euphrates."
+    },
+    {
+      "iso_a2": "AE",
+      "iso_a3": "ARE",
+      "name": "United Arab Emirates",
+      "official_name": "United Arab Emirates",
+      "level": 3,
+      "continent": "asia",
+      "subregion": "Western Asia",
+      "capital": "Abu Dhabi",
+      "languages": [
+        "Arabic"
+      ],
+      "currency": "AED",
+      "currency_name": "United Arab Emirates dirham",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "OMN",
+        "SAU"
+      ],
+      "area_km2": 83600,
+      "population": 11294243,
+      "latlng": [
+        24,
+        54
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇦🇪",
+      "flag_svg": "https://flagcdn.com/ae.svg",
+      "flag_colors": [
+        "red",
+        "green",
+        "white",
+        "black"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "desert",
+      "bordering_waters": [
+        "Persian Gulf",
+        "Gulf of Oman"
+      ],
+      "landmark": "Burj Khalifa",
+      "famous_food": "shawarma",
+      "fact_card": "Seven desert emirates united into one country — home of the Burj Khalifa, the world's tallest building."
+    },
+    {
+      "iso_a2": "IL",
+      "iso_a3": "ISR",
+      "name": "Israel",
+      "official_name": "State of Israel",
+      "level": 3,
+      "continent": "asia",
+      "subregion": "Western Asia",
+      "capital": "Jerusalem",
+      "languages": [
+        "Arabic",
+        "Hebrew"
+      ],
+      "currency": "ILS",
+      "currency_name": "Israeli new shekel",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "EGY",
+        "JOR",
+        "LBN",
+        "PSE",
+        "SYR"
+      ],
+      "area_km2": 21937,
+      "population": 10134800,
+      "latlng": [
+        31.47,
+        35.13
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇮🇱",
+      "flag_svg": "https://flagcdn.com/il.svg",
+      "flag_colors": [
+        "blue",
+        "white"
+      ],
+      "flag_motifs": [
+        "star",
+        "stripes"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "varied",
+      "bordering_waters": [
+        "Mediterranean Sea",
+        "Red Sea",
+        "Dead Sea"
+      ],
+      "landmark": "Western Wall",
+      "famous_food": "falafel",
+      "fact_card": "A tiny nation at the crossroads of three continents, sacred to Jews, Christians, and Muslims."
+    },
+    {
+      "iso_a2": "JO",
+      "iso_a3": "JOR",
+      "name": "Jordan",
+      "official_name": "Hashemite Kingdom of Jordan",
+      "level": 3,
+      "continent": "asia",
+      "subregion": "Western Asia",
+      "capital": "Amman",
+      "languages": [
+        "Arabic"
+      ],
+      "currency": "JOD",
+      "currency_name": "Jordanian dinar",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "IRQ",
+        "ISR",
+        "PSE",
+        "SAU",
+        "SYR"
+      ],
+      "area_km2": 89342,
+      "population": 11734000,
+      "latlng": [
+        31,
+        36
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇯🇴",
+      "flag_svg": "https://flagcdn.com/jo.svg",
+      "flag_colors": [
+        "black",
+        "white",
+        "green",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "star"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "desert",
+      "bordering_waters": [
+        "Red Sea",
+        "Dead Sea"
+      ],
+      "landmark": "Petra",
+      "famous_food": "mansaf",
+      "fact_card": "Home of Petra, the rose-red city carved into cliffs by the ancient Nabataeans."
+    },
+    {
+      "iso_a2": "BD",
+      "iso_a3": "BGD",
+      "name": "Bangladesh",
+      "official_name": "People's Republic of Bangladesh",
+      "level": 3,
+      "continent": "asia",
+      "subregion": "Southern Asia",
+      "capital": "Dhaka",
+      "languages": [
+        "Bengali"
+      ],
+      "currency": "BDT",
+      "currency_name": "Bangladeshi taka",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "MMR",
+        "IND"
+      ],
+      "area_km2": 147570,
+      "population": 169828911,
+      "latlng": [
+        24,
+        90
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "large",
+      "area_bucket": "small",
+      "flag_emoji": "🇧🇩",
+      "flag_svg": "https://flagcdn.com/bd.svg",
+      "flag_colors": [
+        "green",
+        "red"
+      ],
+      "flag_motifs": [
+        "circle"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "delta",
+      "bordering_waters": [
+        "Bay of Bengal"
+      ],
+      "landmark": "Sundarbans mangroves",
+      "famous_food": "hilsa fish curry",
+      "fact_card": "One of the most densely populated countries on Earth, sitting on the world's largest river delta."
+    },
+    {
+      "iso_a2": "LK",
+      "iso_a3": "LKA",
+      "name": "Sri Lanka",
+      "official_name": "Democratic Socialist Republic of Sri Lanka",
+      "level": 3,
+      "continent": "asia",
+      "subregion": "Southern Asia",
+      "capital": "Sri Jayawardenepura Kotte",
+      "languages": [
+        "Sinhala",
+        "Tamil"
+      ],
+      "currency": "LKR",
+      "currency_name": "Sri Lankan rupee",
+      "landlocked": false,
+      "island": true,
+      "borders": [],
+      "area_km2": 65610,
+      "population": 21763170,
+      "latlng": [
+        7,
+        81
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇱🇰",
+      "flag_svg": "https://flagcdn.com/lk.svg",
+      "flag_colors": [
+        "yellow",
+        "red",
+        "green",
+        "orange"
+      ],
+      "flag_motifs": [
+        "coat-of-arms",
+        "sword"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "island",
+      "bordering_waters": [
+        "Indian Ocean"
+      ],
+      "landmark": "Sigiriya Rock Fortress",
+      "famous_food": "kottu roti",
+      "fact_card": "A teardrop-shaped island south of India, famous for cinnamon, tea, and ancient Buddhist temples."
+    },
+    {
+      "iso_a2": "MY",
+      "iso_a3": "MYS",
+      "name": "Malaysia",
+      "official_name": "Malaysia",
+      "level": 3,
+      "continent": "asia",
+      "subregion": "South-Eastern Asia",
+      "capital": "Kuala Lumpur",
+      "languages": [
+        "English",
+        "Malay"
+      ],
+      "currency": "MYR",
+      "currency_name": "Malaysian ringgit",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "BRN",
+        "IDN",
+        "THA"
+      ],
+      "area_km2": 330803,
+      "population": 34231700,
+      "latlng": [
+        2.5,
+        112.5
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "small",
+      "flag_emoji": "🇲🇾",
+      "flag_svg": "https://flagcdn.com/my.svg",
+      "flag_colors": [
+        "red",
+        "white",
+        "blue",
+        "yellow"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "crescent",
+        "star"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "mixed",
+      "bordering_waters": [
+        "South China Sea",
+        "Strait of Malacca"
+      ],
+      "landmark": "Petronas Towers",
+      "famous_food": "nasi lemak",
+      "fact_card": "Split into two parts by the South China Sea, with rainforests, twin skyscrapers, and orangutans."
+    },
+    {
+      "iso_a2": "SG",
+      "iso_a3": "SGP",
+      "name": "Singapore",
+      "official_name": "Republic of Singapore",
+      "level": 3,
+      "continent": "asia",
+      "subregion": "South-Eastern Asia",
+      "capital": "Singapore",
+      "languages": [
+        "English",
+        "Chinese",
+        "Malay",
+        "Tamil"
+      ],
+      "currency": "SGD",
+      "currency_name": "Singapore dollar",
+      "landlocked": false,
+      "island": true,
+      "borders": [],
+      "area_km2": 710,
+      "population": 6110200,
+      "latlng": [
+        1.36666666,
+        103.8
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "small",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇸🇬",
+      "flag_svg": "https://flagcdn.com/sg.svg",
+      "flag_colors": [
+        "red",
+        "white"
+      ],
+      "flag_motifs": [
+        "crescent",
+        "stars"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "city-state",
+      "bordering_waters": [
+        "Strait of Malacca",
+        "South China Sea"
+      ],
+      "landmark": "Marina Bay Sands",
+      "famous_food": "Hainanese chicken rice",
+      "fact_card": "A tiny island city-state with one of the world's busiest ports — went from fishing village to global hub in 60 years."
+    },
+    {
+      "iso_a2": "TW",
+      "iso_a3": "TWN",
+      "name": "Taiwan",
+      "official_name": "Republic of China (Taiwan)",
+      "level": 3,
+      "continent": "asia",
+      "subregion": "Eastern Asia",
+      "capital": "Taipei",
+      "languages": [
+        "Chinese"
+      ],
+      "currency": "TWD",
+      "currency_name": "New Taiwan dollar",
+      "landlocked": false,
+      "island": true,
+      "borders": [],
+      "area_km2": 36197,
+      "population": 23317031,
+      "latlng": [
+        23.5,
+        121
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇹🇼",
+      "flag_svg": "https://flagcdn.com/tw.svg",
+      "flag_colors": [
+        "red",
+        "blue",
+        "white"
+      ],
+      "flag_motifs": [
+        "sun"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "island",
+      "bordering_waters": [
+        "Pacific Ocean",
+        "Taiwan Strait",
+        "South China Sea"
+      ],
+      "landmark": "Taipei 101",
+      "famous_food": "beef noodle soup",
+      "fact_card": "A mountainous island off the coast of China, known for night markets, tech giants, and oolong tea."
+    },
+    {
+      "iso_a2": "MM",
+      "iso_a3": "MMR",
+      "name": "Myanmar",
+      "official_name": "Republic of the Union of Myanmar",
+      "level": 3,
+      "continent": "asia",
+      "subregion": "South-Eastern Asia",
+      "capital": "Naypyidaw",
+      "languages": [
+        "Burmese"
+      ],
+      "currency": "MMK",
+      "currency_name": "Burmese kyat",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "BGD",
+        "CHN",
+        "IND",
+        "LAO",
+        "THA"
+      ],
+      "area_km2": 676578,
+      "population": 51316756,
+      "latlng": [
+        22,
+        98
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "large",
+      "area_bucket": "medium",
+      "flag_emoji": "🇲🇲",
+      "flag_svg": "https://flagcdn.com/mm.svg",
+      "flag_colors": [
+        "yellow",
+        "green",
+        "red",
+        "white"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "star"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "mixed",
+      "bordering_waters": [
+        "Andaman Sea",
+        "Bay of Bengal"
+      ],
+      "landmark": "Shwedagon Pagoda",
+      "famous_food": "mohinga",
+      "fact_card": "Land of thousands of golden pagodas, with the Irrawaddy River flowing through its heart."
+    },
+    {
+      "iso_a2": "UA",
+      "iso_a3": "UKR",
+      "name": "Ukraine",
+      "official_name": "Ukraine",
+      "level": 3,
+      "continent": "europe",
+      "subregion": "Eastern Europe",
+      "capital": "Kyiv",
+      "languages": [
+        "Ukrainian"
+      ],
+      "currency": "UAH",
+      "currency_name": "Ukrainian hryvnia",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "BLR",
+        "HUN",
+        "MDA",
+        "POL",
+        "ROU",
+        "RUS",
+        "SVK"
+      ],
+      "area_km2": 603550,
+      "population": 32862000,
+      "latlng": [
+        49,
+        32
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "medium",
+      "flag_emoji": "🇺🇦",
+      "flag_svg": "https://flagcdn.com/ua.svg",
+      "flag_colors": [
+        "blue",
+        "yellow"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "plains",
+      "bordering_waters": [
+        "Black Sea",
+        "Sea of Azov"
+      ],
+      "landmark": "Kyiv Pechersk Lavra",
+      "famous_food": "borscht",
+      "fact_card": "Europe's largest country fully on the continent, covered by some of the world's richest farmland."
+    },
+    {
+      "iso_a2": "HU",
+      "iso_a3": "HUN",
+      "name": "Hungary",
+      "official_name": "Hungary",
+      "level": 3,
+      "continent": "europe",
+      "subregion": "Central Europe",
+      "capital": "Budapest",
+      "languages": [
+        "Hungarian"
+      ],
+      "currency": "HUF",
+      "currency_name": "Hungarian forint",
+      "landlocked": true,
+      "island": false,
+      "borders": [
+        "AUT",
+        "HRV",
+        "ROU",
+        "SRB",
+        "SVK",
+        "SVN",
+        "UKR"
+      ],
+      "area_km2": 93028,
+      "population": 9539502,
+      "latlng": [
+        47,
+        20
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "small",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇭🇺",
+      "flag_svg": "https://flagcdn.com/hu.svg",
+      "flag_colors": [
+        "red",
+        "white",
+        "green"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "plains",
+      "bordering_waters": [],
+      "landmark": "Hungarian Parliament Building",
+      "famous_food": "goulash",
+      "fact_card": "A landlocked country in central Europe whose language isn't related to any of its neighbors."
+    },
+    {
+      "iso_a2": "CZ",
+      "iso_a3": "CZE",
+      "name": "Czechia",
+      "official_name": "Czech Republic",
+      "level": 3,
+      "continent": "europe",
+      "subregion": "Central Europe",
+      "capital": "Prague",
+      "languages": [
+        "Czech",
+        "Slovak"
+      ],
+      "currency": "CZK",
+      "currency_name": "Czech koruna",
+      "landlocked": true,
+      "island": false,
+      "borders": [
+        "AUT",
+        "DEU",
+        "POL",
+        "SVK"
+      ],
+      "area_km2": 78865,
+      "population": 10882341,
+      "latlng": [
+        49.75,
+        15.5
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇨🇿",
+      "flag_svg": "https://flagcdn.com/cz.svg",
+      "flag_colors": [
+        "white",
+        "red",
+        "blue"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "mixed",
+      "bordering_waters": [],
+      "landmark": "Prague Castle",
+      "famous_food": "svíčková",
+      "fact_card": "A central European country famous for fairy-tale castles and the world's highest beer consumption per person."
+    },
+    {
+      "iso_a2": "BE",
+      "iso_a3": "BEL",
+      "name": "Belgium",
+      "official_name": "Kingdom of Belgium",
+      "level": 3,
+      "continent": "europe",
+      "subregion": "Western Europe",
+      "capital": "Brussels",
+      "languages": [
+        "German",
+        "French",
+        "Dutch"
+      ],
+      "currency": "EUR",
+      "currency_name": "euro",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "FRA",
+        "DEU",
+        "LUX",
+        "NLD"
+      ],
+      "area_km2": 30528,
+      "population": 11825551,
+      "latlng": [
+        50.83333333,
+        4
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇧🇪",
+      "flag_svg": "https://flagcdn.com/be.svg",
+      "flag_colors": [
+        "black",
+        "yellow",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "coastal",
+      "bordering_waters": [
+        "North Sea"
+      ],
+      "landmark": "Grand Place in Brussels",
+      "famous_food": "waffles",
+      "fact_card": "Headquarters of the European Union — famous for chocolate, waffles, beer, and comic-book heroes like Tintin."
+    },
+    {
+      "iso_a2": "DK",
+      "iso_a3": "DNK",
+      "name": "Denmark",
+      "official_name": "Kingdom of Denmark",
+      "level": 3,
+      "continent": "europe",
+      "subregion": "Northern Europe",
+      "capital": "Copenhagen",
+      "languages": [
+        "Danish"
+      ],
+      "currency": "DKK",
+      "currency_name": "Danish krone",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "DEU"
+      ],
+      "area_km2": 43094,
+      "population": 6011488,
+      "latlng": [
+        56,
+        10
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "small",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇩🇰",
+      "flag_svg": "https://flagcdn.com/dk.svg",
+      "flag_colors": [
+        "red",
+        "white"
+      ],
+      "flag_motifs": [
+        "cross"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "flat",
+      "bordering_waters": [
+        "North Sea",
+        "Baltic Sea"
+      ],
+      "landmark": "The Little Mermaid statue",
+      "famous_food": "smørrebrød",
+      "fact_card": "A tiny Scandinavian kingdom of 400 islands — the birthplace of Hans Christian Andersen and LEGO."
+    },
+    {
+      "iso_a2": "FI",
+      "iso_a3": "FIN",
+      "name": "Finland",
+      "official_name": "Republic of Finland",
+      "level": 3,
+      "continent": "europe",
+      "subregion": "Northern Europe",
+      "capital": "Helsinki",
+      "languages": [
+        "Finnish",
+        "Swedish"
+      ],
+      "currency": "EUR",
+      "currency_name": "euro",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "NOR",
+        "SWE",
+        "RUS"
+      ],
+      "area_km2": 338455,
+      "population": 5650325,
+      "latlng": [
+        64,
+        26
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "E",
+      "population_bucket": "small",
+      "area_bucket": "small",
+      "flag_emoji": "🇫🇮",
+      "flag_svg": "https://flagcdn.com/fi.svg",
+      "flag_colors": [
+        "white",
+        "blue"
+      ],
+      "flag_motifs": [
+        "cross"
+      ],
+      "climate_band": "polar",
+      "terrain_headline": "forested",
+      "bordering_waters": [
+        "Baltic Sea",
+        "Gulf of Bothnia",
+        "Gulf of Finland"
+      ],
+      "landmark": "Suomenlinna Fortress",
+      "famous_food": "karjalanpiirakka",
+      "fact_card": "Land of a thousand lakes and the northern lights — voted the world's happiest country many years in a row."
+    },
+    {
+      "iso_a2": "IS",
+      "iso_a3": "ISL",
+      "name": "Iceland",
+      "official_name": "Iceland",
+      "level": 3,
+      "continent": "europe",
+      "subregion": "Northern Europe",
+      "capital": "Reykjavik",
+      "languages": [
+        "Icelandic"
+      ],
+      "currency": "ISK",
+      "currency_name": "Icelandic króna",
+      "landlocked": false,
+      "island": true,
+      "borders": [],
+      "area_km2": 103000,
+      "population": 391810,
+      "latlng": [
+        65,
+        -18
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "tiny",
+      "area_bucket": "small",
+      "flag_emoji": "🇮🇸",
+      "flag_svg": "https://flagcdn.com/is.svg",
+      "flag_colors": [
+        "blue",
+        "white",
+        "red"
+      ],
+      "flag_motifs": [
+        "cross"
+      ],
+      "climate_band": "polar",
+      "terrain_headline": "island",
+      "bordering_waters": [
+        "Atlantic Ocean",
+        "Arctic Ocean"
+      ],
+      "landmark": "Geysir hot spring",
+      "famous_food": "skyr",
+      "fact_card": "A volcanic island just below the Arctic Circle, with glaciers, geysers, and active volcanoes."
+    },
+    {
+      "iso_a2": "IE",
+      "iso_a3": "IRL",
+      "name": "Ireland",
+      "official_name": "Republic of Ireland",
+      "level": 3,
+      "continent": "europe",
+      "subregion": "Northern Europe",
+      "capital": "Dublin",
+      "languages": [
+        "English",
+        "Irish"
+      ],
+      "currency": "EUR",
+      "currency_name": "euro",
+      "landlocked": false,
+      "island": true,
+      "borders": [
+        "GBR"
+      ],
+      "area_km2": 70273,
+      "population": 5458600,
+      "latlng": [
+        53,
+        -8
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "small",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇮🇪",
+      "flag_svg": "https://flagcdn.com/ie.svg",
+      "flag_colors": [
+        "green",
+        "white",
+        "orange"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "rolling hills",
+      "bordering_waters": [
+        "Atlantic Ocean",
+        "Irish Sea"
+      ],
+      "landmark": "Cliffs of Moher",
+      "famous_food": "Irish stew",
+      "fact_card": "The 'Emerald Isle,' famous for endless green pastures, traditional music, and St. Patrick's Day."
+    },
+    {
+      "iso_a2": "GT",
+      "iso_a3": "GTM",
+      "name": "Guatemala",
+      "official_name": "Republic of Guatemala",
+      "level": 3,
+      "continent": "north_america",
+      "subregion": "Central America",
+      "capital": "Guatemala City",
+      "languages": [
+        "Spanish"
+      ],
+      "currency": "GTQ",
+      "currency_name": "Guatemalan quetzal",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "BLZ",
+        "SLV",
+        "HND",
+        "MEX"
+      ],
+      "area_km2": 108889,
+      "population": 18079810,
+      "latlng": [
+        15.5,
+        -90.25
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "medium",
+      "area_bucket": "small",
+      "flag_emoji": "🇬🇹",
+      "flag_svg": "https://flagcdn.com/gt.svg",
+      "flag_colors": [
+        "light-blue",
+        "white"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "coat-of-arms"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "mountainous",
+      "bordering_waters": [
+        "Pacific Ocean",
+        "Caribbean Sea"
+      ],
+      "landmark": "Tikal ruins",
+      "famous_food": "pepián",
+      "fact_card": "Heart of the ancient Maya civilization, with active volcanoes and the deep-blue Lake Atitlán."
+    },
+    {
+      "iso_a2": "CR",
+      "iso_a3": "CRI",
+      "name": "Costa Rica",
+      "official_name": "Republic of Costa Rica",
+      "level": 3,
+      "continent": "north_america",
+      "subregion": "Central America",
+      "capital": "San José",
+      "languages": [
+        "Spanish"
+      ],
+      "currency": "CRC",
+      "currency_name": "Costa Rican colón",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "NIC",
+        "PAN"
+      ],
+      "area_km2": 51100,
+      "population": 5309625,
+      "latlng": [
+        10,
+        -84
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "small",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇨🇷",
+      "flag_svg": "https://flagcdn.com/cr.svg",
+      "flag_colors": [
+        "blue",
+        "white",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "rainforest",
+      "bordering_waters": [
+        "Pacific Ocean",
+        "Caribbean Sea"
+      ],
+      "landmark": "Arenal Volcano",
+      "famous_food": "gallo pinto",
+      "fact_card": "A small Central American country with no army; its motto is 'pura vida' and 25% of its land is protected wilderness."
+    },
+    {
+      "iso_a2": "PA",
+      "iso_a3": "PAN",
+      "name": "Panama",
+      "official_name": "Republic of Panama",
+      "level": 3,
+      "continent": "north_america",
+      "subregion": "Central America",
+      "capital": "Panama City",
+      "languages": [
+        "Spanish"
+      ],
+      "currency": "PAB",
+      "currency_name": "Panamanian balboa",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "COL",
+        "CRI"
+      ],
+      "area_km2": 75417,
+      "population": 4064780,
+      "latlng": [
+        9,
+        -80
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "small",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇵🇦",
+      "flag_svg": "https://flagcdn.com/pa.svg",
+      "flag_colors": [
+        "white",
+        "red",
+        "blue"
+      ],
+      "flag_motifs": [
+        "stars"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "coastal",
+      "bordering_waters": [
+        "Pacific Ocean",
+        "Caribbean Sea"
+      ],
+      "landmark": "Panama Canal",
+      "famous_food": "sancocho",
+      "fact_card": "Home of the Panama Canal — a 51-mile shortcut between the Atlantic and Pacific Oceans."
+    },
+    {
+      "iso_a2": "DO",
+      "iso_a3": "DOM",
+      "name": "Dominican Republic",
+      "official_name": "Dominican Republic",
+      "level": 3,
+      "continent": "north_america",
+      "subregion": "Caribbean",
+      "capital": "Santo Domingo",
+      "languages": [
+        "Spanish"
+      ],
+      "currency": "DOP",
+      "currency_name": "Dominican peso",
+      "landlocked": false,
+      "island": true,
+      "borders": [
+        "HTI"
+      ],
+      "area_km2": 48671,
+      "population": 10771504,
+      "latlng": [
+        19,
+        -70.66666666
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "medium",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇩🇴",
+      "flag_svg": "https://flagcdn.com/do.svg",
+      "flag_colors": [
+        "blue",
+        "red",
+        "white"
+      ],
+      "flag_motifs": [
+        "cross",
+        "coat-of-arms"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "island",
+      "bordering_waters": [
+        "Atlantic Ocean",
+        "Caribbean Sea"
+      ],
+      "landmark": "Colonial Zone of Santo Domingo",
+      "famous_food": "mangú",
+      "fact_card": "Shares the island of Hispaniola with Haiti — where Columbus founded the first European city in the Americas."
+    },
+    {
+      "iso_a2": "JM",
+      "iso_a3": "JAM",
+      "name": "Jamaica",
+      "official_name": "Jamaica",
+      "level": 3,
+      "continent": "north_america",
+      "subregion": "Caribbean",
+      "capital": "Kingston",
+      "languages": [
+        "English",
+        "Jamaican Patois"
+      ],
+      "currency": "JMD",
+      "currency_name": "Jamaican dollar",
+      "landlocked": false,
+      "island": true,
+      "borders": [],
+      "area_km2": 10991,
+      "population": 2825544,
+      "latlng": [
+        18.25,
+        -77.5
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "small",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇯🇲",
+      "flag_svg": "https://flagcdn.com/jm.svg",
+      "flag_colors": [
+        "green",
+        "yellow",
+        "black"
+      ],
+      "flag_motifs": [
+        "cross"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "island",
+      "bordering_waters": [
+        "Caribbean Sea"
+      ],
+      "landmark": "Dunn's River Falls",
+      "famous_food": "jerk chicken",
+      "fact_card": "Birthplace of reggae music and Bob Marley, with some of the Caribbean's most stunning beaches."
+    },
+    {
+      "iso_a2": "CL",
+      "iso_a3": "CHL",
+      "name": "Chile",
+      "official_name": "Republic of Chile",
+      "level": 3,
+      "continent": "south_america",
+      "subregion": "South America",
+      "capital": "Santiago",
+      "languages": [
+        "Spanish"
+      ],
+      "currency": "CLP",
+      "currency_name": "Chilean peso",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "ARG",
+        "BOL",
+        "PER"
+      ],
+      "area_km2": 756102,
+      "population": 20206953,
+      "latlng": [
+        -30,
+        -71
+      ],
+      "hemisphere_ns": "S",
+      "hemisphere_ew": "W",
+      "population_bucket": "medium",
+      "area_bucket": "medium",
+      "flag_emoji": "🇨🇱",
+      "flag_svg": "https://flagcdn.com/cl.svg",
+      "flag_colors": [
+        "white",
+        "red",
+        "blue"
+      ],
+      "flag_motifs": [
+        "star",
+        "stripes"
+      ],
+      "climate_band": "mixed",
+      "terrain_headline": "coastal",
+      "bordering_waters": [
+        "Pacific Ocean"
+      ],
+      "landmark": "Easter Island moai",
+      "famous_food": "empanadas",
+      "fact_card": "A long, thin ribbon of a country stretching 2,700 miles down South America's Pacific coast."
+    },
+    {
+      "iso_a2": "VE",
+      "iso_a3": "VEN",
+      "name": "Venezuela",
+      "official_name": "Bolivarian Republic of Venezuela",
+      "level": 3,
+      "continent": "south_america",
+      "subregion": "South America",
+      "capital": "Caracas",
+      "languages": [
+        "Spanish"
+      ],
+      "currency": "VES",
+      "currency_name": "Venezuelan bolívar soberano",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "BRA",
+        "COL",
+        "GUY"
+      ],
+      "area_km2": 916445,
+      "population": 28517000,
+      "latlng": [
+        8,
+        -66
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "medium",
+      "area_bucket": "medium",
+      "flag_emoji": "🇻🇪",
+      "flag_svg": "https://flagcdn.com/ve.svg",
+      "flag_colors": [
+        "yellow",
+        "blue",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "stars"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "varied",
+      "bordering_waters": [
+        "Caribbean Sea",
+        "Atlantic Ocean"
+      ],
+      "landmark": "Angel Falls",
+      "famous_food": "arepa",
+      "fact_card": "Home of Angel Falls — the world's tallest waterfall, plunging from a flat-topped mountain in the Amazon."
+    },
+    {
+      "iso_a2": "BO",
+      "iso_a3": "BOL",
+      "name": "Bolivia",
+      "official_name": "Plurinational State of Bolivia",
+      "level": 3,
+      "continent": "south_america",
+      "subregion": "South America",
+      "capital": "Sucre",
+      "languages": [
+        "Aymara",
+        "Guaraní",
+        "Quechua",
+        "Spanish"
+      ],
+      "currency": "BOB",
+      "currency_name": "Bolivian boliviano",
+      "landlocked": true,
+      "island": false,
+      "borders": [
+        "ARG",
+        "BRA",
+        "CHL",
+        "PRY",
+        "PER"
+      ],
+      "area_km2": 1098581,
+      "population": 11365333,
+      "latlng": [
+        -17,
+        -65
+      ],
+      "hemisphere_ns": "S",
+      "hemisphere_ew": "W",
+      "population_bucket": "medium",
+      "area_bucket": "medium",
+      "flag_emoji": "🇧🇴",
+      "flag_svg": "https://flagcdn.com/bo.svg",
+      "flag_colors": [
+        "red",
+        "yellow",
+        "green"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "coat-of-arms"
+      ],
+      "climate_band": "mixed",
+      "terrain_headline": "mountainous",
+      "bordering_waters": [],
+      "landmark": "Salar de Uyuni",
+      "famous_food": "salteñas",
+      "fact_card": "Home of the world's largest salt flat, which becomes a giant mirror in the rainy season."
+    },
+    {
+      "iso_a2": "UY",
+      "iso_a3": "URY",
+      "name": "Uruguay",
+      "official_name": "Oriental Republic of Uruguay",
+      "level": 3,
+      "continent": "south_america",
+      "subregion": "South America",
+      "capital": "Montevideo",
+      "languages": [
+        "Spanish"
+      ],
+      "currency": "UYU",
+      "currency_name": "Uruguayan peso",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "ARG",
+        "BRA"
+      ],
+      "area_km2": 181034,
+      "population": 3499451,
+      "latlng": [
+        -33,
+        -56
+      ],
+      "hemisphere_ns": "S",
+      "hemisphere_ew": "W",
+      "population_bucket": "small",
+      "area_bucket": "small",
+      "flag_emoji": "🇺🇾",
+      "flag_svg": "https://flagcdn.com/uy.svg",
+      "flag_colors": [
+        "white",
+        "blue",
+        "yellow"
+      ],
+      "flag_motifs": [
+        "sun",
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "plains",
+      "bordering_waters": [
+        "Atlantic Ocean",
+        "Río de la Plata"
+      ],
+      "landmark": "Punta del Este",
+      "famous_food": "chivito",
+      "fact_card": "A small South American country with vast cattle ranches and the most World Cup soccer trophies per person."
+    },
+    {
+      "iso_a2": "EC",
+      "iso_a3": "ECU",
+      "name": "Ecuador",
+      "official_name": "Republic of Ecuador",
+      "level": 3,
+      "continent": "south_america",
+      "subregion": "South America",
+      "capital": "Quito",
+      "languages": [
+        "Spanish"
+      ],
+      "currency": "USD",
+      "currency_name": "United States dollar",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "COL",
+        "PER"
+      ],
+      "area_km2": 276841,
+      "population": 18103660,
+      "latlng": [
+        -2,
+        -77.5
+      ],
+      "hemisphere_ns": "S",
+      "hemisphere_ew": "W",
+      "population_bucket": "medium",
+      "area_bucket": "small",
+      "flag_emoji": "🇪🇨",
+      "flag_svg": "https://flagcdn.com/ec.svg",
+      "flag_colors": [
+        "yellow",
+        "blue",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "coat-of-arms"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "mountainous",
+      "bordering_waters": [
+        "Pacific Ocean"
+      ],
+      "landmark": "Galápagos Islands",
+      "famous_food": "ceviche",
+      "fact_card": "Named for the equator that runs through it; gateway to the unique animals of the Galápagos Islands."
+    },
+    {
+      "iso_a2": "FJ",
+      "iso_a3": "FJI",
+      "name": "Fiji",
+      "official_name": "Republic of Fiji",
+      "level": 3,
+      "continent": "oceania",
+      "subregion": "Melanesia",
+      "capital": "Suva",
+      "languages": [
+        "English",
+        "Fijian",
+        "Fiji Hindi"
+      ],
+      "currency": "FJD",
+      "currency_name": "Fijian dollar",
+      "landlocked": false,
+      "island": true,
+      "borders": [],
+      "area_km2": 18272,
+      "population": 900869,
+      "latlng": [
+        -17.7134,
+        178.065
+      ],
+      "hemisphere_ns": "S",
+      "hemisphere_ew": "E",
+      "population_bucket": "tiny",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇫🇯",
+      "flag_svg": "https://flagcdn.com/fj.svg",
+      "flag_colors": [
+        "light-blue",
+        "red",
+        "white",
+        "blue"
+      ],
+      "flag_motifs": [
+        "cross",
+        "coat-of-arms"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "archipelago",
+      "bordering_waters": [
+        "Pacific Ocean"
+      ],
+      "landmark": "Bouma National Heritage Park",
+      "famous_food": "kokoda",
+      "fact_card": "An archipelago of 333 South Pacific islands surrounded by coral reefs and warm turquoise waters."
+    },
+    {
+      "iso_a2": "PG",
+      "iso_a3": "PNG",
+      "name": "Papua New Guinea",
+      "official_name": "Independent State of Papua New Guinea",
+      "level": 3,
+      "continent": "oceania",
+      "subregion": "Melanesia",
+      "capital": "Port Moresby",
+      "languages": [
+        "English",
+        "Hiri Motu",
+        "Tok Pisin"
+      ],
+      "currency": "PGK",
+      "currency_name": "Papua New Guinean kina",
+      "landlocked": false,
+      "island": false,
+      "borders": [
+        "IDN"
+      ],
+      "area_km2": 462840,
+      "population": 11781559,
+      "latlng": [
+        -6,
+        147
+      ],
+      "hemisphere_ns": "S",
+      "hemisphere_ew": "E",
+      "population_bucket": "medium",
+      "area_bucket": "small",
+      "flag_emoji": "🇵🇬",
+      "flag_svg": "https://flagcdn.com/pg.svg",
+      "flag_colors": [
+        "red",
+        "black",
+        "yellow",
+        "white"
+      ],
+      "flag_motifs": [
+        "stars"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "rainforest",
+      "bordering_waters": [
+        "Pacific Ocean",
+        "Coral Sea"
+      ],
+      "landmark": "Mount Wilhelm",
+      "famous_food": "mumu",
+      "fact_card": "One of the most culturally diverse countries on Earth, where over 800 languages are spoken."
     }
   ]
 }

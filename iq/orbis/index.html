@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=16">
+    <link rel="stylesheet" href="style.css?v=17">
 </head>
 <body>
 
@@ -44,9 +44,9 @@
                         <span class="tier-num">L2</span>
                         <span class="tier-name">Top 40</span>
                     </button>
-                    <button class="tier-chip disabled" data-level="3" disabled>
+                    <button class="tier-chip" data-level="3">
                         <span class="tier-num">L3</span>
-                        <span class="tier-name">Top 80 · soon</span>
+                        <span class="tier-name">Top 80</span>
                     </button>
                     <button class="tier-chip disabled" data-level="4" disabled>
                         <span class="tier-num">L4</span>
@@ -168,11 +168,13 @@
                     <div class="roadmap-update">
                         <span class="update-tag">🧪 Latest update</span>
                         <p>
-                            <strong>Tier ladder is live.</strong> Atlas grew from 20 → <strong>40 hand-curated countries</strong> with a new <code>level</code> field (L1 Famous 20, L2 Top 40, L3/L4 queued). New <strong>Tier picker</strong> chip bar above the map lets you choose your level — Mission and Geocode both use the selected pool. L2 added: NL, SE, NO, PL, PT, GR, CH, ID, TH, VN, TR, IR, PK, PH, KE, MA, ET, CU, PE, NZ.
+                            <strong>Tier 3 shipped — atlas is now 80 hand-curated countries.</strong> The Geocode + Mission pool grew from 40 → <strong>80</strong> with strong continent rebalancing: Africa 6 → 16, Asia 12 → 22, Americas 7 → 17, Europe 13 → 21, Oceania 2 → 4. L3 chip is now enabled in the tier picker.
+                            <br><br>
+                            <strong>L3 additions (40):</strong> DZ TN GH TZ UG SN CI SD CM MG · IQ AE IL JO BD LK MY SG TW MM · UA HU CZ BE DK FI IS IE · GT CR PA DO JM · CL VE BO UY EC · FJ PG.
+                            <br><br>
+                            <strong>Map highlight</strong> also now reacts instantly to the active tier — switching L1 ↔ L2 ↔ L3 re-highlights the in-pool countries (preserving any region zoom you have set).
                             <br><br>
                             <strong>Next focus:</strong> the <strong>first print quiz / worksheet</strong> — a pure-CSS <code>@media print</code> stylesheet that emits a Famous 20 trading-card deck, doubling as the physical Geocode game board.
-                            <br><br>
-                            <strong>Mission Quiz UI</strong> and <strong>Geocode mode</strong> are still tagged <em>Needs testing</em>. The recent map &amp; UX polish wave is in the Built section.
                         </p>
                     </div>
 
@@ -180,10 +182,10 @@
                         <h3><span class="status-dot"></span>Built</h3>
                         <ul>
                             <li>
-                                <strong>Atlas data backbone (40 countries · L1+L2)</strong> — REST Countries fetch + hand-curated soft fields (flag colors, motifs, climate, terrain, landmark, food, fact card, bordering waters, island flag). Each country tagged with a <code>level</code> (1-4) so the engine can filter pools by tier. Refresh via <code>node data/build_atlas.mjs</code>.
+                                <strong>Atlas data backbone (80 countries · L1+L2+L3)</strong> — REST Countries fetch + hand-curated soft fields (flag colors, motifs, climate, terrain, landmark, food, fact card, bordering waters, island flag). Each country tagged with a <code>level</code> (1-4) so the engine can filter pools by tier. Refresh via <code>node data/build_atlas.mjs</code>.
                             </li>
                             <li>
-                                <strong>Tier ladder + picker</strong> — chip bar above the map (Tier · L1 Famous 20 · L2 Top 40 · L3/L4 disabled). Quiz engine pool spec <code>{type:'level', value:N}</code> returns every country with <code>level ≤ N</code>. Selection persists to localStorage. Mission &amp; Geocode both read the active tier.
+                                <strong>Tier ladder + picker</strong> — chip bar above the map (Tier · L1 Famous 20 · L2 Top 40 · L3 Top 80 · L4 World Tour soon). Quiz engine pool spec <code>{type:'level', value:N}</code> returns every country with <code>level ≤ N</code>. Selection persists to localStorage. Mission &amp; Geocode both read the active tier. The map highlight also re-renders instantly when you change tier — out-of-pool countries dim to context.
                             </li>
                             <li>
                                 <strong>Country-level interactive map</strong> — 212 country paths from Natural Earth GeoJSON. Famous 20 highlighted, the rest dim for context. Click any Famous 20 country to open its info modal.
@@ -217,9 +219,6 @@
                         <ul>
                             <li>
                                 <strong>First print quiz + print pipeline</strong> <span class="item-badge needs-testing">🎯 Up next</span> — pure-CSS <code>@media print</code> stylesheet that emits a Famous 20 trading-card deck. Doubles as the physical Geocode game board. The first proof that every digital mode has a pen-and-paper counterpart. Other early printables to follow: Trace/Label/Recall blank maps, flag-coloring templates, two-player Geocode boards.
-                            </li>
-                            <li>
-                                <strong>Tier 3 — hand-curate next 40 countries (to 80)</strong> — adds depth to the atlas. Likely picks: Algeria, Tunisia, Ghana, Tanzania, Uganda, Senegal, Ivory Coast, Sudan, Iraq, UAE, Israel, Jordan, Bangladesh, Sri Lanka, Malaysia, Singapore, Cambodia, Myanmar, North Korea, Taiwan, Ukraine, Hungary, Czechia, Belgium, Denmark, Finland, Iceland, Ireland, Romania, Belarus, Venezuela, Bolivia, Uruguay, Ecuador, Dominican Republic, Honduras, Panama, Costa Rica, Fiji, Samoa.
                             </li>
                             <li>
                                 <strong>Tier 4 — auto-populate the rest (all ~195)</strong> — fetch every country from REST Countries with no hand-curated soft fields. Geocode hints gracefully skip categories without curated data (or fall back to "no info on this one yet"). Unlocks L4 World Tour mode at the cost of shallower hints. Lets the tier picker grow into its full ladder.
@@ -408,10 +407,10 @@
         </div>
     </div>
 
-    <script src="orbis_countries.js?v=16"></script>
-    <script src="orbis_quiz.js?v=16"></script>
-    <script src="orbis_geocode_ui.js?v=16"></script>
-    <script src="orbis_mission_ui.js?v=16"></script>
-    <script src="script.js?v=16"></script>
+    <script src="orbis_countries.js?v=17"></script>
+    <script src="orbis_quiz.js?v=17"></script>
+    <script src="orbis_geocode_ui.js?v=17"></script>
+    <script src="orbis_mission_ui.js?v=17"></script>
+    <script src="script.js?v=17"></script>
 </body>
 </html>

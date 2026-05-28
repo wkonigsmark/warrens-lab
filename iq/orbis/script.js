@@ -329,9 +329,10 @@ let currentFocus = 'all';
 // L1=Famous 20, L2=Top 40, L3=Top 80 (soon), L4=World Tour (soon).
 // Persisted to localStorage so the user's choice survives reloads.
 const LEVEL_STORAGE_KEY = 'orbis.selectedLevel';
+const MAX_AVAILABLE_LEVEL = 3; // bump as we ship new tiers
 let selectedLevel = (() => {
     const stored = parseInt(localStorage.getItem(LEVEL_STORAGE_KEY), 10);
-    return Number.isFinite(stored) && stored >= 1 && stored <= 2 ? stored : 1;
+    return Number.isFinite(stored) && stored >= 1 && stored <= MAX_AVAILABLE_LEVEL ? stored : 1;
 })();
 
 function setSelectedLevel(level) {
