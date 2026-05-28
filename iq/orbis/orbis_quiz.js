@@ -81,43 +81,70 @@
   }
 
   // ---------- Hint builders ----------------------------------------------
-  // Each returns { category, value, display }
+  // Each returns { category, value, display, noData?: true }
+  // noData hints fire for Tier 4 countries that lack hand-curated soft fields —
+  // they tell the player politely and (per controller policy) don't consume budget.
+
+  function noData(category, fieldLabel) {
+    return {
+      category,
+      value: null,
+      noData: true,
+      display: `We don't have ${fieldLabel} info for this country yet.`
+    };
+  }
+
   const HINT_BUILDERS = {
     continent: c => ({
       category: "continent",
       value: c.continent,
       display: `This country is in ${CONTINENT_HUMAN[c.continent] || c.continent}.`
     }),
-    language: c => ({
-      category: "language",
-      value: c.languages,
-      display: `They speak ${listFormat(c.languages)}.`
-    }),
-    "flag-color": c => ({
-      category: "flag-color",
-      value: c.flag_colors,
-      display: `Its flag uses ${listFormat(c.flag_colors)}.`
-    }),
-    "flag-motif": c => ({
-      category: "flag-motif",
-      value: c.flag_motifs,
-      display: `Its flag features ${listFormat(c.flag_motifs)}.`
-    }),
-    climate: c => ({
-      category: "climate",
-      value: c.climate_band,
-      display: `The climate here is mostly ${c.climate_band}.`
-    }),
+    language: c => {
+      if (!c.languages || !c.languages.length) return noData("language", "language");
+      return {
+        category: "language",
+        value: c.languages,
+        display: `They speak ${listFormat(c.languages)}.`
+      };
+    },
+    "flag-color": c => {
+      if (!c.flag_colors || !c.flag_colors.length) return noData("flag-color", "flag color");
+      return {
+        category: "flag-color",
+        value: c.flag_colors,
+        display: `Its flag uses ${listFormat(c.flag_colors)}.`
+      };
+    },
+    "flag-motif": c => {
+      if (!c.flag_motifs || !c.flag_motifs.length) return noData("flag-motif", "flag-feature");
+      return {
+        category: "flag-motif",
+        value: c.flag_motifs,
+        display: `Its flag features ${listFormat(c.flag_motifs)}.`
+      };
+    },
+    climate: c => {
+      if (!c.climate_band) return noData("climate", "climate");
+      return {
+        category: "climate",
+        value: c.climate_band,
+        display: `The climate here is mostly ${c.climate_band}.`
+      };
+    },
     hemisphere: c => ({
       category: "hemisphere",
       value: { ns: c.hemisphere_ns, ew: c.hemisphere_ew },
       display: `It sits in the ${c.hemisphere_ns === "N" ? "Northern" : "Southern"} and ${c.hemisphere_ew === "E" ? "Eastern" : "Western"} Hemispheres.`
     }),
-    "capital-letter": c => ({
-      category: "capital-letter",
-      value: (c.capital || "?")[0],
-      display: `Its capital begins with the letter "${(c.capital || "?")[0]}".`
-    }),
+    "capital-letter": c => {
+      if (!c.capital) return noData("capital-letter", "capital");
+      return {
+        category: "capital-letter",
+        value: c.capital[0],
+        display: `Its capital begins with the letter "${c.capital[0]}".`
+      };
+    },
     neighbor: c => {
       const picks = pickN(c.borders || [], 3)
         .map(iso3 => {
@@ -133,7 +160,6 @@
         };
       }
       if (!picks.length) {
-        // Has borders but none are in our atlas — say so generically.
         return {
           category: "neighbor",
           value: [],
@@ -148,7 +174,8 @@
       };
     },
     water: c => {
-      const picks = pickN(c.bordering_waters || [], 2);
+      if (!c.bordering_waters) return noData("water", "bordering-water");
+      const picks = pickN(c.bordering_waters, 2);
       if (!picks.length) {
         return {
           category: "water",
@@ -172,21 +199,30 @@
       value: c.population_bucket,
       display: `By population, it's a ${c.population_bucket}-sized country.`
     }),
-    terrain: c => ({
-      category: "terrain",
-      value: c.terrain_headline,
-      display: `Its terrain is mostly ${c.terrain_headline}.`
-    }),
-    landmark: c => ({
-      category: "landmark",
-      value: c.landmark,
-      display: `It is home to the ${c.landmark}.`
-    }),
-    food: c => ({
-      category: "food",
-      value: c.famous_food,
-      display: `A famous food from here is ${c.famous_food}.`
-    })
+    terrain: c => {
+      if (!c.terrain_headline) return noData("terrain", "terrain");
+      return {
+        category: "terrain",
+        value: c.terrain_headline,
+        display: `Its terrain is mostly ${c.terrain_headline}.`
+      };
+    },
+    landmark: c => {
+      if (!c.landmark) return noData("landmark", "landmark");
+      return {
+        category: "landmark",
+        value: c.landmark,
+        display: `It is home to the ${c.landmark}.`
+      };
+    },
+    food: c => {
+      if (!c.famous_food) return noData("food", "famous-food");
+      return {
+        category: "food",
+        value: c.famous_food,
+        display: `A famous food from here is ${c.famous_food}.`
+      };
+    }
   };
 
   const HINT_CATEGORIES = Object.keys(HINT_BUILDERS);
@@ -324,7 +360,9 @@
       const builder = HINT_BUILDERS[category];
       if (!builder) return null;
       const hint = builder(state.target);
-      state.hintsUsed.push(hint);
+      // Don't charge for "no info" hints — the chip stays available so the player
+      // can spend their budget on a category that actually exists for this country.
+      if (!hint.noData) state.hintsUsed.push(hint);
       emit("onHint", hint);
       return hint;
     }

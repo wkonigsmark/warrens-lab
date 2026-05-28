@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbis · Print Quiz: The 7 Continents</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="continents.css?v=3">
+</head>
+<body>
+
+    <!-- Screen-only controls (hidden when printing) -->
+    <div class="page-controls">
+        <a href="../index.html" class="back-link">← Back to Orbis</a>
+        <div class="ctrl-title">Print Quiz · The 7 Continents</div>
+        <button class="print-btn" onclick="window.print()">🖨 Print worksheet</button>
+    </div>
+
+    <!-- The actual worksheet — designed to fill US Letter, portrait, 0.5" margins -->
+    <article class="worksheet" id="worksheet">
+
+        <header class="ws-header">
+            <div class="ws-tag">Orbis · Geography Worksheet</div>
+            <h1>The 7 Continents</h1>
+            <p class="ws-sub">Can you name them all?</p>
+        </header>
+
+        <section class="ws-map-wrap">
+            <svg id="world-map" viewBox="-1000 -10000 11000 6200" preserveAspectRatio="xMidYMid meet">
+                <g id="continents-group"></g>
+                <g id="numbers-group"></g>
+            </svg>
+        </section>
+
+        <!-- Antarctica gets squashed into a thin strip by the Miller projection,
+             so we show it separately as a labeled inset. -->
+        <section class="ws-antarctica-inset">
+            <div class="inset-tag">Don't forget...</div>
+            <div class="inset-body">
+                <svg class="inset-shape" viewBox="0 0 200 200" aria-label="Stylized Antarctica">
+                    <!-- Stylized Antarctica blob with a peninsula -->
+                    <path d="M 100 30
+                             C 50 30, 30 70, 35 105
+                             C 38 130, 55 155, 90 165
+                             C 105 168, 125 168, 145 162
+                             C 170 154, 178 130, 175 105
+                             C 172 75, 155 45, 130 35
+                             L 120 25
+                             L 110 35
+                             Z"
+                          class="continent-shape" />
+                    <circle cx="100" cy="100" r="48" class="number-bg" />
+                    <text x="100" y="100" class="inset-number-text">2</text>
+                </svg>
+                <div class="inset-text">
+                    <strong>Antarctica</strong> is the frozen continent at the very bottom of the world.
+                    <br><span class="inset-note">(Flat maps make it look smaller than it really is!)</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="ws-wordbank">
+            <h2>Word Bank</h2>
+            <div class="wordbank-row">
+                <span class="word">Africa</span>
+                <span class="word-sep">·</span>
+                <span class="word">Antarctica</span>
+                <span class="word-sep">·</span>
+                <span class="word">Asia</span>
+                <span class="word-sep">·</span>
+                <span class="word">Europe</span>
+                <span class="word-sep">·</span>
+                <span class="word">North America</span>
+                <span class="word-sep">·</span>
+                <span class="word">Oceania</span>
+                <span class="word-sep">·</span>
+                <span class="word">South America</span>
+            </div>
+        </section>
+
+        <section class="ws-answers">
+            <h2>Write the name of each continent next to its number:</h2>
+            <div class="answer-grid">
+                <div class="answer-line"><span class="num">1.</span><span class="line"></span></div>
+                <div class="answer-line"><span class="num">2.</span><span class="line"></span></div>
+                <div class="answer-line"><span class="num">3.</span><span class="line"></span></div>
+                <div class="answer-line"><span class="num">4.</span><span class="line"></span></div>
+                <div class="answer-line"><span class="num">5.</span><span class="line"></span></div>
+                <div class="answer-line"><span class="num">6.</span><span class="line"></span></div>
+                <div class="answer-line"><span class="num">7.</span><span class="line"></span></div>
+            </div>
+        </section>
+
+        <footer class="ws-footer">
+            <div class="ws-meta">
+                <span>Name: <span class="meta-line"></span></span>
+                <span>Date: <span class="meta-line"></span></span>
+            </div>
+            <div class="ws-credit">Orbis · The World in View</div>
+        </footer>
+
+    </article>
+
+    <script src="continents.js?v=3"></script>
+</body>
+</html>

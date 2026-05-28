@@ -56,6 +56,7 @@
     if (state.initialized) return;
     state.dom = {
       panel:           document.getElementById("geocode-panel"),
+      tierChips:       document.getElementById("gc-tier-chips"),
       chips:           document.getElementById("hint-chips"),
       clueList:        document.getElementById("clue-list"),
       guessList:       document.getElementById("guess-list"),
@@ -77,7 +78,34 @@
     state.dom.exitBtn.addEventListener("click", stop);
     state.dom.resultPlayAgain.addEventListener("click", () => { closeResult(); startRound(); });
     state.dom.resultClose.addEventListener("click", () => { closeResult(); });
+    // In-panel tier switching — click a tier chip to restart the mystery at that tier
+    if (state.dom.tierChips) {
+      state.dom.tierChips.addEventListener("click", e => {
+        const chip = e.target.closest(".gc-tier-chip");
+        if (!chip || chip.disabled) return;
+        const level = Number(chip.dataset.level);
+        if (!Number.isFinite(level) || level === state.level) return;
+        changeTier(level);
+      });
+    }
     state.initialized = true;
+  }
+
+  function syncTierChips() {
+    if (!state.dom.tierChips) return;
+    for (const chip of state.dom.tierChips.querySelectorAll(".gc-tier-chip")) {
+      chip.classList.toggle("active", Number(chip.dataset.level) === state.level);
+    }
+  }
+
+  function changeTier(newLevel) {
+    state.level = newLevel;
+    // Mirror to the global tier picker + localStorage so the rest of the app agrees
+    if (window.setSelectedLevel) window.setSelectedLevel(newLevel);
+    syncTierChips();
+    // Restart the round at the new tier
+    if (state.session) state.session.end();
+    startRound();
   }
 
   function buildChipDeck() {
@@ -102,6 +130,7 @@
     state.dom.panel.classList.add("open");
     state.active = true;
     document.body.classList.add("geocode-active");
+    syncTierChips();
     // Reset any zoom to the world view so the mystery isn't artificially framed.
     if (window.OrbisCountries) OrbisCountries.resetViewBox(document.getElementById("world-map"));
     startRound();
@@ -174,6 +203,9 @@
     const already = before.hintsUsed.find(h => h.category === category);
     const hint = state.session.useHint(category);
     if (!hint) return;
+    // noData: country has no curated info for this category. Don't mark the chip
+    // used or charge the budget — the player can try another category.
+    if (hint.noData) return;
     btn.classList.add("used");
     btn.disabled = true;
     if (already) return; // re-asking is free; clue card already in log
@@ -182,9 +214,9 @@
   function renderClue(hint) {
     const meta = HINT_META[hint.category] || { icon: "❔", label: hint.category };
     const li = document.createElement("li");
-    li.className = "clue-card";
+    li.className = "clue-card" + (hint.noData ? " no-data" : "");
     li.innerHTML = `
-      <span class="clue-icon">${meta.icon}</span>
+      <span class="clue-icon">${hint.noData ? "🤷" : meta.icon}</span>
       <div class="clue-body">
         <span class="clue-cat">${meta.label}</span>
         <span class="clue-text">${escapeHtml(hint.display)}</span>

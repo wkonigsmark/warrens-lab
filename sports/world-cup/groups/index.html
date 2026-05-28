@@ -116,6 +116,31 @@
     <section class="wc-section">
       <div class="wc-section-header">
         <div>
+          <h2>Team Path Edges</h2>
+          <p>Each team's average W-Index edge against its three group opponents.</p>
+        </div>
+      </div>
+      <div class="wc-table-wrap">
+        <table class="wc-table">
+          <thead>
+            <tr>
+              <th>Team</th>
+              <th>Group</th>
+              <th>W-Index</th>
+              <th>Path Edge</th>
+              <th>Path-Adjusted</th>
+              <th>Group Status</th>
+              <th>Story</th>
+            </tr>
+          </thead>
+          <tbody id="path-table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="wc-section">
+      <div class="wc-section-header">
+        <div>
           <h2>Group Cards</h2>
           <p>Each group with W-Index team order and all six matchup edges.</p>
         </div>
@@ -139,6 +164,7 @@
       insightGrid: $("insight-grid"),
       groupTable: $("group-table"),
       groupCardGrid: $("group-card-grid"),
+      pathTable: $("path-table"),
     };
 
     function flagCode(team) {
@@ -300,6 +326,14 @@
           .filter((pair) => pair.a.id === top.id || pair.b.id === top.id)
           .reduce((sum, pair) => sum + pair.diff, 0) / 3;
 
+        for (const team of teamRows) {
+          team.groupPosition = teamRows.findIndex((candidate) => candidate.id === team.id);
+          const opponentScores = teamRows.filter((candidate) => candidate.id !== team.id).map((candidate) => candidate.score);
+          team.pathEdge = opponentScores.reduce((sum, score) => sum + (team.score - score), 0) / opponentScores.length;
+          team.rawPathAdjusted = team.score + team.pathEdge * 0.15;
+          team.isGroupFavorite = team.id === teamRows[0].id;
+        }
+
         return {
           group,
           teamRows,
@@ -325,7 +359,36 @@
           percentile(analysis.pairwiseDiffSum, diffs, true) * 0.48
         );
       }
+
+      const rawAdjusted = analyses.flatMap((analysis) => analysis.teamRows.map((team) => team.rawPathAdjusted));
+      const minAdjusted = Math.min(...rawAdjusted);
+      const maxAdjusted = Math.max(...rawAdjusted);
+      for (const analysis of analyses) {
+        for (const team of analysis.teamRows) {
+          team.pathAdjusted = maxAdjusted === minAdjusted
+            ? 50
+            : ((team.rawPathAdjusted - minAdjusted) / (maxAdjusted - minAdjusted)) * 100;
+        }
+      }
       return analyses;
+    }
+
+    function allTeamPaths(analyses) {
+      return analyses
+        .flatMap((analysis) => analysis.teamRows.map((team) => ({ ...team, groupTotal: analysis.total })))
+        .sort((a, b) => b.pathEdge - a.pathEdge);
+    }
+
+    function positionLabel(position) {
+      return ["Favorite", "Runner Up", "Third", "Last"][position] || "Group";
+    }
+
+    function positionClass(position) {
+      return ["favorite", "runner-up", "third", "last"][position] || "";
+    }
+
+    function positionTag(team) {
+      return `<span class="wc-position-tag ${positionClass(team.groupPosition)}">${positionLabel(team.groupPosition)}</span>`;
     }
 
     function renderInsights(analyses) {
@@ -402,6 +465,29 @@
         `).join("");
     }
 
+    function renderPathTable(analyses) {
+      elements.pathTable.innerHTML = allTeamPaths(analyses).map((team) => {
+        const rankNote = team.rank <= 12 && !team.isGroupFavorite
+          ? "Elite W-Index team, but not the cleanest group favorite."
+          : team.rank >= 18 && team.isGroupFavorite
+            ? "Lower overall rank, but owns the clearest group position."
+            : team.isGroupFavorite
+              ? "Projected group favorite by W-Index."
+              : "Chasing at least one stronger group opponent.";
+        return `
+          <tr>
+            <td><strong>${teamName(team)}</strong><br><span class="wc-small">Overall #${team.rank}</span></td>
+            <td>Group ${team.group}</td>
+            <td class="wc-number">${scoreLabel(team.score)}</td>
+            <td class="wc-number"><strong>${team.pathEdge >= 0 ? "+" : ""}${team.pathEdge.toFixed(1)}</strong></td>
+            <td class="wc-number">${scoreLabel(team.pathAdjusted)}</td>
+            <td>${positionTag(team)}</td>
+            <td>${rankNote}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
     function renderGroupCards(analyses) {
       elements.groupCardGrid.innerHTML = analyses.map((analysis) => `
         <article class="wc-card wc-card-pad">
@@ -414,7 +500,7 @@
           <div style="margin-top: 12px;">
             ${analysis.teamRows.map((team) => `
               <div class="wc-team-row">
-                <span>${teamName(team)}</span>
+                <span>${teamName(team)}<br>${positionTag(team)}</span>
                 <strong>${scoreLabel(team.score)}</strong>
               </div>
             `).join("")}
@@ -443,6 +529,7 @@
 
         renderInsights(analyses);
         renderTable(analyses);
+        renderPathTable(analyses);
         renderGroupCards(analyses);
 
         const missing = Object.values(teamsById).filter((team) => !map.has(team.id)).map((team) => team.name);

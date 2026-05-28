@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=17">
+    <link rel="stylesheet" href="style.css?v=23">
 </head>
 <body>
 
@@ -25,6 +25,8 @@
                 <button class="action-btn" id="view-oceans-btn">Oceans</button>
                 <button class="action-btn" id="start-exploration">Mission Quiz</button>
                 <button class="action-btn accent" id="play-geocode-btn">🕵️ Geocode</button>
+                <a class="action-btn" href="print/continents.html" target="_blank" rel="noopener">🖨 Print</a>
+                <button class="action-btn" id="atlas-data-btn">📊 Atlas</button>
                 <button class="action-btn" id="roadmap-btn">🗺 Roadmap</button>
                 <a href="../iq/index.html" class="action-btn subtle">Exit to IQ</a>
             </nav>
@@ -48,9 +50,9 @@
                         <span class="tier-num">L3</span>
                         <span class="tier-name">Top 80</span>
                     </button>
-                    <button class="tier-chip disabled" data-level="4" disabled>
+                    <button class="tier-chip" data-level="4">
                         <span class="tier-num">L4</span>
-                        <span class="tier-name">World Tour · soon</span>
+                        <span class="tier-name">World Tour</span>
                     </button>
                 </div>
             </div>
@@ -154,6 +156,57 @@
             </div>
         </footer>
 
+        <!-- Atlas Data Table overlay -->
+        <div id="atlas-data-overlay" class="overlay atlas-data">
+            <div class="modal-content glass atlas-data-modal">
+                <button id="close-atlas-data" aria-label="Close">×</button>
+                <header class="atlas-data-header">
+                    <span class="tag">ATLAS DATA</span>
+                    <h2>Country coverage — find the gaps</h2>
+                    <div class="atlas-stats" id="atlas-stats"></div>
+                    <div class="atlas-filters">
+                        <input type="text" id="atlas-search" placeholder="Search by name or ISO…" autocomplete="off">
+                        <select id="atlas-level-filter">
+                            <option value="all">All tiers</option>
+                            <option value="1">L1 only</option>
+                            <option value="2">L2 only</option>
+                            <option value="3">L3 only</option>
+                            <option value="4">L4 only</option>
+                            <option value="curated">Curated (L1-L3)</option>
+                            <option value="uncurated">Uncurated (L4)</option>
+                        </select>
+                        <label class="filter-toggle">
+                            <input type="checkbox" id="atlas-gaps-only">
+                            <span>Show only countries with gaps</span>
+                        </label>
+                    </div>
+                </header>
+                <div class="atlas-table-wrap">
+                    <table id="atlas-table">
+                        <thead>
+                            <tr>
+                                <th>L</th>
+                                <th>ISO</th>
+                                <th>Country</th>
+                                <th>Capital</th>
+                                <th>Languages</th>
+                                <th>Flag colors</th>
+                                <th>Flag motifs</th>
+                                <th>Climate</th>
+                                <th>Terrain</th>
+                                <th>Landmark</th>
+                                <th>Food</th>
+                                <th>Waters</th>
+                                <th>Island</th>
+                                <th>Fact</th>
+                            </tr>
+                        </thead>
+                        <tbody id="atlas-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <!-- Roadmap overlay -->
         <div id="roadmap-overlay" class="overlay roadmap">
             <div class="modal-content glass roadmap-modal">
@@ -166,15 +219,13 @@
                 <div class="roadmap-body">
 
                     <div class="roadmap-update">
-                        <span class="update-tag">🧪 Latest update</span>
+                        <span class="update-tag">🖨 Latest update</span>
                         <p>
-                            <strong>Tier 3 shipped — atlas is now 80 hand-curated countries.</strong> The Geocode + Mission pool grew from 40 → <strong>80</strong> with strong continent rebalancing: Africa 6 → 16, Asia 12 → 22, Americas 7 → 17, Europe 13 → 21, Oceania 2 → 4. L3 chip is now enabled in the tier picker.
+                            <strong>First print quiz shipped — The 7 Continents.</strong> A kid-friendly worksheet at <code>print/continents.html</code> with a black-and-white world map, numbered circles (1-7) on each continent, a word bank, answer lines, and a name/date footer. Patrick Hand font for the playful bits, Outfit for structure. Uses a <code>@media print</code> stylesheet that hides the screen-only nav and prints clean to US Letter portrait. New <strong>🖨 Print</strong> toolbar button on Orbis opens it in a new tab.
                             <br><br>
-                            <strong>L3 additions (40):</strong> DZ TN GH TZ UG SN CI SD CM MG · IQ AE IL JO BD LK MY SG TW MM · UA HU CZ BE DK FI IS IE · GT CR PA DO JM · CL VE BO UY EC · FJ PG.
+                            This is the proof-of-concept for the print pipeline: every digital mode will have a pen-and-paper counterpart. Next print quizzes likely: Famous 20 trading-card deck, continent-coloring sheet, blank country labeling, flag-coloring templates.
                             <br><br>
-                            <strong>Map highlight</strong> also now reacts instantly to the active tier — switching L1 ↔ L2 ↔ L3 re-highlights the in-pool countries (preserving any region zoom you have set).
-                            <br><br>
-                            <strong>Next focus:</strong> the <strong>first print quiz / worksheet</strong> — a pure-CSS <code>@media print</code> stylesheet that emits a Famous 20 trading-card deck, doubling as the physical Geocode game board.
+                            Atlas remains at <strong>196 sovereign nations</strong> (L1-L4), Geocode + Mission play across the full tier ladder, and the <strong>📊 Atlas Data Table</strong> shows curation coverage at a glance — currently 74 fully curated, 6 partial, 116 sparse (Tier 4 curation runway).
                         </p>
                     </div>
 
@@ -182,34 +233,40 @@
                         <h3><span class="status-dot"></span>Built</h3>
                         <ul>
                             <li>
-                                <strong>Atlas data backbone (80 countries · L1+L2+L3)</strong> — REST Countries fetch + hand-curated soft fields (flag colors, motifs, climate, terrain, landmark, food, fact card, bordering waters, island flag). Each country tagged with a <code>level</code> (1-4) so the engine can filter pools by tier. Refresh via <code>node data/build_atlas.mjs</code>.
+                                <strong>Atlas data backbone (196 sovereign nations · L1-L4)</strong> — REST Countries bulk fetch (<code>/v3.1/independent?status=true</code>) with a Taiwan backfill from <code>/alpha</code>. Hand-curated soft fields for tiers 1-3: flag colors, flag motifs, climate band, terrain headline, landmark, famous food, fact card, bordering waters, island flag. Tier 4 (116 countries) auto-populated with null soft fields. Each country tagged with a <code>level</code> (1-4). Refresh via <code>node data/build_atlas.mjs</code>. Atlas fetch is <code>cache: "no-store"</code> so data edits show immediately.
                             </li>
                             <li>
-                                <strong>Tier ladder + picker</strong> — chip bar above the map (Tier · L1 Famous 20 · L2 Top 40 · L3 Top 80 · L4 World Tour soon). Quiz engine pool spec <code>{type:'level', value:N}</code> returns every country with <code>level ≤ N</code>. Selection persists to localStorage. Mission &amp; Geocode both read the active tier. The map highlight also re-renders instantly when you change tier — out-of-pool countries dim to context.
+                                <strong>Atlas Data Table modal</strong> — 📊 toolbar button opens a sortable, searchable, level-filterable table of every country. Empty cells highlight in red so curation gaps for Tier 4 are obvious. Stats: 74 fully curated · 6 partial · 116 sparse. "Show only countries with gaps" toggle surfaces uncurated countries. The runway for incremental Tier 4 manual curation.
                             </li>
                             <li>
-                                <strong>Country-level interactive map</strong> — 212 country paths from Natural Earth GeoJSON. Famous 20 highlighted, the rest dim for context. Click any Famous 20 country to open its info modal.
+                                <strong>Tier ladder + picker (L1-L4 live)</strong> — chip bar above the map. Pool spec <code>{type:'level', value:N}</code> returns all countries with <code>level ≤ N</code>. Selection persists to localStorage. Mission and Geocode read the active tier. Map highlight re-renders instantly on tier change — out-of-pool countries dim to context. Region Focus zoom is preserved across tier switches. The hint engine returns <em>noData</em> responses (which don't consume budget) for L4 picks lacking curated soft fields.
                             </li>
                             <li>
-                                <strong>Quiz engine</strong> — mode-agnostic, config-driven session driver. Same engine powers Mission and Geocode. Exposes geometry helpers (haversine distance, compass bearing, warmth bands).
+                                <strong>Country-level interactive map</strong> — 212 country paths rendered from Natural Earth GeoJSON. Click any in-pool country to open its info modal. Dim countries are visible context but non-interactive.
                             </li>
                             <li>
-                                <strong>Geocode mode (the "Guess Who + Globle" hybrid)</strong> <span class="item-badge needs-testing">🧪 Needs testing</span> — 14 hint categories, attribute-deduction gameplay, Globle-style distance + direction feedback on wrong guesses, warm/cold map breadcrumbs, full side-panel UI, win modal with country facts. <em>Playtest priorities:</em> mode-switching mid-round, hint-budget exhaustion, give-up flow, exit + return.
+                                <strong>Quiz engine</strong> — mode-agnostic, config-driven session driver. Pool specs: <code>all</code>, <code>continent</code>, <code>iso2s</code>, <code>level</code>, <code>predicate</code>. Same engine powers Mission and Geocode. Geometry helpers (haversine distance, compass bearing, warmth bands). Hint builders handle missing soft data via <em>noData</em> responses. Hook-race fix: <code>autoStart: false</code> + manual first-round call so controllers can stash the session reference before <code>onRoundStart</code> fires.
                             </li>
                             <li>
-                                <strong>Mission Quiz UI</strong> <span class="item-badge needs-testing">🧪 Needs testing</span> — engine-driven "Locate Country" quiz. HUD strip with round counter, target announcement, score chip, End button. Wrong guesses get distance toast + warm/cold breadcrumb. Right guesses auto-advance. 10-round default, session-end summary with round-by-round attempts. <em>Playtest priorities:</em> auto-advance timing (currently 1.1s — too fast/slow?), exit mid-mission, summary X vs New Mission flow, switching Continents/Countries/Oceans views during a mission, click spam during the celebration window.
+                                <strong>Geocode mode (Guess Who + Globle hybrid)</strong> <span class="item-badge needs-testing">🧪 Needs testing</span> — 14 hint categories (continent, language, flag colors, flag motifs, climate, hemisphere, capital letter, neighbors, water, size, population, terrain, landmark, food). Attribute-deduction gameplay. Globle-style distance + direction feedback on every wrong guess. Warm/cold map breadcrumbs accumulate. Side-panel UI with hint deck, clue log, guess log. Win modal with country facts.
                             </li>
                             <li>
-                                <strong>Roadmap overlay</strong> — this very surface. Living document of what's built, what's next, and every idea on the board. Wired to a toolbar button + ESC + backdrop click to close.
+                                <strong>Mission Quiz UI</strong> <span class="item-badge needs-testing">🧪 Needs testing</span> — engine-driven "Locate Country" quiz. HUD strip with round counter, target announcement, score chip, End button. Wrong guesses → distance toast + warm/cold breadcrumb. Right guesses auto-advance after 1.1s. 10-round default. Session-end summary with round-by-round attempt counts. HOME + NEW MISSION buttons. Country ISO labels hidden during a Mission (anti-cheat).
                             </li>
                             <li>
-                                <strong>Region Focus zoom</strong> <span class="item-badge needs-testing">🧪 Needs testing</span> — Focus chip bar above the Countries view (World · Africa · Asia · Europe · N. America · S. America · Oceania). Click a chip → animated SVG viewBox zoom to that continent. Click the active chip again to cancel back to World. Hand-curated representative ISOs + main-polygon-only bbox math to keep Europe tight and Oceania framed on Australia. <em>Known nit:</em> country labels grow proportionally with zoom (need inverse scaling).
+                                <strong>Region Focus zoom</strong> <span class="item-badge needs-testing">🧪 Needs testing</span> — Focus chip bar in Countries view (World · Africa · Asia · Europe · N. America · S. America · Oceania). Click a chip → animated SVG viewBox transition. Click active chip again to toggle back to World. Hand-curated representative ISOs per continent + main-polygon-only bbox math so Europe isn't dragged east by Russia and Oceania frames on Australia. Animation uses <code>setTimeout</code> (works in hidden tabs unlike RAF). <em>Known nit:</em> country labels grow proportionally with zoom (need inverse scaling).
                             </li>
                             <li>
-                                <strong>Map sizing &amp; layout polish</strong> — map area is now ~2.5× larger (max-width raised, container/wrap padding trimmed, status display compressed), with full edge-to-edge mode on viewports ≥1600px. PLANET EARTH headline is auto-hidden in Countries view since it's redundant. Mission HUD strip width matches the map. Body now scrolls if a short laptop screen needs it (was previously locked).
+                                <strong>Roadmap overlay</strong> — living document of what's built, what's next, every idea on the board. Toolbar button + ESC + backdrop click to close.
                             </li>
                             <li>
-                                <strong>Overlay system polish</strong> — all four overlays (Discovery, Roadmap, Mission Summary, Geocode Result) share consistent close buttons (circular, top-right). ESC and backdrop click close any open overlay. Summary modals use a HOME (secondary outline) + primary action button pattern. Cache-busting query strings on every script/style tag.
+                                <strong>Map sizing &amp; layout polish</strong> — map area is ~2.5× larger than the original (max-width raised, container/wrap padding trimmed, status display compressed). Edge-to-edge mode on viewports ≥1600px. PLANET EARTH headline auto-hides in Countries view since it's redundant. Mission HUD strip width matches the map. Body scrolls when short laptop screens need it (was previously locked).
+                            </li>
+                            <li>
+                                <strong>Overlay system polish</strong> — five overlays (Discovery, Roadmap, Mission Summary, Geocode Result, Atlas Data Table) share consistent close buttons (circular, top-right). ESC and backdrop click close any open overlay. Summary modals use a HOME (secondary outline) + primary action button pattern. Cache-busting query strings on every script/style tag so dev edits show on reload.
+                            </li>
+                            <li>
+                                <strong>Print quiz: The 7 Continents</strong> 🆕 — first printable worksheet at <code>print/continents.html</code>. B&amp;W world map with numbered circles 1-7 on each continent, word bank, answer lines, name/date footer. Kid-friendly typography (Patrick Hand + Outfit). <code>@media print</code> stylesheet hides screen-only nav and renders clean to US Letter portrait. Linked from the new 🖨 Print toolbar button on Orbis.
                             </li>
                         </ul>
                     </section>
@@ -218,10 +275,7 @@
                         <h3><span class="status-dot"></span>Build next (queued)</h3>
                         <ul>
                             <li>
-                                <strong>First print quiz + print pipeline</strong> <span class="item-badge needs-testing">🎯 Up next</span> — pure-CSS <code>@media print</code> stylesheet that emits a Famous 20 trading-card deck. Doubles as the physical Geocode game board. The first proof that every digital mode has a pen-and-paper counterpart. Other early printables to follow: Trace/Label/Recall blank maps, flag-coloring templates, two-player Geocode boards.
-                            </li>
-                            <li>
-                                <strong>Tier 4 — auto-populate the rest (all ~195)</strong> — fetch every country from REST Countries with no hand-curated soft fields. Geocode hints gracefully skip categories without curated data (or fall back to "no info on this one yet"). Unlocks L4 World Tour mode at the cost of shallower hints. Lets the tier picker grow into its full ladder.
+                                <strong>More print quizzes (after the 7 Continents pilot)</strong> <span class="item-badge needs-testing">🎯 Up next</span> — Famous 20 trading-card deck (doubles as physical Geocode game board), Trace/Label/Recall blank-map worksheets per region, flag-coloring templates with proportion guides, blank country-labeling sheets per continent, two-player Geocode boards, and an Answer Key generator for parents/teachers. Also: a print-menu modal on Orbis as the print library grows.
                             </li>
                         </ul>
                     </section>
@@ -327,6 +381,17 @@
                 <button id="geocode-exit" aria-label="Exit Geocode">×</button>
             </header>
 
+            <section class="gc-tier">
+                <span class="gc-tier-label">Tier</span>
+                <div class="gc-tier-chips" id="gc-tier-chips">
+                    <button class="gc-tier-chip" data-level="1">L1</button>
+                    <button class="gc-tier-chip" data-level="2">L2</button>
+                    <button class="gc-tier-chip" data-level="3">L3</button>
+                    <button class="gc-tier-chip" data-level="4">L4</button>
+                </div>
+                <span class="gc-tier-hint">Switching restarts the mystery.</span>
+            </section>
+
             <section class="gc-stats">
                 <div class="gc-stat">
                     <span class="gc-stat-val" id="hints-remaining">5</span>
@@ -407,10 +472,10 @@
         </div>
     </div>
 
-    <script src="orbis_countries.js?v=17"></script>
-    <script src="orbis_quiz.js?v=17"></script>
-    <script src="orbis_geocode_ui.js?v=17"></script>
-    <script src="orbis_mission_ui.js?v=17"></script>
-    <script src="script.js?v=17"></script>
+    <script src="orbis_countries.js?v=23"></script>
+    <script src="orbis_quiz.js?v=23"></script>
+    <script src="orbis_geocode_ui.js?v=23"></script>
+    <script src="orbis_mission_ui.js?v=23"></script>
+    <script src="script.js?v=23"></script>
 </body>
 </html>

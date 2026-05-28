@@ -1,0 +1,297 @@
+/* Orbis · Print Quiz · The 7 Continents
+ *
+ * Two visual modes:
+ *   - Screen: paper-tone preview with sticky control bar at top
+ *   - Print:  clean B&W worksheet, no controls, fits US Letter
+ */
+
+@page {
+    size: letter portrait;
+    margin: 0.5in;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Outfit', system-ui, sans-serif;
+    color: #1a1a1a;
+    background: #ece3d4; /* soft paper tone, screen preview only */
+    margin: 0;
+    padding: 0 0 60px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+/* ---- Screen-only top control bar ----------------------------------- */
+.page-controls {
+    position: sticky;
+    top: 0;
+    background: #0a0c10;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 32px;
+    z-index: 100;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.back-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.88rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+}
+.back-link:hover { opacity: 1; }
+.ctrl-title {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #94a3b8;
+}
+.print-btn {
+    background: #f59e0b;
+    color: #1a1a1a;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    letter-spacing: 1.5px;
+    transition: background 0.2s, transform 0.2s;
+}
+.print-btn:hover { background: #fbbf24; transform: translateY(-1px); }
+
+/* ---- The worksheet sheet (looks like paper on screen) -------------- */
+.worksheet {
+    background: #fff;
+    width: 8.5in;
+    min-height: 11in;
+    margin: 28px auto;
+    padding: 0.5in;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---- Print overrides ------------------------------------------------ */
+@media print {
+    body { background: #fff; padding: 0; }
+    .page-controls { display: none !important; }
+    .worksheet {
+        width: 100%;
+        min-height: 0;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+    }
+}
+
+/* ---- Header --------------------------------------------------------- */
+.ws-tag {
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #888;
+    text-align: center;
+    margin-bottom: 6px;
+}
+.ws-header h1 {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 2.6rem;
+    font-weight: 400;
+    text-align: center;
+    margin: 0 0 2px;
+    letter-spacing: 1.5px;
+}
+.ws-sub {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #555;
+    margin: 0 0 14px;
+    font-family: 'Patrick Hand', cursive;
+}
+
+/* ---- World map block ------------------------------------------------ */
+.ws-map-wrap {
+    border: 3px solid #1a1a1a;
+    border-radius: 14px;
+    padding: 10px;
+    margin-bottom: 14px;
+    background: #fff;
+}
+#world-map {
+    width: 100%;
+    height: auto;
+    max-height: 4.4in;
+    display: block;
+}
+
+.continent-shape {
+    fill: #f3ead9;            /* soft fill so kids can color over it */
+    stroke: #1a1a1a;
+    stroke-width: 6;
+    stroke-linejoin: round;
+}
+.number-bg {
+    fill: #fff;
+    stroke: #1a1a1a;
+    stroke-width: 16;
+}
+.number-text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 520px;
+    font-weight: 800;
+    fill: #1a1a1a;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+/* ---- Antarctica inset ---------------------------------------------- */
+/* The Miller projection in the world map turns Antarctica into a thin strip,
+ * so we represent it as a labeled inset below the main map. */
+.ws-antarctica-inset {
+    border: 2px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    background: #fff;
+}
+.inset-tag {
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 6px;
+}
+.inset-body {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.inset-shape {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+.inset-shape .continent-shape {
+    stroke-width: 4;
+}
+.inset-shape .number-bg {
+    stroke-width: 5;
+}
+.inset-number-text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 64px;
+    font-weight: 800;
+    fill: #1a1a1a;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+.inset-text {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.15rem;
+    color: #1a1a1a;
+    line-height: 1.35;
+}
+.inset-text strong { font-weight: 400; }
+.inset-note {
+    font-size: 0.95rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* ---- Word bank ------------------------------------------------------ */
+.ws-wordbank {
+    border: 2px dashed #1a1a1a;
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin-bottom: 14px;
+    background: #fffbf2;
+}
+.ws-wordbank h2 {
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 0 0 6px;
+    color: #555;
+}
+.wordbank-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 10px;
+    font-size: 1.4rem;
+    font-family: 'Patrick Hand', cursive;
+}
+.word { font-weight: 400; }
+.word-sep { color: #999; font-size: 1.2rem; }
+
+/* ---- Answer lines --------------------------------------------------- */
+.ws-answers h2 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 0 0 10px;
+    letter-spacing: 0.5px;
+}
+.answer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 28px;
+}
+.answer-line {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.25rem;
+}
+.answer-line .num {
+    font-weight: 700;
+    min-width: 1.6em;
+}
+.answer-line .line {
+    flex: 1;
+    border-bottom: 2px solid #1a1a1a;
+    height: 1.7em;
+}
+
+/* ---- Footer --------------------------------------------------------- */
+.ws-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid #aaa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.ws-meta {
+    display: flex;
+    gap: 32px;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.05rem;
+}
+.meta-line {
+    display: inline-block;
+    border-bottom: 2px solid #1a1a1a;
+    width: 140px;
+    height: 1.4em;
+    margin-left: 4px;
+    vertical-align: bottom;
+}
+.ws-credit {
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #888;
+}

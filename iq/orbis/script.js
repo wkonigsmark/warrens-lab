@@ -329,7 +329,7 @@ let currentFocus = 'all';
 // L1=Famous 20, L2=Top 40, L3=Top 80 (soon), L4=World Tour (soon).
 // Persisted to localStorage so the user's choice survives reloads.
 const LEVEL_STORAGE_KEY = 'orbis.selectedLevel';
-const MAX_AVAILABLE_LEVEL = 3; // bump as we ship new tiers
+const MAX_AVAILABLE_LEVEL = 4; // bump as we ship new tiers
 let selectedLevel = (() => {
     const stored = parseInt(localStorage.getItem(LEVEL_STORAGE_KEY), 10);
     return Number.isFinite(stored) && stored >= 1 && stored <= MAX_AVAILABLE_LEVEL ? stored : 1;
@@ -353,6 +353,10 @@ function setSelectedLevel(level) {
         renderCountries(regionGroup, labelGroup);
     }
 }
+
+// Expose so the Geocode panel's in-panel tier picker can sync the global state.
+window.setSelectedLevel = setSelectedLevel;
+window.getSelectedLevel = () => selectedLevel;
 
 async function setFocusRegion(region) {
     // Click the currently-active region chip to zoom back out to the world
@@ -651,13 +655,30 @@ function setupEventListeners() {
         closeRoadmapBtn.onclick = () => roadmapOverlay.classList.remove('visible');
     }
 
+    // Atlas data table overlay
+    const atlasBtn = document.getElementById('atlas-data-btn');
+    const atlasOverlay = document.getElementById('atlas-data-overlay');
+    const closeAtlasBtn = document.getElementById('close-atlas-data');
+    if (atlasBtn) {
+        atlasBtn.onclick = async () => {
+            await OrbisCountries.load();
+            renderAtlasTable();
+            atlasOverlay.classList.add('visible');
+        };
+        closeAtlasBtn.onclick = () => atlasOverlay.classList.remove('visible');
+        document.getElementById('atlas-search').addEventListener('input', renderAtlasTable);
+        document.getElementById('atlas-level-filter').addEventListener('change', renderAtlasTable);
+        document.getElementById('atlas-gaps-only').addEventListener('change', renderAtlasTable);
+    }
+
     // Close on backdrop click — any visible overlay closes when you click the dimmed area
     window.onclick = (e) => {
         const overlayIds = [
             'discovery-overlay',
             'roadmap-overlay',
             'mission-summary-overlay',
-            'geocode-result-overlay'
+            'geocode-result-overlay',
+            'atlas-data-overlay'
         ];
         for (const id of overlayIds) {
             const el = document.getElementById(id);
@@ -672,12 +693,106 @@ function setupEventListeners() {
             'discovery-overlay',
             'roadmap-overlay',
             'mission-summary-overlay',
-            'geocode-result-overlay'
+            'geocode-result-overlay',
+            'atlas-data-overlay'
         ];
         for (const id of overlayIds) {
             document.getElementById(id)?.classList.remove('visible');
         }
     });
+}
+
+// ===========================================================
+// Atlas Data Table — coverage view over every country in the atlas
+// ===========================================================
+const ATLAS_SOFT_FIELDS = [
+    'flag_colors', 'flag_motifs', 'climate_band', 'terrain_headline',
+    'landmark', 'famous_food', 'fact_card', 'bordering_waters'
+];
+
+function isFieldPresent(value) {
+    if (value == null) return false;
+    if (Array.isArray(value)) return value.length > 0;
+    if (typeof value === 'string') return value.length > 0;
+    return true;
+}
+
+function hasGaps(country) {
+    return ATLAS_SOFT_FIELDS.some(f => !isFieldPresent(country[f]));
+}
+
+function escapeHtmlSafe(s) {
+    return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function cellOrMissing(v) {
+    return isFieldPresent(v) ? escapeHtmlSafe(v) : '<span class="missing">—</span>';
+}
+
+function listOrMissing(arr) {
+    if (!arr || !arr.length) return '<span class="missing">—</span>';
+    const preview = arr.slice(0, 3).join(', ');
+    const more = arr.length > 3 ? ` <span class="missing">+${arr.length - 3}</span>` : '';
+    return escapeHtmlSafe(preview) + more;
+}
+
+function renderAtlasTable() {
+    const countries = OrbisCountries.allCountries();
+    const search = document.getElementById('atlas-search').value.trim().toLowerCase();
+    const levelFilter = document.getElementById('atlas-level-filter').value;
+    const gapsOnly = document.getElementById('atlas-gaps-only').checked;
+
+    let rows = countries.slice();
+
+    if (levelFilter === 'curated') rows = rows.filter(c => c.level <= 3);
+    else if (levelFilter === 'uncurated') rows = rows.filter(c => c.level === 4);
+    else if (levelFilter !== 'all') rows = rows.filter(c => c.level === Number(levelFilter));
+
+    if (gapsOnly) rows = rows.filter(hasGaps);
+
+    if (search) {
+        rows = rows.filter(c =>
+            c.name.toLowerCase().includes(search) ||
+            c.iso_a2.toLowerCase().includes(search) ||
+            (c.iso_a3 || '').toLowerCase().includes(search)
+        );
+    }
+
+    rows.sort((a, b) => a.level - b.level || a.name.localeCompare(b.name));
+
+    document.getElementById('atlas-tbody').innerHTML = rows.map(c => `
+        <tr class="level-${c.level}">
+            <td class="lvl">L${c.level}</td>
+            <td class="iso">${c.iso_a2}</td>
+            <td class="name">${escapeHtmlSafe(c.name)}</td>
+            <td>${cellOrMissing(c.capital)}</td>
+            <td>${listOrMissing(c.languages)}</td>
+            <td>${listOrMissing(c.flag_colors)}</td>
+            <td>${listOrMissing(c.flag_motifs)}</td>
+            <td>${cellOrMissing(c.climate_band)}</td>
+            <td>${cellOrMissing(c.terrain_headline)}</td>
+            <td>${cellOrMissing(c.landmark)}</td>
+            <td>${cellOrMissing(c.famous_food)}</td>
+            <td>${listOrMissing(c.bordering_waters)}</td>
+            <td>${c.island === null ? '<span class="missing">—</span>' : (c.island ? '✓' : '·')}</td>
+            <td title="${escapeHtmlSafe(c.fact_card || '')}">${c.fact_card ? '✓' : '<span class="missing">—</span>'}</td>
+        </tr>
+    `).join('');
+
+    // Coverage stats — based on the FULL atlas, not the filtered view
+    const total = countries.length;
+    const fullyCurated = countries.filter(c => ATLAS_SOFT_FIELDS.every(f => isFieldPresent(c[f]))).length;
+    const sparse = countries.filter(c => ATLAS_SOFT_FIELDS.every(f => !isFieldPresent(c[f]))).length;
+    const partial = total - fullyCurated - sparse;
+    document.getElementById('atlas-stats').innerHTML = `
+        <span class="stat"><strong>${total}</strong> total</span>
+        <span class="stat"><strong>${fullyCurated}</strong> fully curated</span>
+        <span class="stat"><strong>${partial}</strong> partial</span>
+        <span class="stat"><strong>${sparse}</strong> sparse (auto-only)</span>
+        <span class="stat"><strong>${rows.length}</strong> shown</span>
+    `;
 }
 
 // Start

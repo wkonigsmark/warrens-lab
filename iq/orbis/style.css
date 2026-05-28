@@ -597,8 +597,9 @@ body.geocode-active #region-focus { display: none; }
     stroke-width: 8;
 }
 
-/* During a Mission, hide the ISO country labels — they'd be a cheat helper. */
-body.mission-active .country-label { display: none; }
+/* During a Mission or Geocode, hide the ISO country labels — they'd be a cheat helper. */
+body.mission-active .country-label,
+body.geocode-active .country-label { display: none; }
 
 .ocean-node {
     fill: rgba(59, 130, 246, 0.1);
@@ -858,6 +859,135 @@ body.mission-active .country-label { display: none; }
 #status-display.hidden { display: none; }
 
 /* ===========================================================
+   ATLAS DATA TABLE — overlay showing every country + soft-data coverage
+   =========================================================== */
+.overlay.atlas-data .modal-content.atlas-data-modal {
+    max-width: 1400px;
+    width: 96vw;
+    max-height: 90vh;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.atlas-data-header {
+    padding: 32px 40px 20px;
+    border-bottom: 1px solid var(--glass-border);
+    flex-shrink: 0;
+}
+.atlas-data-header h2 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    margin-top: 8px;
+}
+.atlas-stats {
+    display: flex;
+    gap: 18px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+.atlas-stats .stat {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+.atlas-stats .stat strong {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--accent-gold);
+    margin-right: 6px;
+}
+.atlas-filters {
+    display: flex;
+    gap: 14px;
+    margin-top: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.atlas-filters input[type="text"],
+.atlas-filters select {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    padding: 8px 14px;
+    border-radius: 22px;
+    outline: none;
+    transition: 0.2s;
+}
+.atlas-filters input[type="text"] {
+    min-width: 260px;
+}
+.atlas-filters input[type="text"]:focus,
+.atlas-filters select:focus {
+    border-color: var(--primary-blue);
+    background: rgba(59, 130, 246, 0.08);
+}
+.atlas-filters .filter-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+.atlas-filters .filter-toggle input { accent-color: var(--accent-gold); }
+
+.atlas-table-wrap {
+    overflow: auto;
+    flex: 1;
+    min-height: 0;
+}
+#atlas-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+}
+#atlas-table thead th {
+    position: sticky;
+    top: 0;
+    background: var(--bg-dark);
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--glass-border);
+    z-index: 2;
+}
+#atlas-table tbody td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    vertical-align: middle;
+    color: var(--text-primary);
+}
+#atlas-table tbody tr:hover td { background: rgba(59, 130, 246, 0.05); }
+#atlas-table .lvl {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.78rem;
+    width: 36px;
+    text-align: center;
+}
+#atlas-table .iso {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    width: 44px;
+}
+#atlas-table .name { font-weight: 600; min-width: 160px; }
+#atlas-table .missing {
+    color: rgba(239, 68, 68, 0.55);
+    font-style: italic;
+}
+#atlas-table tr.level-1 .lvl { color: #4ade80; }
+#atlas-table tr.level-2 .lvl { color: #60a5fa; }
+#atlas-table tr.level-3 .lvl { color: #a78bfa; }
+#atlas-table tr.level-4 .lvl { color: var(--text-muted); }
+
+/* ===========================================================
    ROADMAP — overlay listing all ideas, status-tagged
    =========================================================== */
 .overlay.roadmap .modal-content.roadmap-modal {
@@ -1045,7 +1175,7 @@ body.mission-active .country-label { display: none; }
     transition: transform 0.4s var(--transition);
     z-index: 200;
     display: grid;
-    grid-template-rows: auto auto 1fr auto;
+    grid-template-rows: auto auto auto 1fr auto;
     overflow: hidden;
 }
 
@@ -1097,6 +1227,51 @@ body.mission-active .country-label { display: none; }
     transition: 0.2s;
 }
 #geocode-exit:hover { color: var(--text-primary); }
+
+.gc-tier {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--glass-border);
+    flex-wrap: wrap;
+}
+.gc-tier-label {
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+.gc-tier-chips { display: flex; gap: 4px; }
+.gc-tier-chip {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s var(--transition);
+}
+.gc-tier-chip:hover:not(.active) {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: var(--accent-gold);
+}
+.gc-tier-chip.active {
+    background: var(--accent-gold);
+    border-color: var(--accent-gold);
+    color: var(--bg-dark);
+}
+.gc-tier-hint {
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    margin-left: auto;
+    font-style: italic;
+    opacity: 0.7;
+}
 
 .gc-stats {
     display: grid;
@@ -1196,6 +1371,12 @@ body.mission-active .country-label { display: none; }
     border-radius: 8px;
     animation: clue-in 0.3s var(--transition);
 }
+.clue-card.no-data {
+    background: rgba(148, 163, 184, 0.08);
+    border-left-color: rgba(148, 163, 184, 0.5);
+    opacity: 0.85;
+}
+.clue-card.no-data .clue-text { color: var(--text-muted); font-style: italic; }
 .clue-icon { font-size: 1.1rem; line-height: 1.2; }
 .clue-body { display: flex; flex-direction: column; gap: 2px; }
 .clue-cat {

@@ -8,25 +8,25 @@
   <link rel="stylesheet" href="../shared/world-cup.css">
   <style>
     .windex-hero {
-      min-height: 58vh;
+      min-height: 0;
       display: grid;
-      align-items: end;
-      margin-bottom: 24px;
-      padding: 34px 0 12px;
+      align-items: start;
+      margin: 28px 0 18px;
+      padding: 0;
     }
 
     .windex-title {
-      max-width: 780px;
+      max-width: 620px;
       margin: 8px 0 0;
-      font-size: clamp(4.1rem, 15vw, 10rem);
-      line-height: 0.78;
+      font-size: clamp(3.4rem, 9vw, 6.6rem);
+      line-height: 0.86;
       font-weight: 950;
       letter-spacing: 0;
     }
 
     .windex-method {
       max-width: 760px;
-      margin-top: 24px;
+      margin-top: 16px;
       padding: 13px 16px;
       border: 1px solid rgba(244, 201, 93, 0.24);
       border-radius: var(--wc-radius);
@@ -40,7 +40,7 @@
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 10px;
-      margin: 18px 0 34px;
+      margin: 18px 0 32px;
     }
 
     .windex-team-card {
@@ -179,10 +179,10 @@
       min-width: 700px;
     }
 
-    .windex-table .wc-table th:nth-child(6),
-    .windex-table .wc-table td:nth-child(6),
-    .windex-table .wc-table th:nth-child(7),
-    .windex-table .wc-table td:nth-child(7) {
+    .windex-table .wc-table th:nth-child(8),
+    .windex-table .wc-table td:nth-child(8),
+    .windex-table .wc-table th:nth-child(9),
+    .windex-table .wc-table td:nth-child(9) {
       display: none;
     }
 
@@ -202,11 +202,11 @@
 
     @media (max-width: 560px) {
       .windex-hero {
-        min-height: 44vh;
+        min-height: 0;
       }
 
       .windex-title {
-        font-size: clamp(3.55rem, 23vw, 6rem);
+        font-size: clamp(3.1rem, 18vw, 4.8rem);
       }
 
       .windex-topline {
@@ -265,6 +265,8 @@
               <th>Team</th>
               <th>Group</th>
               <th>W-Index</th>
+              <th>Group Path</th>
+              <th>Path-Adjusted</th>
               <th>Status</th>
               <th>Canonical Match</th>
             </tr>
@@ -272,6 +274,16 @@
           <tbody id="rankings-body"></tbody>
         </table>
       </div>
+    </section>
+
+    <section class="wc-section" id="path-storylines">
+      <div class="wc-section-header">
+        <div>
+          <h2>Path Storylines</h2>
+          <p>Where group context changes the way the W-Index reads.</p>
+        </div>
+      </div>
+      <div class="wc-grid" id="path-story-grid"></div>
     </section>
 
     <section class="wc-section" id="matchups">
@@ -307,6 +319,7 @@
     const $ = (id) => document.getElementById(id);
 
     let wIndexByTeam = new Map();
+    let pathByTeam = new Map();
     let fixtureFilter = "All";
 
     const elements = {
@@ -315,6 +328,7 @@
       rankingsBody: $("rankings-body"),
       matchupsBody: $("matchups-body"),
       fixtureFilter: $("fixture-filter"),
+      pathStoryGrid: $("path-story-grid"),
     };
 
     function flag(countryCode) {
@@ -443,6 +457,63 @@
       return Number.isFinite(score) ? `${score.toFixed(1)}%` : "—";
     }
 
+    function computePathContext() {
+      const groupIds = [...new Set(teams.map((team) => team.group))];
+      const nextPath = new Map();
+
+      for (const group of groupIds) {
+        const groupTeams = teams
+          .filter((team) => team.group === group)
+          .map((team) => ({
+            ...team,
+            score: scoreFor(team.id),
+            rank: wIndexByTeam.get(team.id)?.rank,
+          }))
+          .filter((team) => Number.isFinite(team.score))
+          .sort((a, b) => b.score - a.score);
+
+        for (const team of groupTeams) {
+          const opponents = groupTeams.filter((candidate) => candidate.id !== team.id);
+          const pathEdge = opponents.reduce((sum, opponent) => sum + (team.score - opponent.score), 0) / opponents.length;
+          nextPath.set(team.id, {
+            pathEdge,
+            rawPathAdjusted: team.score + pathEdge * 0.15,
+            groupPosition: groupTeams.findIndex((candidate) => candidate.id === team.id),
+            isGroupFavorite: team.id === groupTeams[0]?.id,
+            groupFavorite: groupTeams[0]?.id,
+          });
+        }
+      }
+
+      const rawAdjusted = [...nextPath.values()].map((path) => path.rawPathAdjusted);
+      const minAdjusted = Math.min(...rawAdjusted);
+      const maxAdjusted = Math.max(...rawAdjusted);
+      for (const path of nextPath.values()) {
+        path.pathAdjusted = maxAdjusted === minAdjusted
+          ? 50
+          : ((path.rawPathAdjusted - minAdjusted) / (maxAdjusted - minAdjusted)) * 100;
+      }
+
+      pathByTeam = nextPath;
+    }
+
+    function pathLabel(edge) {
+      return Number.isFinite(edge) ? `${edge >= 0 ? "+" : ""}${edge.toFixed(1)}` : "—";
+    }
+
+    function positionLabel(position) {
+      return ["Favorite", "Runner Up", "Third", "Last"][position] || "Group";
+    }
+
+    function positionClass(position) {
+      return ["favorite", "runner-up", "third", "last"][position] || "";
+    }
+
+    function positionTag(path) {
+      if (!path) return "";
+      return `<br><span class="wc-position-tag ${positionClass(path.groupPosition)}">${positionLabel(path.groupPosition)}</span>`;
+    }
+
     function renderRankings() {
       const rows = teams.map((team) => ({
         team,
@@ -465,9 +536,70 @@
           <td><strong>${row.team.name}</strong><br><span class="wc-small">${row.team.confederation}</span></td>
           <td>Group ${row.team.group}</td>
           <td class="wc-number"><strong>${scoreLabel(row.data?.score)}</strong></td>
+          <td class="wc-number">
+            <strong>${pathLabel(pathByTeam.get(row.team.id)?.pathEdge)}</strong>
+            ${positionTag(pathByTeam.get(row.team.id))}
+          </td>
+          <td class="wc-number">${scoreLabel(pathByTeam.get(row.team.id)?.pathAdjusted)}</td>
           <td>${row.data?.status || '<span class="wc-empty">Missing from feed</span>'}</td>
           <td>${row.data ? '<span class="wc-trend-good">Matched</span>' : '<span class="wc-trend-watch">Needs alias</span>'}</td>
         </tr>
+      `).join("");
+    }
+
+    function renderPathStories() {
+      const rows = teams.map((team) => ({
+        team,
+        data: wIndexByTeam.get(team.id),
+        path: pathByTeam.get(team.id),
+      })).filter((row) => row.data && row.path);
+
+      const lowerRankedFavorites = rows
+        .filter((row) => row.path.isGroupFavorite && row.data.rank >= 15)
+        .sort((a, b) => b.path.pathEdge - a.path.pathEdge)
+        .slice(0, 4);
+
+      const elitePressure = rows
+        .filter((row) => row.data.rank <= 12 && !row.path.isGroupFavorite)
+        .sort((a, b) => a.path.pathEdge - b.path.pathEdge)
+        .slice(0, 4);
+
+      const clearestPaths = rows
+        .filter((row) => row.path.isGroupFavorite)
+        .sort((a, b) => b.path.pathEdge - a.path.pathEdge)
+        .slice(0, 4);
+
+      const cards = [
+        {
+          label: "Clear Favorite Paths",
+          rows: clearestPaths,
+          note: "Highest average edge over the other three group teams.",
+        },
+        {
+          label: "Lower-Ranked Favorites",
+          rows: lowerRankedFavorites,
+          note: "Teams outside the very top tier that still project as group favorites.",
+        },
+        {
+          label: "Elite Teams Under Pressure",
+          rows: elitePressure,
+          note: "Top W-Index teams without the cleanest path to win their group.",
+        },
+      ];
+
+      elements.pathStoryGrid.innerHTML = cards.map((card) => `
+        <article class="wc-card wc-card-pad">
+          <span class="wc-chip">${card.label}</span>
+          <p class="wc-muted">${card.note}</p>
+          <div style="margin-top: 10px;">
+            ${card.rows.length ? card.rows.map((row) => `
+              <div class="wc-team-row">
+                <span>${flagImage(row.team)}${row.team.name}<br><span class="wc-small">#${row.data.rank} · Group ${row.team.group}</span></span>
+                <strong>${pathLabel(row.path.pathEdge)}</strong>
+              </div>
+            `).join("") : '<p class="wc-muted">No teams currently meet this filter.</p>'}
+          </div>
+        </article>
       `).join("");
     }
 
@@ -567,8 +699,10 @@
         }
 
         wIndexByTeam = nextMap;
+        computePathContext();
         renderTopline();
         renderRankings();
+        renderPathStories();
         renderMatchups();
 
         const missing = teams.filter((team) => !wIndexByTeam.has(team.id)).map((team) => team.name);
@@ -579,6 +713,7 @@
         `);
       } catch (error) {
         renderRankings();
+        renderPathStories();
         renderMatchups();
         setStatus(`W-Index feed failed to load: ${error.message}. If you opened this as a file, use localhost.`, true);
       } finally {
