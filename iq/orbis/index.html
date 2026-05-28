@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=23">
+    <link rel="stylesheet" href="style.css?v=25">
 </head>
 <body>
 
@@ -20,15 +20,34 @@
                 <span class="tagline">The World in View</span>
             </div>
             <nav class="header-actions">
-                <button class="action-btn" id="view-continents-btn">Continents</button>
-                <button class="action-btn" id="view-countries-btn">Countries</button>
-                <button class="action-btn" id="view-oceans-btn">Oceans</button>
+                <!-- View switcher: segmented control -->
+                <div class="view-segment" role="group" aria-label="Map view">
+                    <button class="seg-btn" id="view-continents-btn">Continents</button>
+                    <button class="seg-btn" id="view-countries-btn">Countries</button>
+                    <button class="seg-btn" id="view-oceans-btn">Oceans</button>
+                </div>
+
+                <!-- Primary play actions -->
                 <button class="action-btn" id="start-exploration">Mission Quiz</button>
                 <button class="action-btn accent" id="play-geocode-btn">🕵️ Geocode</button>
-                <a class="action-btn" href="print/continents.html" target="_blank" rel="noopener">🖨 Print</a>
-                <button class="action-btn" id="atlas-data-btn">📊 Atlas</button>
-                <button class="action-btn" id="roadmap-btn">🗺 Roadmap</button>
-                <a href="../iq/index.html" class="action-btn subtle">Exit to IQ</a>
+                <!-- Print menu (lists available print quizzes) -->
+                <div class="nav-menu" id="print-menu-wrap">
+                    <button class="action-btn" id="print-menu-btn" aria-haspopup="true" aria-expanded="false">🖨 Print</button>
+                    <div class="nav-menu-dropdown" id="print-menu-dropdown" role="menu">
+                        <a class="menu-item" href="print/continents.html" target="_blank" rel="noopener" role="menuitem">🌍 The 7 Continents</a>
+                        <a class="menu-item" href="print/oceans.html" target="_blank" rel="noopener" role="menuitem">🌊 The 5 Oceans</a>
+                    </div>
+                </div>
+
+                <!-- More menu (utility + exit) -->
+                <div class="nav-menu">
+                    <button class="action-btn nav-menu-trigger" id="nav-menu-btn" aria-label="More" aria-haspopup="true" aria-expanded="false">⋯</button>
+                    <div class="nav-menu-dropdown" id="nav-menu-dropdown" role="menu">
+                        <button class="menu-item" id="atlas-data-btn" role="menuitem">📊 Atlas Data</button>
+                        <button class="menu-item" id="roadmap-btn" role="menuitem">🗺 Roadmap</button>
+                        <a class="menu-item" href="../iq/index.html" role="menuitem">↩ Exit to IQ</a>
+                    </div>
+                </div>
             </nav>
         </header>
 
@@ -472,10 +491,10 @@
         </div>
     </div>
 
-    <script src="orbis_countries.js?v=23"></script>
-    <script src="orbis_quiz.js?v=23"></script>
-    <script src="orbis_geocode_ui.js?v=23"></script>
-    <script src="orbis_mission_ui.js?v=23"></script>
-    <script src="script.js?v=23"></script>
+    <script src="orbis_countries.js?v=25"></script>
+    <script src="orbis_quiz.js?v=25"></script>
+    <script src="orbis_geocode_ui.js?v=25"></script>
+    <script src="orbis_mission_ui.js?v=25"></script>
+    <script src="script.js?v=25"></script>
 </body>
 </html>

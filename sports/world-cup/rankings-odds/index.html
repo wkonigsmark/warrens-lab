@@ -87,7 +87,7 @@
       width: 100%;
       height: 100%;
       display: block;
-      object-fit: cover;
+      object-fit: contain;
     }
 
     .windex-flag-cell {
@@ -109,7 +109,7 @@
       width: 100%;
       height: 100%;
       display: block;
-      object-fit: cover;
+      object-fit: contain;
     }
 
     .windex-mini-flag {
@@ -128,7 +128,7 @@
       width: 100%;
       height: 100%;
       display: block;
-      object-fit: cover;
+      object-fit: contain;
     }
 
     .windex-rank {
@@ -241,14 +241,200 @@
     @media (max-width: 560px) {
       .windex-hero {
         min-height: 0;
+        margin: 16px 0 12px;
       }
 
       .windex-title {
-        font-size: clamp(3.1rem, 18vw, 4.8rem);
+        font-size: clamp(2.85rem, 16vw, 4.1rem);
+      }
+
+      .windex-method {
+        margin-top: 12px;
+        padding: 11px 12px;
+        font-size: 0.9rem;
       }
 
       .windex-topline {
         grid-template-columns: 1fr;
+        gap: 7px;
+        margin: 12px 0 22px;
+      }
+
+      .windex-team-card {
+        display: grid;
+        grid-template-columns: auto 54px minmax(0, 1fr) auto;
+        grid-template-areas:
+          "rank flag name score"
+          "rank flag group score";
+        gap: 4px 9px;
+        align-items: center;
+        padding: 8px 10px;
+        min-height: 64px;
+        box-shadow: none;
+      }
+
+      .windex-team-card::after {
+        display: none;
+      }
+
+      .windex-rank {
+        grid-area: rank;
+        min-height: 22px;
+        padding: 0 7px;
+        font-size: 0.64rem;
+      }
+
+      .windex-flag-large {
+        grid-area: flag;
+        width: 54px;
+        margin: 0;
+        border-radius: 5px;
+      }
+
+      .windex-team-card h3 {
+        grid-area: name;
+        margin: 0;
+        font-size: 0.95rem;
+        line-height: 1.05;
+      }
+
+      .windex-score {
+        grid-area: score;
+        font-size: 1.12rem;
+        text-align: right;
+      }
+
+      .windex-team-card .wc-small {
+        grid-area: group;
+        line-height: 1.1;
+      }
+
+      .windex-panel {
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .windex-panel h2 {
+        font-size: 1.75rem;
+      }
+
+      .windex-panel > div:last-child {
+        align-items: stretch !important;
+      }
+
+      .windex-table {
+        overflow: visible;
+        border: 0;
+        background: transparent;
+      }
+
+      .windex-table .wc-table {
+        min-width: 0;
+        border-collapse: separate;
+        border-spacing: 0 9px;
+      }
+
+      .windex-table .wc-table thead {
+        display: none;
+      }
+
+      .windex-table .wc-table,
+      .windex-table .wc-table tbody,
+      .windex-table .wc-table tr,
+      .windex-table .wc-table td {
+        display: block;
+        width: 100%;
+      }
+
+      .windex-table .wc-table tr {
+        display: grid;
+        grid-template-columns: auto 42px minmax(0, 1fr);
+        column-gap: 9px;
+        align-items: start;
+        padding: 11px 12px;
+        border: 1px solid var(--wc-line);
+        border-radius: var(--wc-radius);
+        background: rgba(255, 255, 255, 0.035);
+      }
+
+      .windex-table .wc-table td {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 5px 0;
+        border: 0;
+        text-align: right;
+        font-size: 0.86rem;
+      }
+
+      .windex-table .wc-table td::before {
+        content: attr(data-label);
+        color: var(--wc-faint);
+        font-size: 0.62rem;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-align: left;
+      }
+
+      .windex-table .wc-table td:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1;
+        width: auto;
+        padding-top: 1px;
+        color: var(--wc-gold);
+      }
+
+      .windex-table .wc-table td:nth-child(1)::before,
+      .windex-table .wc-table td:nth-child(2)::before,
+      .windex-table .wc-table td:nth-child(3)::before {
+        display: none;
+      }
+
+      .windex-table .wc-table td:nth-child(2) {
+        grid-column: 2;
+        grid-row: 1;
+        width: auto;
+        padding-top: 1px;
+      }
+
+      .windex-table .wc-table td:nth-child(3) {
+        grid-column: 3;
+        grid-row: 1;
+        display: block;
+        min-height: 38px;
+        padding-top: 0;
+        text-align: left;
+        font-size: 1rem;
+      }
+
+      .windex-table .wc-table td:nth-child(4) {
+        grid-column: 1 / -1;
+        border-top: 1px solid rgba(247, 244, 235, 0.07);
+        margin-top: 7px;
+        padding-top: 9px;
+      }
+
+      .windex-table .wc-table td:nth-child(n+5) {
+        grid-column: 1 / -1;
+      }
+
+      .windex-table .wc-table td:nth-child(9),
+      .windex-table .wc-table td:nth-child(10) {
+        display: none;
+      }
+
+      .windex-flag-cell {
+        width: auto;
+      }
+
+      .windex-flag-thumb {
+        width: 42px;
+        border-radius: 4px;
+      }
+
+      .windex-table .wc-position-tag {
+        margin-top: 3px;
       }
     }
   </style>
@@ -644,23 +830,23 @@
 
       elements.rankingsBody.innerHTML = rows.map((row, index) => `
         <tr>
-          <td class="wc-number">${row.data?.rank || "—"}</td>
-          <td class="windex-flag-cell">
+          <td class="wc-number" data-label="Rank">${row.data?.rank || "—"}</td>
+          <td class="windex-flag-cell" data-label="Flag">
             <span class="windex-flag-thumb" aria-label="${row.team.name} flag">
               <img src="${flagUrl(row.team, 160)}" alt="" loading="lazy">
             </span>
           </td>
-          <td><strong>${row.team.name}</strong><br><span class="wc-small">${row.team.confederation}</span></td>
-          <td>Group ${row.team.group}</td>
-          <td class="wc-number"><strong>${scoreLabel(row.data?.score)}</strong></td>
-          <td class="wc-number">
+          <td data-label="Team"><strong>${row.team.name}</strong><br><span class="wc-small">${row.team.confederation}</span></td>
+          <td data-label="Group">Group ${row.team.group}</td>
+          <td class="wc-number" data-label="W-Index"><strong>${scoreLabel(row.data?.score)}</strong></td>
+          <td class="wc-number" data-label="Group Path">
             <strong>${pathLabel(pathByTeam.get(row.team.id)?.pathEdge)}</strong>
             ${positionTag(pathByTeam.get(row.team.id))}
           </td>
-          <td class="wc-number">${scoreLabel(pathByTeam.get(row.team.id)?.pathAdjusted)}</td>
-          <td class="wc-number"><strong>${diffLabel(row)}</strong></td>
-          <td>${row.data?.status || '<span class="wc-empty">Missing from feed</span>'}</td>
-          <td>${row.data ? '<span class="wc-trend-good">Matched</span>' : '<span class="wc-trend-watch">Needs alias</span>'}</td>
+          <td class="wc-number" data-label="Path-Adjusted">${scoreLabel(pathByTeam.get(row.team.id)?.pathAdjusted)}</td>
+          <td class="wc-number" data-label="Diff"><strong>${diffLabel(row)}</strong></td>
+          <td data-label="Status">${row.data?.status || '<span class="wc-empty">Missing from feed</span>'}</td>
+          <td data-label="Canonical Match">${row.data ? '<span class="wc-trend-good">Matched</span>' : '<span class="wc-trend-watch">Needs alias</span>'}</td>
         </tr>
       `).join("");
     }

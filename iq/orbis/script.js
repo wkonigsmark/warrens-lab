@@ -305,6 +305,11 @@ function renderMap(view) {
     // Expose the current view to CSS so we can hide/show view-scoped UI
     document.getElementById('app').dataset.view = view;
 
+    // Sync the segmented view-switcher's active state
+    for (const v of ['continents', 'countries', 'oceans']) {
+        document.getElementById(`view-${v}-btn`)?.classList.toggle('active', v === view);
+    }
+
     // Reset any region zoom on every view change so the SVG isn't stuck at a sub-region
     const svg = document.getElementById('world-map');
     if (svg && window.OrbisCountries) OrbisCountries.resetViewBox(svg);
@@ -639,6 +644,34 @@ function setupEventListeners() {
         }
         OrbisMission.start(selectedLevel);
     };
+
+    // Generic dropdown wiring — works for both the ⋯ More menu and the 🖨 Print menu
+    function wireDropdown(triggerId, dropdownId) {
+        const trigger = document.getElementById(triggerId);
+        const dropdown = document.getElementById(dropdownId);
+        if (!trigger || !dropdown) return;
+        trigger.onclick = e => {
+            e.stopPropagation();
+            // Close any other open dropdowns first
+            document.querySelectorAll('.nav-menu-dropdown.open').forEach(el => {
+                if (el !== dropdown) el.classList.remove('open');
+            });
+            const open = dropdown.classList.toggle('open');
+            trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        };
+        document.addEventListener('click', e => {
+            if (!dropdown.contains(e.target) && e.target !== trigger) {
+                dropdown.classList.remove('open');
+                trigger.setAttribute('aria-expanded', 'false');
+            }
+        });
+        dropdown.addEventListener('click', () => {
+            dropdown.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+        });
+    }
+    wireDropdown('nav-menu-btn', 'nav-menu-dropdown');
+    wireDropdown('print-menu-btn', 'print-menu-dropdown');
 
     // Modal Close
     const closeBtn = document.getElementById('close-modal');
