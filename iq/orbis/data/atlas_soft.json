@@ -2,8 +2,14 @@
   "__doc": {
     "purpose": "Hand-curated soft fields for Orbis atlas. Merged with REST Countries data by build_atlas.mjs to produce atlas.json.",
     "color_palette": ["red", "white", "blue", "green", "yellow", "orange", "black", "light-blue"],
-    "motif_palette": ["stripes", "stars", "cross", "crescent", "sun", "eagle", "maple-leaf", "dragon", "circle", "sword", "text", "coat-of-arms", "wheel", "trigrams", "sphere", "Y-shape"],
-    "climate_bands": ["tropical", "temperate", "arid", "polar", "mixed"]
+    "motif_palette": ["stripes", "stars", "star", "cross", "crescent", "sun", "eagle", "maple-leaf", "dragon", "circle", "sword", "text", "coat-of-arms", "wheel", "trigrams", "sphere", "Y-shape"],
+    "climate_bands": ["tropical", "temperate", "arid", "polar", "mixed"],
+    "levels": {
+      "1": "Famous 20 — the most-recognized 20 countries. L1 Geocode pool.",
+      "2": "Top 40 — next 20 most-recognized. L2 Geocode pool (combines with L1).",
+      "3": "Top 80 — broader regional coverage. L3 pool.",
+      "4": "All ~195 countries. L4 World Tour."
+    }
   },
 
   "continents": {
@@ -74,6 +80,7 @@
 
   "countries": {
     "US": {
+      "level": 1,
       "flag_colors": ["red", "white", "blue"],
       "flag_motifs": ["stars", "stripes"],
       "climate_band": "temperate",
@@ -85,6 +92,7 @@
       "bordering_waters": ["Atlantic Ocean", "Pacific Ocean", "Gulf of Mexico"]
     },
     "CA": {
+      "level": 1,
       "flag_colors": ["red", "white"],
       "flag_motifs": ["maple-leaf"],
       "climate_band": "polar",
@@ -96,6 +104,7 @@
       "bordering_waters": ["Atlantic Ocean", "Pacific Ocean", "Arctic Ocean"]
     },
     "MX": {
+      "level": 1,
       "flag_colors": ["green", "white", "red"],
       "flag_motifs": ["eagle", "stripes"],
       "climate_band": "tropical",
@@ -107,6 +116,7 @@
       "bordering_waters": ["Pacific Ocean", "Gulf of Mexico", "Caribbean Sea"]
     },
     "BR": {
+      "level": 1,
       "flag_colors": ["green", "yellow", "blue", "white"],
       "flag_motifs": ["stars", "sphere"],
       "climate_band": "tropical",
@@ -118,6 +128,7 @@
       "bordering_waters": ["Atlantic Ocean"]
     },
     "AR": {
+      "level": 1,
       "flag_colors": ["light-blue", "white"],
       "flag_motifs": ["sun", "stripes"],
       "climate_band": "temperate",
@@ -129,6 +140,7 @@
       "bordering_waters": ["Atlantic Ocean"]
     },
     "GB": {
+      "level": 1,
       "flag_colors": ["red", "white", "blue"],
       "flag_motifs": ["cross"],
       "climate_band": "temperate",
@@ -140,6 +152,7 @@
       "bordering_waters": ["Atlantic Ocean", "North Sea", "English Channel"]
     },
     "FR": {
+      "level": 1,
       "flag_colors": ["blue", "white", "red"],
       "flag_motifs": ["stripes"],
       "climate_band": "temperate",
@@ -151,6 +164,7 @@
       "bordering_waters": ["Atlantic Ocean", "Mediterranean Sea", "English Channel"]
     },
     "DE": {
+      "level": 1,
       "flag_colors": ["black", "red", "yellow"],
       "flag_motifs": ["stripes"],
       "climate_band": "temperate",
@@ -162,6 +176,7 @@
       "bordering_waters": ["North Sea", "Baltic Sea"]
     },
     "ES": {
+      "level": 1,
       "flag_colors": ["red", "yellow"],
       "flag_motifs": ["coat-of-arms", "stripes"],
       "climate_band": "temperate",
@@ -173,6 +188,7 @@
       "bordering_waters": ["Atlantic Ocean", "Mediterranean Sea"]
     },
     "IT": {
+      "level": 1,
       "flag_colors": ["green", "white", "red"],
       "flag_motifs": ["stripes"],
       "climate_band": "temperate",
@@ -184,6 +200,7 @@
       "bordering_waters": ["Mediterranean Sea", "Adriatic Sea", "Tyrrhenian Sea"]
     },
     "RU": {
+      "level": 1,
       "flag_colors": ["white", "blue", "red"],
       "flag_motifs": ["stripes"],
       "climate_band": "polar",
@@ -195,6 +212,7 @@
       "bordering_waters": ["Arctic Ocean", "Pacific Ocean", "Baltic Sea", "Black Sea", "Caspian Sea"]
     },
     "CN": {
+      "level": 1,
       "flag_colors": ["red", "yellow"],
       "flag_motifs": ["stars"],
       "climate_band": "mixed",
@@ -206,6 +224,7 @@
       "bordering_waters": ["Pacific Ocean", "South China Sea", "Yellow Sea", "East China Sea"]
     },
     "JP": {
+      "level": 1,
       "flag_colors": ["white", "red"],
       "flag_motifs": ["sun", "circle"],
       "climate_band": "temperate",
@@ -217,6 +236,7 @@
       "bordering_waters": ["Pacific Ocean", "Sea of Japan"]
     },
     "IN": {
+      "level": 1,
       "flag_colors": ["orange", "white", "green", "blue"],
       "flag_motifs": ["wheel", "stripes"],
       "climate_band": "tropical",
@@ -228,6 +248,7 @@
       "bordering_waters": ["Indian Ocean", "Arabian Sea", "Bay of Bengal"]
     },
     "KR": {
+      "level": 1,
       "flag_colors": ["white", "red", "blue", "black"],
       "flag_motifs": ["circle", "trigrams"],
       "climate_band": "temperate",
@@ -239,6 +260,7 @@
       "bordering_waters": ["Sea of Japan", "Yellow Sea"]
     },
     "SA": {
+      "level": 1,
       "flag_colors": ["green", "white"],
       "flag_motifs": ["text", "sword"],
       "climate_band": "arid",
@@ -250,6 +272,7 @@
       "bordering_waters": ["Red Sea", "Persian Gulf"]
     },
     "EG": {
+      "level": 1,
       "flag_colors": ["red", "white", "black"],
       "flag_motifs": ["eagle", "stripes"],
       "climate_band": "arid",
@@ -261,6 +284,7 @@
       "bordering_waters": ["Mediterranean Sea", "Red Sea"]
     },
     "ZA": {
+      "level": 1,
       "flag_colors": ["red", "white", "blue", "green", "yellow", "black"],
       "flag_motifs": ["Y-shape", "stripes"],
       "climate_band": "temperate",
@@ -272,6 +296,7 @@
       "bordering_waters": ["Atlantic Ocean", "Indian Ocean"]
     },
     "NG": {
+      "level": 1,
       "flag_colors": ["green", "white"],
       "flag_motifs": ["stripes"],
       "climate_band": "tropical",
@@ -283,6 +308,7 @@
       "bordering_waters": ["Atlantic Ocean", "Gulf of Guinea"]
     },
     "AU": {
+      "level": 1,
       "flag_colors": ["blue", "white", "red"],
       "flag_motifs": ["stars", "cross"],
       "climate_band": "arid",
@@ -292,6 +318,247 @@
       "fact_card": "Both a country and a continent — home to kangaroos, koalas, and the Great Barrier Reef.",
       "island": true,
       "bordering_waters": ["Pacific Ocean", "Indian Ocean", "Coral Sea", "Tasman Sea"]
+    },
+
+    "NL": {
+      "level": 2,
+      "flag_colors": ["red", "white", "blue"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "temperate",
+      "terrain_headline": "flat",
+      "landmark": "Anne Frank House",
+      "famous_food": "stroopwafel",
+      "fact_card": "About a third of the country lies below sea level, protected by an enormous system of dikes.",
+      "island": false,
+      "bordering_waters": ["North Sea"]
+    },
+    "SE": {
+      "level": 2,
+      "flag_colors": ["blue", "yellow"],
+      "flag_motifs": ["cross"],
+      "climate_band": "polar",
+      "terrain_headline": "forested",
+      "landmark": "Stockholm City Hall",
+      "famous_food": "meatballs",
+      "fact_card": "One of the most forested countries in Europe, with a coastline scattered with 30,000 islands.",
+      "island": false,
+      "bordering_waters": ["Baltic Sea", "Gulf of Bothnia"]
+    },
+    "NO": {
+      "level": 2,
+      "flag_colors": ["red", "white", "blue"],
+      "flag_motifs": ["cross"],
+      "climate_band": "polar",
+      "terrain_headline": "fjords",
+      "landmark": "Geirangerfjord",
+      "famous_food": "salmon",
+      "fact_card": "Carved by glaciers, Norway's coast is a maze of fjords and one of the world's longest coastlines.",
+      "island": false,
+      "bordering_waters": ["North Sea", "Norwegian Sea", "Barents Sea"]
+    },
+    "PL": {
+      "level": 2,
+      "flag_colors": ["white", "red"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "temperate",
+      "terrain_headline": "plains",
+      "landmark": "Wawel Castle",
+      "famous_food": "pierogi",
+      "fact_card": "Home to Europe's last primeval forest and the birthplace of scientist Marie Curie.",
+      "island": false,
+      "bordering_waters": ["Baltic Sea"]
+    },
+    "PT": {
+      "level": 2,
+      "flag_colors": ["green", "red", "yellow"],
+      "flag_motifs": ["coat-of-arms"],
+      "climate_band": "temperate",
+      "terrain_headline": "coastal",
+      "landmark": "Belém Tower",
+      "famous_food": "pastel de nata",
+      "fact_card": "From this small country, explorers like Vasco da Gama opened up sea routes around the world.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean"]
+    },
+    "GR": {
+      "level": 2,
+      "flag_colors": ["blue", "white"],
+      "flag_motifs": ["stripes", "cross"],
+      "climate_band": "temperate",
+      "terrain_headline": "islands",
+      "landmark": "Acropolis of Athens",
+      "famous_food": "gyro",
+      "fact_card": "Birthplace of the Olympic Games and home to over 6,000 islands scattered across two seas.",
+      "island": false,
+      "bordering_waters": ["Aegean Sea", "Mediterranean Sea", "Ionian Sea"]
+    },
+    "CH": {
+      "level": 2,
+      "flag_colors": ["red", "white"],
+      "flag_motifs": ["cross"],
+      "climate_band": "temperate",
+      "terrain_headline": "mountainous",
+      "landmark": "Matterhorn",
+      "famous_food": "cheese fondue",
+      "fact_card": "A landlocked alpine nation famous for neutrality, chocolate, and four official languages.",
+      "island": false,
+      "bordering_waters": []
+    },
+    "ID": {
+      "level": 2,
+      "flag_colors": ["red", "white"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "tropical",
+      "terrain_headline": "archipelago",
+      "landmark": "Borobudur Temple",
+      "famous_food": "nasi goreng",
+      "fact_card": "An archipelago of more than 17,000 islands — the world's largest island nation.",
+      "island": true,
+      "bordering_waters": ["Pacific Ocean", "Indian Ocean", "Java Sea"]
+    },
+    "TH": {
+      "level": 2,
+      "flag_colors": ["red", "white", "blue"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "tropical",
+      "terrain_headline": "mixed",
+      "landmark": "Grand Palace in Bangkok",
+      "famous_food": "pad thai",
+      "fact_card": "Known as the 'Land of Smiles' — the only Southeast Asian country never colonized by Europeans.",
+      "island": false,
+      "bordering_waters": ["Andaman Sea", "Gulf of Thailand"]
+    },
+    "VN": {
+      "level": 2,
+      "flag_colors": ["red", "yellow"],
+      "flag_motifs": ["star"],
+      "climate_band": "tropical",
+      "terrain_headline": "coastal",
+      "landmark": "Ha Long Bay",
+      "famous_food": "pho",
+      "fact_card": "An S-shaped country along the South China Sea, famous for rice terraces and pho noodle soup.",
+      "island": false,
+      "bordering_waters": ["South China Sea", "Gulf of Tonkin"]
+    },
+    "TR": {
+      "level": 2,
+      "flag_colors": ["red", "white"],
+      "flag_motifs": ["crescent", "star"],
+      "climate_band": "temperate",
+      "terrain_headline": "peninsula",
+      "landmark": "Hagia Sophia",
+      "famous_food": "kebab",
+      "fact_card": "Bridges Europe and Asia — Istanbul is the only major city sitting on two continents.",
+      "island": false,
+      "bordering_waters": ["Mediterranean Sea", "Black Sea", "Aegean Sea"]
+    },
+    "IR": {
+      "level": 2,
+      "flag_colors": ["green", "white", "red"],
+      "flag_motifs": ["text", "stripes"],
+      "climate_band": "arid",
+      "terrain_headline": "plateau",
+      "landmark": "Persepolis",
+      "famous_food": "kebab",
+      "fact_card": "Heir to the ancient Persian Empire, with deserts, snow-capped mountains, and the world's best saffron.",
+      "island": false,
+      "bordering_waters": ["Persian Gulf", "Caspian Sea", "Gulf of Oman"]
+    },
+    "PK": {
+      "level": 2,
+      "flag_colors": ["green", "white"],
+      "flag_motifs": ["crescent", "star"],
+      "climate_band": "arid",
+      "terrain_headline": "mixed",
+      "landmark": "Badshahi Mosque",
+      "famous_food": "biryani",
+      "fact_card": "Home to K2, the second-highest mountain on Earth, and one of the world's most populous countries.",
+      "island": false,
+      "bordering_waters": ["Arabian Sea"]
+    },
+    "PH": {
+      "level": 2,
+      "flag_colors": ["red", "white", "blue", "yellow"],
+      "flag_motifs": ["stars", "sun"],
+      "climate_band": "tropical",
+      "terrain_headline": "archipelago",
+      "landmark": "Banaue Rice Terraces",
+      "famous_food": "adobo",
+      "fact_card": "An archipelago of 7,641 islands with one of the most diverse marine ecosystems on Earth.",
+      "island": true,
+      "bordering_waters": ["Pacific Ocean", "South China Sea", "Philippine Sea"]
+    },
+    "KE": {
+      "level": 2,
+      "flag_colors": ["black", "red", "green", "white"],
+      "flag_motifs": ["stripes", "sword"],
+      "climate_band": "tropical",
+      "terrain_headline": "savanna",
+      "landmark": "Maasai Mara",
+      "famous_food": "ugali",
+      "fact_card": "Crossed by the equator, home to the world's most famous safari grounds and the cradle of human evolution.",
+      "island": false,
+      "bordering_waters": ["Indian Ocean"]
+    },
+    "MA": {
+      "level": 2,
+      "flag_colors": ["red", "green"],
+      "flag_motifs": ["star"],
+      "climate_band": "arid",
+      "terrain_headline": "mixed",
+      "landmark": "Marrakech Medina",
+      "famous_food": "tagine",
+      "fact_card": "Where the Atlas Mountains meet the Sahara and the Atlantic meets the Mediterranean.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean", "Mediterranean Sea"]
+    },
+    "ET": {
+      "level": 2,
+      "flag_colors": ["green", "yellow", "red", "blue"],
+      "flag_motifs": ["star"],
+      "climate_band": "temperate",
+      "terrain_headline": "highlands",
+      "landmark": "Rock-Hewn Churches of Lalibela",
+      "famous_food": "injera",
+      "fact_card": "Birthplace of coffee, one of the oldest Christian nations, and home of 'Lucy,' a 3.2-million-year-old human ancestor.",
+      "island": false,
+      "bordering_waters": []
+    },
+    "CU": {
+      "level": 2,
+      "flag_colors": ["blue", "white", "red"],
+      "flag_motifs": ["stripes", "star"],
+      "climate_band": "tropical",
+      "terrain_headline": "island",
+      "landmark": "Old Havana",
+      "famous_food": "ropa vieja",
+      "fact_card": "The largest island in the Caribbean, famous for its music, vintage cars, and tropical beaches.",
+      "island": true,
+      "bordering_waters": ["Caribbean Sea", "Gulf of Mexico", "Atlantic Ocean"]
+    },
+    "PE": {
+      "level": 2,
+      "flag_colors": ["red", "white"],
+      "flag_motifs": ["stripes", "coat-of-arms"],
+      "climate_band": "mixed",
+      "terrain_headline": "mountainous",
+      "landmark": "Machu Picchu",
+      "famous_food": "ceviche",
+      "fact_card": "Home of Machu Picchu and the Inca Empire, spanning desert coast, Andes peaks, and Amazon rainforest.",
+      "island": false,
+      "bordering_waters": ["Pacific Ocean"]
+    },
+    "NZ": {
+      "level": 2,
+      "flag_colors": ["blue", "red", "white"],
+      "flag_motifs": ["stars", "cross"],
+      "climate_band": "temperate",
+      "terrain_headline": "islands",
+      "landmark": "Milford Sound",
+      "famous_food": "pavlova",
+      "fact_card": "Two main islands shaped by volcanoes and glaciers — home of the kiwi bird and the Māori people.",
+      "island": true,
+      "bordering_waters": ["Pacific Ocean", "Tasman Sea"]
     }
   }
 }

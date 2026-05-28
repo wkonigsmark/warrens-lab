@@ -70,7 +70,7 @@
         </article>
         <article class="wc-card wc-card-pad">
           <span class="wc-chip">Close Density</span>
-          <p class="wc-copy">Count group matchups within 5, 10, and 15 W-Index points. More means fewer obvious games.</p>
+          <p class="wc-copy">Count each unique group matchup once, out of six total games, within 5, 10, and 15 W-Index points.</p>
         </article>
       </div>
       <div class="wc-status" id="status">Loading W-Index group analysis...</div>
@@ -385,7 +385,7 @@
             <td class="wc-number">${scoreLabel(analysis.avg)}</td>
             <td class="wc-number">${analysis.pairwiseDiffSum.toFixed(1)}<br><span class="wc-small">avg ${analysis.avgPairwiseDiff.toFixed(1)}</span></td>
             <td class="wc-number">${analysis.stdDev.toFixed(1)}</td>
-            <td class="wc-number">≤5: ${analysis.close5}<br>≤10: ${analysis.close10}<br>≤15: ${analysis.close15}</td>
+            <td class="wc-number">≤5: ${analysis.close5}/6<br>≤10: ${analysis.close10}/6<br>≤15: ${analysis.close15}/6</td>
             <td class="wc-number">${analysis.teamRows[0].name}<br><span class="wc-small">+${analysis.favoritePath.toFixed(1)} avg edge</span></td>
             <td class="wc-number">${analysis.topTwoCushion.toFixed(1)} pts</td>
           </tr>

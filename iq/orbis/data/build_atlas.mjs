@@ -79,6 +79,7 @@ async function main() {
       iso_a3: raw.cca3,
       name: raw.name.common,
       official_name: raw.name.official,
+      level: s.level || 4,                                  // tier 1=Famous20, 2=top40, 3=top80, 4=all
       continent: continentFor(raw.region, raw.subregion),
       subregion: raw.subregion,
       capital: (raw.capital && raw.capital[0]) || null,
