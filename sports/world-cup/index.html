@@ -243,6 +243,13 @@
       min-width: 0;
       overflow: hidden;
       mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+      cursor: grab;
+      touch-action: pan-y;
+      user-select: none;
+    }
+
+    .ticker-window.is-dragging {
+      cursor: grabbing;
     }
 
     .ticker-track {
@@ -251,16 +258,7 @@
       width: max-content;
       min-height: 52px;
       transform: translateX(0);
-      animation: ticker-right-to-left 96s linear infinite;
       will-change: transform;
-    }
-
-    .ticker-track.is-entering {
-      animation: ticker-enter-from-right 16s linear 1 forwards;
-    }
-
-    .ticker-window:hover .ticker-track {
-      animation-play-state: paused;
     }
 
     .ticker-item {
@@ -431,26 +429,6 @@
       object-fit: cover;
     }
 
-    @keyframes ticker-right-to-left {
-      from {
-        transform: translateX(0);
-      }
-
-      to {
-        transform: translateX(-50%);
-      }
-    }
-
-    @keyframes ticker-enter-from-right {
-      from {
-        transform: translateX(100vw);
-      }
-
-      to {
-        transform: translateX(0);
-      }
-    }
-
     @media (max-width: 640px) {
       .hero {
         grid-template-rows: auto minmax(190px, 30vh) auto auto;
@@ -475,7 +453,6 @@
 
       .ticker-track {
         min-height: 46px;
-        animation-duration: 78s;
       }
 
       .ticker-item {
@@ -589,11 +566,20 @@
     (() => {
       const W_INDEX_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv';
       const ticker = document.getElementById('w-index-ticker');
+      const tickerWindow = ticker.closest('.ticker-window');
       const modalOverlay = document.getElementById('group-modal-overlay');
       const modalContent = document.getElementById('group-modal-content');
       const modalClose = document.getElementById('group-modal-close');
       let analysesByGroup = new Map();
       let lastFocusedTickerItem = null;
+      let tickerX = 0;
+      let tickerLoopWidth = 0;
+      let tickerLastFrame = 0;
+      let tickerPausedUntil = 0;
+      let tickerDragging = false;
+      let tickerDragStartX = 0;
+      let tickerDragStartOffset = 0;
+      let tickerDragMoved = false;
 
       function flagCode(team) {
         if (team.id === 'ENG') return 'gb-eng';
@@ -780,13 +766,37 @@
           </button>
         `).join('');
 
-        ticker.classList.remove('is-entering');
         ticker.innerHTML = items + items;
-        void ticker.offsetWidth;
-        ticker.classList.add('is-entering');
-        window.setTimeout(() => {
-          ticker.classList.remove('is-entering');
-        }, 16000);
+        requestAnimationFrame(() => {
+          tickerLoopWidth = ticker.scrollWidth / 2;
+          tickerX = tickerWindow.getBoundingClientRect().width;
+          tickerLastFrame = performance.now();
+        });
+      }
+
+      function normalizeTickerX() {
+        if (!tickerLoopWidth) return;
+        while (tickerX <= -tickerLoopWidth) tickerX += tickerLoopWidth;
+        while (tickerX > 0) tickerX -= tickerLoopWidth;
+      }
+
+      function animateTicker(now) {
+        if (!tickerLastFrame) tickerLastFrame = now;
+        const delta = now - tickerLastFrame;
+        tickerLastFrame = now;
+
+        if (!tickerDragging && now > tickerPausedUntil && tickerLoopWidth) {
+          const pxPerSecond = window.innerWidth < 640 ? 26 : 34;
+          tickerX -= (pxPerSecond * delta) / 1000;
+          normalizeTickerX();
+        }
+
+        ticker.style.transform = `translateX(${tickerX}px)`;
+        requestAnimationFrame(animateTicker);
+      }
+
+      function pointerX(event) {
+        return event.clientX ?? event.touches?.[0]?.clientX ?? 0;
       }
 
       async function loadTicker() {
@@ -802,11 +812,48 @@
       }
 
       ticker.addEventListener('click', (event) => {
+        if (tickerDragMoved) {
+          event.preventDefault();
+          event.stopPropagation();
+          tickerDragMoved = false;
+          return;
+        }
         const item = event.target.closest('.ticker-item');
         if (!item?.dataset.group) return;
         lastFocusedTickerItem = item;
         openGroupModal(item.dataset.group);
       });
+
+      tickerWindow.addEventListener('pointerdown', (event) => {
+        tickerDragging = true;
+        tickerDragMoved = false;
+        tickerDragStartX = pointerX(event);
+        tickerDragStartOffset = tickerX;
+        tickerPausedUntil = performance.now() + 5000;
+        tickerWindow.classList.add('is-dragging');
+        tickerWindow.setPointerCapture?.(event.pointerId);
+      });
+
+      tickerWindow.addEventListener('pointermove', (event) => {
+        if (!tickerDragging) return;
+        const delta = pointerX(event) - tickerDragStartX;
+        if (Math.abs(delta) > 5) tickerDragMoved = true;
+        tickerX = tickerDragStartOffset + delta;
+        normalizeTickerX();
+        tickerPausedUntil = performance.now() + 2600;
+      });
+
+      function endTickerDrag(event) {
+        if (!tickerDragging) return;
+        tickerDragging = false;
+        tickerPausedUntil = performance.now() + 1800;
+        tickerWindow.classList.remove('is-dragging');
+        tickerWindow.releasePointerCapture?.(event.pointerId);
+      }
+
+      tickerWindow.addEventListener('pointerup', endTickerDrag);
+      tickerWindow.addEventListener('pointercancel', endTickerDrag);
+      tickerWindow.addEventListener('pointerleave', endTickerDrag);
 
       modalClose.addEventListener('click', closeGroupModal);
       modalOverlay.addEventListener('click', (event) => {
@@ -820,6 +867,7 @@
       });
 
       loadTicker();
+      requestAnimationFrame(animateTicker);
     })();
   </script>
 
@@ -844,14 +892,14 @@
         [73, 141, 255],
       ];
 
-      const MAX_SPEED = 4.2;
-      const HOMING_FORCE = 0.052;
+      const MAX_SPEED = 3.4;
+      const HOMING_FORCE = 0.041;
       const SEPARATION_RADIUS = 3.2;
       const SEPARATION_FORCE = 0.08;
       const DAMPING = 0.88;
       const CURSOR_RADIUS = 130;
       const CURSOR_SCATTER = 7.5;
-      const ORGANIZE_MS = 2200;
+      const ORGANIZE_MS = 3600;
 
       let W = 0;
       let H = 0;
