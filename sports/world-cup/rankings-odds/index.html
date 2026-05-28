@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>W-Index Odds Lab | Warren's World Cup Pool</title>
+  <title>W-Index Rankings | Warren's World Cup Pool</title>
   <link rel="stylesheet" href="../shared/world-cup.css">
 </head>
 
@@ -16,6 +16,7 @@
         <a href="../pool/">Pool</a>
         <a href="../meta/">Meta</a>
         <a href="./" aria-current="page">W-Index</a>
+        <a href="../groups/">Groups</a>
         <a href="../scoreboard/">Scoreboard</a>
         <a href="../news/">News</a>
       </nav>
@@ -23,78 +24,60 @@
 
     <section class="wc-hero">
       <div>
-        <div class="wc-eyebrow">Odds + Rankings Architecture</div>
-        <h1 class="wc-title">W-Index Odds Lab</h1>
+        <div class="wc-eyebrow">Proprietary Ranking Layer</div>
+        <h1 class="wc-title">W-Index Rankings</h1>
         <p class="wc-copy">
-          A live odds intake surface for all 48 teams and every fixture. For now this ranks raw market signals; later we
-          can fold them into the proprietary W-Index formula.
+          Live pull from Warren's published W-Index sheet, normalized against the canonical 48-team tournament data and
+          applied to every scheduled matchup.
         </p>
       </div>
-      <div class="wc-pill" id="provider-pill">Provider: not connected</div>
+      <div class="wc-pill" id="source-pill">Source: Google Sheet CSV</div>
     </section>
 
-    <section class="wc-stat-row" aria-label="Odds coverage totals">
+    <section class="wc-stat-row" aria-label="W-Index coverage totals">
       <div class="wc-stat">
         <strong id="team-count">48</strong>
         <span>Teams</span>
       </div>
       <div class="wc-stat">
-        <strong id="futures-count">0</strong>
-        <span>Future Prices</span>
+        <strong id="ranked-count">0</strong>
+        <span>Ranked</span>
       </div>
       <div class="wc-stat">
-        <strong id="fixture-count">104</strong>
-        <span>Fixtures</span>
+        <strong id="matchup-count">0</strong>
+        <span>Rated Fixtures</span>
       </div>
       <div class="wc-stat">
-        <strong id="markets-count">0</strong>
-        <span>Markets Found</span>
+        <strong id="top-score">0%</strong>
+        <span>Top W-Index</span>
       </div>
     </section>
 
     <section class="wc-card wc-card-pad">
       <div class="wc-section-header">
         <div>
-          <h2>Live Odds Connection</h2>
+          <h2>Published W-Index Feed</h2>
           <p>
-            The page can call The Odds API directly from localhost. API keys stay in this browser's local storage unless
-            you clear them.
+            This page fetches the CSV directly from your published Google Sheet and recalculates team and matchup views
+            in the browser.
           </p>
         </div>
       </div>
-
       <div class="wc-control-grid">
-        <div class="wc-field">
-          <label for="api-key">The Odds API Key</label>
-          <input class="wc-input" id="api-key" type="password" autocomplete="off" placeholder="Paste key">
+        <div class="wc-field" style="grid-column: span 3;">
+          <label for="w-index-url">CSV Source</label>
+          <input class="wc-input" id="w-index-url" type="url" readonly>
         </div>
-        <div class="wc-field">
-          <label for="sport-key">Sport Key</label>
-          <input class="wc-input" id="sport-key" type="text" value="soccer_fifa_world_cup">
-        </div>
-        <div class="wc-field">
-          <label for="regions">Regions</label>
-          <input class="wc-input" id="regions" type="text" value="us,uk,eu">
-        </div>
-        <button class="wc-button" id="fetch-odds" type="button">Fetch Odds</button>
+        <button class="wc-button" id="refresh-w-index" type="button">Refresh W-Index</button>
       </div>
-
-      <div class="wc-filter-row" style="margin-top: 12px;">
-        <button class="secondary wc-button" id="find-sports" type="button">Find World Cup Sport Keys</button>
-        <button class="secondary wc-button" id="clear-key" type="button">Clear Key</button>
-      </div>
-
-      <div class="wc-status" id="status">
-        Add a provider key to pull live futures and fixture-level markets. Until then, tables are populated from the
-        canonical World Cup schedule.
-      </div>
+      <div class="wc-status" id="status">Loading W-Index feed...</div>
     </section>
 
-    <section class="wc-section" id="futures">
+    <section class="wc-section" id="rankings">
       <div class="wc-section-header">
         <div>
-          <h2>World Cup Futures</h2>
-          <p>All 48 teams, sorted by best available title odds when live data is connected.</p>
+          <h2>Team Rankings</h2>
+          <p>All 48 teams sorted by the published W-Index rank.</p>
         </div>
       </div>
       <div class="wc-table-wrap">
@@ -104,23 +87,21 @@
               <th>Rank</th>
               <th>Team</th>
               <th>Group</th>
-              <th>Best Price</th>
-              <th>Best Book</th>
-              <th>Avg Implied</th>
-              <th>Books</th>
-              <th>Market Status</th>
+              <th>W-Index</th>
+              <th>Status</th>
+              <th>Canonical Match</th>
             </tr>
           </thead>
-          <tbody id="futures-body"></tbody>
+          <tbody id="rankings-body"></tbody>
         </table>
       </div>
     </section>
 
-    <section class="wc-section" id="fixtures">
+    <section class="wc-section" id="matchups">
       <div class="wc-section-header">
         <div>
-          <h2>Fixture Odds Board</h2>
-          <p>Moneyline, spread, and total markets by match when books have them posted.</p>
+          <h2>Matchup W-Index Board</h2>
+          <p>Every fixture rated by W-Index favorite, underdog, and edge.</p>
         </div>
       </div>
       <div class="wc-filter-row" id="fixture-filter"></div>
@@ -131,13 +112,12 @@
               <th>Match</th>
               <th>Fixture</th>
               <th>Date</th>
-              <th>Moneyline</th>
-              <th>Spread</th>
-              <th>Total</th>
-              <th>Books</th>
+              <th>Favorite</th>
+              <th>Edge</th>
+              <th>Ratings</th>
             </tr>
           </thead>
-          <tbody id="fixture-body"></tbody>
+          <tbody id="matchups-body"></tbody>
         </table>
       </div>
     </section>
@@ -145,22 +125,22 @@
     <section class="wc-section">
       <div class="wc-section-header">
         <div>
-          <h2>W-Index Inputs To Add</h2>
-          <p>The odds layer is just the market-intelligence piece. These are the obvious next data feeds.</p>
+          <h2>How This Feeds The Pool</h2>
+          <p>Useful ways this ranking layer can support the next tools.</p>
         </div>
       </div>
       <div class="wc-grid">
         <article class="wc-card wc-card-pad">
-          <span class="wc-chip">Market</span>
-          <p class="wc-copy">Futures implied probability, fixture moneyline, group winner odds, advancement odds, and line movement.</p>
+          <span class="wc-chip">Entry UX</span>
+          <p class="wc-copy">Show a lightweight W-Index hint next to each team when users rank groups or third-place teams.</p>
         </article>
         <article class="wc-card wc-card-pad">
-          <span class="wc-chip">Team Quality</span>
-          <p class="wc-copy">Elo/SPI-style strength, FIFA ranking, recent form, squad value, manager tenure, and tournament history.</p>
+          <span class="wc-chip">Simulation</span>
+          <p class="wc-copy">Use the W-Index edge as the first baseline win probability for matchup simulations.</p>
         </article>
         <article class="wc-card wc-card-pad">
-          <span class="wc-chip">Path</span>
-          <p class="wc-copy">Group difficulty, travel/rest burden, likely knockout route, third-place advancement volatility, and venue effects.</p>
+          <span class="wc-chip">Scoring</span>
+          <p class="wc-copy">Highlight where a bracket pick went against the W-Index favorite for contrarian-pick analysis.</p>
         </article>
       </div>
     </section>
@@ -169,32 +149,25 @@
   <script type="module">
     import { matches, teams, teamsById } from "../data/world-cup-2026.js";
 
-    const API_BASE = "https://api.the-odds-api.com/v4";
-    const STORAGE_KEY = "wc26.theOddsApiKey";
+    const W_INDEX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
     const $ = (id) => document.getElementById(id);
 
-    let futuresByTeam = new Map();
-    let fixtureOddsByMatch = new Map();
+    let wIndexByTeam = new Map();
     let fixtureFilter = "All";
-    const teamOrder = new Map(teams.map((team, index) => [team.id, index]));
 
     const elements = {
-      apiKey: $("api-key"),
-      sportKey: $("sport-key"),
-      regions: $("regions"),
-      fetchOdds: $("fetch-odds"),
-      findSports: $("find-sports"),
-      clearKey: $("clear-key"),
+      sourceUrl: $("w-index-url"),
+      refresh: $("refresh-w-index"),
       status: $("status"),
-      provider: $("provider-pill"),
-      futuresBody: $("futures-body"),
-      fixtureBody: $("fixture-body"),
+      rankedCount: $("ranked-count"),
+      matchupCount: $("matchup-count"),
+      topScore: $("top-score"),
+      rankingsBody: $("rankings-body"),
+      matchupsBody: $("matchups-body"),
       fixtureFilter: $("fixture-filter"),
-      futuresCount: $("futures-count"),
-      marketsCount: $("markets-count"),
     };
 
-    elements.apiKey.value = localStorage.getItem(STORAGE_KEY) || "";
+    elements.sourceUrl.value = W_INDEX_URL;
 
     function flag(countryCode) {
       return countryCode
@@ -202,38 +175,6 @@
         .split("")
         .map((char) => String.fromCodePoint(127397 + char.charCodeAt(0)))
         .join("");
-    }
-
-    function setStatus(message, isError = false) {
-      elements.status.innerHTML = message;
-      elements.status.style.color = isError ? "var(--wc-red)" : "var(--wc-muted)";
-    }
-
-    function americanToDecimal(odds) {
-      const value = Number(odds);
-      if (!Number.isFinite(value) || value === 0) return null;
-      return value > 0 ? value / 100 + 1 : 100 / Math.abs(value) + 1;
-    }
-
-    function impliedFromAmerican(odds) {
-      const value = Number(odds);
-      if (!Number.isFinite(value) || value === 0) return null;
-      return value > 0 ? 100 / (value + 100) : Math.abs(value) / (Math.abs(value) + 100);
-    }
-
-    function formatAmerican(value) {
-      if (!Number.isFinite(Number(value))) return "—";
-      return Number(value) > 0 ? `+${Number(value)}` : String(Number(value));
-    }
-
-    function formatPercent(value) {
-      if (!Number.isFinite(value)) return "—";
-      return `${(value * 100).toFixed(1)}%`;
-    }
-
-    function teamName(teamId) {
-      const team = teamsById[teamId];
-      return `${flag(team.countryCode)} ${team.name}`;
     }
 
     function normalizeName(name) {
@@ -253,24 +194,69 @@
       if (team.id === "KOR") names.push("South Korea");
       if (team.id === "CIV") names.push("Cote d Ivoire", "Côte d'Ivoire");
       if (team.id === "COD") names.push("Congo DR", "Democratic Republic of Congo");
-      if (team.id === "TUR") names.push("Turkey");
+      if (team.id === "TUR") names.push("Turkey", "Türkiye");
+      if (team.id === "IRN") names.push("IR Iran", "Iran");
+      if (team.id === "CPV") names.push("Cabo Verde", "Cape Verde");
+      if (team.id === "CUW") names.push("Curaçao", "Curacao");
       for (const name of names.filter(Boolean)) teamAliases.set(normalizeName(name), team.id);
     }
 
     function findTeamId(name) {
-      const normalized = normalizeName(name);
-      return teamAliases.get(normalized) || null;
+      return teamAliases.get(normalizeName(name)) || null;
     }
 
-    function findMatchForEvent(event) {
-      const homeId = findTeamId(event.home_team);
-      const awayId = findTeamId(event.away_team);
-      if (!homeId || !awayId) return null;
-      return matches.find((match) => {
-        const sameTeams = match.home === homeId && match.away === awayId;
-        const swappedTeams = match.home === awayId && match.away === homeId;
-        return sameTeams || swappedTeams;
-      }) || null;
+    function parseCsv(text) {
+      const rows = [];
+      let row = [];
+      let field = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const next = text[i + 1];
+
+        if (char === '"' && inQuotes && next === '"') {
+          field += '"';
+          i++;
+        } else if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === "," && !inQuotes) {
+          row.push(field);
+          field = "";
+        } else if ((char === "\n" || char === "\r") && !inQuotes) {
+          if (char === "\r" && next === "\n") i++;
+          row.push(field);
+          if (row.some((value) => value.trim() !== "")) rows.push(row);
+          row = [];
+          field = "";
+        } else {
+          field += char;
+        }
+      }
+
+      row.push(field);
+      if (row.some((value) => value.trim() !== "")) rows.push(row);
+      return rows;
+    }
+
+    function rowsToObjects(rows) {
+      const headers = rows[0].map((header) => header.trim());
+      return rows.slice(1).map((row) => Object.fromEntries(headers.map((header, index) => [header, row[index]?.trim() || ""])));
+    }
+
+    function parsePercent(value) {
+      const number = Number(String(value).replace("%", "").trim());
+      return Number.isFinite(number) ? number : null;
+    }
+
+    function setStatus(message, isError = false) {
+      elements.status.innerHTML = message;
+      elements.status.style.color = isError ? "var(--wc-red)" : "var(--wc-muted)";
+    }
+
+    function teamLabel(teamId) {
+      const team = teamsById[teamId];
+      return `${flag(team.countryCode)} ${team.name}`;
     }
 
     function formatDate(iso) {
@@ -283,99 +269,45 @@
       }).format(new Date(iso));
     }
 
-    function extractFutures(events) {
-      const prices = new Map();
-      for (const event of events) {
-        for (const bookmaker of event.bookmakers || []) {
-          for (const market of bookmaker.markets || []) {
-            if (market.key !== "outrights") continue;
-            for (const outcome of market.outcomes || []) {
-              const teamId = findTeamId(outcome.name);
-              if (!teamId) continue;
-              const implied = impliedFromAmerican(outcome.price);
-              const entry = prices.get(teamId) || { all: [], best: null };
-              const price = {
-                bookmaker: bookmaker.title || bookmaker.key,
-                price: Number(outcome.price),
-                implied,
-                lastUpdate: market.last_update || bookmaker.last_update,
-              };
-              entry.all.push(price);
-              if (!entry.best || americanToDecimal(price.price) > americanToDecimal(entry.best.price)) entry.best = price;
-              prices.set(teamId, entry);
-            }
-          }
-        }
-      }
-      return prices;
+    function scoreFor(teamId) {
+      return wIndexByTeam.get(teamId)?.score ?? null;
     }
 
-    function extractFixtureOdds(events) {
-      const odds = new Map();
-      for (const event of events) {
-        const match = findMatchForEvent(event);
-        if (!match) continue;
-        const record = odds.get(match.matchNumber) || { h2h: [], spreads: [], totals: [] };
-        for (const bookmaker of event.bookmakers || []) {
-          for (const market of bookmaker.markets || []) {
-            if (!record[market.key]) continue;
-            record[market.key].push({
-              bookmaker: bookmaker.title || bookmaker.key,
-              outcomes: market.outcomes || [],
-              lastUpdate: market.last_update || bookmaker.last_update,
-            });
-          }
-        }
-        odds.set(match.matchNumber, record);
-      }
-      return odds;
+    function scoreLabel(score) {
+      return Number.isFinite(score) ? `${score.toFixed(1)}%` : "—";
     }
 
-    function summarizeH2h(record) {
-      const market = record?.h2h?.[0];
-      if (!market) return "—";
-      return market.outcomes.map((outcome) => `${outcome.name}: ${formatAmerican(outcome.price)}`).join("<br>");
-    }
-
-    function summarizeSpread(record) {
-      const market = record?.spreads?.[0];
-      if (!market) return "—";
-      return market.outcomes.map((outcome) => `${outcome.name} ${outcome.point ?? ""}: ${formatAmerican(outcome.price)}`).join("<br>");
-    }
-
-    function summarizeTotal(record) {
-      const market = record?.totals?.[0];
-      if (!market) return "—";
-      return market.outcomes.map((outcome) => `${outcome.name} ${outcome.point ?? ""}: ${formatAmerican(outcome.price)}`).join("<br>");
-    }
-
-    function renderFutures() {
-      const rows = teams.map((team) => {
-        const odds = futuresByTeam.get(team.id);
-        const avgImplied = odds?.all.length
-          ? odds.all.reduce((sum, price) => sum + (price.implied || 0), 0) / odds.all.length
-          : null;
-        return { team, odds, avgImplied };
-      }).sort((a, b) => {
-        if (a.odds?.best && b.odds?.best) return americanToDecimal(a.odds.best.price) - americanToDecimal(b.odds.best.price);
-        if (a.odds?.best) return -1;
-        if (b.odds?.best) return 1;
-        return teamOrder.get(a.team.id) - teamOrder.get(b.team.id);
+    function renderRankings() {
+      const rows = teams.map((team) => ({
+        team,
+        data: wIndexByTeam.get(team.id),
+      })).sort((a, b) => {
+        if (a.data?.rank && b.data?.rank) return a.data.rank - b.data.rank;
+        if (a.data?.rank) return -1;
+        if (b.data?.rank) return 1;
+        return a.team.group.localeCompare(b.team.group) || a.team.name.localeCompare(b.team.name);
       });
 
-      elements.futuresBody.innerHTML = rows.map((row, index) => `
+      elements.rankingsBody.innerHTML = rows.map((row, index) => `
         <tr>
-          <td class="wc-number">${index + 1}</td>
+          <td class="wc-number">${row.data?.rank || index + 1}</td>
           <td><strong>${flag(row.team.countryCode)} ${row.team.name}</strong><br><span class="wc-small">${row.team.confederation}</span></td>
           <td>Group ${row.team.group}</td>
-          <td class="wc-number">${row.odds?.best ? formatAmerican(row.odds.best.price) : "—"}</td>
-          <td>${row.odds?.best?.bookmaker || "—"}</td>
-          <td class="wc-number">${formatPercent(row.avgImplied)}</td>
-          <td class="wc-number">${row.odds?.all.length || 0}</td>
-          <td>${row.odds?.best ? '<span class="wc-trend-good">Live</span>' : '<span class="wc-empty">No futures price loaded</span>'}</td>
+          <td class="wc-number"><strong>${scoreLabel(row.data?.score)}</strong></td>
+          <td>${row.data?.status || '<span class="wc-empty">Missing from feed</span>'}</td>
+          <td>${row.data ? '<span class="wc-trend-good">Matched</span>' : '<span class="wc-trend-watch">Needs alias</span>'}</td>
         </tr>
       `).join("");
-      elements.futuresCount.textContent = [...futuresByTeam.values()].reduce((sum, entry) => sum + entry.all.length, 0);
+    }
+
+    function matchupFor(match) {
+      const homeScore = scoreFor(match.home);
+      const awayScore = scoreFor(match.away);
+      if (!Number.isFinite(homeScore) || !Number.isFinite(awayScore)) return null;
+      const favorite = homeScore >= awayScore ? match.home : match.away;
+      const underdog = favorite === match.home ? match.away : match.home;
+      const edge = Math.abs(homeScore - awayScore);
+      return { favorite, underdog, edge, homeScore, awayScore };
     }
 
     function renderFixtureFilter() {
@@ -385,126 +317,100 @@
       `).join("");
     }
 
-    function renderFixtures() {
+    function renderMatchups() {
       const filtered = matches.filter((match) => {
         if (fixtureFilter === "Group Stage") return match.matchNumber <= 72;
         if (fixtureFilter === "Knockout") return match.matchNumber > 72;
         return true;
       });
-      elements.fixtureBody.innerHTML = filtered.map((match) => {
-        const record = fixtureOddsByMatch.get(match.matchNumber);
-        const bookCount = new Set([
-          ...(record?.h2h || []).map((market) => market.bookmaker),
-          ...(record?.spreads || []).map((market) => market.bookmaker),
-          ...(record?.totals || []).map((market) => market.bookmaker),
-        ]).size;
+
+      let ratedCount = 0;
+      elements.matchupsBody.innerHTML = filtered.map((match) => {
+        const matchup = matchupFor(match);
+        if (matchup) ratedCount++;
+        const homeKnown = teamsById[match.home];
+        const awayKnown = teamsById[match.away];
+        const fixture = `${homeKnown ? teamLabel(match.home) : match.homeName} <span class="wc-muted">v</span> ${awayKnown ? teamLabel(match.away) : match.awayName}`;
+        const ratings = homeKnown && awayKnown
+          ? `${teamLabel(match.home)}: ${scoreLabel(matchup?.homeScore)}<br>${teamLabel(match.away)}: ${scoreLabel(matchup?.awayScore)}`
+          : '<span class="wc-empty">Bracket slot TBD</span>';
         return `
           <tr>
             <td><strong>${match.matchNumber}</strong><br><span class="wc-small">${match.stage}</span></td>
-            <td>${teamsById[match.home] ? teamName(match.home) : match.homeName} <span class="wc-muted">v</span> ${teamsById[match.away] ? teamName(match.away) : match.awayName}</td>
+            <td>${fixture}</td>
             <td>${formatDate(match.utc)}</td>
-            <td>${summarizeH2h(record)}</td>
-            <td>${summarizeSpread(record)}</td>
-            <td>${summarizeTotal(record)}</td>
-            <td class="wc-number">${bookCount || "—"}</td>
+            <td>${matchup ? teamLabel(matchup.favorite) : '<span class="wc-empty">TBD</span>'}</td>
+            <td class="wc-number">${matchup ? `${matchup.edge.toFixed(1)} pts` : "—"}</td>
+            <td>${ratings}</td>
           </tr>
         `;
       }).join("");
-      elements.marketsCount.textContent = [...fixtureOddsByMatch.values()].reduce((sum, record) => (
-        sum + record.h2h.length + record.spreads.length + record.totals.length
-      ), 0);
+
+      elements.matchupCount.textContent = ratedCount;
     }
 
-    async function fetchJson(url) {
-      const response = await fetch(url);
-      if (!response.ok) {
-        const body = await response.text();
-        throw new Error(`${response.status} ${response.statusText}: ${body.slice(0, 180)}`);
-      }
-      return response.json();
-    }
-
-    async function findSportKeys() {
-      const apiKey = elements.apiKey.value.trim();
-      if (!apiKey) {
-        setStatus("Add your API key first, then I can query available World Cup sport keys.", true);
-        return;
-      }
-      localStorage.setItem(STORAGE_KEY, apiKey);
-      elements.findSports.disabled = true;
-      setStatus("Searching provider sport catalog for World Cup markets...");
+    async function loadWIndex() {
+      elements.refresh.disabled = true;
+      setStatus("Refreshing W-Index feed...");
       try {
-        const sports = await fetchJson(`${API_BASE}/sports?apiKey=${encodeURIComponent(apiKey)}&all=true`);
-        const candidates = sports.filter((sport) => /world cup|fifa|international/i.test(`${sport.key} ${sport.title} ${sport.description}`));
-        const outrightCandidates = candidates.filter((sport) => sport.has_outrights);
-        const chosen = outrightCandidates[0] || candidates[0];
-        if (chosen) elements.sportKey.value = chosen.key;
-        setStatus(candidates.length
-          ? `<strong>${candidates.length}</strong> candidate sport keys found. ${chosen ? `Using <strong>${chosen.key}</strong>.` : ""}`
-          : "No World Cup sport key appeared in the provider catalog yet. Keeping the default soccer_fifa_world_cup key.");
+        const response = await fetch(`${W_INDEX_URL}&cacheBust=${Date.now()}`);
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        const csv = await response.text();
+        const rows = rowsToObjects(parseCsv(csv));
+        const nextMap = new Map();
+        const unmatched = [];
+
+        for (const row of rows) {
+          const teamId = findTeamId(row.Team);
+          if (!teamId) {
+            unmatched.push(row.Team);
+            continue;
+          }
+          nextMap.set(teamId, {
+            sourceName: row.Team,
+            sourceGroup: row.Group,
+            score: parsePercent(row["W-Index"]),
+            status: row.Status,
+            rank: Number(row.Rank),
+          });
+        }
+
+        wIndexByTeam = nextMap;
+        renderRankings();
+        renderMatchups();
+
+        const scores = [...wIndexByTeam.values()].map((entry) => entry.score).filter(Number.isFinite);
+        elements.rankedCount.textContent = wIndexByTeam.size;
+        elements.topScore.textContent = scores.length ? `${Math.max(...scores).toFixed(1)}%` : "0%";
+
+        const missing = teams.filter((team) => !wIndexByTeam.has(team.id)).map((team) => team.name);
+        setStatus(`
+          Loaded <strong>${wIndexByTeam.size}</strong> W-Index rows.
+          ${missing.length ? `<br><strong>Missing canonical teams:</strong> ${missing.join(", ")}` : ""}
+          ${unmatched.length ? `<br><strong>Unmatched feed names:</strong> ${unmatched.join(", ")}` : ""}
+        `);
       } catch (error) {
-        setStatus(`Sport key lookup failed: ${error.message}`, true);
+        renderRankings();
+        renderMatchups();
+        setStatus(`W-Index feed failed to load: ${error.message}. If you opened this as a file, use localhost.`, true);
       } finally {
-        elements.findSports.disabled = false;
+        elements.refresh.disabled = false;
       }
     }
 
-    async function fetchOdds() {
-      const apiKey = elements.apiKey.value.trim();
-      const sportKey = elements.sportKey.value.trim();
-      const regions = elements.regions.value.trim() || "us";
-      if (!apiKey || !sportKey) {
-        setStatus("Add an API key and sport key before fetching odds.", true);
-        return;
-      }
-      localStorage.setItem(STORAGE_KEY, apiKey);
-      elements.fetchOdds.disabled = true;
-      elements.provider.textContent = "Provider: The Odds API";
-      setStatus("Fetching futures and fixture odds...");
-      try {
-        const params = `apiKey=${encodeURIComponent(apiKey)}&regions=${encodeURIComponent(regions)}&oddsFormat=american`;
-        const futuresUrl = `${API_BASE}/sports/${encodeURIComponent(sportKey)}/odds?${params}&markets=outrights`;
-        const fixturesUrl = `${API_BASE}/sports/${encodeURIComponent(sportKey)}/odds?${params}&markets=h2h,spreads,totals`;
-        const [futuresEvents, fixtureEvents] = await Promise.all([
-          fetchJson(futuresUrl).catch((error) => {
-            setStatus(`Futures fetch warning: ${error.message}`);
-            return [];
-          }),
-          fetchJson(fixturesUrl).catch((error) => {
-            setStatus(`Fixture odds fetch warning: ${error.message}`);
-            return [];
-          }),
-        ]);
-        futuresByTeam = extractFutures(futuresEvents);
-        fixtureOddsByMatch = extractFixtureOdds(fixtureEvents);
-        renderFutures();
-        renderFixtures();
-        setStatus(`Loaded <strong>${futuresByTeam.size}</strong> teams with futures and <strong>${fixtureOddsByMatch.size}</strong> fixtures with posted odds from The Odds API.`);
-      } catch (error) {
-        setStatus(`Odds fetch failed: ${error.message}`, true);
-      } finally {
-        elements.fetchOdds.disabled = false;
-      }
-    }
-
-    elements.findSports.addEventListener("click", findSportKeys);
-    elements.fetchOdds.addEventListener("click", fetchOdds);
-    elements.clearKey.addEventListener("click", () => {
-      localStorage.removeItem(STORAGE_KEY);
-      elements.apiKey.value = "";
-      setStatus("API key cleared from this browser.");
-    });
+    elements.refresh.addEventListener("click", loadWIndex);
     elements.fixtureFilter.addEventListener("click", (event) => {
       const button = event.target.closest("button");
       if (!button) return;
       fixtureFilter = button.dataset.stage;
       renderFixtureFilter();
-      renderFixtures();
+      renderMatchups();
     });
 
-    renderFutures();
+    renderRankings();
     renderFixtureFilter();
-    renderFixtures();
+    renderMatchups();
+    loadWIndex();
   </script>
 </body>
 

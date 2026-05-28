@@ -67,7 +67,7 @@
       display: grid;
       place-items: center;
       min-height: 100vh;
-      padding: 28px 18px;
+      padding: 28px 18px 86px;
     }
 
     .hero {
@@ -210,6 +210,93 @@
       color: var(--ink);
     }
 
+    .w-index-tape {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 4;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      min-height: 52px;
+      border-top: 1px solid rgba(247, 244, 235, 0.18);
+      background: rgba(7, 19, 15, 0.88);
+      box-shadow: 0 -18px 60px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(18px);
+    }
+
+    .tape-label {
+      display: grid;
+      place-items: center;
+      min-width: 112px;
+      padding: 0 16px;
+      border-right: 1px solid var(--line);
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .ticker-window {
+      min-width: 0;
+      overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+    }
+
+    .ticker-track {
+      display: flex;
+      align-items: center;
+      width: max-content;
+      min-height: 52px;
+      transform: translateX(-50%);
+      animation: ticker-left-to-right 96s linear infinite;
+      will-change: transform;
+    }
+
+    .ticker-window:hover .ticker-track {
+      animation-play-state: paused;
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      margin-right: 10px;
+      padding: 0 12px;
+      border: 1px solid rgba(247, 244, 235, 0.14);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.055);
+      color: rgba(247, 244, 235, 0.88);
+      font-size: 0.82rem;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .ticker-item strong {
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .ticker-rank {
+      color: var(--gold);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    @keyframes ticker-left-to-right {
+      from {
+        transform: translateX(-50%);
+      }
+
+      to {
+        transform: translateX(0);
+      }
+    }
+
     @media (max-width: 640px) {
       .hero {
         grid-template-rows: auto minmax(190px, 30vh) auto auto;
@@ -222,6 +309,24 @@
 
       .cta {
         width: 100%;
+      }
+
+      .w-index-tape {
+        grid-template-columns: 1fr;
+      }
+
+      .tape-label {
+        display: none;
+      }
+
+      .ticker-track {
+        min-height: 46px;
+        animation-duration: 78s;
+      }
+
+      .ticker-item {
+        min-height: 32px;
+        font-size: 0.78rem;
       }
     }
   </style>
@@ -263,6 +368,7 @@
         <a href="pool/">Pool</a>
         <a href="meta/#group-fixtures">Fixtures</a>
         <a href="rankings-odds/">W-Index</a>
+        <a href="groups/">Groups</a>
         <span>Odds</span>
         <span>News</span>
         <span>Scoreboard</span>
@@ -274,6 +380,15 @@
       </div>
     </section>
   </main>
+
+  <aside class="w-index-tape" aria-label="W-Index ranking ticker">
+    <div class="tape-label">W-Index</div>
+    <div class="ticker-window">
+      <div class="ticker-track" id="w-index-ticker">
+        <span class="ticker-item">Loading W-Index rankings...</span>
+      </div>
+    </div>
+  </aside>
 
   <script>
     (() => {
@@ -300,6 +415,121 @@
 
       renderCountdown();
       setInterval(renderCountdown, 1000);
+    })();
+  </script>
+
+  <script type="module">
+    import { teams } from './data/world-cup-2026.js';
+
+    (() => {
+      const W_INDEX_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv';
+      const ticker = document.getElementById('w-index-ticker');
+
+      function flag(countryCode) {
+        return countryCode
+          .toUpperCase()
+          .split('')
+          .map((char) => String.fromCodePoint(127397 + char.charCodeAt(0)))
+          .join('');
+      }
+
+      function normalizeName(name) {
+        return String(name || '')
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/&/g, 'and')
+          .replace(/[^a-z0-9]+/g, ' ')
+          .trim();
+      }
+
+      const teamAliases = new Map();
+      for (const team of teams) {
+        const names = [team.name, team.shortName, team.id];
+        if (team.id === 'USA') names.push('USA', 'United States of America', 'USMNT');
+        if (team.id === 'KOR') names.push('South Korea');
+        if (team.id === 'CIV') names.push('Cote d Ivoire', "Côte d'Ivoire");
+        if (team.id === 'COD') names.push('Congo DR', 'Democratic Republic of Congo');
+        if (team.id === 'TUR') names.push('Turkey', 'Türkiye');
+        if (team.id === 'IRN') names.push('IR Iran', 'Iran');
+        if (team.id === 'CPV') names.push('Cabo Verde', 'Cape Verde');
+        if (team.id === 'CUW') names.push('Curaçao', 'Curacao');
+        for (const name of names.filter(Boolean)) teamAliases.set(normalizeName(name), team);
+      }
+
+      function parseCsv(text) {
+        const rows = [];
+        let row = [];
+        let field = '';
+        let inQuotes = false;
+
+        for (let i = 0; i < text.length; i++) {
+          const char = text[i];
+          const next = text[i + 1];
+
+          if (char === '"' && inQuotes && next === '"') {
+            field += '"';
+            i++;
+          } else if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === ',' && !inQuotes) {
+            row.push(field);
+            field = '';
+          } else if ((char === '\n' || char === '\r') && !inQuotes) {
+            if (char === '\r' && next === '\n') i++;
+            row.push(field);
+            if (row.some((value) => value.trim() !== '')) rows.push(row);
+            row = [];
+            field = '';
+          } else {
+            field += char;
+          }
+        }
+
+        row.push(field);
+        if (row.some((value) => value.trim() !== '')) rows.push(row);
+        return rows;
+      }
+
+      function rowsToObjects(rows) {
+        const headers = rows[0].map((header) => header.trim());
+        return rows.slice(1).map((row) => Object.fromEntries(headers.map((header, index) => [header, row[index]?.trim() || ''])));
+      }
+
+      function renderTicker(rows) {
+        const ranked = rows
+          .map((row) => ({ row, team: teamAliases.get(normalizeName(row.Team)) }))
+          .filter((entry) => entry.team)
+          .sort((a, b) => Number(a.row.Rank) - Number(b.row.Rank));
+
+        if (!ranked.length) {
+          ticker.innerHTML = '<span class="ticker-item">W-Index rankings unavailable</span>';
+          return;
+        }
+
+        const items = ranked.map(({ row, team }) => `
+          <span class="ticker-item">
+            <span class="ticker-rank">#${row.Rank}</span>
+            <span>${flag(team.countryCode)}</span>
+            <span>${team.name}</span>
+            <strong>${row['W-Index']}</strong>
+          </span>
+        `).join('');
+
+        ticker.innerHTML = items + items;
+      }
+
+      async function loadTicker() {
+        try {
+          const response = await fetch(`${W_INDEX_URL}&tickerBust=${Date.now()}`);
+          if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+          renderTicker(rowsToObjects(parseCsv(await response.text())));
+        } catch (error) {
+          ticker.innerHTML = '<span class="ticker-item">W-Index rankings unavailable</span>';
+        }
+      }
+
+      loadTicker();
     })();
   </script>
 

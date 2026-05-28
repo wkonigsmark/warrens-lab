@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8">
+    <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
 
@@ -35,6 +35,20 @@
             <div id="status-display">
                 <div class="status-label">CURRENT FOCUS</div>
                 <div id="current-region-name">PLANET EARTH</div>
+            </div>
+
+            <!-- Region focus chips — only visible in Countries view -->
+            <div id="region-focus">
+                <span class="focus-label">Focus</span>
+                <div class="focus-chips">
+                    <button class="focus-chip active" data-region="all">World</button>
+                    <button class="focus-chip" data-region="africa">Africa</button>
+                    <button class="focus-chip" data-region="asia">Asia</button>
+                    <button class="focus-chip" data-region="europe">Europe</button>
+                    <button class="focus-chip" data-region="north_america">N. America</button>
+                    <button class="focus-chip" data-region="south_america">S. America</button>
+                    <button class="focus-chip" data-region="oceania">Oceania</button>
+                </div>
             </div>
 
             <!-- Mission HUD strip (hidden unless Mission is active) -->
@@ -131,9 +145,11 @@
                     <div class="roadmap-update">
                         <span class="update-tag">🧪 Latest update</span>
                         <p>
-                            <strong>Mission Quiz UI</strong> just shipped, joining the recently-landed <strong>Geocode mode</strong>. Both are working end-to-end but tagged <em>Needs testing</em> — they need real playthroughs to surface edge cases and tune the game feel (timing, scoring, mode-switching, mid-round exits, view changes, click spam).
+                            <strong>Big map &amp; UX polish wave.</strong> The map is now ~2.5× bigger (1336×690 on a 1440 screen, edge-to-edge on screens ≥1600px), and a new <strong>Region Focus zoom</strong> chip bar above the Countries view lets you zoom into any continent with a single click — click the active chip again to zoom back out. The zoom uses hand-curated representative ISOs per continent so Europe doesn't get dragged east by Russia and Oceania doesn't span the whole Pacific.
                             <br><br>
-                            Also landed: <strong>Roadmap overlay</strong>, full-page <strong>body scroll fix</strong>, hook-race fix in the quiz engine, and <strong>cache busting</strong> on script/style tags so dev edits show up on reload.
+                            <strong>Mission Quiz UI</strong> and <strong>Geocode mode</strong> are still tagged <em>Needs testing</em> — both work end-to-end but need real playthroughs for timing, scoring, mode-switching, mid-round exits, and edge cases. Mission now hides country ISO labels mid-quiz (no cheating from the labels) and shows a session-end summary with HOME + NEW MISSION buttons.
+                            <br><br>
+                            <strong>Cross-modal polish:</strong> close buttons across every overlay (Discovery, Roadmap, Mission Summary, Geocode Result) look consistent now (circular, top-right). ESC and backdrop click close any open overlay. Cache-busting query strings on every script/style tag so dev edits show up immediately.
                         </p>
                     </div>
 
@@ -156,7 +172,16 @@
                                 <strong>Mission Quiz UI</strong> <span class="item-badge needs-testing">🧪 Needs testing</span> — engine-driven "Locate Country" quiz. HUD strip with round counter, target announcement, score chip, End button. Wrong guesses get distance toast + warm/cold breadcrumb. Right guesses auto-advance. 10-round default, session-end summary with round-by-round attempts. <em>Playtest priorities:</em> auto-advance timing (currently 1.1s — too fast/slow?), exit mid-mission, summary X vs New Mission flow, switching Continents/Countries/Oceans views during a mission, click spam during the celebration window.
                             </li>
                             <li>
-                                <strong>Roadmap overlay</strong> — this very surface. Living document of what's built, what's next, and every idea on the board. Wired to a toolbar button + ESC to close.
+                                <strong>Roadmap overlay</strong> — this very surface. Living document of what's built, what's next, and every idea on the board. Wired to a toolbar button + ESC + backdrop click to close.
+                            </li>
+                            <li>
+                                <strong>Region Focus zoom</strong> <span class="item-badge needs-testing">🧪 Needs testing</span> — Focus chip bar above the Countries view (World · Africa · Asia · Europe · N. America · S. America · Oceania). Click a chip → animated SVG viewBox zoom to that continent. Click the active chip again to cancel back to World. Hand-curated representative ISOs + main-polygon-only bbox math to keep Europe tight and Oceania framed on Australia. <em>Known nit:</em> country labels grow proportionally with zoom (need inverse scaling).
+                            </li>
+                            <li>
+                                <strong>Map sizing &amp; layout polish</strong> — map area is now ~2.5× larger (max-width raised, container/wrap padding trimmed, status display compressed), with full edge-to-edge mode on viewports ≥1600px. PLANET EARTH headline is auto-hidden in Countries view since it's redundant. Mission HUD strip width matches the map. Body now scrolls if a short laptop screen needs it (was previously locked).
+                            </li>
+                            <li>
+                                <strong>Overlay system polish</strong> — all four overlays (Discovery, Roadmap, Mission Summary, Geocode Result) share consistent close buttons (circular, top-right). ESC and backdrop click close any open overlay. Summary modals use a HOME (secondary outline) + primary action button pattern. Cache-busting query strings on every script/style tag.
                             </li>
                         </ul>
                     </section>
@@ -243,17 +268,17 @@
                     <section class="roadmap-section status-polish">
                         <h3><span class="status-dot"></span>Polish &amp; quality-of-life</h3>
                         <ul>
-                            <li><strong>Auto-zoom on guess</strong> — frame the action when a guess is far. The <code>OrbisCountries.viewBoxOf()</code> helper is already built and unused.</li>
+                            <li><strong>Inverse-scale country labels</strong> on zoom — labels currently grow proportionally with the zoom level. At Europe zoom (7×), GB/FR/DE labels look comically large. Apply a counter-scale so labels stay a consistent rendered size at any zoom.</li>
+                            <li><strong>Auto-zoom to the Mission target's region</strong> on round start (optional difficulty toggle) — using <code>OrbisCountries.viewBoxOfContinent()</code> the engine could narrow the search area. Hides too much of the world for L2 but valuable for L3+ (Regional Master).</li>
+                            <li><strong>Frame breadcrumb cluster in Geocode</strong> — as wrong guesses accumulate, auto-zoom to fit the breadcrumb spread so the warmer/colder pattern is visible at a glance.</li>
                             <li><strong>Warm/cold halo on guessed countries</strong> — color the whole country, not just a centroid dot, with intensity by proximity.</li>
-                            <li><strong>Hint cost variance</strong> — continent hint costs 2, "famous food" costs 0.5. Adds real strategy.</li>
-                            <li><strong>Disabled Give Up button</strong> after a round ends.</li>
+                            <li><strong>Hint cost variance</strong> in Geocode — continent hint costs 2, "famous food" costs 0.5. Adds real strategy.</li>
+                            <li><strong>Disabled Give Up button</strong> in Geocode after a round ends.</li>
                             <li><strong>Snappier reveal animations</strong> on clue cards and chip-to-clue transitions.</li>
-                            <li><strong>Label cleanup in dense Europe</strong> — FR/ES/DE/IT/GB labels stack. Skip labels at this zoom or only show when a region is focused.</li>
                             <li><strong>True centroids</strong> for crescent-shaped countries — Saudi Arabia's label currently sits inside Egypt due to bbox-center placement.</li>
                             <li><strong>Continent color tint</strong> on Famous 20 — group countries visually by continent, matching the cinematic style.</li>
-                            <li><strong>Nav button wrap on narrower viewports</strong> — toolbar crowds below ~1100px.</li>
-                            <li><strong>Compact status header</strong> — the current "PLANET EARTH" status block eats ~150px of vertical space.</li>
-                            <li><strong>Persisted progress</strong> — save Geocode wins, played mysteries, and curriculum stamps to localStorage.</li>
+                            <li><strong>Nav button responsive wrap</strong> — toolbar still crowds on narrower viewports (below ~1100px). Either wrap cleanly or collapse into a menu.</li>
+                            <li><strong>Persisted progress</strong> — save Geocode wins, Mission scores, played mysteries, and curriculum stamps to localStorage. Show a daily streak.</li>
                         </ul>
                     </section>
 
@@ -354,10 +379,10 @@
         </div>
     </div>
 
-    <script src="orbis_countries.js?v=8"></script>
-    <script src="orbis_quiz.js?v=8"></script>
-    <script src="orbis_geocode_ui.js?v=8"></script>
-    <script src="orbis_mission_ui.js?v=8"></script>
-    <script src="script.js?v=8"></script>
+    <script src="orbis_countries.js?v=12"></script>
+    <script src="orbis_quiz.js?v=12"></script>
+    <script src="orbis_geocode_ui.js?v=12"></script>
+    <script src="orbis_mission_ui.js?v=12"></script>
+    <script src="script.js?v=12"></script>
 </body>
 </html>

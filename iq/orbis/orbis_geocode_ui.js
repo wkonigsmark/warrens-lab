@@ -100,11 +100,15 @@
     init();
     state.dom.panel.classList.add("open");
     state.active = true;
+    document.body.classList.add("geocode-active");
+    // Reset any zoom to the world view so the mystery isn't artificially framed.
+    if (window.OrbisCountries) OrbisCountries.resetViewBox(document.getElementById("world-map"));
     startRound();
   }
 
   function stop() {
     state.active = false;
+    document.body.classList.remove("geocode-active");
     if (state.session) state.session.end();
     state.session = null;
     clearBreadcrumbs();

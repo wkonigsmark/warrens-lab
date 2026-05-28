@@ -171,6 +171,71 @@ body {
     filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.4)); /* 3D floating effect */
 }
 
+/* Hide the "PLANET EARTH" status when we're looking at country-level detail —
+   it's redundant. Override when Geocode is active so the mystery banner still shows. */
+#app[data-view="countries"] #status-display { display: none; }
+body.geocode-active #status-display { display: block !important; }
+
+/* Region focus chips — only in Countries view, hidden during a quiz */
+#region-focus {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    max-width: min(1600px, 96vw);
+    margin: 0 auto 10px;
+    flex-wrap: wrap;
+}
+#app[data-view="countries"] #region-focus { display: flex; }
+body.mission-active #region-focus,
+body.geocode-active #region-focus { display: none; }
+
+.focus-label {
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+.focus-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.focus-chip {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-family: var(--font-main);
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s var(--transition);
+}
+.focus-chip:hover {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: var(--primary-blue);
+    transform: translateY(-1px);
+}
+.focus-chip.active {
+    background: var(--accent-gold);
+    border-color: var(--accent-gold);
+    color: var(--bg-dark);
+}
+
+/* Edge-to-edge mode on wide screens — reclaim the remaining gutters for the map */
+@media (min-width: 1600px) {
+    #globe-container { padding: 12px 12px 18px; }
+    #globe-viewport { max-width: calc(100vw - 24px); }
+    #globe-wrap { padding: 16px; }
+    #mission-strip { max-width: calc(100vw - 24px); }
+    #region-focus { max-width: calc(100vw - 24px); }
+}
+
 .ocean-bg {
     fill: transparent;
 }

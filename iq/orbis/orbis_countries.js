@@ -180,6 +180,99 @@
    * Accepts: array of features, array of iso2s, single iso2, or single feature.
    * Pads by `padRatio` (default 0.15) on each side.
    */
+  // The default world view — must match the viewBox attribute on the SVG in index.html.
+  const WORLD_VIEWBOX = [-1000, -10000, 11000, 6200];
+
+  // Hand-curated representative ISOs per continent. Auto-bboxes break on continents like
+  // Europe (UK + France span the globe via overseas territories) and Oceania (Pacific
+  // island nations are spread across thousands of km). We pick "core" countries that
+  // frame each continent the way a kid would expect.
+  // Russia is intentionally excluded from Europe — its mainland spans 11 timezones and
+  // would drag the bbox into Asia.
+  const CONTINENT_ZOOM_ISOS = {
+    africa:        ["EG", "ZA", "NG", "DZ", "KE", "ML", "ET"],
+    asia:          ["CN", "JP", "IN", "KR", "SA", "TH", "ID", "IR"],
+    europe:        ["DE", "FR", "ES", "IT", "GB", "PL", "GR", "NO"],
+    north_america: ["US", "CA", "MX", "GT"],
+    south_america: ["BR", "AR", "PE", "CO", "CL", "VE"],
+    oceania:       ["AU", "NZ", "PG"]
+  };
+
+  // Bbox of just the largest polygon in a feature — kills outliers like
+  // French Guiana on the France feature or Falkland Islands on the UK feature.
+  function mainPolygonBbox(feature) {
+    const g = feature.geometry;
+    if (!g) return null;
+    let best = null, bestArea = -1;
+    const consider = ring => {
+      const b = ringBbox(ring);
+      const a = (b.maxX - b.minX) * (b.maxY - b.minY);
+      if (a > bestArea) { bestArea = a; best = b; }
+    };
+    if (g.type === "Polygon") g.coordinates.forEach(consider);
+    else if (g.type === "MultiPolygon") g.coordinates.forEach(p => p.forEach(consider));
+    return best;
+  }
+
+  function viewBoxOfContinent(id, padRatio = 0.10) {
+    if (!state.loaded) return null;
+    const isos = CONTINENT_ZOOM_ISOS[id];
+    if (!isos) return null;
+
+    const bboxes = isos
+      .map(iso => state.featByIso2.get(iso))
+      .filter(Boolean)
+      .map(mainPolygonBbox)
+      .filter(Boolean);
+    if (!bboxes.length) return null;
+
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const b of bboxes) {
+      if (b.minX < minX) minX = b.minX;
+      if (b.minY < minY) minY = b.minY;
+      if (b.maxX > maxX) maxX = b.maxX;
+      if (b.maxY > maxY) maxY = b.maxY;
+    }
+
+    // Flip Y into SVG space + pad
+    const svgMinX = minX;
+    const svgMaxX = maxX;
+    const svgMinY = -maxY;
+    const svgMaxY = -minY;
+    const w = svgMaxX - svgMinX;
+    const h = svgMaxY - svgMinY;
+    const padX = w * padRatio;
+    const padY = h * padRatio;
+    return [svgMinX - padX, svgMinY - padY, w + 2 * padX, h + 2 * padY];
+  }
+
+  // Animate an SVG element's viewBox attribute to a target [x, y, w, h] over `duration` ms.
+  // Uses ease-out cubic. Cancels any prior animation on the same element.
+  // Uses setTimeout instead of requestAnimationFrame so it works in hidden tabs
+  // (RAF is suspended when document.visibilityState === 'hidden', e.g. headless testing).
+  function animateViewBoxTo(svg, target, duration = 650) {
+    if (!svg || !target) return;
+    const current = svg.getAttribute("viewBox").split(/\s+/).map(parseFloat);
+    if (current.every((v, i) => Math.abs(v - target[i]) < 0.5)) return;
+    if (svg.__vbAnim) clearTimeout(svg.__vbAnim);
+    const startTs = performance.now();
+    const FRAME_MS = 16; // ~60fps
+    function step() {
+      const t = Math.min(1, (performance.now() - startTs) / duration);
+      const e = 1 - Math.pow(1 - t, 3);
+      const vb = current.map((s, i) => s + (target[i] - s) * e);
+      svg.setAttribute("viewBox", vb.join(" "));
+      if (t < 1) svg.__vbAnim = setTimeout(step, FRAME_MS);
+      else svg.__vbAnim = null;
+    }
+    svg.__vbAnim = setTimeout(step, FRAME_MS);
+  }
+
+  function resetViewBox(svg, animated = false) {
+    if (animated) animateViewBoxTo(svg, WORLD_VIEWBOX);
+    else svg.setAttribute("viewBox", WORLD_VIEWBOX.join(" "));
+  }
+
   function viewBoxOf(target, padRatio = 0.15) {
     const features = normalizeTargets(target);
     if (!features.length) return null;
@@ -236,6 +329,10 @@
     load,
     renderInto,
     viewBoxOf,
+    viewBoxOfContinent,
+    animateViewBoxTo,
+    resetViewBox,
+    WORLD_VIEWBOX,
     bboxOfFeature,
     centroidOfFeature,
     getCountry,

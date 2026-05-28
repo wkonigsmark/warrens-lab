@@ -302,6 +302,18 @@ function renderMap(view) {
     regionGroup.innerHTML = '';
     labelGroup.innerHTML = '';
 
+    // Expose the current view to CSS so we can hide/show view-scoped UI
+    document.getElementById('app').dataset.view = view;
+
+    // Reset any region zoom on every view change so the SVG isn't stuck at a sub-region
+    const svg = document.getElementById('world-map');
+    if (svg && window.OrbisCountries) OrbisCountries.resetViewBox(svg);
+    // Reset the active focus chip to World whenever we re-enter the map
+    currentFocus = 'all';
+    document.querySelectorAll('.focus-chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.region === 'all');
+    });
+
     if (view === 'continents') {
         renderContinents(regionGroup, labelGroup);
     } else if (view === 'countries') {
@@ -309,6 +321,28 @@ function renderMap(view) {
     } else {
         renderOceans(regionGroup, labelGroup);
     }
+}
+
+let currentFocus = 'all';
+
+async function setFocusRegion(region) {
+    // Click the currently-active region chip to zoom back out to the world
+    if (region !== 'all' && region === currentFocus) region = 'all';
+
+    await OrbisCountries.load();
+    const svg = document.getElementById('world-map');
+    if (!svg) return;
+    if (region === 'all') {
+        OrbisCountries.animateViewBoxTo(svg, OrbisCountries.WORLD_VIEWBOX);
+    } else {
+        const target = OrbisCountries.viewBoxOfContinent(region);
+        if (!target) return;
+        OrbisCountries.animateViewBoxTo(svg, target);
+    }
+    currentFocus = region;
+    document.querySelectorAll('.focus-chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.region === region);
+    });
 }
 
 async function renderCountries(regionGroup, labelGroup) {
@@ -519,6 +553,16 @@ function setupEventListeners() {
         currentView = 'countries';
         renderMap('countries');
     };
+
+    // Region focus chips (Countries view only)
+    const focusBar = document.getElementById('region-focus');
+    if (focusBar) {
+        focusBar.addEventListener('click', e => {
+            const chip = e.target.closest('.focus-chip');
+            if (!chip) return;
+            setFocusRegion(chip.dataset.region);
+        });
+    }
 
     document.getElementById('play-geocode-btn').onclick = async () => {
         if (window.OrbisMission && OrbisMission.isActive()) OrbisMission.stop();

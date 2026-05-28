@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Group Analysis | Warren's World Cup Pool</title>
+  <link rel="stylesheet" href="../shared/world-cup.css">
+</head>
+
+<body>
+  <main class="wc-shell">
+    <header class="wc-topbar">
+      <a class="wc-brand" href="../">Warren's World Cup Pool</a>
+      <nav class="wc-nav" aria-label="World Cup sections">
+        <a href="../pool/">Pool</a>
+        <a href="../meta/">Meta</a>
+        <a href="../rankings-odds/">W-Index</a>
+        <a href="./" aria-current="page">Groups</a>
+        <a href="../scoreboard/">Scoreboard</a>
+        <a href="../news/">News</a>
+      </nav>
+    </header>
+
+    <section class="wc-hero">
+      <div>
+        <div class="wc-eyebrow">W-Index Group Lens</div>
+        <h1 class="wc-title">Group Analysis</h1>
+        <p class="wc-copy">
+          Strength, parity, close-match density, and favorite-path pressure using the live published W-Index feed.
+        </p>
+      </div>
+      <div class="wc-pill" id="source-pill">Source: W-Index CSV</div>
+    </section>
+
+    <section class="wc-stat-row" aria-label="Group analysis headline metrics">
+      <div class="wc-stat">
+        <strong id="death-group">—</strong>
+        <span>Group Of Death</span>
+      </div>
+      <div class="wc-stat">
+        <strong id="strongest-group">—</strong>
+        <span>Strongest Total</span>
+      </div>
+      <div class="wc-stat">
+        <strong id="most-even-group">—</strong>
+        <span>Most Even</span>
+      </div>
+      <div class="wc-stat">
+        <strong id="easy-favorite-group">—</strong>
+        <span>Easiest Favorite Path</span>
+      </div>
+    </section>
+
+    <section class="wc-card wc-card-pad">
+      <div class="wc-section-header">
+        <div>
+          <h2>Model Definitions</h2>
+          <p>These are deliberately simple, transparent metrics so we can argue with them productively.</p>
+        </div>
+      </div>
+      <div class="wc-grid">
+        <article class="wc-card wc-card-pad">
+          <span class="wc-chip">Total Strength</span>
+          <p class="wc-copy">Sum the four W-Index scores in the group. Higher means more total quality.</p>
+        </article>
+        <article class="wc-card wc-card-pad">
+          <span class="wc-chip">Parity</span>
+          <p class="wc-copy">Sum the absolute W-Index difference across all six group matchups. Lower means more even.</p>
+        </article>
+        <article class="wc-card wc-card-pad">
+          <span class="wc-chip">Close Density</span>
+          <p class="wc-copy">Count group matchups within 5, 10, and 15 W-Index points. More means fewer obvious games.</p>
+        </article>
+      </div>
+      <div class="wc-status" id="status">Loading W-Index group analysis...</div>
+    </section>
+
+    <section class="wc-section">
+      <div class="wc-section-header">
+        <div>
+          <h2>Interpretation Cards</h2>
+          <p>Quick reads for pool strategy and future writeups.</p>
+        </div>
+      </div>
+      <div class="wc-grid" id="insight-grid"></div>
+    </section>
+
+    <section class="wc-section">
+      <div class="wc-section-header">
+        <div>
+          <h2>Group Rankings</h2>
+          <p>Sortable-looking analysis table for the main group strength and parity metrics.</p>
+        </div>
+      </div>
+      <div class="wc-table-wrap">
+        <table class="wc-table">
+          <thead>
+            <tr>
+              <th>Group</th>
+              <th>Teams</th>
+              <th>Total W-Index</th>
+              <th>Avg</th>
+              <th>Pairwise Diff Sum</th>
+              <th>Std Dev</th>
+              <th>Close Games</th>
+              <th>Favorite Path</th>
+              <th>Top-2 Cushion</th>
+            </tr>
+          </thead>
+          <tbody id="group-table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="wc-section">
+      <div class="wc-section-header">
+        <div>
+          <h2>Group Cards</h2>
+          <p>Each group with W-Index team order and all six matchup edges.</p>
+        </div>
+      </div>
+      <div class="wc-grid" id="group-card-grid"></div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { groups, teamsById } from "../data/world-cup-2026.js";
+
+    const W_INDEX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
+    const $ = (id) => document.getElementById(id);
+
+    const elements = {
+      status: $("status"),
+      deathGroup: $("death-group"),
+      strongestGroup: $("strongest-group"),
+      mostEvenGroup: $("most-even-group"),
+      easyFavoriteGroup: $("easy-favorite-group"),
+      insightGrid: $("insight-grid"),
+      groupTable: $("group-table"),
+      groupCardGrid: $("group-card-grid"),
+    };
+
+    function flag(countryCode) {
+      return countryCode
+        .toUpperCase()
+        .split("")
+        .map((char) => String.fromCodePoint(127397 + char.charCodeAt(0)))
+        .join("");
+    }
+
+    function normalizeName(name) {
+      return String(name || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/&/g, "and")
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+    }
+
+    const teamAliases = new Map();
+    for (const team of Object.values(teamsById)) {
+      const names = [team.name, team.shortName, team.id];
+      if (team.id === "USA") names.push("USA", "United States of America", "USMNT");
+      if (team.id === "KOR") names.push("South Korea");
+      if (team.id === "CIV") names.push("Cote d Ivoire", "Côte d'Ivoire");
+      if (team.id === "COD") names.push("Congo DR", "Democratic Republic of Congo");
+      if (team.id === "TUR") names.push("Turkey", "Türkiye");
+      if (team.id === "IRN") names.push("IR Iran", "Iran");
+      if (team.id === "CPV") names.push("Cabo Verde", "Cape Verde");
+      if (team.id === "CUW") names.push("Curaçao", "Curacao");
+      for (const name of names.filter(Boolean)) teamAliases.set(normalizeName(name), team.id);
+    }
+
+    function parseCsv(text) {
+      const rows = [];
+      let row = [];
+      let field = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const next = text[i + 1];
+
+        if (char === '"' && inQuotes && next === '"') {
+          field += '"';
+          i++;
+        } else if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === "," && !inQuotes) {
+          row.push(field);
+          field = "";
+        } else if ((char === "\n" || char === "\r") && !inQuotes) {
+          if (char === "\r" && next === "\n") i++;
+          row.push(field);
+          if (row.some((value) => value.trim() !== "")) rows.push(row);
+          row = [];
+          field = "";
+        } else {
+          field += char;
+        }
+      }
+
+      row.push(field);
+      if (row.some((value) => value.trim() !== "")) rows.push(row);
+      return rows;
+    }
+
+    function rowsToObjects(rows) {
+      const headers = rows[0].map((header) => header.trim());
+      return rows.slice(1).map((row) => Object.fromEntries(headers.map((header, index) => [header, row[index]?.trim() || ""])));
+    }
+
+    function parsePercent(value) {
+      const number = Number(String(value).replace("%", "").trim());
+      return Number.isFinite(number) ? number : null;
+    }
+
+    function scoreLabel(score) {
+      return Number.isFinite(score) ? `${score.toFixed(1)}%` : "—";
+    }
+
+    function pairwise(teamRows) {
+      const pairs = [];
+      for (let i = 0; i < teamRows.length; i++) {
+        for (let j = i + 1; j < teamRows.length; j++) {
+          const a = teamRows[i];
+          const b = teamRows[j];
+          pairs.push({
+            a,
+            b,
+            diff: Math.abs(a.score - b.score),
+            favorite: a.score >= b.score ? a : b,
+          });
+        }
+      }
+      return pairs;
+    }
+
+    function standardDeviation(values) {
+      const avg = values.reduce((sum, value) => sum + value, 0) / values.length;
+      const variance = values.reduce((sum, value) => sum + Math.pow(value - avg, 2), 0) / values.length;
+      return Math.sqrt(variance);
+    }
+
+    function percentile(value, values, inverse = false) {
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      if (max === min) return 0.5;
+      const raw = (value - min) / (max - min);
+      return inverse ? 1 - raw : raw;
+    }
+
+    function buildWIndexMap(rows) {
+      const map = new Map();
+      const unmatched = [];
+      for (const row of rows) {
+        const id = teamAliases.get(normalizeName(row.Team));
+        if (!id) {
+          unmatched.push(row.Team);
+          continue;
+        }
+        map.set(id, {
+          score: parsePercent(row["W-Index"]),
+          rank: Number(row.Rank),
+          status: row.Status,
+        });
+      }
+      return { map, unmatched };
+    }
+
+    function analyzeGroups(wIndex) {
+      const analyses = Object.entries(groups).map(([group, teamIds]) => {
+        const teamRows = teamIds.map((id) => {
+          const team = teamsById[id];
+          return {
+            ...team,
+            score: wIndex.get(id)?.score,
+            rank: wIndex.get(id)?.rank,
+          };
+        }).sort((a, b) => b.score - a.score);
+
+        const scores = teamRows.map((team) => team.score);
+        const pairs = pairwise(teamRows);
+        const total = scores.reduce((sum, score) => sum + score, 0);
+        const pairwiseDiffSum = pairs.reduce((sum, pair) => sum + pair.diff, 0);
+        const top = teamRows[0];
+        const favoritePath = pairs
+          .filter((pair) => pair.a.id === top.id || pair.b.id === top.id)
+          .reduce((sum, pair) => sum + pair.diff, 0) / 3;
+
+        return {
+          group,
+          teamRows,
+          pairs,
+          total,
+          avg: total / 4,
+          pairwiseDiffSum,
+          avgPairwiseDiff: pairwiseDiffSum / 6,
+          stdDev: standardDeviation(scores),
+          close5: pairs.filter((pair) => pair.diff <= 5).length,
+          close10: pairs.filter((pair) => pair.diff <= 10).length,
+          close15: pairs.filter((pair) => pair.diff <= 15).length,
+          favoritePath,
+          topTwoCushion: teamRows[1].score - teamRows[2].score,
+        };
+      });
+
+      const totals = analyses.map((analysis) => analysis.total);
+      const diffs = analyses.map((analysis) => analysis.pairwiseDiffSum);
+      for (const analysis of analyses) {
+        analysis.deathScore = (
+          percentile(analysis.total, totals) * 0.52 +
+          percentile(analysis.pairwiseDiffSum, diffs, true) * 0.48
+        );
+      }
+      return analyses;
+    }
+
+    function renderInsights(analyses) {
+      const strongest = [...analyses].sort((a, b) => b.total - a.total)[0];
+      const mostEven = [...analyses].sort((a, b) => a.pairwiseDiffSum - b.pairwiseDiffSum)[0];
+      const mostClose10 = [...analyses].sort((a, b) => b.close10 - a.close10 || a.pairwiseDiffSum - b.pairwiseDiffSum)[0];
+      const death = [...analyses].sort((a, b) => b.deathScore - a.deathScore)[0];
+      const easyFavorite = [...analyses].sort((a, b) => b.favoritePath - a.favoritePath)[0];
+      const easiestTopTwo = [...analyses].sort((a, b) => b.topTwoCushion - a.topTwoCushion)[0];
+
+      elements.deathGroup.textContent = death.group;
+      elements.strongestGroup.textContent = strongest.group;
+      elements.mostEvenGroup.textContent = mostEven.group;
+      elements.easyFavoriteGroup.textContent = easyFavorite.group;
+
+      elements.insightGrid.innerHTML = [
+        {
+          label: "Group of Death",
+          title: `Group ${death.group}`,
+          body: `Best blend of total group strength (${scoreLabel(death.total)}) and parity (${death.pairwiseDiffSum.toFixed(1)} total matchup edge).`,
+        },
+        {
+          label: "Strongest Group",
+          title: `Group ${strongest.group}`,
+          body: `Highest aggregate W-Index at ${scoreLabel(strongest.total)} across all four teams.`,
+        },
+        {
+          label: "Most Even",
+          title: `Group ${mostEven.group}`,
+          body: `Lowest sum of all six matchup gaps at ${mostEven.pairwiseDiffSum.toFixed(1)} points.`,
+        },
+        {
+          label: "Most Toss-Ups",
+          title: `Group ${mostClose10.group}`,
+          body: `${mostClose10.close10} of 6 matchups are within 10 W-Index points.`,
+        },
+        {
+          label: "Easiest Favorite Path",
+          title: `Group ${easyFavorite.group}`,
+          body: `${easyFavorite.teamRows[0].name} averages a ${easyFavorite.favoritePath.toFixed(1)} point W-Index edge over the other three teams.`,
+        },
+        {
+          label: "Cleanest Top-Two Path",
+          title: `Group ${easiestTopTwo.group}`,
+          body: `The projected runner-up has a ${easiestTopTwo.topTwoCushion.toFixed(1)} point cushion over third.`,
+        },
+      ].map((card) => `
+        <article class="wc-card wc-card-pad">
+          <span class="wc-chip">${card.label}</span>
+          <div class="wc-metric" style="margin-top: 12px;">
+            <strong>${card.title}</strong>
+            <p class="wc-copy">${card.body}</p>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderTable(analyses) {
+      const maxTotal = Math.max(...analyses.map((analysis) => analysis.total));
+      elements.groupTable.innerHTML = [...analyses]
+        .sort((a, b) => b.deathScore - a.deathScore)
+        .map((analysis) => `
+          <tr>
+            <td><strong>Group ${analysis.group}</strong><br><span class="wc-small">Death score ${(analysis.deathScore * 100).toFixed(0)}</span></td>
+            <td>${analysis.teamRows.map((team) => `${flag(team.countryCode)} ${team.name}`).join("<br>")}</td>
+            <td class="wc-number"><strong>${scoreLabel(analysis.total)}</strong><div class="wc-meter"><span style="--value: ${(analysis.total / maxTotal) * 100}%"></span></div></td>
+            <td class="wc-number">${scoreLabel(analysis.avg)}</td>
+            <td class="wc-number">${analysis.pairwiseDiffSum.toFixed(1)}<br><span class="wc-small">avg ${analysis.avgPairwiseDiff.toFixed(1)}</span></td>
+            <td class="wc-number">${analysis.stdDev.toFixed(1)}</td>
+            <td class="wc-number">≤5: ${analysis.close5}<br>≤10: ${analysis.close10}<br>≤15: ${analysis.close15}</td>
+            <td class="wc-number">${analysis.teamRows[0].name}<br><span class="wc-small">+${analysis.favoritePath.toFixed(1)} avg edge</span></td>
+            <td class="wc-number">${analysis.topTwoCushion.toFixed(1)} pts</td>
+          </tr>
+        `).join("");
+    }
+
+    function renderGroupCards(analyses) {
+      elements.groupCardGrid.innerHTML = analyses.map((analysis) => `
+        <article class="wc-card wc-card-pad">
+          <span class="wc-chip">Group ${analysis.group}</span>
+          <div class="wc-rank-note">
+            <span class="wc-small">Total ${scoreLabel(analysis.total)}</span>
+            <span class="wc-small">Parity ${analysis.pairwiseDiffSum.toFixed(1)}</span>
+            <span class="wc-small">≤10 close ${analysis.close10}/6</span>
+          </div>
+          <div style="margin-top: 12px;">
+            ${analysis.teamRows.map((team) => `
+              <div class="wc-team-row">
+                <span>${flag(team.countryCode)} ${team.name}</span>
+                <strong>${scoreLabel(team.score)}</strong>
+              </div>
+            `).join("")}
+          </div>
+          <div style="margin-top: 12px;">
+            ${analysis.pairs
+              .sort((a, b) => a.diff - b.diff)
+              .map((pair) => `
+                <div class="wc-team-row">
+                  <span>${pair.a.name} v ${pair.b.name}</span>
+                  <strong>${pair.diff.toFixed(1)}</strong>
+                </div>
+              `).join("")}
+          </div>
+        </article>
+      `).join("");
+    }
+
+    async function loadAnalysis() {
+      try {
+        const response = await fetch(`${W_INDEX_URL}&groupsBust=${Date.now()}`);
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        const rows = rowsToObjects(parseCsv(await response.text()));
+        const { map, unmatched } = buildWIndexMap(rows);
+        const analyses = analyzeGroups(map);
+
+        renderInsights(analyses);
+        renderTable(analyses);
+        renderGroupCards(analyses);
+
+        const missing = Object.values(teamsById).filter((team) => !map.has(team.id)).map((team) => team.name);
+        elements.status.innerHTML = `
+          Loaded <strong>${map.size}</strong> W-Index teams for <strong>${analyses.length}</strong> groups.
+          ${missing.length ? `<br><strong>Missing canonical teams:</strong> ${missing.join(", ")}` : ""}
+          ${unmatched.length ? `<br><strong>Unmatched feed names:</strong> ${unmatched.join(", ")}` : ""}
+        `;
+      } catch (error) {
+        elements.status.innerHTML = `Group analysis failed to load: ${error.message}. Use localhost so the data modules and CSV feed can load.`;
+        elements.status.style.color = "var(--wc-red)";
+      }
+    }
+
+    loadAnalysis();
+  </script>
+</body>
+
+</html>

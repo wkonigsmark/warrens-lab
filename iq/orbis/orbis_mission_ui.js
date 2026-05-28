@@ -81,6 +81,8 @@
     state.dom.strip.classList.add("active");
     // Hide country ISO labels while Mission is active — they're cheat helpers
     document.body.classList.add("mission-active");
+    // Reset any region zoom — Mission always uses the world view
+    if (window.OrbisCountries) OrbisCountries.resetViewBox(state.dom.svg);
 
     state.session = OrbisQuiz.start({
       mode: "mission",
