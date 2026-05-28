@@ -29,13 +29,26 @@
     // Tweak these to move a numbered badge into a more centered/readable spot.
     const POSITIONS = {
         africa:        [4400, -6300],
-        antarctica:    [4500, -3950],  // on the thin strip at the bottom
+        antarctica:    [4500, -3300],  // on the manually-drawn strip
         asia:          [7300, -7800],
         europe:        [4400, -9000],
         north_america: [2000, -8600],
         oceania:       [8700, -5700],
         south_america: [2700, -6100]
     };
+
+    // Natural Earth's medium-res dataset omits Antarctica entirely.
+    // We draw a stylized icy strip across the bottom of the world map.
+    // Wavy top edge (ice shelf vibe), flat bottom, full map width.
+    const ANTARCTICA_STRIP_PATH = `
+        M -800 -3700
+        C 200 -3900, 1400 -3500, 2400 -3700
+        C 3400 -3900, 4500 -3500, 5500 -3700
+        C 6500 -3900, 7700 -3500, 8700 -3700
+        C 9700 -3900, 10500 -3600, 10800 -3700
+        L 10800 -2900
+        L -800 -2900
+        Z`;
 
     const SVG_NS = "http://www.w3.org/2000/svg";
     const cg = document.getElementById("continents-group");
@@ -68,10 +81,15 @@
         return;
     }
 
+    // ---- Paint the manually-drawn Antarctica strip first ---------------
+    // (so the real continents render on top of it if anything overlaps)
+    const aPath = document.createElementNS(SVG_NS, "path");
+    aPath.setAttribute("d", ANTARCTICA_STRIP_PATH.trim());
+    aPath.setAttribute("class", "continent-shape antarctica-strip");
+    aPath.setAttribute("data-continent", "antarctica");
+    cg.appendChild(aPath);
+
     // ---- Paint each country, classed by continent ---------------------
-    // Antarctica shows up as a thin strip at the bottom (Miller projection
-    // squashes it). The inset below the map shows its real shape; the strip
-    // here teaches kids "this is where Antarctica sits on the world map."
     for (const feature of geo.features) {
         const ne = feature.properties.continent;
         const id = NE_TO_ID[ne];
@@ -85,23 +103,16 @@
         cg.appendChild(path);
     }
 
-    // ---- Place numbered circles ----------------------------------------
-    // Antarctica's strip is too thin for a full-size badge, so it gets a smaller one.
-    const NORMAL_RADIUS = 620;
-    const NORMAL_FONT = 520;
-    const ANTARCTICA_RADIUS = 220;
-    const ANTARCTICA_FONT = 220;
-
+    // ---- Place numbered circles (all uniform size now) -----------------
     ORDER.forEach((id, i) => {
         const pos = POSITIONS[id];
         if (!pos) return;
         const [x, y] = pos;
-        const isAntarctica = id === "antarctica";
 
         const circle = document.createElementNS(SVG_NS, "circle");
         circle.setAttribute("cx", x);
         circle.setAttribute("cy", y);
-        circle.setAttribute("r", isAntarctica ? ANTARCTICA_RADIUS : NORMAL_RADIUS);
+        circle.setAttribute("r", 620);
         circle.setAttribute("class", "number-bg");
         ng.appendChild(circle);
 
@@ -109,9 +120,6 @@
         text.setAttribute("x", x);
         text.setAttribute("y", y);
         text.setAttribute("class", "number-text");
-        if (isAntarctica) {
-            text.setAttribute("font-size", String(ANTARCTICA_FONT));
-        }
         text.textContent = String(i + 1);
         ng.appendChild(text);
     });

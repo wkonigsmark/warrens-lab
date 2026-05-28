@@ -4,32 +4,1722 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scoreboard Coming Soon | Warren's World Cup Pool</title>
+  <title>Scoreboard & Standings Sandbox | Warren's World Cup Pool</title>
   <link rel="stylesheet" href="../shared/world-cup.css">
+  
+  <style>
+    /* Premium Local CSS Tokens & Overrides */
+    :root {
+      --wc-bg: #07130f;
+      --wc-ink: #f7f4eb;
+      --wc-muted: rgba(247, 244, 235, 0.65);
+      --wc-line: rgba(247, 244, 235, 0.12);
+      --wc-panel: rgba(255, 255, 255, 0.05);
+      --wc-panel-strong: rgba(255, 255, 255, 0.09);
+      --wc-gold: #f4c95d;
+      --wc-green: #24b47e;
+      --wc-red: #ff5d5d;
+      --wc-blue: #4aa3ff;
+    }
+
+    .tab-selectors {
+      display: flex;
+      gap: 12px;
+      border-bottom: 1px solid var(--wc-line);
+      margin-bottom: 24px;
+      padding-bottom: 4px;
+    }
+
+    .sim-tab-btn {
+      background: none;
+      border: none;
+      color: var(--wc-muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .sim-tab-btn:hover {
+      color: var(--wc-ink);
+      background: var(--wc-panel);
+    }
+
+    .sim-tab-btn.active {
+      color: var(--wc-gold);
+      background: var(--wc-panel-strong);
+    }
+
+    .sim-tab-btn.active::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 12%;
+      width: 76%;
+      height: 2px;
+      background: var(--wc-gold);
+      border-radius: 99px;
+      box-shadow: 0 0 10px var(--wc-gold);
+    }
+
+    .sim-view-panel {
+      display: none;
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    .sim-view-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Leaderboard Styles */
+    .leaderboard-table-wrap {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid var(--wc-line);
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(16px);
+      margin-bottom: 28px;
+    }
+
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .leaderboard-table th {
+      background: var(--wc-panel-strong);
+      color: var(--wc-muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--wc-line);
+    }
+
+    .leaderboard-table td {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--wc-line);
+      vertical-align: middle;
+      transition: background 0.15s ease;
+    }
+
+    .leaderboard-table tbody tr {
+      cursor: pointer;
+    }
+
+    .leaderboard-table tbody tr:hover td {
+      background: var(--wc-panel);
+    }
+
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      font-weight: 900;
+      font-size: 0.78rem;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--wc-ink);
+    }
+
+    .rank-badge.rank-1 {
+      background: var(--wc-gold);
+      color: #07130f;
+      box-shadow: 0 0 10px rgba(244, 201, 93, 0.4);
+    }
+
+    .rank-badge.rank-2 {
+      background: #e5e5e5;
+      color: #07130f;
+    }
+
+    .rank-badge.rank-3 {
+      background: #cd7f32;
+      color: #07130f;
+    }
+
+    .shift-indicator {
+      font-weight: 850;
+      font-size: 0.76rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .shift-indicator.up {
+      color: var(--wc-green);
+      background: rgba(36, 180, 126, 0.1);
+    }
+
+    .shift-indicator.down {
+      color: var(--wc-red);
+      background: rgba(255, 93, 93, 0.1);
+    }
+
+    .shift-indicator.neutral {
+      color: var(--wc-muted);
+    }
+
+    .player-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 850;
+      color: var(--wc-ink);
+    }
+
+    .player-avatar {
+      font-size: 1.25rem;
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+    }
+
+    /* Expandable Predictions Panel */
+    .expanded-predictions {
+      background: rgba(0, 0, 0, 0.35);
+      border-bottom: 1px solid var(--wc-line);
+      display: none;
+    }
+
+    .expanded-predictions.active {
+      display: table-row;
+    }
+
+    .predictions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .prediction-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--wc-line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .prediction-card-title {
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--wc-gold);
+      letter-spacing: 0.08em;
+      margin: 0 0 10px 0;
+    }
+
+    .prediction-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0;
+      font-size: 0.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .prediction-list-item:last-child {
+      border-bottom: none;
+    }
+
+    /* Sandbox controls */
+    .sandbox-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .sandbox-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sandbox-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--wc-line);
+      border-radius: 12px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+    }
+
+    .sandbox-label {
+      font-weight: 850;
+      font-size: 0.85rem;
+      color: var(--wc-muted);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .sandbox-input, .sandbox-select {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--wc-line);
+      color: var(--wc-ink);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      width: 100%;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .sandbox-input:focus, .sandbox-select:focus {
+      border-color: var(--wc-gold);
+    }
+
+    /* Match Grid Styles */
+    .match-center-filters {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .match-filter-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--wc-line);
+      color: var(--wc-muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 99px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.15s ease;
+    }
+
+    .match-filter-btn:hover {
+      color: var(--wc-ink);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .match-filter-btn.active {
+      background: var(--wc-gold);
+      color: #07130f;
+      border-color: var(--wc-gold);
+    }
+
+    .scoreboard-matches-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .sc-match-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--wc-line);
+      border-radius: 10px;
+      padding: 14px;
+      position: relative;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .sc-match-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(244, 201, 93, 0.3);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .sc-match-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      font-weight: 850;
+      color: var(--wc-muted);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+
+    .sc-match-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0;
+    }
+
+    .sc-match-team {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 850;
+      font-size: 0.85rem;
+    }
+
+    .sc-match-score {
+      font-size: 1rem;
+      font-weight: 900;
+      background: rgba(255, 255, 255, 0.06);
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 4px;
+      border: 1px solid var(--wc-line);
+    }
+
+    .sc-match-score.completed {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .sc-match-card.live {
+      border-color: var(--wc-green);
+      box-shadow: 0 0 10px rgba(36, 180, 126, 0.15);
+    }
+
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(36, 180, 126, 0.15);
+      color: var(--wc-green);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.62rem;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+
+    .flag-holder {
+      width: 20px;
+      height: 14px;
+      border-radius: 2px;
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: middle;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: #1a1a1a;
+    }
+
+    .flag-holder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .p-shootout-badge {
+      font-size: 0.62rem;
+      background: var(--wc-gold);
+      color: #07130f;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-weight: 900;
+      margin-left: auto;
+      margin-right: 6px;
+    }
+
+    .highlight-winner {
+      color: var(--wc-gold) !important;
+    }
+
+    .empty-scoreboard-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--wc-muted);
+      border: 1px dashed var(--wc-line);
+      border-radius: 12px;
+    }
+
+    .sandbox-toast-region {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 40;
+      display: grid;
+      gap: 10px;
+      width: min(340px, calc(100vw - 32px));
+      pointer-events: none;
+    }
+
+    .sandbox-toast {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border: 1px solid rgba(36, 180, 126, 0.38);
+      border-radius: 10px;
+      background: rgba(7, 19, 15, 0.94);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34), 0 0 18px rgba(36, 180, 126, 0.12);
+      backdrop-filter: blur(16px);
+      color: var(--wc-ink);
+      animation: sandboxToastIn 0.24s ease-out both;
+    }
+
+    .sandbox-toast.is-leaving {
+      animation: sandboxToastOut 0.22s ease-in both;
+    }
+
+    .sandbox-toast-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: rgba(36, 180, 126, 0.16);
+      color: var(--wc-green);
+      font-size: 1rem;
+      font-weight: 950;
+    }
+
+    .sandbox-toast strong {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 0.88rem;
+      font-weight: 950;
+    }
+
+    .sandbox-toast span {
+      display: block;
+      color: var(--wc-muted);
+      font-size: 0.76rem;
+      font-weight: 750;
+      line-height: 1.35;
+    }
+
+    @keyframes sandboxToastIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes sandboxToastOut {
+      to {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="sandbox-toast-region" id="sandbox-toast-region" aria-live="polite" aria-atomic="true"></div>
+
   <main class="wc-shell">
     <header class="wc-topbar">
       <a class="wc-brand" href="../">Warren's World Cup Pool</a>
       <nav class="wc-nav" aria-label="World Cup sections">
-        <a href="../">Home</a>
+        <a href="../pool/">Pool</a>
         <a href="../meta/">Meta</a>
         <a href="../rankings-odds/">W-Index</a>
         <a href="../groups/">Groups</a>
+        <a href="./" aria-current="page">Scoreboard</a>
+        <a href="../news/">News</a>
         <a href="../simulation/">Simulator</a>
       </nav>
     </header>
 
     <section class="wc-hero">
       <div>
-        <div class="wc-eyebrow">Pool Standings</div>
-        <h1 class="wc-title">Coming Soon...</h1>
-        <p class="wc-copy">The live pool scoreboard will live here.</p>
+        <div class="wc-eyebrow">Pool Scoring & Sandbox Arena</div>
+        <h1 class="wc-title">Tournament Scoreboard Hub</h1>
+        <p class="wc-copy">
+          Track live standings, review all 104 matches, and run sandbox simulations to test pool entry performance.
+        </p>
       </div>
-      <a class="wc-pill" href="../">Back Home</a>
+      <div class="wc-pill" id="sync-status">Loading W-Index data...</div>
     </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="tab-selectors" id="scoreboard-tabs-nav">
+      <button class="sim-tab-btn active" data-tab="standings">🏆 Pool Standings</button>
+      <button class="sim-tab-btn" data-tab="matches">📅 Match Center</button>
+      <button class="sim-tab-btn" data-tab="sandbox">🎛️ Commissioner Sandbox</button>
+    </nav>
+
+    <!-- Tab Panels Container -->
+    <div id="scoreboard-views-container">
+      
+      <!-- Tab 1: Leaderboard Standings -->
+      <div class="sim-view-panel active" id="panel-standings">
+        <div class="matches-export-bar" style="display: flex; gap: 12px; margin-bottom: 16px; align-items: center; justify-content: flex-end; flex-wrap: wrap;">
+          <span style="font-size: 0.8rem; color: var(--wc-muted); font-weight: 850; margin-right: auto;">
+            🏆 Live pool standings ready for Warren's spreadsheet tracking
+          </span>
+          <button class="wc-button secondary" id="copy-standings-btn" style="padding: 6px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
+            📋 Copy Standings
+          </button>
+          <button class="wc-button" id="export-standings-btn" style="padding: 6px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
+            📥 Export Standings CSV
+          </button>
+        </div>
+        <div class="leaderboard-table-wrap">
+          <table class="leaderboard-table" id="leaderboard">
+            <thead>
+              <tr>
+                <th style="width: 50px;">Rank</th>
+                <th style="width: 70px; text-align: center;">Shift</th>
+                <th>Participant</th>
+                <th style="text-align: right;">Group Picks</th>
+                <th style="text-align: right;">KO Picks</th>
+                <th style="text-align: right;">Accuracy</th>
+                <th style="text-align: right; width: 120px; color: var(--wc-gold);">Points</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size: 0.78rem; color: var(--wc-muted); text-align: center; font-style: italic;">
+          💡 Tip: Click any row to expand and view that participant's prediction sheet vs actual outcomes.
+        </p>
+      </div>
+
+      <!-- Tab 2: Match Center -->
+      <div class="sim-view-panel" id="panel-matches">
+        <div class="match-center-filters">
+          <button class="match-filter-btn active" data-filter="all">All Matches</button>
+          <button class="match-filter-btn" data-filter="group">Group Stage (1-72)</button>
+          <button class="match-filter-btn" data-filter="knockout">Knockouts (73-104)</button>
+          <button class="match-filter-btn" data-filter="completed">Completed</button>
+          <button class="match-filter-btn" data-filter="upcoming">Upcoming</button>
+        </div>
+        
+        <div class="matches-export-bar" style="display: flex; gap: 12px; margin-top: 16px; margin-bottom: 20px; align-items: center; justify-content: flex-end; flex-wrap: wrap; border-bottom: 1px solid var(--wc-line); padding-bottom: 16px;">
+          <span style="font-size: 0.8rem; color: var(--wc-muted); font-weight: 850; margin-right: auto;">
+            📅 Simulated/Actual match results ready for Warren's spreadsheets
+          </span>
+          <button class="wc-button secondary" id="copy-matches-btn" style="padding: 6px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
+            📋 Copy Matches
+          </button>
+          <button class="wc-button" id="export-matches-btn" style="padding: 6px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
+            📥 Export Matches CSV
+          </button>
+        </div>
+        
+        <div class="scoreboard-matches-grid" id="match-center-grid">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- Tab 3: Commissioner Sandbox -->
+      <div class="sim-view-panel" id="panel-sandbox">
+        <div class="sandbox-container">
+          
+          <!-- Sandbox Controls Card -->
+          <div class="sandbox-card">
+            <h3 style="margin-top: 0; color: var(--wc-gold); text-transform: uppercase; font-size: 0.95rem; letter-spacing: 0.05em; font-weight:950;">⚡ Sandbox Controls</h3>
+            <p style="font-size: 0.8rem; color: var(--wc-muted); margin-bottom: 20px;">
+              Simulate matches using stochastic algorithms or clear the board to see how points and ranks adapt instantly.
+            </p>
+            
+            <!-- Chaos level slider -->
+            <div style="margin-bottom: 24px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span class="sandbox-label" style="margin-bottom: 0;">Simulation Chaos Level</span>
+                <span style="font-weight: 850; font-size: 0.88rem; color: var(--wc-gold);" id="sandbox-chaos-label">50%</span>
+              </div>
+              <input type="range" id="sandbox-chaos-slider" min="0" max="1" step="0.05" value="0.5" style="width: 100%; accent-color: var(--wc-gold); cursor: pointer;">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <button class="wc-button" id="sandbox-btn-next5">Simulate Next 5 Matches</button>
+              <button class="wc-button" id="sandbox-btn-group">Complete Group Stage (Matches 1-72)</button>
+              <button class="wc-button" id="sandbox-btn-all">Complete Full Tournament (104 Matches)</button>
+              <button class="wc-button secondary" id="sandbox-btn-reset" style="border-color: rgba(255, 93, 93, 0.4); color: var(--wc-red);">Reset Sandbox (Clear Scores)</button>
+            </div>
+          </div>
+
+          <!-- Manual Overrides Card -->
+          <div class="sandbox-card">
+            <h3 style="margin-top: 0; color: var(--wc-blue); text-transform: uppercase; font-size: 0.95rem; letter-spacing: 0.05em; font-weight:950;">📝 Manual Match Override</h3>
+            <p style="font-size: 0.8rem; color: var(--wc-muted); margin-bottom: 20px;">
+              Directly key in custom scores to simulate a specific game day or override actual results.
+            </p>
+
+            <form id="override-form" onsubmit="return false;">
+              <label class="sandbox-label" for="override-match-select">Select Match</label>
+              <select class="sandbox-select" id="override-match-select">
+                <!-- Loaded dynamically -->
+              </select>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                <div>
+                  <label class="sandbox-label" id="override-home-label">Home Score</label>
+                  <input type="number" class="sandbox-input" id="override-home-score" min="0" max="20" value="0">
+                </div>
+                <div>
+                  <label class="sandbox-label" id="override-away-label">Away Score</label>
+                  <input type="number" class="sandbox-input" id="override-away-score" min="0" max="20" value="0">
+                </div>
+              </div>
+
+              <!-- Shootout option (hidden by default unless KO) -->
+              <div id="override-shootout-container" style="display: none; margin-bottom: 16px;">
+                <label class="sandbox-label" for="override-shootout-select">Penalty Shootout Winner</label>
+                <select class="sandbox-select" id="override-shootout-select">
+                  <!-- Loaded dynamically based on teams -->
+                </select>
+              </div>
+
+              <button class="wc-button" id="override-btn-apply" style="width: 100%;">Apply Custom Scores</button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
   </main>
+
+  <!-- Google sheets permutations lookup -->
+  <script src="../archive/world-cup-1/bracket_lookup.js"></script>
+
+  <script type="module">
+    import { groupStageMatches, teams, groups, teamsById } from "../data/world-cup-2026.js";
+    import { 
+      SCORING_RULES, 
+      calculateGroupTables, 
+      calculateThirdPlaceStandings, 
+      scoreEntry, 
+      seedDefaultEntries 
+    } from "./scoreboard-engine.js";
+
+    const W_INDEX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
+
+    // Application State
+    let wIndexMap = new Map();
+    let actualMatches = [];
+    let poolEntries = [];
+    let previousRanks = {}; // For computing standing position changes (↑/↓)
+    
+    // UI Selectors
+    const elements = {
+      syncStatus: document.getElementById("sync-status"),
+      tabs: document.querySelectorAll(".sim-tab-btn"),
+      panels: document.querySelectorAll(".sim-view-panel"),
+      leaderboardBody: document.getElementById("leaderboard-body"),
+      matchGrid: document.getElementById("match-center-grid"),
+      matchFilters: document.querySelectorAll(".match-filter-btn"),
+      sandboxChaosSlider: document.getElementById("sandbox-chaos-slider"),
+      sandboxChaosLabel: document.getElementById("sandbox-chaos-label"),
+      btnNext5: document.getElementById("sandbox-btn-next5"),
+      btnGroup: document.getElementById("sandbox-btn-group"),
+      btnAll: document.getElementById("sandbox-btn-all"),
+      btnReset: document.getElementById("sandbox-btn-reset"),
+      overrideMatchSelect: document.getElementById("override-match-select"),
+      overrideHomeScore: document.getElementById("override-home-score"),
+      overrideAwayScore: document.getElementById("override-away-score"),
+      overrideHomeLabel: document.getElementById("override-home-label"),
+      overrideAwayLabel: document.getElementById("override-away-label"),
+      overrideShootoutContainer: document.getElementById("override-shootout-container"),
+      overrideShootoutSelect: document.getElementById("override-shootout-select"),
+      btnApplyOverride: document.getElementById("override-btn-apply"),
+      copyStandingsBtn: document.getElementById("copy-standings-btn"),
+      exportStandingsBtn: document.getElementById("export-standings-btn"),
+      copyMatchesBtn: document.getElementById("copy-matches-btn"),
+      exportMatchesBtn: document.getElementById("export-matches-btn"),
+      toastRegion: document.getElementById("sandbox-toast-region")
+    };
+
+    // Load CSV helper functions
+    function parseCsv(text) {
+      const rows = [];
+      let row = [];
+      let field = "";
+      let inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const next = text[i + 1];
+        if (char === '"' && inQuotes && next === '"') { field += '"'; i++; }
+        else if (char === '"') { inQuotes = !inQuotes; }
+        else if (char === ',' && !inQuotes) { row.push(field); field = ""; }
+        else if ((char === '\n' || char === '\r') && !inQuotes) {
+          if (char === '\r' && next === '\n') i++;
+          row.push(field);
+          if (row.some(v => v.trim() !== "")) rows.push(row);
+          row = [];
+          field = "";
+        } else { field += char; }
+      }
+      row.push(field);
+      if (row.some(v => v.trim() !== "")) rows.push(row);
+      return rows;
+    }
+
+    function rowsToObjects(rows) {
+      const headers = rows[0].map(h => h.trim());
+      return rows.slice(1).map(row => Object.fromEntries(headers.map((h, idx) => [h, row[idx]?.trim() || ""])));
+    }
+
+    function flagUrl(teamId) {
+      const t = teamsById[teamId];
+      if (!t) return "https://flagcdn.com/w80/un.png";
+      const code = t.id === "ENG" ? "gb-eng" : (t.id === "SCO" ? "gb-sct" : t.countryCode.toLowerCase());
+      return `https://flagcdn.com/w80/${code}.png`;
+    }
+
+    function teamName(teamId) {
+      return teamsById[teamId]?.name || `TBD (${teamId})`;
+    }
+
+    // Initialize matches array (1 to 104)
+    function initMatches() {
+      actualMatches = [];
+
+      // 1. Group Stage (1-72)
+      groupStageMatches.forEach(m => {
+        actualMatches.push({
+          matchNumber: m.matchNumber,
+          group: m.group,
+          home: m.home,
+          away: m.away,
+          homeScore: 0,
+          awayScore: 0,
+          status: 'upcoming',
+          winnerId: null,
+          shootoutWinnerId: null,
+          resultNote: "",
+          venue: m.venue,
+          localDate: m.localDate
+        });
+      });
+
+      // 2. Knockouts (73-104)
+      const knockoutDefs = [
+        // R32 (73-88)
+        { id: 73, stage: "Round of 32" }, { id: 74, stage: "Round of 32" }, { id: 75, stage: "Round of 32" }, { id: 76, stage: "Round of 32" },
+        { id: 77, stage: "Round of 32" }, { id: 78, stage: "Round of 32" }, { id: 79, stage: "Round of 32" }, { id: 80, stage: "Round of 32" },
+        { id: 81, stage: "Round of 32" }, { id: 82, stage: "Round of 32" }, { id: 83, stage: "Round of 32" }, { id: 84, stage: "Round of 32" },
+        { id: 85, stage: "Round of 32" }, { id: 86, stage: "Round of 32" }, { id: 87, stage: "Round of 32" }, { id: 88, stage: "Round of 32" },
+        // R16 (89-96)
+        { id: 89, stage: "Round of 16" }, { id: 90, stage: "Round of 16" }, { id: 91, stage: "Round of 16" }, { id: 92, stage: "Round of 16" },
+        { id: 93, stage: "Round of 16" }, { id: 94, stage: "Round of 16" }, { id: 95, stage: "Round of 16" }, { id: 96, stage: "Round of 16" },
+        // QF (97-100)
+        { id: 97, stage: "Quarterfinals" }, { id: 98, stage: "Quarterfinals" }, { id: 99, stage: "Quarterfinals" }, { id: 100, stage: "Quarterfinals" },
+        // SF (101-102)
+        { id: 101, stage: "Semifinals" }, { id: 102, stage: "Semifinals" },
+        // 3rd Place Match
+        { id: 103, stage: "Third Place Match" },
+        // Grand Final
+        { id: 104, stage: "Grand Final" }
+      ];
+
+      knockoutDefs.forEach(k => {
+        actualMatches.push({
+          matchNumber: k.id,
+          group: null,
+          home: null,
+          away: null,
+          homeScore: 0,
+          awayScore: 0,
+          status: 'upcoming',
+          winnerId: null,
+          shootoutWinnerId: null,
+          resultNote: "",
+          stage: k.stage,
+          venue: { city: "TBD Venue", stadium: "TBD Stadium" },
+          localDate: "July 2026"
+        });
+      });
+    }
+
+    // Stochastic game simulation (getWeightedScore formula)
+    function simulateGameScores(homeId, awayId, stochasticity = 0.5) {
+      const w1 = wIndexMap.get(homeId) || 0.50;
+      const w2 = wIndexMap.get(awayId) || 0.50;
+
+      // Base random factor
+      const stochBase = Math.random() * 3.2;
+      const fixedBase = 1.3;
+
+      const base1 = Math.floor(fixedBase * (1 - stochasticity) + stochBase * stochasticity);
+      const base2 = Math.floor(fixedBase * (1 - stochasticity) + stochBase * stochasticity);
+
+      // Advantage scaling based on W-Index differences
+      const diff = w1 - w2;
+      const advantageScale = 2.5;
+
+      const extra1 = (diff > 0) ? Math.floor(advantageScale * diff * (1 - stochasticity) + Math.random() * (advantageScale * diff) * stochasticity) : 0;
+      const extra2 = (diff < 0) ? Math.floor(advantageScale * Math.abs(diff) * (1 - stochasticity) + Math.random() * (advantageScale * Math.abs(diff)) * stochasticity) : 0;
+
+      return {
+        homeScore: base1 + extra1,
+        awayScore: base2 + extra2
+      };
+    }
+
+    // Resolves live knockout pairings sequentially based on actual scores
+    function updateKnockoutPairings() {
+      const groupStageDone = actualMatches.slice(0, 72).every(m => m.status === 'completed');
+      if (!groupStageDone) return;
+
+      const tables = calculateGroupTables(actualMatches, teams);
+      const thirds = calculateThirdPlaceStandings(tables);
+
+      const getT = (rank, gLetter) => tables[gLetter] ? tables[gLetter][rank - 1].id : "???";
+      
+      const advancingThirds = thirds.filter(t => t.status === 'Q').map(t => t.group).sort();
+      const thirdsKey = advancingThirds.join("");
+      const lookup = window.BRACKET_LOOKUP || {};
+      const mapping = lookup[thirdsKey] || {
+        "A": "3E", "B": "3G", "D": "3I", "E": "3D", "G": "3H", "I": "3F", "K": "3L", "L": "3K"
+      };
+      
+      const get3rd = (gLetter) => thirds.find(x => x.group === gLetter)?.id || "???";
+
+      const setPair = (matchNum, hId, aId) => {
+        const m = actualMatches.find(x => x.matchNumber === matchNum);
+        if (m) {
+          m.home = hId;
+          m.away = aId;
+        }
+      };
+
+      // Set Round of 32 Pairings (73 to 88)
+      setPair(73, getT(1, "E"), get3rd(mapping["E"][1]));
+      setPair(74, getT(1, "I"), get3rd(mapping["I"][1]));
+      setPair(75, getT(2, "A"), getT(2, "B"));
+      setPair(76, getT(1, "F"), getT(2, "C"));
+      setPair(77, getT(1, "C"), getT(2, "F"));
+      setPair(78, getT(2, "E"), getT(2, "I"));
+      setPair(79, getT(1, "A"), get3rd(mapping["A"][1]));
+      setPair(80, getT(1, "L"), get3rd(mapping["L"][1]));
+      setPair(81, getT(2, "K"), getT(2, "L"));
+      setPair(82, getT(1, "H"), getT(2, "J"));
+      setPair(83, getT(1, "D"), get3rd(mapping["D"][1]));
+      setPair(84, getT(1, "G"), get3rd(mapping["G"][1]));
+      setPair(85, getT(1, "B"), get3rd(mapping["B"][1]));
+      setPair(86, getT(1, "K"), get3rd(mapping["K"][1]));
+      setPair(87, getT(1, "J"), getT(2, "H"));
+      setPair(88, getT(2, "D"), getT(2, "G"));
+
+      // Helper to fetch actual winner IDs
+      const getW = (matchNum) => {
+        const m = actualMatches.find(x => x.matchNumber === matchNum);
+        return m && m.status === 'completed' ? m.winnerId : "???";
+      };
+
+      // Set R16 matchups (89 to 96)
+      setPair(89, getW(73), getW(74));
+      setPair(90, getW(75), getW(76));
+      setPair(91, getW(77), getW(78));
+      setPair(92, getW(79), getW(80));
+      setPair(93, getW(81), getW(82));
+      setPair(94, getW(83), getW(84));
+      setPair(95, getW(85), getW(86));
+      setPair(96, getW(87), getW(88));
+
+      // Set QF matchups (97 to 100)
+      setPair(97, getW(89), getW(90));
+      setPair(98, getW(91), getW(92));
+      setPair(99, getW(93), getW(94));
+      setPair(100, getW(95), getW(96));
+
+      // Set SF matchups (101 to 102)
+      setPair(101, getW(97), getW(98));
+      setPair(102, getW(99), getW(100));
+
+      // Set Third Place & Final matchups (103 & 104)
+      const getL = (matchNum) => {
+        const m = actualMatches.find(x => x.matchNumber === matchNum);
+        if (!m || m.status !== 'completed') return "???";
+        return m.winnerId === m.home ? m.away : m.home;
+      };
+      setPair(103, getL(101), getL(102));
+      setPair(104, getW(101), getW(102));
+    }
+
+    // Runs live scoring recalculation across all player entries
+    function scoreLeaderboard() {
+      // 1. Gather group table context
+      const groupTables = calculateGroupTables(actualMatches, teams);
+      const thirdPlaceStandings = calculateThirdPlaceStandings(groupTables);
+
+      // Map knockout matches to the shape expected by scoreEntry (id, winner)
+      const bracketMatches = actualMatches
+        .filter(m => m.matchNumber >= 73)
+        .map(m => ({
+          id: m.matchNumber,
+          winner: m.winnerId || null,
+          home: m.home,
+          away: m.away,
+          status: m.status
+        }));
+
+      // 2. Score entries
+      const scoredList = poolEntries.map(entry => {
+        const breakdown = scoreEntry(entry, actualMatches, groupTables, thirdPlaceStandings, bracketMatches);
+        return {
+          entry,
+          breakdown,
+          points: breakdown.total
+        };
+      });
+
+      // 3. Sort leaderboard by points
+      scoredList.sort((a, b) => b.points - a.points);
+
+      // 4. Map rank, tracking shifts
+      const newRanks = {};
+      const standingsOutput = scoredList.map((item, index) => {
+        const rank = index + 1;
+        const name = item.entry.playerName;
+        newRanks[name] = rank;
+
+        let shift = 0;
+        if (previousRanks[name]) {
+          shift = previousRanks[name] - rank; // e.g. Rank 4 -> Rank 1 is +3 shift
+        }
+
+        return {
+          ...item,
+          rank,
+          shift
+        };
+      });
+
+      // Update previous ranks cache
+      previousRanks = newRanks;
+      localStorage.setItem("world_cup_pool_previous_ranks", JSON.stringify(previousRanks));
+
+      return { standingsOutput, groupTables, thirdPlaceStandings };
+    }
+
+    // Render Tab Panel Views
+    function switchTab(tabId) {
+      elements.tabs.forEach(btn => {
+        if (btn.dataset.tab === tabId) btn.classList.add("active");
+        else btn.classList.remove("active");
+      });
+
+      elements.panels.forEach(p => {
+        if (p.id === `panel-${tabId}`) p.classList.add("active");
+        else p.classList.remove("active");
+      });
+    }
+
+    function renderStandings() {
+      const { standingsOutput, groupTables, thirdPlaceStandings } = scoreLeaderboard();
+      
+      elements.leaderboardBody.innerHTML = "";
+      
+      standingsOutput.forEach(player => {
+        let shiftHtml = `<span class="shift-indicator neutral">-</span>`;
+        if (player.shift > 0) {
+          shiftHtml = `<span class="shift-indicator up">↑ ${player.shift}</span>`;
+        } else if (player.shift < 0) {
+          shiftHtml = `<span class="shift-indicator down">↓ ${Math.abs(player.shift)}</span>`;
+        }
+
+        let rankClass = "";
+        if (player.rank === 1) rankClass = "rank-1";
+        else if (player.rank === 2) rankClass = "rank-2";
+        else if (player.rank === 3) rankClass = "rank-3";
+
+        const accuracy = Math.round(((player.breakdown.groupQualifiers + player.breakdown.r32 + player.breakdown.r16 + player.breakdown.qf + player.breakdown.sf + player.breakdown.thirdPlace + player.breakdown.champion) / 54) * 100);
+
+        const row = document.createElement("tr");
+        row.setAttribute("data-player", player.entry.playerName);
+        row.innerHTML = `
+          <td><span class="rank-badge ${rankClass}">${player.rank}</span></td>
+          <td style="text-align: center;">${shiftHtml}</td>
+          <td>
+            <div class="player-profile">
+              <span class="player-avatar">${player.entry.avatar}</span>
+              <span>${player.entry.playerName}</span>
+            </div>
+          </td>
+          <td style="text-align: right; font-weight:700;">${player.breakdown.groupQualifiers}/24 <span style="font-size:0.75rem; color:var(--wc-muted)">(${player.breakdown.groupWinners} exact)</span></td>
+          <td style="text-align: right; font-weight:700;">${player.breakdown.r32 + player.breakdown.r16 + player.breakdown.qf + player.breakdown.sf + player.breakdown.thirdPlace + player.breakdown.champion}/32</td>
+          <td style="text-align: right; font-weight:700; color:var(--wc-blue);">${accuracy}%</td>
+          <td style="text-align: right; font-weight:900; font-size:1.05rem; color:var(--wc-gold);">${player.points} pts</td>
+        `;
+        
+        elements.leaderboardBody.appendChild(row);
+
+        // Click listener for Expandable prediction summary row
+        row.addEventListener("click", () => {
+          const detailRowId = `details-${player.entry.playerName.replace(/\s+/g, '-')}`;
+          let detailsRow = document.getElementById(detailRowId);
+          
+          if (detailsRow) {
+            detailsRow.classList.toggle("active");
+          } else {
+            const exp = document.createElement("tr");
+            exp.id = detailRowId;
+            exp.className = "expanded-predictions active";
+            
+            // Build prediction overview tables HTML
+            let groupPredHtml = "";
+            let koPredHtml = "";
+
+            // Group predictions card html
+            Object.keys(player.entry.groupPredictions).slice(0, 4).forEach(g => {
+              const list = player.entry.groupPredictions[g];
+              groupPredHtml += `
+                <div class="prediction-card">
+                  <h4 class="prediction-card-title">Group ${g} Picks</h4>
+                  ${list.map((tid, idx) => {
+                    const qualifiedSet = new Set();
+                    if (groupTables[g] && groupTables[g].length >= 2) {
+                      qualifiedSet.add(groupTables[g][0].id);
+                      qualifiedSet.add(groupTables[g][1].id);
+                    }
+                    thirdPlaceStandings.forEach(t => { if(t.status === 'Q') qualifiedSet.add(t.id); });
+                    
+                    const isGreen = qualifiedSet.has(tid);
+                    const isWinnerBonus = (idx === 0 && groupTables[g]?.[0]?.id === tid);
+                    
+                    let statusColor = "color: var(--wc-muted);";
+                    if (isGreen) statusColor = "color: var(--wc-green); font-weight: 850;";
+                    if (isWinnerBonus) statusColor = "color: var(--wc-gold); font-weight: 900;";
+
+                    return `
+                      <div class="prediction-list-item">
+                        <span style="${statusColor}">${idx+1}. ${teamName(tid)}</span>
+                        <span>${isGreen ? '✅' : '❌'}</span>
+                      </div>
+                    `;
+                  }).join("")}
+                </div>
+              `;
+            });
+
+            // Knockout picks card html
+            const keyMatches = [73, 89, 97, 101, 104];
+            keyMatches.forEach(mId => {
+              const actual = actualMatches.find(x => x.matchNumber === mId);
+              const predicted = player.entry.bracketPredictions[mId];
+              const isCorrect = actual && actual.winnerId === predicted && actual.status === 'completed';
+              
+              let matchLabel = `Match ${mId}`;
+              if (mId === 73) matchLabel = "Round of 32 (M73)";
+              else if (mId === 89) matchLabel = "Round of 16 (M89)";
+              else if (mId === 97) matchLabel = "Quarterfinal (M97)";
+              else if (mId === 101) matchLabel = "Semifinal (M101)";
+              else if (mId === 104) matchLabel = "Grand Champion (M104)";
+
+              koPredHtml += `
+                <div class="prediction-list-item" style="padding: 8px 0;">
+                  <div>
+                    <div style="font-size:0.68rem; color:var(--wc-gold); font-weight:800; text-transform:uppercase;">${matchLabel}</div>
+                    <div style="font-weight:850; font-size:0.85rem; color:${isCorrect ? 'var(--wc-green)' : (actual?.status === 'completed' ? 'var(--wc-red)' : 'var(--wc-ink)')}">${teamName(predicted)}</div>
+                  </div>
+                  <span>${actual?.status !== 'completed' ? '⏳' : (isCorrect ? '✅' : '❌')}</span>
+                </div>
+              `;
+            });
+
+            exp.innerHTML = `
+              <td colspan="7">
+                <div class="predictions-grid">
+                  <div>
+                    <h3 style="margin-top:0; font-size:0.88rem; text-transform:uppercase; color:var(--wc-ink); letter-spacing:0.05em; font-weight:900;">📋 Sample Group Standing Predictions</h3>
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                      ${groupPredHtml}
+                    </div>
+                  </div>
+                  <div class="prediction-card">
+                    <h3 style="margin-top:0; font-size:0.88rem; text-transform:uppercase; color:var(--wc-ink); letter-spacing:0.05em; font-weight:900;">🏆 Major Knockout Tree Predictions</h3>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                      ${koPredHtml}
+                    </div>
+                  </div>
+                </div>
+              </td>
+            `;
+            
+            row.parentNode.insertBefore(exp, row.nextSibling);
+          }
+        });
+      });
+    }
+
+    function renderMatches(filter = "all") {
+      elements.matchGrid.innerHTML = "";
+      
+      let filtered = actualMatches;
+      if (filter === "group") {
+        filtered = actualMatches.filter(m => m.matchNumber <= 72);
+      } else if (filter === "knockout") {
+        filtered = actualMatches.filter(m => m.matchNumber >= 73);
+      } else if (filter === "completed") {
+        filtered = actualMatches.filter(m => m.status === 'completed');
+      } else if (filter === "upcoming") {
+        filtered = actualMatches.filter(m => m.status === 'upcoming');
+      }
+
+      if (filtered.length === 0) {
+        elements.matchGrid.innerHTML = `
+          <div class="empty-scoreboard-state" style="grid-column: 1 / -1;">
+            <h4>No Matches Found</h4>
+            <p>Adjust your match filters or utilize sandbox controls to complete games.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(m => {
+        const isKO = m.matchNumber >= 73;
+        const homeName = teamName(m.home);
+        const awayName = teamName(m.away);
+        
+        const homeWon = m.status === 'completed' && m.winnerId === m.home;
+        const awayWon = m.status === 'completed' && m.winnerId === m.away;
+
+        const card = document.createElement("div");
+        card.className = `sc-match-card ${m.status === 'live' ? 'live' : ''}`;
+        
+        let headerText = isKO ? `${m.stage} • Match ${m.matchNumber}` : `Group ${m.group} • Match ${m.matchNumber}`;
+        let scoreClass = m.status === 'completed' ? 'completed' : '';
+
+        let homeHtml = m.home ? `
+          <div class="sc-match-team">
+            <span class="flag-holder"><img src="${flagUrl(m.home)}" alt=""></span>
+            <span class="${homeWon ? 'highlight-winner' : ''}">${homeName}</span>
+          </div>
+        ` : `<span class="sc-match-team" style="color:var(--wc-muted); font-style:italic;">${m.stage ? 'TBD Team' : '???'}</span>`;
+
+        let awayHtml = m.away ? `
+          <div class="sc-match-team">
+            <span class="flag-holder"><img src="${flagUrl(m.away)}" alt=""></span>
+            <span class="${awayWon ? 'highlight-winner' : ''}">${awayName}</span>
+          </div>
+        ` : `<span class="sc-match-team" style="color:var(--wc-muted); font-style:italic;">${m.stage ? 'TBD Team' : '???'}</span>`;
+
+        let pBadge = (m.resultNote === "(p)" && m.status === 'completed') ? `<span class="p-shootout-badge">PK</span>` : '';
+
+        card.innerHTML = `
+          <div class="sc-match-header">
+            <span>${headerText}</span>
+            <span>${m.status === 'completed' ? '✅ Final' : (m.status === 'live' ? '<span class="live-indicator">● LIVE</span>' : '⏳ Upcoming')}</span>
+          </div>
+          <div class="sc-match-row">
+            ${homeHtml}
+            <div style="display:flex; align-items:center;">
+              ${pBadge}
+              <div class="sc-match-score ${scoreClass}">${m.status === 'completed' ? m.homeScore : '-'}</div>
+            </div>
+          </div>
+          <div class="sc-match-row">
+            ${awayHtml}
+            <div class="sc-match-score ${scoreClass}">${m.status === 'completed' ? m.awayScore : '-'}</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.64rem; color:var(--wc-muted); margin-top:8px; border-top:1px solid rgba(255,255,255,0.03); padding-top:6px;">
+            <span>🏟️ ${m.venue?.city || 'TBD'}</span>
+            <span>📅 ${m.localDate || 'July 2026'}</span>
+          </div>
+        `;
+
+        elements.matchGrid.appendChild(card);
+      });
+    }
+
+    // Populate the dropdown overrides selector
+    function loadOverrideMatchSelector() {
+      elements.overrideMatchSelect.innerHTML = "";
+      
+      actualMatches.forEach(m => {
+        const option = document.createElement("option");
+        option.value = m.matchNumber;
+        
+        let label = `Match ${m.matchNumber} (${teamName(m.home)} v ${teamName(m.away)})`;
+        if (m.matchNumber >= 73) {
+          label = `[${m.stage}] Match ${m.matchNumber} (${teamName(m.home)} v ${teamName(m.away)})`;
+        }
+        option.textContent = label;
+        elements.overrideMatchSelect.appendChild(option);
+      });
+    }
+
+    function showSandboxToast(title, message, icon = "✓") {
+      const toast = document.createElement("div");
+      toast.className = "sandbox-toast";
+      toast.innerHTML = `
+        <div class="sandbox-toast-icon">${icon}</div>
+        <div>
+          <strong>${title}</strong>
+          <span>${message}</span>
+        </div>
+      `;
+
+      elements.toastRegion.appendChild(toast);
+
+      window.setTimeout(() => {
+        toast.classList.add("is-leaving");
+        toast.addEventListener("animationend", () => toast.remove(), { once: true });
+      }, 2600);
+    }
+
+    // Sandbox step-by-step game simulator
+    function runSandboxSimulation(count) {
+      const chaos = parseFloat(elements.sandboxChaosSlider.value);
+      
+      let simulatedCount = 0;
+      for (const m of actualMatches) {
+        if (m.status === 'completed') continue;
+        
+        // Ensure team slots are populated (run knockout calculations dynamically!)
+        updateKnockoutPairings();
+        
+        if (!m.home || !m.away || m.home === "???" || m.away === "???") {
+          // Can't simulate because bracket slots are not resolved yet!
+          break;
+        }
+
+        const { homeScore, awayScore } = simulateGameScores(m.home, m.away, chaos);
+        m.homeScore = homeScore;
+        m.awayScore = awayScore;
+        m.status = 'completed';
+
+        if (homeScore > awayScore) {
+          m.winnerId = m.home;
+          m.resultNote = "";
+        } else if (awayScore > homeScore) {
+          m.winnerId = m.away;
+          m.resultNote = "";
+        } else {
+          // Draw
+          if (m.matchNumber >= 73) {
+            // Shootout required in knockouts!
+            const w1 = wIndexMap.get(m.home) || 0.50;
+            const w2 = wIndexMap.get(m.away) || 0.50;
+            const prob = w1 / (w1 + w2);
+            m.winnerId = Math.random() < prob ? m.home : m.away;
+            m.resultNote = "(p)";
+          } else {
+            m.winnerId = null;
+            m.resultNote = "";
+          }
+        }
+
+        simulatedCount++;
+        if (count > 0 && simulatedCount >= count) {
+          break;
+        }
+      }
+
+      // Propagate bracket slots & save state
+      updateKnockoutPairings();
+      saveSandboxState();
+
+      // Recalculate and re-render
+      renderStandings();
+      renderMatches(getActiveMatchFilter());
+      loadOverrideMatchSelector();
+
+      if (simulatedCount > 0) {
+        const completedTotal = actualMatches.filter(m => m.status === "completed").length;
+        showSandboxToast(
+          `${simulatedCount} match${simulatedCount === 1 ? "" : "es"} simulated`,
+          `${completedTotal}/104 matches are now complete. Standings and match center refreshed.`,
+          "✓"
+        );
+      } else {
+        showSandboxToast(
+          "No playable matches found",
+          "The next bracket slot may still be waiting on prior results, or the sandbox is already complete.",
+          "!"
+        );
+      }
+    }
+
+    function saveSandboxState() {
+      localStorage.setItem("world_cup_sandbox_matches", JSON.stringify(actualMatches));
+    }
+
+    function getActiveMatchFilter() {
+      let activeFilter = "all";
+      elements.matchFilters.forEach(btn => {
+        if (btn.classList.contains("active")) activeFilter = btn.dataset.filter;
+      });
+      return activeFilter;
+    }
+
+    // Robust fetch wrapper with AbortController timeout
+    async function fetchWithTimeout(url, options = {}, timeout = 3000) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      try {
+        const response = await fetch(url, { ...options, signal: controller.signal });
+        clearTimeout(id);
+        return response;
+      } catch (err) {
+        clearTimeout(id);
+        throw err;
+      }
+    }
+
+    // Main Google Sheets W-Index loader
+    async function loadWIndexFeed() {
+      try {
+        const response = await fetchWithTimeout(`${W_INDEX_URL}&cacheBust=${Date.now()}`, {}, 3000);
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        const csvText = await response.text();
+        const rows = rowsToObjects(parseCsv(csvText));
+        
+        wIndexMap.clear();
+        for (const row of rows) {
+          const matchingTeam = teams.find(t => t.name.toLowerCase() === row.Team?.toLowerCase() || t.id === row.Team);
+          if (matchingTeam) {
+            const rawPercent = String(row["W-Index"]).replace("%", "").trim();
+            const val = parseFloat(rawPercent);
+            if (Number.isFinite(val)) {
+              wIndexMap.set(matchingTeam.id, val / 100);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Standings W-Index feed failed, using defaults:", err);
+        // Fallback default ratings
+        wIndexMap.clear();
+        teams.forEach(t => {
+          let defaultVal = 50.0;
+          if (t.id === "FRA" || t.id === "ARG" || t.id === "BRA") defaultVal = 82.0;
+          else if (t.id === "ENG" || t.id === "POR" || t.id === "ESP") defaultVal = 80.0;
+          else if (t.id === "GER" || t.id === "NED" || t.id === "BEL") defaultVal = 77.0;
+          else if (t.id === "USA" || t.id === "COL" || t.id === "URU") defaultVal = 72.0;
+          wIndexMap.set(t.id, defaultVal / 100);
+        });
+      } finally {
+        elements.syncStatus.textContent = "🏆 Standings Sandbox Active";
+        elements.syncStatus.style.borderColor = "var(--wc-green)";
+        elements.syncStatus.style.color = "var(--wc-green)";
+        elements.syncStatus.style.background = "rgba(36, 180, 126, 0.1)";
+
+        // Initialize entries & load cached sandbox matches
+        poolEntries = seedDefaultEntries(teams, wIndexMap);
+        
+        const cachedMatches = localStorage.getItem("world_cup_sandbox_matches");
+        if (cachedMatches) {
+          actualMatches = JSON.parse(cachedMatches);
+        } else {
+          initMatches();
+        }
+
+        const cachedRanks = localStorage.getItem("world_cup_pool_previous_ranks");
+        if (cachedRanks) {
+          previousRanks = JSON.parse(cachedRanks);
+        }
+
+        // Render everything
+        updateKnockoutPairings();
+        renderStandings();
+        renderMatches();
+        loadOverrideMatchSelector();
+      }
+    }
+
+    // Generate Standings CSV
+    function generateStandingsCsv() {
+      const { standingsOutput } = scoreLeaderboard();
+      const headers = ["Rank", "Shift", "Player", "Avatar", "Group Qualifiers Correct", "Exact Group Winners", "Knockout Predictions Correct", "Total Accuracy %", "Total Points"];
+      const rows = [headers];
+
+      standingsOutput.forEach(player => {
+        const accuracy = Math.round(((player.breakdown.groupQualifiers + player.breakdown.r32 + player.breakdown.r16 + player.breakdown.qf + player.breakdown.sf + player.breakdown.thirdPlace + player.breakdown.champion) / 54) * 100);
+        const shiftVal = player.shift > 0 ? `+${player.shift}` : (player.shift < 0 ? player.shift : "0");
+        const koCorrect = player.breakdown.r32 + player.breakdown.r16 + player.breakdown.qf + player.breakdown.sf + player.breakdown.thirdPlace + player.breakdown.champion;
+
+        rows.push([
+          player.rank,
+          shiftVal,
+          player.entry.playerName,
+          player.entry.avatar,
+          player.breakdown.groupQualifiers,
+          player.breakdown.groupWinners,
+          koCorrect,
+          `${accuracy}%`,
+          player.points
+        ]);
+      });
+
+      return rows.map(row => 
+        row.map(val => {
+          const stringVal = String(val === null || val === undefined ? "" : val);
+          if (stringVal.includes(",") || stringVal.includes('"') || stringVal.includes("\n") || stringVal.includes("\r")) {
+            return `"${stringVal.replace(/"/g, '""')}"`;
+          }
+          return stringVal;
+        }).join(",")
+      ).join("\n");
+    }
+
+    // Generate Matches CSV
+    function generateMatchesCsv() {
+      const headers = ["Match Number", "Stage", "Home ID", "Home Team", "Home Score", "Away Score", "Away Team", "Away ID", "Winner ID", "Shootout Winner ID", "Status"];
+      const rows = [headers];
+
+      actualMatches.forEach(m => {
+        const homeName = teamName(m.home);
+        const awayName = teamName(m.away);
+        const winnerId = m.winnerId || (m.status === "completed" && m.homeScore === m.awayScore ? "Draw" : "");
+        const shootoutWinner = m.resultNote === "(p)" ? m.winnerId : "";
+
+        // Stage description
+        let stageName = `Group ${m.group || ""}`;
+        if (m.matchNumber >= 73 && m.matchNumber <= 88) stageName = "Round of 32";
+        else if (m.matchNumber >= 89 && m.matchNumber <= 96) stageName = "Round of 16";
+        else if (m.matchNumber >= 97 && m.matchNumber <= 100) stageName = "Quarterfinals";
+        else if (m.matchNumber >= 101 && m.matchNumber <= 102) stageName = "Semifinals";
+        else if (m.matchNumber === 103) stageName = "Third Place Match";
+        else if (m.matchNumber === 104) stageName = "Final";
+
+        rows.push([
+          m.matchNumber,
+          stageName,
+          m.home || "",
+          homeName,
+          m.homeScore !== null ? m.homeScore : "",
+          m.awayScore !== null ? m.awayScore : "",
+          awayName,
+          m.away || "",
+          winnerId,
+          shootoutWinner,
+          m.status
+        ]);
+      });
+
+      return rows.map(row => 
+        row.map(val => {
+          const stringVal = String(val === null || val === undefined ? "" : val);
+          if (stringVal.includes(",") || stringVal.includes('"') || stringVal.includes("\n") || stringVal.includes("\r")) {
+            return `"${stringVal.replace(/"/g, '""')}"`;
+          }
+          return stringVal;
+        }).join(",")
+      ).join("\n");
+    }
+
+    // Set up interactive event listeners
+    document.addEventListener("DOMContentLoaded", () => {
+      // Standings CSV & copy
+      if (elements.copyStandingsBtn) {
+        elements.copyStandingsBtn.addEventListener("click", async () => {
+          try {
+            const csvText = generateStandingsCsv();
+            await navigator.clipboard.writeText(csvText);
+            
+            const btn = elements.copyStandingsBtn;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "✅ Copied!";
+            btn.style.borderColor = "var(--wc-green)";
+            btn.style.color = "var(--wc-green)";
+            
+            setTimeout(() => {
+              btn.innerHTML = originalText;
+              btn.style.borderColor = "";
+              btn.style.color = "";
+            }, 1500);
+          } catch (err) {
+            console.error("Standings copy failed:", err);
+            alert("Failed to copy standings to clipboard.");
+          }
+        });
+      }
+
+      if (elements.exportStandingsBtn) {
+        elements.exportStandingsBtn.addEventListener("click", () => {
+          try {
+            const csvText = generateStandingsCsv();
+            const blob = new Blob([csvText], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            
+            link.setAttribute("href", url);
+            link.setAttribute("download", `world-cup-2026-pool-standings-${Date.now()}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          } catch (err) {
+            console.error("Standings CSV export failed:", err);
+            alert("Failed to export standings CSV.");
+          }
+        });
+      }
+
+      // Matches CSV & copy
+      if (elements.copyMatchesBtn) {
+        elements.copyMatchesBtn.addEventListener("click", async () => {
+          try {
+            const csvText = generateMatchesCsv();
+            await navigator.clipboard.writeText(csvText);
+            
+            const btn = elements.copyMatchesBtn;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "✅ Copied!";
+            btn.style.borderColor = "var(--wc-green)";
+            btn.style.color = "var(--wc-green)";
+            
+            setTimeout(() => {
+              btn.innerHTML = originalText;
+              btn.style.borderColor = "";
+              btn.style.color = "";
+            }, 1500);
+          } catch (err) {
+            console.error("Matches copy failed:", err);
+            alert("Failed to copy matches to clipboard.");
+          }
+        });
+      }
+
+      if (elements.exportMatchesBtn) {
+        elements.exportMatchesBtn.addEventListener("click", () => {
+          try {
+            const csvText = generateMatchesCsv();
+            const blob = new Blob([csvText], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            
+            link.setAttribute("href", url);
+            link.setAttribute("download", `world-cup-2026-scoreboard-matches-${Date.now()}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          } catch (err) {
+            console.error("Matches CSV export failed:", err);
+            alert("Failed to export matches CSV.");
+          }
+        });
+      }
+
+      // Tab selector clicks
+      elements.tabs.forEach(btn => {
+        btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+      });
+
+      // Match center filter clicks
+      elements.matchFilters.forEach(btn => {
+        btn.addEventListener("click", () => {
+          elements.matchFilters.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          renderMatches(btn.dataset.filter);
+        });
+      });
+
+      // Chaos level slider
+      elements.sandboxChaosSlider.addEventListener("input", () => {
+        elements.sandboxChaosLabel.textContent = `${Math.round(elements.sandboxChaosSlider.value * 100)}%`;
+      });
+
+      // Sandbox Action buttons
+      elements.btnNext5.addEventListener("click", () => runSandboxSimulation(5));
+      elements.btnGroup.addEventListener("click", () => runSandboxSimulation(72));
+      elements.btnAll.addEventListener("click", () => runSandboxSimulation(104));
+      
+      elements.btnReset.addEventListener("click", () => {
+        localStorage.removeItem("world_cup_sandbox_matches");
+        localStorage.removeItem("world_cup_pool_previous_ranks");
+        previousRanks = {};
+        initMatches();
+        saveSandboxState();
+        renderStandings();
+        renderMatches(getActiveMatchFilter());
+        loadOverrideMatchSelector();
+      });
+
+      // Manual Override selector change updates labels dynamically
+      elements.overrideMatchSelect.addEventListener("change", () => {
+        const mId = parseInt(elements.overrideMatchSelect.value);
+        const m = actualMatches.find(x => x.matchNumber === mId);
+        if (m) {
+          elements.overrideHomeLabel.textContent = m.home ? `${teamName(m.home)} Score` : "Home Score";
+          elements.overrideAwayLabel.textContent = m.away ? `${teamName(m.away)} Score` : "Away Score";
+
+          // If knockout stage and scores are draw, show shootout selector
+          const isKO = mId >= 73;
+          if (isKO) {
+            elements.overrideShootoutContainer.style.display = "block";
+            elements.overrideShootoutSelect.innerHTML = "";
+            
+            const opt1 = document.createElement("option");
+            opt1.value = m.home;
+            opt1.textContent = teamName(m.home);
+            
+            const opt2 = document.createElement("option");
+            opt2.value = m.away;
+            opt2.textContent = teamName(m.away);
+            
+            elements.overrideShootoutSelect.appendChild(opt1);
+            elements.overrideShootoutSelect.appendChild(opt2);
+          } else {
+            elements.overrideShootoutContainer.style.display = "none";
+          }
+        }
+      });
+
+      // Apply Override click
+      elements.btnApplyOverride.addEventListener("click", () => {
+        const mId = parseInt(elements.overrideMatchSelect.value);
+        const m = actualMatches.find(x => x.matchNumber === mId);
+        if (!m) return;
+
+        const hScore = parseInt(elements.overrideHomeScore.value) || 0;
+        const aScore = parseInt(elements.overrideAwayScore.value) || 0;
+
+        m.homeScore = hScore;
+        m.awayScore = aScore;
+        m.status = "completed";
+
+        if (hScore > aScore) {
+          m.winnerId = m.home;
+          m.resultNote = "";
+        } else if (aScore > hScore) {
+          m.winnerId = m.away;
+          m.resultNote = "";
+        } else {
+          // Draw
+          if (mId >= 73) {
+            // Shootout winner
+            m.winnerId = elements.overrideShootoutSelect.value;
+            m.resultNote = "(p)";
+          } else {
+            m.winnerId = null;
+            m.resultNote = "";
+          }
+        }
+
+        updateKnockoutPairings();
+        saveSandboxState();
+
+        renderStandings();
+        renderMatches(getActiveMatchFilter());
+        loadOverrideMatchSelector();
+      });
+
+      // Initialize
+      loadWIndexFeed();
+    });
+  </script>
 </body>
 
 </html>

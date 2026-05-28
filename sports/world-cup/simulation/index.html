@@ -798,6 +798,17 @@
 
       <!-- Tab 5: Simulated Matches -->
       <div class="sim-view-panel" id="panel-results">
+        <div class="matches-export-bar" style="display: flex; gap: 12px; margin-bottom: 20px; align-items: center; justify-content: flex-end; flex-wrap: wrap;">
+          <span style="font-size: 0.8rem; color: var(--wc-muted); font-weight: 850; margin-right: auto;">
+            📊 104 simulated matches ready for export
+          </span>
+          <button class="wc-button secondary" id="copy-csv-btn" style="padding: 6px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
+            📋 Copy CSV to Clipboard
+          </button>
+          <button class="wc-button" id="export-csv-btn" style="padding: 6px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
+            📥 Export CSV File
+          </button>
+        </div>
         <div class="matches-grid" id="matches-results-grid"></div>
       </div>
 
@@ -932,10 +943,24 @@
       `;
     }
 
+    // Robust fetch wrapper with AbortController timeout
+    async function fetchWithTimeout(url, options = {}, timeout = 3000) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      try {
+        const response = await fetch(url, { ...options, signal: controller.signal });
+        clearTimeout(id);
+        return response;
+      } catch (err) {
+        clearTimeout(id);
+        throw err;
+      }
+    }
+
     // Load W-Index from Google Sheets
     async function loadWIndexFeed() {
       try {
-        const response = await fetch(`${W_INDEX_URL}&cacheBust=${Date.now()}`);
+        const response = await fetchWithTimeout(`${W_INDEX_URL}&cacheBust=${Date.now()}`, {}, 3000);
         if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
         const csvText = await response.text();
         const rows = rowsToObjects(parseCsv(csvText));
@@ -1776,6 +1801,134 @@
           else p.classList.remove("active");
         });
       });
+    });
+
+    // CSV Matches Export Logic
+    function generateMatchesCsv() {
+      const headers = ["Match Number", "Stage", "Home ID", "Home Team", "Home Score", "Away Score", "Away Team", "Away ID", "Winner ID", "Shootout Winner ID", "Venue", "Date"];
+      const rows = [headers];
+
+      // 1. Group stage matches
+      simulatedMatches.forEach(m => {
+        const tHome = teamsById[m.home];
+        const tAway = teamsById[m.away];
+        const winnerId = m.score1 > m.score2 ? m.home : (m.score2 > m.score1 ? m.away : "Draw");
+        rows.push([
+          m.matchNumber,
+          `Group ${m.group}`,
+          m.home,
+          tHome ? tHome.name : "???",
+          m.score1,
+          m.score2,
+          tAway ? tAway.name : "???",
+          m.away,
+          winnerId,
+          "",
+          m.venue ? m.venue.city : "",
+          m.localDate || ""
+        ]);
+      });
+
+      // Helper for stage names
+      const getKnockoutStageName = (id) => {
+        if (id >= 73 && id <= 88) return "Round of 32";
+        if (id >= 89 && id <= 96) return "Round of 16";
+        if (id >= 97 && id <= 100) return "Quarterfinals";
+        if (id >= 101 && id <= 102) return "Semifinals";
+        if (id === 103) return "Third Place Match";
+        if (id === 104) return "Final";
+        return "Knockout Stage";
+      };
+
+      // 2. Knockout matches
+      if (bracketSchedule && bracketSchedule.r32Matches) {
+        const knockoutRounds = [
+          bracketSchedule.r32Matches,
+          bracketSchedule.r16Matches,
+          bracketSchedule.qfMatches,
+          bracketSchedule.sfMatches,
+          [bracketSchedule.thirdPlaceMatch],
+          [bracketSchedule.finalMatch]
+        ];
+
+        knockoutRounds.forEach(round => {
+          if (!round) return;
+          round.forEach(m => {
+            if (!m) return;
+            const tHome = teamsById[m.t1];
+            const tAway = teamsById[m.t2];
+            const winnerId = m.winner || "";
+            const shootoutWinner = m.resultNote === "(p)" ? m.winner : "";
+            
+            rows.push([
+              m.id,
+              getKnockoutStageName(m.id),
+              m.t1 || "",
+              tHome ? tHome.name : "???",
+              m.score1 !== undefined ? m.score1 : "",
+              m.score2 !== undefined ? m.score2 : "",
+              tAway ? tAway.name : "???",
+              m.t2 || "",
+              winnerId,
+              shootoutWinner,
+              "TBD (Knockout Venue)",
+              "July 2026"
+            ]);
+          });
+        });
+      }
+
+      return rows.map(row => 
+        row.map(val => {
+          const stringVal = String(val === null || val === undefined ? "" : val);
+          if (stringVal.includes(",") || stringVal.includes('"') || stringVal.includes("\n") || stringVal.includes("\r")) {
+            return `"${stringVal.replace(/"/g, '""')}"`;
+          }
+          return stringVal;
+        }).join(",")
+      ).join("\n");
+    }
+
+    document.getElementById("copy-csv-btn").addEventListener("click", async () => {
+      try {
+        const csvText = generateMatchesCsv();
+        await navigator.clipboard.writeText(csvText);
+        
+        const btn = document.getElementById("copy-csv-btn");
+        const originalText = btn.innerHTML;
+        btn.innerHTML = "✅ Copied to Clipboard!";
+        btn.style.borderColor = "var(--wc-green)";
+        btn.style.color = "var(--wc-green)";
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.style.borderColor = "";
+          btn.style.color = "";
+        }, 1500);
+      } catch (err) {
+        console.error("Clipboard copy failed:", err);
+        alert("Failed to copy CSV to clipboard. Please try again.");
+      }
+    });
+
+    document.getElementById("export-csv-btn").addEventListener("click", () => {
+      try {
+        const csvText = generateMatchesCsv();
+        const blob = new Blob([csvText], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        
+        link.setAttribute("href", url);
+        link.setAttribute("download", `world-cup-2026-simulated-matches-${activeMode}-${Date.now()}.csv`);
+        link.style.visibility = 'hidden';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (err) {
+        console.error("File download failed:", err);
+        alert("Failed to export CSV file. Please try again.");
+      }
     });
 
     // Initialize application on load

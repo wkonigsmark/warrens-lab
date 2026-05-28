@@ -130,7 +130,7 @@ body {
 #world-map {
     width: 100%;
     height: auto;
-    max-height: 4.4in;
+    max-height: 5in;
     display: block;
 }
 
@@ -140,6 +140,8 @@ body {
     stroke-width: 6;
     stroke-linejoin: round;
 }
+
+/* Stylized Antarctica strip — inherits the cream fill from .continent-shape */
 .number-bg {
     fill: #fff;
     stroke: #1a1a1a;

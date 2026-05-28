@@ -416,6 +416,33 @@
       object-fit: cover;
     }
 
+    .wc-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: var(--ink);
+      color: #07130f;
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 950;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .wc-button.secondary {
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.045);
+      color: var(--ink);
+    }
+
+    .wc-button:hover {
+      opacity: 0.87;
+    }
+
     @media (max-width: 640px) {
       .hero {
         grid-template-rows: minmax(220px, 34vh) auto auto;
@@ -485,13 +512,13 @@
         <a href="groups/">Group Analysis</a>
         <a href="meta/#group-fixtures">Fixtures</a>
         <a href="simulation/">Simulator</a>
+        <a href="scoreboard/">Scoreboard</a>
       </div>
 
       <div class="coming-soon-strip" aria-label="Coming soon sections">
         <div class="coming-soon-label">Coming Soon</div>
         <div class="module-strip">
           <a href="pool/">Pool</a>
-          <a href="scoreboard/">Scoreboard</a>
         </div>
       </div>
     </section>
@@ -709,6 +736,14 @@
                 <strong>${pair.diff.toFixed(1)}</strong>
               </div>
             `).join('')}
+          </div>
+          <div style="margin-top: 20px; display: flex; gap: 10px; border-top: 1px solid var(--wc-line); padding-top: 16px;">
+            <a href="simulation/" class="wc-button" style="flex: 1; text-align: center; text-decoration: none; font-size: 0.78rem; min-height: 36px; padding: 0 10px; font-weight: 850; border-radius: var(--wc-radius); display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+              🎮 Simulator
+            </a>
+            <a href="scoreboard/" class="wc-button secondary" style="flex: 1; text-align: center; text-decoration: none; font-size: 0.78rem; min-height: 36px; padding: 0 10px; font-weight: 850; border-radius: var(--wc-radius); display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+              🏆 Scoreboard
+            </a>
           </div>
         `;
       }
