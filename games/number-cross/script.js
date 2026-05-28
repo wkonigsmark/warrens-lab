@@ -346,20 +346,72 @@
 
   // ---------- Print ----------
 
+  // Print layout per grid size — picks rows/cols of puzzles that fit on one letter page
+  // and a cell size that keeps cells writable.
+  function printLayoutFor(N) {
+    if (N <= 4) return { cols: 2, rows: 3, cellSize: "0.5in" };
+    if (N <= 6) return { cols: 2, rows: 2, cellSize: "0.5in" };
+    if (N === 7) return { cols: 1, rows: 2, cellSize: "0.5in" };
+    if (N === 8) return { cols: 1, rows: 1, cellSize: "0.7in" };
+    return { cols: 1, rows: 1, cellSize: "0.6in" };
+  }
+
+  function buildPrintPuzzleBlock(p, label) {
+    const N = p.size;
+    const block = document.createElement("div");
+    block.className = "print-puzzle";
+
+    const labelEl = document.createElement("div");
+    labelEl.className = "print-puzzle-label";
+    labelEl.textContent = label;
+    block.appendChild(labelEl);
+
+    const grid = document.createElement("div");
+    grid.className = "print-grid";
+    grid.style.setProperty("--nc-print-cols", N + 1);
+
+    grid.appendChild(document.createElement("div"));
+    for (let c = 0; c < N; c++) {
+      const t = document.createElement("div");
+      t.className = "print-target";
+      t.textContent = String(p.colTargets[c]);
+      grid.appendChild(t);
+    }
+    for (let r = 0; r < N; r++) {
+      const t = document.createElement("div");
+      t.className = "print-target";
+      t.textContent = String(p.rowTargets[r]);
+      grid.appendChild(t);
+      for (let c = 0; c < N; c++) {
+        const cell = document.createElement("div");
+        cell.className = "print-cell";
+        cell.textContent = String(p.grid[r][c]);
+        grid.appendChild(cell);
+      }
+    }
+    block.appendChild(grid);
+    return block;
+  }
+
   function renderPrintSheet() {
     if (!puzzle || !printSheetEl) return;
     const N = puzzle.size;
+    const layout = printLayoutFor(N);
+    const total = layout.cols * layout.rows;
+    const diff = puzzle.difficulty || "medium";
+
     printSheetEl.innerHTML = "";
-    printSheetEl.style.setProperty("--nc-print-cols", N + 1);
+    printSheetEl.style.setProperty("--print-cols", layout.cols);
+    printSheetEl.style.setProperty("--print-rows", layout.rows);
+    printSheetEl.style.setProperty("--print-cell-size", layout.cellSize);
 
     const header = document.createElement("header");
     header.className = "print-header";
     const h1 = document.createElement("h1");
     h1.textContent = "Number Cross";
     const sub = document.createElement("p");
-    const diff = (puzzle.difficulty || "medium");
     sub.className = "print-sub";
-    sub.textContent = `${N} × ${N} • ${diff.charAt(0).toUpperCase() + diff.slice(1)}`;
+    sub.textContent = `${N} × ${N} • ${diff.charAt(0).toUpperCase() + diff.slice(1)} • ${total} puzzle${total > 1 ? "s" : ""}`;
     header.appendChild(h1);
     header.appendChild(sub);
     printSheetEl.appendChild(header);
@@ -370,36 +422,30 @@
       "Cross out numbers so the remaining numbers in each row and column add up to the target shown outside the grid.";
     printSheetEl.appendChild(instr);
 
-    const grid = document.createElement("div");
-    grid.className = "print-grid";
-    grid.style.setProperty("--nc-print-cols", N + 1);
+    const wrap = document.createElement("div");
+    wrap.className = "print-puzzles";
+    printSheetEl.appendChild(wrap);
 
-    grid.appendChild(document.createElement("div"));
-    for (let c = 0; c < N; c++) {
-      const t = document.createElement("div");
-      t.className = "print-target";
-      t.textContent = String(puzzle.colTargets[c]);
-      grid.appendChild(t);
+    // First slot is the on-screen puzzle, so users can finish what they're working on.
+    const puzzles = [puzzle];
+    while (puzzles.length < total) {
+      puzzles.push(generatePuzzle(N, diff));
     }
-    for (let r = 0; r < N; r++) {
-      const t = document.createElement("div");
-      t.className = "print-target";
-      t.textContent = String(puzzle.rowTargets[r]);
-      grid.appendChild(t);
-      for (let c = 0; c < N; c++) {
-        const cell = document.createElement("div");
-        cell.className = "print-cell";
-        cell.textContent = String(puzzle.grid[r][c]);
-        grid.appendChild(cell);
-      }
-    }
-    printSheetEl.appendChild(grid);
+    puzzles.forEach((p, i) => {
+      wrap.appendChild(buildPrintPuzzleBlock(p, total > 1 ? `#${i + 1}` : ""));
+    });
   }
 
   function printPuzzle() {
     if (!puzzle) return;
-    renderPrintSheet();
-    window.print();
+    const N = puzzle.size;
+    const total = printLayoutFor(N).cols * printLayoutFor(N).rows;
+    statusTextEl.textContent = total > 1 ? `Preparing ${total} puzzles for print…` : "Preparing print…";
+    setTimeout(() => {
+      renderPrintSheet();
+      statusTextEl.textContent = "Cross out numbers so each row and column sums to its target.";
+      window.print();
+    }, 30);
   }
 
   // ---------- Timer ----------

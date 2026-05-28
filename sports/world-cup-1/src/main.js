@@ -45,7 +45,7 @@ function getRadius(w) {
 }
 
 function startCountdown() {
-    const targetDate = new Date('June 11, 2026 15:00:00').getTime();
+    const targetDate = new Date('2026-06-11T15:00:00-04:00').getTime();
     function update() {
         const now = new Date().getTime();
         const distance = targetDate - now;

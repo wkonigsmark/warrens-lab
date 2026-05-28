@@ -1,212 +1,536 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Cup 2026 - Interactive Power Rankings</title>
-    <link rel="stylesheet" href="src/style.css">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="bracket_lookup.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Warren's World Cup Pool</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07130f;
+      --ink: #f7f4eb;
+      --muted: rgba(247, 244, 235, 0.68);
+      --line: rgba(247, 244, 235, 0.16);
+      --panel: rgba(255, 255, 255, 0.06);
+      --panel-strong: rgba(255, 255, 255, 0.1);
+      --gold: #f4c95d;
+      --green: #24b47e;
+      --blue: #4aa3ff;
+      --red: #ff5d5d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 22% 12%, rgba(36, 180, 126, 0.22), transparent 32%),
+        radial-gradient(circle at 78% 22%, rgba(74, 163, 255, 0.17), transparent 30%),
+        linear-gradient(140deg, #06100d 0%, #0d1d18 48%, #08100f 100%);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 72%);
+    }
+
+    #particle-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .page-shell {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      padding: 28px 18px;
+    }
+
+    .hero {
+      width: min(100%, 980px);
+      min-height: calc(100vh - 56px);
+      display: grid;
+      grid-template-rows: auto minmax(210px, 34vh) auto auto;
+      align-content: center;
+      gap: 24px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      justify-self: center;
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--gold);
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      backdrop-filter: blur(12px);
+    }
+
+    .title-stage {
+      position: relative;
+      min-height: 210px;
+      display: grid;
+      place-items: center;
+    }
+
+    .fallback-title {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .subtitle {
+      max-width: 650px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+      line-height: 1.45;
+    }
+
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      width: min(100%, 660px);
+      margin: 0 auto;
+    }
+
+    .time-card {
+      min-width: 0;
+      padding: 16px 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--panel-strong), var(--panel));
+      box-shadow: 0 20px 80px rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(16px);
+    }
+
+    .time-card strong {
+      display: block;
+      color: var(--ink);
+      font-size: clamp(1.85rem, 8vw, 3.8rem);
+      line-height: 0.95;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .time-card span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .module-strip {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      width: min(100%, 760px);
+      margin: 0 auto;
+    }
+
+    .module-strip span,
+    .module-strip a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.045);
+      color: rgba(247, 244, 235, 0.76);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-decoration: none;
+      backdrop-filter: blur(12px);
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 20px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: var(--ink);
+      color: #07130f;
+      font-weight: 950;
+      text-decoration: none;
+    }
+
+    .cta.secondary {
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--ink);
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        grid-template-rows: auto minmax(190px, 30vh) auto auto;
+        gap: 20px;
+      }
+
+      .countdown {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .cta {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <!-- Top Bar with Status and Main Action -->
-    <div class="top-bar">
-        <div class="top-bar-left">
-            <div id="sync-status" class="sync-status">
-                <span class="status-dot">●</span>
-                <span class="status-text">Connecting...</span>
-            </div>
-            <div class="header-stack">
-                <h1 class="compact-title">⚽ World Cup 2026</h1>
-                <div id="kickoff-countdown" class="countdown-compact">
-                    <span id="days" class="count-num">00</span>d
-                    <span id="hours" class="count-num">00</span>h
-                    <span id="minutes" class="count-num">00</span>m
-                    <span id="seconds" class="count-num" style="opacity: 0.6;">00</span>s
-                </div>
-            </div>
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+  <main class="page-shell">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="eyebrow">World Cup 2026</div>
+
+      <div class="title-stage" id="title-stage">
+        <h1 id="page-title" class="fallback-title">Warren's<br>World Cup<br>Pool</h1>
+      </div>
+
+      <p class="subtitle">Pool entries, rankings, fixtures, news, commentary, and scoreboard. Coming soon.</p>
+
+      <div class="countdown" aria-label="Countdown to World Cup kickoff">
+        <div class="time-card">
+          <strong id="days">00</strong>
+          <span>Days</span>
         </div>
-        <div class="top-bar-center">
-            <button id="visual-start-btn" class="hero-button">
-                SIMULATE
-            </button>
-            <!-- Spacebar hint tooltip -->
-            <div id="spacebar-hint" class="spacebar-hint">
-                ⌨️ Press <kbd>SPACEBAR</kbd> to simulate!
-            </div>
+        <div class="time-card">
+          <strong id="hours">00</strong>
+          <span>Hours</span>
         </div>
-        <div class="top-bar-right"></div>
-    </div>
-
-    <!-- Left Sidebar -->
-    <aside class="left-sidebar">
-        <!-- Group Grid (3x4) -->
-        <div class="group-grid-container">
-            <div class="section-label">GROUPS</div>
-            <div class="group-grid" id="group-grid">
-                <button class="group-btn active" data-group="all">ALL</button>
-                <!-- Group buttons will be dynamically inserted here -->
-            </div>
+        <div class="time-card">
+          <strong id="minutes">00</strong>
+          <span>Minutes</span>
         </div>
-
-        <!-- Search Bar -->
-        <div class="search-container-sidebar">
-            <input type="text" id="search-input" placeholder="Search teams..." autocomplete="off">
+        <div class="time-card">
+          <strong id="seconds">00</strong>
+          <span>Seconds</span>
         </div>
+      </div>
 
-        <!-- Modeling Options Dropdown -->
-        <div class="modeling-options">
-            <button class="dropdown-toggle" id="options-toggle">
-                <span>⚙️ Modeling Options</span>
-                <span class="arrow">▼</span>
-            </button>
-            <div class="dropdown-menu" id="options-menu">
-                <!-- Stochasticity Slider -->
-                <div class="slider-container"
-                    style="padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 8px;">
-                    <label for="home-stoch-slider"
-                        style="display: flex; justify-content: space-between; color: #94a3b8; font-size: 0.8rem; font-weight: 700; margin-bottom: 8px;">
-                        <span>RANDOMNESS</span>
-                        <span id="home-stoch-value" style="color: #4fd1c5;">50%</span>
-                    </label>
-                    <input type="range" id="home-stoch-slider" min="0" max="1" step="0.01" value="0.5"
-                        style="width: 100%; cursor: pointer;">
-                    <div
-                        style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #64748b; margin-top: 4px;">
-                        <span>Predictable</span>
-                        <span>Chaos</span>
-                    </div>
-                </div>
+      <div class="module-strip" aria-label="Planned hub sections">
+        <a href="pool/">Pool</a>
+        <a href="meta/#group-fixtures">Fixtures</a>
+        <span>W-Index</span>
+        <span>Odds</span>
+        <span>News</span>
+        <span>Scoreboard</span>
+      </div>
 
-                <button id="monte-carlo-btn" class="option-btn">
-                    <span class="option-icon">📊</span>
-                    <span class="option-text">Monte Carlo (1000x)</span>
-                </button>
-                <button id="simulate-btn" class="option-btn">
-                    <span class="option-icon">🎲</span>
-                    <span class="option-text">Full Simulation</span>
-                </button>
-                <button id="download-btn" class="option-btn" style="opacity: 0.5; pointer-events: none;">
-                    <span class="option-icon">⬇️</span>
-                    <span class="option-text">Download Full Simulation</span>
-                </button>
-                <button id="open-schedule-btn" class="option-btn">
-                    <span class="option-icon">📅</span>
-                    <span class="option-text">Fixtures</span>
-                </button>
-                <button id="bracket-view-btn" class="option-btn">
-                    <span class="option-icon">🏆</span>
-                    <span class="option-text">Bracket View</span>
-                </button>
-            </div>
-        </div>
+      <div class="cta-row">
+        <a class="cta" href="pool/">Pool Coming Soon</a>
+        <a class="cta secondary" href="ARCHITECTURE.md">Project Plan</a>
+      </div>
+    </section>
+  </main>
 
-    </aside>
+  <script>
+    (() => {
+      const kickoff = new Date('2026-06-11T15:00:00-04:00').getTime();
+      const parts = {
+        days: document.getElementById('days'),
+        hours: document.getElementById('hours'),
+        minutes: document.getElementById('minutes'),
+        seconds: document.getElementById('seconds')
+      };
 
-    <div id="bubble-chart">
-        <div class="loading">CALIBRATING SIMULATION...</div>
-    </div>
+      function renderCountdown() {
+        const distance = Math.max(0, kickoff - Date.now());
+        const days = Math.floor(distance / 86400000);
+        const hours = Math.floor((distance % 86400000) / 3600000);
+        const minutes = Math.floor((distance % 3600000) / 60000);
+        const seconds = Math.floor((distance % 60000) / 1000);
 
-    <!-- Bracket View Container -->
-    <div id="bracket-view" style="display: none; padding: 40px; overflow: auto; min-height: 800px;">
-        <div id="bracket-canvas" style="min-width: 1400px; position: relative;"></div>
-    </div>
+        parts.days.textContent = String(days).padStart(2, '0');
+        parts.hours.textContent = String(hours).padStart(2, '0');
+        parts.minutes.textContent = String(minutes).padStart(2, '0');
+        parts.seconds.textContent = String(seconds).padStart(2, '0');
+      }
 
-    <!-- Schedule Modal -->
-    <div id="schedule-modal" class="modal-overlay">
-        <div class="modal-card" style="max-width: 900px; height: 85vh; display: flex; flex-direction: column;">
-            <button class="modal-close"
-                onclick="document.getElementById('schedule-modal').classList.remove('active')">&times;</button>
-            <div style="margin-bottom: 24px;">
-                <h2
-                    style="font-size: 2rem; margin-bottom: 16px; background: linear-gradient(135deg, #63b3ed, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-                    Tournament Schedule</h2>
-                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                    <input type="text" id="schedule-search" placeholder="Search team, city, or venue..."
-                        style="flex: 1; min-width: 250px; padding: 10px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; outline: none;">
-                    <select id="schedule-sort"
-                        style="padding: 10px 16px; background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; outline: none; cursor: pointer;">
-                        <option value="date">Sort by Date</option>
-                        <option value="rank">Sort by Matchup Rank</option>
-                    </select>
-                </div>
-            </div>
-            <div id="schedule-list" style="flex: 1; overflow-y: auto; padding-right: 10px;">
-                <!-- Match cards will be injected here -->
-            </div>
-        </div>
-    </div>
+      renderCountdown();
+      setInterval(renderCountdown, 1000);
+    })();
+  </script>
 
-    <!-- Modal for Team Details -->
-    <div id="team-modal" class="modal-overlay">
-        <div class="modal-card">
-            <button class="modal-close"
-                onclick="document.getElementById('team-modal').classList.remove('active')">&times;</button>
-            <div class="team-header">
-                <div id="modal-flag" class="team-flag-large"></div>
-                <div class="team-title">
-                    <h2 id="modal-name">Team Name</h2>
-                    <span id="modal-group" class="group-badge">Group A</span>
-                </div>
-            </div>
+  <script>
+    (() => {
+      const canvas = document.getElementById('particle-canvas');
+      const ctx = canvas.getContext('2d');
+      const titleStage = document.getElementById('title-stage');
 
-            <div id="modal-status-alert" class="status-alert">
-                ⚠️ THIS TEAM HAS NOT YET QUALIFIED
-            </div>
+      const TEXT_LINES = [
+        "Warren's",
+        'World Cup',
+        'Pool',
+      ];
 
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <div class="stat-label">W-INDEX</div>
-                    <div id="modal-score" class="stat-value">--</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">RANK</div>
-                    <div id="modal-rank" class="stat-value">--</div>
-                </div>
-            </div>
+      const PALETTE = [
+        [231, 40, 54],
+        [247, 244, 235],
+        [37, 99, 235],
+        [255, 255, 255],
+        [190, 20, 35],
+        [73, 141, 255],
+      ];
 
-            <div class="schedule-section">
-                <h3>GROUP STAGE FIXTURES</h3>
-                <div id="modal-schedule"></div>
-            </div>
-        </div>
-    </div>
+      const MAX_SPEED = 4.2;
+      const HOMING_FORCE = 0.052;
+      const SEPARATION_RADIUS = 3.2;
+      const SEPARATION_FORCE = 0.08;
+      const DAMPING = 0.88;
+      const CURSOR_RADIUS = 130;
+      const CURSOR_SCATTER = 7.5;
+      const ORGANIZE_MS = 2200;
 
-    <!-- Monte Carlo Results Modal -->
-    <div id="mc-modal" class="modal-overlay">
-        <div class="modal-card" style="max-width: 800px; height: 85vh; display: flex; flex-direction: column;">
-            <button class="modal-close"
-                onclick="document.getElementById('mc-modal').classList.remove('active')">&times;</button>
-            <div style="margin-bottom: 24px;">
-                <h2
-                    style="font-size: 2rem; margin-bottom: 8px; background: linear-gradient(135deg, #f687b3, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-                    Monte Carlo Results</h2>
-                <p style="color: #94a3b8; font-size: 0.9rem;">Aggregated results from 1,000 tournament simulations</p>
+      let W = 0;
+      let H = 0;
+      let startedAt = performance.now();
+      let mouse = { x: -9999, y: -9999, active: false };
+      let particles = [];
+      let textTargets = [];
 
-                <div id="stochastic-control"
-                    style="margin-top: 20px; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="font-size: 0.8rem; font-weight: 700; color: #94a3b8;">STOCHASTICITY: <span
-                                id="stoch-val-label" style="color: #f687b3;">50%</span></span>
-                        <span style="font-size: 0.7rem; color: #475569;">FAVORITES ↔ CHAOS</span>
-                    </div>
-                    <input type="range" id="stoch-slider" min="0" max="100" value="50"
-                        style="width: 100%; accent-color: #f687b3; cursor: pointer;">
-                    <button id="rerun-mc-btn" class="filter-btn"
-                        style="margin-top: 12px; width: 100%; border-color: #f687b3; color: #f687b3; padding: 12px 20px;">
-                        🎲 RE-RUN SIMULATION
-                    </button>
-                </div>
-            </div>
-            <div id="mc-results-list" style="flex: 1; overflow-y: auto; padding-right: 10px;">
-                <!-- Result rows will be injected here -->
-            </div>
-        </div>
-    </div>
+      function resize() {
+        W = canvas.width = document.body.scrollWidth;
+        H = canvas.height = document.body.scrollHeight;
+        textTargets = sampleText();
+        assignTargets();
+      }
 
-    <script type="module" src="src/main.js?v=1.1"></script>
+      function sampleText() {
+        const offscreen = document.createElement('canvas');
+        const octx = offscreen.getContext('2d');
+        offscreen.width = W;
+        offscreen.height = H;
+
+        const rect = titleStage.getBoundingClientRect();
+        const sy = window.scrollY;
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + sy + rect.height / 2;
+        const availableWidth = Math.min(rect.width, W - 28);
+        let fontSize = Math.min(94, availableWidth / 7.3);
+        fontSize = Math.max(34, fontSize);
+        const lineHeight = fontSize * 0.92;
+        const blockHeight = TEXT_LINES.length * lineHeight;
+        const startY = centerY - blockHeight / 2;
+
+        octx.font = `950 ${fontSize}px Inter, ui-sans-serif, system-ui, sans-serif`;
+        octx.textAlign = 'center';
+        octx.textBaseline = 'top';
+        octx.fillStyle = '#fff';
+
+        for (let i = 0; i < TEXT_LINES.length; i++) {
+          octx.fillText(TEXT_LINES[i], centerX, startY + i * lineHeight);
+        }
+
+        const data = octx.getImageData(0, 0, W, H).data;
+        const points = [];
+        const gap = window.innerWidth < 520 ? 2 : 2;
+
+        for (let y = 0; y < H; y += gap) {
+          for (let x = 0; x < W; x += gap) {
+            if (data[(y * W + x) * 4 + 3] > 128) {
+              points.push({ x, y });
+            }
+          }
+        }
+
+        return points;
+      }
+
+      function assignTargets() {
+        if (textTargets.length === 0) return;
+        const count = Math.min(textTargets.length, window.innerWidth < 520 ? 5200 : 7800);
+
+        while (particles.length < count) {
+          particles.push(makeParticle());
+        }
+        particles.length = count;
+
+        const shuffled = [...textTargets];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].tx = shuffled[i].x;
+          particles[i].ty = shuffled[i].y;
+          if (!particles[i].seeded) {
+            const rect = titleStage.getBoundingClientRect();
+            particles[i].x = rect.left + Math.random() * rect.width;
+            particles[i].y = rect.top + window.scrollY + Math.random() * rect.height;
+            particles[i].vx = (Math.random() - 0.5) * 8;
+            particles[i].vy = (Math.random() - 0.5) * 8;
+            particles[i].seeded = true;
+          }
+        }
+      }
+
+      function makeParticle() {
+        const a = Math.random() * Math.PI * 2;
+        const r = Math.random() * Math.max(W, H) * 0.45;
+        return {
+          x: W / 2 + Math.cos(a) * r,
+          y: H / 2 + Math.sin(a) * r,
+          vx: (Math.random() - 0.5) * 2,
+          vy: (Math.random() - 0.5) * 2,
+          tx: 0,
+          ty: 0,
+          size: Math.random() * 0.58 + 0.58,
+          alpha: Math.random() * 0.24 + 0.62,
+          colorOffset: Math.random() * 10000,
+          seeded: false,
+        };
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, W, H);
+        const now = performance.now();
+        const organize = Math.min(1, (now - startedAt) / ORGANIZE_MS);
+        const ease = organize * organize * (3 - 2 * organize);
+        const activeHoming = HOMING_FORCE * (0.12 + ease * 0.88);
+        const activeDamping = DAMPING - (1 - ease) * 0.06;
+
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          const hdx = p.tx - p.x;
+          const hdy = p.ty - p.y;
+          p.vx += hdx * activeHoming;
+          p.vy += hdy * activeHoming;
+
+          const lo = Math.max(0, i - 18);
+          const hi = Math.min(particles.length, i + 18);
+          for (let j = lo; j < hi; j++) {
+            if (i === j) continue;
+            const o = particles[j];
+            const dx = o.x - p.x;
+            const dy = o.y - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+            if (dist < SEPARATION_RADIUS) {
+              p.vx -= (dx / dist) * SEPARATION_FORCE;
+              p.vy -= (dy / dist) * SEPARATION_FORCE;
+            }
+          }
+
+          if (mouse.active) {
+            const dx = p.x - mouse.x;
+            const dy = p.y - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < CURSOR_RADIUS && dist > 1) {
+              const force = (1 - dist / CURSOR_RADIUS) * CURSOR_SCATTER;
+              p.vx += (dx / dist) * force;
+              p.vy += (dy / dist) * force;
+            }
+          }
+
+          p.vx *= activeDamping;
+          p.vy *= activeDamping;
+
+          const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          if (speed > MAX_SPEED) {
+            p.vx = (p.vx / speed) * MAX_SPEED;
+            p.vy = (p.vy / speed) * MAX_SPEED;
+          }
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          const t = (now * 0.00024 + p.colorOffset) % PALETTE.length;
+          const ci = Math.floor(t);
+          const frac = t - ci;
+          const c1 = PALETTE[ci % PALETTE.length];
+          const c2 = PALETTE[(ci + 1) % PALETTE.length];
+          const cr = Math.round(c1[0] + (c2[0] - c1[0]) * frac);
+          const cg = Math.round(c1[1] + (c2[1] - c1[1]) * frac);
+          const cb = Math.round(c1[2] + (c2[2] - c1[2]) * frac);
+
+          ctx.beginPath();
+          const crispness = 0.76 + ease * 0.42;
+          ctx.arc(p.x, p.y, p.size * crispness, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${cr},${cg},${cb},${Math.min(0.98, p.alpha + ease * 0.16)})`;
+          ctx.fill();
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener('resize', resize);
+
+      document.addEventListener('mousemove', (event) => {
+        mouse.x = event.clientX;
+        mouse.y = event.clientY + window.scrollY;
+        mouse.active = true;
+      });
+
+      document.addEventListener('mouseleave', () => {
+        mouse.active = false;
+      });
+
+      document.addEventListener('touchmove', (event) => {
+        mouse.x = event.touches[0].clientX;
+        mouse.y = event.touches[0].clientY + window.scrollY;
+        mouse.active = true;
+      }, { passive: true });
+
+      document.addEventListener('touchend', () => {
+        mouse.active = false;
+      });
+
+      resize();
+      animate();
+    })();
+  </script>
 </body>
 
 </html>

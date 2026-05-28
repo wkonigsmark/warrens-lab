@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>World Cup 2026 Meta | Warren's World Cup Pool</title>
+  <link rel="stylesheet" href="../shared/world-cup.css">
+</head>
+
+<body>
+  <main class="wc-shell">
+    <header class="wc-topbar">
+      <a class="wc-brand" href="../">Warren's World Cup Pool</a>
+      <nav class="wc-nav" aria-label="World Cup sections">
+        <a href="../pool/">Pool</a>
+        <a href="./" aria-current="page">Meta</a>
+        <a href="../rankings-odds/">W-Index</a>
+        <a href="../scoreboard/">Scoreboard</a>
+        <a href="../news/">News</a>
+      </nav>
+    </header>
+
+    <section class="wc-hero">
+      <div>
+        <div class="wc-eyebrow">Tournament Reference Layer</div>
+        <h1 class="wc-title">World Cup 2026 Meta</h1>
+        <p class="wc-copy">
+          Teams, groups, fixtures, venues, kickoff times, bracket slots, and the little structural facts that every pool,
+          simulation, ranking, and scoreboard view should share.
+        </p>
+      </div>
+      <div class="wc-pill" id="viewer-time-zone">Local time loading</div>
+    </section>
+
+    <section class="wc-stat-row" aria-label="Tournament totals">
+      <div class="wc-stat">
+        <strong id="team-count">48</strong>
+        <span>Teams</span>
+      </div>
+      <div class="wc-stat">
+        <strong id="group-count">12</strong>
+        <span>Groups</span>
+      </div>
+      <div class="wc-stat">
+        <strong id="match-count">104</strong>
+        <span>Matches</span>
+      </div>
+      <div class="wc-stat">
+        <strong>16</strong>
+        <span>Host Cities</span>
+      </div>
+    </section>
+
+    <section class="wc-callout">
+      This page intentionally treats match data as reusable infrastructure. The pool UX, simulator, scoreboard, and
+      future editorial tools should import the same data file instead of carrying their own fixture copies.
+    </section>
+
+    <section class="wc-section">
+      <div class="wc-section-header">
+        <div>
+          <h2>Data Files</h2>
+          <p>Raw lists for auditing, spreadsheets, scoring logic, and future database imports.</p>
+        </div>
+      </div>
+      <div class="wc-grid">
+        <article class="wc-card wc-card-pad">
+          <span class="wc-chip">Audit Sheet</span>
+          <p class="wc-copy"><a href="DATA_POINTS.md">Teams, fixtures, knockout schedule, and venues in Markdown</a></p>
+        </article>
+        <article class="wc-card wc-card-pad">
+          <span class="wc-chip">CSV</span>
+          <p class="wc-copy"><a href="../data/teams.csv">Teams</a> · <a href="../data/fixtures.csv">All fixtures</a></p>
+        </article>
+        <article class="wc-card wc-card-pad">
+          <span class="wc-chip">CSV</span>
+          <p class="wc-copy"><a href="../data/group-fixtures.csv">Group fixtures</a> · <a href="../data/knockout-fixtures.csv">Knockout fixtures</a> · <a href="../data/venues.csv">Venues</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="wc-section" id="groups">
+      <div class="wc-section-header">
+        <div>
+          <h2>Groups</h2>
+          <p>All 48 nations grouped by the final draw.</p>
+        </div>
+      </div>
+      <div class="wc-grid" id="group-grid"></div>
+    </section>
+
+    <section class="wc-section" id="group-fixtures">
+      <div class="wc-section-header">
+        <div>
+          <h2>Group Fixtures</h2>
+          <p>Venue-local kickoff is preserved. Viewer time converts automatically using the browser timezone.</p>
+        </div>
+      </div>
+      <div class="wc-filter-row" id="group-filter" aria-label="Filter group fixtures"></div>
+      <div class="wc-table-wrap">
+        <table class="wc-table">
+          <thead>
+            <tr>
+              <th>Match</th>
+              <th>Fixture</th>
+              <th>Viewer Time</th>
+              <th>Venue Local</th>
+              <th>Venue</th>
+            </tr>
+          </thead>
+          <tbody id="group-fixtures-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="wc-section" id="knockout">
+      <div class="wc-section-header">
+        <div>
+          <h2>Knockout Schedule</h2>
+          <p>Official bracket slots from the Round of 32 through the final, including the third-place match.</p>
+        </div>
+      </div>
+      <div class="wc-filter-row" id="stage-filter" aria-label="Filter knockout fixtures"></div>
+      <div class="wc-table-wrap">
+        <table class="wc-table">
+          <thead>
+            <tr>
+              <th>Match</th>
+              <th>Slot</th>
+              <th>Viewer Time</th>
+              <th>Venue Local</th>
+              <th>Venue</th>
+            </tr>
+          </thead>
+          <tbody id="knockout-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="wc-section" id="teams">
+      <div class="wc-section-header">
+        <div>
+          <h2>Nation Meta</h2>
+          <p>Baseline team metadata for future W-Index, odds, and pool-entry views.</p>
+        </div>
+      </div>
+      <div class="wc-table-wrap">
+        <table class="wc-table">
+          <thead>
+            <tr>
+              <th>Nation</th>
+              <th>Group</th>
+              <th>Confederation</th>
+              <th>Code</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody id="team-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="wc-section" id="venues">
+      <div class="wc-section-header">
+        <div>
+          <h2>Venues</h2>
+          <p>Host stadiums, cities, countries, timezones, and assigned match count.</p>
+        </div>
+      </div>
+      <div class="wc-grid" id="venue-grid"></div>
+    </section>
+
+    <section class="wc-section">
+      <div class="wc-section-header">
+        <div>
+          <h2>Critical Rules</h2>
+          <p>Structural details that matter for pool scoring and bracket generation.</p>
+        </div>
+      </div>
+      <div class="wc-grid">
+        <article class="wc-card wc-card-pad">
+          <span class="wc-chip">Advancement</span>
+          <p class="wc-copy">Top two from each group plus the eight best third-place teams reach the Round of 32.</p>
+        </article>
+        <article class="wc-card wc-card-pad">
+          <span class="wc-chip">Pool Implication</span>
+          <p class="wc-copy">Correct third-place ordering is high leverage because it controls which bracket slots are
+            filled.</p>
+        </article>
+        <article class="wc-card wc-card-pad">
+          <span class="wc-chip">Final Weekend</span>
+          <p class="wc-copy">The semifinal losers play the third-place match one day before the final.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="wc-section">
+      <div class="wc-section-header">
+        <div>
+          <h2>Sources</h2>
+          <p>Fixture data should be periodically re-checked as FIFA and venue naming can change.</p>
+        </div>
+      </div>
+      <div id="source-list" class="wc-grid"></div>
+    </section>
+  </main>
+
+  <script type="module">
+    import {
+      groupStageMatches,
+      groups,
+      knockoutMatches,
+      matches,
+      sources,
+      teams,
+      teamsById,
+      tournament,
+      venues,
+    } from "../data/world-cup-2026.js";
+
+    const viewerTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "local time";
+    document.getElementById("viewer-time-zone").textContent = `Viewer time: ${viewerTimeZone}`;
+    document.getElementById("team-count").textContent = tournament.teamsCount;
+    document.getElementById("group-count").textContent = tournament.groupsCount;
+    document.getElementById("match-count").textContent = tournament.matchesCount;
+
+    function flag(countryCode) {
+      if (!countryCode || countryCode.length !== 2) return "";
+      return countryCode
+        .toUpperCase()
+        .split("")
+        .map((char) => String.fromCodePoint(127397 + char.charCodeAt(0)))
+        .join("");
+    }
+
+    function teamLabel(id) {
+      const team = teamsById[id];
+      if (!team) return id;
+      return `<span class="wc-flag">${flag(team.countryCode)}</span>${team.name}`;
+    }
+
+    function formatViewerTime(match) {
+      return new Intl.DateTimeFormat(undefined, {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short",
+      }).format(new Date(match.utc));
+    }
+
+    function formatVenueTime(match) {
+      return new Intl.DateTimeFormat(undefined, {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short",
+        timeZone: match.venue.timeZone,
+      }).format(new Date(match.utc));
+    }
+
+    function venueLabel(match) {
+      return `${match.venue.name}<br><span class="wc-small">${match.venue.city}, ${match.venue.country}</span>`;
+    }
+
+    function fixtureLabel(match) {
+      return `${teamLabel(match.home)} <span class="wc-muted">v</span> ${teamLabel(match.away)}`;
+    }
+
+    function rowFor(match) {
+      return `
+        <tr>
+          <td><strong>${match.matchNumber}</strong><br><span class="wc-small">${match.stage}</span></td>
+          <td>${fixtureLabel(match)}</td>
+          <td>${formatViewerTime(match)}</td>
+          <td>${formatVenueTime(match)}</td>
+          <td>${venueLabel(match)}</td>
+        </tr>
+      `;
+    }
+
+    function renderGroups() {
+      document.getElementById("group-grid").innerHTML = Object.entries(groups).map(([group, teamIds]) => `
+        <article class="wc-card wc-card-pad">
+          <span class="wc-chip">Group ${group}</span>
+          <ul class="wc-team-list">
+            ${teamIds.map((id) => {
+              const team = teamsById[id];
+              return `<li><span>${teamLabel(id)}</span><small>${team.confederation}${team.role ? ` · ${team.role}` : ""}</small></li>`;
+            }).join("")}
+          </ul>
+        </article>
+      `).join("");
+    }
+
+    function renderFilter(containerId, values, active, onSelect) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = values.map((value) => `
+        <button type="button" class="${value === active ? "is-active" : ""}" data-value="${value}">${value}</button>
+      `).join("");
+      container.onclick = (event) => {
+        const button = event.target.closest("button");
+        if (!button) return;
+        onSelect(button.dataset.value);
+      };
+    }
+
+    function renderGroupFixtures(group = "All") {
+      const filtered = group === "All" ? groupStageMatches : groupStageMatches.filter((match) => match.group === group);
+      document.getElementById("group-fixtures-body").innerHTML = filtered.map(rowFor).join("");
+      renderFilter("group-filter", ["All", ...Object.keys(groups)], group, renderGroupFixtures);
+    }
+
+    function renderKnockout(stage = "All") {
+      const stages = [...new Set(knockoutMatches.map((match) => match.stage))];
+      const filtered = stage === "All" ? knockoutMatches : knockoutMatches.filter((match) => match.stage === stage);
+      document.getElementById("knockout-body").innerHTML = filtered.map(rowFor).join("");
+      renderFilter("stage-filter", ["All", ...stages], stage, renderKnockout);
+    }
+
+    function renderTeams() {
+      document.getElementById("team-body").innerHTML = teams.map((team) => `
+        <tr>
+          <td>${teamLabel(team.id)}</td>
+          <td>Group ${team.group}</td>
+          <td>${team.confederation}</td>
+          <td>${team.id}</td>
+          <td>${team.role || "Qualified nation"}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderVenues() {
+      document.getElementById("venue-grid").innerHTML = Object.entries(venues).map(([venueId, venue]) => {
+        const count = matches.filter((match) => match.venueId === venueId).length;
+        return `
+          <article class="wc-card wc-card-pad">
+            <span class="wc-chip">${count} matches</span>
+            <h3>${venue.name}</h3>
+            <p class="wc-muted">${venue.city}, ${venue.country}</p>
+            <p class="wc-small">${venue.timeZone}</p>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderSources() {
+      document.getElementById("source-list").innerHTML = sources.map((source) => `
+        <article class="wc-card wc-card-pad">
+          <a href="${source.url}" target="_blank" rel="noreferrer">${source.label}</a>
+        </article>
+      `).join("");
+    }
+
+    renderGroups();
+    renderGroupFixtures();
+    renderKnockout();
+    renderTeams();
+    renderVenues();
+    renderSources();
+  </script>
+</body>
+
+</html>
