@@ -125,13 +125,13 @@
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
-      width: min(100%, 660px);
+      width: min(100%, 560px);
       margin: 0 auto;
     }
 
     .time-card {
       min-width: 0;
-      padding: 16px 8px 14px;
+      padding: 12px 8px 11px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: linear-gradient(180deg, var(--panel-strong), var(--panel));
@@ -142,14 +142,14 @@
     .time-card strong {
       display: block;
       color: var(--ink);
-      font-size: clamp(1.85rem, 8vw, 3.8rem);
+      font-size: clamp(1.65rem, 6vw, 3.15rem);
       line-height: 0.95;
       font-variant-numeric: tabular-nums;
     }
 
     .time-card span {
       display: block;
-      margin-top: 8px;
+      margin-top: 7px;
       color: var(--muted);
       font-size: 0.72rem;
       font-weight: 900;
@@ -166,6 +166,21 @@
       margin: 0 auto;
     }
 
+    .coming-soon-strip {
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      margin-top: -8px;
+    }
+
+    .coming-soon-label {
+      color: var(--muted);
+      font-size: 0.66rem;
+      font-weight: 950;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
     .module-strip span,
     .module-strip a {
       display: inline-flex;
@@ -180,34 +195,6 @@
       font-weight: 800;
       text-decoration: none;
       backdrop-filter: blur(12px);
-    }
-
-    .cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 2px;
-    }
-
-    .cta {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      padding: 0 20px;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      background: var(--ink);
-      color: #07130f;
-      font-weight: 950;
-      text-decoration: none;
-    }
-
-    .cta.secondary {
-      border-color: var(--line);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--ink);
     }
 
     .w-index-tape {
@@ -439,10 +426,6 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .cta {
-        width: 100%;
-      }
-
       .w-index-tape {
         grid-template-columns: 1fr;
       }
@@ -500,18 +483,17 @@
       </div>
 
       <div class="module-strip" aria-label="Planned hub sections">
-        <a href="pool/">Pool</a>
-        <a href="meta/#group-fixtures">Fixtures</a>
         <a href="rankings-odds/">W-Index</a>
         <a href="groups/">Group Analysis</a>
-        <span>Odds</span>
-        <a href="news/">News</a>
-        <a href="scoreboard/">Scoreboard</a>
+        <a href="meta/#group-fixtures">Fixtures</a>
       </div>
 
-      <div class="cta-row">
-        <a class="cta" href="pool/">Pool Coming Soon</a>
-        <a class="cta secondary" href="ARCHITECTURE.md">Project Plan</a>
+      <div class="coming-soon-strip" aria-label="Coming soon sections">
+        <div class="coming-soon-label">Coming Soon</div>
+        <div class="module-strip">
+          <a href="pool/">Pool</a>
+        <a href="scoreboard/">Scoreboard</a>
+        </div>
       </div>
     </section>
   </main>
@@ -581,6 +563,7 @@
       let tickerDragStartOffset = 0;
       let tickerDragMoved = false;
       let tickerClickSuppressed = false;
+      let tickerPressItem = null;
 
       function flagCode(team) {
         if (team.id === 'ENG') return 'gb-eng';
@@ -786,7 +769,7 @@
         tickerLastFrame = now;
 
         if (!tickerDragging && now > tickerPausedUntil && tickerLoopWidth) {
-          const pxPerSecond = window.innerWidth < 640 ? 26 : 34;
+          const pxPerSecond = window.innerWidth < 640 ? 38 : 48;
           tickerX -= (pxPerSecond * delta) / 1000;
           normalizeTickerX();
         }
@@ -827,6 +810,7 @@
       tickerWindow.addEventListener('pointerdown', (event) => {
         tickerDragging = true;
         tickerDragMoved = false;
+        tickerPressItem = event.target.closest('.ticker-item');
         tickerDragStartX = pointerX(event);
         tickerDragStartOffset = tickerX;
         tickerPausedUntil = performance.now() + 5000;
@@ -846,12 +830,20 @@
       function endTickerDrag(event) {
         if (!tickerDragging) return;
         tickerDragging = false;
-        if (tickerDragMoved) {
+        if (!tickerDragMoved && event.type === 'pointerup' && tickerPressItem?.dataset.group) {
+          lastFocusedTickerItem = tickerPressItem;
+          openGroupModal(tickerPressItem.dataset.group);
+          tickerClickSuppressed = true;
+          window.setTimeout(() => {
+            tickerClickSuppressed = false;
+          }, 0);
+        } else if (tickerDragMoved) {
           tickerClickSuppressed = true;
           window.setTimeout(() => {
             tickerClickSuppressed = false;
           }, 0);
         }
+        tickerPressItem = null;
         tickerPausedUntil = performance.now() + 1800;
         tickerWindow.classList.remove('is-dragging');
         tickerWindow.releasePointerCapture?.(event.pointerId);
