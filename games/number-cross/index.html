@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Number Cross</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="game-panel" aria-label="Number Cross game">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Logic & Sums</p>
+            <h1>Number Cross</h1>
+          </div>
+          <div class="controls" aria-label="Puzzle controls">
+            <label class="select-control" for="gridSize">
+              <span>Grid</span>
+              <select id="gridSize">
+                <optgroup label="Starter">
+                  <option value="3">3x3</option>
+                  <option value="4">4x4</option>
+                </optgroup>
+                <optgroup label="Classic">
+                  <option value="5">5x5</option>
+                  <option value="6">6x6</option>
+                  <option value="7" selected>7x7</option>
+                  <option value="8">8x8</option>
+                  <option value="9">9x9</option>
+                  <option value="10">10x10</option>
+                </optgroup>
+              </select>
+            </label>
+            <label class="select-control" for="difficulty">
+              <span>Level</span>
+              <select id="difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </label>
+            <button id="newPuzzle" type="button">New</button>
+            <button id="resetPuzzle" type="button">Reset</button>
+            <button id="solveBtn" type="button" class="secondary">Reveal</button>
+            <button id="printPuzzle" type="button" class="secondary">Print</button>
+          </div>
+        </header>
+
+        <div class="status-strip" id="statusStrip" aria-live="polite">
+          <span id="statusText">Cross out numbers so each row and column sums to its target.</span>
+          <strong id="timerText">0:00</strong>
+        </div>
+
+        <div class="board-wrap">
+          <div class="nc-board" id="board" aria-label="Number Cross board"></div>
+        </div>
+
+        <div class="legend" aria-label="How to mark cells">
+          <span><kbd>Click</kbd> cycles: unmarked &rarr; keep &rarr; cross out &rarr; clear</span>
+          <span class="legend-dot legend-kept">7</span>
+          <span class="legend-dot legend-circled">7</span>
+          <span class="legend-dot legend-crossed">7</span>
+        </div>
+      </section>
+
+      <aside class="lesson-panel" aria-label="How to play">
+        <p class="eyebrow">How It Works</p>
+        <h2>Cross out the extras</h2>
+        <p>Every row and column has a target sum shown outside the grid. Cross out numbers inside so the <em>remaining</em> values add up to the target on every row and every column.</p>
+        <p>Click a cell once to cross it out. Click again to circle it (marking "this one definitely stays"). Click once more to clear.</p>
+        <p>The live "current / target" readout next to each total tells you where you stand. When all twelve glow green, you've solved it.</p>
+      </aside>
+    </main>
+
+    <section class="print-sheet" id="printSheet" aria-label="Printable Number Cross worksheet"></section>
+
+    <script src="script.js"></script>
+  </body>
+</html>

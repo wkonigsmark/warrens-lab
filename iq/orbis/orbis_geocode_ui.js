@@ -126,6 +126,7 @@
       mode: "geocode",
       pool: { type: "all" },
       hintBudget: 5,
+      autoStart: false,
       hooks: {
         onRoundStart: () => render(),
         onHint:       (h)  => { renderClue(h); render(); },
@@ -133,6 +134,7 @@
         onRoundEnd:   (o)  => onRoundEnd(o)
       }
     });
+    state.session.nextRound();
   }
 
   function resetPanel() {

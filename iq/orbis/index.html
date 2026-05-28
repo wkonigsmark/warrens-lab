@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 
@@ -25,6 +25,7 @@
                 <button class="action-btn" id="view-oceans-btn">Oceans</button>
                 <button class="action-btn" id="start-exploration">Mission Quiz</button>
                 <button class="action-btn accent" id="play-geocode-btn">🕵️ Geocode</button>
+                <button class="action-btn" id="roadmap-btn">🗺 Roadmap</button>
                 <a href="../iq/index.html" class="action-btn subtle">Exit to IQ</a>
             </nav>
         </header>
@@ -34,6 +35,29 @@
             <div id="status-display">
                 <div class="status-label">CURRENT FOCUS</div>
                 <div id="current-region-name">PLANET EARTH</div>
+            </div>
+
+            <!-- Mission HUD strip (hidden unless Mission is active) -->
+            <div id="mission-strip">
+                <div class="mission-left">
+                    <span class="mission-tag">Mission</span>
+                    <div class="mission-round">
+                        <span id="mission-round-current">1</span>
+                        <span class="round-divider">/</span>
+                        <span id="mission-round-total">10</span>
+                    </div>
+                </div>
+                <div class="mission-target">
+                    <span class="target-label">Locate</span>
+                    <span class="target-name" id="mission-target-name">—</span>
+                </div>
+                <div class="mission-right">
+                    <div class="mission-score-chip">
+                        <span class="score-icon">✓</span>
+                        <span class="score-value" id="mission-score">0</span>
+                    </div>
+                    <button id="mission-exit" class="mission-exit-btn">End</button>
+                </div>
             </div>
 
             <div id="globe-viewport">
@@ -93,6 +117,150 @@
             </div>
         </footer>
 
+        <!-- Roadmap overlay -->
+        <div id="roadmap-overlay" class="overlay roadmap">
+            <div class="modal-content glass roadmap-modal">
+                <button id="close-roadmap" aria-label="Close">×</button>
+                <header class="roadmap-header">
+                    <span class="tag">ORBIS ROADMAP</span>
+                    <h2>What's built, what's next, and every idea on the board.</h2>
+                    <p class="roadmap-sub">A living document — we add to it as we workshop new ideas.</p>
+                </header>
+                <div class="roadmap-body">
+
+                    <div class="roadmap-update">
+                        <span class="update-tag">🧪 Latest update</span>
+                        <p>
+                            <strong>Mission Quiz UI</strong> just shipped, joining the recently-landed <strong>Geocode mode</strong>. Both are working end-to-end but tagged <em>Needs testing</em> — they need real playthroughs to surface edge cases and tune the game feel (timing, scoring, mode-switching, mid-round exits, view changes, click spam).
+                            <br><br>
+                            Also landed: <strong>Roadmap overlay</strong>, full-page <strong>body scroll fix</strong>, hook-race fix in the quiz engine, and <strong>cache busting</strong> on script/style tags so dev edits show up on reload.
+                        </p>
+                    </div>
+
+                    <section class="roadmap-section status-built">
+                        <h3><span class="status-dot"></span>Built</h3>
+                        <ul>
+                            <li>
+                                <strong>Atlas data backbone</strong> — Famous 20 countries + 7 continents pulled from REST Countries and hand-curated with flag colors, motifs, climates, landmarks, foods, fact cards. Refresh anytime via <code>node data/build_atlas.mjs</code>.
+                            </li>
+                            <li>
+                                <strong>Country-level interactive map</strong> — 212 country paths from Natural Earth GeoJSON. Famous 20 highlighted, the rest dim for context. Click any Famous 20 country to open its info modal.
+                            </li>
+                            <li>
+                                <strong>Quiz engine</strong> — mode-agnostic, config-driven session driver. Same engine powers Mission and Geocode. Exposes geometry helpers (haversine distance, compass bearing, warmth bands).
+                            </li>
+                            <li>
+                                <strong>Geocode mode (the "Guess Who + Globle" hybrid)</strong> <span class="item-badge needs-testing">🧪 Needs testing</span> — 14 hint categories, attribute-deduction gameplay, Globle-style distance + direction feedback on wrong guesses, warm/cold map breadcrumbs, full side-panel UI, win modal with country facts. <em>Playtest priorities:</em> mode-switching mid-round, hint-budget exhaustion, give-up flow, exit + return.
+                            </li>
+                            <li>
+                                <strong>Mission Quiz UI</strong> <span class="item-badge needs-testing">🧪 Needs testing</span> — engine-driven "Locate Country" quiz. HUD strip with round counter, target announcement, score chip, End button. Wrong guesses get distance toast + warm/cold breadcrumb. Right guesses auto-advance. 10-round default, session-end summary with round-by-round attempts. <em>Playtest priorities:</em> auto-advance timing (currently 1.1s — too fast/slow?), exit mid-mission, summary X vs New Mission flow, switching Continents/Countries/Oceans views during a mission, click spam during the celebration window.
+                            </li>
+                            <li>
+                                <strong>Roadmap overlay</strong> — this very surface. Living document of what's built, what's next, and every idea on the board. Wired to a toolbar button + ESC to close.
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="roadmap-section status-next">
+                        <h3><span class="status-dot"></span>Build next (queued)</h3>
+                        <ul>
+                            <li>
+                                <strong>Print pipeline + first worksheet</strong> — pure-CSS <code>@media print</code> stylesheet that emits a Famous 20 trading-card deck. Doubles as the physical Geocode game board. The first proof that every digital mode has a pen-and-paper counterpart.
+                            </li>
+                            <li>
+                                <strong>Atlas expansion</strong> — bump from 20 → ~50 countries so Geocode has real legs. Obvious adds: Indonesia, Turkey, Iran, Vietnam, Thailand, Pakistan, Poland, Sweden, Ukraine, Kenya, Ethiopia, Morocco, Chile, Colombia, Peru, plus more headline European and Asian states.
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="roadmap-section status-ideated">
+                        <h3><span class="status-dot"></span>Game modes (ideated)</h3>
+                        <ul>
+                            <li>
+                                <strong>Geocode difficulty ladder</strong> — five scaffolded levels:
+                                <ul class="sub-list">
+                                    <li><em>L1 Continent Decoder</em> (ages 6-8): mystery is one of 7 continents.</li>
+                                    <li><em>L2 Famous 20</em> (current proof-of-concept).</li>
+                                    <li><em>L3 Regional Master</em>: one region at a time (e.g. all of Europe).</li>
+                                    <li><em>L4 World Tour</em>: all ~195 countries.</li>
+                                    <li><em>L5 Daily Mystery</em>: one puzzle per day, same for everyone, shareable.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>Where in the World (Daily Mystery)</strong> — Wordle-style. Five clues revealed one at a time ("Indian Ocean coast… Portuguese-speaking… capital starts with M…"). One puzzle per day, shareable result strip. Hooks casual visitors.
+                            </li>
+                            <li>
+                                <strong>Flag Lab</strong> — flag literacy in deliberate passes: shape & color families → symbolism → match-to-country → draw your own on a printable proportion grid.
+                            </li>
+                            <li>
+                                <strong>Compare Mode / Projection Lab</strong> — drag two countries side by side at true scale. Built-in Mercator distortion lesson (the Greenland-vs-Africa reveal).
+                            </li>
+                            <li>
+                                <strong>Border Chains</strong> — given a start and end country, build the shortest chain of bordering countries between them. Teaches adjacency intuitively.
+                            </li>
+                            <li>
+                                <strong>Multi-round Geocode streak mode</strong> — back-to-back mysteries with a running streak counter and shrinking hint budget.
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="roadmap-section status-curriculum">
+                        <h3><span class="status-dot"></span>Curriculum spine</h3>
+                        <ul>
+                            <li>
+                                <strong>Curriculum Atlas</strong> — a tree of modules, each a tight three-act loop:
+                                <ul class="sub-list">
+                                    <li><em>Discover</em>: narrated globe tour with cinematic camera moves.</li>
+                                    <li><em>Practice</em>: in-app quiz drawn from the engine.</li>
+                                    <li><em>Take-Home</em>: printable worksheet pack for pen-and-paper work.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>Passport stamps</strong> — earned per module, stored in localStorage. A printable passport booklet that mirrors the digital one — kid fills it out alongside the on-screen version.
+                            </li>
+                            <li>
+                                <strong>Age-tier paths</strong> — visual + reading-level variants so an 8-year-old and a 12-year-old can both use the same module appropriately.
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="roadmap-section status-print">
+                        <h3><span class="status-dot"></span>Worksheets &amp; print</h3>
+                        <ul>
+                            <li><strong>Trading-card decks</strong> per difficulty level — also the physical Geocode game boards (digital + physical share the same data).</li>
+                            <li><strong>Trace / Label / Recall blank maps</strong> — three difficulty tiers per region. Trace = bold outlines + faded names. Label = blank shapes + word bank. Recall = blank shapes only.</li>
+                            <li><strong>Flag-coloring templates</strong> with proportion guides — kid draws their own.</li>
+                            <li><strong>Lat/long plotting grids</strong> — find this coordinate, mark the spot.</li>
+                            <li><strong>Border-coloring exercises</strong> — "color every country that borders France."</li>
+                            <li><strong>Cut-and-paste continent puzzles</strong> — physical jigsaws from our SVG paths.</li>
+                            <li><strong>Two-player printable Geocode board</strong> — 24 country tiles in classic Guess Who layout. Pencils to cross off eliminated tiles.</li>
+                            <li><strong>Solo detective sheet</strong> — single-page case file with scratch-off / cover-up clues.</li>
+                            <li><strong>Daily mystery printable</strong> — one-page handout for classroom use.</li>
+                            <li><strong>Passport booklet</strong> — physical companion to the digital passport stamps.</li>
+                        </ul>
+                    </section>
+
+                    <section class="roadmap-section status-polish">
+                        <h3><span class="status-dot"></span>Polish &amp; quality-of-life</h3>
+                        <ul>
+                            <li><strong>Auto-zoom on guess</strong> — frame the action when a guess is far. The <code>OrbisCountries.viewBoxOf()</code> helper is already built and unused.</li>
+                            <li><strong>Warm/cold halo on guessed countries</strong> — color the whole country, not just a centroid dot, with intensity by proximity.</li>
+                            <li><strong>Hint cost variance</strong> — continent hint costs 2, "famous food" costs 0.5. Adds real strategy.</li>
+                            <li><strong>Disabled Give Up button</strong> after a round ends.</li>
+                            <li><strong>Snappier reveal animations</strong> on clue cards and chip-to-clue transitions.</li>
+                            <li><strong>Label cleanup in dense Europe</strong> — FR/ES/DE/IT/GB labels stack. Skip labels at this zoom or only show when a region is focused.</li>
+                            <li><strong>True centroids</strong> for crescent-shaped countries — Saudi Arabia's label currently sits inside Egypt due to bbox-center placement.</li>
+                            <li><strong>Continent color tint</strong> on Famous 20 — group countries visually by continent, matching the cinematic style.</li>
+                            <li><strong>Nav button wrap on narrower viewports</strong> — toolbar crowds below ~1100px.</li>
+                            <li><strong>Compact status header</strong> — the current "PLANET EARTH" status block eats ~150px of vertical space.</li>
+                            <li><strong>Persisted progress</strong> — save Geocode wins, played mysteries, and curriculum stamps to localStorage.</li>
+                        </ul>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+
         <!-- Geocode side panel -->
         <aside id="geocode-panel">
             <header class="gc-header">
@@ -139,6 +307,36 @@
             </footer>
         </aside>
 
+        <!-- Mission summary modal -->
+        <div id="mission-summary-overlay" class="overlay mission-summary">
+            <div class="modal-content glass">
+                <button id="mission-summary-close" aria-label="Close">×</button>
+                <div class="summary-inner">
+                    <div class="summary-trophy">🏆</div>
+                    <h2 id="mission-summary-title">Mission Complete</h2>
+                    <div class="summary-stats">
+                        <div class="summary-stat">
+                            <span class="summary-val" id="summary-score">—</span>
+                            <span class="summary-lbl">Found</span>
+                        </div>
+                        <div class="summary-stat">
+                            <span class="summary-val" id="summary-attempts">—</span>
+                            <span class="summary-lbl">Attempts</span>
+                        </div>
+                        <div class="summary-stat">
+                            <span class="summary-val" id="summary-time">—</span>
+                            <span class="summary-lbl">Time</span>
+                        </div>
+                    </div>
+                    <div class="summary-detail" id="summary-detail"></div>
+                    <div class="summary-actions">
+                        <button id="mission-summary-home" class="secondary-action">Home</button>
+                        <button id="mission-summary-again" class="primary-action">New Mission</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Distance toast (floats above the map) -->
         <div id="distance-toast" class="distance-toast"></div>
 
@@ -156,9 +354,10 @@
         </div>
     </div>
 
-    <script src="orbis_countries.js"></script>
-    <script src="orbis_quiz.js"></script>
-    <script src="orbis_geocode_ui.js"></script>
-    <script src="script.js"></script>
+    <script src="orbis_countries.js?v=8"></script>
+    <script src="orbis_quiz.js?v=8"></script>
+    <script src="orbis_geocode_ui.js?v=8"></script>
+    <script src="orbis_mission_ui.js?v=8"></script>
+    <script src="script.js?v=8"></script>
 </body>
 </html>

@@ -321,17 +321,18 @@ async function renderCountries(regionGroup, labelGroup) {
 
     OrbisCountries.renderInto(regionGroup, {
         onHover: (iso2, country) => {
-            if (quizActive || (window.OrbisGeocode && OrbisGeocode.isActive())) return;
+            if (anyQuizActive()) return;
             const name = country?.name || iso2;
             updateStatus(name);
         },
         onUnhover: () => {
-            if (!quizActive && !(window.OrbisGeocode && OrbisGeocode.isActive())) {
-                updateStatus('PLANET EARTH');
-            }
+            if (!anyQuizActive()) updateStatus('PLANET EARTH');
         },
         onClick: (iso2, country) => {
-            if (quizActive) return;
+            if (window.OrbisMission && OrbisMission.isActive()) {
+                OrbisMission.handleMapClick(iso2, country);
+                return;
+            }
             if (window.OrbisGeocode && OrbisGeocode.isActive()) {
                 OrbisGeocode.handleMapClick(iso2, country);
                 return;
@@ -354,6 +355,11 @@ async function renderCountries(regionGroup, labelGroup) {
         text.textContent = country.iso_a2;
         labelGroup.appendChild(text);
     }
+}
+
+function anyQuizActive() {
+    return (window.OrbisMission && OrbisMission.isActive()) ||
+           (window.OrbisGeocode && OrbisGeocode.isActive());
 }
 
 function showCountryDiscovery(country) {
@@ -515,7 +521,7 @@ function setupEventListeners() {
     };
 
     document.getElementById('play-geocode-btn').onclick = async () => {
-        if (quizActive) return;
+        if (window.OrbisMission && OrbisMission.isActive()) OrbisMission.stop();
         if (currentView !== 'countries') {
             currentView = 'countries';
             renderMap('countries');
@@ -527,24 +533,19 @@ function setupEventListeners() {
         updateStatus('?????');
     };
 
-    // Quiz Button
-    document.getElementById('start-exploration').onclick = () => {
-        quizActive = !quizActive;
-        const btn = document.getElementById('start-exploration');
-        if (quizActive) {
-            btn.textContent = 'STOP QUIZ';
-            if (currentView !== 'continents') {
-                currentView = 'continents';
-                renderMap('continents');
-            }
-            startQuizRound();
-        } else {
-            btn.textContent = 'START QUIZ';
-            document.querySelector('.status-label').textContent = 'CURRENT FOCUS';
-            updateStatus('PLANET EARTH');
-            currentQuizContinent = null;
-            currentQuizCountry = null;
+    // Mission Quiz Button — engine-driven country-locate quiz
+    document.getElementById('start-exploration').onclick = async () => {
+        // Tear down Geocode if it's running so the modes don't fight each other
+        if (window.OrbisGeocode && OrbisGeocode.isActive()) OrbisGeocode.stop();
+        if (window.OrbisMission && OrbisMission.isActive()) return; // already running
+
+        if (currentView !== 'countries') {
+            currentView = 'countries';
+            renderMap('countries');
+            // Let the country paths render before Mission attaches click handlers
+            await new Promise(r => setTimeout(r, 60));
         }
+        OrbisMission.start();
     };
 
     // Modal Close
@@ -553,13 +554,42 @@ function setupEventListeners() {
         document.getElementById('discovery-overlay').classList.remove('visible');
     };
 
-    // Close on backdrop click
+    // Roadmap overlay
+    const roadmapBtn = document.getElementById('roadmap-btn');
+    const roadmapOverlay = document.getElementById('roadmap-overlay');
+    const closeRoadmapBtn = document.getElementById('close-roadmap');
+    if (roadmapBtn) {
+        roadmapBtn.onclick = () => roadmapOverlay.classList.add('visible');
+        closeRoadmapBtn.onclick = () => roadmapOverlay.classList.remove('visible');
+    }
+
+    // Close on backdrop click — any visible overlay closes when you click the dimmed area
     window.onclick = (e) => {
-        const overlay = document.getElementById('discovery-overlay');
-        if (e.target === overlay) {
-            overlay.classList.remove('visible');
+        const overlayIds = [
+            'discovery-overlay',
+            'roadmap-overlay',
+            'mission-summary-overlay',
+            'geocode-result-overlay'
+        ];
+        for (const id of overlayIds) {
+            const el = document.getElementById(id);
+            if (el && e.target === el) el.classList.remove('visible');
         }
     };
+
+    // ESC to close any open overlay
+    window.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        const overlayIds = [
+            'discovery-overlay',
+            'roadmap-overlay',
+            'mission-summary-overlay',
+            'geocode-result-overlay'
+        ];
+        for (const id of overlayIds) {
+            document.getElementById(id)?.classList.remove('visible');
+        }
+    });
 }
 
 // Start
