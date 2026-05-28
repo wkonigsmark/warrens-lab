@@ -74,7 +74,7 @@
       width: min(100%, 980px);
       min-height: calc(100vh - 56px);
       display: grid;
-      grid-template-rows: auto minmax(210px, 34vh) auto auto;
+      grid-template-rows: minmax(240px, 40vh) auto auto;
       align-content: center;
       gap: 24px;
       text-align: center;
@@ -418,7 +418,7 @@
 
     @media (max-width: 640px) {
       .hero {
-        grid-template-rows: auto minmax(190px, 30vh) auto auto;
+        grid-template-rows: minmax(220px, 34vh) auto auto;
         gap: 20px;
       }
 
@@ -455,8 +455,6 @@
 
   <main class="page-shell">
     <section class="hero" aria-labelledby="page-title">
-      <div class="eyebrow">World Cup 2026</div>
-
       <div class="title-stage" id="title-stage">
         <h1 id="page-title" class="fallback-title">Warren's<br>World Cup<br>Pool</h1>
       </div>
@@ -890,14 +888,14 @@
         [73, 141, 255],
       ];
 
-      const MAX_SPEED = 3.4;
-      const HOMING_FORCE = 0.041;
+      const MAX_SPEED = 2.35;
+      const HOMING_FORCE = 0.026;
       const SEPARATION_RADIUS = 3.2;
       const SEPARATION_FORCE = 0.08;
       const DAMPING = 0.88;
       const CURSOR_RADIUS = 130;
       const CURSOR_SCATTER = 7.5;
-      const ORGANIZE_MS = 3600;
+      const ORGANIZE_MS = 7200;
 
       let W = 0;
       let H = 0;

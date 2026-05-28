@@ -1,5 +1,9 @@
 #!/usr/bin/env node
-// Generates atlas.json by merging REST Countries (live fetch) with atlas_soft.json (hand-curated).
+// Generates atlas.json by merging REST Countries (live fetch of every sovereign
+// nation) with atlas_soft.json (hand-curated tier 1-3). Countries without soft
+// fields land at level 4 with null soft data — the engine handles them via the
+// "no info" hint fallback.
+//
 // Usage:  node build_atlas.mjs
 
 import fs from "node:fs/promises";
@@ -13,7 +17,7 @@ const OUT_PATH = path.join(__dirname, "atlas.json");
 const FIELDS = [
   "name", "cca2", "cca3", "region", "subregion", "capital",
   "languages", "currencies", "landlocked", "borders",
-  "area", "population", "latlng", "flag", "flags"
+  "area", "population", "latlng", "flag", "flags", "independent"
 ].join(",");
 
 const REGION_TO_CONTINENT = {
@@ -56,60 +60,95 @@ function hemisphere(latlng) {
   return { ns: lat >= 0 ? "N" : "S", ew: lng >= 0 ? "E" : "W" };
 }
 
-async function fetchCountry(iso2) {
+async function fetchAll() {
+  // /v3.1/all is deprecated by the API. The /independent endpoint with status=true
+  // returns every sovereign nation in one call. Much faster than 195 individual queries.
+  const url = `https://restcountries.com/v3.1/independent?status=true&fields=${FIELDS}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Fetch /independent failed: ${res.status}`);
+  return res.json();
+}
+
+async function fetchOne(iso2) {
   const url = `https://restcountries.com/v3.1/alpha/${iso2}?fields=${FIELDS}`;
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`Fetch failed for ${iso2}: ${res.status}`);
+  if (!res.ok) return null;
   return res.json();
 }
 
 async function main() {
   const soft = JSON.parse(await fs.readFile(SOFT_PATH, "utf8"));
-  const countryIsos = Object.keys(soft.countries);
 
-  console.log(`Fetching ${countryIsos.length} countries from REST Countries...`);
-  const fetched = await Promise.all(countryIsos.map(fetchCountry));
+  console.log(`Fetching all countries from REST Countries...`);
+  const all = await fetchAll();
 
-  const countries = fetched.map((raw, i) => {
-    const iso2 = countryIsos[i];
-    const s = soft.countries[iso2];
-    const hemi = hemisphere(raw.latlng);
+  // Sovereign nations only — drops dependent territories, UN observers without
+  // recognition, and Antarctic claims. ~195 countries.
+  const sovereign = all.filter(c => c.independent === true);
+
+  // REST Countries excludes a handful of entities (Taiwan especially) from the
+  // /independent endpoint because of disputed UN recognition. If our hand-curated
+  // soft data references any such ISOs, fetch them individually and add them in.
+  const haveIsos = new Set(sovereign.map(c => c.cca2));
+  const softIsos = Object.keys(soft.countries);
+  const missing = softIsos.filter(iso => !haveIsos.has(iso));
+  if (missing.length > 0) {
+    console.log(`Backfilling ${missing.length} curated country/ies not in /independent:`, missing.join(", "));
+    const extras = await Promise.all(missing.map(fetchOne));
+    for (const c of extras) if (c) sovereign.push(c);
+  }
+
+  console.log(`Total countries in atlas: ${sovereign.length}.`);
+
+  // Stable sort by ISO so output diffs are readable
+  sovereign.sort((a, b) => a.cca2.localeCompare(b.cca2));
+
+  const countries = sovereign.map(raw => {
+    const iso2 = raw.cca2;
+    const s = soft.countries[iso2] || {};
+    const latlng = raw.latlng || [0, 0];
+    const hemi = hemisphere(latlng);
     return {
       iso_a2: raw.cca2,
       iso_a3: raw.cca3,
       name: raw.name.common,
       official_name: raw.name.official,
-      level: s.level || 4,                                  // tier 1=Famous20, 2=top40, 3=top80, 4=all
+      level: s.level || 4,                                  // L1-L3 hand-curated, L4 auto
       continent: continentFor(raw.region, raw.subregion),
-      subregion: raw.subregion,
+      subregion: raw.subregion || null,
       capital: (raw.capital && raw.capital[0]) || null,
       languages: Object.values(raw.languages || {}),
       currency: Object.keys(raw.currencies || {})[0] || null,
       currency_name: Object.values(raw.currencies || {})[0]?.name || null,
-      landlocked: raw.landlocked,
-      island: s.island,
+      landlocked: !!raw.landlocked,
+      island: s.island ?? null,
       borders: raw.borders || [],
-      area_km2: raw.area,
-      population: raw.population,
-      latlng: raw.latlng,
+      area_km2: raw.area || 0,
+      population: raw.population || 0,
+      latlng,
       hemisphere_ns: hemi.ns,
       hemisphere_ew: hemi.ew,
-      population_bucket: populationBucket(raw.population),
-      area_bucket: areaBucket(raw.area),
+      population_bucket: populationBucket(raw.population || 0),
+      area_bucket: areaBucket(raw.area || 0),
       flag_emoji: raw.flag,
       flag_svg: raw.flags?.svg,
-      flag_colors: s.flag_colors,
-      flag_motifs: s.flag_motifs,
-      climate_band: s.climate_band,
-      terrain_headline: s.terrain_headline,
-      bordering_waters: s.bordering_waters,
-      landmark: s.landmark,
-      famous_food: s.famous_food,
-      fact_card: s.fact_card
+      // Soft fields — null when not hand-curated. Hint builders handle nulls gracefully.
+      flag_colors: s.flag_colors || null,
+      flag_motifs: s.flag_motifs || null,
+      climate_band: s.climate_band || null,
+      terrain_headline: s.terrain_headline || null,
+      bordering_waters: s.bordering_waters || null,
+      landmark: s.landmark || null,
+      famous_food: s.famous_food || null,
+      fact_card: s.fact_card || null
     };
   });
 
-  // Continents come straight from soft, but add a derived country_count.
+  const tierBreakdown = countries.reduce((acc, c) => {
+    acc[c.level] = (acc[c.level] || 0) + 1;
+    return acc;
+  }, {});
+
   const continents = Object.entries(soft.continents).map(([id, c]) => ({
     id,
     ...c,
@@ -117,7 +156,7 @@ async function main() {
   }));
 
   const atlas = {
-    version: 1,
+    version: 2,
     generated_at: new Date().toISOString(),
     sources: {
       countries: "https://restcountries.com/v3.1",
@@ -131,6 +170,7 @@ async function main() {
   console.log(`Wrote ${OUT_PATH}`);
   console.log(`  continents: ${continents.length}`);
   console.log(`  countries:  ${countries.length}`);
+  console.log(`  tier breakdown:`, tierBreakdown);
 }
 
 main().catch(err => {
