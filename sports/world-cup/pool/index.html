@@ -143,6 +143,21 @@
       background: rgba(255, 255, 255, 0.04);
     }
 
+    .pool-rank-slot.is-draggable {
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .pool-rank-slot.is-dragging {
+      opacity: 0.42;
+    }
+
+    .pool-rank-slot.is-drop-target {
+      border-color: rgba(244, 201, 93, 0.7);
+      background: rgba(244, 201, 93, 0.1);
+    }
+
     .pool-slot-number {
       display: grid;
       place-items: center;
@@ -181,16 +196,28 @@
       font-weight: 850;
     }
 
-    .pool-remove {
-      width: 36px;
-      aspect-ratio: 1;
+    .pool-drag-handle {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 42px;
       border: 1px solid var(--wc-line);
-      border-radius: 999px;
+      border-radius: var(--wc-radius);
       background: rgba(255, 255, 255, 0.04);
-      color: var(--wc-ink);
-      cursor: pointer;
-      font: inherit;
+      color: var(--wc-muted);
+      font-size: 1.05rem;
       font-weight: 950;
+      line-height: 1;
+    }
+
+    .pool-drag-ghost {
+      position: fixed;
+      z-index: 80;
+      width: min(540px, calc(100vw - 28px));
+      pointer-events: none;
+      opacity: 0.94;
+      transform: translate(-50%, -50%) scale(1.02);
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.34);
     }
 
     .pool-team-grid {
@@ -881,12 +908,7 @@
         });
       });
 
-      app.querySelectorAll("[data-remove-index]").forEach((button) => {
-        button.addEventListener("click", () => {
-          picks.splice(Number(button.dataset.removeIndex), 1);
-          render();
-        });
-      });
+      bindRankDrag("group");
 
       document.getElementById("group-clear").addEventListener("click", () => {
         state.groupPicks[group] = [];
@@ -925,7 +947,7 @@
       const label = mode === "third" ? `#${index + 1}` : ["1st", "2nd", "3rd", "4th"][index];
       const team = teamId ? teamData(teamId) : null;
       return `
-        <article class="pool-rank-slot">
+        <article class="pool-rank-slot ${team ? "is-draggable" : ""}" ${team ? `data-drag-index="${index}" data-drag-mode="${mode}"` : ""}>
           <span class="pool-slot-number">${label}</span>
           ${team ? `
             ${flagImage(team, 160)}
@@ -933,7 +955,7 @@
               <strong>${escapeHtml(team.name)}</strong>
               <span>Group ${team.group} · ${formatScore(team.wIndex)} · ${team.wRank ? `#${team.wRank}` : "unranked"}</span>
             </div>
-            <button class="pool-remove" type="button" data-remove-index="${index}" aria-label="Remove ${escapeAttr(team.name)}">x</button>
+            <span class="pool-drag-handle" aria-hidden="true">::</span>
           ` : `
             <span></span>
             <div class="pool-team-main">
@@ -1079,12 +1101,7 @@
         });
       });
 
-      app.querySelectorAll("[data-remove-index]").forEach((button) => {
-        button.addEventListener("click", () => {
-          state.thirdPicks.splice(Number(button.dataset.removeIndex), 1);
-          render();
-        });
-      });
+      bindRankDrag("third");
 
       document.getElementById("third-back").addEventListener("click", () => {
         state.step = "groups";
