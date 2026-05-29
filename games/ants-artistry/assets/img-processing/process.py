@@ -1,82 +1,81 @@
 #!/usr/bin/env python3
 """
-Ants & Artistry — coloring-image background stripper (prototype v1).
+Ants & Artistry — coloring-image background stripper (v2, chroma-key).
 
-Strategy: FLOOD FILL FROM THE BORDER.
-  - Treat "light" pixels (luminance > LIGHT_T) as potential background.
-  - Flood from every border pixel through connected light pixels.
-  - Any light region reachable from the border  -> background -> transparent.
-  - Light regions NOT reachable (enclosed interiors) -> stay opaque WHITE.
-  - Dark pixels (the line art) -> always stay opaque.
+INPUT  : line art on a FLAT SENTINEL background (default pure magenta #FF00FF),
+         with a SOLID WHITE object interior.
+OUTPUT : transparent PNG where
+           - sentinel-colored negative space -> transparent
+           - white interior                  -> stays solid white (opaque)
+           - black line art                  -> stays opaque
+         Kept pixels are desaturated to pure grayscale, which cleanly removes
+         any colored anti-alias fringe around the lines (the art is meant to be
+         black-and-white, so this is lossless for our purposes).
 
-This makes the object render as a SOLID object on the canvas (white interior),
-with only the true exterior negative space knocked out to transparent.
+Why a flat sentinel color (vs white / checker):
+  - Gap-immune: only sentinel-colored pixels are removed, so a break in the
+    outline cannot leak transparency into the white interior.
+  - Enclosed-hole aware: paint an interior pocket with the sentinel and it
+    knocks out too, even when walled off from the border.
+  - No ghosting, trivial detection.
 
-Works identically on solid-white OR checkerboard backgrounds, because both
-are "light" and both are border-connected.
+Usage:
+  python3 process.py                 # process raw-img/*.png -> finished-img/
+  python3 process.py --sentinel 0,255,0   # use green screen instead
 """
 
-import sys
-from collections import deque
+import argparse
 from pathlib import Path
 from PIL import Image
 import numpy as np
 
-LIGHT_T = 235   # luminance above this = "light" (background or interior fill)
-RAW = Path(__file__).parent / "raw-img"
-OUT = Path(__file__).parent / "finished-img"
+HERE = Path(__file__).parent
+RAW = HERE / "raw-img"
+OUT = HERE / "finished-img"
+
+DEFAULT_SENTINEL = (255, 0, 255)   # pure magenta
+TOL = 120                          # Euclidean RGB distance: < TOL => background
 
 
-def strip(path: Path) -> Image.Image:
+def strip(path: Path, sentinel) -> Image.Image:
     im = Image.open(path).convert("RGB")
-    arr = np.asarray(im, dtype=np.int16)
+    arr = np.asarray(im, dtype=np.float32)
     h, w, _ = arr.shape
 
+    dist = np.sqrt(((arr - np.array(sentinel, dtype=np.float32)) ** 2).sum(axis=2))
+    bg = dist < TOL
+
+    # Desaturate kept pixels -> pure gray (kills magenta fringe on line edges).
     lum = (0.299 * arr[:, :, 0] + 0.587 * arr[:, :, 1] + 0.114 * arr[:, :, 2])
-    light = lum > LIGHT_T                       # True = floodable
+    gray = np.clip(lum, 0, 255).astype(np.uint8)
+    rgb = np.dstack([gray, gray, gray])
 
-    # BFS flood from every border pixel that is light
-    bg = np.zeros((h, w), dtype=bool)
-    dq = deque()
-
-    for x in range(w):
-        for y in (0, h - 1):
-            if light[y, x] and not bg[y, x]:
-                bg[y, x] = True
-                dq.append((y, x))
-    for y in range(h):
-        for x in (0, w - 1):
-            if light[y, x] and not bg[y, x]:
-                bg[y, x] = True
-                dq.append((y, x))
-
-    while dq:
-        y, x = dq.popleft()
-        for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-            ny, nx = y + dy, x + dx
-            if 0 <= ny < h and 0 <= nx < w and light[ny, nx] and not bg[ny, nx]:
-                bg[ny, nx] = True
-                dq.append((ny, nx))
-
-    # Build RGBA: background -> alpha 0; everything else opaque.
     alpha = np.where(bg, 0, 255).astype(np.uint8)
-    out = np.dstack([arr.astype(np.uint8), alpha])
+    out = np.dstack([rgb, alpha])
 
-    interior_light = int((light & ~bg).sum())
-    print(f"  {path.name}: {w}x{h}  bg_px={int(bg.sum()):,}  "
-          f"kept_interior_light_px={interior_light:,}")
+    print(f"  {path.name}: {w}x{h}  transparent_px={int(bg.sum()):,}  "
+          f"kept_px={int((~bg).sum()):,}")
     return Image.fromarray(out, "RGBA")
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--sentinel", default=None,
+                    help="R,G,B of background color (default 255,0,255 magenta)")
+    args = ap.parse_args()
+    sentinel = DEFAULT_SENTINEL
+    if args.sentinel:
+        sentinel = tuple(int(v) for v in args.sentinel.split(","))
+
     OUT.mkdir(exist_ok=True)
-    files = sorted(RAW.glob("*.png"))
+    files = [f for f in sorted(RAW.glob("*.png"))]
     if not files:
-        print("No PNGs found in", RAW)
-        sys.exit(1)
+        print("No PNGs in", RAW)
+        return
+    print(f"Sentinel = {sentinel}, tolerance = {TOL}")
     for f in files:
-        result = strip(f)
-        dest = OUT / f.name.replace(".png", "-transparent.png")
+        result = strip(f, sentinel)
+        dest = OUT / (f.stem + ".png")
         result.save(dest)
     print("Done ->", OUT)
 

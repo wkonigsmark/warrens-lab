@@ -326,6 +326,67 @@ def clear_checker_components(
                     pixels[x, y] = (r, g, b, 0)
 
 
+def clear_small_negative_light_components(
+    img: Image.Image,
+    max_area: int,
+    always_remove_area: int,
+    max_density: float,
+    min_lightness: int,
+    max_channel_spread: int,
+) -> None:
+    pixels = img.load()
+    seen: set[tuple[int, int]] = set()
+
+    def is_light(x: int, y: int) -> bool:
+        r, g, b, a = pixels[x, y]
+        if a == 0:
+            return False
+        lightness = max(r, g, b)
+        return lightness >= min_lightness and lightness - min(r, g, b) <= max_channel_spread
+
+    for start_y in range(img.height):
+        for start_x in range(img.width):
+            start = (start_x, start_y)
+            if start in seen or not is_light(start_x, start_y):
+                continue
+
+            component: list[tuple[int, int]] = []
+            queue: deque[tuple[int, int]] = deque([start])
+            seen.add(start)
+            min_x = max_x = start_x
+            min_y = max_y = start_y
+
+            while queue:
+                x, y = queue.popleft()
+                component.append((x, y))
+                min_x = min(min_x, x)
+                max_x = max(max_x, x)
+                min_y = min(min_y, y)
+                max_y = max(max_y, y)
+
+                for dx, dy in NEIGHBORS_8:
+                    nx = x + dx
+                    ny = y + dy
+                    point = (nx, ny)
+                    if nx < 0 or ny < 0 or nx >= img.width or ny >= img.height:
+                        continue
+                    if point in seen or not is_light(nx, ny):
+                        continue
+                    seen.add(point)
+                    queue.append(point)
+
+            area = len(component)
+            if area > max_area:
+                continue
+
+            bbox_area = (max_x - min_x + 1) * (max_y - min_y + 1)
+            density = area / bbox_area
+            if area <= always_remove_area or density <= max_density:
+                for x, y in component:
+                    r, g, b, _ = pixels[x, y]
+                    pixels[x, y] = (r, g, b, 0)
+
+
 def clear_background(
     src_path: Path,
     min_lightness: int,
@@ -344,6 +405,10 @@ def clear_background(
     checker_component_cleanup: bool,
     checker_component_ratio: float,
     checker_component_max_white_ratio: float,
+    negative_light_cleanup: bool,
+    negative_light_max_area: int,
+    negative_light_always_area: int,
+    negative_light_max_density: float,
     background_max_lightness: int | None,
 ) -> Image.Image:
     img = Image.open(src_path).convert("RGBA")
@@ -382,6 +447,16 @@ def clear_background(
             checker_ratio=checker_component_ratio,
             max_white_ratio=checker_component_max_white_ratio,
             max_channel_spread=max_channel_spread,
+        )
+
+    if negative_light_cleanup:
+        clear_small_negative_light_components(
+            img=img,
+            max_area=negative_light_max_area,
+            always_remove_area=negative_light_always_area,
+            max_density=negative_light_max_density,
+            min_lightness=180,
+            max_channel_spread=50,
         )
 
     if interior_gray_cleanup:
@@ -484,6 +559,10 @@ def process_all(args: argparse.Namespace) -> int:
             checker_component_cleanup=args.checker_component_cleanup,
             checker_component_ratio=args.checker_component_ratio,
             checker_component_max_white_ratio=args.checker_component_max_white_ratio,
+            negative_light_cleanup=args.negative_light_cleanup,
+            negative_light_max_area=args.negative_light_max_area,
+            negative_light_always_area=args.negative_light_always_area,
+            negative_light_max_density=args.negative_light_max_density,
             background_max_lightness=args.background_max_lightness,
         )
 
@@ -529,6 +608,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--checker-component-cleanup", action="store_true", help="Remove enclosed checker-like regions; useful for black-outline text logos.")
     parser.add_argument("--checker-component-ratio", type=float, default=0.35, help="Checker-tone share needed to remove an enclosed light region.")
     parser.add_argument("--checker-component-max-white-ratio", type=float, default=0.20, help="Do not remove checker-like regions with more true-white fill than this.")
+    parser.add_argument("--negative-light-cleanup", action="store_true", help="Remove small light islands left in text-logo negative space.")
+    parser.add_argument("--negative-light-max-area", type=int, default=10000, help="Largest light island considered by --negative-light-cleanup.")
+    parser.add_argument("--negative-light-always-area", type=int, default=3500, help="Always remove light islands up to this area.")
+    parser.add_argument("--negative-light-max-density", type=float, default=0.60, help="Remove larger light islands up to max area when density is below this.")
     return parser.parse_args()
 
 
