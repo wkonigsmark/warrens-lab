@@ -679,6 +679,46 @@
         .game-card .game-icon { font-size: 2.5rem; }
         .game-card .game-info h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 4px; }
         .game-card .game-info p { font-size: 0.75rem; color: var(--text-dim); font-weight: 600; }
+
+        /* Tile grid */
+        .tile-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            max-width: 720px;
+            margin: 0 auto 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tile-grid .tile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            z-index: 2;
+            width: 160px;
+            padding: 24px 12px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            aspect-ratio: 1;
+        }
+
+        .tile-grid .tile:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 4px 24px rgba(37, 99, 235, 0.15);
+        }
+
+        .tile-grid .tile .icon { font-size: 32px; line-height: 1; }
+        .tile-grid .tile .label { font-size: 13px; font-weight: 600; text-align: center; line-height: 1.2; }
     </style>
 </head>
 <body>
@@ -723,6 +763,49 @@
             <div class="logo">Ballard's Basecamp</div>
             <div class="subtitle">Modular Sandbox v1.0</div>
         </header>
+
+        <div class="tile-grid">
+            <a href="/iq/ants-apples/index.html" class="tile">
+                <span class="icon">🍎</span>
+                <span class="label">Ants & Apples</span>
+            </a>
+            <a href="/iq/ants-algebra/index.html" class="tile">
+                <span class="icon">𝑥²</span>
+                <span class="label">Ants & Algebra</span>
+            </a>
+            <a href="https://ants-axes.vercel.app/" class="tile">
+                <span class="icon">📊</span>
+                <span class="label">Ants & Axes</span>
+            </a>
+            <a href="/iq/lexicon/index.html" class="tile">
+                <span class="icon">📖</span>
+                <span class="label">Lexicon</span>
+            </a>
+            <a href="/games/crossword/index.html" class="tile">
+                <span class="icon">🔤</span>
+                <span class="label">Crossword</span>
+            </a>
+            <a href="/games/ants-acorns/index.html" class="tile">
+                <span class="icon">🐜</span>
+                <span class="label">Ants & Acorns</span>
+            </a>
+            <a href="/games/sudoku/index.html" class="tile">
+                <span class="icon">🔢</span>
+                <span class="label">Sudoku</span>
+            </a>
+            <a href="/games/abacus/index.html" class="tile">
+                <span class="icon">🧮</span>
+                <span class="label">Abacus</span>
+            </a>
+            <a href="/games/ants-labyrinth/index.html" class="tile">
+                <span class="icon">🌀</span>
+                <span class="label">Ant's Labyrinth</span>
+            </a>
+            <a href="/games/matching/index.html" class="tile">
+                <span class="icon">🧩</span>
+                <span class="label">Memory Match</span>
+            </a>
+        </div>
 
         <main id="bricks-container">
             <!-- Brick 1: Worktime Planner -->
@@ -1164,8 +1247,8 @@
       function resize(){W=canvas.width=document.body.scrollWidth;H=canvas.height=document.body.scrollHeight;textTargets=sampleText();assignTargets();}
       function sampleText(){
         const off=document.createElement('canvas'),octx=off.getContext('2d');off.width=W;off.height=H;
-        const sy=window.scrollY,hdr=document.querySelector('header'),main=document.querySelector('main');
-        const hB=hdr.getBoundingClientRect().bottom+sy,gT=main.getBoundingClientRect().top+sy;
+        const sy=window.scrollY,hdr=document.querySelector('header'),grid=document.querySelector('.tile-grid');
+        const hB=hdr.getBoundingClientRect().bottom+sy,gT=grid.getBoundingClientRect().top+sy;
         const aW=W-40;let fs=Math.min(38,aW/12);fs=Math.max(14,fs);const lh=fs*1.45,bh=TEXT_LINES.length*lh;
         const aY=hB+(gT-hB-bh)/2;
         octx.font=`800 ${fs}px Outfit,sans-serif`;octx.textAlign='center';octx.textBaseline='top';octx.fillStyle='#fff';

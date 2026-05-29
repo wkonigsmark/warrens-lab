@@ -1,4 +1,26 @@
 (() => {
+  // Victory sounds — alternate between the two on each solve so the player
+  // hears variety. Stored in localStorage so the rotation survives reloads.
+  const VICTORY_SFX = [
+    'sfx/you-cracked-the-code-oh-yea.m4a',
+    'sfx/yes-you-cracked-the-code.m4a',
+  ];
+  VICTORY_SFX.forEach(src => { const a = new Audio(); a.preload = 'auto'; a.src = src; });
+
+  function playVictorySound() {
+    try {
+      const lastIdx = parseInt(localStorage.getItem('nc_sfx_last') ?? '-1', 10);
+      const nextIdx = (Number.isFinite(lastIdx) ? lastIdx + 1 : 0) % VICTORY_SFX.length;
+      const audio = new Audio(VICTORY_SFX[nextIdx]);
+      audio.volume = 1.0;
+      const playPromise = audio.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(() => {});
+      }
+      localStorage.setItem('nc_sfx_last', String(nextIdx));
+    } catch (e) {}
+  }
+
   // Cycle: KEPT (unmarked default) -> CIRCLED (marked "keep") -> CROSSED (X, excluded from sum) -> KEPT.
   const STATE_KEPT = 0;
   const STATE_CIRCLED = 1;
@@ -339,6 +361,7 @@
       stopTimer();
       statusTextEl.textContent = `Solved in ${formatTime(Date.now() - startTime)}! Hit New for another.`;
       boardEl.classList.add("is-solved");
+      playVictorySound();
     } else if (!allMatch) {
       boardEl.classList.remove("is-solved");
     }
