@@ -392,6 +392,40 @@
       color: var(--accent);
       font-weight: 700;
     }
+    /* Mentor Mode annotations on past guesses (history rows). */
+    .guess-row .digits .h-ruled {
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+      opacity: 0.45;
+    }
+    .guess-row .digits .h-acorn {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    .guess-row .digits .h-ant {
+      font-weight: 800;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    /* Highlight New Game after a win to invite a quick restart with Enter. */
+    button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    #new-game.ready-to-restart {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      font-weight: 700;
+      animation: aa-pulse 0.55s ease-out 1;
+    }
+    @keyframes aa-pulse {
+      0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(176, 109, 46, 0.55); }
+      60%  { transform: scale(1.04); box-shadow: 0 0 0 10px rgba(176, 109, 46, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(176, 109, 46, 0); }
+    }
     .print-sheet { display: none; }
     @media print {
       @page { size: letter; margin: 0.4in; }
@@ -503,6 +537,7 @@
         <label class="mentor-toggle"><input type="checkbox" data-hint="count"> Possibilities</label>
         <label class="mentor-toggle"><input type="checkbox" data-hint="nudge"> Solvable nudge</label>
         <label class="mentor-toggle"><input type="checkbox" data-hint="reasoning"> Show reasoning</label>
+        <label class="mentor-toggle"><input type="checkbox" data-hint="mode"> Mentor Mode</label>
       </div>
       <div id="mentor-output" class="mentor-output"></div>
     </details>
@@ -653,7 +688,7 @@
         })
       );
       if (consistent.length === 0) {
-        return { remaining: 0, confirmed: [], ruledOut: [], locked: [] };
+        return { remaining: 0, confirmed: [], ruledOut: [], locked: [], annotations: null };
       }
       const confirmed = [];
       const ruledOut = [];
@@ -671,7 +706,40 @@
           locked.push({ pos: i, digit: first });
         }
       }
-      return { remaining: consistent.length, confirmed, ruledOut, locked };
+      // Per-slot annotations: for each (position, digit), classify based on what
+      // every remaining consistent candidate shows.
+      //   'ruled' — no candidate has this digit anywhere (proven out of code)
+      //   'ant'   — every candidate has this digit at this position (locked here)
+      //   'acorn' — every candidate has this digit somewhere, but none at this position
+      const annotations = {};
+      for (let p = 0; p < state.codeLength; p++) {
+        annotations[p] = {};
+        for (let d = 0; d <= 9; d++) {
+          const s = String(d);
+          const noneHaveD = consistent.every(c => !c.includes(s));
+          const allHaveAtP = consistent.every(c => c[p] === s);
+          const allHaveD = consistent.every(c => c.includes(s));
+          const noneHaveAtP = consistent.every(c => c[p] !== s);
+          if (noneHaveD) annotations[p][s] = 'ruled';
+          else if (allHaveAtP) annotations[p][s] = 'ant';
+          else if (allHaveD && noneHaveAtP) annotations[p][s] = 'acorn';
+        }
+      }
+      return { remaining: consistent.length, confirmed, ruledOut, locked, annotations };
+    }
+
+    // Memoize computeMentor() since render() and renderMentor() both want it
+    // per frame, and brute-force enumeration is the heavy bit. Key by the
+    // guesses + game config; invalidates automatically when anything changes.
+    let _mentorCache = null;
+    let _mentorCacheKey = null;
+    function getMentor() {
+      const key = state.codeLength + '|' + state.mode + '|' +
+        state.guesses.map(g => g.value + ':' + g.ants + ',' + g.acorns).join(';');
+      if (_mentorCacheKey === key && _mentorCache) return _mentorCache;
+      _mentorCacheKey = key;
+      _mentorCache = computeMentor();
+      return _mentorCache;
     }
 
     function reasonForRuledOut(ruledOutDigits) {
@@ -759,7 +827,7 @@
         $mentorOutput.innerHTML = '';
         return;
       }
-      const m = computeMentor();
+      const m = getMentor();
       const showReason = !!flags.reasoning && state.guesses.length > 0;
       const groups = [];
       const push = (line, reason) => groups.push({ line, reason });
@@ -844,10 +912,23 @@
       if (state.guesses.length === 0) {
         $history.innerHTML = '<div class="history-empty">No guesses yet.</div>';
       } else {
+        // Mentor Mode: when toggled on, annotate each digit in past guesses
+        // with strikethrough / underline / bold-underline per the airtight
+        // brute-force candidate analysis.
+        const modeFlag = document.querySelector('.mentor-toggle input[data-hint="mode"]');
+        const annotateOn = !!(modeFlag && modeFlag.checked);
+        const annotations = annotateOn ? getMentor().annotations : null;
+        const renderDigits = (value) => {
+          if (!annotations) return value;
+          return value.split('').map((d, p) => {
+            const cls = annotations[p] && annotations[p][d];
+            return cls ? `<span class="h-${cls}">${d}</span>` : d;
+          }).join('');
+        };
         $history.innerHTML = state.guesses.map((g, i) => `
           <div class="guess-row${g.ants === state.codeLength ? ' win' : ''}">
             <div class="num">#${i + 1}</div>
-            <div class="digits">${g.value}</div>
+            <div class="digits">${renderDigits(g.value)}</div>
             <div class="feedback">
               <span><span class="ico">🐜</span> ${g.ants}</span>
               <span><span class="ico">🌰</span> ${g.acorns}</span>
@@ -879,14 +960,22 @@
         const settingsPanel = document.getElementById('settings-panel');
         if (settingsPanel) settingsPanel.open = false;
       }
-      if (ants === state.codeLength) {
+      const won = ants === state.codeLength;
+      if (won) {
         state.over = true;
         playVictorySound();
       } else if (state.maxGuesses !== Infinity && state.guesses.length >= state.maxGuesses) {
         state.over = true;
       }
       render();
-      if (!state.over) $guess.focus();
+      if (!state.over) {
+        $guess.focus();
+      } else if (won) {
+        // Highlight the New Game button and move focus so Enter triggers a
+        // fresh round — keeps the play flow moving for the kid.
+        $newGame.classList.add('ready-to-restart');
+        $newGame.focus();
+      }
     }
 
     function newGame() {
@@ -899,6 +988,7 @@
       $guess.placeholder = '-'.repeat(state.codeLength);
       $guess.disabled = false;
       $submit.disabled = false;
+      $newGame.classList.remove('ready-to-restart');
       const settingsPanel = document.getElementById('settings-panel');
       if (settingsPanel) settingsPanel.open = true;
       render();
@@ -921,7 +1011,7 @@
     });
 
     $mentorToggles.forEach(cb => {
-      cb.addEventListener('change', renderMentor);
+      cb.addEventListener('change', render);
     });
 
     function buildPrintSheet() {
