@@ -5,6 +5,7 @@ let isDragging = false;
 let dragOffsetX = 0;
 let dragOffsetY = 0;
 let isResizing = false;
+let MANIFEST = null;
 
 const canvas = document.getElementById('canvas');
 const gallery = document.getElementById('gallery');
@@ -12,38 +13,71 @@ const galleryGrid = document.getElementById('gallery-grid');
 const galleryTitle = document.getElementById('gallery-title');
 const sidebar = document.querySelector('.sidebar');
 const propertiesPanel = document.getElementById('properties-panel');
+const categoriesEl = document.getElementById('categories');
 
-// ===== CATEGORY SELECTION =====
-document.querySelectorAll('.category-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        currentCategory = btn.dataset.category;
-        showGallery(currentCategory);
+// Emoji per category (fallback to palette for any new folder)
+const CATEGORY_ICONS = {
+    animals: '🦁', constructs: '🏰', nature: '🌳', landscapes: '🏔️',
+    food: '🍰', objects: '⭐', misc: '✨',
+};
+
+// ===== LOAD MANIFEST & BUILD CATEGORIES =====
+init();
+
+async function init() {
+    try {
+        const res = await fetch('assets/images/manifest.json?t=' + Date.now());
+        MANIFEST = await res.json();
+    } catch (e) {
+        categoriesEl.innerHTML =
+            '<p style="padding:12px;color:#999;font-size:0.85rem">Could not load images. ' +
+            'Run <code>python3 catalog.py</code> to build the manifest.</p>';
+        return;
+    }
+    buildCategories();
+}
+
+function buildCategories() {
+    categoriesEl.innerHTML = '';
+    MANIFEST.categoryOrder.forEach(cat => {
+        const count = MANIFEST.categories[cat].length;
+        if (count === 0) return; // hide empty categories from the kid-facing tool
+        const btn = document.createElement('button');
+        btn.className = 'category-btn';
+        btn.dataset.category = cat;
+        btn.innerHTML =
+            `<span class="category-icon">${CATEGORY_ICONS[cat] || '🎨'}</span>` +
+            `<span>${cat.charAt(0).toUpperCase() + cat.slice(1)}</span>`;
+        btn.addEventListener('click', () => {
+            currentCategory = cat;
+            showGallery(cat, btn);
+        });
+        categoriesEl.appendChild(btn);
     });
-});
+}
 
 // ===== GALLERY =====
-function showGallery(category) {
+function showGallery(category, btn) {
     document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-    event.target.closest('.category-btn').classList.add('active');
+    if (btn) btn.classList.add('active');
 
     gallery.classList.remove('hidden');
     galleryTitle.textContent = category.charAt(0).toUpperCase() + category.slice(1);
 
-    const images = imageDatabase[category] || [];
+    const images = (MANIFEST.categories[category] || []);
     galleryGrid.innerHTML = '';
 
-    images.forEach(image => {
+    images.forEach(entry => {
+        const image = { type: 'png', src: entry.src, label: entry.label };
         const item = document.createElement('div');
         item.className = 'gallery-item';
+        item.title = entry.label;
         item.draggable = true;
 
-        if (image.type === 'svg') {
-            item.innerHTML = image.svg;
-        } else {
-            const img = document.createElement('img');
-            img.src = image.src;
-            item.appendChild(img);
-        }
+        const img = document.createElement('img');
+        img.src = image.src;
+        img.alt = entry.label;
+        item.appendChild(img);
 
         item.addEventListener('dragstart', (e) => {
             e.dataTransfer.effectAllowed = 'copy';
@@ -299,13 +333,27 @@ document.getElementById('print-btn').addEventListener('click', () => {
         <head>
             <style>
                 body { margin: 0; padding: 0; }
-                .canvas { width: 8.5in; height: 11in; background: white; }
+                .canvas { position: relative; width: 8.5in; height: 11in; background: white; }
                 .canvas.landscape { width: 11in; height: 8.5in; }
+                /* Tiny branding watermark, bottom-right corner */
+                .print-watermark {
+                    position: absolute;
+                    bottom: 0.25in;
+                    right: 0.3in;
+                    width: 0.9in;
+                    height: auto;
+                    opacity: 0.45;
+                    pointer-events: none;
+                }
+                @media print {
+                    .print-watermark { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                }
             </style>
         </head>
         <body>
             <div class="canvas ${canvas.classList.contains('landscape') ? 'landscape' : ''}">
                 ${canvasHTML}
+                <img class="print-watermark" src="assets/banners/text_banner_ants_artisty.png" alt="Ants & Artistry">
             </div>
         </body>
         </html>

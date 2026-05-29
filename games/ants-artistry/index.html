@@ -11,6 +11,10 @@
 </head>
 <body>
 
+<header class="app-banner">
+    <img src="assets/banners/banner-ants-artisty.png" alt="Ants & Artistry" class="banner-img">
+</header>
+
 <div class="container">
     <!-- Sidebar: Category Selection -->
     <aside class="sidebar">
@@ -18,28 +22,8 @@
             <h2>Elements</h2>
         </div>
 
-        <div class="categories">
-            <button class="category-btn" data-category="landscapes">
-                <span class="category-icon">🏔️</span>
-                <span>Landscapes</span>
-            </button>
-            <button class="category-btn" data-category="constructs">
-                <span class="category-icon">🏰</span>
-                <span>Constructs</span>
-            </button>
-            <button class="category-btn" data-category="animals">
-                <span class="category-icon">🦁</span>
-                <span>Animals</span>
-            </button>
-            <button class="category-btn" data-category="objects">
-                <span class="category-icon">☀️</span>
-                <span>Objects</span>
-            </button>
-            <button class="category-btn" data-category="misc">
-                <span class="category-icon">✨</span>
-                <span>Misc</span>
-            </button>
-        </div>
+        <!-- Categories populated from manifest.json -->
+        <div class="categories" id="categories"></div>
 
         <!-- Image Gallery (appears when category selected) -->
         <div class="gallery hidden" id="gallery">
@@ -101,7 +85,6 @@
     </main>
 </div>
 
-<script src="images-data.js"></script>
 <script src="script.js"></script>
 
 </body>

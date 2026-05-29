@@ -79,6 +79,13 @@ def main():
         result.save(dest)
     print("Done ->", OUT)
 
+    # Refresh the catalog manifest so the tool + dashboard stay in sync.
+    try:
+        from catalog import write_manifest
+        write_manifest()
+    except Exception as e:  # noqa: BLE001
+        print("  (catalog refresh skipped:", e, ")")
+
 
 if __name__ == "__main__":
     main()

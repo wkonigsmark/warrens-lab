@@ -1,0 +1,168 @@
+{
+  "generated": "2026-05-29T14:31:53+00:00",
+  "categoryOrder": [
+    "animals",
+    "constructs",
+    "nature",
+    "landscapes",
+    "food",
+    "objects",
+    "misc"
+  ],
+  "categories": {
+    "animals": [
+      {
+        "file": "lion-1.png",
+        "name": "lion",
+        "num": 1,
+        "label": "Lion 1",
+        "src": "assets/images/animals/lion-1.png"
+      },
+      {
+        "file": "puppy-1.png",
+        "name": "puppy",
+        "num": 1,
+        "label": "Puppy 1",
+        "src": "assets/images/animals/puppy-1.png"
+      },
+      {
+        "file": "tiger-1.png",
+        "name": "tiger",
+        "num": 1,
+        "label": "Tiger 1",
+        "src": "assets/images/animals/tiger-1.png"
+      },
+      {
+        "file": "unicorn-1.png",
+        "name": "unicorn",
+        "num": 1,
+        "label": "Unicorn 1",
+        "src": "assets/images/animals/unicorn-1.png"
+      }
+    ],
+    "constructs": [
+      {
+        "file": "castle-1.png",
+        "name": "castle",
+        "num": 1,
+        "label": "Castle 1",
+        "src": "assets/images/constructs/castle-1.png"
+      },
+      {
+        "file": "fence-1.png",
+        "name": "fence",
+        "num": 1,
+        "label": "Fence 1",
+        "src": "assets/images/constructs/fence-1.png"
+      },
+      {
+        "file": "house-1.png",
+        "name": "house",
+        "num": 1,
+        "label": "House 1",
+        "src": "assets/images/constructs/house-1.png"
+      }
+    ],
+    "nature": [
+      {
+        "file": "cloud-1.png",
+        "name": "cloud",
+        "num": 1,
+        "label": "Cloud 1",
+        "src": "assets/images/nature/cloud-1.png"
+      },
+      {
+        "file": "moon-1.png",
+        "name": "moon",
+        "num": 1,
+        "label": "Moon 1",
+        "src": "assets/images/nature/moon-1.png"
+      },
+      {
+        "file": "rainbow-1.png",
+        "name": "rainbow",
+        "num": 1,
+        "label": "Rainbow 1",
+        "src": "assets/images/nature/rainbow-1.png"
+      },
+      {
+        "file": "sun-1.png",
+        "name": "sun",
+        "num": 1,
+        "label": "Sun 1",
+        "src": "assets/images/nature/sun-1.png"
+      },
+      {
+        "file": "tree-1.png",
+        "name": "tree",
+        "num": 1,
+        "label": "Tree 1",
+        "src": "assets/images/nature/tree-1.png"
+      }
+    ],
+    "landscapes": [],
+    "food": [
+      {
+        "file": "cake-1.png",
+        "name": "cake",
+        "num": 1,
+        "label": "Cake 1",
+        "src": "assets/images/food/cake-1.png"
+      },
+      {
+        "file": "cake-2.png",
+        "name": "cake",
+        "num": 2,
+        "label": "Cake 2",
+        "src": "assets/images/food/cake-2.png"
+      },
+      {
+        "file": "cupcake-1.png",
+        "name": "cupcake",
+        "num": 1,
+        "label": "Cupcake 1",
+        "src": "assets/images/food/cupcake-1.png"
+      }
+    ],
+    "objects": [
+      {
+        "file": "heart-1.png",
+        "name": "heart",
+        "num": 1,
+        "label": "Heart 1",
+        "src": "assets/images/objects/heart-1.png"
+      }
+    ],
+    "misc": []
+  },
+  "summary": {
+    "totalImages": 16,
+    "totalTypes": 15,
+    "byCategory": {
+      "animals": 4,
+      "constructs": 3,
+      "nature": 5,
+      "landscapes": 0,
+      "food": 3,
+      "objects": 1,
+      "misc": 0
+    },
+    "byType": {
+      "cake": 2,
+      "castle": 1,
+      "cloud": 1,
+      "cupcake": 1,
+      "fence": 1,
+      "heart": 1,
+      "house": 1,
+      "lion": 1,
+      "moon": 1,
+      "puppy": 1,
+      "rainbow": 1,
+      "sun": 1,
+      "tiger": 1,
+      "tree": 1,
+      "unicorn": 1
+    }
+  }
+}

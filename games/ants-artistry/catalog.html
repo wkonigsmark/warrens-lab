@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ants & Artistry — Image Catalog</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta name="theme-color" content="#1a1a1a">
+    <link rel="stylesheet" href="catalog.css">
+</head>
+<body>
+    <header class="cat-header">
+        <img src="assets/banners/text_banner_ants_artisty.png" alt="Ants & Artistry" class="cat-logo">
+        <div class="cat-headtext">
+            <h1>Image Catalog</h1>
+            <p id="generated">Loading…</p>
+        </div>
+        <a href="index.html" class="cat-toollink">← Open the Tool</a>
+    </header>
+
+    <main class="cat-main">
+        <!-- Summary stat cards -->
+        <section class="stats" id="stats"></section>
+
+        <!-- Category breakdown bars -->
+        <section class="panel">
+            <h2>By Category</h2>
+            <div id="category-bars" class="bars"></div>
+        </section>
+
+        <!-- Inventory + roadmap table -->
+        <section class="panel">
+            <div class="panel-head">
+                <h2>Inventory &amp; Roadmap</h2>
+                <div class="addrow">
+                    <input type="text" id="plan-name" placeholder="planned type (e.g. dragon)">
+                    <input type="number" id="plan-target" placeholder="target #" min="1" value="3">
+                    <button id="plan-add">+ Add to roadmap</button>
+                </div>
+            </div>
+            <table class="inv">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Category</th>
+                        <th>Have</th>
+                        <th>Target</th>
+                        <th>Progress</th>
+                        <th>Notes</th>
+                        <th>Variants</th>
+                    </tr>
+                </thead>
+                <tbody id="inv-body"></tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="catalog.js"></script>
+</body>
+</html>
