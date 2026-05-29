@@ -804,7 +804,7 @@
         tickerLastFrame = now;
 
         if (!tickerDragging && now > tickerPausedUntil && tickerLoopWidth) {
-          const pxPerSecond = window.innerWidth < 640 ? 38 : 48;
+          const pxPerSecond = window.innerWidth < 640 ? 68 : 48;
           tickerX -= (pxPerSecond * delta) / 1000;
           normalizeTickerX();
         }

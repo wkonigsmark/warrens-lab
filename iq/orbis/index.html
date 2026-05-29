@@ -36,6 +36,7 @@
                     <div class="nav-menu-dropdown" id="print-menu-dropdown" role="menu">
                         <a class="menu-item" href="print/continents.html" target="_blank" rel="noopener" role="menuitem">🌍 The 7 Continents</a>
                         <a class="menu-item" href="print/oceans.html" target="_blank" rel="noopener" role="menuitem">🌊 The 5 Oceans</a>
+                        <a class="menu-item" href="print/animals.html" target="_blank" rel="noopener" role="menuitem">🐘 Animals of the World</a>
                     </div>
                 </div>
 
@@ -240,7 +241,7 @@
                     <div class="roadmap-update">
                         <span class="update-tag">🖨 Latest update</span>
                         <p>
-                            <strong>Print pipeline scaled up + Orbis nav cleaned up.</strong> Two print quizzes live now: <strong>🌍 The 7 Continents</strong> and <strong>🌊 The 5 Oceans</strong>. Both share the same kid-friendly worksheet template (Patrick Hand + Outfit, paper-tone screen preview, <code>@media print</code> for clean Letter output). Oceans adds a soft-blue water backdrop; continents added a hand-drawn Antarctica strip (Natural Earth's medium-res data omits Antarctica entirely — verified empirically). Number badges are now subtle (radius 380 vs the original 620) so they don't dominate small continents like South America.
+                            <strong>Third print worksheet shipped + atlas expanded to 129 countries.</strong> <strong>🐘 Animals of the World</strong> is now live — draw-a-line matching of 8 signature animals to their home continents, with a fun-facts strip. Atlas soft data grew from 100 → 129 countries (added Colombia, DR Congo, Austria, Kazakhstan at L3; plus 25 new L4 entries across Africa, Central Asia, Caucasus, and Central America). Full print worksheet roadmap added below with 17 planned exercises. Previously shipped: <strong>🌍 The 7 Continents</strong> and <strong>🌊 The 5 Oceans</strong>. Both share the same kid-friendly worksheet template (Patrick Hand + Outfit, paper-tone screen preview, <code>@media print</code> for clean Letter output). Oceans adds a soft-blue water backdrop; continents added a hand-drawn Antarctica strip (Natural Earth's medium-res data omits Antarctica entirely — verified empirically). Number badges are now subtle (radius 380 vs the original 620) so they don't dominate small continents like South America.
                             <br><br>
                             <strong>Nav redesign:</strong> 9 buttons collapsed to 6 visible elements. Continents/Countries/Oceans joined into a segmented control with active-state highlighting. Atlas/Roadmap/Exit moved into a ⋯ More dropdown. 🖨 Print is now a dropdown listing all available worksheets — adding new ones is a one-line HTML change. A shared <code>wireDropdown()</code> helper handles open/close/click-outside for both menus.
                             <br><br>
@@ -285,12 +286,17 @@
                                 <strong>Overlay system polish</strong> — five overlays (Discovery, Roadmap, Mission Summary, Geocode Result, Atlas Data Table) share consistent close buttons (circular, top-right). ESC and backdrop click close any open overlay. Summary modals use a HOME (secondary outline) + primary action button pattern. Cache-busting query strings on every script/style tag so dev edits show on reload.
                             </li>
                             <li>
-                                <strong>Print quizzes (2 worksheets, growing)</strong> — kid-friendly Letter-portrait worksheets sharing one template:
+                                <strong>Print quizzes (3 worksheets, growing)</strong> — kid-friendly Letter-portrait worksheets sharing one template:
                                 <ul class="sub-list">
                                     <li><em>🌍 The 7 Continents</em> — numbered circles 1-7 on each continent, hand-drawn Antarctica strip (Natural Earth omits Antarctica).</li>
                                     <li><em>🌊 The 5 Oceans</em> — soft-blue water backdrop, numbered circles 1-5 on Arctic / Atlantic / Indian / Pacific / Southern.</li>
                                 </ul>
                                 Patrick Hand + Outfit typography. <code>@media print</code> for clean print output. Number badges sized so they don't dominate continents.
+                                <ul class="sub-list">
+                                    <li>🌍 <strong>The 7 Continents</strong> — numbered world map + word bank + answer lines.</li>
+                                    <li>🌊 <strong>The 5 Oceans</strong> — same map with soft-blue water backdrop.</li>
+                                    <li>🐘 <strong>Animals of the World</strong> — draw-a-line matching: 8 animals → 7 continents + Arctic. Fun facts strip at bottom.</li>
+                                </ul>
                             </li>
                             <li>
                                 <strong>Cleaner Orbis nav</strong> — 9 toolbar buttons collapsed to 6 visible elements. Continents/Countries/Oceans joined into a segmented control with active-state highlighting. Utility items (Atlas Data, Roadmap, Exit to IQ) moved into a ⋯ More dropdown. 🖨 Print became a dropdown listing every available worksheet — extensible as more land. Shared <code>wireDropdown()</code> JS helper handles open/close/click-outside for both menus.
@@ -302,13 +308,25 @@
                         <h3><span class="status-dot"></span>Build next (queued)</h3>
                         <ul>
                             <li>
-                                <strong>More print quizzes</strong> <span class="item-badge needs-testing">🎯 Up next</span> — next candidates in pedagogical order:
+                                <strong>More print quizzes</strong> <span class="item-badge needs-testing">🎯 Up next</span> — full worksheet roadmap in pedagogical order:
                                 <ul class="sub-list">
-                                    <li><em>🐘 Animals of the World</em> — match-and-draw (animals at top, lines to continents).</li>
-                                    <li><em>🎨 Color the Continents</em> — pure coloring sheet with continent names pre-labeled.</li>
-                                    <li><em>🧭 Hemispheres</em> — color Northern vs Southern, Eastern vs Western.</li>
-                                    <li><em>🏛 Famous Landmarks → Continents</em> — match landmarks to continents.</li>
-                                    <li>Famous 20 trading-card deck (doubles as physical Geocode board), Trace/Label/Recall blank maps, flag-coloring templates, two-player Geocode boards, Answer-Key generator for parents/teachers.</li>
+                                    <li>✅ <em>🐘 Animals of the World</em> — shipped. Draw-a-line matching: 8 animals → 7 continents.</li>
+                                    <li><em>🎨 Color the Continents</em> — pure coloring sheet, continent names pre-labeled, blank fill regions.</li>
+                                    <li><em>🧭 Hemispheres</em> — color Northern vs Southern, Eastern vs Western on a split globe diagram.</li>
+                                    <li><em>🏴 Flag → Country Match</em> — 8 flag swatches, draw a line to the country name.</li>
+                                    <li><em>🍜 Famous Foods → Country Match</em> — dish illustrations matched to home countries.</li>
+                                    <li><em>🏛 Landmarks → Continent Match</em> — Eiffel Tower / Great Wall / Pyramid etc. matched to continents.</li>
+                                    <li><em>🗺 Blank Map: Label the Countries</em> — continent-by-continent label sheets (word bank + outline only). Three tiers: Trace (faded labels), Label (word bank), Recall (blank).</li>
+                                    <li><em>📊 Size &amp; Population Sort</em> — rank 8 countries smallest → largest, or least → most populous.</li>
+                                    <li><em>🌡 Climate Match</em> — assign each country to tropical / arid / temperate / polar.</li>
+                                    <li><em>🃏 Famous 20 Trading-Card Deck</em> — one card per country: flag, capital, landmark, fact. Cut-apart. Doubles as the physical Geocode game board.</li>
+                                    <li><em>✂️ Cut-and-Paste Continent Puzzle</em> — print, cut, reassemble the continents from SVG outlines.</li>
+                                    <li><em>🎴 Memory / Concentration Pairs</em> — flag card + country-name card. Print and cut.</li>
+                                    <li><em>🔍 Two-Player Geocode Board</em> — 24 country tiles in classic Guess Who layout, pencils to cross off.</li>
+                                    <li><em>📍 Lat/Long Plotting Grid</em> — find the coordinate, mark the spot.</li>
+                                    <li><em>🖍 Flag-Coloring Templates</em> — proportion grids for each flag, kid draws their own.</li>
+                                    <li><em>📖 Passport Booklet</em> — physical companion to the digital passport stamps, kid fills in alongside the app.</li>
+                                    <li><em>🔑 Answer-Key generator</em> — parent/teacher answer keys auto-generated from atlas data for every worksheet.</li>
                                 </ul>
                             </li>
                             <li>

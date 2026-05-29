@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generated_at": "2026-05-29T01:17:38.051Z",
+  "generated_at": "2026-05-29T16:53:31.192Z",
   "sources": {
     "countries": "https://restcountries.com/v3.1",
     "soft_fields": "atlas_soft.json (hand-curated)"
@@ -420,7 +420,7 @@
       "currency": "AOA",
       "currency_name": "Angolan kwanza",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "COG",
         "COD",
@@ -439,14 +439,23 @@
       "area_bucket": "medium",
       "flag_emoji": "🇦🇴",
       "flag_svg": "https://flagcdn.com/ao.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "red",
+        "black",
+        "yellow"
+      ],
+      "flag_motifs": [
+        "star",
+        "wheel"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "plateau and savanna",
+      "bordering_waters": [
+        "Atlantic Ocean"
+      ],
+      "landmark": "Kalandula Falls",
+      "famous_food": "muamba de galinha",
+      "fact_card": "A large country on Africa's southwestern Atlantic coast, rich in oil and diamonds, with dramatic waterfalls and a plateau interior."
     },
     {
       "iso_a2": "AR",
@@ -506,7 +515,7 @@
       "iso_a3": "AUT",
       "name": "Austria",
       "official_name": "Republic of Austria",
-      "level": 4,
+      "level": 3,
       "continent": "europe",
       "subregion": "Central Europe",
       "capital": "Vienna",
@@ -516,7 +525,7 @@
       "currency": "EUR",
       "currency_name": "euro",
       "landlocked": true,
-      "island": null,
+      "island": false,
       "borders": [
         "CZE",
         "DEU",
@@ -539,14 +548,19 @@
       "area_bucket": "tiny",
       "flag_emoji": "🇦🇹",
       "flag_svg": "https://flagcdn.com/at.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "red",
+        "white"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "alps",
+      "bordering_waters": [],
+      "landmark": "Schönbrunn Palace",
+      "famous_food": "wiener schnitzel",
+      "fact_card": "A landlocked country in the heart of Europe, famous for its Alpine ski slopes, classical music composers like Mozart and Beethoven, and the grand city of Vienna."
     },
     {
       "iso_a2": "AU",
@@ -613,7 +627,7 @@
       "currency": "AZN",
       "currency_name": "Azerbaijani manat",
       "landlocked": true,
-      "island": null,
+      "island": false,
       "borders": [
         "ARM",
         "GEO",
@@ -633,14 +647,25 @@
       "area_bucket": "tiny",
       "flag_emoji": "🇦🇿",
       "flag_svg": "https://flagcdn.com/az.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "blue",
+        "red",
+        "green",
+        "white"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "crescent",
+        "star"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "caucasus mountains",
+      "bordering_waters": [
+        "Caspian Sea"
+      ],
+      "landmark": "Flame Towers Baku",
+      "famous_food": "plov",
+      "fact_card": "Sitting at the crossroads of Europe and Asia on the Caspian Sea, Azerbaijan is famous for its ancient fire temples — where flames once burned naturally from underground gas."
     },
     {
       "iso_a2": "BA",
@@ -840,7 +865,7 @@
       "currency": "XOF",
       "currency_name": "West African CFA franc",
       "landlocked": true,
-      "island": null,
+      "island": false,
       "borders": [
         "BEN",
         "CIV",
@@ -861,14 +886,21 @@
       "area_bucket": "small",
       "flag_emoji": "🇧🇫",
       "flag_svg": "https://flagcdn.com/bf.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "red",
+        "green",
+        "yellow"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "star"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "flat savanna",
+      "bordering_waters": [],
+      "landmark": "Sindou Peaks",
+      "famous_food": "tô",
+      "fact_card": "A flat, landlocked Sahel country in West Africa whose name means 'Land of the Honest People' — it sits at the edge of the expanding Sahara Desert."
     },
     {
       "iso_a2": "BG",
@@ -885,7 +917,7 @@
       "currency": "BGN",
       "currency_name": "Bulgarian lev",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "GRC",
         "MKD",
@@ -905,14 +937,22 @@
       "area_bucket": "small",
       "flag_emoji": "🇧🇬",
       "flag_svg": "https://flagcdn.com/bg.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "white",
+        "green",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "mountains and plains",
+      "bordering_waters": [
+        "Black Sea"
+      ],
+      "landmark": "Rila Monastery",
+      "famous_food": "banitsa",
+      "fact_card": "A Balkan country on the Black Sea coast, home to the stunning Rila Monastery high in the mountains and one of the oldest rose-oil industries in the world."
     },
     {
       "iso_a2": "BH",
@@ -1336,7 +1376,7 @@
       "currency": "BYN",
       "currency_name": "Belarusian ruble",
       "landlocked": true,
-      "island": null,
+      "island": false,
       "borders": [
         "LVA",
         "LTU",
@@ -1356,14 +1396,20 @@
       "area_bucket": "small",
       "flag_emoji": "🇧🇾",
       "flag_svg": "https://flagcdn.com/by.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "red",
+        "green",
+        "white"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "plains and forests",
+      "bordering_waters": [],
+      "landmark": "Mir Castle",
+      "famous_food": "draniki",
+      "fact_card": "A flat, forested country in Eastern Europe known for its potato pancakes (draniki), medieval castles, and being one of Europe's last remaining untouched ancient forests at Białowieża."
     },
     {
       "iso_a2": "BZ",
@@ -1463,7 +1509,7 @@
       "iso_a3": "COD",
       "name": "DR Congo",
       "official_name": "Democratic Republic of the Congo",
-      "level": 4,
+      "level": 3,
       "continent": "africa",
       "subregion": "Middle Africa",
       "capital": "Kinshasa",
@@ -1477,7 +1523,7 @@
       "currency": "CDF",
       "currency_name": "Congolese franc",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "AGO",
         "BDI",
@@ -1501,14 +1547,23 @@
       "area_bucket": "large",
       "flag_emoji": "🇨🇩",
       "flag_svg": "https://flagcdn.com/cd.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "blue",
+        "yellow",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "star"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "rainforest and river basin",
+      "bordering_waters": [
+        "Atlantic Ocean"
+      ],
+      "landmark": "Congo River",
+      "famous_food": "fufu",
+      "fact_card": "Home to the world's second-largest rainforest and the mighty Congo River — the deepest river on Earth — making it one of the most biodiverse places on the planet."
     },
     {
       "iso_a2": "CF",
@@ -1526,7 +1581,7 @@
       "currency": "XAF",
       "currency_name": "Central African CFA franc",
       "landlocked": true,
-      "island": null,
+      "island": false,
       "borders": [
         "CMR",
         "TCD",
@@ -1547,14 +1602,23 @@
       "area_bucket": "medium",
       "flag_emoji": "🇨🇫",
       "flag_svg": "https://flagcdn.com/cf.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "blue",
+        "white",
+        "green",
+        "yellow",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "star"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "forest and plateau",
+      "bordering_waters": [],
+      "landmark": "Dzanga-Sangha Forest Reserve",
+      "famous_food": "gozo",
+      "fact_card": "A remote landlocked country at the geographic heart of Africa, home to western lowland gorillas and forest elephants in some of the continent's most intact rainforests."
     },
     {
       "iso_a2": "CG",
@@ -1884,7 +1948,7 @@
       "iso_a3": "COL",
       "name": "Colombia",
       "official_name": "Republic of Colombia",
-      "level": 4,
+      "level": 3,
       "continent": "south_america",
       "subregion": "South America",
       "capital": "Bogotá",
@@ -1894,7 +1958,7 @@
       "currency": "COP",
       "currency_name": "Colombian peso",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "BRA",
         "ECU",
@@ -1914,14 +1978,23 @@
       "area_bucket": "medium",
       "flag_emoji": "🇨🇴",
       "flag_svg": "https://flagcdn.com/co.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "yellow",
+        "blue",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "andes and rainforest",
+      "bordering_waters": [
+        "Pacific Ocean",
+        "Caribbean Sea"
+      ],
+      "landmark": "Cartagena Old City",
+      "famous_food": "arepas",
+      "fact_card": "The only South American country with coastlines on both the Pacific Ocean and the Caribbean Sea, and home to the lush Amazon rainforest in its south."
     },
     {
       "iso_a2": "CR",
@@ -3078,7 +3151,7 @@
       "currency": "GEL",
       "currency_name": "lari",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "ARM",
         "AZE",
@@ -3097,14 +3170,21 @@
       "area_bucket": "tiny",
       "flag_emoji": "🇬🇪",
       "flag_svg": "https://flagcdn.com/ge.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "white",
+        "red"
+      ],
+      "flag_motifs": [
+        "cross"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "caucasus mountains",
+      "bordering_waters": [
+        "Black Sea"
+      ],
+      "landmark": "Vardzia Cave Monastery",
+      "famous_food": "khachapuri",
+      "fact_card": "A small country tucked in the Caucasus Mountains between Europe and Asia, with a unique ancient alphabet, cave cities, and one of the world's oldest wine-making traditions."
     },
     {
       "iso_a2": "GH",
@@ -3214,7 +3294,7 @@
       "currency": "GNF",
       "currency_name": "Guinean franc",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "CIV",
         "GNB",
@@ -3235,14 +3315,22 @@
       "area_bucket": "small",
       "flag_emoji": "🇬🇳",
       "flag_svg": "https://flagcdn.com/gn.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "red",
+        "yellow",
+        "green"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "highlands and coast",
+      "bordering_waters": [
+        "Atlantic Ocean"
+      ],
+      "landmark": "Fouta Djallon Highlands",
+      "famous_food": "rice with peanut sauce",
+      "fact_card": "Often called 'the water tower of West Africa' — nearly all of West Africa's major rivers, including the Niger, originate in Guinea's central highlands."
     },
     {
       "iso_a2": "GQ",
@@ -4546,7 +4634,7 @@
       "currency": "KPW",
       "currency_name": "North Korean won",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "CHN",
         "KOR",
@@ -4564,14 +4652,25 @@
       "area_bucket": "small",
       "flag_emoji": "🇰🇵",
       "flag_svg": "https://flagcdn.com/kp.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "red",
+        "white",
+        "blue"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "star",
+        "circle"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "mountains",
+      "bordering_waters": [
+        "Yellow Sea",
+        "Sea of Japan"
+      ],
+      "landmark": "Mount Paektu",
+      "famous_food": "cold noodles",
+      "fact_card": "The northern half of the Korean Peninsula, separated from South Korea since 1953, with rugged mountains and Mount Paektu — a sacred volcano — on its northern border."
     },
     {
       "iso_a2": "KR",
@@ -4639,7 +4738,7 @@
       "currency": "KWD",
       "currency_name": "Kuwaiti dinar",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "IRQ",
         "SAU"
@@ -4656,21 +4755,30 @@
       "area_bucket": "tiny",
       "flag_emoji": "🇰🇼",
       "flag_svg": "https://flagcdn.com/kw.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "green",
+        "white",
+        "red",
+        "black"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "desert",
+      "bordering_waters": [
+        "Persian Gulf"
+      ],
+      "landmark": "Kuwait Towers",
+      "famous_food": "machboos",
+      "fact_card": "A small but wealthy country at the top of the Persian Gulf, sitting atop some of the world's largest oil reserves, with iconic water towers that store desalinated water."
     },
     {
       "iso_a2": "KZ",
       "iso_a3": "KAZ",
       "name": "Kazakhstan",
       "official_name": "Republic of Kazakhstan",
-      "level": 4,
+      "level": 3,
       "continent": "asia",
       "subregion": "Central Asia",
       "capital": "Astana",
@@ -4681,7 +4789,7 @@
       "currency": "KZT",
       "currency_name": "Kazakhstani tenge",
       "landlocked": true,
-      "island": null,
+      "island": false,
       "borders": [
         "CHN",
         "KGZ",
@@ -4701,14 +4809,23 @@
       "area_bucket": "large",
       "flag_emoji": "🇰🇿",
       "flag_svg": "https://flagcdn.com/kz.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "blue",
+        "yellow"
+      ],
+      "flag_motifs": [
+        "sun",
+        "eagle"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "steppe and desert",
+      "bordering_waters": [
+        "Caspian Sea",
+        "Aral Sea"
+      ],
+      "landmark": "Baikonur Cosmodrome",
+      "famous_food": "beshbarmak",
+      "fact_card": "The world's largest landlocked country — bigger than Western Europe — with vast empty steppes, deserts, and the historic Baikonur launch site where the first human went to space."
     },
     {
       "iso_a2": "LA",
@@ -4725,7 +4842,7 @@
       "currency": "LAK",
       "currency_name": "Lao kip",
       "landlocked": true,
-      "island": null,
+      "island": false,
       "borders": [
         "MMR",
         "KHM",
@@ -4745,14 +4862,21 @@
       "area_bucket": "small",
       "flag_emoji": "🇱🇦",
       "flag_svg": "https://flagcdn.com/la.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "red",
+        "blue",
+        "white"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "circle"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "mountains and mekong river",
+      "bordering_waters": [],
+      "landmark": "Luang Prabang Temples",
+      "famous_food": "larb",
+      "fact_card": "The only landlocked country in Southeast Asia, Laos is crisscrossed by the Mekong River and dotted with ancient Buddhist temples draped in saffron-orange."
     },
     {
       "iso_a2": "LB",
@@ -4947,7 +5071,7 @@
       "currency": "LRD",
       "currency_name": "Liberian dollar",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "GIN",
         "CIV",
@@ -4965,14 +5089,23 @@
       "area_bucket": "small",
       "flag_emoji": "🇱🇷",
       "flag_svg": "https://flagcdn.com/lr.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "red",
+        "white",
+        "blue"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "star"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "coastal rainforest",
+      "bordering_waters": [
+        "Atlantic Ocean"
+      ],
+      "landmark": "Sapo National Park",
+      "famous_food": "jollof rice",
+      "fact_card": "Founded in 1847 by formerly enslaved Americans returning to Africa, Liberia was the first African republic — its flag echoes the Stars and Stripes of the United States."
     },
     {
       "iso_a2": "LS",
@@ -5686,7 +5819,7 @@
       "currency": "MRU",
       "currency_name": "Mauritanian ouguiya",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "DZA",
         "MLI",
@@ -5705,14 +5838,24 @@
       "area_bucket": "medium",
       "flag_emoji": "🇲🇷",
       "flag_svg": "https://flagcdn.com/mr.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "green",
+        "yellow",
+        "red"
+      ],
+      "flag_motifs": [
+        "crescent",
+        "stars",
+        "stripes"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "sahara desert",
+      "bordering_waters": [
+        "Atlantic Ocean"
+      ],
+      "landmark": "Ancient Ksour of Ouadane",
+      "famous_food": "thieboudienne",
+      "fact_card": "Covering mostly Sahara Desert, Mauritania is home to ancient fortified cities (ksour) that were once crucial stops on trans-Saharan camel caravan trading routes."
     },
     {
       "iso_a2": "MT",
@@ -5997,7 +6140,7 @@
       "currency": "MZN",
       "currency_name": "Mozambican metical",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "MWI",
         "ZAF",
@@ -6018,14 +6161,27 @@
       "area_bucket": "medium",
       "flag_emoji": "🇲🇿",
       "flag_svg": "https://flagcdn.com/mz.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "green",
+        "white",
+        "black",
+        "yellow",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "star",
+        "coat-of-arms"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "coastal lowlands",
+      "bordering_waters": [
+        "Indian Ocean",
+        "Mozambique Channel"
+      ],
+      "landmark": "Gorongosa National Park",
+      "famous_food": "piri-piri prawns",
+      "fact_card": "A long, narrow country stretching down southeast Africa's coast, with over 2,500 km of Indian Ocean shoreline and some of Africa's best coral reefs."
     },
     {
       "iso_a2": "NA",
@@ -6093,7 +6249,7 @@
       "currency": "XOF",
       "currency_name": "West African CFA franc",
       "landlocked": true,
-      "island": null,
+      "island": false,
       "borders": [
         "DZA",
         "BEN",
@@ -6115,14 +6271,21 @@
       "area_bucket": "medium",
       "flag_emoji": "🇳🇪",
       "flag_svg": "https://flagcdn.com/ne.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "orange",
+        "white",
+        "green"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "circle"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "sahara and sahel",
+      "bordering_waters": [],
+      "landmark": "Agadez Grand Mosque",
+      "famous_food": "dambou",
+      "fact_card": "One of the world's largest countries by area, Niger is mostly Sahara Desert in the north and dry Sahel savanna in the south, centered around the Niger River."
     },
     {
       "iso_a2": "NG",
@@ -6190,7 +6353,7 @@
       "currency": "NIO",
       "currency_name": "Nicaraguan córdoba",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "CRI",
         "HND"
@@ -6207,14 +6370,23 @@
       "area_bucket": "small",
       "flag_emoji": "🇳🇮",
       "flag_svg": "https://flagcdn.com/ni.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "blue",
+        "white"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "coat-of-arms"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "volcanoes and lakes",
+      "bordering_waters": [
+        "Pacific Ocean",
+        "Caribbean Sea"
+      ],
+      "landmark": "Ometepe Island",
+      "famous_food": "gallo pinto",
+      "fact_card": "Central America's largest country, with a chain of active volcanoes running along its Pacific coast and the largest lake in Central America, Lake Nicaragua."
     },
     {
       "iso_a2": "NL",
@@ -6471,7 +6643,7 @@
       "currency": "OMR",
       "currency_name": "Omani rial",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "SAU",
         "ARE",
@@ -6489,14 +6661,25 @@
       "area_bucket": "small",
       "flag_emoji": "🇴🇲",
       "flag_svg": "https://flagcdn.com/om.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "red",
+        "white",
+        "green"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "coat-of-arms"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "desert and mountains",
+      "bordering_waters": [
+        "Arabian Sea",
+        "Gulf of Oman",
+        "Strait of Hormuz"
+      ],
+      "landmark": "Wahiba Sands",
+      "famous_food": "shuwa",
+      "fact_card": "An ancient seafaring nation on the southeastern tip of the Arabian Peninsula, with dramatic fjords in the north, vast sand dunes, and a history of frankincense trade."
     },
     {
       "iso_a2": "PA",
@@ -7574,7 +7757,7 @@
       "currency": "EUR",
       "currency_name": "euro",
       "landlocked": true,
-      "island": null,
+      "island": false,
       "borders": [
         "AUT",
         "CZE",
@@ -7594,14 +7777,21 @@
       "area_bucket": "tiny",
       "flag_emoji": "🇸🇰",
       "flag_svg": "https://flagcdn.com/sk.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "white",
+        "blue",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "coat-of-arms"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "carpathian mountains",
+      "bordering_waters": [],
+      "landmark": "Spiš Castle",
+      "famous_food": "bryndzové halušky",
+      "fact_card": "A landlocked Central European country with hundreds of medieval castles — more castles per square kilometer than almost anywhere in the world."
     },
     {
       "iso_a2": "SL",
@@ -7753,7 +7943,7 @@
       "currency": "SOS",
       "currency_name": "Somali shilling",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "DJI",
         "ETH",
@@ -7771,14 +7961,22 @@
       "area_bucket": "medium",
       "flag_emoji": "🇸🇴",
       "flag_svg": "https://flagcdn.com/so.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "blue",
+        "white"
+      ],
+      "flag_motifs": [
+        "star"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "coast and semi-desert",
+      "bordering_waters": [
+        "Indian Ocean",
+        "Gulf of Aden"
+      ],
+      "landmark": "Laas Geel Cave Paintings",
+      "famous_food": "canjeero",
+      "fact_card": "Located on the Horn of Africa, Somalia has the longest coastline of any African country, and its ancient cave paintings at Laas Geel are among the oldest in the world."
     },
     {
       "iso_a2": "SR",
@@ -7920,7 +8118,7 @@
       "currency": "USD",
       "currency_name": "United States dollar",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "GTM",
         "HND"
@@ -7937,14 +8135,22 @@
       "area_bucket": "tiny",
       "flag_emoji": "🇸🇻",
       "flag_svg": "https://flagcdn.com/sv.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "blue",
+        "white"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "coat-of-arms"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "volcanoes",
+      "bordering_waters": [
+        "Pacific Ocean"
+      ],
+      "landmark": "Santa Ana Volcano",
+      "famous_food": "pupusas",
+      "fact_card": "The smallest and most densely populated country in Central America, nicknamed 'The Land of Volcanoes' — its stuffed corn cakes (pupusas) are the national dish."
     },
     {
       "iso_a2": "SY",
@@ -8048,7 +8254,7 @@
       "currency": "XAF",
       "currency_name": "Central African CFA franc",
       "landlocked": true,
-      "island": null,
+      "island": false,
       "borders": [
         "CMR",
         "CAF",
@@ -8069,14 +8275,22 @@
       "area_bucket": "medium",
       "flag_emoji": "🇹🇩",
       "flag_svg": "https://flagcdn.com/td.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "blue",
+        "yellow",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "sahara and sahel",
+      "bordering_waters": [
+        "Lake Chad"
+      ],
+      "landmark": "Ennedi Plateau",
+      "famous_food": "boule",
+      "fact_card": "A vast landlocked country where the Sahara Desert in the north gives way to a green Sahel belt in the south, and where ancient cave art dots the otherworldly Ennedi Plateau."
     },
     {
       "iso_a2": "TG",
@@ -8188,7 +8402,7 @@
       "currency": "TJS",
       "currency_name": "Tajikistani somoni",
       "landlocked": true,
-      "island": null,
+      "island": false,
       "borders": [
         "AFG",
         "CHN",
@@ -8207,14 +8421,22 @@
       "area_bucket": "small",
       "flag_emoji": "🇹🇯",
       "flag_svg": "https://flagcdn.com/tj.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "red",
+        "white",
+        "green"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "crown",
+        "stars"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "pamir mountains",
+      "bordering_waters": [],
+      "landmark": "Pamir Highway",
+      "famous_food": "qurutob",
+      "fact_card": "Over 90% of this Central Asian country is covered by mountains — including the soaring Pamirs, nicknamed 'the Roof of the World,' with peaks over 7,000 metres."
     },
     {
       "iso_a2": "TL",
@@ -8855,7 +9077,7 @@
       "currency": "UZS",
       "currency_name": "Uzbekistani soʻm",
       "landlocked": true,
-      "island": null,
+      "island": false,
       "borders": [
         "AFG",
         "KAZ",
@@ -8875,14 +9097,24 @@
       "area_bucket": "small",
       "flag_emoji": "🇺🇿",
       "flag_svg": "https://flagcdn.com/uz.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "blue",
+        "white",
+        "green"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "crescent",
+        "stars"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "desert and ancient cities",
+      "bordering_waters": [
+        "Aral Sea"
+      ],
+      "landmark": "Registan, Samarkand",
+      "famous_food": "plov",
+      "fact_card": "Home to the ancient Silk Road cities of Samarkand and Bukhara — once the most dazzling trading stops in the medieval world — now gleaming with turquoise-tiled mosques."
     },
     {
       "iso_a2": "VA",
@@ -9212,7 +9444,7 @@
       "currency": "YER",
       "currency_name": "Yemeni rial",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "OMN",
         "SAU"
@@ -9229,14 +9461,24 @@
       "area_bucket": "medium",
       "flag_emoji": "🇾🇪",
       "flag_svg": "https://flagcdn.com/ye.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "red",
+        "white",
+        "black"
+      ],
+      "flag_motifs": [
+        "stripes"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "mountains and desert",
+      "bordering_waters": [
+        "Arabian Sea",
+        "Gulf of Aden",
+        "Red Sea"
+      ],
+      "landmark": "Socotra Island",
+      "famous_food": "saltah",
+      "fact_card": "On the southern tip of the Arabian Peninsula, Yemen is home to Socotra — an island so isolated it evolved alien-looking 'dragon blood' trees found nowhere else on Earth."
     },
     {
       "iso_a2": "ZA",
@@ -9321,7 +9563,7 @@
       "currency": "ZMW",
       "currency_name": "Zambian kwacha",
       "landlocked": true,
-      "island": null,
+      "island": false,
       "borders": [
         "AGO",
         "BWA",
@@ -9344,14 +9586,22 @@
       "area_bucket": "medium",
       "flag_emoji": "🇿🇲",
       "flag_svg": "https://flagcdn.com/zm.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "green",
+        "orange",
+        "black",
+        "red"
+      ],
+      "flag_motifs": [
+        "stripes",
+        "eagle"
+      ],
+      "climate_band": "tropical",
+      "terrain_headline": "plateau",
+      "bordering_waters": [],
+      "landmark": "Victoria Falls",
+      "famous_food": "nshima",
+      "fact_card": "A landlocked country in southern Africa that shares Victoria Falls — one of the world's greatest waterfalls — with its neighbor Zimbabwe."
     },
     {
       "iso_a2": "ZW",

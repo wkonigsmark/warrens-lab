@@ -1290,6 +1290,383 @@
       "fact_card": "An archipelago of nearly 1,000 islands in the South Pacific, with WWII history and pristine coral reefs.",
       "island": true,
       "bordering_waters": ["Pacific Ocean", "Coral Sea"]
+    },
+
+    "CO": {
+      "level": 3,
+      "flag_colors": ["yellow", "blue", "red"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "tropical",
+      "terrain_headline": "andes and rainforest",
+      "landmark": "Cartagena Old City",
+      "famous_food": "arepas",
+      "fact_card": "The only South American country with coastlines on both the Pacific Ocean and the Caribbean Sea, and home to the lush Amazon rainforest in its south.",
+      "island": false,
+      "bordering_waters": ["Pacific Ocean", "Caribbean Sea"]
+    },
+
+    "CD": {
+      "level": 3,
+      "flag_colors": ["blue", "yellow", "red"],
+      "flag_motifs": ["stripes", "star"],
+      "climate_band": "tropical",
+      "terrain_headline": "rainforest and river basin",
+      "landmark": "Congo River",
+      "famous_food": "fufu",
+      "fact_card": "Home to the world's second-largest rainforest and the mighty Congo River — the deepest river on Earth — making it one of the most biodiverse places on the planet.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean"]
+    },
+
+    "AT": {
+      "level": 3,
+      "flag_colors": ["red", "white"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "temperate",
+      "terrain_headline": "alps",
+      "landmark": "Schönbrunn Palace",
+      "famous_food": "wiener schnitzel",
+      "fact_card": "A landlocked country in the heart of Europe, famous for its Alpine ski slopes, classical music composers like Mozart and Beethoven, and the grand city of Vienna.",
+      "island": false,
+      "bordering_waters": []
+    },
+
+    "KZ": {
+      "level": 3,
+      "flag_colors": ["blue", "yellow"],
+      "flag_motifs": ["sun", "eagle"],
+      "climate_band": "arid",
+      "terrain_headline": "steppe and desert",
+      "landmark": "Baikonur Cosmodrome",
+      "famous_food": "beshbarmak",
+      "fact_card": "The world's largest landlocked country — bigger than Western Europe — with vast empty steppes, deserts, and the historic Baikonur launch site where the first human went to space.",
+      "island": false,
+      "bordering_waters": ["Caspian Sea", "Aral Sea"]
+    },
+
+    "AO": {
+      "level": 4,
+      "flag_colors": ["red", "black", "yellow"],
+      "flag_motifs": ["star", "wheel"],
+      "climate_band": "tropical",
+      "terrain_headline": "plateau and savanna",
+      "landmark": "Kalandula Falls",
+      "famous_food": "muamba de galinha",
+      "fact_card": "A large country on Africa's southwestern Atlantic coast, rich in oil and diamonds, with dramatic waterfalls and a plateau interior.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean"]
+    },
+
+    "MZ": {
+      "level": 4,
+      "flag_colors": ["green", "white", "black", "yellow", "red"],
+      "flag_motifs": ["stripes", "star", "coat-of-arms"],
+      "climate_band": "tropical",
+      "terrain_headline": "coastal lowlands",
+      "landmark": "Gorongosa National Park",
+      "famous_food": "piri-piri prawns",
+      "fact_card": "A long, narrow country stretching down southeast Africa's coast, with over 2,500 km of Indian Ocean shoreline and some of Africa's best coral reefs.",
+      "island": false,
+      "bordering_waters": ["Indian Ocean", "Mozambique Channel"]
+    },
+
+    "ZM": {
+      "level": 4,
+      "flag_colors": ["green", "orange", "black", "red"],
+      "flag_motifs": ["stripes", "eagle"],
+      "climate_band": "tropical",
+      "terrain_headline": "plateau",
+      "landmark": "Victoria Falls",
+      "famous_food": "nshima",
+      "fact_card": "A landlocked country in southern Africa that shares Victoria Falls — one of the world's greatest waterfalls — with its neighbor Zimbabwe.",
+      "island": false,
+      "bordering_waters": []
+    },
+
+    "KP": {
+      "level": 4,
+      "flag_colors": ["red", "white", "blue"],
+      "flag_motifs": ["stripes", "star", "circle"],
+      "climate_band": "temperate",
+      "terrain_headline": "mountains",
+      "landmark": "Mount Paektu",
+      "famous_food": "cold noodles",
+      "fact_card": "The northern half of the Korean Peninsula, separated from South Korea since 1953, with rugged mountains and Mount Paektu — a sacred volcano — on its northern border.",
+      "island": false,
+      "bordering_waters": ["Yellow Sea", "Sea of Japan"]
+    },
+
+    "BY": {
+      "level": 4,
+      "flag_colors": ["red", "green", "white"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "temperate",
+      "terrain_headline": "plains and forests",
+      "landmark": "Mir Castle",
+      "famous_food": "draniki",
+      "fact_card": "A flat, forested country in Eastern Europe known for its potato pancakes (draniki), medieval castles, and being one of Europe's last remaining untouched ancient forests at Białowieża.",
+      "island": false,
+      "bordering_waters": []
+    },
+
+    "AZ": {
+      "level": 4,
+      "flag_colors": ["blue", "red", "green", "white"],
+      "flag_motifs": ["stripes", "crescent", "star"],
+      "climate_band": "temperate",
+      "terrain_headline": "caucasus mountains",
+      "landmark": "Flame Towers Baku",
+      "famous_food": "plov",
+      "fact_card": "Sitting at the crossroads of Europe and Asia on the Caspian Sea, Azerbaijan is famous for its ancient fire temples — where flames once burned naturally from underground gas.",
+      "island": false,
+      "bordering_waters": ["Caspian Sea"]
+    },
+
+    "GE": {
+      "level": 4,
+      "flag_colors": ["white", "red"],
+      "flag_motifs": ["cross"],
+      "climate_band": "temperate",
+      "terrain_headline": "caucasus mountains",
+      "landmark": "Vardzia Cave Monastery",
+      "famous_food": "khachapuri",
+      "fact_card": "A small country tucked in the Caucasus Mountains between Europe and Asia, with a unique ancient alphabet, cave cities, and one of the world's oldest wine-making traditions.",
+      "island": false,
+      "bordering_waters": ["Black Sea"]
+    },
+
+    "OM": {
+      "level": 4,
+      "flag_colors": ["red", "white", "green"],
+      "flag_motifs": ["stripes", "coat-of-arms"],
+      "climate_band": "arid",
+      "terrain_headline": "desert and mountains",
+      "landmark": "Wahiba Sands",
+      "famous_food": "shuwa",
+      "fact_card": "An ancient seafaring nation on the southeastern tip of the Arabian Peninsula, with dramatic fjords in the north, vast sand dunes, and a history of frankincense trade.",
+      "island": false,
+      "bordering_waters": ["Arabian Sea", "Gulf of Oman", "Strait of Hormuz"]
+    },
+
+    "KW": {
+      "level": 4,
+      "flag_colors": ["green", "white", "red", "black"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "arid",
+      "terrain_headline": "desert",
+      "landmark": "Kuwait Towers",
+      "famous_food": "machboos",
+      "fact_card": "A small but wealthy country at the top of the Persian Gulf, sitting atop some of the world's largest oil reserves, with iconic water towers that store desalinated water.",
+      "island": false,
+      "bordering_waters": ["Persian Gulf"]
+    },
+
+    "LA": {
+      "level": 4,
+      "flag_colors": ["red", "blue", "white"],
+      "flag_motifs": ["stripes", "circle"],
+      "climate_band": "tropical",
+      "terrain_headline": "mountains and mekong river",
+      "landmark": "Luang Prabang Temples",
+      "famous_food": "larb",
+      "fact_card": "The only landlocked country in Southeast Asia, Laos is crisscrossed by the Mekong River and dotted with ancient Buddhist temples draped in saffron-orange.",
+      "island": false,
+      "bordering_waters": []
+    },
+
+    "NI": {
+      "level": 4,
+      "flag_colors": ["blue", "white"],
+      "flag_motifs": ["stripes", "coat-of-arms"],
+      "climate_band": "tropical",
+      "terrain_headline": "volcanoes and lakes",
+      "landmark": "Ometepe Island",
+      "famous_food": "gallo pinto",
+      "fact_card": "Central America's largest country, with a chain of active volcanoes running along its Pacific coast and the largest lake in Central America, Lake Nicaragua.",
+      "island": false,
+      "bordering_waters": ["Pacific Ocean", "Caribbean Sea"]
+    },
+
+    "SV": {
+      "level": 4,
+      "flag_colors": ["blue", "white"],
+      "flag_motifs": ["stripes", "coat-of-arms"],
+      "climate_band": "tropical",
+      "terrain_headline": "volcanoes",
+      "landmark": "Santa Ana Volcano",
+      "famous_food": "pupusas",
+      "fact_card": "The smallest and most densely populated country in Central America, nicknamed 'The Land of Volcanoes' — its stuffed corn cakes (pupusas) are the national dish.",
+      "island": false,
+      "bordering_waters": ["Pacific Ocean"]
+    },
+
+    "BG": {
+      "level": 4,
+      "flag_colors": ["white", "green", "red"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "temperate",
+      "terrain_headline": "mountains and plains",
+      "landmark": "Rila Monastery",
+      "famous_food": "banitsa",
+      "fact_card": "A Balkan country on the Black Sea coast, home to the stunning Rila Monastery high in the mountains and one of the oldest rose-oil industries in the world.",
+      "island": false,
+      "bordering_waters": ["Black Sea"]
+    },
+
+    "SK": {
+      "level": 4,
+      "flag_colors": ["white", "blue", "red"],
+      "flag_motifs": ["stripes", "coat-of-arms"],
+      "climate_band": "temperate",
+      "terrain_headline": "carpathian mountains",
+      "landmark": "Spiš Castle",
+      "famous_food": "bryndzové halušky",
+      "fact_card": "A landlocked Central European country with hundreds of medieval castles — more castles per square kilometer than almost anywhere in the world.",
+      "island": false,
+      "bordering_waters": []
+    },
+
+    "NE": {
+      "level": 4,
+      "flag_colors": ["orange", "white", "green"],
+      "flag_motifs": ["stripes", "circle"],
+      "climate_band": "arid",
+      "terrain_headline": "sahara and sahel",
+      "landmark": "Agadez Grand Mosque",
+      "famous_food": "dambou",
+      "fact_card": "One of the world's largest countries by area, Niger is mostly Sahara Desert in the north and dry Sahel savanna in the south, centered around the Niger River.",
+      "island": false,
+      "bordering_waters": []
+    },
+
+    "TJ": {
+      "level": 4,
+      "flag_colors": ["red", "white", "green"],
+      "flag_motifs": ["stripes", "crown", "stars"],
+      "climate_band": "temperate",
+      "terrain_headline": "pamir mountains",
+      "landmark": "Pamir Highway",
+      "famous_food": "qurutob",
+      "fact_card": "Over 90% of this Central Asian country is covered by mountains — including the soaring Pamirs, nicknamed 'the Roof of the World,' with peaks over 7,000 metres.",
+      "island": false,
+      "bordering_waters": []
+    },
+
+    "UZ": {
+      "level": 4,
+      "flag_colors": ["blue", "white", "green"],
+      "flag_motifs": ["stripes", "crescent", "stars"],
+      "climate_band": "arid",
+      "terrain_headline": "desert and ancient cities",
+      "landmark": "Registan, Samarkand",
+      "famous_food": "plov",
+      "fact_card": "Home to the ancient Silk Road cities of Samarkand and Bukhara — once the most dazzling trading stops in the medieval world — now gleaming with turquoise-tiled mosques.",
+      "island": false,
+      "bordering_waters": ["Aral Sea"]
+    },
+
+    "GN": {
+      "level": 4,
+      "flag_colors": ["red", "yellow", "green"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "tropical",
+      "terrain_headline": "highlands and coast",
+      "landmark": "Fouta Djallon Highlands",
+      "famous_food": "rice with peanut sauce",
+      "fact_card": "Often called 'the water tower of West Africa' — nearly all of West Africa's major rivers, including the Niger, originate in Guinea's central highlands.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean"]
+    },
+
+    "TD": {
+      "level": 4,
+      "flag_colors": ["blue", "yellow", "red"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "arid",
+      "terrain_headline": "sahara and sahel",
+      "landmark": "Ennedi Plateau",
+      "famous_food": "boule",
+      "fact_card": "A vast landlocked country where the Sahara Desert in the north gives way to a green Sahel belt in the south, and where ancient cave art dots the otherworldly Ennedi Plateau.",
+      "island": false,
+      "bordering_waters": ["Lake Chad"]
+    },
+
+    "CF": {
+      "level": 4,
+      "flag_colors": ["blue", "white", "green", "yellow", "red"],
+      "flag_motifs": ["stripes", "star"],
+      "climate_band": "tropical",
+      "terrain_headline": "forest and plateau",
+      "landmark": "Dzanga-Sangha Forest Reserve",
+      "famous_food": "gozo",
+      "fact_card": "A remote landlocked country at the geographic heart of Africa, home to western lowland gorillas and forest elephants in some of the continent's most intact rainforests.",
+      "island": false,
+      "bordering_waters": []
+    },
+
+    "SO": {
+      "level": 4,
+      "flag_colors": ["blue", "white"],
+      "flag_motifs": ["star"],
+      "climate_band": "arid",
+      "terrain_headline": "coast and semi-desert",
+      "landmark": "Laas Geel Cave Paintings",
+      "famous_food": "canjeero",
+      "fact_card": "Located on the Horn of Africa, Somalia has the longest coastline of any African country, and its ancient cave paintings at Laas Geel are among the oldest in the world.",
+      "island": false,
+      "bordering_waters": ["Indian Ocean", "Gulf of Aden"]
+    },
+
+    "YE": {
+      "level": 4,
+      "flag_colors": ["red", "white", "black"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "arid",
+      "terrain_headline": "mountains and desert",
+      "landmark": "Socotra Island",
+      "famous_food": "saltah",
+      "fact_card": "On the southern tip of the Arabian Peninsula, Yemen is home to Socotra — an island so isolated it evolved alien-looking 'dragon blood' trees found nowhere else on Earth.",
+      "island": false,
+      "bordering_waters": ["Arabian Sea", "Gulf of Aden", "Red Sea"]
+    },
+
+    "MR": {
+      "level": 4,
+      "flag_colors": ["green", "yellow", "red"],
+      "flag_motifs": ["crescent", "stars", "stripes"],
+      "climate_band": "arid",
+      "terrain_headline": "sahara desert",
+      "landmark": "Ancient Ksour of Ouadane",
+      "famous_food": "thieboudienne",
+      "fact_card": "Covering mostly Sahara Desert, Mauritania is home to ancient fortified cities (ksour) that were once crucial stops on trans-Saharan camel caravan trading routes.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean"]
+    },
+
+    "BF": {
+      "level": 4,
+      "flag_colors": ["red", "green", "yellow"],
+      "flag_motifs": ["stripes", "star"],
+      "climate_band": "arid",
+      "terrain_headline": "flat savanna",
+      "landmark": "Sindou Peaks",
+      "famous_food": "tô",
+      "fact_card": "A flat, landlocked Sahel country in West Africa whose name means 'Land of the Honest People' — it sits at the edge of the expanding Sahara Desert.",
+      "island": false,
+      "bordering_waters": []
+    },
+
+    "LR": {
+      "level": 4,
+      "flag_colors": ["red", "white", "blue"],
+      "flag_motifs": ["stripes", "star"],
+      "climate_band": "tropical",
+      "terrain_headline": "coastal rainforest",
+      "landmark": "Sapo National Park",
+      "famous_food": "jollof rice",
+      "fact_card": "Founded in 1847 by formerly enslaved Americans returning to Africa, Liberia was the first African republic — its flag echoes the Stars and Stripes of the United States.",
+      "island": false,
+      "bordering_waters": ["Atlantic Ocean"]
     }
   }
 }

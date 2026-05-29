@@ -46,6 +46,103 @@
       font-size: 0.7rem;
       color: var(--wc-muted);
     }
+
+    .group-mobile-grid {
+      display: none;
+      gap: 10px;
+    }
+
+    .group-mobile-card {
+      padding: 14px;
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: rgba(255, 255, 255, 0.055);
+      box-shadow: var(--wc-shadow);
+    }
+
+    .group-mobile-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .group-mobile-top h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .group-mobile-score {
+      text-align: right;
+      font-weight: 950;
+    }
+
+    .group-mobile-score span {
+      display: block;
+      margin-top: 2px;
+      color: var(--wc-muted);
+      font-size: 0.64rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .group-mobile-teams {
+      display: grid;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .group-mobile-team {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 7px 0;
+      border-top: 1px solid var(--wc-line);
+      font-weight: 850;
+    }
+
+    .group-mobile-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .group-mobile-metric {
+      padding: 10px;
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .group-mobile-metric strong {
+      display: block;
+      color: var(--wc-ink);
+      font-size: 0.98rem;
+      line-height: 1.1;
+    }
+
+    .group-mobile-metric span {
+      display: block;
+      margin-top: 4px;
+      color: var(--wc-muted);
+      font-size: 0.62rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 760px) {
+      .group-rankings-table {
+        display: none;
+      }
+
+      .group-mobile-grid {
+        display: grid;
+      }
+    }
   </style>
 </head>
 
@@ -145,7 +242,7 @@
           <p>Sortable-looking analysis table for the main group strength and parity metrics.</p>
         </div>
       </div>
-      <div class="wc-table-wrap">
+      <div class="wc-table-wrap group-rankings-table">
         <table class="wc-table">
           <thead>
             <tr>
@@ -163,6 +260,7 @@
           <tbody id="group-table"></tbody>
         </table>
       </div>
+      <div class="group-mobile-grid" id="group-mobile-grid"></div>
     </section>
 
     <section class="wc-section">
@@ -215,6 +313,7 @@
       easyFavoriteGroup: $("easy-favorite-group"),
       insightGrid: $("insight-grid"),
       groupTable: $("group-table"),
+      groupMobileGrid: $("group-mobile-grid"),
       groupCardGrid: $("group-card-grid"),
       pathTable: $("path-table"),
     };
@@ -522,8 +621,8 @@
 
     function renderTable(analyses) {
       const maxTotal = Math.max(...analyses.map((analysis) => analysis.total));
-      elements.groupTable.innerHTML = [...analyses]
-        .sort((a, b) => b.deathScore - a.deathScore)
+      const rankedAnalyses = [...analyses].sort((a, b) => b.deathScore - a.deathScore);
+      elements.groupTable.innerHTML = rankedAnalyses
         .map((analysis) => `
           <tr>
             <td><strong>Group ${analysis.group}</strong><br><span class="wc-small">Top+bottom ${analysis.deathScore.toFixed(1)}</span></td>
@@ -537,6 +636,56 @@
             <td class="wc-number">${analysis.topTwoCushion.toFixed(1)} pts</td>
           </tr>
         `).join("");
+
+      elements.groupMobileGrid.innerHTML = rankedAnalyses.map((analysis) => `
+        <article class="group-mobile-card">
+          <div class="group-mobile-top">
+            <div>
+              <h3>Group ${analysis.group}</h3>
+              <span class="wc-small">Top+bottom ${analysis.deathScore.toFixed(1)}</span>
+            </div>
+            <div class="group-mobile-score">
+              ${scoreLabel(analysis.total)}
+              <span>Total W-Index</span>
+            </div>
+          </div>
+          <div class="wc-meter" style="margin-top: 12px;"><span style="--value: ${(analysis.total / maxTotal) * 100}%"></span></div>
+          <div class="group-mobile-teams">
+            ${analysis.teamRows.map((team) => `
+              <div class="group-mobile-team">
+                <span>${teamName(team)}<br>${positionTag(team)}</span>
+                <strong>${scoreLabel(team.score)}</strong>
+              </div>
+            `).join("")}
+          </div>
+          <div class="group-mobile-metrics">
+            <div class="group-mobile-metric">
+              <strong>${scoreLabel(analysis.avg)}</strong>
+              <span>Average</span>
+            </div>
+            <div class="group-mobile-metric">
+              <strong>${analysis.pairwiseDiffSum.toFixed(1)}</strong>
+              <span>Parity Sum</span>
+            </div>
+            <div class="group-mobile-metric">
+              <strong>${analysis.close10}/6</strong>
+              <span>Within 10</span>
+            </div>
+            <div class="group-mobile-metric">
+              <strong>${analysis.topTwoCushion.toFixed(1)} pts</strong>
+              <span>Top-2 Cushion</span>
+            </div>
+            <div class="group-mobile-metric">
+              <strong>${analysis.teamRows[0].name}</strong>
+              <span>Favorite</span>
+            </div>
+            <div class="group-mobile-metric">
+              <strong>+${analysis.favoritePath.toFixed(1)}</strong>
+              <span>Avg Edge</span>
+            </div>
+          </div>
+        </article>
+      `).join("");
     }
 
     function renderPathTable(analyses) {
