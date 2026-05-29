@@ -4,12 +4,397 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pool Coming Soon | Warren's World Cup Pool</title>
+  <title>Pool Entry | Warren's World Cup Pool</title>
   <link rel="stylesheet" href="../shared/world-cup.css">
+  <style>
+    .pool-shell {
+      padding-bottom: 118px;
+    }
+
+    .pool-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .pool-title {
+      max-width: 780px;
+      margin: 9px 0 0;
+      font-size: clamp(2.4rem, 7vw, 5.2rem);
+      line-height: 0.9;
+      font-weight: 950;
+    }
+
+    .pool-copy {
+      max-width: 680px;
+      color: var(--wc-muted);
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .pool-panel {
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.045));
+      box-shadow: var(--wc-shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .pool-card-pad {
+      padding: clamp(16px, 3vw, 24px);
+    }
+
+    .pool-steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .pool-step {
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .pool-step strong {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--wc-ink);
+      font-size: 1rem;
+    }
+
+    .pool-step span {
+      color: var(--wc-muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .pool-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .pool-form {
+      display: grid;
+      gap: 14px;
+      max-width: 540px;
+    }
+
+    .pool-meter {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      margin: 14px 0 22px;
+      color: var(--wc-muted);
+      font-size: 0.8rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .pool-meter-bar {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .pool-meter-bar span {
+      display: block;
+      width: var(--progress, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--wc-green), var(--wc-gold), var(--wc-red));
+      transition: width 180ms ease;
+    }
+
+    .pool-picker-grid {
+      display: grid;
+      grid-template-columns: minmax(270px, 0.95fr) minmax(320px, 1.05fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .pool-rank-stack,
+    .pool-team-grid,
+    .pool-fixture-list,
+    .pool-review-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .pool-rank-slot {
+      display: grid;
+      grid-template-columns: 42px 48px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 68px;
+      padding: 10px;
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .pool-slot-number {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      aspect-ratio: 1;
+      border: 1px solid rgba(244, 201, 93, 0.35);
+      border-radius: 999px;
+      color: var(--wc-gold);
+      font-weight: 950;
+    }
+
+    .pool-slot-empty {
+      color: var(--wc-faint);
+      font-weight: 850;
+    }
+
+    .pool-team-main {
+      min-width: 0;
+    }
+
+    .pool-team-main strong {
+      display: block;
+      overflow: hidden;
+      color: var(--wc-ink);
+      font-size: 1rem;
+      font-weight: 950;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .pool-team-main span {
+      display: block;
+      margin-top: 3px;
+      color: var(--wc-muted);
+      font-size: 0.78rem;
+      font-weight: 850;
+    }
+
+    .pool-remove {
+      width: 36px;
+      aspect-ratio: 1;
+      border: 1px solid var(--wc-line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--wc-ink);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 950;
+    }
+
+    .pool-team-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .pool-team-button {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      min-height: 76px;
+      padding: 10px;
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--wc-ink);
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+    }
+
+    .pool-team-button:active {
+      transform: translateY(1px);
+    }
+
+    .pool-flag {
+      width: 48px;
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+      border: 1px solid rgba(247, 244, 235, 0.2);
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 9px 20px rgba(0, 0, 0, 0.16);
+    }
+
+    .pool-flag img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .pool-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .pool-mini-stat {
+      padding: 12px;
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .pool-mini-stat strong {
+      display: block;
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .pool-mini-stat span {
+      display: block;
+      margin-top: 6px;
+      color: var(--wc-muted);
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .pool-fixtures {
+      margin-top: 14px;
+    }
+
+    .pool-fixtures h3,
+    .pool-review-section h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .pool-fixture {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      padding: 10px 0;
+      border-top: 1px solid var(--wc-line);
+      color: rgba(247, 244, 235, 0.86);
+      font-size: 0.88rem;
+      font-weight: 850;
+    }
+
+    .pool-fixture small {
+      color: var(--wc-faint);
+      font-size: 0.74rem;
+      font-weight: 800;
+    }
+
+    .pool-bottom-nav {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      z-index: 12;
+      display: grid;
+      grid-template-columns: minmax(86px, auto) minmax(86px, auto) minmax(128px, 1fr);
+      gap: 10px;
+      width: min(100% - 24px, 720px);
+      padding: 12px;
+      padding-bottom: max(12px, env(safe-area-inset-bottom));
+      border: 1px solid var(--wc-line);
+      border-bottom: 0;
+      border-radius: 14px 14px 0 0;
+      background: rgba(7, 19, 15, 0.88);
+      box-shadow: 0 -18px 70px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(18px);
+      transform: translateX(-50%);
+    }
+
+    .pool-review-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .pool-review-card {
+      padding: 14px;
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .pool-review-card h3 {
+      margin: 0 0 9px;
+      font-size: 1rem;
+    }
+
+    .pool-review-card ol {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding-left: 20px;
+      color: rgba(247, 244, 235, 0.9);
+      font-weight: 850;
+    }
+
+    .pool-toast {
+      position: fixed;
+      left: 50%;
+      bottom: 86px;
+      z-index: 24;
+      padding: 11px 14px;
+      border: 1px solid rgba(36, 180, 126, 0.42);
+      border-radius: 999px;
+      background: rgba(13, 29, 24, 0.94);
+      color: var(--wc-ink);
+      font-size: 0.86rem;
+      font-weight: 900;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 10px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .pool-toast.is-visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (max-width: 760px) {
+      .pool-shell {
+        padding-top: 18px;
+      }
+
+      .pool-hero {
+        grid-template-columns: 1fr;
+      }
+
+      .pool-steps,
+      .pool-picker-grid,
+      .pool-meta-grid,
+      .pool-review-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pool-team-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pool-rank-slot {
+        min-height: 62px;
+      }
+
+      .pool-bottom-nav {
+        width: 100%;
+        border-right: 0;
+        border-left: 0;
+        border-radius: 12px 12px 0 0;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <main class="wc-shell">
+  <main class="wc-shell pool-shell">
     <header class="wc-topbar">
       <a class="wc-brand" href="../">Warren's World Cup Pool</a>
       <nav class="wc-nav" aria-label="World Cup sections">
@@ -18,20 +403,735 @@
         <a href="../rankings-odds/">W-Index</a>
         <a href="../groups/">Groups</a>
         <a href="../scoreboard/">Scoreboard</a>
-        <a href="../news/">News</a>
         <a href="../simulation/">Simulator</a>
       </nav>
     </header>
 
-    <section class="wc-hero">
-      <div>
-        <div class="wc-eyebrow">Pool Entry</div>
-        <h1 class="wc-title">Coming Soon...</h1>
-        <p class="wc-copy">The pool entry flow is being built here.</p>
-      </div>
-      <a class="wc-pill" href="../">Back Home</a>
-    </section>
+    <div id="pool-app" aria-live="polite"></div>
   </main>
+  <div class="pool-toast" id="pool-toast" role="status"></div>
+
+  <script type="module">
+    import { groupStageMatches, groups, teamsById } from "../data/world-cup-2026.js";
+
+    const W_INDEX_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
+    const GROUP_IDS = "ABCDEFGHIJKL".split("");
+    const app = document.getElementById("pool-app");
+    const toast = document.getElementById("pool-toast");
+
+    const state = {
+      step: "welcome",
+      activeGroupIndex: 0,
+      entry: { bracketName: "", venmo: "" },
+      groupPicks: Object.fromEntries(GROUP_IDS.map((group) => [group, []])),
+      thirdPicks: [],
+      entryId: "",
+      wIndexStatus: "Loading W-Index",
+    };
+
+    const wIndexByTeam = new Map();
+    const teamAliases = buildTeamAliases();
+    let toastTimer;
+
+    function normalizeName(value) {
+      return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/gi, " ")
+        .trim()
+        .toLowerCase();
+    }
+
+    function buildTeamAliases() {
+      const aliases = new Map();
+      Object.values(teamsById).forEach((team) => {
+        [team.id, team.name, team.shortName].filter(Boolean).forEach((name) => {
+          aliases.set(normalizeName(name), team.id);
+        });
+      });
+
+      [
+        ["USA", "USA"],
+        ["United States", "USA"],
+        ["USMNT", "USA"],
+        ["South Korea", "KOR"],
+        ["Korea Republic", "KOR"],
+        ["Turkey", "TUR"],
+        ["Turkiye", "TUR"],
+        ["Türkiye", "TUR"],
+        ["Iran", "IRN"],
+        ["IR Iran", "IRN"],
+        ["Ivory Coast", "CIV"],
+        ["Cote d'Ivoire", "CIV"],
+        ["Côte d'Ivoire", "CIV"],
+        ["Cape Verde", "CPV"],
+        ["Cabo Verde", "CPV"],
+        ["Curacao", "CUW"],
+        ["Curaçao", "CUW"],
+        ["DR Congo", "COD"],
+        ["Congo DR", "COD"],
+        ["Democratic Republic of Congo", "COD"],
+        ["Czech Republic", "CZE"],
+        ["Czechia", "CZE"],
+        ["England", "ENG"],
+        ["Scotland", "SCO"],
+      ].forEach(([name, id]) => aliases.set(normalizeName(name), id));
+      return aliases;
+    }
+
+    function parseCsv(text) {
+      const rows = [];
+      let row = [];
+      let field = "";
+      let inQuotes = false;
+
+      for (let index = 0; index < text.length; index += 1) {
+        const char = text[index];
+        const next = text[index + 1];
+
+        if (char === '"' && inQuotes && next === '"') {
+          field += '"';
+          index += 1;
+        } else if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === "," && !inQuotes) {
+          row.push(field);
+          field = "";
+        } else if ((char === "\n" || char === "\r") && !inQuotes) {
+          if (char === "\r" && next === "\n") index += 1;
+          row.push(field);
+          if (row.some((cell) => cell.trim() !== "")) rows.push(row);
+          row = [];
+          field = "";
+        } else {
+          field += char;
+        }
+      }
+
+      row.push(field);
+      if (row.some((cell) => cell.trim() !== "")) rows.push(row);
+      return rows;
+    }
+
+    async function loadWIndex() {
+      try {
+        const response = await fetch(W_INDEX_CSV_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error(`W-Index request failed: ${response.status}`);
+        const rows = parseCsv(await response.text());
+        const headers = rows.shift().map((header) => normalizeName(header));
+        const teamIndex = headers.indexOf("team");
+        const scoreIndex = headers.indexOf("w index");
+        const rankIndex = headers.indexOf("rank");
+
+        rows.forEach((row) => {
+          const teamId = teamAliases.get(normalizeName(row[teamIndex]));
+          if (!teamId) return;
+          wIndexByTeam.set(teamId, {
+            score: Number(String(row[scoreIndex] || "").replace("%", "")) || 0,
+            rank: Number(row[rankIndex]) || null,
+          });
+        });
+        state.wIndexStatus = `${wIndexByTeam.size}/48 W-Index teams loaded`;
+      } catch (error) {
+        console.warn(error);
+        state.wIndexStatus = "W-Index unavailable - using fixture order";
+      }
+      render();
+    }
+
+    function flagCode(team) {
+      if (team.id === "ENG") return "gb-eng";
+      if (team.id === "SCO") return "gb-sct";
+      return String(team.countryCode || "").toLowerCase();
+    }
+
+    function flagUrl(team, width = 160) {
+      return `https://flagcdn.com/w${width}/${flagCode(team)}.png`;
+    }
+
+    function flagImage(team, width = 160) {
+      return `<span class="pool-flag" aria-hidden="true"><img src="${flagUrl(team, width)}" alt="" loading="lazy"></span>`;
+    }
+
+    function teamData(teamId) {
+      const team = teamsById[teamId];
+      const wIndex = wIndexByTeam.get(teamId) || {};
+      return { ...team, wIndex: wIndex.score ?? null, wRank: wIndex.rank ?? null };
+    }
+
+    function groupTeams(group) {
+      return [...(groups[group] || [])]
+        .map(teamData)
+        .sort((a, b) => (b.wIndex ?? -1) - (a.wIndex ?? -1) || a.name.localeCompare(b.name));
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
+      })[char]);
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value);
+    }
+
+    function normalizeVenmo(value) {
+      const trimmed = String(value || "").trim();
+      if (!trimmed) return "";
+      return trimmed.startsWith("@") ? trimmed : `@${trimmed}`;
+    }
+
+    function formatScore(score) {
+      return Number.isFinite(score) ? `${score.toFixed(1)}%` : "NR";
+    }
+
+    function render(resetScroll = false) {
+      if (state.step === "welcome") renderWelcome();
+      if (state.step === "intro") renderIntro();
+      if (state.step === "groups") renderGroupPicker();
+      if (state.step === "thirds") renderThirdPlacePicker();
+      if (state.step === "review") renderReview();
+      if (resetScroll) window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderWelcome() {
+      app.innerHTML = `
+        <section class="pool-hero">
+          <div>
+            <div class="wc-eyebrow">Beta Pool Entry</div>
+            <h1 class="pool-title">Group picks, fast.</h1>
+            <p class="pool-copy">Rank every group from 1 to 4, then choose the top eight third-place teams. That is the full beta entry for the group-play pool.</p>
+          </div>
+          <span class="wc-pill">${state.wIndexStatus}</span>
+        </section>
+
+        <section class="pool-panel pool-card-pad">
+          <div class="pool-steps">
+            <article class="pool-step">
+              <strong>Fill out your picks</strong>
+              <span>Order all 12 groups in their predicted final standings.</span>
+            </article>
+            <article class="pool-step">
+              <strong>Name your bracket</strong>
+              <span>Add a unique bracket name and Venmo handle for matching later.</span>
+            </article>
+            <article class="pool-step">
+              <strong>Send Venmo</strong>
+              <span>Export or copy the entry, then send payment separately.</span>
+            </article>
+          </div>
+          <div class="pool-actions">
+            <button class="wc-button" type="button" id="start-entry">Start Entry</button>
+            <a class="wc-button secondary" href="../groups/">View Group Analysis</a>
+          </div>
+        </section>
+      `;
+
+      document.getElementById("start-entry").addEventListener("click", () => {
+        state.step = "intro";
+        render(true);
+      });
+    }
+
+    function renderIntro() {
+      app.innerHTML = `
+        <section class="pool-hero">
+          <div>
+            <div class="wc-eyebrow">Entry Details</div>
+            <h1 class="pool-title">Who owns this bracket?</h1>
+            <p class="pool-copy">Keep this simple and unique enough that the entry can be matched to payment later.</p>
+          </div>
+        </section>
+
+        <section class="pool-panel pool-card-pad">
+          <form class="pool-form" id="entry-form">
+            <div class="wc-field">
+              <label for="bracket-name">Bracket name</label>
+              <input class="wc-input" id="bracket-name" type="text" autocomplete="nickname" placeholder="Warren's Winners" value="${escapeAttr(state.entry.bracketName)}" required>
+            </div>
+            <div class="wc-field">
+              <label for="venmo">Venmo handle</label>
+              <input class="wc-input" id="venmo" type="text" autocapitalize="off" autocomplete="off" placeholder="@yourhandle" value="${escapeAttr(state.entry.venmo)}" required>
+            </div>
+            <div class="pool-actions">
+              <button class="wc-button" type="submit">Start Group A</button>
+              <button class="wc-button secondary" type="button" id="back-home">Back</button>
+            </div>
+          </form>
+        </section>
+      `;
+
+      document.getElementById("entry-form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        state.entry.bracketName = document.getElementById("bracket-name").value.trim();
+        state.entry.venmo = normalizeVenmo(document.getElementById("venmo").value);
+        state.step = "groups";
+        render(true);
+      });
+
+      document.getElementById("back-home").addEventListener("click", () => {
+        state.step = "welcome";
+        render(true);
+      });
+    }
+
+    function renderGroupPicker() {
+      const group = GROUP_IDS[state.activeGroupIndex];
+      const picks = state.groupPicks[group];
+      const remaining = groupTeams(group).filter((team) => !picks.includes(team.id));
+      const completeGroups = GROUP_IDS.filter((groupId) => state.groupPicks[groupId].length === 4).length;
+
+      app.innerHTML = `
+        <section class="pool-hero">
+          <div>
+            <div class="wc-eyebrow">Final Standings</div>
+            <h1 class="pool-title">Group ${group}</h1>
+            <p class="pool-copy">Tap teams in finish order. Once you pick three, the final team jumps into fourth automatically.</p>
+          </div>
+          <span class="wc-pill">${completeGroups}/12 groups</span>
+        </section>
+
+        ${renderMeter(state.activeGroupIndex + 1, GROUP_IDS.length, `Group ${group}`)}
+
+        <section class="pool-picker-grid">
+          <div class="pool-panel pool-card-pad">
+            <div class="pool-rank-stack" aria-label="Selected Group ${group} standings">
+              ${[0, 1, 2, 3].map((index) => renderRankSlot(index, picks[index], "group")).join("")}
+            </div>
+          </div>
+
+          <div>
+            <div class="pool-team-grid" aria-label="Available Group ${group} teams">
+              ${remaining.map((team) => renderTeamButton(team)).join("")}
+            </div>
+            ${renderGroupMeta(group)}
+          </div>
+        </section>
+
+        ${renderBottomNav({
+          backId: "group-back",
+          clearId: "group-clear",
+          nextId: "group-next",
+          clearDisabled: picks.length === 0,
+          nextDisabled: picks.length !== 4,
+          nextLabel: state.activeGroupIndex === GROUP_IDS.length - 1 ? "Pick Thirds" : `Group ${GROUP_IDS[state.activeGroupIndex + 1]}`,
+        })}
+      `;
+
+      app.querySelectorAll("[data-team-id]").forEach((button) => {
+        button.addEventListener("click", () => {
+          if (picks.length >= 4) return;
+          picks.push(button.dataset.teamId);
+          autoFillFinalGroupSlot(group);
+          render();
+        });
+      });
+
+      app.querySelectorAll("[data-remove-index]").forEach((button) => {
+        button.addEventListener("click", () => {
+          picks.splice(Number(button.dataset.removeIndex), 1);
+          render();
+        });
+      });
+
+      document.getElementById("group-clear").addEventListener("click", () => {
+        state.groupPicks[group] = [];
+        render();
+      });
+
+      document.getElementById("group-back").addEventListener("click", () => {
+        if (state.activeGroupIndex > 0) {
+          state.activeGroupIndex -= 1;
+          render(true);
+        } else {
+          state.step = "intro";
+          render(true);
+        }
+      });
+
+      document.getElementById("group-next").addEventListener("click", () => {
+        advanceFromGroup();
+      });
+    }
+
+    function renderMeter(current, total, label) {
+      const progress = Math.max(0, Math.min(100, (current / total) * 100));
+      return `
+        <div class="pool-meter" aria-label="${label} progress">
+          <span>${label}</span>
+          <div class="pool-meter-bar"><span style="--progress: ${progress}%"></span></div>
+          <span>${current}/${total}</span>
+        </div>
+      `;
+    }
+
+    function renderRankSlot(index, teamId, mode) {
+      const label = mode === "third" ? `#${index + 1}` : ["1st", "2nd", "3rd", "4th"][index];
+      const team = teamId ? teamData(teamId) : null;
+      return `
+        <article class="pool-rank-slot">
+          <span class="pool-slot-number">${label}</span>
+          ${team ? `
+            ${flagImage(team, 120)}
+            <div class="pool-team-main">
+              <strong>${escapeHtml(team.name)}</strong>
+              <span>Group ${team.group} · ${formatScore(team.wIndex)} · ${team.wRank ? `#${team.wRank}` : "unranked"}</span>
+            </div>
+            <button class="pool-remove" type="button" data-remove-index="${index}" aria-label="Remove ${escapeAttr(team.name)}">x</button>
+          ` : `
+            <span></span>
+            <div class="pool-team-main">
+              <strong class="pool-slot-empty">${mode === "third" ? "Choose a third-place team" : "Choose a team"}</strong>
+              <span>${mode === "third" ? "Top eight only" : "Tap from the list"}</span>
+            </div>
+          `}
+        </article>
+      `;
+    }
+
+    function renderTeamButton(team) {
+      return `
+        <button class="pool-team-button" type="button" data-team-id="${team.id}">
+          ${flagImage(team, 160)}
+          <span class="pool-team-main">
+            <strong>${escapeHtml(team.name)}</strong>
+            <span>Group ${team.group} · ${formatScore(team.wIndex)} · ${team.wRank ? `#${team.wRank}` : "unranked"}</span>
+          </span>
+        </button>
+      `;
+    }
+
+    function renderGroupMeta(group) {
+      const rows = groupTeams(group);
+      const scores = rows.map((team) => team.wIndex).filter(Number.isFinite);
+      const total = scores.reduce((sum, score) => sum + score, 0);
+      const average = scores.length ? total / scores.length : 0;
+      const top = rows[0];
+
+      return `
+        <div class="pool-meta-grid">
+          <div class="pool-mini-stat">
+            <strong>${total.toFixed(1)}%</strong>
+            <span>Total W-Index</span>
+          </div>
+          <div class="pool-mini-stat">
+            <strong>${average.toFixed(1)}%</strong>
+            <span>Average</span>
+          </div>
+          <div class="pool-mini-stat">
+            <strong>${top ? escapeHtml(top.name) : "TBD"}</strong>
+            <span>W-Index favorite</span>
+          </div>
+        </div>
+        <section class="pool-fixtures pool-panel pool-card-pad">
+          <h3>Group ${group} fixtures</h3>
+          <div class="pool-fixture-list">
+            ${groupStageMatches
+              .filter((match) => match.group === group)
+              .map((match) => `
+                <div class="pool-fixture">
+                  <span>${escapeHtml(match.homeName)} v ${escapeHtml(match.awayName)}<br><small>${formatMatchTime(match.utc)} · ${escapeHtml(match.venue.city)}</small></span>
+                  <small>M${match.matchNumber}</small>
+                </div>
+              `).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function formatMatchTime(utc) {
+      return new Intl.DateTimeFormat(undefined, {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short",
+      }).format(new Date(utc));
+    }
+
+    function autoFillFinalGroupSlot(group) {
+      const picks = state.groupPicks[group];
+      if (picks.length !== 3) return;
+      const finalTeam = groupTeams(group).find((team) => !picks.includes(team.id));
+      if (finalTeam) picks.push(finalTeam.id);
+    }
+
+    function advanceFromGroup() {
+      const group = GROUP_IDS[state.activeGroupIndex];
+      if (state.groupPicks[group].length !== 4) return;
+      if (state.activeGroupIndex < GROUP_IDS.length - 1) {
+        state.activeGroupIndex += 1;
+      } else {
+        state.step = "thirds";
+        const validThirdIds = new Set(getThirdPlaceTeams().map((team) => team.id));
+        state.thirdPicks = state.thirdPicks.filter((teamId) => validThirdIds.has(teamId));
+      }
+      render(true);
+    }
+
+    function getThirdPlaceTeams() {
+      return GROUP_IDS
+        .map((group) => state.groupPicks[group][2])
+        .filter(Boolean)
+        .map(teamData)
+        .sort((a, b) => (b.wIndex ?? -1) - (a.wIndex ?? -1) || a.group.localeCompare(b.group));
+    }
+
+    function renderThirdPlacePicker() {
+      const thirdTeams = getThirdPlaceTeams();
+      const remaining = thirdTeams.filter((team) => !state.thirdPicks.includes(team.id));
+
+      app.innerHTML = `
+        <section class="pool-hero">
+          <div>
+            <div class="wc-eyebrow">Third-Place Table</div>
+            <h1 class="pool-title">Pick the top 8.</h1>
+            <p class="pool-copy">These are the teams you placed third in each group. Rank the eight you think advance to the Round of 32.</p>
+          </div>
+          <span class="wc-pill">${state.thirdPicks.length}/8 selected</span>
+        </section>
+
+        ${renderMeter(state.thirdPicks.length, 8, "Thirds")}
+
+        <section class="pool-picker-grid">
+          <div class="pool-panel pool-card-pad">
+            <div class="pool-rank-stack" aria-label="Selected third-place teams">
+              ${Array.from({ length: 8 }, (_, index) => renderRankSlot(index, state.thirdPicks[index], "third")).join("")}
+            </div>
+          </div>
+          <div class="pool-team-grid" aria-label="Available third-place teams">
+            ${remaining.map((team) => renderTeamButton(team)).join("")}
+          </div>
+        </section>
+
+        ${renderBottomNav({
+          backId: "third-back",
+          clearId: "third-clear",
+          nextId: "third-next",
+          clearDisabled: state.thirdPicks.length === 0,
+          nextDisabled: state.thirdPicks.length !== 8,
+          nextLabel: "Review Entry",
+        })}
+      `;
+
+      app.querySelectorAll("[data-team-id]").forEach((button) => {
+        button.addEventListener("click", () => {
+          if (state.thirdPicks.length >= 8) return;
+          state.thirdPicks.push(button.dataset.teamId);
+          render();
+        });
+      });
+
+      app.querySelectorAll("[data-remove-index]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.thirdPicks.splice(Number(button.dataset.removeIndex), 1);
+          render();
+        });
+      });
+
+      document.getElementById("third-back").addEventListener("click", () => {
+        state.step = "groups";
+        state.activeGroupIndex = GROUP_IDS.length - 1;
+        render(true);
+      });
+
+      document.getElementById("third-clear").addEventListener("click", () => {
+        state.thirdPicks = [];
+        render();
+      });
+
+      document.getElementById("third-next").addEventListener("click", () => {
+        if (state.thirdPicks.length !== 8) return;
+        state.entryId ||= `WC26-${Date.now()}`;
+        state.step = "review";
+        render(true);
+      });
+    }
+
+    function renderBottomNav({ backId, clearId, nextId, clearDisabled, nextDisabled, nextLabel }) {
+      return `
+        <nav class="pool-bottom-nav" aria-label="Pool entry controls">
+          <button class="wc-button secondary" type="button" id="${backId}">Back</button>
+          <button class="wc-button secondary" type="button" id="${clearId}" ${clearDisabled ? "disabled" : ""}>Clear</button>
+          <button class="wc-button" type="button" id="${nextId}" data-advance ${nextDisabled ? "disabled" : ""}>${nextLabel}</button>
+        </nav>
+      `;
+    }
+
+    function renderReview() {
+      app.innerHTML = `
+        <section class="pool-hero">
+          <div>
+            <div class="wc-eyebrow">Beta Export</div>
+            <h1 class="pool-title">Entry ready.</h1>
+            <p class="pool-copy">${escapeHtml(state.entry.bracketName)} · ${escapeHtml(state.entry.venmo)} · ${state.entryId}</p>
+          </div>
+          <span class="wc-pill">Group play only</span>
+        </section>
+
+        <section class="pool-panel pool-card-pad pool-review-section">
+          <h3>Third-place advancing order</h3>
+          <div class="pool-rank-stack">
+            ${state.thirdPicks.map((teamId, index) => renderRankSlot(index, teamId, "third")).join("")}
+          </div>
+          <div class="pool-actions">
+            <button class="wc-button" type="button" id="copy-csv">Copy CSV</button>
+            <button class="wc-button secondary" type="button" id="export-csv">Export CSV</button>
+            <button class="wc-button secondary" type="button" id="edit-entry">Edit Picks</button>
+          </div>
+        </section>
+
+        <section class="wc-section">
+          <div class="wc-section-header">
+            <div>
+              <h2>Group Picks</h2>
+              <p>Final predicted standings for all 12 groups.</p>
+            </div>
+          </div>
+          <div class="pool-review-grid">
+            ${GROUP_IDS.map((group) => renderReviewGroup(group)).join("")}
+          </div>
+        </section>
+      `;
+
+      document.getElementById("copy-csv").addEventListener("click", copyCsv);
+      document.getElementById("export-csv").addEventListener("click", exportCsv);
+      document.getElementById("edit-entry").addEventListener("click", () => {
+        state.step = "groups";
+        state.activeGroupIndex = 0;
+        render(true);
+      });
+    }
+
+    function renderReviewGroup(group) {
+      return `
+        <article class="pool-review-card">
+          <h3>Group ${group}</h3>
+          <ol>
+            ${state.groupPicks[group].map((teamId) => {
+              const team = teamData(teamId);
+              return `<li>${escapeHtml(team.name)} <span class="wc-small">${formatScore(team.wIndex)}</span></li>`;
+            }).join("")}
+          </ol>
+        </article>
+      `;
+    }
+
+    function csvEscape(value) {
+      const stringValue = String(value ?? "");
+      return /[",\n\r]/.test(stringValue) ? `"${stringValue.replace(/"/g, '""')}"` : stringValue;
+    }
+
+    function buildCsv() {
+      const submittedAt = new Date().toISOString();
+      const headers = [
+        "entry_id",
+        "submitted_at",
+        "bracket_name",
+        "venmo",
+        "section",
+        "group",
+        "rank",
+        "team_id",
+        "team_name",
+        "w_index",
+        "w_index_rank",
+      ];
+
+      const rows = [];
+      GROUP_IDS.forEach((group) => {
+        state.groupPicks[group].forEach((teamId, index) => {
+          const team = teamData(teamId);
+          rows.push([
+            state.entryId,
+            submittedAt,
+            state.entry.bracketName,
+            state.entry.venmo,
+            "group_order",
+            group,
+            index + 1,
+            team.id,
+            team.name,
+            Number.isFinite(team.wIndex) ? team.wIndex.toFixed(1) : "",
+            team.wRank || "",
+          ]);
+        });
+      });
+
+      state.thirdPicks.forEach((teamId, index) => {
+        const team = teamData(teamId);
+        rows.push([
+          state.entryId,
+          submittedAt,
+          state.entry.bracketName,
+          state.entry.venmo,
+          "third_place_order",
+          team.group,
+          index + 1,
+          team.id,
+          team.name,
+          Number.isFinite(team.wIndex) ? team.wIndex.toFixed(1) : "",
+          team.wRank || "",
+        ]);
+      });
+
+      return [headers, ...rows].map((row) => row.map(csvEscape).join(",")).join("\n");
+    }
+
+    async function copyCsv() {
+      state.entryId ||= `WC26-${Date.now()}`;
+      const csv = buildCsv();
+      try {
+        await navigator.clipboard.writeText(csv);
+        showToast("CSV copied to clipboard");
+      } catch (error) {
+        console.warn(error);
+        showToast("Clipboard blocked - exporting instead");
+        exportCsv();
+      }
+    }
+
+    function exportCsv() {
+      state.entryId ||= `WC26-${Date.now()}`;
+      const csv = buildCsv();
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const safeName = state.entry.bracketName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "entry";
+      link.href = url;
+      link.download = `world-cup-2026-pool-${safeName}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      showToast("CSV export downloaded");
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("is-visible");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 1700);
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") return;
+      const active = document.activeElement;
+      if (active && ["INPUT", "TEXTAREA", "SELECT"].includes(active.tagName)) return;
+      const advanceButton = document.querySelector("[data-advance]:not(:disabled)");
+      if (advanceButton) {
+        event.preventDefault();
+        advanceButton.click();
+      }
+    });
+
+    render();
+    loadWIndex();
+  </script>
 </body>
 
 </html>

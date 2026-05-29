@@ -262,6 +262,18 @@
       outline: none;
       border-color: var(--accent);
     }
+    /* Inline variant sits next to the guess input + Guess button. */
+    .length-select.inline {
+      flex: 0 0 auto;
+      padding: 10px 8px;
+      font-size: 12px;
+    }
+    /* Slightly tighter letter-spacing in the guess input so the dropdown
+       has room to sit inline without crowding the digits. */
+    .row > .length-select.inline + .guess-input {
+      letter-spacing: 8px;
+      padding-left: 12px;
+    }
     details.panel {
       padding: 14px 16px;
     }
@@ -504,6 +516,11 @@
 
     <div class="panel">
       <div class="row">
+        <select id="length-select" class="length-select inline">
+          <option value="2">2 digits</option>
+          <option value="3">3 digits</option>
+          <option value="4" selected>4 digits</option>
+        </select>
         <input
           id="guess"
           class="guess-input"
@@ -548,14 +565,6 @@
         Guess the secret code! <strong>🐜 Ants</strong> represent correct digits in the exact right spot. <strong>🌰 Acorns</strong> represent correct digits in the wrong spot. Use logic to crack the code!
       </p>
 
-      <div class="row">
-        <span class="length-label">Code length</span>
-        <select id="length-select" class="length-select">
-          <option value="2">2 digits</option>
-          <option value="3">3 digits</option>
-          <option value="4" selected>4 digits</option>
-        </select>
-      </div>
       <div class="row">
         <label class="mode active" data-mode="unique">
           <input type="radio" name="mode" value="unique" checked>
@@ -971,10 +980,16 @@
       if (!state.over) {
         $guess.focus();
       } else if (won) {
-        // Highlight the New Game button and move focus so Enter triggers a
-        // fresh round — keeps the play flow moving for the kid.
-        $newGame.classList.add('ready-to-restart');
-        $newGame.focus();
+        // Highlight the New Game button so it's obvious where the next step
+        // is, but don't steal focus — let the player linger on the clues and
+        // history to review their solve before deciding to restart.
+        //
+        // Defer adding the class to the next event-loop tick so the same
+        // Enter keypress that just submitted the winning guess can finish
+        // bubbling to the document-level Enter listener BEFORE the highlight
+        // turns on. Otherwise the win-Enter would also instantly fire a new
+        // game and wipe the history before the player sees it.
+        setTimeout(() => $newGame.classList.add('ready-to-restart'), 0);
       }
     }
 
@@ -1004,6 +1019,23 @@
     });
 
     $newGame.addEventListener('click', newGame);
+
+    // While the New Game button is highlighted (just after a win), Enter from
+    // anywhere on the page triggers a fresh round — without us having to steal
+    // focus from the player while they review their solve. We skip Enter if
+    // it's already "claimed" by an interactive element (so we never double-fire
+    // a focused button, or hijack typing in an enabled text input).
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      if (!$newGame.classList.contains('ready-to-restart')) return;
+      const t = e.target;
+      const tag = (t && t.tagName || '').toUpperCase();
+      if (tag === 'BUTTON' || tag === 'TEXTAREA') return;
+      if (tag === 'INPUT' && !t.disabled && t.type !== 'checkbox' && t.type !== 'radio') return;
+      if (t && t.isContentEditable) return;
+      e.preventDefault();
+      newGame();
+    });
 
     $lengthSelect.addEventListener('change', () => {
       state.codeLength = Number($lengthSelect.value);

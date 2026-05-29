@@ -26,20 +26,30 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
+            position: relative;
             font-family: 'Outfit', sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
             line-height: 1.5;
             padding: 20px;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        .container { max-width: 850px; margin: 0 auto; }
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container { max-width: 850px; margin: 0 auto; position: relative; z-index: 1; }
 
         header {
             text-align: left;
             padding: 40px 0;
-            margin-bottom: 20px;
+            margin-bottom: 200px;
         }
 
         .logo {
@@ -671,6 +681,7 @@
     </style>
 </head>
 <body>
+    <canvas id="particle-canvas"></canvas>
     <!-- Hidden Print Templates -->
     <div id="print-worksheet-view">
         <div class="worksheet-header">
@@ -1131,6 +1142,43 @@
         updateUI();
         setInterval(updateUI, 1000);
         syncRockies();
+    </script>
+
+    <script>
+    (() => {
+      const canvas = document.getElementById('particle-canvas');
+      const ctx = canvas.getContext('2d');
+      const TEXT_LINES = [
+        'The Wonderful, Imaginative,',
+        'Thoughtful, Dancing Gymnast,',
+        'Eleanor Jane Konigsmark',
+      ];
+      const NEON = [[255,30,120],[255,230,0],[0,180,255],[0,255,100],[255,120,0],[180,50,255]];
+      const MAX_SPEED=4.0, HOMING_FORCE=0.04, SEPARATION_RADIUS=4, SEPARATION_FORCE=0.15, DAMPING=0.90, CURSOR_RADIUS=120, CURSOR_SCATTER=8;
+      let W,H,mouse={x:-9999,y:-9999,active:false},particles=[],textTargets=[];
+      function resize(){W=canvas.width=document.body.scrollWidth;H=canvas.height=document.body.scrollHeight;textTargets=sampleText();assignTargets();}
+      function sampleText(){
+        const off=document.createElement('canvas'),octx=off.getContext('2d');off.width=W;off.height=H;
+        const sy=window.scrollY,hdr=document.querySelector('header'),main=document.querySelector('main');
+        const hB=hdr.getBoundingClientRect().bottom+sy,gT=main.getBoundingClientRect().top+sy;
+        const aW=W-40;let fs=Math.min(38,aW/12);fs=Math.max(14,fs);const lh=fs*1.45,bh=TEXT_LINES.length*lh;
+        const aY=hB+(gT-hB-bh)/2;
+        octx.font=`800 ${fs}px Outfit,sans-serif`;octx.textAlign='center';octx.textBaseline='top';octx.fillStyle='#fff';
+        for(let i=0;i<TEXT_LINES.length;i++)octx.fillText(TEXT_LINES[i],W/2,aY+i*lh);
+        const d=octx.getImageData(0,0,W,H).data,pts=[];
+        for(let y=0;y<H;y+=1)for(let x=0;x<W;x+=2)if(d[(y*W+x)*4+3]>128)pts.push({x,y});
+        return pts;
+      }
+      function assignTargets(){if(!textTargets.length)return;const c=textTargets.length;while(particles.length<c)particles.push(makeP(particles.length));particles.length=c;const s=[...textTargets];for(let i=s.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[s[i],s[j]]=[s[j],s[i]];}for(let i=0;i<particles.length;i++){particles[i].tx=s[i].x;particles[i].ty=s[i].y;}}
+      function makeP(){const a=Math.random()*Math.PI*2,r=Math.random()*Math.max(W,H)*0.5;return{x:W/2+Math.cos(a)*r,y:H/2+Math.sin(a)*r,vx:(Math.random()-0.5)*2,vy:(Math.random()-0.5)*2,tx:0,ty:0,size:Math.random()*1.2+1.0,alpha:Math.random()*0.2+0.7,colorOffset:Math.random()*10000};}
+      function animate(){ctx.clearRect(0,0,W,H);const now=performance.now();for(let i=0;i<particles.length;i++){const p=particles[i];p.vx+=(p.tx-p.x)*HOMING_FORCE;p.vy+=(p.ty-p.y)*HOMING_FORCE;const lo=Math.max(0,i-20),hi=Math.min(particles.length,i+20);for(let j=lo;j<hi;j++){if(i===j)continue;const o=particles[j],dx=o.x-p.x,dy=o.y-p.y,dist=Math.sqrt(dx*dx+dy*dy)||1;if(dist<SEPARATION_RADIUS){p.vx-=(dx/dist)*SEPARATION_FORCE;p.vy-=(dy/dist)*SEPARATION_FORCE;}}if(mouse.active){const dx=p.x-mouse.x,dy=p.y-mouse.y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<CURSOR_RADIUS&&dist>1){const f=(1-dist/CURSOR_RADIUS)*CURSOR_SCATTER;p.vx+=(dx/dist)*f;p.vy+=(dy/dist)*f;}}p.vx*=DAMPING;p.vy*=DAMPING;const sp=Math.sqrt(p.vx*p.vx+p.vy*p.vy);if(sp>MAX_SPEED){p.vx=(p.vx/sp)*MAX_SPEED;p.vy=(p.vy/sp)*MAX_SPEED;}p.x+=p.vx;p.y+=p.vy;const t=(now*0.0003+p.colorOffset)%NEON.length,ci=Math.floor(t),fr=t-ci,c1=NEON[ci%NEON.length],c2=NEON[(ci+1)%NEON.length];const cr=Math.round(c1[0]+(c2[0]-c1[0])*fr),cg=Math.round(c1[1]+(c2[1]-c1[1])*fr),cb=Math.round(c1[2]+(c2[2]-c1[2])*fr);ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fillStyle=`rgba(${cr},${cg},${cb},${p.alpha})`;ctx.fill();}requestAnimationFrame(animate);}
+      window.addEventListener('resize',resize);
+      document.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY+window.scrollY;mouse.active=true;});
+      document.addEventListener('mouseleave',()=>{mouse.active=false;});
+      document.addEventListener('touchmove',e=>{mouse.x=e.touches[0].clientX;mouse.y=e.touches[0].clientY+window.scrollY;mouse.active=true;},{passive:true});
+      document.addEventListener('touchend',()=>{mouse.active=false;});
+      document.fonts.ready.then(()=>{resize();animate();});
+    })();
     </script>
 </body>
 </html>
