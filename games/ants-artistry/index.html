@@ -99,6 +99,19 @@
                         <button id="send-back-all-btn" title="Send to Back (⌘⇧↓)">⇊ Back</button>
                     </div>
                 </div>
+                <div class="property-group" id="crop-group">
+                    <button id="crop-btn" class="crop-btn">✂️ Crop image</button>
+                    <button id="reset-crop-btn" class="reset-crop-btn hidden">↺ Reset crop</button>
+                    <p id="crop-rotate-note" class="crop-note hidden">Set rotation to 0° to crop.</p>
+                </div>
+                <!-- Crop-mode action bar (replaces controls while cropping) -->
+                <div class="property-group crop-actions hidden" id="crop-actions">
+                    <p class="crop-hint">Drag the handles to trim. <kbd>Enter</kbd> apply · <kbd>Esc</kbd> cancel</p>
+                    <div class="crop-action-btns">
+                        <button id="crop-apply" class="crop-apply">✓ Apply</button>
+                        <button id="crop-cancel" class="crop-cancel">✕ Cancel</button>
+                    </div>
+                </div>
                 <button id="delete-btn" class="delete-btn">🗑 Delete</button>
             </div>
         </div>
