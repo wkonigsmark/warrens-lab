@@ -8,7 +8,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@500&family=Handlee&family=Gochi+Hand&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@500&family=Handlee&family=Gochi+Hand&family=Cormorant+Garamond:ital,wght@0,600;1,600;1,700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #ffffff;
@@ -47,24 +47,66 @@
         .container { max-width: 850px; margin: 0 auto; position: relative; z-index: 1; }
 
         header {
-            text-align: left;
-            padding: 40px 0;
+            text-align: center;
             margin-bottom: 180px;
         }
 
-        .logo {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: -1.2px;
-            color: var(--text-main);
+        header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(28px, 5.5vw, 44px);
+            font-weight: 300;
+            font-style: normal;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
         }
 
-        .subtitle {
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-weight: 700;
+        header h1::before,
+        header h1::after {
+            content: '';
+            height: 1px;
+            width: 40px;
+            background: rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+        }
+
+        /* Homeroom nav */
+        .homeroom-nav {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding-top: 20px;
+        }
+
+        .homeroom-nav a {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            padding: 5px 14px;
+            border-radius: 20px;
+            color: rgba(0,0,0,0.35);
+            border: 1px solid rgba(0,0,0,0.08);
+            transition: all 0.2s;
+        }
+
+        .homeroom-nav a:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .homeroom-nav a.active {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: rgba(37, 99, 235, 0.1);
+            pointer-events: none;
         }
 
         /* Brick System */
@@ -750,18 +792,14 @@
             <iframe id="game-frame" src="" frameborder="0"></iframe>
         </div>
     </div>
-    <div class="nav-fab">
-        <div class="fab-main">👨‍👩‍👧‍👦</div>
-        <div class="fab-menu">
-            <a href="../ballard/index.html"><span>🏕️</span> Ballard</a>
-            <a href="../elle/index.html"><span>🏰</span> Elle</a>
-            <a href="../edie/index.html"><span>🚂</span> Edie</a>
-        </div>
-    </div>
+    <nav class="homeroom-nav">
+        <a href="../ballard/" class="active">Ballard</a>
+        <a href="../elle/">Elle</a>
+        <a href="../edie/">Edie</a>
+    </nav>
     <div class="container">
         <header>
-            <div class="logo">Ballard's Basecamp</div>
-            <div class="subtitle">Modular Sandbox v1.0</div>
+            <h1>Ballard's Lab</h1>
         </header>
 
         <div class="tile-grid">

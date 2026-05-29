@@ -311,22 +311,148 @@
       transform: translateX(-50%);
     }
 
-    .pool-review-fab {
-      position: fixed;
-      right: max(18px, env(safe-area-inset-right));
-      bottom: calc(92px + env(safe-area-inset-bottom));
-      z-index: 14;
-      min-height: 44px;
-      padding: 0 15px;
+    .pool-bottom-nav.has-review {
+      grid-template-columns: minmax(74px, auto) minmax(74px, auto) minmax(128px, 1fr) minmax(116px, auto);
+      width: min(100% - 24px, 860px);
+    }
+
+    .pool-review-jump {
       border: 1px solid rgba(244, 201, 93, 0.36);
-      border-radius: 999px;
-      background: rgba(244, 201, 93, 0.96);
+      background: rgba(244, 201, 93, 0.94);
       color: #07130f;
-      box-shadow: 0 18px 54px rgba(0, 0, 0, 0.32);
-      cursor: pointer;
-      font: inherit;
+    }
+
+    .pool-bracket-board {
+      position: relative;
+      overflow-x: auto;
+      padding: 16px;
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background:
+        radial-gradient(circle at 50% 5%, rgba(244, 201, 93, 0.14), transparent 28%),
+        rgba(3, 10, 8, 0.48);
+      box-shadow: var(--wc-shadow);
+    }
+
+    .pool-bracket-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      color: var(--wc-muted);
+      font-size: 0.74rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .pool-bracket-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(520px, 1fr));
+      gap: 14px;
+      min-width: 1060px;
+    }
+
+    .pool-bracket-quad {
+      display: grid;
+      grid-template-columns: minmax(230px, 1fr) 80px 78px 72px;
+      gap: 10px;
+      align-items: center;
+      min-height: 360px;
+      padding: 14px;
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .pool-bracket-quad:nth-child(even) {
+      grid-template-columns: 72px 78px 80px minmax(230px, 1fr);
+    }
+
+    .pool-r32-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .pool-bracket-quad:nth-child(even) .pool-r32-stack {
+      grid-column: 4;
+    }
+
+    .pool-path-column {
+      display: grid;
+      gap: 48px;
+    }
+
+    .pool-path-column.small {
+      gap: 112px;
+    }
+
+    .pool-path-column.final-lane {
+      gap: 0;
+    }
+
+    .pool-bracket-slot {
+      min-height: 44px;
+      border: 1px solid rgba(244, 201, 93, 0.22);
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(36, 180, 126, 0.16), rgba(244, 201, 93, 0.08));
+    }
+
+    .pool-match-seed {
+      padding: 8px;
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: rgba(7, 19, 15, 0.72);
+    }
+
+    .pool-match-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 7px;
+      color: var(--wc-faint);
+      font-size: 0.68rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .pool-bracket-team {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+      min-height: 38px;
+      padding: 5px 7px;
+      border: 1px solid rgba(247, 244, 235, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .pool-bracket-team + .pool-bracket-team {
+      margin-top: 5px;
+    }
+
+    .pool-bracket-team .pool-flag {
+      width: 34px;
+      border-radius: 4px;
+    }
+
+    .pool-bracket-team strong {
+      display: block;
+      overflow: hidden;
+      color: var(--wc-ink);
       font-size: 0.82rem;
       font-weight: 950;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .pool-bracket-team span {
+      display: block;
+      color: var(--wc-muted);
+      font-size: 0.66rem;
+      font-weight: 850;
     }
 
     .pool-review-grid {
@@ -408,9 +534,8 @@
         border-radius: 12px 12px 0 0;
       }
 
-      .pool-review-fab {
-        right: 12px;
-        bottom: calc(84px + env(safe-area-inset-bottom));
+      .pool-bottom-nav.has-review {
+        grid-template-columns: 0.7fr 0.7fr 1.2fr 1fr;
       }
     }
   </style>
@@ -434,6 +559,7 @@
   </main>
   <div class="pool-toast" id="pool-toast" role="status"></div>
 
+  <script src="../archive/world-cup-1/bracket_lookup.js"></script>
   <script type="module">
     import { groupStageMatches, groups, teamsById } from "../data/world-cup-2026.js";
 
@@ -742,8 +868,8 @@
           clearDisabled: picks.length === 0,
           nextDisabled: picks.length !== 4,
           nextLabel: state.activeGroupIndex === GROUP_IDS.length - 1 ? "Pick Thirds" : `Group ${GROUP_IDS[state.activeGroupIndex + 1]}`,
+          includeReview: true,
         })}
-        ${renderReviewFab()}
       `;
 
       app.querySelectorAll("[data-team-id]").forEach((button) => {
@@ -941,8 +1067,8 @@
           clearDisabled: state.thirdPicks.length === 0,
           nextDisabled: state.thirdPicks.length !== 8,
           nextLabel: "Review Entry",
+          includeReview: true,
         })}
-        ${renderReviewFab()}
       `;
 
       app.querySelectorAll("[data-team-id]").forEach((button) => {
@@ -981,23 +1107,20 @@
       bindReviewFab();
     }
 
-    function renderBottomNav({ backId, clearId, nextId, clearDisabled, nextDisabled, nextLabel }) {
+    function renderBottomNav({ backId, clearId, nextId, clearDisabled, nextDisabled, nextLabel, includeReview = false }) {
+      const showReview = includeReview && isEntryComplete();
       return `
-        <nav class="pool-bottom-nav" aria-label="Pool entry controls">
+        <nav class="pool-bottom-nav ${showReview ? "has-review" : ""}" aria-label="Pool entry controls">
           <button class="wc-button secondary" type="button" id="${backId}">Back</button>
           <button class="wc-button secondary" type="button" id="${clearId}" ${clearDisabled ? "disabled" : ""}>Clear</button>
           <button class="wc-button" type="button" id="${nextId}" data-advance ${nextDisabled ? "disabled" : ""}>${nextLabel}</button>
+          ${showReview ? `<button class="wc-button pool-review-jump" type="button" id="review-fab">Review Entry</button>` : ""}
         </nav>
       `;
     }
 
     function isEntryComplete() {
       return GROUP_IDS.every((group) => state.groupPicks[group].length === 4) && state.thirdPicks.length === 8;
-    }
-
-    function renderReviewFab() {
-      if (!isEntryComplete()) return "";
-      return `<button class="pool-review-fab" type="button" id="review-fab">Review Entry</button>`;
     }
 
     function bindReviewFab() {
@@ -1037,6 +1160,17 @@
         <section class="wc-section">
           <div class="wc-section-header">
             <div>
+              <h2>Predicted Round of 32</h2>
+              <p>Generated from your group standings and top-eight third-place order.</p>
+            </div>
+            <span class="wc-pill">Third key ${thirdPlaceKey()}</span>
+          </div>
+          ${renderBracketPreview()}
+        </section>
+
+        <section class="wc-section">
+          <div class="wc-section-header">
+            <div>
               <h2>Group Picks</h2>
               <p>Final predicted standings for all 12 groups.</p>
             </div>
@@ -1054,6 +1188,114 @@
         state.activeGroupIndex = 0;
         render(true);
       });
+    }
+
+    function thirdPlaceKey() {
+      return state.thirdPicks.map((teamId) => teamData(teamId).group).sort().join("");
+    }
+
+    function teamFromSeed(rank, group) {
+      const teamId = state.groupPicks[group]?.[rank - 1];
+      return teamId ? teamData(teamId) : null;
+    }
+
+    function thirdFromGroup(group) {
+      const teamId = state.thirdPicks.find((id) => teamData(id).group === group);
+      return teamId ? teamData(teamId) : null;
+    }
+
+    function buildRoundOf32() {
+      const mapping = window.BRACKET_LOOKUP?.[thirdPlaceKey()] || {};
+      const thirdGroup = (seed) => seed?.replace("3", "") || "?";
+      const thirdSeed = (group) => {
+        const mappedGroup = thirdGroup(mapping[group]);
+        return {
+          group: mappedGroup,
+          team: thirdFromGroup(mappedGroup),
+          label: `3rd Group ${mappedGroup}`,
+        };
+      };
+
+      return [
+        { id: 73, a: { team: teamFromSeed(1, "E"), label: "Winner E" }, b: thirdSeed("E") },
+        { id: 74, a: { team: teamFromSeed(1, "I"), label: "Winner I" }, b: thirdSeed("I") },
+        { id: 75, a: { team: teamFromSeed(2, "A"), label: "Runner-up A" }, b: { team: teamFromSeed(2, "B"), label: "Runner-up B" } },
+        { id: 76, a: { team: teamFromSeed(1, "F"), label: "Winner F" }, b: { team: teamFromSeed(2, "C"), label: "Runner-up C" } },
+        { id: 77, a: { team: teamFromSeed(1, "C"), label: "Winner C" }, b: { team: teamFromSeed(2, "F"), label: "Runner-up F" } },
+        { id: 78, a: { team: teamFromSeed(2, "E"), label: "Runner-up E" }, b: { team: teamFromSeed(2, "I"), label: "Runner-up I" } },
+        { id: 79, a: { team: teamFromSeed(1, "A"), label: "Winner A" }, b: thirdSeed("A") },
+        { id: 80, a: { team: teamFromSeed(1, "L"), label: "Winner L" }, b: thirdSeed("L") },
+        { id: 81, a: { team: teamFromSeed(2, "K"), label: "Runner-up K" }, b: { team: teamFromSeed(2, "L"), label: "Runner-up L" } },
+        { id: 82, a: { team: teamFromSeed(1, "H"), label: "Winner H" }, b: { team: teamFromSeed(2, "J"), label: "Runner-up J" } },
+        { id: 83, a: { team: teamFromSeed(1, "D"), label: "Winner D" }, b: thirdSeed("D") },
+        { id: 84, a: { team: teamFromSeed(1, "G"), label: "Winner G" }, b: thirdSeed("G") },
+        { id: 85, a: { team: teamFromSeed(1, "B"), label: "Winner B" }, b: thirdSeed("B") },
+        { id: 86, a: { team: teamFromSeed(1, "K"), label: "Winner K" }, b: thirdSeed("K") },
+        { id: 87, a: { team: teamFromSeed(1, "J"), label: "Winner J" }, b: { team: teamFromSeed(2, "H"), label: "Runner-up H" } },
+        { id: 88, a: { team: teamFromSeed(2, "D"), label: "Runner-up D" }, b: { team: teamFromSeed(2, "G"), label: "Runner-up G" } },
+      ];
+    }
+
+    function renderBracketPreview() {
+      const matches = buildRoundOf32();
+      const quadrants = [
+        matches.slice(0, 4),
+        matches.slice(4, 8),
+        matches.slice(8, 12),
+        matches.slice(12, 16),
+      ];
+
+      return `
+        <div class="pool-bracket-board">
+          <div class="pool-bracket-title">
+            <span>Round of 32</span>
+            <span>Path to Final</span>
+          </div>
+          <div class="pool-bracket-grid">
+            ${quadrants.map((quad, index) => renderBracketQuadrant(quad, index)).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderBracketQuadrant(matches, quadrantIndex) {
+      const reverse = quadrantIndex % 2 === 1;
+      const r32 = `<div class="pool-r32-stack">${matches.map(renderBracketMatch).join("")}</div>`;
+      const columns = `
+        <div class="pool-path-column">${Array.from({ length: 2 }, () => `<span class="pool-bracket-slot"></span>`).join("")}</div>
+        <div class="pool-path-column small"><span class="pool-bracket-slot"></span></div>
+        <div class="pool-path-column final-lane"><span class="pool-bracket-slot"></span></div>
+      `;
+
+      return `<div class="pool-bracket-quad">${reverse ? `${columns}${r32}` : `${r32}${columns}`}</div>`;
+    }
+
+    function renderBracketMatch(match) {
+      return `
+        <article class="pool-match-seed">
+          <div class="pool-match-label"><span>Match ${match.id}</span><span>R32</span></div>
+          ${renderBracketTeam(match.a)}
+          ${renderBracketTeam(match.b)}
+        </article>
+      `;
+    }
+
+    function renderBracketTeam(seed) {
+      if (!seed.team) {
+        return `
+          <div class="pool-bracket-team">
+            <span class="pool-flag"></span>
+            <span><strong>TBD</strong><span>${escapeHtml(seed.label)}</span></span>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="pool-bracket-team">
+          ${flagImage(seed.team, 160)}
+          <span><strong>${escapeHtml(seed.team.name)}</strong><span>${escapeHtml(seed.label)}</span></span>
+        </div>
+      `;
     }
 
     function renderReviewGroup(group) {
