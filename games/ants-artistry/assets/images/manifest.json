@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-29T18:57:24+00:00",
+  "generated": "2026-05-29T19:07:22+00:00",
   "categoryOrder": [
     "animals",
     "constructs",
@@ -317,6 +317,27 @@
     ],
     "nature": [
       {
+        "file": "bush-1.png",
+        "name": "bush",
+        "num": 1,
+        "label": "Bush 1",
+        "src": "assets/images/nature/bush-1.png"
+      },
+      {
+        "file": "bush-2.png",
+        "name": "bush",
+        "num": 2,
+        "label": "Bush 2",
+        "src": "assets/images/nature/bush-2.png"
+      },
+      {
+        "file": "cactus-1.png",
+        "name": "cactus",
+        "num": 1,
+        "label": "Cactus 1",
+        "src": "assets/images/nature/cactus-1.png"
+      },
+      {
         "file": "cliff-1.png",
         "name": "cliff",
         "num": 1,
@@ -457,6 +478,13 @@
         "src": "assets/images/nature/forest-1.png"
       },
       {
+        "file": "grass-1.png",
+        "name": "grass",
+        "num": 1,
+        "label": "Grass 1",
+        "src": "assets/images/nature/grass-1.png"
+      },
+      {
         "file": "island-palm-tree-1.png",
         "name": "island-palm-tree",
         "num": 1,
@@ -476,6 +504,20 @@
         "num": 1,
         "label": "Mountains 1",
         "src": "assets/images/nature/mountains-1.png"
+      },
+      {
+        "file": "plant-1.png",
+        "name": "plant",
+        "num": 1,
+        "label": "Plant 1",
+        "src": "assets/images/nature/plant-1.png"
+      },
+      {
+        "file": "plant-2.png",
+        "name": "plant",
+        "num": 2,
+        "label": "Plant 2",
+        "src": "assets/images/nature/plant-2.png"
       },
       {
         "file": "pond-1.png",
@@ -553,6 +595,34 @@
         "num": 1,
         "label": "Tree 1",
         "src": "assets/images/nature/tree-1.png"
+      },
+      {
+        "file": "tree-2.png",
+        "name": "tree",
+        "num": 2,
+        "label": "Tree 2",
+        "src": "assets/images/nature/tree-2.png"
+      },
+      {
+        "file": "tree-3.png",
+        "name": "tree",
+        "num": 3,
+        "label": "Tree 3",
+        "src": "assets/images/nature/tree-3.png"
+      },
+      {
+        "file": "tree-4.png",
+        "name": "tree",
+        "num": 4,
+        "label": "Tree 4",
+        "src": "assets/images/nature/tree-4.png"
+      },
+      {
+        "file": "tree-5.png",
+        "name": "tree",
+        "num": 5,
+        "label": "Tree 5",
+        "src": "assets/images/nature/tree-5.png"
       },
       {
         "file": "volcano-1.png",
@@ -746,12 +816,12 @@
     ]
   },
   "summary": {
-    "totalImages": 103,
-    "totalTypes": 50,
+    "totalImages": 113,
+    "totalTypes": 54,
     "byCategory": {
       "animals": 32,
       "constructs": 11,
-      "nature": 44,
+      "nature": 54,
       "food": 3,
       "objects": 3,
       "misc": 0,
@@ -767,6 +837,8 @@
       "basketball-hoop": 1,
       "bear": 2,
       "bike": 1,
+      "bush": 2,
+      "cactus": 1,
       "cake": 2,
       "castle": 9,
       "cliff": 3,
@@ -782,6 +854,7 @@
       "fence": 1,
       "forest": 1,
       "giraffe": 2,
+      "grass": 1,
       "heart": 1,
       "hippopotamus": 1,
       "horse": 1,
@@ -791,6 +864,7 @@
       "monkey": 1,
       "moon": 1,
       "mountains": 1,
+      "plant": 2,
       "pond": 1,
       "puppy": 1,
       "rainbow": 8,
@@ -801,7 +875,7 @@
       "soccer-goal": 1,
       "sun": 1,
       "tiger": 3,
-      "tree": 1,
+      "tree": 5,
       "unicorn": 9,
       "volcano": 1,
       "waterfall": 5,
