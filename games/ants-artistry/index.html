@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ants & Artistry — Coloring Page Creator</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <meta name="theme-color" content="#1a1a1a">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+    <!-- Sidebar: Category Selection -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Elements</h2>
+        </div>
+
+        <div class="categories">
+            <button class="category-btn" data-category="landscapes">
+                <span class="category-icon">🏔️</span>
+                <span>Landscapes</span>
+            </button>
+            <button class="category-btn" data-category="constructs">
+                <span class="category-icon">🏰</span>
+                <span>Constructs</span>
+            </button>
+            <button class="category-btn" data-category="animals">
+                <span class="category-icon">🦁</span>
+                <span>Animals</span>
+            </button>
+            <button class="category-btn" data-category="objects">
+                <span class="category-icon">☀️</span>
+                <span>Objects</span>
+            </button>
+            <button class="category-btn" data-category="misc">
+                <span class="category-icon">✨</span>
+                <span>Misc</span>
+            </button>
+        </div>
+
+        <!-- Image Gallery (appears when category selected) -->
+        <div class="gallery hidden" id="gallery">
+            <div class="gallery-header">
+                <button class="back-btn">← Back</button>
+                <h3 id="gallery-title">Category</h3>
+            </div>
+            <div class="gallery-grid" id="gallery-grid">
+                <!-- Images will be populated here -->
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Canvas Area -->
+    <main class="main-content">
+        <div class="toolbar">
+            <div class="canvas-controls">
+                <button id="portrait-btn" class="orientation-btn active" title="Portrait (8.5 x 11)">
+                    <span>📄</span> Portrait
+                </button>
+                <button id="landscape-btn" class="orientation-btn" title="Landscape (11 x 8.5)">
+                    <span>📋</span> Landscape
+                </button>
+            </div>
+
+            <div class="action-controls">
+                <button id="clear-canvas-btn" title="Clear canvas">Clear</button>
+                <button id="save-btn" title="Save as PNG">💾 Save</button>
+                <button id="print-btn" title="Print">🖨️ Print</button>
+            </div>
+        </div>
+
+        <!-- Canvas -->
+        <div class="canvas-wrapper">
+            <div id="canvas" class="canvas portrait">
+                <!-- Dragged images will be added here -->
+            </div>
+        </div>
+
+        <!-- Properties Panel (appears when element selected) -->
+        <div class="properties-panel hidden" id="properties-panel">
+            <h4>Selected Element</h4>
+            <div class="property-group">
+                <label>Size: <span id="size-display">100%</span></label>
+                <input type="range" id="size-slider" min="20" max="200" value="100">
+            </div>
+            <div class="property-group">
+                <label>Rotation: <span id="rotation-display">0°</span></label>
+                <input type="range" id="rotation-slider" min="0" max="360" value="0">
+            </div>
+            <div class="property-group">
+                <label>
+                    <input type="checkbox" id="lock-checkbox">
+                    Lock in place
+                </label>
+            </div>
+            <button id="delete-btn" class="delete-btn">Delete</button>
+        </div>
+    </main>
+</div>
+
+<script src="images-data.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

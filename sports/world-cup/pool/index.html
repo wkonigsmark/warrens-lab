@@ -375,57 +375,72 @@
 
     .pool-bracket-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(520px, 1fr));
+      grid-template-columns: repeat(2, minmax(590px, 1fr));
       gap: 14px;
-      min-width: 1060px;
+      min-width: 1200px;
     }
 
     .pool-bracket-quad {
       display: grid;
-      grid-template-columns: minmax(230px, 1fr) 80px 78px 72px;
-      gap: 10px;
-      align-items: center;
-      min-height: 360px;
+      grid-template-columns: minmax(300px, 1.2fr) minmax(62px, 0.24fr) minmax(58px, 0.2fr) minmax(54px, 0.18fr);
+      gap: 12px;
+      align-items: stretch;
+      min-height: 620px;
       padding: 14px;
       border: 1px solid var(--wc-line);
       border-radius: var(--wc-radius);
       background: rgba(255, 255, 255, 0.04);
     }
 
-    .pool-bracket-quad:nth-child(even) {
-      grid-template-columns: 72px 78px 80px minmax(230px, 1fr);
+    .pool-bracket-quad.is-reverse {
+      grid-template-columns: minmax(54px, 0.18fr) minmax(58px, 0.2fr) minmax(62px, 0.24fr) minmax(300px, 1.2fr);
+    }
+
+    .pool-round-stack {
+      display: grid;
+      align-items: center;
+      min-height: 100%;
     }
 
     .pool-r32-stack {
-      display: grid;
       gap: 10px;
+      grid-template-rows: repeat(4, minmax(0, 1fr));
     }
 
-    .pool-bracket-quad:nth-child(even) .pool-r32-stack {
-      grid-column: 4;
+    .pool-r16-stack {
+      gap: 10px;
+      grid-template-rows: repeat(4, minmax(0, 1fr));
     }
 
-    .pool-path-column {
-      display: grid;
-      gap: 48px;
+    .pool-qf-stack {
+      gap: 10px;
+      grid-template-rows: repeat(2, minmax(0, 1fr));
     }
 
-    .pool-path-column.small {
-      gap: 112px;
-    }
-
-    .pool-path-column.final-lane {
-      gap: 0;
+    .pool-sf-stack {
+      grid-template-rows: 1fr;
     }
 
     .pool-bracket-slot {
-      min-height: 44px;
+      display: grid;
+      place-items: center;
+      justify-self: center;
+      width: max-content;
+      min-width: 42px;
+      min-height: 30px;
+      padding: 0 10px;
       border: 1px solid rgba(244, 201, 93, 0.22);
       border-radius: 999px;
       background: linear-gradient(90deg, rgba(36, 180, 126, 0.16), rgba(244, 201, 93, 0.08));
+      color: rgba(247, 244, 235, 0.46);
+      font-size: 0.64rem;
+      font-weight: 950;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
 
     .pool-match-seed {
+      align-self: center;
       padding: 8px;
       border: 1px solid var(--wc-line);
       border-radius: var(--wc-radius);
@@ -564,6 +579,41 @@
       .pool-bottom-nav.has-review {
         grid-template-columns: 0.7fr 0.7fr 1.2fr 1fr;
       }
+
+      .pool-bracket-board {
+        overflow-x: visible;
+      }
+
+      .pool-bracket-grid {
+        grid-template-columns: 1fr;
+        min-width: 0;
+      }
+
+      .pool-bracket-quad,
+      .pool-bracket-quad.is-reverse {
+        grid-template-columns: 1fr;
+        min-height: 0;
+      }
+
+      .pool-bracket-quad.is-reverse .pool-r32-stack {
+        grid-row: 1;
+      }
+
+      .pool-r32-stack,
+      .pool-r16-stack,
+      .pool-qf-stack,
+      .pool-sf-stack {
+        grid-template-rows: none;
+      }
+
+      .pool-r16-stack {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .pool-qf-stack,
+      .pool-sf-stack {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -598,7 +648,7 @@
     const state = {
       step: "welcome",
       activeGroupIndex: 0,
-      entry: { bracketName: "", venmo: "" },
+      entry: { bracketName: "", venmo: "", email: "" },
       groupPicks: Object.fromEntries(GROUP_IDS.map((group) => [group, []])),
       thirdPicks: [],
       entryId: "",
@@ -833,6 +883,10 @@
               <label for="venmo">Venmo handle</label>
               <input class="wc-input" id="venmo" type="text" autocapitalize="off" autocomplete="off" placeholder="@yourhandle" value="${escapeAttr(state.entry.venmo)}" required>
             </div>
+            <div class="wc-field">
+              <label for="email">Email address</label>
+              <input class="wc-input" id="email" type="email" autocomplete="email" placeholder="you@example.com" value="${escapeAttr(state.entry.email)}" required>
+            </div>
             <div class="pool-actions">
               <button class="wc-button" type="submit">Start Group A</button>
               <button class="wc-button secondary" type="button" id="back-home">Back</button>
@@ -845,6 +899,7 @@
         event.preventDefault();
         state.entry.bracketName = document.getElementById("bracket-name").value.trim();
         state.entry.venmo = normalizeVenmo(document.getElementById("venmo").value);
+        state.entry.email = document.getElementById("email").value.trim();
         state.step = "groups";
         render(true);
       });
@@ -1247,7 +1302,7 @@
           <div>
             <div class="wc-eyebrow">Beta Export</div>
             <h1 class="pool-title">Entry ready.</h1>
-            <p class="pool-copy">${escapeHtml(state.entry.bracketName)} · ${escapeHtml(state.entry.venmo)} · ${state.entryId}</p>
+            <p class="pool-copy">${escapeHtml(state.entry.bracketName)} · ${escapeHtml(state.entry.venmo)} · ${escapeHtml(state.entry.email)} · ${state.entryId}</p>
           </div>
           <span class="wc-pill">Group play only</span>
         </section>
@@ -1368,14 +1423,24 @@
 
     function renderBracketQuadrant(matches, quadrantIndex) {
       const reverse = quadrantIndex % 2 === 1;
-      const r32 = `<div class="pool-r32-stack">${matches.map(renderBracketMatch).join("")}</div>`;
-      const columns = `
-        <div class="pool-path-column">${Array.from({ length: 2 }, () => `<span class="pool-bracket-slot"></span>`).join("")}</div>
-        <div class="pool-path-column small"><span class="pool-bracket-slot"></span></div>
-        <div class="pool-path-column final-lane"><span class="pool-bracket-slot"></span></div>
+      const r32 = `<div class="pool-round-stack pool-r32-stack">${matches.map(renderBracketMatch).join("")}</div>`;
+      const r16 = `
+        <div class="pool-round-stack pool-r16-stack">
+          ${Array.from({ length: 4 }, () => `<span class="pool-bracket-slot">R16</span>`).join("")}
+        </div>
+      `;
+      const qf = `
+        <div class="pool-round-stack pool-qf-stack">
+          ${Array.from({ length: 2 }, () => `<span class="pool-bracket-slot">QF</span>`).join("")}
+        </div>
+      `;
+      const sf = `
+        <div class="pool-round-stack pool-sf-stack">
+          <span class="pool-bracket-slot">SF</span>
+        </div>
       `;
 
-      return `<div class="pool-bracket-quad">${reverse ? `${columns}${r32}` : `${r32}${columns}`}</div>`;
+      return `<div class="pool-bracket-quad ${reverse ? "is-reverse" : ""}">${reverse ? `${sf}${qf}${r16}${r32}` : `${r32}${r16}${qf}${sf}`}</div>`;
     }
 
     function renderBracketMatch(match) {
@@ -1432,6 +1497,7 @@
         "submitted_at",
         "bracket_name",
         "venmo",
+        "email",
         "section",
         "group",
         "rank",
@@ -1450,6 +1516,7 @@
             submittedAt,
             state.entry.bracketName,
             state.entry.venmo,
+            state.entry.email,
             "group_order",
             group,
             index + 1,
@@ -1468,6 +1535,7 @@
           submittedAt,
           state.entry.bracketName,
           state.entry.venmo,
+          state.entry.email,
           "third_place_order",
           team.group,
           index + 1,
@@ -1521,6 +1589,7 @@
       return Boolean(
         state.entry.bracketName ||
         state.entry.venmo ||
+        state.entry.email ||
         GROUP_IDS.some((group) => state.groupPicks[group].length > 0) ||
         state.thirdPicks.length > 0
       );
