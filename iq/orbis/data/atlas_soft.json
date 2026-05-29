@@ -2,7 +2,7 @@
   "__doc": {
     "purpose": "Hand-curated soft fields for Orbis atlas. Merged with REST Countries data by build_atlas.mjs to produce atlas.json.",
     "color_palette": ["red", "white", "blue", "green", "yellow", "orange", "black", "light-blue"],
-    "motif_palette": ["stripes", "stars", "star", "cross", "crescent", "sun", "eagle", "maple-leaf", "dragon", "circle", "sword", "text", "coat-of-arms", "wheel", "trigrams", "sphere", "Y-shape"],
+    "motif_palette": ["stripes", "stars", "star", "cross", "crescent", "sun", "eagle", "maple-leaf", "dragon", "circle", "sword", "text", "coat-of-arms", "wheel", "trigrams", "sphere", "Y-shape", "tree"],
     "climate_bands": ["tropical", "temperate", "arid", "polar", "mixed"],
     "levels": {
       "1": "Famous 20 — the most-recognized 20 countries. L1 Geocode pool.",
@@ -1044,6 +1044,251 @@
       "famous_food": "mumu",
       "fact_card": "One of the most culturally diverse countries on Earth, where over 800 languages are spoken.",
       "island": false,
+      "bordering_waters": ["Pacific Ocean", "Coral Sea"]
+    },
+
+    "ZW": {
+      "level": 4,
+      "flag_colors": ["green", "yellow", "red", "black", "white"],
+      "flag_motifs": ["stripes", "star", "eagle"],
+      "climate_band": "tropical",
+      "terrain_headline": "highlands",
+      "landmark": "Victoria Falls",
+      "famous_food": "sadza",
+      "fact_card": "Home to Victoria Falls — one of the world's largest waterfalls — and the medieval stone ruins of Great Zimbabwe.",
+      "island": false,
+      "bordering_waters": []
+    },
+    "BW": {
+      "level": 4,
+      "flag_colors": ["light-blue", "white", "black"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "arid",
+      "terrain_headline": "savanna",
+      "landmark": "Okavango Delta",
+      "famous_food": "seswaa",
+      "fact_card": "Home to the Okavango Delta, a vast inland wetland where the river evaporates into the Kalahari Desert instead of reaching the sea.",
+      "island": false,
+      "bordering_waters": []
+    },
+    "ML": {
+      "level": 4,
+      "flag_colors": ["green", "yellow", "red"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "arid",
+      "terrain_headline": "desert",
+      "landmark": "Great Mosque of Djenné",
+      "famous_food": "jollof rice",
+      "fact_card": "Ancient home of the Mali Empire and the legendary city of Timbuktu — a center of trans-Saharan trade and Islamic scholarship.",
+      "island": false,
+      "bordering_waters": []
+    },
+    "RW": {
+      "level": 4,
+      "flag_colors": ["blue", "yellow", "green"],
+      "flag_motifs": ["stripes", "sun"],
+      "climate_band": "temperate",
+      "terrain_headline": "highlands",
+      "landmark": "Volcanoes National Park",
+      "famous_food": "ugali",
+      "fact_card": "Nicknamed 'Land of a Thousand Hills,' home to endangered mountain gorillas in misty volcanic forests.",
+      "island": false,
+      "bordering_waters": []
+    },
+    "LY": {
+      "level": 4,
+      "flag_colors": ["red", "black", "green"],
+      "flag_motifs": ["stripes", "crescent", "star"],
+      "climate_band": "arid",
+      "terrain_headline": "desert",
+      "landmark": "Leptis Magna ruins",
+      "famous_food": "couscous",
+      "fact_card": "Nearly all desert, but holds some of the world's best-preserved ancient Roman ruins along its Mediterranean coast.",
+      "island": false,
+      "bordering_waters": ["Mediterranean Sea"]
+    },
+
+    "NP": {
+      "level": 4,
+      "flag_colors": ["red", "blue", "white"],
+      "flag_motifs": ["sun", "circle"],
+      "climate_band": "mixed",
+      "terrain_headline": "mountainous",
+      "landmark": "Mount Everest",
+      "famous_food": "dal bhat",
+      "fact_card": "Home to Mount Everest, the world's tallest peak, and eight of the world's ten highest mountains. The only country with a non-rectangular flag.",
+      "island": false,
+      "bordering_waters": []
+    },
+    "AF": {
+      "level": 4,
+      "flag_colors": ["black", "red", "green", "white"],
+      "flag_motifs": ["stripes", "coat-of-arms"],
+      "climate_band": "arid",
+      "terrain_headline": "mountainous",
+      "landmark": "Band-e Amir lakes",
+      "famous_food": "kabuli pulao",
+      "fact_card": "A landlocked country at the crossroads of Central, South, and West Asia, home to the towering Hindu Kush mountains.",
+      "island": false,
+      "bordering_waters": []
+    },
+    "MN": {
+      "level": 4,
+      "flag_colors": ["red", "blue", "yellow"],
+      "flag_motifs": ["stripes", "sun", "circle"],
+      "climate_band": "arid",
+      "terrain_headline": "steppe",
+      "landmark": "Gobi Desert",
+      "famous_food": "buuz",
+      "fact_card": "The world's most sparsely populated country, with nomadic herders riding the same vast steppes as Genghis Khan's empire.",
+      "island": false,
+      "bordering_waters": []
+    },
+    "KH": {
+      "level": 4,
+      "flag_colors": ["blue", "red", "white"],
+      "flag_motifs": ["stripes", "coat-of-arms"],
+      "climate_band": "tropical",
+      "terrain_headline": "river-delta",
+      "landmark": "Angkor Wat",
+      "famous_food": "amok",
+      "fact_card": "Home to Angkor Wat, the largest religious monument on Earth, built by the Khmer Empire 900 years ago.",
+      "island": false,
+      "bordering_waters": ["Gulf of Thailand"]
+    },
+    "QA": {
+      "level": 4,
+      "flag_colors": ["white", "red"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "arid",
+      "terrain_headline": "desert",
+      "landmark": "Museum of Islamic Art",
+      "famous_food": "machbous",
+      "fact_card": "A tiny desert peninsula that hosted the 2022 FIFA World Cup, sitting on one of the world's largest natural gas reserves.",
+      "island": false,
+      "bordering_waters": ["Persian Gulf"]
+    },
+    "LB": {
+      "level": 4,
+      "flag_colors": ["red", "white"],
+      "flag_motifs": ["stripes", "tree"],
+      "climate_band": "temperate",
+      "terrain_headline": "mountainous",
+      "landmark": "Cedars of God",
+      "famous_food": "kibbeh",
+      "fact_card": "A small mountainous country on the Mediterranean, named for its towering cedar trees that grace its national flag.",
+      "island": false,
+      "bordering_waters": ["Mediterranean Sea"]
+    },
+
+    "RO": {
+      "level": 4,
+      "flag_colors": ["blue", "yellow", "red"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "temperate",
+      "terrain_headline": "mountainous",
+      "landmark": "Bran Castle",
+      "famous_food": "sarmale",
+      "fact_card": "Home of the Carpathian Mountains and the legend of Dracula, inspired by 15th-century prince Vlad the Impaler.",
+      "island": false,
+      "bordering_waters": ["Black Sea"]
+    },
+    "HR": {
+      "level": 4,
+      "flag_colors": ["red", "white", "blue"],
+      "flag_motifs": ["stripes", "coat-of-arms"],
+      "climate_band": "temperate",
+      "terrain_headline": "coastal",
+      "landmark": "Dubrovnik Old Town",
+      "famous_food": "peka",
+      "fact_card": "Famous for its Adriatic coast of more than 1,000 islands and the medieval walled city of Dubrovnik.",
+      "island": false,
+      "bordering_waters": ["Adriatic Sea", "Mediterranean Sea"]
+    },
+    "RS": {
+      "level": 4,
+      "flag_colors": ["red", "blue", "white"],
+      "flag_motifs": ["stripes", "eagle"],
+      "climate_band": "temperate",
+      "terrain_headline": "mixed",
+      "landmark": "Belgrade Fortress",
+      "famous_food": "ćevapi",
+      "fact_card": "A landlocked Balkan country at the confluence of the Sava and Danube rivers, with a 7,000-year history of civilization.",
+      "island": false,
+      "bordering_waters": []
+    },
+    "LT": {
+      "level": 4,
+      "flag_colors": ["yellow", "green", "red"],
+      "flag_motifs": ["stripes"],
+      "climate_band": "temperate",
+      "terrain_headline": "flat",
+      "landmark": "Hill of Crosses",
+      "famous_food": "cepelinai",
+      "fact_card": "A small Baltic nation — the first Soviet republic to declare independence — covered in pine forests and pristine lakes.",
+      "island": false,
+      "bordering_waters": ["Baltic Sea"]
+    },
+
+    "HN": {
+      "level": 4,
+      "flag_colors": ["blue", "white"],
+      "flag_motifs": ["stripes", "stars"],
+      "climate_band": "tropical",
+      "terrain_headline": "mountainous",
+      "landmark": "Copán Maya ruins",
+      "famous_food": "baleadas",
+      "fact_card": "A Central American country with ancient Maya ruins, lush cloud forests, and the world's second-largest barrier reef.",
+      "island": false,
+      "bordering_waters": ["Caribbean Sea", "Pacific Ocean"]
+    },
+    "HT": {
+      "level": 4,
+      "flag_colors": ["blue", "red"],
+      "flag_motifs": ["stripes", "coat-of-arms"],
+      "climate_band": "tropical",
+      "terrain_headline": "mountainous",
+      "landmark": "Citadelle Laferrière",
+      "famous_food": "griot",
+      "fact_card": "The world's first nation founded by a successful slave revolution, sharing the island of Hispaniola with the Dominican Republic.",
+      "island": true,
+      "bordering_waters": ["Caribbean Sea", "Atlantic Ocean"]
+    },
+    "PY": {
+      "level": 4,
+      "flag_colors": ["red", "white", "blue"],
+      "flag_motifs": ["stripes", "coat-of-arms"],
+      "climate_band": "tropical",
+      "terrain_headline": "plains",
+      "landmark": "Jesuit Missions of La Santísima Trinidad",
+      "famous_food": "chipa",
+      "fact_card": "A landlocked South American country where both Spanish and Guaraní (an indigenous language) are spoken by nearly everyone.",
+      "island": false,
+      "bordering_waters": []
+    },
+
+    "WS": {
+      "level": 4,
+      "flag_colors": ["red", "blue", "white"],
+      "flag_motifs": ["stars", "cross"],
+      "climate_band": "tropical",
+      "terrain_headline": "islands",
+      "landmark": "To Sua Ocean Trench",
+      "famous_food": "palusami",
+      "fact_card": "A pair of large volcanic islands in the South Pacific, home to one of the world's oldest Polynesian cultures.",
+      "island": true,
+      "bordering_waters": ["Pacific Ocean"]
+    },
+    "SB": {
+      "level": 4,
+      "flag_colors": ["blue", "yellow", "green", "white"],
+      "flag_motifs": ["stars", "stripes"],
+      "climate_band": "tropical",
+      "terrain_headline": "archipelago",
+      "landmark": "Guadalcanal",
+      "famous_food": "poi",
+      "fact_card": "An archipelago of nearly 1,000 islands in the South Pacific, with WWII history and pristine coral reefs.",
+      "island": true,
       "bordering_waters": ["Pacific Ocean", "Coral Sea"]
     }
   }

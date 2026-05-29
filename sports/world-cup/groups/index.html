@@ -332,14 +332,6 @@
       return Math.sqrt(variance);
     }
 
-    function percentile(value, values, inverse = false) {
-      const min = Math.min(...values);
-      const max = Math.max(...values);
-      if (max === min) return 0.5;
-      const raw = (value - min) / (max - min);
-      return inverse ? 1 - raw : raw;
-    }
-
     function buildWIndexMap(rows) {
       const map = new Map();
       const unmatched = [];
@@ -374,6 +366,8 @@
         const total = scores.reduce((sum, score) => sum + score, 0);
         const pairwiseDiffSum = pairs.reduce((sum, pair) => sum + pair.diff, 0);
         const top = teamRows[0];
+        const bottom = teamRows[teamRows.length - 1];
+        const deathScore = top.score + bottom.score;
         const favoritePath = pairs
           .filter((pair) => pair.a.id === top.id || pair.b.id === top.id)
           .reduce((sum, pair) => sum + pair.diff, 0) / 3;
@@ -400,17 +394,9 @@
           close15: pairs.filter((pair) => pair.diff <= 15).length,
           favoritePath,
           topTwoCushion: teamRows[1].score - teamRows[2].score,
+          deathScore,
         };
       });
-
-      const totals = analyses.map((analysis) => analysis.total);
-      const diffs = analyses.map((analysis) => analysis.pairwiseDiffSum);
-      for (const analysis of analyses) {
-        analysis.deathScore = (
-          percentile(analysis.total, totals) * 0.52 +
-          percentile(analysis.pairwiseDiffSum, diffs, true) * 0.48
-        );
-      }
 
       const rawAdjusted = analyses.flatMap((analysis) => analysis.teamRows.map((team) => team.rawPathAdjusted));
       const minAdjusted = Math.min(...rawAdjusted);
@@ -460,7 +446,7 @@
         {
           label: "Group of Death",
           title: `Group ${death.group}`,
-          body: `Best blend of total group strength (${scoreLabel(death.total)}) and parity (${death.pairwiseDiffSum.toFixed(1)} total matchup edge).`,
+          body: `Highest top-plus-bottom W-Index score: ${death.teamRows[0].name} at ${scoreLabel(death.teamRows[0].score)} plus ${death.teamRows[death.teamRows.length - 1].name} at ${scoreLabel(death.teamRows[death.teamRows.length - 1].score)} = ${death.deathScore.toFixed(1)} points.`,
         },
         {
           label: "Strongest Group",
@@ -540,7 +526,7 @@
         .sort((a, b) => b.deathScore - a.deathScore)
         .map((analysis) => `
           <tr>
-            <td><strong>Group ${analysis.group}</strong><br><span class="wc-small">Death score ${(analysis.deathScore * 100).toFixed(0)}</span></td>
+            <td><strong>Group ${analysis.group}</strong><br><span class="wc-small">Top+bottom ${analysis.deathScore.toFixed(1)}</span></td>
             <td>${analysis.teamRows.map((team) => teamName(team)).join("<br>")}</td>
             <td class="wc-number"><strong>${scoreLabel(analysis.total)}</strong><div class="wc-meter"><span style="--value: ${(analysis.total / maxTotal) * 100}%"></span></div></td>
             <td class="wc-number">${scoreLabel(analysis.avg)}</td>

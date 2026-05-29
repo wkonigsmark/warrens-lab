@@ -131,6 +131,11 @@
       object-fit: contain;
     }
 
+    .windex-mobile-value,
+    .windex-mobile-team-meta {
+      display: none;
+    }
+
     .windex-rank {
       display: inline-flex;
       align-items: center;
@@ -348,10 +353,12 @@
 
       .windex-table .wc-table tr {
         display: grid;
-        grid-template-columns: auto 42px minmax(0, 1fr);
-        column-gap: 9px;
-        align-items: start;
-        padding: 11px 12px;
+        grid-template-columns: 66px minmax(0, 1fr) auto;
+        grid-template-rows: auto auto auto;
+        column-gap: 12px;
+        row-gap: 2px;
+        align-items: center;
+        padding: 12px;
         border: 1px solid var(--wc-line);
         border-radius: var(--wc-radius);
         background: rgba(255, 255, 255, 0.035);
@@ -360,68 +367,79 @@
       .windex-table .wc-table td {
         display: flex;
         justify-content: space-between;
-        gap: 14px;
-        padding: 5px 0;
+        gap: 10px;
+        padding: 0;
         border: 0;
         text-align: right;
         font-size: 0.86rem;
       }
 
       .windex-table .wc-table td::before {
-        content: attr(data-label);
-        color: var(--wc-faint);
-        font-size: 0.62rem;
-        font-weight: 950;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        text-align: left;
+        display: none;
       }
 
-      .windex-table .wc-table td:nth-child(1) {
-        grid-column: 1;
-        grid-row: 1;
-        width: auto;
-        padding-top: 1px;
-        color: var(--wc-gold);
-      }
-
-      .windex-table .wc-table td:nth-child(1)::before,
-      .windex-table .wc-table td:nth-child(2)::before,
-      .windex-table .wc-table td:nth-child(3)::before {
+      .windex-table .wc-table td:nth-child(1),
+      .windex-table .wc-table td:nth-child(4),
+      .windex-table .wc-table td:nth-child(9),
+      .windex-table .wc-table td:nth-child(10) {
         display: none;
       }
 
       .windex-table .wc-table td:nth-child(2) {
-        grid-column: 2;
-        grid-row: 1;
-        width: auto;
-        padding-top: 1px;
+        grid-column: 1;
+        grid-row: 1 / 4;
+        align-self: stretch;
+        align-items: stretch;
       }
 
       .windex-table .wc-table td:nth-child(3) {
-        grid-column: 3;
+        grid-column: 2;
         grid-row: 1;
         display: block;
-        min-height: 38px;
-        padding-top: 0;
         text-align: left;
+        font-size: 1.02rem;
+        line-height: 1.05;
+      }
+
+      .windex-table .wc-table td:nth-child(3) strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .windex-table .wc-table td:nth-child(5),
+      .windex-table .wc-table td:nth-child(7),
+      .windex-table .wc-table td:nth-child(8) {
+        grid-column: 3;
+        justify-content: flex-end;
+        min-width: 54px;
         font-size: 1rem;
+        line-height: 1;
+        font-weight: 950;
       }
 
-      .windex-table .wc-table td:nth-child(4) {
-        grid-column: 1 / -1;
-        border-top: 1px solid rgba(247, 244, 235, 0.07);
-        margin-top: 7px;
-        padding-top: 9px;
+      .windex-table .wc-table td:nth-child(5) {
+        grid-row: 1;
+        align-self: start;
       }
 
-      .windex-table .wc-table td:nth-child(n+5) {
-        grid-column: 1 / -1;
+      .windex-table .wc-table td:nth-child(7) {
+        grid-row: 2;
       }
 
-      .windex-table .wc-table td:nth-child(9),
-      .windex-table .wc-table td:nth-child(10) {
-        display: none;
+      .windex-table .wc-table td:nth-child(8) {
+        grid-row: 3;
+        align-self: end;
+      }
+
+      .windex-table .wc-table td:nth-child(6) {
+        grid-column: 2;
+        grid-row: 2 / 4;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: end;
+        gap: 4px;
+        text-align: left;
       }
 
       .windex-flag-cell {
@@ -429,12 +447,38 @@
       }
 
       .windex-flag-thumb {
-        width: 42px;
-        border-radius: 4px;
+        width: 66px;
+        height: 100%;
+        min-height: 62px;
+        border-radius: 6px;
       }
 
       .windex-table .wc-position-tag {
-        margin-top: 3px;
+        order: 1;
+      }
+
+      .windex-path-edge {
+        order: 2;
+        color: var(--wc-muted);
+        font-size: 0.88rem;
+      }
+
+      .windex-position-break,
+      .windex-desktop-team-break,
+      .windex-desktop-value,
+      .windex-desktop-team-meta {
+        display: none;
+      }
+
+      .windex-mobile-value,
+      .windex-mobile-team-meta {
+        display: inline;
+      }
+
+      .windex-mobile-team-meta {
+        color: var(--wc-muted);
+        font-size: 0.76rem;
+        font-weight: 850;
       }
     }
   </style>
@@ -704,6 +748,11 @@
       return Number.isFinite(score) ? `${score.toFixed(1)}%` : "—";
     }
 
+    function compactScoreLabel(score) {
+      if (!Number.isFinite(score)) return "—";
+      return Number.isInteger(score) ? `${score.toFixed(0)}%` : `${score.toFixed(1)}%`;
+    }
+
     function diffLabel(row) {
       const score = row.data?.score;
       const adjusted = pathByTeam.get(row.team.id)?.pathAdjusted;
@@ -770,7 +819,7 @@
 
     function positionTag(path) {
       if (!path) return "";
-      return `<br><span class="wc-position-tag ${positionClass(path.groupPosition)}">${positionLabel(path.groupPosition)}</span>`;
+      return `<br class="windex-position-break"><span class="wc-position-tag ${positionClass(path.groupPosition)}">${positionLabel(path.groupPosition)}</span>`;
     }
 
     function renderRankings() {
@@ -836,14 +885,19 @@
               <img src="${flagUrl(row.team, 160)}" alt="" loading="lazy">
             </span>
           </td>
-          <td data-label="Team"><strong>${row.team.name}</strong><br><span class="wc-small">${row.team.confederation}</span></td>
+          <td data-label="Team">
+            <strong>${row.team.name}</strong>
+            <br class="windex-desktop-team-break">
+            <span class="wc-small windex-desktop-team-meta">${row.team.confederation}</span>
+            <span class="windex-mobile-team-meta">${row.team.confederation}: ${row.team.group}</span>
+          </td>
           <td data-label="Group">Group ${row.team.group}</td>
-          <td class="wc-number" data-label="W-Index"><strong>${scoreLabel(row.data?.score)}</strong></td>
+          <td class="wc-number" data-label="W-Index"><strong><span class="windex-desktop-value">${scoreLabel(row.data?.score)}</span><span class="windex-mobile-value">${compactScoreLabel(row.data?.score)}</span></strong></td>
           <td class="wc-number" data-label="Group Path">
-            <strong>${pathLabel(pathByTeam.get(row.team.id)?.pathEdge)}</strong>
+            <strong class="windex-path-edge">${pathLabel(pathByTeam.get(row.team.id)?.pathEdge)}</strong>
             ${positionTag(pathByTeam.get(row.team.id))}
           </td>
-          <td class="wc-number" data-label="Path-Adjusted">${scoreLabel(pathByTeam.get(row.team.id)?.pathAdjusted)}</td>
+          <td class="wc-number" data-label="Path-Adjusted"><span class="windex-desktop-value">${scoreLabel(pathByTeam.get(row.team.id)?.pathAdjusted)}</span><span class="windex-mobile-value">${compactScoreLabel(pathByTeam.get(row.team.id)?.pathAdjusted)}</span></td>
           <td class="wc-number" data-label="Diff"><strong>${diffLabel(row)}</strong></td>
           <td data-label="Status">${row.data?.status || '<span class="wc-empty">Missing from feed</span>'}</td>
           <td data-label="Canonical Match">${row.data ? '<span class="wc-trend-good">Matched</span>' : '<span class="wc-trend-watch">Needs alias</span>'}</td>
