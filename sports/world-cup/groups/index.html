@@ -15,6 +15,7 @@
       padding-top: 20px;
       border-bottom: 1px solid var(--wc-line);
       margin-bottom: 10px;
+      min-width: 0;
     }
     .histogram-bar {
       flex: 1;
@@ -37,14 +38,66 @@
       font-weight: 900;
     }
     .histogram-axis {
-      display: flex;
-      gap: 4px;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 6px;
+      min-width: 0;
     }
     .histogram-axis span {
-      flex: 1;
       text-align: center;
       font-size: 0.7rem;
       color: var(--wc-muted);
+      white-space: nowrap;
+      min-width: 0;
+    }
+
+    .histogram-note {
+      margin: 10px 0 0;
+      color: var(--wc-muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .group-guide {
+      display: grid;
+      gap: 14px;
+    }
+
+    .group-guide-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .group-guide-item {
+      padding: 12px;
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .group-guide-item strong {
+      display: block;
+      color: var(--wc-ink);
+      font-size: 0.9rem;
+    }
+
+    .group-guide-item span {
+      display: block;
+      margin-top: 5px;
+      color: var(--wc-muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .group-quick-read {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .group-quick-read .wc-chip {
+      min-height: 30px;
     }
 
     .group-mobile-grid {
@@ -142,6 +195,14 @@
       .group-mobile-grid {
         display: grid;
       }
+
+      .group-guide-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .histogram-axis {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
     }
   </style>
 </head>
@@ -191,27 +252,28 @@
       </div>
     </section>
 
-    <section class="wc-card wc-card-pad">
+    <section class="wc-card wc-card-pad group-guide">
       <div class="wc-section-header">
         <div>
-          <h2>Model Definitions</h2>
-          <p>These are deliberately simple, transparent metrics so we can argue with them productively.</p>
+          <h2>How To Read It</h2>
+          <p>Short version: high strength means talent, low parity gaps mean chaos, and favorite path shows how clean the favorite’s route looks.</p>
         </div>
       </div>
-      <div class="wc-grid">
-        <article class="wc-card wc-card-pad">
-          <span class="wc-chip">Total Strength</span>
-          <p class="wc-copy">Sum the four W-Index scores in the group. Higher means more total quality.</p>
-        </article>
-        <article class="wc-card wc-card-pad">
-          <span class="wc-chip">Parity</span>
-          <p class="wc-copy">Sum the absolute W-Index difference across all six group matchups. Lower means more even.</p>
-        </article>
-        <article class="wc-card wc-card-pad">
-          <span class="wc-chip">Close Density</span>
-          <p class="wc-copy">Count each unique group matchup once, out of six total games, within 5, 10, and 15 W-Index points.</p>
-        </article>
+      <div class="group-guide-grid">
+        <div class="group-guide-item">
+          <strong>Total Strength</strong>
+          <span>Sum of the four W-Index scores in the group.</span>
+        </div>
+        <div class="group-guide-item">
+          <strong>Parity</strong>
+          <span>Sum of all six matchup gaps. Lower means more balanced.</span>
+        </div>
+        <div class="group-guide-item">
+          <strong>Close Density</strong>
+          <span>Counts unique matchups within 5, 10, and 15 W-Index points.</span>
+        </div>
       </div>
+      <div class="group-quick-read" id="insight-grid"></div>
       <div class="wc-status" id="status">Loading W-Index group analysis...</div>
     </section>
 
@@ -219,20 +281,10 @@
       <div class="wc-section-header">
         <div>
           <h2>Matchup Parity Distribution</h2>
-          <p>Histogram of the W-Index differences across all 72 group stage games.</p>
+          <p>Histogram of W-Index gaps across all group-stage matchups. The lower the number on the x-axis, the more closely balanced the matchup.</p>
         </div>
       </div>
       <div class="wc-card wc-card-pad" id="histogram-container"></div>
-    </section>
-
-    <section class="wc-section">
-      <div class="wc-section-header">
-        <div>
-          <h2>Interpretation Cards</h2>
-          <p>Quick reads for pool strategy and future writeups.</p>
-        </div>
-      </div>
-      <div class="wc-grid" id="insight-grid"></div>
     </section>
 
     <section class="wc-section">
@@ -542,44 +594,14 @@
       elements.easyFavoriteGroup.textContent = easyFavorite.group;
 
       elements.insightGrid.innerHTML = [
-        {
-          label: "Group of Death",
-          title: `Group ${death.group}`,
-          body: `Highest top-plus-bottom W-Index score: ${death.teamRows[0].name} at ${scoreLabel(death.teamRows[0].score)} plus ${death.teamRows[death.teamRows.length - 1].name} at ${scoreLabel(death.teamRows[death.teamRows.length - 1].score)} = ${death.deathScore.toFixed(1)} points.`,
-        },
-        {
-          label: "Strongest Group",
-          title: `Group ${strongest.group}`,
-          body: `Highest aggregate W-Index at ${scoreLabel(strongest.total)} across all four teams.`,
-        },
-        {
-          label: "Most Even",
-          title: `Group ${mostEven.group}`,
-          body: `Lowest sum of all six matchup gaps at ${mostEven.pairwiseDiffSum.toFixed(1)} points.`,
-        },
-        {
-          label: "Most Toss-Ups",
-          title: `Group ${mostClose10.group}`,
-          body: `${mostClose10.close10} of 6 matchups are within 10 W-Index points.`,
-        },
-        {
-          label: "Easiest Favorite Path",
-          title: `Group ${easyFavorite.group}`,
-          body: `${easyFavorite.teamRows[0].name} averages a ${easyFavorite.favoritePath.toFixed(1)} point W-Index edge over the other three teams.`,
-        },
-        {
-          label: "Cleanest Top-Two Path",
-          title: `Group ${easiestTopTwo.group}`,
-          body: `The projected runner-up has a ${easiestTopTwo.topTwoCushion.toFixed(1)} point cushion over third.`,
-        },
-      ].map((card) => `
-        <article class="wc-card wc-card-pad">
-          <span class="wc-chip">${card.label}</span>
-          <div class="wc-metric" style="margin-top: 12px;">
-            <strong>${card.title}</strong>
-            <p class="wc-copy">${card.body}</p>
-          </div>
-        </article>
+        `Death: Group ${death.group} (${death.deathScore.toFixed(1)})`,
+        `Strongest: Group ${strongest.group} (${scoreLabel(strongest.total)})`,
+        `Most Even: Group ${mostEven.group} (${mostEven.pairwiseDiffSum.toFixed(1)})`,
+        `Most Toss-Ups: Group ${mostClose10.group} (${mostClose10.close10}/6 within 10)`,
+        `Cleanest Favorite: Group ${easyFavorite.group} (+${easyFavorite.favoritePath.toFixed(1)})`,
+        `Top-2 Cushion: Group ${easiestTopTwo.group} (${easiestTopTwo.topTwoCushion.toFixed(1)} pts)`,
+      ].map((read) => `
+        <span class="wc-chip">${read}</span>
       `).join("");
     }
 
@@ -609,13 +631,19 @@
         `;
       }).join("");
 
-      const axisHtml = buckets.map((_, i) => `
+      const axisIndexes = [0, 1, 2, Math.floor(numBuckets / 2), numBuckets - 2, numBuckets - 1]
+        .filter((index) => index >= 0 && index < numBuckets)
+        .filter((index, position, list) => list.indexOf(index) === position)
+        .sort((a, b) => a - b);
+
+      const axisHtml = axisIndexes.map((i) => `
         <span>${i * bucketSize}-${(i + 1) * bucketSize}</span>
       `).join("");
 
       container.innerHTML = `
         <div class="histogram">${barsHtml}</div>
         <div class="histogram-axis">${axisHtml}</div>
+        <p class="histogram-note">Lower x-axis buckets mean tighter matchups. Taller bars mean more games fall into that balance range.</p>
       `;
     }
 

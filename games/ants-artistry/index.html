@@ -20,6 +20,11 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <h2>Elements</h2>
+            <div class="search-wrap">
+                <input type="text" id="element-search" class="element-search"
+                       placeholder="🔍 Search all elements…" autocomplete="off">
+                <button id="search-clear" class="search-clear hidden" title="Clear search">✕</button>
+            </div>
         </div>
 
         <!-- Categories populated from manifest.json -->
@@ -50,6 +55,7 @@
             </div>
 
             <div class="action-controls">
+                <button id="help-btn" title="Keyboard shortcuts">⌨️</button>
                 <button id="clear-canvas-btn" title="Clear canvas">Clear</button>
                 <button id="save-btn" title="Save as PNG">💾 Save</button>
                 <button id="print-btn" title="Print">🖨️ Print</button>
@@ -65,7 +71,7 @@
 
         <!-- Properties Panel (appears when element selected) -->
         <div class="properties-panel hidden" id="properties-panel">
-            <h4>Selected Element</h4>
+            <h4 id="properties-title">Selected Element</h4>
             <div class="property-group">
                 <label>Size: <span id="size-display">100%</span></label>
                 <input type="range" id="size-slider" min="20" max="200" value="100">
@@ -80,9 +86,38 @@
                     Lock in place
                 </label>
             </div>
-            <button id="delete-btn" class="delete-btn">Delete</button>
+            <div class="property-group">
+                <label>Layer order</label>
+                <div class="layer-controls">
+                    <button id="bring-front-btn" title="Bring to Front (⌘⇧↑)">⇈ Front</button>
+                    <button id="bring-forward-btn" title="Bring Forward (⌘↑)">↑ Forward</button>
+                    <button id="send-back-btn" title="Send Back (⌘↓)">↓ Back</button>
+                    <button id="send-back-all-btn" title="Send to Back (⌘⇧↓)">⇊ Back</button>
+                </div>
+            </div>
+            <button id="delete-btn" class="delete-btn">🗑 Delete</button>
         </div>
     </main>
+</div>
+
+<!-- Keyboard shortcuts overlay -->
+<div id="shortcuts-overlay" class="shortcuts-overlay hidden">
+    <div class="shortcuts-modal">
+        <button class="shortcuts-close" id="shortcuts-close" title="Close (Esc)">✕</button>
+        <h2>⌨️ Keyboard Shortcuts</h2>
+        <table class="shortcuts-table">
+            <tr><td><kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd></td><td>Nudge selection 2px</td></tr>
+            <tr><td><kbd>⇧</kbd> + arrows</td><td>Nudge 20px (bigger steps)</td></tr>
+            <tr><td><kbd>⌘</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd></td><td>Bring forward / send back</td></tr>
+            <tr><td><kbd>⌘</kbd> <kbd>⇧</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd></td><td>Bring to front / send to back</td></tr>
+            <tr><td><kbd>⌘</kbd> + <kbd>A</kbd></td><td>Select all elements</td></tr>
+            <tr><td><kbd>⇧</kbd> / <kbd>⌘</kbd> + click</td><td>Add / remove from selection</td></tr>
+            <tr><td>Drag on empty canvas</td><td>Marquee-select a group</td></tr>
+            <tr><td><kbd>Delete</kbd> / <kbd>⌫</kbd></td><td>Delete selection</td></tr>
+            <tr><td><kbd>Esc</kbd></td><td>Deselect / close dialogs</td></tr>
+        </table>
+        <p class="shortcuts-hint">Press <kbd>X</kbd>, <kbd>Esc</kbd>, or click outside to close</p>
+    </div>
 </div>
 
 <script src="script.js"></script>

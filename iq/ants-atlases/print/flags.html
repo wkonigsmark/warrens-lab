@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ants & Atlases · Print Quiz: Flags of the World</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="flags.css?v=1">
+</head>
+<body>
+
+    <!-- Screen-only controls (hidden when printing) -->
+    <div class="page-controls">
+        <a href="../index.html" class="back-link">← Back to Ants & Atlases</a>
+        <div class="ctrl-group">
+            <label class="ctrl-field">
+                <span>Difficulty</span>
+                <select id="level-select">
+                    <option value="1">Famous 20</option>
+                    <option value="2" selected>Top 40</option>
+                    <option value="3">Top 80</option>
+                    <option value="4">World</option>
+                </select>
+            </label>
+            <button class="ghost-btn" id="shuffle-btn">🔀 New flags</button>
+            <button class="print-btn" onclick="window.print()">🖨 Print worksheet</button>
+        </div>
+    </div>
+
+    <!-- Worksheet -->
+    <article class="worksheet" id="worksheet">
+
+        <header class="ws-header">
+            <div class="ws-tag">Ants & Atlases · Geography Worksheet</div>
+            <h1>Flags of the World</h1>
+            <p class="ws-sub">Draw a line from each flag to the country it belongs to.</p>
+        </header>
+
+        <!-- Matching layout: flags column | drawing area | country names column -->
+        <section class="ws-match">
+            <div class="match-col flags-col" id="flags-col"></div>
+
+            <div class="match-lines-area">
+                <div class="lines-hint">Draw your lines here →</div>
+            </div>
+
+            <div class="match-col names-col" id="names-col"></div>
+        </section>
+
+        <!-- Flag facts strip (generic — true no matter which flags appear) -->
+        <section class="ws-facts">
+            <div class="facts-tag">Flag facts</div>
+            <div class="facts-grid">
+                <div class="fact-item">
+                    <span class="fact-icon">🔺</span>
+                    <span class="fact-text">Nepal's flag is the only national flag in the world that isn't a rectangle!</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">🎨</span>
+                    <span class="fact-text">The most common colors on world flags are red, white, and blue.</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">⭐</span>
+                    <span class="fact-text">Many flags use stars and stripes to stand for states, regions, or ideas.</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">📜</span>
+                    <span class="fact-text">Denmark's flag is one of the oldest still in use — over 800 years old!</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upside-down answer key -->
+        <div class="ws-answer-key">
+            <div class="answer-key-inner">
+                <span class="ak-label">Answer Key:</span>
+                <span id="answer-key-text"></span>
+            </div>
+        </div>
+
+        <footer class="ws-footer">
+            <div class="ws-meta">
+                <span>Name: <span class="meta-line"></span></span>
+                <span>Date: <span class="meta-line"></span></span>
+            </div>
+            <div class="ws-credit">Ants & Atlases</div>
+        </footer>
+
+    </article>
+
+    <script src="flags.js?v=1"></script>
+</body>
+</html>

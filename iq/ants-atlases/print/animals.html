@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ants & Atlases · Print Quiz: Animals of the World</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="animals.css?v=2">
+</head>
+<body>
+
+    <!-- Screen-only controls -->
+    <div class="page-controls">
+        <a href="../index.html" class="back-link">← Back to Ants & Atlases</a>
+        <div class="ctrl-title">Print Quiz · Animals of the World</div>
+        <button class="print-btn" onclick="window.print()">🖨 Print worksheet</button>
+    </div>
+
+    <!-- Worksheet -->
+    <article class="worksheet" id="worksheet">
+
+        <header class="ws-header">
+            <div class="ws-tag">Ants & Atlases · Geography Worksheet</div>
+            <h1>Animals of the World</h1>
+            <p class="ws-sub">Draw a line from each animal to the continent it lives on.</p>
+        </header>
+
+        <!-- Main matching layout: animals column | lines area | continents column -->
+        <section class="ws-match">
+
+            <!-- Left column: animals (filled by animals.js) -->
+            <div class="match-col animals-col" id="animals-col"></div>
+
+            <!-- Middle: drawing area for pencil lines -->
+            <div class="match-lines-area">
+                <div class="lines-hint">Draw your lines here →</div>
+            </div>
+
+            <!-- Right column: continents (filled by animals.js) -->
+            <div class="match-col continents-col" id="continents-col"></div>
+
+        </section>
+
+        <!-- Fun fact strip -->
+        <section class="ws-facts">
+            <div class="facts-tag">Did you know?</div>
+            <div class="facts-grid">
+                <div class="fact-item">
+                    <span class="fact-icon">🐘</span>
+                    <span class="fact-text">Elephants are the largest land animals on Earth — and they never forget a face!</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">🦘</span>
+                    <span class="fact-text">A baby kangaroo (called a joey) is the size of a grape when it's born!</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">🐼</span>
+                    <span class="fact-text">Giant pandas eat up to 12 hours a day — almost all bamboo!</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">🐧</span>
+                    <span class="fact-text">Emperor penguins can dive deeper than any other bird — over 500 metres!</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upside-down answer key -->
+        <div class="ws-answer-key">
+            <div class="answer-key-inner">
+                <span class="ak-label">Answer Key:</span>
+                <span id="answer-key-text"></span>
+            </div>
+        </div>
+
+        <footer class="ws-footer">
+            <div class="ws-meta">
+                <span>Name: <span class="meta-line"></span></span>
+                <span>Date: <span class="meta-line"></span></span>
+            </div>
+            <div class="ws-credit">Ants & Atlases</div>
+        </footer>
+
+    </article>
+
+    <script src="animals.js?v=1"></script>
+</body>
+</html>

@@ -1,22 +1,120 @@
 {
-  "generated": "2026-05-29T14:38:16+00:00",
+  "generated": "2026-05-29T18:57:24+00:00",
   "categoryOrder": [
     "animals",
     "constructs",
     "nature",
-    "landscapes",
     "food",
     "objects",
-    "misc"
+    "misc",
+    "sports"
   ],
   "categories": {
     "animals": [
+      {
+        "file": "bear-1.png",
+        "name": "bear",
+        "num": 1,
+        "label": "Bear 1",
+        "src": "assets/images/animals/bear-1.png"
+      },
+      {
+        "file": "bear-2.png",
+        "name": "bear",
+        "num": 2,
+        "label": "Bear 2",
+        "src": "assets/images/animals/bear-2.png"
+      },
+      {
+        "file": "deer-1.png",
+        "name": "deer",
+        "num": 1,
+        "label": "Deer 1",
+        "src": "assets/images/animals/deer-1.png"
+      },
+      {
+        "file": "dolphin-1.png",
+        "name": "dolphin",
+        "num": 1,
+        "label": "Dolphin 1",
+        "src": "assets/images/animals/dolphin-1.png"
+      },
+      {
+        "file": "eagle-1.png",
+        "name": "eagle",
+        "num": 1,
+        "label": "Eagle 1",
+        "src": "assets/images/animals/eagle-1.png"
+      },
+      {
+        "file": "elephant-1.png",
+        "name": "elephant",
+        "num": 1,
+        "label": "Elephant 1",
+        "src": "assets/images/animals/elephant-1.png"
+      },
+      {
+        "file": "elephant-2.png",
+        "name": "elephant",
+        "num": 2,
+        "label": "Elephant 2",
+        "src": "assets/images/animals/elephant-2.png"
+      },
+      {
+        "file": "giraffe-1.png",
+        "name": "giraffe",
+        "num": 1,
+        "label": "Giraffe 1",
+        "src": "assets/images/animals/giraffe-1.png"
+      },
+      {
+        "file": "giraffe-2.png",
+        "name": "giraffe",
+        "num": 2,
+        "label": "Giraffe 2",
+        "src": "assets/images/animals/giraffe-2.png"
+      },
+      {
+        "file": "hippopotamus-1.png",
+        "name": "hippopotamus",
+        "num": 1,
+        "label": "Hippopotamus 1",
+        "src": "assets/images/animals/hippopotamus-1.png"
+      },
+      {
+        "file": "horse-1.png",
+        "name": "horse",
+        "num": 1,
+        "label": "Horse 1",
+        "src": "assets/images/animals/horse-1.png"
+      },
       {
         "file": "lion-1.png",
         "name": "lion",
         "num": 1,
         "label": "Lion 1",
         "src": "assets/images/animals/lion-1.png"
+      },
+      {
+        "file": "lion-2.png",
+        "name": "lion",
+        "num": 2,
+        "label": "Lion 2",
+        "src": "assets/images/animals/lion-2.png"
+      },
+      {
+        "file": "lion-3.png",
+        "name": "lion",
+        "num": 3,
+        "label": "Lion 3",
+        "src": "assets/images/animals/lion-3.png"
+      },
+      {
+        "file": "monkey-1.png",
+        "name": "monkey",
+        "num": 1,
+        "label": "Monkey 1",
+        "src": "assets/images/animals/monkey-1.png"
       },
       {
         "file": "puppy-1.png",
@@ -26,6 +124,13 @@
         "src": "assets/images/animals/puppy-1.png"
       },
       {
+        "file": "rhinoceros-1.png",
+        "name": "rhinoceros",
+        "num": 1,
+        "label": "Rhinoceros 1",
+        "src": "assets/images/animals/rhinoceros-1.png"
+      },
+      {
         "file": "tiger-1.png",
         "name": "tiger",
         "num": 1,
@@ -33,11 +138,102 @@
         "src": "assets/images/animals/tiger-1.png"
       },
       {
+        "file": "tiger-2.png",
+        "name": "tiger",
+        "num": 2,
+        "label": "Tiger 2",
+        "src": "assets/images/animals/tiger-2.png"
+      },
+      {
+        "file": "tiger-3.png",
+        "name": "tiger",
+        "num": 3,
+        "label": "Tiger 3",
+        "src": "assets/images/animals/tiger-3.png"
+      },
+      {
         "file": "unicorn-1.png",
         "name": "unicorn",
         "num": 1,
         "label": "Unicorn 1",
         "src": "assets/images/animals/unicorn-1.png"
+      },
+      {
+        "file": "unicorn-2.png",
+        "name": "unicorn",
+        "num": 2,
+        "label": "Unicorn 2",
+        "src": "assets/images/animals/unicorn-2.png"
+      },
+      {
+        "file": "unicorn-3.png",
+        "name": "unicorn",
+        "num": 3,
+        "label": "Unicorn 3",
+        "src": "assets/images/animals/unicorn-3.png"
+      },
+      {
+        "file": "unicorn-4.png",
+        "name": "unicorn",
+        "num": 4,
+        "label": "Unicorn 4",
+        "src": "assets/images/animals/unicorn-4.png"
+      },
+      {
+        "file": "unicorn-5.png",
+        "name": "unicorn",
+        "num": 5,
+        "label": "Unicorn 5",
+        "src": "assets/images/animals/unicorn-5.png"
+      },
+      {
+        "file": "unicorn-6.png",
+        "name": "unicorn",
+        "num": 6,
+        "label": "Unicorn 6",
+        "src": "assets/images/animals/unicorn-6.png"
+      },
+      {
+        "file": "unicorn-7.png",
+        "name": "unicorn",
+        "num": 7,
+        "label": "Unicorn 7",
+        "src": "assets/images/animals/unicorn-7.png"
+      },
+      {
+        "file": "unicorn-8.png",
+        "name": "unicorn",
+        "num": 8,
+        "label": "Unicorn 8",
+        "src": "assets/images/animals/unicorn-8.png"
+      },
+      {
+        "file": "unicorn-9.png",
+        "name": "unicorn",
+        "num": 9,
+        "label": "Unicorn 9",
+        "src": "assets/images/animals/unicorn-9.png"
+      },
+      {
+        "file": "wolf-1.png",
+        "name": "wolf",
+        "num": 1,
+        "label": "Wolf 1",
+        "src": "assets/images/animals/wolf-1.png"
+      },
+      {
+        "file": "wolf-2.png",
+        "name": "wolf",
+        "num": 2,
+        "label": "Wolf 2",
+        "src": "assets/images/animals/wolf-2.png"
+      },
+      {
+        "file": "zebra-1.png",
+        "name": "zebra",
+        "num": 1,
+        "label": "Zebra 1",
+        "src": "assets/images/animals/zebra-1.png"
       }
     ],
     "constructs": [
@@ -47,6 +243,62 @@
         "num": 1,
         "label": "Castle 1",
         "src": "assets/images/constructs/castle-1.png"
+      },
+      {
+        "file": "castle-2.png",
+        "name": "castle",
+        "num": 2,
+        "label": "Castle 2",
+        "src": "assets/images/constructs/castle-2.png"
+      },
+      {
+        "file": "castle-3.png",
+        "name": "castle",
+        "num": 3,
+        "label": "Castle 3",
+        "src": "assets/images/constructs/castle-3.png"
+      },
+      {
+        "file": "castle-4.png",
+        "name": "castle",
+        "num": 4,
+        "label": "Castle 4",
+        "src": "assets/images/constructs/castle-4.png"
+      },
+      {
+        "file": "castle-5.png",
+        "name": "castle",
+        "num": 5,
+        "label": "Castle 5",
+        "src": "assets/images/constructs/castle-5.png"
+      },
+      {
+        "file": "castle-6.png",
+        "name": "castle",
+        "num": 6,
+        "label": "Castle 6",
+        "src": "assets/images/constructs/castle-6.png"
+      },
+      {
+        "file": "castle-7.png",
+        "name": "castle",
+        "num": 7,
+        "label": "Castle 7",
+        "src": "assets/images/constructs/castle-7.png"
+      },
+      {
+        "file": "castle-8.png",
+        "name": "castle",
+        "num": 8,
+        "label": "Castle 8",
+        "src": "assets/images/constructs/castle-8.png"
+      },
+      {
+        "file": "castle-9.png",
+        "name": "castle",
+        "num": 9,
+        "label": "Castle 9",
+        "src": "assets/images/constructs/castle-9.png"
       },
       {
         "file": "fence-1.png",
@@ -65,11 +317,151 @@
     ],
     "nature": [
       {
+        "file": "cliff-1.png",
+        "name": "cliff",
+        "num": 1,
+        "label": "Cliff 1",
+        "src": "assets/images/nature/cliff-1.png"
+      },
+      {
+        "file": "cliff-2.png",
+        "name": "cliff",
+        "num": 2,
+        "label": "Cliff 2",
+        "src": "assets/images/nature/cliff-2.png"
+      },
+      {
+        "file": "cliff-3.png",
+        "name": "cliff",
+        "num": 3,
+        "label": "Cliff 3",
+        "src": "assets/images/nature/cliff-3.png"
+      },
+      {
         "file": "cloud-1.png",
         "name": "cloud",
         "num": 1,
         "label": "Cloud 1",
         "src": "assets/images/nature/cloud-1.png"
+      },
+      {
+        "file": "cloud-10.png",
+        "name": "cloud",
+        "num": 10,
+        "label": "Cloud 10",
+        "src": "assets/images/nature/cloud-10.png"
+      },
+      {
+        "file": "cloud-11.png",
+        "name": "cloud",
+        "num": 11,
+        "label": "Cloud 11",
+        "src": "assets/images/nature/cloud-11.png"
+      },
+      {
+        "file": "cloud-2.png",
+        "name": "cloud",
+        "num": 2,
+        "label": "Cloud 2",
+        "src": "assets/images/nature/cloud-2.png"
+      },
+      {
+        "file": "cloud-3.png",
+        "name": "cloud",
+        "num": 3,
+        "label": "Cloud 3",
+        "src": "assets/images/nature/cloud-3.png"
+      },
+      {
+        "file": "cloud-4.png",
+        "name": "cloud",
+        "num": 4,
+        "label": "Cloud 4",
+        "src": "assets/images/nature/cloud-4.png"
+      },
+      {
+        "file": "cloud-5.png",
+        "name": "cloud",
+        "num": 5,
+        "label": "Cloud 5",
+        "src": "assets/images/nature/cloud-5.png"
+      },
+      {
+        "file": "cloud-6.png",
+        "name": "cloud",
+        "num": 6,
+        "label": "Cloud 6",
+        "src": "assets/images/nature/cloud-6.png"
+      },
+      {
+        "file": "cloud-7.png",
+        "name": "cloud",
+        "num": 7,
+        "label": "Cloud 7",
+        "src": "assets/images/nature/cloud-7.png"
+      },
+      {
+        "file": "cloud-8.png",
+        "name": "cloud",
+        "num": 8,
+        "label": "Cloud 8",
+        "src": "assets/images/nature/cloud-8.png"
+      },
+      {
+        "file": "cloud-9.png",
+        "name": "cloud",
+        "num": 9,
+        "label": "Cloud 9",
+        "src": "assets/images/nature/cloud-9.png"
+      },
+      {
+        "file": "coast-cliff-1.png",
+        "name": "coast-cliff",
+        "num": 1,
+        "label": "Coast Cliff 1",
+        "src": "assets/images/nature/coast-cliff-1.png"
+      },
+      {
+        "file": "coast-cliff-2.png",
+        "name": "coast-cliff",
+        "num": 2,
+        "label": "Coast Cliff 2",
+        "src": "assets/images/nature/coast-cliff-2.png"
+      },
+      {
+        "file": "coast-cliff-3.png",
+        "name": "coast-cliff",
+        "num": 3,
+        "label": "Coast Cliff 3",
+        "src": "assets/images/nature/coast-cliff-3.png"
+      },
+      {
+        "file": "coast-cliff-waterfall-1.png",
+        "name": "coast-cliff-waterfall",
+        "num": 1,
+        "label": "Coast Cliff Waterfall 1",
+        "src": "assets/images/nature/coast-cliff-waterfall-1.png"
+      },
+      {
+        "file": "desert-1.png",
+        "name": "desert",
+        "num": 1,
+        "label": "Desert 1",
+        "src": "assets/images/nature/desert-1.png"
+      },
+      {
+        "file": "forest-1.png",
+        "name": "forest",
+        "num": 1,
+        "label": "Forest 1",
+        "src": "assets/images/nature/forest-1.png"
+      },
+      {
+        "file": "island-palm-tree-1.png",
+        "name": "island-palm-tree",
+        "num": 1,
+        "label": "Island Palm Tree 1",
+        "src": "assets/images/nature/island-palm-tree-1.png"
       },
       {
         "file": "moon-1.png",
@@ -79,11 +471,74 @@
         "src": "assets/images/nature/moon-1.png"
       },
       {
+        "file": "mountains-1.png",
+        "name": "mountains",
+        "num": 1,
+        "label": "Mountains 1",
+        "src": "assets/images/nature/mountains-1.png"
+      },
+      {
+        "file": "pond-1.png",
+        "name": "pond",
+        "num": 1,
+        "label": "Pond 1",
+        "src": "assets/images/nature/pond-1.png"
+      },
+      {
         "file": "rainbow-1.png",
         "name": "rainbow",
         "num": 1,
         "label": "Rainbow 1",
         "src": "assets/images/nature/rainbow-1.png"
+      },
+      {
+        "file": "rainbow-2.png",
+        "name": "rainbow",
+        "num": 2,
+        "label": "Rainbow 2",
+        "src": "assets/images/nature/rainbow-2.png"
+      },
+      {
+        "file": "rainbow-3.png",
+        "name": "rainbow",
+        "num": 3,
+        "label": "Rainbow 3",
+        "src": "assets/images/nature/rainbow-3.png"
+      },
+      {
+        "file": "rainbow-4.png",
+        "name": "rainbow",
+        "num": 4,
+        "label": "Rainbow 4",
+        "src": "assets/images/nature/rainbow-4.png"
+      },
+      {
+        "file": "rainbow-5.png",
+        "name": "rainbow",
+        "num": 5,
+        "label": "Rainbow 5",
+        "src": "assets/images/nature/rainbow-5.png"
+      },
+      {
+        "file": "rainbow-6.png",
+        "name": "rainbow",
+        "num": 6,
+        "label": "Rainbow 6",
+        "src": "assets/images/nature/rainbow-6.png"
+      },
+      {
+        "file": "rainbow-7.png",
+        "name": "rainbow",
+        "num": 7,
+        "label": "Rainbow 7",
+        "src": "assets/images/nature/rainbow-7.png"
+      },
+      {
+        "file": "rainbow-8.png",
+        "name": "rainbow",
+        "num": 8,
+        "label": "Rainbow 8",
+        "src": "assets/images/nature/rainbow-8.png"
       },
       {
         "file": "sun-1.png",
@@ -98,9 +553,78 @@
         "num": 1,
         "label": "Tree 1",
         "src": "assets/images/nature/tree-1.png"
+      },
+      {
+        "file": "volcano-1.png",
+        "name": "volcano",
+        "num": 1,
+        "label": "Volcano 1",
+        "src": "assets/images/nature/volcano-1.png"
+      },
+      {
+        "file": "waterfall-1.png",
+        "name": "waterfall",
+        "num": 1,
+        "label": "Waterfall 1",
+        "src": "assets/images/nature/waterfall-1.png"
+      },
+      {
+        "file": "waterfall-2.png",
+        "name": "waterfall",
+        "num": 2,
+        "label": "Waterfall 2",
+        "src": "assets/images/nature/waterfall-2.png"
+      },
+      {
+        "file": "waterfall-3.png",
+        "name": "waterfall",
+        "num": 3,
+        "label": "Waterfall 3",
+        "src": "assets/images/nature/waterfall-3.png"
+      },
+      {
+        "file": "waterfall-4.png",
+        "name": "waterfall",
+        "num": 4,
+        "label": "Waterfall 4",
+        "src": "assets/images/nature/waterfall-4.png"
+      },
+      {
+        "file": "waterfall-5.png",
+        "name": "waterfall",
+        "num": 5,
+        "label": "Waterfall 5",
+        "src": "assets/images/nature/waterfall-5.png"
+      },
+      {
+        "file": "wave-sea-ocean-1.png",
+        "name": "wave-sea-ocean",
+        "num": 1,
+        "label": "Wave Sea Ocean 1",
+        "src": "assets/images/nature/wave-sea-ocean-1.png"
+      },
+      {
+        "file": "wave-sea-ocean-2.png",
+        "name": "wave-sea-ocean",
+        "num": 2,
+        "label": "Wave Sea Ocean 2",
+        "src": "assets/images/nature/wave-sea-ocean-2.png"
+      },
+      {
+        "file": "wave-sea-ocean-3.png",
+        "name": "wave-sea-ocean",
+        "num": 3,
+        "label": "Wave Sea Ocean 3",
+        "src": "assets/images/nature/wave-sea-ocean-3.png"
+      },
+      {
+        "file": "wave-sea-ocean-4.png",
+        "name": "wave-sea-ocean",
+        "num": 4,
+        "label": "Wave Sea Ocean 4",
+        "src": "assets/images/nature/wave-sea-ocean-4.png"
       }
     ],
-    "landscapes": [],
     "food": [
       {
         "file": "cake-1.png",
@@ -126,43 +650,164 @@
     ],
     "objects": [
       {
+        "file": "bike-1.png",
+        "name": "bike",
+        "num": 1,
+        "label": "Bike 1",
+        "src": "assets/images/objects/bike-1.png"
+      },
+      {
         "file": "heart-1.png",
         "name": "heart",
         "num": 1,
         "label": "Heart 1",
         "src": "assets/images/objects/heart-1.png"
+      },
+      {
+        "file": "scooter-1.png",
+        "name": "scooter",
+        "num": 1,
+        "label": "Scooter 1",
+        "src": "assets/images/objects/scooter-1.png"
       }
     ],
-    "misc": []
+    "misc": [],
+    "sports": [
+      {
+        "file": "baseball-1.png",
+        "name": "baseball",
+        "num": 1,
+        "label": "Baseball 1",
+        "src": "assets/images/sports/baseball-1.png"
+      },
+      {
+        "file": "baseball-bat-1.png",
+        "name": "baseball-bat",
+        "num": 1,
+        "label": "Baseball Bat 1",
+        "src": "assets/images/sports/baseball-bat-1.png"
+      },
+      {
+        "file": "baseball-field-1.png",
+        "name": "baseball-field",
+        "num": 1,
+        "label": "Baseball Field 1",
+        "src": "assets/images/sports/baseball-field-1.png"
+      },
+      {
+        "file": "baseball-helmet-1.png",
+        "name": "baseball-helmet",
+        "num": 1,
+        "label": "Baseball Helmet 1",
+        "src": "assets/images/sports/baseball-helmet-1.png"
+      },
+      {
+        "file": "basketball-1.png",
+        "name": "basketball",
+        "num": 1,
+        "label": "Basketball 1",
+        "src": "assets/images/sports/basketball-1.png"
+      },
+      {
+        "file": "basketball-court-1.png",
+        "name": "basketball-court",
+        "num": 1,
+        "label": "Basketball Court 1",
+        "src": "assets/images/sports/basketball-court-1.png"
+      },
+      {
+        "file": "basketball-hoop-1.png",
+        "name": "basketball-hoop",
+        "num": 1,
+        "label": "Basketball Hoop 1",
+        "src": "assets/images/sports/basketball-hoop-1.png"
+      },
+      {
+        "file": "soccer-ball-1.png",
+        "name": "soccer-ball",
+        "num": 1,
+        "label": "Soccer Ball 1",
+        "src": "assets/images/sports/soccer-ball-1.png"
+      },
+      {
+        "file": "soccer-field-1.png",
+        "name": "soccer-field",
+        "num": 1,
+        "label": "Soccer Field 1",
+        "src": "assets/images/sports/soccer-field-1.png"
+      },
+      {
+        "file": "soccer-goal-1.png",
+        "name": "soccer-goal",
+        "num": 1,
+        "label": "Soccer Goal 1",
+        "src": "assets/images/sports/soccer-goal-1.png"
+      }
+    ]
   },
   "summary": {
-    "totalImages": 16,
-    "totalTypes": 15,
+    "totalImages": 103,
+    "totalTypes": 50,
     "byCategory": {
-      "animals": 4,
-      "constructs": 3,
-      "nature": 5,
-      "landscapes": 0,
+      "animals": 32,
+      "constructs": 11,
+      "nature": 44,
       "food": 3,
-      "objects": 1,
-      "misc": 0
+      "objects": 3,
+      "misc": 0,
+      "sports": 10
     },
     "byType": {
+      "baseball": 1,
+      "baseball-bat": 1,
+      "baseball-field": 1,
+      "baseball-helmet": 1,
+      "basketball": 1,
+      "basketball-court": 1,
+      "basketball-hoop": 1,
+      "bear": 2,
+      "bike": 1,
       "cake": 2,
-      "castle": 1,
-      "cloud": 1,
+      "castle": 9,
+      "cliff": 3,
+      "cloud": 11,
+      "coast-cliff": 3,
+      "coast-cliff-waterfall": 1,
       "cupcake": 1,
+      "deer": 1,
+      "desert": 1,
+      "dolphin": 1,
+      "eagle": 1,
+      "elephant": 2,
       "fence": 1,
+      "forest": 1,
+      "giraffe": 2,
       "heart": 1,
+      "hippopotamus": 1,
+      "horse": 1,
       "house": 1,
-      "lion": 1,
+      "island-palm-tree": 1,
+      "lion": 3,
+      "monkey": 1,
       "moon": 1,
+      "mountains": 1,
+      "pond": 1,
       "puppy": 1,
-      "rainbow": 1,
+      "rainbow": 8,
+      "rhinoceros": 1,
+      "scooter": 1,
+      "soccer-ball": 1,
+      "soccer-field": 1,
+      "soccer-goal": 1,
       "sun": 1,
-      "tiger": 1,
+      "tiger": 3,
       "tree": 1,
-      "unicorn": 1
+      "unicorn": 9,
+      "volcano": 1,
+      "waterfall": 5,
+      "wave-sea-ocean": 4,
+      "wolf": 2,
+      "zebra": 1
     }
   }
 }
