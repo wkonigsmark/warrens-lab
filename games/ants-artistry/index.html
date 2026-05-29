@@ -69,33 +69,38 @@
             </div>
         </div>
 
-        <!-- Properties Panel (appears when element selected) -->
+        <!-- Properties Panel (appears when element selected; draggable & collapsible) -->
         <div class="properties-panel hidden" id="properties-panel">
-            <h4 id="properties-title">Selected Element</h4>
-            <div class="property-group">
-                <label>Size: <span id="size-display">100%</span></label>
-                <input type="range" id="size-slider" min="20" max="200" value="100">
+            <div class="panel-header" id="panel-header">
+                <h4 id="properties-title">Selected Element</h4>
+                <button id="panel-collapse" class="panel-collapse" title="Collapse / expand">–</button>
             </div>
-            <div class="property-group">
-                <label>Rotation: <span id="rotation-display">0°</span></label>
-                <input type="range" id="rotation-slider" min="0" max="360" value="0">
-            </div>
-            <div class="property-group">
-                <label>
-                    <input type="checkbox" id="lock-checkbox">
-                    Lock in place
-                </label>
-            </div>
-            <div class="property-group">
-                <label>Layer order</label>
-                <div class="layer-controls">
-                    <button id="bring-front-btn" title="Bring to Front (⌘⇧↑)">⇈ Front</button>
-                    <button id="bring-forward-btn" title="Bring Forward (⌘↑)">↑ Forward</button>
-                    <button id="send-back-btn" title="Send Back (⌘↓)">↓ Back</button>
-                    <button id="send-back-all-btn" title="Send to Back (⌘⇧↓)">⇊ Back</button>
+            <div class="panel-body" id="panel-body">
+                <div class="property-group">
+                    <label>Size: <span id="size-display">100%</span></label>
+                    <input type="range" id="size-slider" min="20" max="200" value="100">
                 </div>
+                <div class="property-group">
+                    <label>Rotation: <span id="rotation-display">0°</span></label>
+                    <input type="range" id="rotation-slider" min="0" max="360" value="0">
+                </div>
+                <div class="property-group">
+                    <label>
+                        <input type="checkbox" id="lock-checkbox">
+                        Lock in place
+                    </label>
+                </div>
+                <div class="property-group">
+                    <label>Layer order</label>
+                    <div class="layer-controls">
+                        <button id="bring-front-btn" title="Bring to Front (⌘⇧↑)">⇈ Front</button>
+                        <button id="bring-forward-btn" title="Bring Forward (⌘↑)">↑ Forward</button>
+                        <button id="send-back-btn" title="Send Back (⌘↓)">↓ Back</button>
+                        <button id="send-back-all-btn" title="Send to Back (⌘⇧↓)">⇊ Back</button>
+                    </div>
+                </div>
+                <button id="delete-btn" class="delete-btn">🗑 Delete</button>
             </div>
-            <button id="delete-btn" class="delete-btn">🗑 Delete</button>
         </div>
     </main>
 </div>

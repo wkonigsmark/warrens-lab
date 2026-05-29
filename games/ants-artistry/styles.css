@@ -432,27 +432,70 @@ button:hover {
     pointer-events: none;
 }
 
-/* Properties Panel */
+/* Properties Panel — floating, draggable, collapsible */
 .properties-panel {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
     background: white;
     border: 2px solid #667eea;
-    border-radius: 8px;
-    padding: 15px;
-    min-width: 250px;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-    z-index: 100;
+    border-radius: 10px;
+    width: 260px;
+    box-shadow: 0 8px 28px rgba(102, 126, 234, 0.3);
+    z-index: 9000;
+    overflow: hidden;
 }
 
 .properties-panel.hidden {
     display: none;
 }
 
-.properties-panel h4 {
-    margin-bottom: 12px;
-    color: #333;
+/* Draggable header (grab here to move) */
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: #667eea;
+    cursor: move;
+    user-select: none;
+}
+
+.panel-header h4 {
+    color: white;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.panel-collapse {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.panel-collapse:hover {
+    background: rgba(255, 255, 255, 0.45);
+    color: white;
+}
+
+.panel-body {
+    padding: 15px;
+}
+
+/* Collapsed: hide the body, keep just the header bar */
+.properties-panel.collapsed .panel-body {
+    display: none;
+}
+
+.properties-panel.collapsed {
+    width: 200px;
 }
 
 .property-group {

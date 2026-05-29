@@ -296,6 +296,7 @@ function refreshSelectionUI() {
     } else {
         propertiesPanel.classList.remove('hidden');
         updatePropertiesPanel();
+        keepPanelInView();
     }
 }
 
@@ -481,6 +482,82 @@ document.getElementById('bring-forward-btn').addEventListener('click', () => lay
 document.getElementById('send-back-btn').addEventListener('click', () => layerOp(sendBack));
 document.getElementById('bring-front-btn').addEventListener('click', () => layerOp(bringToFront));
 document.getElementById('send-back-all-btn').addEventListener('click', () => layerOp(sendToBack));
+
+// ===== DRAGGABLE / COLLAPSIBLE PROPERTIES PANEL =====
+const panelHeader = document.getElementById('panel-header');
+const panelCollapse = document.getElementById('panel-collapse');
+const PANEL_KEY = 'ants-artistry-panel';
+
+function setPanelPos(left, top) {
+    propertiesPanel.style.left = left + 'px';
+    propertiesPanel.style.top = top + 'px';
+    propertiesPanel.style.right = 'auto';
+    propertiesPanel.style.bottom = 'auto';
+}
+
+function savePanel() {
+    const r = propertiesPanel.getBoundingClientRect();
+    localStorage.setItem(PANEL_KEY, JSON.stringify({
+        left: r.left, top: r.top,
+        collapsed: propertiesPanel.classList.contains('collapsed'),
+    }));
+}
+
+// Keep the panel fully inside the viewport (called when shown / dragged / resized)
+function keepPanelInView() {
+    if (propertiesPanel.classList.contains('hidden')) return;
+    const r = propertiesPanel.getBoundingClientRect();
+    const maxLeft = window.innerWidth - r.width - 6;
+    const maxTop = window.innerHeight - r.height - 6;
+    const left = Math.max(6, Math.min(maxLeft, r.left));
+    const top = Math.max(6, Math.min(maxTop, r.top));
+    setPanelPos(left, top);
+}
+
+// Drag via the header
+panelHeader.addEventListener('mousedown', (e) => {
+    if (e.target === panelCollapse) return;     // collapse button handles itself
+    const r = propertiesPanel.getBoundingClientRect();
+    const offX = e.clientX - r.left;
+    const offY = e.clientY - r.top;
+    e.preventDefault();
+
+    function move(ev) {
+        setPanelPos(ev.clientX - offX, ev.clientY - offY);
+    }
+    function up() {
+        keepPanelInView();
+        savePanel();
+        document.removeEventListener('mousemove', move);
+        document.removeEventListener('mouseup', up);
+    }
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
+});
+
+// Collapse / expand
+panelCollapse.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const collapsed = propertiesPanel.classList.toggle('collapsed');
+    panelCollapse.textContent = collapsed ? '+' : '–';
+    keepPanelInView();
+    savePanel();
+});
+
+// Restore saved position / collapsed state on load
+(function restorePanel() {
+    try {
+        const s = JSON.parse(localStorage.getItem(PANEL_KEY));
+        if (!s) return;
+        if (s.collapsed) {
+            propertiesPanel.classList.add('collapsed');
+            panelCollapse.textContent = '+';
+        }
+        if (typeof s.left === 'number') setPanelPos(s.left, s.top);
+    } catch (_) { /* ignore */ }
+})();
+
+window.addEventListener('resize', keepPanelInView);
 
 // ===== KEYBOARD SHORTCUTS =====
 document.addEventListener('keydown', (e) => {
