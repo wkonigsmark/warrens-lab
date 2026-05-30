@@ -21,7 +21,7 @@ const categoriesEl = document.getElementById('categories');
 // Emoji per category (fallback to palette for any new folder)
 const CATEGORY_ICONS = {
     animals: '🦁', constructs: '🏰', nature: '🌳', landscapes: '🏔️',
-    food: '🍰', objects: '⭐', misc: '✨',
+    food: '🍰', objects: '⭐', misc: '✨', sports: '⚽', flags: '🚩',
 };
 
 // ===== LOAD MANIFEST & BUILD CATEGORIES =====
@@ -237,8 +237,11 @@ function addElementToCanvas(imageData, x, y) {
     element.className = 'canvas-element';
     element.style.left = x + 'px';
     element.style.top = y + 'px';
+    // Default square until the image loads (then resized to its natural ratio)
     element.style.width = '100px';
     element.style.height = '100px';
+    element.dataset.baseW = 100;
+    element.dataset.baseH = 100;
     // Always place new elements on top
     const existing = canvas.querySelectorAll('.canvas-element');
     element.style.zIndex = existing.length + 1;
@@ -248,6 +251,19 @@ function addElementToCanvas(imageData, x, y) {
     } else {
         const img = document.createElement('img');
         img.src = imageData.src;
+        // Size the box to the image's aspect ratio (longest side = 100)
+        img.addEventListener('load', () => {
+            const nW = img.naturalWidth, nH = img.naturalHeight;
+            if (!nW || !nH) return;
+            const MAX = 100;
+            const bw = nW >= nH ? MAX : MAX * nW / nH;
+            const bh = nH >= nW ? MAX : MAX * nH / nW;
+            element.dataset.baseW = bw;
+            element.dataset.baseH = bh;
+            element.style.width = bw + 'px';
+            element.style.height = bh + 'px';
+            if (selection.includes(element)) updatePropertiesPanel();
+        });
         element.appendChild(img);
     }
 
@@ -258,6 +274,7 @@ function addElementToCanvas(imageData, x, y) {
 
     // Mouse events
     element.addEventListener('mousedown', (e) => {
+        if (cropEl) return;  // ignore element interaction while cropping
         e.stopPropagation(); // don't trigger canvas marquee
         if (e.target.classList.contains('resize-handle')) {
             // Resize only operates on a single element
@@ -387,15 +404,17 @@ function startResize(e, element) {
     if (element.classList.contains('locked')) return;
 
     isResizing = true;
-    const startX = e.clientX;
+    const startX = e.clientX, startY = e.clientY;
     const startWidth = element.offsetWidth;
+    const startHeight = element.offsetHeight;
+    const aspect = startWidth / startHeight;
 
     function handleMouseMove(ev) {
         if (!isResizing) return;
-        const delta = Math.max(ev.clientX - startX, ev.clientY - e.clientY);
-        const newSize = Math.max(50, startWidth + delta);
-        element.style.width = newSize + 'px';
-        element.style.height = newSize + 'px';
+        const delta = Math.max(ev.clientX - startX, ev.clientY - startY);
+        const newWidth = Math.max(40, startWidth + delta);
+        element.style.width = newWidth + 'px';
+        element.style.height = (newWidth / aspect) + 'px';  // keep aspect ratio
     }
     function handleMouseUp() {
         isResizing = false;
@@ -423,7 +442,8 @@ function updatePropertiesPanel() {
         ? `${selection.length} elements selected`
         : 'Selected Element';
 
-    const scale = Math.round((p.offsetWidth / 100) * 100);
+    const baseW = parseFloat(p.dataset.baseW) || 100;
+    const scale = Math.round((p.offsetWidth / baseW) * 100);
     document.getElementById('size-slider').value = scale;
     document.getElementById('size-display').textContent = scale + '%';
 
@@ -435,15 +455,38 @@ function updatePropertiesPanel() {
     const lockedCount = selection.filter(el => el.classList.contains('locked')).length;
     lockBox.checked = lockedCount === selection.length;
     lockBox.indeterminate = lockedCount > 0 && lockedCount < selection.length;
+
+    updateCropControls();
 }
 
-// Size control — applies to every selected element
+// Show/hide crop controls based on the current single selection
+function updateCropControls() {
+    const group = document.getElementById('crop-group');
+    const cropBtn = document.getElementById('crop-btn');
+    const resetBtn = document.getElementById('reset-crop-btn');
+    const note = document.getElementById('crop-rotate-note');
+    const p = primary();
+
+    // Crop only makes sense for a single, unrotated element
+    const single = selection.length === 1 && p;
+    group.classList.toggle('hidden', !single);
+    if (!single) return;
+
+    const rotated = getRotation(p) !== 0;
+    cropBtn.classList.toggle('hidden', rotated);
+    note.classList.toggle('hidden', !rotated);
+    resetBtn.classList.toggle('hidden', !p.dataset.origSrc);
+}
+
+// Size control — scales each selected element by its own base (preserves aspect)
 document.getElementById('size-slider').addEventListener('input', (e) => {
     if (!selection.length) return;
-    const newSize = 100 * (e.target.value / 100);
+    const factor = e.target.value / 100;
     selection.forEach(el => {
-        el.style.width = newSize + 'px';
-        el.style.height = newSize + 'px';
+        const bw = parseFloat(el.dataset.baseW) || 100;
+        const bh = parseFloat(el.dataset.baseH) || 100;
+        el.style.width = (bw * factor) + 'px';
+        el.style.height = (bh * factor) + 'px';
     });
     document.getElementById('size-display').textContent = e.target.value + '%';
 });
@@ -482,6 +525,167 @@ document.getElementById('bring-forward-btn').addEventListener('click', () => lay
 document.getElementById('send-back-btn').addEventListener('click', () => layerOp(sendBack));
 document.getElementById('bring-front-btn').addEventListener('click', () => layerOp(bringToFront));
 document.getElementById('send-back-all-btn').addEventListener('click', () => layerOp(sendToBack));
+
+// ===== CROP =====
+// cropEl: the element currently being cropped (null when not in crop mode)
+// cropRect: the keep-region in element-box pixels {x,y,w,h}
+// imgRect:  where the image actually renders inside the box (object-fit: contain)
+let cropEl = null;
+let cropRect = null;
+let imgRect = null;
+const MIN_CROP = 24;
+
+function enterCrop() {
+    const p = primary();
+    if (!p || selection.length !== 1 || getRotation(p) !== 0) return;
+    const img = p.querySelector('img');
+    if (!img || !img.naturalWidth) return;
+
+    cropEl = p;
+    const W = p.offsetWidth, H = p.offsetHeight;
+    const natW = img.naturalWidth, natH = img.naturalHeight;
+    const scale = Math.min(W / natW, H / natH);  // object-fit: contain
+    const dW = natW * scale, dH = natH * scale;
+    const ox = (W - dW) / 2, oy = (H - dH) / 2;
+    imgRect = { ox, oy, dW, dH, scale, natW, natH };
+    cropRect = { x: ox, y: oy, w: dW, h: dH };   // start = whole image
+
+    p.classList.add('cropping');
+    buildCropUI();
+
+    document.getElementById('crop-actions').classList.remove('hidden');
+    document.getElementById('crop-group').classList.add('hidden');
+}
+
+function buildCropUI() {
+    const ui = document.createElement('div');
+    ui.className = 'crop-ui';
+    const rect = document.createElement('div');
+    rect.className = 'crop-rect';
+    ui.appendChild(rect);
+
+    ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'].forEach(dir => {
+        const h = document.createElement('div');
+        h.className = 'crop-handle h-' + dir;
+        h.dataset.dir = dir;
+        h.addEventListener('mousedown', startHandleDrag);
+        rect.appendChild(h);
+    });
+    cropEl.appendChild(ui);
+    paintCropRect();
+}
+
+function paintCropRect() {
+    const rect = cropEl.querySelector('.crop-rect');
+    rect.style.left = cropRect.x + 'px';
+    rect.style.top = cropRect.y + 'px';
+    rect.style.width = cropRect.w + 'px';
+    rect.style.height = cropRect.h + 'px';
+}
+
+function startHandleDrag(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const dir = e.currentTarget.dataset.dir;
+    const elRect = cropEl.getBoundingClientRect();
+    const minX = imgRect.ox, maxX = imgRect.ox + imgRect.dW;
+    const minY = imgRect.oy, maxY = imgRect.oy + imgRect.dH;
+
+    function move(ev) {
+        const lx = Math.max(minX, Math.min(maxX, ev.clientX - elRect.left));
+        const ly = Math.max(minY, Math.min(maxY, ev.clientY - elRect.top));
+        let L = cropRect.x, T = cropRect.y, R = cropRect.x + cropRect.w, B = cropRect.y + cropRect.h;
+        if (dir.includes('w')) L = Math.min(lx, R - MIN_CROP);
+        if (dir.includes('e')) R = Math.max(lx, L + MIN_CROP);
+        if (dir.includes('n')) T = Math.min(ly, B - MIN_CROP);
+        if (dir.includes('s')) B = Math.max(ly, T + MIN_CROP);
+        cropRect = { x: L, y: T, w: R - L, h: B - T };
+        paintCropRect();
+    }
+    function up() {
+        document.removeEventListener('mousemove', move);
+        document.removeEventListener('mouseup', up);
+    }
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
+}
+
+function applyCrop() {
+    if (!cropEl) return;
+    const p = cropEl, img = p.querySelector('img');
+    const { ox, oy, scale } = imgRect;
+
+    // Map crop rect (box px) -> natural image px
+    const nx = Math.round((cropRect.x - ox) / scale);
+    const ny = Math.round((cropRect.y - oy) / scale);
+    const nw = Math.round(cropRect.w / scale);
+    const nh = Math.round(cropRect.h / scale);
+
+    const cv = document.createElement('canvas');
+    cv.width = nw; cv.height = nh;
+    cv.getContext('2d').drawImage(img, nx, ny, nw, nh, 0, 0, nw, nh);
+    const dataURL = cv.toDataURL('image/png');
+
+    // Preserve the very-first original for Reset
+    if (!p.dataset.origSrc) {
+        p.dataset.origSrc = img.src;
+        p.dataset.origLeft = p.offsetLeft;
+        p.dataset.origTop = p.offsetTop;
+        p.dataset.origW = p.offsetWidth;
+        p.dataset.origH = p.offsetHeight;
+        p.dataset.origBaseW = p.dataset.baseW;
+        p.dataset.origBaseH = p.dataset.baseH;
+    }
+
+    // The kept region stays exactly where it was on screen
+    const newLeft = p.offsetLeft + cropRect.x;
+    const newTop = p.offsetTop + cropRect.y;
+    img.src = dataURL;
+    p.style.left = newLeft + 'px';
+    p.style.top = newTop + 'px';
+    p.style.width = cropRect.w + 'px';
+    p.style.height = cropRect.h + 'px';
+    // Cropped result becomes the new 100% baseline (keeps slider sensible)
+    p.dataset.baseW = cropRect.w;
+    p.dataset.baseH = cropRect.h;
+
+    exitCrop();
+}
+
+function resetCrop() {
+    const p = primary();
+    if (!p || !p.dataset.origSrc) return;
+    p.querySelector('img').src = p.dataset.origSrc;
+    p.style.left = p.dataset.origLeft + 'px';
+    p.style.top = p.dataset.origTop + 'px';
+    p.style.width = p.dataset.origW + 'px';
+    p.style.height = p.dataset.origH + 'px';
+    p.dataset.baseW = p.dataset.origBaseW;
+    p.dataset.baseH = p.dataset.origBaseH;
+    delete p.dataset.origSrc;
+    delete p.dataset.origLeft;
+    delete p.dataset.origTop;
+    delete p.dataset.origW;
+    delete p.dataset.origH;
+    delete p.dataset.origBaseW;
+    delete p.dataset.origBaseH;
+    updatePropertiesPanel();
+}
+
+function exitCrop() {
+    if (cropEl) {
+        cropEl.classList.remove('cropping');
+        cropEl.querySelector('.crop-ui')?.remove();
+    }
+    cropEl = null; cropRect = null; imgRect = null;
+    document.getElementById('crop-actions').classList.add('hidden');
+    updatePropertiesPanel();
+}
+
+document.getElementById('crop-btn').addEventListener('click', enterCrop);
+document.getElementById('crop-apply').addEventListener('click', applyCrop);
+document.getElementById('crop-cancel').addEventListener('click', exitCrop);
+document.getElementById('reset-crop-btn').addEventListener('click', resetCrop);
 
 // ===== DRAGGABLE / COLLAPSIBLE PROPERTIES PANEL =====
 const panelHeader = document.getElementById('panel-header');
@@ -570,6 +774,13 @@ document.addEventListener('keydown', (e) => {
         return;
     }
 
+    // Crop mode takes priority: Enter applies, Esc cancels
+    if (cropEl) {
+        if (e.key === 'Enter') { e.preventDefault(); applyCrop(); }
+        else if (e.key === 'Escape') { e.preventDefault(); exitCrop(); }
+        return;
+    }
+
     if (document.activeElement.tagName === 'INPUT') return;
     const cmd = e.metaKey || e.ctrlKey;
 
@@ -616,6 +827,7 @@ document.addEventListener('keydown', (e) => {
 // ===== MARQUEE (drag-to-select on empty canvas) =====
 let marqueeEl = null;
 canvas.addEventListener('mousedown', (e) => {
+    if (cropEl) return;              // don't start marquee while cropping
     if (e.target !== canvas) return; // only on empty canvas
     const additive = e.shiftKey || e.metaKey || e.ctrlKey;
     if (!additive) clearSelection();
@@ -691,6 +903,7 @@ document.getElementById('save-btn').addEventListener('click', async () => {
 
 // ===== PRINT =====
 document.getElementById('print-btn').addEventListener('click', () => {
+    if (cropEl) exitCrop();  // never print mid-crop (would capture the crop UI)
     const printWindow = window.open('', '_blank');
     const isLandscape = canvas.classList.contains('landscape');
 

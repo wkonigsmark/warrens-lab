@@ -423,6 +423,98 @@ button:hover {
     display: block;
 }
 
+/* Hide selection chrome on the element being cropped */
+.canvas-element.cropping {
+    border: none !important;
+    outline: none !important;
+}
+.canvas-element.cropping .resize-handle { display: none !important; }
+
+/* ===== CROP OVERLAY ===== */
+.crop-ui {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;      /* clips the dimming shadow to the element box */
+    z-index: 50;
+}
+
+.crop-rect {
+    position: absolute;
+    outline: 1px dashed #fff;
+    /* Big spread shadow dims everything outside the keep-region */
+    box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.5);
+    cursor: move;
+}
+
+.crop-handle {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border: 2px solid #667eea;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Handle positions (centered on edges/corners) */
+.h-nw { left: -7px;  top: -7px;  cursor: nwse-resize; }
+.h-n  { left: 50%;   top: -7px;  margin-left: -7px; cursor: ns-resize; }
+.h-ne { right: -7px; top: -7px;  cursor: nesw-resize; }
+.h-e  { right: -7px; top: 50%;   margin-top: -7px; cursor: ew-resize; }
+.h-se { right: -7px; bottom: -7px; cursor: nwse-resize; }
+.h-s  { left: 50%;   bottom: -7px; margin-left: -7px; cursor: ns-resize; }
+.h-sw { left: -7px;  bottom: -7px; cursor: nesw-resize; }
+.h-w  { left: -7px;  top: 50%;   margin-top: -7px; cursor: ew-resize; }
+
+/* ===== CROP PANEL CONTROLS ===== */
+.crop-btn, .reset-crop-btn {
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 9px;
+}
+.crop-btn {
+    background: #6f42c1;
+    color: white;
+    border-color: #6f42c1;
+}
+.crop-btn:hover { background: #5a32a3; border-color: #5a32a3; color: white; }
+.reset-crop-btn {
+    margin-top: 6px;
+    background: #f8f9fa;
+    color: #666;
+}
+.crop-note {
+    font-size: 0.75rem;
+    color: #b07a1a;
+    margin-top: 6px;
+    text-align: center;
+}
+
+.crop-actions .crop-hint {
+    font-size: 0.78rem;
+    color: #555;
+    margin-bottom: 8px;
+    text-align: center;
+    line-height: 1.5;
+}
+.crop-action-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+.crop-apply {
+    background: #28a745;
+    color: white;
+    border-color: #28a745;
+    font-weight: 600;
+}
+.crop-apply:hover { background: #218838; border-color: #218838; color: white; }
+.crop-cancel {
+    background: #f8f9fa;
+    color: #666;
+}
+.hidden { display: none; }
+
 /* Marquee selection box */
 .marquee {
     position: absolute;

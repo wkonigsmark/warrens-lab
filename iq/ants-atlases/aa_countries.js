@@ -10,7 +10,9 @@
  */
 (function (global) {
   const SVG_NS = "http://www.w3.org/2000/svg";
-  const DATA_DIR = "data";
+  // Mutable so pages in subfolders (e.g. print/) can point at "../data".
+  let dataDir = "data";
+  function setDataDir(dir) { dataDir = dir; }
 
   const state = {
     loaded: false,
@@ -26,8 +28,8 @@
     // cache: "no-store" forces a fresh fetch — these JSON files change as we expand
     // the atlas; without this, browsers serve stale copies even after script reloads.
     const [atlas, geo] = await Promise.all([
-      fetch(`${DATA_DIR}/atlas.json`, { cache: "no-store" }).then(r => r.json()),
-      fetch(`${DATA_DIR}/world.geo.json`, { cache: "no-store" }).then(r => r.json())
+      fetch(`${dataDir}/atlas.json`, { cache: "no-store" }).then(r => r.json()),
+      fetch(`${dataDir}/world.geo.json`, { cache: "no-store" }).then(r => r.json())
     ]);
 
     state.atlas = atlas;
