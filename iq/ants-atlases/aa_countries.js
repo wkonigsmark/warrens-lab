@@ -69,6 +69,79 @@
     return "";
   }
 
+  // ---- Single-country silhouette ------------------------------------------
+
+  /**
+   * Build a self-contained silhouette for one country: an SVG path string plus a
+   * tightly-framed viewBox. Used by the Shape Match game and the Shapes print quiz.
+   *
+   * Clusters polygons to drop geographically distant outliers (French Guiana on
+   * the France feature, Alaska/Hawaii on the US) so the main landmass fills the
+   * frame — while KEEPING nearby islands so archipelagos (Japan, Indonesia, NZ,
+   * the Philippines) stay recognizable. Anchors on the largest polygon and keeps
+   * any polygon whose center lies within `clusterFactor`× the main polygon's span.
+   *
+   * Returns { d, viewBox: [x,y,w,h] } in SVG space (y already inverted), or null.
+   */
+  function silhouette(iso2, options = {}) {
+    const padRatio = options.padRatio ?? 0.08;
+    const clusterFactor = options.clusterFactor ?? 3;
+    const f = getFeature(iso2);
+    if (!f || !f.geometry) return null;
+    const g = f.geometry;
+
+    // Collect each polygon's outer-ring bbox, area, center, and span.
+    const polys = [];
+    const addPoly = (rings) => {
+      if (!rings || !rings.length) return;
+      const b = ringBbox(rings[0]);
+      polys.push({
+        rings,
+        b,
+        area: (b.maxX - b.minX) * (b.maxY - b.minY),
+        cx: (b.minX + b.maxX) / 2,
+        cy: (b.minY + b.maxY) / 2,
+        span: Math.hypot(b.maxX - b.minX, b.maxY - b.minY)
+      });
+    };
+    if (g.type === "Polygon") addPoly(g.coordinates);
+    else if (g.type === "MultiPolygon") g.coordinates.forEach(addPoly);
+    if (!polys.length) return null;
+
+    // Anchor on the largest polygon; keep neighbors within clusterFactor × its span.
+    polys.sort((a, b) => b.area - a.area);
+    const main = polys[0];
+    const maxDist = Math.max(main.span * clusterFactor, 1);
+    const kept = polys.filter(p => Math.hypot(p.cx - main.cx, p.cy - main.cy) <= maxDist);
+
+    // Path string from all rings of kept polygons (ringToPath already inverts y).
+    let d = "";
+    for (const p of kept) for (const ring of p.rings) d += ringToPath(ring) + " ";
+
+    // Union bbox of kept polygons → SVG viewBox (flip y, then pad).
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const p of kept) {
+      if (p.b.minX < minX) minX = p.b.minX;
+      if (p.b.minY < minY) minY = p.b.minY;
+      if (p.b.maxX > maxX) maxX = p.b.maxX;
+      if (p.b.maxY > maxY) maxY = p.b.maxY;
+    }
+    const svgMinX = minX, svgMaxX = maxX, svgMinY = -maxY, svgMaxY = -minY;
+    const w = svgMaxX - svgMinX, h = svgMaxY - svgMinY;
+    const padX = w * padRatio, padY = h * padRatio;
+    return { d: d.trim(), viewBox: [svgMinX - padX, svgMinY - padY, w + 2 * padX, h + 2 * padY] };
+  }
+
+  /** Convenience: returns a complete <svg>…</svg> markup string for a country shape. */
+  function silhouetteSVG(iso2, options = {}) {
+    const s = silhouette(iso2, options);
+    if (!s) return "";
+    const cls = options.pathClass || "shape-path";
+    const par = options.preserveAspectRatio || "xMidYMid meet";
+    return `<svg viewBox="${s.viewBox.join(" ")}" preserveAspectRatio="${par}" class="${options.svgClass || "shape-svg"}">`
+      + `<path d="${s.d}" class="${cls}" /></svg>`;
+  }
+
   // ---- Rendering ----------------------------------------------------------
 
   /**
@@ -339,6 +412,9 @@
 
   global.AACountries = {
     load,
+    setDataDir,
+    silhouette,
+    silhouetteSVG,
     renderInto,
     viewBoxOf,
     viewBoxOfContinent,

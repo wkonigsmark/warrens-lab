@@ -84,22 +84,17 @@
       justify-self: center;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 8px 10px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.045);
-      backdrop-filter: blur(14px);
+      gap: 18px;
     }
 
     .host-flag {
-      width: 48px;
+      width: 144px;
       aspect-ratio: 3 / 2;
       overflow: hidden;
       border: 1px solid rgba(247, 244, 235, 0.22);
-      border-radius: 5px;
+      border-radius: 8px;
       background: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 16px 42px rgba(0, 0, 0, 0.24);
     }
 
     .host-flag img {
@@ -107,6 +102,14 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .eagle-world-cup {
+      justify-self: center;
+      width: min(38vw, 330px);
+      max-width: 82%;
+      margin: -8px 0 -18px;
+      filter: drop-shadow(0 24px 56px rgba(0, 0, 0, 0.34));
     }
 
     .eyebrow {
@@ -479,7 +482,17 @@
       }
 
       .host-flag {
-        width: 42px;
+        width: min(29vw, 116px);
+        border-radius: 6px;
+      }
+
+      .host-flags {
+        gap: 8px;
+      }
+
+      .eagle-world-cup {
+        width: min(54vw, 220px);
+        margin: -4px 0 -12px;
       }
 
       .countdown {
@@ -516,10 +529,12 @@
   <main class="page-shell">
     <section class="hero" aria-labelledby="page-title">
       <div class="host-flags" aria-label="2026 World Cup host nations: Mexico, United States, Canada">
-        <span class="host-flag"><img src="https://flagcdn.com/w160/mx.png" alt="Mexico flag"></span>
-        <span class="host-flag"><img src="https://flagcdn.com/w160/us.png" alt="United States flag"></span>
-        <span class="host-flag"><img src="https://flagcdn.com/w160/ca.png" alt="Canada flag"></span>
+        <span class="host-flag"><img src="https://flagcdn.com/w320/mx.png" alt="Mexico flag"></span>
+        <span class="host-flag"><img src="https://flagcdn.com/w320/us.png" alt="United States flag"></span>
+        <span class="host-flag"><img src="https://flagcdn.com/w320/ca.png" alt="Canada flag"></span>
       </div>
+
+      <img class="eagle-world-cup" src="assets/eagle-world-cup.png" alt="World Cup eagle mark">
 
       <div class="title-stage" id="title-stage">
         <h1 id="page-title" class="fallback-title">Warren's<br>World Cup<br>Pool</h1>

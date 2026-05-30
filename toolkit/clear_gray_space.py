@@ -687,28 +687,6 @@ def clear_gray_background(
         max_channel_spread=max_channel_spread,
     )
 
-    alpha = img.getchannel("A")
-    bbox = alpha.getbbox()
-    if bbox and not crop and not no_center:
-        artwork = img.crop(bbox)
-        centered = Image.new("RGBA", img.size, (0, 0, 0, 0))
-        x = (img.width - artwork.width) // 2
-        y = (img.height - artwork.height) // 2
-        centered.paste(artwork, (x, y), artwork)
-        img = centered
-
-    if crop:
-        bbox = img.getchannel("A").getbbox()
-        if bbox:
-            left, top, right, bottom = bbox
-            left = max(0, left - padding)
-            top = max(0, top - padding)
-            right = min(img.width, right + padding)
-            bottom = min(img.height, bottom + padding)
-            img = img.crop((left, top, right, bottom))
-
-    return img
-
 
 def save_png(img: Image.Image, dst_path: Path) -> None:
     dst_path.parent.mkdir(parents=True, exist_ok=True)
@@ -755,6 +733,9 @@ def process_all(args: argparse.Namespace) -> int:
 
         img = clear_background(
             src_path=src_path,
+            key_color=args.key_color,
+            key_tolerance=args.key_tolerance,
+            key_hue_tolerance=args.key_hue_tolerance,
             min_lightness=args.min_lightness,
             max_channel_spread=args.max_channel_spread,
             crop=args.crop,
@@ -802,6 +783,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--watch", action="store_true", help="Keep checking raw-img for new files.")
     parser.add_argument("--force", action="store_true", help="Overwrite files already in finished-img.")
     parser.add_argument("--format", choices=("png", "svg", "both"), default="png", help="Output format.")
+    parser.add_argument("--key-color", default=None, help="Remove an edge-connected color background, e.g. magenta, auto, or #e40076.")
+    parser.add_argument("--key-tolerance", type=float, default=90, help="RGB distance tolerance for --key-color.")
+    parser.add_argument("--key-hue-tolerance", type=float, default=0.055, help="Hue tolerance for --key-color, from 0 to 0.5.")
     parser.add_argument("--crop", action="store_true", help="Crop output to the non-transparent artwork.")
     parser.add_argument("--no-center", action="store_true", help="Leave artwork in its original canvas position.")
     parser.add_argument("--padding", type=int, default=24, help="Pixels of padding when using --crop.")

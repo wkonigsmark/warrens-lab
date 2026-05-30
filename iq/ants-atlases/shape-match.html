@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ants & Atlases · Shape Match</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shape-match.css?v=1">
+</head>
+<body>
+
+    <header id="fm-header">
+        <div class="fm-brand">
+            <a href="index.html" class="fm-back">← Ants &amp; Atlases</a>
+            <h1 class="fm-title">Shape Match</h1>
+        </div>
+        <div class="fm-scoreboard">
+            <div class="fm-stat">
+                <span class="fm-stat-num" id="score-num">0</span>
+                <span class="fm-stat-label">Score</span>
+            </div>
+            <div class="fm-stat">
+                <span class="fm-stat-num" id="streak-num">0</span>
+                <span class="fm-stat-label">Streak 🔥</span>
+            </div>
+        </div>
+    </header>
+
+    <nav id="fm-ladder" aria-label="Difficulty levels"></nav>
+
+    <main id="fm-stage">
+        <p class="fm-prompt">Which country has this shape?</p>
+
+        <div class="fm-flag-wrap">
+            <div class="fm-flag-card" id="shape-card">
+                <!-- Country silhouette SVG injected here -->
+            </div>
+        </div>
+
+        <div class="fm-choices" id="choices"></div>
+
+        <div class="fm-feedback" id="feedback" aria-live="polite"></div>
+    </main>
+
+    <div id="levelup-overlay" class="fm-overlay hidden">
+        <div class="fm-levelup-card">
+            <div class="fm-levelup-emoji">🎉</div>
+            <h2 id="levelup-title">Level Up!</h2>
+            <p id="levelup-sub"></p>
+            <button id="levelup-continue" class="fm-btn-primary">Keep going →</button>
+        </div>
+    </div>
+
+    <script src="aa_countries.js?v=27"></script>
+    <script src="shape-match.js?v=1"></script>
+</body>
+</html>

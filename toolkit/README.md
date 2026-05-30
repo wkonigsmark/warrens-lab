@@ -16,6 +16,12 @@ python3 clear_gray_space.py --format svg
 
 Use `--format both` to create both files.
 
+To remove a strong colored background while preserving all other colors:
+
+```bash
+python3 clear_gray_space.py --force --key-color magenta
+```
+
 Useful options:
 
 ```bash
