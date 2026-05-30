@@ -373,6 +373,53 @@ function endTextEdit() {
     pushHistory();
 }
 
+// ===== COPY / PASTE =====
+// Clipboard holds detached clones of the copied elements (preserves size,
+// crop dataURL, rotation, text styling — everything in the element markup).
+let clipboard = [];
+let pasteOffset = 0;
+
+function copySelection() {
+    if (!selection.length) return;
+    // Store clones in z-order so paste re-stacks them correctly
+    const ordered = [...selection].sort(
+        (a, b) => (parseInt(a.style.zIndex) || 0) - (parseInt(b.style.zIndex) || 0)
+    );
+    clipboard = ordered.map(el => {
+        const clone = el.cloneNode(true);
+        clone.classList.remove('selected', 'primary', 'dragging', 'cropping', 'editing');
+        clone.querySelectorAll('.crop-ui').forEach(n => n.remove());
+        clone.querySelectorAll('[contenteditable]').forEach(n => n.removeAttribute('contenteditable'));
+        return clone;
+    });
+    pasteOffset = 0;
+}
+
+function pasteClipboard() {
+    if (!clipboard.length) return;
+    if (editingTextEl) endTextEdit();
+    pasteOffset += 16;  // cascade each successive paste
+    let zBase = canvas.querySelectorAll('.canvas-element').length;
+
+    const pasted = [];
+    clipboard.forEach(srcClone => {
+        const el = srcClone.cloneNode(true);  // copy again so the clipboard stays reusable
+        // Offset position, clamped to the canvas
+        const left = (parseFloat(el.style.left) || 0) + pasteOffset;
+        const top = (parseFloat(el.style.top) || 0) + pasteOffset;
+        el.style.left = Math.max(0, Math.min(left, canvas.offsetWidth - 20)) + 'px';
+        el.style.top = Math.max(0, Math.min(top, canvas.offsetHeight - 20)) + 'px';
+        el.style.zIndex = ++zBase;  // paste on top
+        attachElementHandlers(el);
+        canvas.appendChild(el);
+        pasted.push(el);
+    });
+
+    selection = pasted;
+    refreshSelectionUI();
+    pushHistory();
+}
+
 // ===== UNDO / REDO HISTORY =====
 let history = [];
 let histIndex = -1;
@@ -1043,6 +1090,20 @@ document.addEventListener('keydown', (e) => {
         e.preventDefault();
         selection = [...canvas.querySelectorAll('.canvas-element')];
         refreshSelectionUI();
+        return;
+    }
+
+    // ⌘C copy / ⌘V paste / ⌘D duplicate
+    if (cmd && e.key.toLowerCase() === 'c') {
+        if (selection.length) { e.preventDefault(); copySelection(); }
+        return;
+    }
+    if (cmd && e.key.toLowerCase() === 'v') {
+        if (clipboard.length) { e.preventDefault(); pasteClipboard(); }
+        return;
+    }
+    if (cmd && e.key.toLowerCase() === 'd') {
+        if (selection.length) { e.preventDefault(); copySelection(); pasteClipboard(); }
         return;
     }
 
