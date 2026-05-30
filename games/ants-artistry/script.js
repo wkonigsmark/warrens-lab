@@ -272,30 +272,94 @@ function addElementToCanvas(imageData, x, y) {
     handle.className = 'resize-handle';
     element.appendChild(handle);
 
-    // Mouse events
+    attachElementHandlers(element);
+    canvas.appendChild(element);
+    selectOnly(element);
+    pushHistory();
+}
+
+// Wire up mouse interaction for an element (used on create AND on undo/redo restore)
+function attachElementHandlers(element) {
     element.addEventListener('mousedown', (e) => {
         if (cropEl) return;  // ignore element interaction while cropping
         e.stopPropagation(); // don't trigger canvas marquee
         if (e.target.classList.contains('resize-handle')) {
-            // Resize only operates on a single element
             selectOnly(element);
             startResize(e, element);
             return;
         }
-
         if (e.shiftKey || e.metaKey || e.ctrlKey) {
-            // Toggle this element in/out of the selection
             toggleInSelection(element);
-            if (selection.includes(element)) startDrag(e); // drag the group
+            if (selection.includes(element)) startDrag(e);
         } else {
-            // If clicking an element already in a multi-selection, keep the group
             if (!selection.includes(element)) selectOnly(element);
             startDrag(e);
         }
     });
+}
 
-    canvas.appendChild(element);
-    selectOnly(element);
+// ===== UNDO / REDO HISTORY =====
+let history = [];
+let histIndex = -1;
+let isRestoring = false;
+
+// A snapshot is the canvas markup with transient UI/classes stripped out
+function snapshotCanvas() {
+    const clone = canvas.cloneNode(true);
+    clone.querySelectorAll('.crop-ui').forEach(n => n.remove());
+    clone.querySelectorAll('.canvas-element').forEach(el =>
+        el.classList.remove('selected', 'primary', 'dragging', 'cropping'));
+    return clone.innerHTML;
+}
+
+function pushHistory() {
+    if (isRestoring) return;
+    history = history.slice(0, histIndex + 1);   // drop any redo branch
+    history.push(snapshotCanvas());
+    if (history.length > 60) history.shift();
+    histIndex = history.length - 1;
+    updateUndoRedoButtons();
+}
+
+function restoreHistory(html) {
+    isRestoring = true;
+    if (cropEl) exitCrop();
+    canvas.innerHTML = html;
+    canvas.querySelectorAll('.canvas-element').forEach(attachElementHandlers);
+    selection = [];
+    refreshSelectionUI();
+    isRestoring = false;
+}
+
+function undo() {
+    if (cropEl) { exitCrop(); return; }
+    if (histIndex > 0) {
+        histIndex--;
+        restoreHistory(history[histIndex]);
+        updateUndoRedoButtons();
+    }
+}
+
+function redo() {
+    if (histIndex < history.length - 1) {
+        histIndex++;
+        restoreHistory(history[histIndex]);
+        updateUndoRedoButtons();
+    }
+}
+
+function updateUndoRedoButtons() {
+    const u = document.getElementById('undo-btn');
+    const r = document.getElementById('redo-btn');
+    if (u) u.disabled = histIndex <= 0;
+    if (r) r.disabled = histIndex >= history.length - 1;
+}
+
+// Debounced push for rapid actions (arrow-key nudging)
+let histTimer = null;
+function pushHistoryDebounced() {
+    clearTimeout(histTimer);
+    histTimer = setTimeout(pushHistory, 350);
 }
 
 // ===== SELECTION MODEL =====
@@ -370,6 +434,7 @@ function nudgeSelection(dx, dy) {
         s.el.style.left = (s.left + cdx) + 'px';
         s.el.style.top = (s.top + cdy) + 'px';
     });
+    pushHistoryDebounced();
 }
 
 // ===== DRAGGING (moves the whole selection together) =====
@@ -382,9 +447,11 @@ function startDrag(e) {
         el, left: el.offsetLeft, top: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight,
     }));
     els.forEach(el => el.classList.add('dragging'));
+    let moved = false;
 
     function handleMouseMove(ev) {
         const [dx, dy] = clampGroupDelta(starts, ev.clientX - startX, ev.clientY - startY);
+        if (dx || dy) moved = true;
         starts.forEach(s => {
             s.el.style.left = (s.left + dx) + 'px';
             s.el.style.top = (s.top + dy) + 'px';
@@ -394,6 +461,7 @@ function startDrag(e) {
         els.forEach(el => el.classList.remove('dragging'));
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
+        if (moved) pushHistory();   // only record an actual move, not a click
     }
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
@@ -421,6 +489,7 @@ function startResize(e, element) {
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
         updatePropertiesPanel();
+        pushHistory();
     }
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
@@ -490,6 +559,9 @@ document.getElementById('size-slider').addEventListener('input', (e) => {
     });
     document.getElementById('size-display').textContent = e.target.value + '%';
 });
+document.getElementById('size-slider').addEventListener('change', () => {
+    if (selection.length) pushHistory();
+});
 
 // Rotation control — applies to every selected element
 document.getElementById('rotation-slider').addEventListener('input', (e) => {
@@ -497,18 +569,25 @@ document.getElementById('rotation-slider').addEventListener('input', (e) => {
     const rotation = e.target.value;
     selection.forEach(el => el.style.transform = `rotate(${rotation}deg)`);
     document.getElementById('rotation-display').textContent = rotation + '°';
+    updateCropControls();   // crop hides while rotated
+});
+document.getElementById('rotation-slider').addEventListener('change', () => {
+    if (selection.length) pushHistory();
 });
 
 // Lock control — applies to every selected element
 document.getElementById('lock-checkbox').addEventListener('change', (e) => {
     if (!selection.length) return;
     selection.forEach(el => el.classList.toggle('locked', e.target.checked));
+    pushHistory();
 });
 
 // Delete button — deletes all selected
 function deleteSelection() {
+    if (!selection.length) return;
     selection.forEach(el => el.remove());
     clearSelection();
+    pushHistory();
 }
 document.getElementById('delete-btn').addEventListener('click', deleteSelection);
 
@@ -520,6 +599,7 @@ function layerOp(op) {
     );
     if (op === bringForward || op === bringToFront) ordered.reverse();
     ordered.forEach(el => op(el));
+    pushHistory();
 }
 document.getElementById('bring-forward-btn').addEventListener('click', () => layerOp(bringForward));
 document.getElementById('send-back-btn').addEventListener('click', () => layerOp(sendBack));
@@ -560,10 +640,17 @@ function enterCrop() {
 function buildCropUI() {
     const ui = document.createElement('div');
     ui.className = 'crop-ui';
+
+    // Four dimming panels around the keep-region (no overflow clipping needed)
+    ['top', 'bottom', 'left', 'right'].forEach(side => {
+        const m = document.createElement('div');
+        m.className = 'crop-mask crop-mask-' + side;
+        ui.appendChild(m);
+    });
+
     const rect = document.createElement('div');
     rect.className = 'crop-rect';
-    ui.appendChild(rect);
-
+    rect.addEventListener('mousedown', startRectDrag);   // drag to move the region
     ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'].forEach(dir => {
         const h = document.createElement('div');
         h.className = 'crop-handle h-' + dir;
@@ -571,16 +658,57 @@ function buildCropUI() {
         h.addEventListener('mousedown', startHandleDrag);
         rect.appendChild(h);
     });
+    ui.appendChild(rect);
     cropEl.appendChild(ui);
     paintCropRect();
 }
 
 function paintCropRect() {
+    const { x, y, w, h } = cropRect;
+    const W = cropEl.offsetWidth, H = cropEl.offsetHeight;
+
     const rect = cropEl.querySelector('.crop-rect');
-    rect.style.left = cropRect.x + 'px';
-    rect.style.top = cropRect.y + 'px';
-    rect.style.width = cropRect.w + 'px';
-    rect.style.height = cropRect.h + 'px';
+    rect.style.left = x + 'px';
+    rect.style.top = y + 'px';
+    rect.style.width = w + 'px';
+    rect.style.height = h + 'px';
+
+    const place = (sel, l, t, wd, ht) => {
+        const m = cropEl.querySelector(sel);
+        m.style.left = l + 'px';
+        m.style.top = t + 'px';
+        m.style.width = Math.max(0, wd) + 'px';
+        m.style.height = Math.max(0, ht) + 'px';
+    };
+    place('.crop-mask-top', 0, 0, W, y);
+    place('.crop-mask-bottom', 0, y + h, W, H - (y + h));
+    place('.crop-mask-left', 0, y, x, h);
+    place('.crop-mask-right', x + w, y, W - (x + w), h);
+}
+
+// Drag the whole keep-region around (constrained to the image area)
+function startRectDrag(e) {
+    if (e.target.classList.contains('crop-handle')) return;
+    e.stopPropagation();
+    e.preventDefault();
+    const sx = e.clientX, sy = e.clientY;
+    const x0 = cropRect.x, y0 = cropRect.y;
+    const { ox, oy, dW, dH } = imgRect;
+
+    function move(ev) {
+        let nx = x0 + (ev.clientX - sx);
+        let ny = y0 + (ev.clientY - sy);
+        nx = Math.max(ox, Math.min(ox + dW - cropRect.w, nx));
+        ny = Math.max(oy, Math.min(oy + dH - cropRect.h, ny));
+        cropRect.x = nx; cropRect.y = ny;
+        paintCropRect();
+    }
+    function up() {
+        document.removeEventListener('mousemove', move);
+        document.removeEventListener('mouseup', up);
+    }
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
 }
 
 function startHandleDrag(e) {
@@ -650,6 +778,7 @@ function applyCrop() {
     p.dataset.baseH = cropRect.h;
 
     exitCrop();
+    pushHistory();
 }
 
 function resetCrop() {
@@ -670,6 +799,7 @@ function resetCrop() {
     delete p.dataset.origBaseW;
     delete p.dataset.origBaseH;
     updatePropertiesPanel();
+    pushHistory();
 }
 
 function exitCrop() {
@@ -889,9 +1019,11 @@ document.getElementById('landscape-btn').addEventListener('click', () => {
 
 // ===== CLEAR CANVAS =====
 document.getElementById('clear-canvas-btn').addEventListener('click', () => {
-    if (confirm('Clear all elements from canvas? This cannot be undone.')) {
+    if (!canvas.querySelector('.canvas-element')) return;
+    if (confirm('Clear all elements from canvas? (You can undo this.)')) {
         canvas.innerHTML = '';
         clearSelection();
+        pushHistory();
     }
 });
 

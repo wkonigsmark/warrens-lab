@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-30T14:40:43+00:00",
+  "generated": "2026-05-30T15:18:18+00:00",
   "categoryOrder": [
     "animals",
     "constructs",
@@ -239,6 +239,13 @@
     ],
     "constructs": [
       {
+        "file": "brick-wall-1.png",
+        "name": "brick-wall",
+        "num": 1,
+        "label": "Brick Wall 1",
+        "src": "assets/images/constructs/brick-wall-1.png"
+      },
+      {
         "file": "castle-1.png",
         "name": "castle",
         "num": 1,
@@ -309,11 +316,144 @@
         "src": "assets/images/constructs/fence-1.png"
       },
       {
+        "file": "fence-2.png",
+        "name": "fence",
+        "num": 2,
+        "label": "Fence 2",
+        "src": "assets/images/constructs/fence-2.png"
+      },
+      {
+        "file": "fence-3.png",
+        "name": "fence",
+        "num": 3,
+        "label": "Fence 3",
+        "src": "assets/images/constructs/fence-3.png"
+      },
+      {
+        "file": "fire-station-1.png",
+        "name": "fire-station",
+        "num": 1,
+        "label": "Fire Station 1",
+        "src": "assets/images/constructs/fire-station-1.png"
+      },
+      {
         "file": "house-1.png",
         "name": "house",
         "num": 1,
         "label": "House 1",
         "src": "assets/images/constructs/house-1.png"
+      },
+      {
+        "file": "house-2.png",
+        "name": "house",
+        "num": 2,
+        "label": "House 2",
+        "src": "assets/images/constructs/house-2.png"
+      },
+      {
+        "file": "police-station-1.png",
+        "name": "police-station",
+        "num": 1,
+        "label": "Police Station 1",
+        "src": "assets/images/constructs/police-station-1.png"
+      },
+      {
+        "file": "road-1.png",
+        "name": "road",
+        "num": 1,
+        "label": "Road 1",
+        "src": "assets/images/constructs/road-1.png"
+      },
+      {
+        "file": "road-2.png",
+        "name": "road",
+        "num": 2,
+        "label": "Road 2",
+        "src": "assets/images/constructs/road-2.png"
+      },
+      {
+        "file": "road-3.png",
+        "name": "road",
+        "num": 3,
+        "label": "Road 3",
+        "src": "assets/images/constructs/road-3.png"
+      },
+      {
+        "file": "road-4.png",
+        "name": "road",
+        "num": 4,
+        "label": "Road 4",
+        "src": "assets/images/constructs/road-4.png"
+      },
+      {
+        "file": "road-5.png",
+        "name": "road",
+        "num": 5,
+        "label": "Road 5",
+        "src": "assets/images/constructs/road-5.png"
+      },
+      {
+        "file": "road-6.png",
+        "name": "road",
+        "num": 6,
+        "label": "Road 6",
+        "src": "assets/images/constructs/road-6.png"
+      },
+      {
+        "file": "road-7.png",
+        "name": "road",
+        "num": 7,
+        "label": "Road 7",
+        "src": "assets/images/constructs/road-7.png"
+      },
+      {
+        "file": "road-8.png",
+        "name": "road",
+        "num": 8,
+        "label": "Road 8",
+        "src": "assets/images/constructs/road-8.png"
+      },
+      {
+        "file": "road-9.png",
+        "name": "road",
+        "num": 9,
+        "label": "Road 9",
+        "src": "assets/images/constructs/road-9.png"
+      },
+      {
+        "file": "school-1.png",
+        "name": "school",
+        "num": 1,
+        "label": "School 1",
+        "src": "assets/images/constructs/school-1.png"
+      },
+      {
+        "file": "school-2.png",
+        "name": "school",
+        "num": 2,
+        "label": "School 2",
+        "src": "assets/images/constructs/school-2.png"
+      },
+      {
+        "file": "stone-wall-1.png",
+        "name": "stone-wall",
+        "num": 1,
+        "label": "Stone Wall 1",
+        "src": "assets/images/constructs/stone-wall-1.png"
+      },
+      {
+        "file": "train-track-1.png",
+        "name": "train-track",
+        "num": 1,
+        "label": "Train Track 1",
+        "src": "assets/images/constructs/train-track-1.png"
+      },
+      {
+        "file": "train-track-2.png",
+        "name": "train-track",
+        "num": 2,
+        "label": "Train Track 2",
+        "src": "assets/images/constructs/train-track-2.png"
       }
     ],
     "nature": [
@@ -826,11 +966,11 @@
     ]
   },
   "summary": {
-    "totalImages": 114,
-    "totalTypes": 55,
+    "totalImages": 134,
+    "totalTypes": 62,
     "byCategory": {
       "animals": 32,
-      "constructs": 11,
+      "constructs": 31,
       "nature": 54,
       "food": 3,
       "objects": 3,
@@ -848,6 +988,7 @@
       "basketball-hoop": 1,
       "bear": 2,
       "bike": 1,
+      "brick-wall": 1,
       "bush": 2,
       "cactus": 1,
       "cake": 2,
@@ -862,14 +1003,15 @@
       "dolphin": 1,
       "eagle": 1,
       "elephant": 2,
-      "fence": 1,
+      "fence": 3,
+      "fire-station": 1,
       "forest": 1,
       "giraffe": 2,
       "grass": 1,
       "heart": 1,
       "hippopotamus": 1,
       "horse": 1,
-      "house": 1,
+      "house": 2,
       "island-palm-tree": 1,
       "japan": 1,
       "lion": 3,
@@ -877,16 +1019,21 @@
       "moon": 1,
       "mountains": 1,
       "plant": 2,
+      "police-station": 1,
       "pond": 1,
       "puppy": 1,
       "rainbow": 8,
       "rhinoceros": 1,
+      "road": 9,
+      "school": 2,
       "scooter": 1,
       "soccer-ball": 1,
       "soccer-field": 1,
       "soccer-goal": 1,
+      "stone-wall": 1,
       "sun": 1,
       "tiger": 3,
+      "train-track": 2,
       "tree": 5,
       "unicorn": 9,
       "volcano": 1,

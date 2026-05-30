@@ -434,15 +434,20 @@ button:hover {
 .crop-ui {
     position: absolute;
     inset: 0;
-    overflow: hidden;      /* clips the dimming shadow to the element box */
     z-index: 50;
+}
+
+/* Dimming panels around the keep-region */
+.crop-mask {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+    pointer-events: none;
 }
 
 .crop-rect {
     position: absolute;
-    outline: 1px dashed #fff;
-    /* Big spread shadow dims everything outside the keep-region */
-    box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.5);
+    outline: 2px dashed #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4);
     cursor: move;
 }
 
