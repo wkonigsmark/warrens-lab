@@ -1123,3 +1123,11 @@ document.getElementById('print-btn').addEventListener('click', () => {
         refreshSelectionUI();
     }, 300);
 });
+
+// ===== UNDO / REDO WIRING =====
+document.getElementById('undo-btn').addEventListener('click', undo);
+document.getElementById('redo-btn').addEventListener('click', redo);
+
+// Seed history with the initial (empty) canvas so the first action is undoable
+pushHistory();
+updateUndoRedoButtons();

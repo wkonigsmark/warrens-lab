@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import colorsys
 import io
 import re
 import sys
@@ -40,6 +41,135 @@ NEIGHBORS_8 = (
     (0, 1),
     (1, 1),
 )
+
+NAMED_KEY_COLORS = {
+    "magenta": (228, 0, 118),
+    "pink": (228, 0, 118),
+    "green": (0, 255, 0),
+    "blue": (0, 0, 255),
+    "white": (255, 255, 255),
+    "black": (0, 0, 0),
+}
+
+
+def parse_key_color(value: str | None) -> tuple[int, int, int] | None:
+    if value is None:
+        return None
+
+    normalized = value.strip().lower()
+    if normalized == "auto":
+        return None
+    if normalized in NAMED_KEY_COLORS:
+        return NAMED_KEY_COLORS[normalized]
+
+    if normalized.startswith("#"):
+        normalized = normalized[1:]
+    if len(normalized) == 6:
+        try:
+            return tuple(int(normalized[i : i + 2], 16) for i in (0, 2, 4))
+        except ValueError:
+            pass
+
+    raise ValueError(f"Unsupported key color: {value!r}. Use a name like magenta or a hex color like #e40076.")
+
+
+def color_distance(a: tuple[int, int, int], b: tuple[int, int, int]) -> float:
+    return sum((a[i] - b[i]) ** 2 for i in range(3)) ** 0.5
+
+
+def hue_distance(a: float, b: float) -> float:
+    diff = abs(a - b)
+    return min(diff, 1.0 - diff)
+
+
+def is_key_color(pixel, key_rgb: tuple[int, int, int], tolerance: float, hue_tolerance: float) -> bool:
+    r, g, b, a = pixel
+    if a == 0:
+        return True
+
+    rgb = (r, g, b)
+    if color_distance(rgb, key_rgb) <= tolerance:
+        return True
+
+    pixel_h, pixel_s, pixel_v = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
+    key_h, key_s, _ = colorsys.rgb_to_hsv(key_rgb[0] / 255, key_rgb[1] / 255, key_rgb[2] / 255)
+    return (
+        hue_distance(pixel_h, key_h) <= hue_tolerance
+        and pixel_s >= max(0.35, key_s - 0.25)
+        and pixel_v >= 0.25
+    )
+
+
+def estimate_edge_key_color(img: Image.Image) -> tuple[int, int, int]:
+    pixels = img.load()
+    samples: list[tuple[int, int, int]] = []
+
+    def collect(x: int, y: int) -> None:
+        r, g, b, a = pixels[x, y]
+        if a > 0:
+            samples.append((r, g, b))
+
+    inset_x = max(1, img.width // 40)
+    inset_y = max(1, img.height // 40)
+    for x, y in (
+        (inset_x, inset_y),
+        (img.width - inset_x - 1, inset_y),
+        (inset_x, img.height - inset_y - 1),
+        (img.width - inset_x - 1, img.height - inset_y - 1),
+        (img.width // 2, inset_y),
+        (img.width // 2, img.height - inset_y - 1),
+        (inset_x, img.height // 2),
+        (img.width - inset_x - 1, img.height // 2),
+    ):
+        collect(x, y)
+
+    if not samples:
+        return (255, 255, 255)
+
+    return tuple(sorted(channel)[len(channel) // 2] for channel in zip(*samples))
+
+
+def clear_connected_key_background(
+    img: Image.Image,
+    key_rgb: tuple[int, int, int],
+    tolerance: float,
+    hue_tolerance: float,
+) -> None:
+    width, height = img.size
+    pixels = img.load()
+    background: set[tuple[int, int]] = set()
+    queue: deque[tuple[int, int]] = deque()
+
+    def seed(x: int, y: int) -> None:
+        point = (x, y)
+        if point not in background and is_key_color(pixels[x, y], key_rgb, tolerance, hue_tolerance):
+            background.add(point)
+            queue.append(point)
+
+    for x in range(width):
+        seed(x, 0)
+        seed(x, height - 1)
+    for y in range(height):
+        seed(0, y)
+        seed(width - 1, y)
+
+    while queue:
+        x, y = queue.popleft()
+        for dx, dy in NEIGHBORS_8:
+            nx = x + dx
+            ny = y + dy
+            if nx < 0 or ny < 0 or nx >= width or ny >= height:
+                continue
+            point = (nx, ny)
+            if point in background:
+                continue
+            if is_key_color(pixels[nx, ny], key_rgb, tolerance, hue_tolerance):
+                background.add(point)
+                queue.append(point)
+
+    for x, y in background:
+        r, g, b, _ = pixels[x, y]
+        pixels[x, y] = (r, g, b, 0)
 
 
 def is_background_like(pixel, min_lightness: int, max_channel_spread: int, max_lightness: int | None = None) -> bool:
@@ -389,6 +519,9 @@ def clear_small_negative_light_components(
 
 def clear_background(
     src_path: Path,
+    key_color: str | None,
+    key_tolerance: float,
+    key_hue_tolerance: float,
     min_lightness: int,
     max_channel_spread: int,
     crop: bool,
@@ -413,6 +546,85 @@ def clear_background(
 ) -> Image.Image:
     img = Image.open(src_path).convert("RGBA")
     pixels = img.load()
+    if key_color:
+        key_rgb = parse_key_color(key_color)
+        if key_rgb is None:
+            key_rgb = estimate_edge_key_color(img)
+        clear_connected_key_background(
+            img=img,
+            key_rgb=key_rgb,
+            tolerance=key_tolerance,
+            hue_tolerance=key_hue_tolerance,
+        )
+    else:
+        clear_gray_background(
+            img=img,
+            pixels=pixels,
+            min_lightness=min_lightness,
+            max_channel_spread=max_channel_spread,
+            extra_passes=extra_passes,
+            trapped_backdrop_cleanup=trapped_backdrop_cleanup,
+            dark_barrier=dark_barrier,
+            checker_component_cleanup=checker_component_cleanup,
+            checker_component_ratio=checker_component_ratio,
+            checker_component_max_white_ratio=checker_component_max_white_ratio,
+            negative_light_cleanup=negative_light_cleanup,
+            negative_light_max_area=negative_light_max_area,
+            negative_light_always_area=negative_light_always_area,
+            negative_light_max_density=negative_light_max_density,
+            interior_gray_cleanup=interior_gray_cleanup,
+            interior_min_lightness=interior_min_lightness,
+            interior_max_lightness=interior_max_lightness,
+            dark_guard_radius=dark_guard_radius,
+            small_light_component_limit=small_light_component_limit,
+            background_max_lightness=background_max_lightness,
+        )
+
+    alpha = img.getchannel("A")
+    bbox = alpha.getbbox()
+    if bbox and not crop and not no_center:
+        artwork = img.crop(bbox)
+        centered = Image.new("RGBA", img.size, (0, 0, 0, 0))
+        x = (img.width - artwork.width) // 2
+        y = (img.height - artwork.height) // 2
+        centered.paste(artwork, (x, y), artwork)
+        img = centered
+
+    if crop:
+        bbox = img.getchannel("A").getbbox()
+        if bbox:
+            left, top, right, bottom = bbox
+            left = max(0, left - padding)
+            top = max(0, top - padding)
+            right = min(img.width, right + padding)
+            bottom = min(img.height, bottom + padding)
+            img = img.crop((left, top, right, bottom))
+
+    return img
+
+
+def clear_gray_background(
+    img: Image.Image,
+    pixels,
+    min_lightness: int,
+    max_channel_spread: int,
+    extra_passes: int,
+    trapped_backdrop_cleanup: bool,
+    dark_barrier: int,
+    checker_component_cleanup: bool,
+    checker_component_ratio: float,
+    checker_component_max_white_ratio: float,
+    negative_light_cleanup: bool,
+    negative_light_max_area: int,
+    negative_light_always_area: int,
+    negative_light_max_density: float,
+    interior_gray_cleanup: bool,
+    interior_min_lightness: int,
+    interior_max_lightness: int,
+    dark_guard_radius: int,
+    small_light_component_limit: int,
+    background_max_lightness: int | None,
+) -> None:
     background_min_lightness, background_max_lightness = estimate_background_lightness_bounds(
         img,
         min_lightness=min_lightness,
