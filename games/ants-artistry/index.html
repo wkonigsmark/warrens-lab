@@ -7,7 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
     <meta name="theme-color" content="#1a1a1a">
-    <link rel="stylesheet" href="styles.css?v=2">
+    <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
 
@@ -55,6 +55,8 @@
             </div>
 
             <div class="action-controls">
+                <button id="undo-btn" title="Undo (⌘Z)" disabled>↶</button>
+                <button id="redo-btn" title="Redo (⌘⇧Z)" disabled>↷</button>
                 <button id="help-btn" title="Keyboard shortcuts">⌨️</button>
                 <button id="clear-canvas-btn" title="Clear canvas">Clear</button>
                 <button id="save-btn" title="Save as PNG">💾 Save</button>
@@ -124,6 +126,8 @@
         <button class="shortcuts-close" id="shortcuts-close" title="Close (Esc)">✕</button>
         <h2>⌨️ Keyboard Shortcuts</h2>
         <table class="shortcuts-table">
+            <tr><td><kbd>⌘</kbd> + <kbd>Z</kbd></td><td>Undo</td></tr>
+            <tr><td><kbd>⌘</kbd> <kbd>⇧</kbd> + <kbd>Z</kbd></td><td>Redo</td></tr>
             <tr><td><kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd></td><td>Nudge selection 2px</td></tr>
             <tr><td><kbd>⇧</kbd> + arrows</td><td>Nudge 20px (bigger steps)</td></tr>
             <tr><td><kbd>⌘</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd></td><td>Bring forward / send back</td></tr>
@@ -138,7 +142,7 @@
     </div>
 </div>
 
-<script src="script.js?v=2"></script>
+<script src="script.js?v=3"></script>
 
 </body>
 </html>

@@ -917,6 +917,13 @@ document.addEventListener('keydown', (e) => {
     // Esc deselects even when nothing is "actionable"
     if (e.key === 'Escape') { clearSelection(); return; }
 
+    // ⌘Z undo / ⌘⇧Z redo (works regardless of current selection)
+    if (cmd && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        if (e.shiftKey) redo(); else undo();
+        return;
+    }
+
     // ⌘A — select all (works regardless of current selection)
     if (cmd && e.key.toLowerCase() === 'a') {
         e.preventDefault();

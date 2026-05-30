@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-30T15:18:18+00:00",
+  "generated": "2026-05-30T15:27:31+00:00",
   "categoryOrder": [
     "animals",
     "constructs",
@@ -13,6 +13,13 @@
   "categories": {
     "animals": [
       {
+        "file": "aye-aye-1.png",
+        "name": "aye-aye",
+        "num": 1,
+        "label": "Aye Aye 1",
+        "src": "assets/images/animals/aye-aye-1.png"
+      },
+      {
         "file": "bear-1.png",
         "name": "bear",
         "num": 1,
@@ -25,6 +32,13 @@
         "num": 2,
         "label": "Bear 2",
         "src": "assets/images/animals/bear-2.png"
+      },
+      {
+        "file": "butterfly-1.png",
+        "name": "butterfly",
+        "num": 1,
+        "label": "Butterfly 1",
+        "src": "assets/images/animals/butterfly-1.png"
       },
       {
         "file": "deer-1.png",
@@ -48,6 +62,13 @@
         "src": "assets/images/animals/eagle-1.png"
       },
       {
+        "file": "eagle-world-cup-1.png",
+        "name": "eagle-world-cup",
+        "num": 1,
+        "label": "Eagle World Cup 1",
+        "src": "assets/images/animals/eagle-world-cup-1.png"
+      },
+      {
         "file": "elephant-1.png",
         "name": "elephant",
         "num": 1,
@@ -60,6 +81,13 @@
         "num": 2,
         "label": "Elephant 2",
         "src": "assets/images/animals/elephant-2.png"
+      },
+      {
+        "file": "fossa-1.png",
+        "name": "fossa",
+        "num": 1,
+        "label": "Fossa 1",
+        "src": "assets/images/animals/fossa-1.png"
       },
       {
         "file": "giraffe-1.png",
@@ -76,6 +104,13 @@
         "src": "assets/images/animals/giraffe-2.png"
       },
       {
+        "file": "gorilla-1.png",
+        "name": "gorilla",
+        "num": 1,
+        "label": "Gorilla 1",
+        "src": "assets/images/animals/gorilla-1.png"
+      },
+      {
         "file": "hippopotamus-1.png",
         "name": "hippopotamus",
         "num": 1,
@@ -88,6 +123,20 @@
         "num": 1,
         "label": "Horse 1",
         "src": "assets/images/animals/horse-1.png"
+      },
+      {
+        "file": "lemur-1.png",
+        "name": "lemur",
+        "num": 1,
+        "label": "Lemur 1",
+        "src": "assets/images/animals/lemur-1.png"
+      },
+      {
+        "file": "leopard-1.png",
+        "name": "leopard",
+        "num": 1,
+        "label": "Leopard 1",
+        "src": "assets/images/animals/leopard-1.png"
       },
       {
         "file": "lion-1.png",
@@ -118,11 +167,32 @@
         "src": "assets/images/animals/monkey-1.png"
       },
       {
+        "file": "orangutan-1.png",
+        "name": "orangutan",
+        "num": 1,
+        "label": "Orangutan 1",
+        "src": "assets/images/animals/orangutan-1.png"
+      },
+      {
+        "file": "panda-1.png",
+        "name": "panda",
+        "num": 1,
+        "label": "Panda 1",
+        "src": "assets/images/animals/panda-1.png"
+      },
+      {
         "file": "puppy-1.png",
         "name": "puppy",
         "num": 1,
         "label": "Puppy 1",
         "src": "assets/images/animals/puppy-1.png"
+      },
+      {
+        "file": "red-panda-1.png",
+        "name": "red-panda",
+        "num": 1,
+        "label": "Red Panda 1",
+        "src": "assets/images/animals/red-panda-1.png"
       },
       {
         "file": "rhinoceros-1.png",
@@ -966,10 +1036,10 @@
     ]
   },
   "summary": {
-    "totalImages": 134,
-    "totalTypes": 62,
+    "totalImages": 144,
+    "totalTypes": 72,
     "byCategory": {
-      "animals": 32,
+      "animals": 42,
       "constructs": 31,
       "nature": 54,
       "food": 3,
@@ -979,6 +1049,7 @@
       "sports": 10
     },
     "byType": {
+      "aye-aye": 1,
       "baseball": 1,
       "baseball-bat": 1,
       "baseball-field": 1,
@@ -990,6 +1061,7 @@
       "bike": 1,
       "brick-wall": 1,
       "bush": 2,
+      "butterfly": 1,
       "cactus": 1,
       "cake": 2,
       "castle": 9,
@@ -1002,11 +1074,14 @@
       "desert": 1,
       "dolphin": 1,
       "eagle": 1,
+      "eagle-world-cup": 1,
       "elephant": 2,
       "fence": 3,
       "fire-station": 1,
       "forest": 1,
+      "fossa": 1,
       "giraffe": 2,
+      "gorilla": 1,
       "grass": 1,
       "heart": 1,
       "hippopotamus": 1,
@@ -1014,15 +1089,20 @@
       "house": 2,
       "island-palm-tree": 1,
       "japan": 1,
+      "lemur": 1,
+      "leopard": 1,
       "lion": 3,
       "monkey": 1,
       "moon": 1,
       "mountains": 1,
+      "orangutan": 1,
+      "panda": 1,
       "plant": 2,
       "police-station": 1,
       "pond": 1,
       "puppy": 1,
       "rainbow": 8,
+      "red-panda": 1,
       "rhinoceros": 1,
       "road": 9,
       "school": 2,

@@ -707,10 +707,28 @@ button:hover {
     }
 }
 
-/* ===== HELP BUTTON ===== */
+/* ===== HELP / UNDO / REDO BUTTONS ===== */
 #help-btn {
     font-size: 1.1rem;
     padding: 10px 14px;
+}
+
+#undo-btn, #redo-btn {
+    font-size: 1.2rem;
+    padding: 8px 13px;
+    line-height: 1;
+}
+
+#undo-btn:disabled, #redo-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    border-color: #dee2e6;
+    color: #999;
+}
+#undo-btn:disabled:hover, #redo-btn:disabled:hover {
+    background: white;
+    border-color: #dee2e6;
+    color: #999;
 }
 
 /* ===== SHORTCUTS OVERLAY ===== */
