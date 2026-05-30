@@ -76,8 +76,18 @@
       display: grid;
       grid-template-rows: auto minmax(240px, 40vh) auto auto;
       align-content: center;
-      gap: 24px;
+      gap: 18px;
       text-align: center;
+    }
+
+    .host-mark {
+      position: relative;
+      justify-self: center;
+      display: grid;
+      place-items: center;
+      width: min(100%, 520px);
+      min-height: 250px;
+      margin-bottom: 0;
     }
 
     .host-flags {
@@ -85,6 +95,7 @@
       display: inline-flex;
       align-items: center;
       gap: 18px;
+      transform: translateY(-52px);
     }
 
     .host-flag {
@@ -105,11 +116,14 @@
     }
 
     .eagle-world-cup {
-      justify-self: center;
-      width: min(38vw, 330px);
+      position: absolute;
+      z-index: 2;
+      top: 28px;
+      left: 50%;
+      width: min(34vw, 300px);
       max-width: 82%;
-      margin: -8px 0 -18px;
       filter: drop-shadow(0 24px 56px rgba(0, 0, 0, 0.34));
+      transform: translateX(-50%);
     }
 
     .eyebrow {
@@ -477,8 +491,13 @@
 
     @media (max-width: 640px) {
       .hero {
-        grid-template-rows: auto minmax(220px, 34vh) auto auto;
-        gap: 20px;
+        grid-template-rows: auto minmax(150px, 22vh) auto auto;
+        gap: 8px;
+      }
+
+      .host-mark {
+        min-height: 188px;
+        margin-bottom: 2px;
       }
 
       .host-flag {
@@ -488,11 +507,16 @@
 
       .host-flags {
         gap: 8px;
+        transform: translateY(-40px);
       }
 
       .eagle-world-cup {
-        width: min(54vw, 220px);
-        margin: -4px 0 -12px;
+        top: 20px;
+        width: min(46vw, 180px);
+      }
+
+      .title-stage {
+        min-height: 150px;
       }
 
       .countdown {
@@ -528,13 +552,15 @@
 
   <main class="page-shell">
     <section class="hero" aria-labelledby="page-title">
-      <div class="host-flags" aria-label="2026 World Cup host nations: Mexico, United States, Canada">
-        <span class="host-flag"><img src="https://flagcdn.com/w320/mx.png" alt="Mexico flag"></span>
-        <span class="host-flag"><img src="https://flagcdn.com/w320/us.png" alt="United States flag"></span>
-        <span class="host-flag"><img src="https://flagcdn.com/w320/ca.png" alt="Canada flag"></span>
-      </div>
+      <div class="host-mark">
+        <div class="host-flags" aria-label="2026 World Cup host nations: Mexico, United States, Canada">
+          <span class="host-flag"><img src="https://flagcdn.com/w320/mx.png" alt="Mexico flag"></span>
+          <span class="host-flag"><img src="https://flagcdn.com/w320/us.png" alt="United States flag"></span>
+          <span class="host-flag"><img src="https://flagcdn.com/w320/ca.png" alt="Canada flag"></span>
+        </div>
 
-      <img class="eagle-world-cup" src="assets/eagle-world-cup.png" alt="World Cup eagle mark">
+        <img class="eagle-world-cup" src="assets/eagle-world-cup.png" alt="World Cup eagle mark">
+      </div>
 
       <div class="title-stage" id="title-stage">
         <h1 id="page-title" class="fallback-title">Warren's<br>World Cup<br>Pool</h1>

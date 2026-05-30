@@ -282,6 +282,8 @@ function addElementToCanvas(imageData, x, y) {
 function attachElementHandlers(element) {
     element.addEventListener('mousedown', (e) => {
         if (cropEl) return;  // ignore element interaction while cropping
+        // While editing a text box, let clicks inside it position the caret
+        if (element.classList.contains('editing')) { e.stopPropagation(); return; }
         e.stopPropagation(); // don't trigger canvas marquee
         if (e.target.classList.contains('resize-handle')) {
             selectOnly(element);
@@ -296,6 +298,79 @@ function attachElementHandlers(element) {
             startDrag(e);
         }
     });
+
+    // Text boxes: double-click to edit
+    if (element.classList.contains('text-element')) {
+        element.addEventListener('dblclick', (e) => {
+            e.stopPropagation();
+            beginTextEdit(element);
+        });
+    }
+}
+
+// ===== TEXT BOXES =====
+function addTextBox() {
+    const el = document.createElement('div');
+    el.className = 'canvas-element text-element';
+    el.style.left = '120px';
+    el.style.top = '120px';
+    el.style.zIndex = (canvas.querySelectorAll('.canvas-element').length + 1);
+    // Default text styling (stored on the element so it survives snapshots)
+    el.style.fontFamily = "'Outfit', sans-serif";
+    el.style.fontSize = '28px';
+
+    const txt = document.createElement('div');
+    txt.className = 'text-content';
+    txt.textContent = 'Your text';
+    el.appendChild(txt);
+
+    const handle = document.createElement('div');
+    handle.className = 'resize-handle';
+    el.appendChild(handle);
+
+    attachElementHandlers(el);
+    canvas.appendChild(el);
+    selectOnly(el);
+    pushHistory();
+    // Jump straight into editing the placeholder
+    beginTextEdit(el, true);
+}
+
+let editingTextEl = null;
+function beginTextEdit(el, selectAll = false) {
+    if (editingTextEl && editingTextEl !== el) endTextEdit();
+    editingTextEl = el;
+    el.classList.add('editing');
+    const txt = el.querySelector('.text-content');
+    txt.setAttribute('contenteditable', 'plaintext-only');
+    txt.focus();
+
+    const range = document.createRange();
+    range.selectNodeContents(txt);
+    if (!selectAll) range.collapse(false); // caret at end
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    txt.addEventListener('blur', onTextBlur);
+}
+
+function onTextBlur() { endTextEdit(); }
+
+function endTextEdit() {
+    if (!editingTextEl) return;
+    const el = editingTextEl;
+    const txt = el.querySelector('.text-content');
+    txt.removeEventListener('blur', onTextBlur);
+    txt.removeAttribute('contenteditable');
+    el.classList.remove('editing');
+    // Drop empty boxes
+    if (txt.textContent.trim() === '') {
+        el.remove();
+        if (selection.includes(el)) clearSelection();
+    }
+    editingTextEl = null;
+    pushHistory();
 }
 
 // ===== UNDO / REDO HISTORY =====
@@ -308,7 +383,10 @@ function snapshotCanvas() {
     const clone = canvas.cloneNode(true);
     clone.querySelectorAll('.crop-ui').forEach(n => n.remove());
     clone.querySelectorAll('.canvas-element').forEach(el =>
-        el.classList.remove('selected', 'primary', 'dragging', 'cropping'));
+        el.classList.remove('selected', 'primary', 'dragging', 'cropping', 'editing'));
+    // Don't persist contenteditable state in history
+    clone.querySelectorAll('.text-content[contenteditable]').forEach(t =>
+        t.removeAttribute('contenteditable'));
     return clone.innerHTML;
 }
 
@@ -511,10 +589,19 @@ function updatePropertiesPanel() {
         ? `${selection.length} elements selected`
         : 'Selected Element';
 
-    const baseW = parseFloat(p.dataset.baseW) || 100;
-    const scale = Math.round((p.offsetWidth / baseW) * 100);
-    document.getElementById('size-slider').value = scale;
-    document.getElementById('size-display').textContent = scale + '%';
+    const isText = p.classList.contains('text-element');
+    const sizeGroup = document.getElementById('size-slider').closest('.property-group');
+
+    if (isText) {
+        // Text uses font-size, not box-scale — hide the % size slider
+        sizeGroup.classList.add('hidden');
+    } else {
+        sizeGroup.classList.remove('hidden');
+        const baseW = parseFloat(p.dataset.baseW) || 100;
+        const scale = Math.round((p.offsetWidth / baseW) * 100);
+        document.getElementById('size-slider').value = scale;
+        document.getElementById('size-display').textContent = scale + '%';
+    }
 
     const rotation = getRotation(p);
     document.getElementById('rotation-slider').value = rotation;
@@ -526,6 +613,25 @@ function updatePropertiesPanel() {
     lockBox.indeterminate = lockedCount > 0 && lockedCount < selection.length;
 
     updateCropControls();
+    updateTextControls();
+}
+
+// Show/sync text-formatting controls for a single selected text box
+function updateTextControls() {
+    const group = document.getElementById('text-group');
+    const p = primary();
+    const isText = selection.length === 1 && p && p.classList.contains('text-element');
+    group.classList.toggle('hidden', !isText);
+    if (!isText) return;
+
+    document.getElementById('font-family').value =
+        p.style.fontFamily || "'Outfit', sans-serif";
+    const fs = parseInt(p.style.fontSize) || 28;
+    document.getElementById('font-size').value = fs;
+    document.getElementById('font-size-display').textContent = fs + 'px';
+    document.getElementById('text-bold').classList.toggle('active', p.style.fontWeight === 'bold');
+    document.getElementById('text-italic').classList.toggle('active', p.style.fontStyle === 'italic');
+    document.getElementById('text-underline').classList.toggle('active', p.style.textDecoration.includes('underline'));
 }
 
 // Show/hide crop controls based on the current single selection
@@ -536,8 +642,8 @@ function updateCropControls() {
     const note = document.getElementById('crop-rotate-note');
     const p = primary();
 
-    // Crop only makes sense for a single, unrotated element
-    const single = selection.length === 1 && p;
+    // Crop only makes sense for a single, unrotated image element
+    const single = selection.length === 1 && p && !p.classList.contains('text-element');
     group.classList.toggle('hidden', !single);
     if (!single) return;
 
@@ -911,7 +1017,15 @@ document.addEventListener('keydown', (e) => {
         return;
     }
 
-    if (document.activeElement.tagName === 'INPUT') return;
+    // While editing a text box, let the text field handle all keys (except Esc to finish)
+    if (editingTextEl) {
+        if (e.key === 'Escape') { e.preventDefault(); endTextEdit(); }
+        return;
+    }
+
+    if (document.activeElement.tagName === 'INPUT' ||
+        document.activeElement.tagName === 'SELECT' ||
+        document.activeElement.isContentEditable) return;
     const cmd = e.metaKey || e.ctrlKey;
 
     // Esc deselects even when nothing is "actionable"
@@ -1123,6 +1237,40 @@ document.getElementById('print-btn').addEventListener('click', () => {
         refreshSelectionUI();
     }, 300);
 });
+
+// ===== TEXT CONTROL WIRING =====
+document.getElementById('add-text-btn').addEventListener('click', addTextBox);
+
+document.getElementById('font-family').addEventListener('change', (e) => {
+    const p = primary();
+    if (!p || !p.classList.contains('text-element')) return;
+    p.style.fontFamily = e.target.value;
+    pushHistory();
+});
+
+document.getElementById('font-size').addEventListener('input', (e) => {
+    const p = primary();
+    if (!p || !p.classList.contains('text-element')) return;
+    p.style.fontSize = e.target.value + 'px';
+    document.getElementById('font-size-display').textContent = e.target.value + 'px';
+});
+document.getElementById('font-size').addEventListener('change', () => {
+    if (primary()?.classList.contains('text-element')) pushHistory();
+});
+
+function toggleTextStyle(prop, onVal, offVal) {
+    const p = primary();
+    if (!p || !p.classList.contains('text-element')) return;
+    const cur = (prop === 'textDecoration')
+        ? p.style.textDecoration.includes('underline')
+        : p.style[prop] === onVal;
+    p.style[prop] = cur ? offVal : onVal;
+    updateTextControls();
+    pushHistory();
+}
+document.getElementById('text-bold').addEventListener('click', () => toggleTextStyle('fontWeight', 'bold', 'normal'));
+document.getElementById('text-italic').addEventListener('click', () => toggleTextStyle('fontStyle', 'italic', 'normal'));
+document.getElementById('text-underline').addEventListener('click', () => toggleTextStyle('textDecoration', 'underline', 'none'));
 
 // ===== UNDO / REDO WIRING =====
 document.getElementById('undo-btn').addEventListener('click', undo);

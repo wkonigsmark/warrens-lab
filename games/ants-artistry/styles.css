@@ -423,6 +423,69 @@ button:hover {
     display: block;
 }
 
+/* ===== TEXT BOXES ===== */
+.text-element {
+    width: auto;
+    height: auto;
+    min-width: 24px;
+    padding: 4px 6px;
+    color: #000;
+    line-height: 1.2;
+    white-space: pre-wrap;
+    cursor: grab;
+}
+.text-element .text-content {
+    outline: none;
+    min-width: 1ch;
+    pointer-events: none;   /* clicks go to the box for drag, until editing */
+}
+.text-element.editing {
+    cursor: text;
+    outline: 2px solid #667eea;
+    background: rgba(255, 255, 255, 0.6);
+}
+.text-element.editing .text-content {
+    pointer-events: auto;   /* allow caret placement while editing */
+    cursor: text;
+    user-select: text;      /* override .canvas-element user-select:none */
+    -webkit-user-select: text;
+}
+/* Text sizing is via the font-size slider, so hide the box resize handle */
+.text-element .resize-handle { display: none !important; }
+
+/* ===== TEXT FORMATTING CONTROLS ===== */
+.text-select {
+    width: 100%;
+    padding: 7px 8px;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    margin-bottom: 8px;
+    background: white;
+    cursor: pointer;
+}
+.text-style-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+.text-style-btn {
+    padding: 8px;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 1rem;
+}
+.text-style-btn:hover { border-color: #667eea; }
+.text-style-btn.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
 /* Hide selection chrome on the element being cropped */
 .canvas-element.cropping {
     border: none !important;

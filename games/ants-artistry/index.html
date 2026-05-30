@@ -7,7 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
     <meta name="theme-color" content="#1a1a1a">
-    <link rel="stylesheet" href="styles.css?v=3">
+    <link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
 
@@ -55,6 +55,7 @@
             </div>
 
             <div class="action-controls">
+                <button id="add-text-btn" title="Add a text box">🔤 Text</button>
                 <button id="undo-btn" title="Undo (⌘Z)" disabled>↶</button>
                 <button id="redo-btn" title="Redo (⌘⇧Z)" disabled>↷</button>
                 <button id="help-btn" title="Keyboard shortcuts">⌨️</button>
@@ -106,6 +107,28 @@
                     <button id="reset-crop-btn" class="reset-crop-btn hidden">↺ Reset crop</button>
                     <p id="crop-rotate-note" class="crop-note hidden">Set rotation to 0° to crop.</p>
                 </div>
+                <!-- Text formatting (shown only when a text box is selected) -->
+                <div class="property-group hidden" id="text-group">
+                    <label>Text</label>
+                    <select id="font-family" class="text-select">
+                        <option value="'Outfit', sans-serif">Outfit</option>
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="'Comic Sans MS', 'Comic Sans', cursive">Comic Sans</option>
+                        <option value="Georgia, serif">Georgia</option>
+                        <option value="'Times New Roman', serif">Times New Roman</option>
+                        <option value="'Courier New', monospace">Courier</option>
+                        <option value="'Trebuchet MS', sans-serif">Trebuchet</option>
+                        <option value="Verdana, sans-serif">Verdana</option>
+                        <option value="Impact, sans-serif">Impact</option>
+                    </select>
+                    <div class="text-style-row">
+                        <button id="text-bold" class="text-style-btn" title="Bold"><b>B</b></button>
+                        <button id="text-italic" class="text-style-btn" title="Italic"><i>I</i></button>
+                        <button id="text-underline" class="text-style-btn" title="Underline"><u>U</u></button>
+                    </div>
+                    <label>Font size: <span id="font-size-display">28px</span></label>
+                    <input type="range" id="font-size" min="10" max="120" value="28">
+                </div>
                 <!-- Crop-mode action bar (replaces controls while cropping) -->
                 <div class="property-group crop-actions hidden" id="crop-actions">
                     <p class="crop-hint">Drag the handles to trim. <kbd>Enter</kbd> apply · <kbd>Esc</kbd> cancel</p>
@@ -142,7 +165,7 @@
     </div>
 </div>
 
-<script src="script.js?v=3"></script>
+<script src="script.js?v=4"></script>
 
 </body>
 </html>

@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=26">
+    <link rel="stylesheet" href="style.css?v=27">
 </head>
 <body>
 
@@ -31,6 +31,7 @@
                 <button class="action-btn" id="start-exploration">Mission Quiz</button>
                 <button class="action-btn accent" id="play-geocode-btn">🕵️ Geocode</button>
                 <a class="action-btn" href="flag-match.html">🏴 Flag Match</a>
+                <a class="action-btn" href="shape-match.html">🗺 Shape Match</a>
                 <!-- Print menu (lists available print quizzes) -->
                 <div class="nav-menu" id="print-menu-wrap">
                     <button class="action-btn" id="print-menu-btn" aria-haspopup="true" aria-expanded="false">🖨 Print</button>
@@ -39,6 +40,7 @@
                         <a class="menu-item" href="print/oceans.html" target="_blank" rel="noopener" role="menuitem">🌊 The 5 Oceans</a>
                         <a class="menu-item" href="print/animals.html" target="_blank" rel="noopener" role="menuitem">🐘 Animals of the World</a>
                         <a class="menu-item" href="print/flags.html" target="_blank" rel="noopener" role="menuitem">🏴 Flags of the World</a>
+                        <a class="menu-item" href="print/shapes.html" target="_blank" rel="noopener" role="menuitem">🗺 Shapes of the World</a>
                     </div>
                 </div>
 
@@ -241,13 +243,13 @@
                 <div class="roadmap-body">
 
                     <div class="roadmap-update">
-                        <span class="update-tag">🏴 Latest update</span>
+                        <span class="update-tag">🗺 Latest update</span>
                         <p>
-                            <strong>Flag Match game shipped + rebrand to Ants &amp; Atlases.</strong> A new interactive <strong>🏴 Flag Match</strong> game is live: a real national flag is shown (sourced from <code>flagcdn.com</code> — proper flag images, not emoji) and the learner picks the country from multiple choice. It runs on a <strong>combined difficulty ladder of 8 rungs</strong> (Starter → World Master); each rung ramps both the country pool (L1 Famous 20 → L4 World Tour) <em>and</em> the number of answer choices (2 → 6) together, so kids make achievable strides. Distractors get smarter as you climb — early rungs pull random wrong answers, higher rungs pull same-continent decoys for a true test of flag knowledge. Streaks, a per-level "Level Up!" celebration, locked/unlocked rungs, and localStorage progress persistence are all wired up. The whole tool was also rebranded from "Orbis" to <strong>Ants &amp; Atlases</strong> (files, globals, display text, storage keys).
+                            <strong>Shape Match shipped — game + print worksheet.</strong> A new <strong>🗺 Shape Match</strong> identifies a country from its outline silhouette. It's mechanically identical to Flag Match (same 8-rung ladder, smarter distractors, streaks, level-up, localStorage progress) but shows the country's shape instead of its flag. Shapes are rendered live from the Natural Earth geometry via a new <code>AACountries.silhouette()</code> helper that <em>clusters polygons</em> — dropping far-flung outliers (French Guiana on France, Alaska/Hawaii on the US) so the main landmass fills the frame, while keeping nearby islands so archipelagos (Japan, Indonesia, NZ, the Philippines) stay recognizable. A matching <strong>🗺 Shapes of the World</strong> print worksheet (numbered black silhouettes → country names, difficulty selector, shuffle, upside-down answer key) ships alongside.
                             <br><br>
-                            <strong>Earlier:</strong> <strong>🐘 Animals of the World</strong> print worksheet (draw-a-line matching, randomized per load, upside-down answer key) and atlas growth from 100 → 129 curated countries. Print quizzes share one kid-friendly template (Patrick Hand + Outfit, paper-tone preview, <code>@media print</code> Letter output).
+                            <strong>Earlier:</strong> <strong>🏴 Flag Match</strong> game + <strong>🏴 Flags of the World</strong> print worksheet (real flagcdn images, not emoji), the <strong>🐘 Animals of the World</strong> sheet, atlas growth to 129 curated countries, and the rebrand from "Orbis" to <strong>Ants &amp; Atlases</strong>. Fixed flag images being cropped (<code>object-fit: contain</code>).
                             <br><br>
-                            <strong>Next:</strong> Flag → Country <em>print</em> worksheet (same flagcdn images, paper format), then more matching sheets (Foods, Landmarks) and the Tier 4 curation runway.
+                            <strong>Next:</strong> more matching sheets (Foods, Landmarks), a Foods/Landmarks interactive mode, and the Tier 4 curation runway.
                         </p>
                     </div>
 
@@ -279,6 +281,9 @@
                                 <strong>Flag Match game</strong> — multiple-choice flag identification with a combined 8-rung difficulty ladder (Starter → World Master). Each rung ramps the country pool (L1 → L4) and the choice count (2 → 6) together. Real flag images from <code>flagcdn.com</code> (the atlas <code>flag_svg</code> field), not emoji. Smarter distractors as you climb: random decoys at low rungs, same-continent decoys at high rungs. Streak counter, per-level "Level Up!" celebration, locked/unlocked rungs, localStorage progress persistence. Standalone <code>flag-match.html</code> in the cinematic dark theme, linked from the main nav.
                             </li>
                             <li>
+                                <strong>Shape Match game</strong> — same engine and 8-rung ladder as Flag Match, but identifies a country from its outline silhouette. Shapes rendered live from Natural Earth geometry via <code>AACountries.silhouette()</code>, which clusters polygons to drop distant outliers (French Guiana, Alaska/Hawaii) while keeping archipelagos (Japan, Indonesia, NZ, Philippines) intact. Clean cutout silhouette on the dark card. Standalone <code>shape-match.html</code>.
+                            </li>
+                            <li>
                                 <strong>Region Focus zoom</strong> <span class="item-badge needs-testing">🧪 Needs testing</span> — Focus chip bar in Countries view (World · Africa · Asia · Europe · N. America · S. America · Oceania). Click a chip → animated SVG viewBox transition. Click active chip again to toggle back to World. Hand-curated representative ISOs per continent + main-polygon-only bbox math so Europe isn't dragged east by Russia and Oceania frames on Australia. Animation uses <code>setTimeout</code> (works in hidden tabs unlike RAF). <em>Known nit:</em> country labels grow proportionally with zoom (need inverse scaling).
                             </li>
                             <li>
@@ -291,7 +296,7 @@
                                 <strong>Overlay system polish</strong> — five overlays (Discovery, Roadmap, Mission Summary, Geocode Result, Atlas Data Table) share consistent close buttons (circular, top-right). ESC and backdrop click close any open overlay. Summary modals use a HOME (secondary outline) + primary action button pattern. Cache-busting query strings on every script/style tag so dev edits show on reload.
                             </li>
                             <li>
-                                <strong>Print quizzes (4 worksheets, growing)</strong> — kid-friendly Letter-portrait worksheets sharing one template:
+                                <strong>Print quizzes (5 worksheets, growing)</strong> — kid-friendly Letter-portrait worksheets sharing one template:
                                 <ul class="sub-list">
                                     <li><em>🌍 The 7 Continents</em> — numbered circles 1-7 on each continent, hand-drawn Antarctica strip (Natural Earth omits Antarctica).</li>
                                     <li><em>🌊 The 5 Oceans</em> — soft-blue water backdrop, numbered circles 1-5 on Arctic / Atlantic / Indian / Pacific / Southern.</li>
@@ -302,6 +307,7 @@
                                     <li>🌊 <strong>The 5 Oceans</strong> — same map with soft-blue water backdrop.</li>
                                     <li>🐘 <strong>Animals of the World</strong> — draw-a-line matching: 8 animals → 7 continents. Randomized per load, upside-down answer key.</li>
                                     <li>🏴 <strong>Flags of the World</strong> — draw-a-line matching: 8 real flag images (flagcdn) → country names. Screen-only difficulty selector (Famous 20 → World) + "New flags" shuffle; both hidden in print. Numbered flags with an upside-down answer key.</li>
+                                    <li>🗺 <strong>Shapes of the World</strong> — draw-a-line matching: 8 black country silhouettes → country names. Same difficulty selector + shuffle + upside-down answer key. Silhouettes rendered from map geometry with outlier-dropping so each shape frames cleanly.</li>
                                 </ul>
                             </li>
                             <li>
@@ -533,10 +539,10 @@
         </div>
     </div>
 
-    <script src="aa_countries.js?v=26"></script>
-    <script src="aa_quiz.js?v=26"></script>
-    <script src="aa_geocode_ui.js?v=26"></script>
-    <script src="aa_mission_ui.js?v=26"></script>
-    <script src="script.js?v=26"></script>
+    <script src="aa_countries.js?v=27"></script>
+    <script src="aa_quiz.js?v=27"></script>
+    <script src="aa_geocode_ui.js?v=27"></script>
+    <script src="aa_mission_ui.js?v=27"></script>
+    <script src="script.js?v=27"></script>
 </body>
 </html>
