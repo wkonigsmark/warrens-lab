@@ -420,6 +420,61 @@ function pasteClipboard() {
     pushHistory();
 }
 
+// ===== RIGHT-CLICK CONTEXT MENU =====
+const contextMenu = document.getElementById('context-menu');
+
+function showContextMenu(x, y) {
+    // Enable/disable items based on current state
+    const hasSel = selection.length > 0;
+    contextMenu.querySelector('[data-action="copy"]').disabled = !hasSel;
+    contextMenu.querySelector('[data-action="duplicate"]').disabled = !hasSel;
+    contextMenu.querySelector('[data-action="front"]').disabled = !hasSel;
+    contextMenu.querySelector('[data-action="back"]').disabled = !hasSel;
+    contextMenu.querySelector('[data-action="delete"]').disabled = !hasSel;
+    contextMenu.querySelector('[data-action="paste"]').disabled = !clipboard.length;
+
+    contextMenu.classList.remove('hidden');
+    // Clamp to viewport
+    const r = contextMenu.getBoundingClientRect();
+    const left = Math.min(x, window.innerWidth - r.width - 6);
+    const top = Math.min(y, window.innerHeight - r.height - 6);
+    contextMenu.style.left = left + 'px';
+    contextMenu.style.top = top + 'px';
+}
+
+function hideContextMenu() { contextMenu.classList.add('hidden'); }
+
+canvas.addEventListener('contextmenu', (e) => {
+    if (cropEl || editingTextEl) return;   // don't hijack while cropping/typing
+    const el = e.target.closest('.canvas-element');
+    if (el) {
+        // Right-clicking an unselected element selects it first
+        if (!selection.includes(el)) selectOnly(el);
+    }
+    e.preventDefault();
+    showContextMenu(e.clientX, e.clientY);
+});
+
+contextMenu.addEventListener('click', (e) => {
+    const btn = e.target.closest('.ctx-item');
+    if (!btn || btn.disabled) return;
+    switch (btn.dataset.action) {
+        case 'copy': copySelection(); break;
+        case 'paste': pasteClipboard(); break;
+        case 'duplicate': copySelection(); pasteClipboard(); break;
+        case 'front': layerOp(bringToFront); break;
+        case 'back': layerOp(sendToBack); break;
+        case 'delete': deleteSelection(); break;
+    }
+    hideContextMenu();
+});
+
+// Dismiss the menu on any outside click, scroll, or Escape
+document.addEventListener('mousedown', (e) => {
+    if (!contextMenu.contains(e.target)) hideContextMenu();
+});
+window.addEventListener('blur', hideContextMenu);
+
 // ===== UNDO / REDO HISTORY =====
 let history = [];
 let histIndex = -1;
@@ -1076,7 +1131,11 @@ document.addEventListener('keydown', (e) => {
     const cmd = e.metaKey || e.ctrlKey;
 
     // Esc deselects even when nothing is "actionable"
-    if (e.key === 'Escape') { clearSelection(); return; }
+    if (e.key === 'Escape') {
+        if (!contextMenu.classList.contains('hidden')) { hideContextMenu(); return; }
+        clearSelection();
+        return;
+    }
 
     // ⌘Z undo / ⌘⇧Z redo (works regardless of current selection)
     if (cmd && e.key.toLowerCase() === 'z') {

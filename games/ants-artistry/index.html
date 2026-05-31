@@ -7,7 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
     <meta name="theme-color" content="#1a1a1a">
-    <link rel="stylesheet" href="styles.css?v=5">
+    <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
 
@@ -143,6 +143,18 @@
     </main>
 </div>
 
+<!-- Right-click context menu -->
+<div id="context-menu" class="context-menu hidden">
+    <button class="ctx-item" data-action="copy">Copy <span class="ctx-key">⌘C</span></button>
+    <button class="ctx-item" data-action="paste">Paste <span class="ctx-key">⌘V</span></button>
+    <button class="ctx-item" data-action="duplicate">Duplicate <span class="ctx-key">⌘D</span></button>
+    <div class="ctx-sep"></div>
+    <button class="ctx-item" data-action="front">Bring to Front <span class="ctx-key">⌘⇧↑</span></button>
+    <button class="ctx-item" data-action="back">Send to Back <span class="ctx-key">⌘⇧↓</span></button>
+    <div class="ctx-sep"></div>
+    <button class="ctx-item ctx-danger" data-action="delete">Delete <span class="ctx-key">⌫</span></button>
+</div>
+
 <!-- Keyboard shortcuts overlay -->
 <div id="shortcuts-overlay" class="shortcuts-overlay hidden">
     <div class="shortcuts-modal">
@@ -167,7 +179,7 @@
     </div>
 </div>
 
-<script src="script.js?v=5"></script>
+<script src="script.js?v=6"></script>
 
 </body>
 </html>
