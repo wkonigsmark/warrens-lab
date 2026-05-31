@@ -643,9 +643,9 @@
 
   <script type="module">
     import { groups, teams, teamsById } from './data/world-cup-2026.js';
+    import { W_INDEX_URL, fetchWithTimeout, wIndexBaselineRows } from './data/w-index-baseline.js';
 
     (() => {
-      const W_INDEX_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv';
       const ticker = document.getElementById('w-index-ticker');
       const tickerWindow = ticker.closest('.ticker-window');
       const modalOverlay = document.getElementById('group-modal-overlay');
@@ -890,14 +890,17 @@
       }
 
       async function loadTicker() {
+        analysesByGroup = analyzeGroups(wIndexBaselineRows);
+        renderTicker(wIndexBaselineRows);
+
         try {
-          const response = await fetch(`${W_INDEX_URL}&tickerBust=${Date.now()}`);
+          const response = await fetchWithTimeout(W_INDEX_URL);
           if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
           const rows = rowsToObjects(parseCsv(await response.text()));
           analysesByGroup = analyzeGroups(rows);
           renderTicker(rows);
         } catch (error) {
-          ticker.innerHTML = '<span class="ticker-item">W-Index rankings unavailable</span>';
+          console.warn('Live W-Index ticker refresh failed; using local baseline.', error);
         }
       }
 

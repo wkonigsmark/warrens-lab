@@ -601,8 +601,8 @@
 
   <script type="module">
     import { matches, teams, teamsById } from "../data/world-cup-2026.js";
+    import { W_INDEX_URL, fetchWithTimeout, wIndexBaselineRows } from "../data/w-index-baseline.js";
 
-    const W_INDEX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
     const $ = (id) => document.getElementById(id);
 
     let wIndexByTeam = new Map();
@@ -1031,13 +1031,7 @@
 
     }
 
-    async function loadWIndex() {
-      setStatus("Refreshing W-Index feed...");
-      try {
-        const response = await fetch(`${W_INDEX_URL}&cacheBust=${Date.now()}`);
-        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-        const csv = await response.text();
-        const rows = rowsToObjects(parseCsv(csv));
+    function applyWIndexRows(rows, sourceLabel) {
         const nextMap = new Map();
         const unmatched = [];
 
@@ -1065,16 +1059,23 @@
 
         const missing = teams.filter((team) => !wIndexByTeam.has(team.id)).map((team) => team.name);
         setStatus(`
-          ${wIndexByTeam.size} teams loaded.
+          ${wIndexByTeam.size} teams loaded from ${sourceLabel}.
           ${missing.length ? `<br><strong>Missing canonical teams:</strong> ${missing.join(", ")}` : ""}
           ${unmatched.length ? `<br><strong>Unmatched feed names:</strong> ${unmatched.join(", ")}` : ""}
         `);
+    }
+
+    async function loadWIndex() {
+      applyWIndexRows(wIndexBaselineRows, "local baseline");
+      setStatus(`${wIndexByTeam.size} teams loaded from local baseline. Refreshing live W-Index quietly...`);
+
+      try {
+        const response = await fetchWithTimeout(W_INDEX_URL);
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        const csv = await response.text();
+        applyWIndexRows(rowsToObjects(parseCsv(csv)), "live feed");
       } catch (error) {
-        renderRankings();
-        renderPathStories();
-        renderMatchups();
-        setStatus(`W-Index feed failed to load: ${error.message}. If you opened this as a file, use localhost.`, true);
-      } finally {
+        setStatus(`${wIndexByTeam.size} teams loaded from local baseline. Live W-Index refresh failed: ${error.message}.`, true);
       }
     }
 

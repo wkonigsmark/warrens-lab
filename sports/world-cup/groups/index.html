@@ -353,8 +353,8 @@
 
   <script type="module">
     import { groups, teamsById } from "../data/world-cup-2026.js";
+    import { W_INDEX_URL, fetchWithTimeout, wIndexBaselineRows } from "../data/w-index-baseline.js";
 
-    const W_INDEX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
     const $ = (id) => document.getElementById(id);
 
     const elements = {
@@ -770,11 +770,7 @@
       `).join("");
     }
 
-    async function loadAnalysis() {
-      try {
-        const response = await fetch(`${W_INDEX_URL}&groupsBust=${Date.now()}`);
-        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-        const rows = rowsToObjects(parseCsv(await response.text()));
+    function applyAnalysisRows(rows, sourceLabel) {
         const { map, unmatched } = buildWIndexMap(rows);
         const analyses = analyzeGroups(map);
 
@@ -786,13 +782,23 @@
 
         const missing = Object.values(teamsById).filter((team) => !map.has(team.id)).map((team) => team.name);
         elements.status.innerHTML = `
-          Loaded <strong>${map.size}</strong> W-Index teams for <strong>${analyses.length}</strong> groups.
+          Loaded <strong>${map.size}</strong> W-Index teams for <strong>${analyses.length}</strong> groups from ${sourceLabel}.
           ${missing.length ? `<br><strong>Missing canonical teams:</strong> ${missing.join(", ")}` : ""}
           ${unmatched.length ? `<br><strong>Unmatched feed names:</strong> ${unmatched.join(", ")}` : ""}
         `;
+        elements.status.style.color = "";
+    }
+
+    async function loadAnalysis() {
+      applyAnalysisRows(wIndexBaselineRows, "local baseline");
+
+      try {
+        const response = await fetchWithTimeout(W_INDEX_URL);
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        applyAnalysisRows(rowsToObjects(parseCsv(await response.text())), "live feed");
       } catch (error) {
-        elements.status.innerHTML = `Group analysis failed to load: ${error.message}. Use localhost so the data modules and CSV feed can load.`;
-        elements.status.style.color = "var(--wc-red)";
+        elements.status.innerHTML = `Loaded local baseline. Live W-Index refresh failed: ${error.message}.`;
+        elements.status.style.color = "var(--wc-gold)";
       }
     }
 

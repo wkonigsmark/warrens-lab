@@ -639,8 +639,8 @@
   <script src="../archive/world-cup-1/bracket_lookup.js"></script>
   <script type="module">
     import { groupStageMatches, groups, teamsById } from "../data/world-cup-2026.js";
+    import { W_INDEX_URL as W_INDEX_CSV_URL, fetchWithTimeout, wIndexBaselineRows } from "../data/w-index-baseline.js";
 
-    const W_INDEX_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
     const GROUP_IDS = "ABCDEFGHIJKL".split("");
     const app = document.getElementById("pool-app");
     const toast = document.getElementById("pool-toast");
@@ -739,30 +739,48 @@
       return rows;
     }
 
-    async function loadWIndex() {
-      try {
-        const response = await fetch(W_INDEX_CSV_URL, { cache: "no-store" });
-        if (!response.ok) throw new Error(`W-Index request failed: ${response.status}`);
-        const rows = parseCsv(await response.text());
-        const headers = rows.shift().map((header) => normalizeName(header));
-        const teamIndex = headers.indexOf("team");
-        const scoreIndex = headers.indexOf("w index");
-        const rankIndex = headers.indexOf("rank");
-
-        rows.forEach((row) => {
-          const teamId = teamAliases.get(normalizeName(row[teamIndex]));
-          if (!teamId) return;
-          wIndexByTeam.set(teamId, {
-            score: Number(String(row[scoreIndex] || "").replace("%", "")) || 0,
-            rank: Number(row[rankIndex]) || null,
-          });
+    function applyWIndexRows(rows, sourceLabel) {
+      wIndexByTeam.clear();
+      rows.forEach((row) => {
+        const teamId = teamAliases.get(normalizeName(row.Team));
+        if (!teamId) return;
+        wIndexByTeam.set(teamId, {
+          score: Number(String(row["W-Index"] || "").replace("%", "")) || 0,
+          rank: Number(row.Rank) || null,
         });
-        state.wIndexStatus = `${wIndexByTeam.size}/48 W-Index teams loaded`;
-      } catch (error) {
-        console.warn(error);
-        state.wIndexStatus = "W-Index unavailable - using fixture order";
-      }
+      });
+      state.wIndexStatus = `${wIndexByTeam.size}/48 W-Index teams loaded from ${sourceLabel}`;
       render();
+    }
+
+    function csvRowsToWIndexObjects(rows) {
+      const headers = rows.shift().map((header) => normalizeName(header));
+      const teamIndex = headers.indexOf("team");
+      const groupIndex = headers.indexOf("group");
+      const scoreIndex = headers.indexOf("w index");
+      const statusIndex = headers.indexOf("status");
+      const rankIndex = headers.indexOf("rank");
+      return rows.map((row) => ({
+        Team: row[teamIndex],
+        Group: row[groupIndex],
+        "W-Index": row[scoreIndex],
+        Status: row[statusIndex],
+        Rank: row[rankIndex],
+      }));
+    }
+
+    async function loadWIndex() {
+      applyWIndexRows(wIndexBaselineRows, "local baseline");
+
+      try {
+        const response = await fetchWithTimeout(W_INDEX_CSV_URL);
+        if (!response.ok) throw new Error(`W-Index request failed: ${response.status}`);
+        applyWIndexRows(csvRowsToWIndexObjects(parseCsv(await response.text())), "live feed");
+      } catch (error) {
+        console.warn("Live W-Index refresh failed; using local baseline.", error);
+        state.wIndexStatus = `${wIndexByTeam.size}/48 W-Index teams loaded from local baseline`;
+        render();
+      }
     }
 
     function flagCode(team) {

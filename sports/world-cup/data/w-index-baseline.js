@@ -1,0 +1,58 @@
+export const W_INDEX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
+
+export const wIndexBaselineRows = [
+  { Team: "Spain", Group: "H", "W-Index": "100.0%", Status: "Qualified", Rank: "1" },
+  { Team: "France", Group: "I", "W-Index": "100.0%", Status: "Qualified", Rank: "2" },
+  { Team: "Argentina", Group: "J", "W-Index": "97.8%", Status: "Qualified", Rank: "3" },
+  { Team: "England", Group: "L", "W-Index": "96.9%", Status: "Qualified", Rank: "4" },
+  { Team: "Portugal", Group: "K", "W-Index": "94.1%", Status: "Qualified", Rank: "5" },
+  { Team: "Brazil", Group: "C", "W-Index": "93.9%", Status: "Qualified", Rank: "6" },
+  { Team: "Germany", Group: "E", "W-Index": "89.8%", Status: "Qualified", Rank: "7" },
+  { Team: "Netherlands", Group: "F", "W-Index": "87.6%", Status: "Qualified", Rank: "8" },
+  { Team: "Belgium", Group: "G", "W-Index": "79.7%", Status: "Qualified", Rank: "9" },
+  { Team: "Norway", Group: "I", "W-Index": "73.4%", Status: "Qualified", Rank: "10" },
+  { Team: "Colombia", Group: "K", "W-Index": "72.1%", Status: "Qualified", Rank: "11" },
+  { Team: "Morocco", Group: "C", "W-Index": "71.1%", Status: "Qualified", Rank: "12" },
+  { Team: "Japan", Group: "F", "W-Index": "67.6%", Status: "Qualified", Rank: "13" },
+  { Team: "USA", Group: "D", "W-Index": "66.5%", Status: "Qualified", Rank: "14" },
+  { Team: "Mexico", Group: "A", "W-Index": "62.5%", Status: "Qualified", Rank: "15" },
+  { Team: "Uruguay", Group: "H", "W-Index": "59.5%", Status: "Qualified", Rank: "16" },
+  { Team: "Croatia", Group: "L", "W-Index": "53.7%", Status: "Qualified", Rank: "17" },
+  { Team: "Senegal", Group: "I", "W-Index": "52.5%", Status: "Qualified", Rank: "18" },
+  { Team: "Switzerland", Group: "B", "W-Index": "51.3%", Status: "Qualified", Rank: "19" },
+  { Team: "Ecuador", Group: "E", "W-Index": "49.6%", Status: "Qualified", Rank: "20" },
+  { Team: "Austria", Group: "J", "W-Index": "48.9%", Status: "Qualified", Rank: "21" },
+  { Team: "Korea Republic", Group: "A", "W-Index": "48.7%", Status: "Qualified", Rank: "22" },
+  { Team: "Turkiye", Group: "D", "W-Index": "48.1%", Status: "Qualified", Rank: "23" },
+  { Team: "Algeria", Group: "J", "W-Index": "47.4%", Status: "Qualified", Rank: "24" },
+  { Team: "Egypt", Group: "G", "W-Index": "46.8%", Status: "Qualified", Rank: "25" },
+  { Team: "Canada", Group: "B", "W-Index": "46.6%", Status: "Qualified", Rank: "26" },
+  { Team: "Cote d'Ivoire", Group: "E", "W-Index": "46.3%", Status: "Qualified", Rank: "27" },
+  { Team: "IR Iran", Group: "G", "W-Index": "46.1%", Status: "Qualified", Rank: "28" },
+  { Team: "Paraguay", Group: "D", "W-Index": "45.8%", Status: "Qualified", Rank: "29" },
+  { Team: "Australia", Group: "D", "W-Index": "44.9%", Status: "Qualified", Rank: "30" },
+  { Team: "Sweden", Group: "F", "W-Index": "44.7%", Status: "Qualified", Rank: "31" },
+  { Team: "Scotland", Group: "C", "W-Index": "44.6%", Status: "Qualified", Rank: "32" },
+  { Team: "Tunisia", Group: "F", "W-Index": "42.6%", Status: "Qualified", Rank: "33" },
+  { Team: "Czechia", Group: "A", "W-Index": "42.2%", Status: "Qualified", Rank: "34" },
+  { Team: "Panama", Group: "L", "W-Index": "41.6%", Status: "Qualified", Rank: "35" },
+  { Team: "Ghana", Group: "L", "W-Index": "40.3%", Status: "Qualified", Rank: "36" },
+  { Team: "South Africa", Group: "A", "W-Index": "39.7%", Status: "Qualified", Rank: "37" },
+  { Team: "Congo DR", Group: "K", "W-Index": "39.4%", Status: "Qualified", Rank: "38" },
+  { Team: "Qatar", Group: "B", "W-Index": "35.6%", Status: "Qualified", Rank: "39" },
+  { Team: "Iraq", Group: "I", "W-Index": "35.3%", Status: "Qualified", Rank: "40" },
+  { Team: "Saudi Arabia", Group: "H", "W-Index": "34.4%", Status: "Qualified", Rank: "41" },
+  { Team: "New Zealand", Group: "G", "W-Index": "29.6%", Status: "Qualified", Rank: "42" },
+  { Team: "Uzbekistan", Group: "K", "W-Index": "26.0%", Status: "Qualified", Rank: "43" },
+  { Team: "Cabo Verde", Group: "H", "W-Index": "22.5%", Status: "Qualified", Rank: "44" },
+  { Team: "Curacao", Group: "E", "W-Index": "20.1%", Status: "Qualified", Rank: "45" },
+  { Team: "Jordan", Group: "J", "W-Index": "18.4%", Status: "Qualified", Rank: "46" },
+  { Team: "Bosnia and Herzegovina", Group: "B", "W-Index": "3.3%", Status: "Qualified", Rank: "47" },
+  { Team: "Haiti", Group: "C", "W-Index": "0.0%", Status: "Qualified", Rank: "48" },
+];
+
+export function fetchWithTimeout(url, options = {}, timeoutMs = 3500) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timeout));
+}
