@@ -6,14 +6,13 @@
   const scriptUrl = document.currentScript?.src || new URL("world-cup-audio.js", window.location.href).href;
   const audioUrl = new URL("../assets/america-the-beautiful.mp3", scriptUrl).href;
   const savedMuted = localStorage.getItem(mutedKey) === "true";
-  const savedEnabled = localStorage.getItem(enabledKey);
 
   let blocked = false;
-  let hasTriedGestureStart = false;
 
   const audio = document.createElement("audio");
   audio.id = "wc-theme-audio";
   audio.src = audioUrl;
+  audio.autoplay = true;
   audio.loop = true;
   audio.preload = "auto";
   audio.volume = 0.34;
@@ -52,19 +51,22 @@
   function renderButton() {
     const isPlaying = !audio.paused && !audio.muted;
     const isMuted = audio.muted || localStorage.getItem(enabledKey) === "false";
+    const needsPlay = !isMuted && !isPlaying;
     const label = blocked && !isMuted
       ? "Play theme music"
       : isMuted
         ? "Unmute theme music"
-        : "Mute theme music";
+        : needsPlay
+          ? "Play theme music"
+          : "Mute theme music";
 
     button.setAttribute("aria-label", label);
     button.setAttribute("title", label);
     button.classList.toggle("is-muted", isMuted);
-    button.classList.toggle("is-blocked", blocked && !isMuted);
+    button.classList.toggle("is-blocked", needsPlay);
     button.innerHTML = `
       <span class="wc-audio-icon" aria-hidden="true">${isMuted ? "♪" : isPlaying ? "♫" : "♪"}</span>
-      <span class="wc-audio-text">${blocked && !isMuted ? "Play" : isMuted ? "Muted" : "Music"}</span>
+      <span class="wc-audio-text">${needsPlay ? "Play" : isMuted ? "Muted" : "Music"}</span>
     `;
   }
 
@@ -97,18 +99,23 @@
   }
 
   button.addEventListener("click", () => {
-    if (audio.muted || localStorage.getItem(enabledKey) === "false" || blocked) {
+    if (audio.muted || localStorage.getItem(enabledKey) === "false" || blocked || audio.paused) {
       unmuteTheme();
     } else {
       muteTheme();
     }
   });
 
-  document.addEventListener("pointerdown", () => {
-    if (hasTriedGestureStart || audio.muted || localStorage.getItem(enabledKey) === "false") return;
-    hasTriedGestureStart = true;
+  function startFromGesture() {
+    if (audio.muted || localStorage.getItem(enabledKey) === "false" || !audio.paused) return;
     playTheme();
-  }, { once: true, passive: true });
+  }
+
+  document.addEventListener("pointerdown", startFromGesture, { passive: true });
+  document.addEventListener("keydown", startFromGesture);
+  window.addEventListener("pageshow", () => {
+    if (!audio.muted && wantsMusic() && audio.paused) playTheme();
+  });
 
   audio.addEventListener("loadedmetadata", restoreTime, { once: true });
   audio.addEventListener("play", renderButton);
