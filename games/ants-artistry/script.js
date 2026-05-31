@@ -681,6 +681,24 @@ function getRotation(el) {
     return m ? parseInt(m[1]) : 0;
 }
 
+function getFlip(el) {
+    return el.dataset.flipH === '1';
+}
+
+function applyTransform(el, rotation, flipped) {
+    const parts = [];
+    if (flipped) parts.push('scaleX(-1)');
+    if (rotation) parts.push(`rotate(${rotation}deg)`);
+    el.style.transform = parts.join(' ');
+}
+
+function updateFlipButton() {
+    const p = primary();
+    const btn = document.getElementById('flip-h-btn');
+    if (!p || !btn) return;
+    btn.classList.toggle('active', getFlip(p));
+}
+
 // ===== PROPERTIES PANEL =====
 function updatePropertiesPanel() {
     const p = primary();
@@ -716,6 +734,7 @@ function updatePropertiesPanel() {
 
     updateCropControls();
     updateTextControls();
+    updateFlipButton();
 }
 
 // Show/sync text-formatting controls for a single selected text box
@@ -774,13 +793,25 @@ document.getElementById('size-slider').addEventListener('change', () => {
 // Rotation control — applies to every selected element
 document.getElementById('rotation-slider').addEventListener('input', (e) => {
     if (!selection.length) return;
-    const rotation = e.target.value;
-    selection.forEach(el => el.style.transform = `rotate(${rotation}deg)`);
+    const rotation = parseInt(e.target.value);
+    selection.forEach(el => applyTransform(el, rotation, getFlip(el)));
     document.getElementById('rotation-display').textContent = rotation + '°';
     updateCropControls();   // crop hides while rotated
 });
 document.getElementById('rotation-slider').addEventListener('change', () => {
     if (selection.length) pushHistory();
+});
+
+// Flip horizontal — toggles scaleX(-1) on all selected elements
+document.getElementById('flip-h-btn').addEventListener('click', () => {
+    if (!selection.length) return;
+    selection.forEach(el => {
+        const flipped = !getFlip(el);
+        el.dataset.flipH = flipped ? '1' : '0';
+        applyTransform(el, getRotation(el), flipped);
+    });
+    updateFlipButton();
+    pushHistory();
 });
 
 // Lock control — applies to every selected element

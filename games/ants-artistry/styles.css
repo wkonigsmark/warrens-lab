@@ -14,6 +14,7 @@ body {
 .container {
     display: grid;
     grid-template-columns: 270px 1fr;
+    grid-template-rows: minmax(0, 1fr);   /* cap row height so children can scroll */
     width: 100%;
     height: 100%;
     background: white;
@@ -28,8 +29,18 @@ body {
     border-right: 1px solid #dee2e6;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow: hidden;          /* inner regions scroll, not the whole sidebar */
+    height: 100%;
+    min-height: 0;
 }
+
+/* Fixed (non-scrolling) top sections */
+.sidebar-brand,
+.tool-section,
+.sidebar-header { flex-shrink: 0; }
+
+/* When a gallery is open, hide the category grid so the gallery owns the space */
+.sidebar:has(.gallery:not(.hidden)) .categories { display: none; }
 
 /* Full-color banner card at top of sidebar */
 .sidebar-brand {
@@ -155,6 +166,8 @@ body {
     display: grid;
     grid-template-columns: 1fr;
     gap: 6px;
+    flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
 }
 
@@ -222,11 +235,12 @@ body {
 
 /* Gallery */
 .gallery {
-    padding: 15px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    flex: 1;
+    flex: 1 1 auto;
+    min-height: 0;          /* allow inner grid to scroll */
 }
 
 .gallery.hidden {
@@ -237,7 +251,8 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
 }
 
 .back-btn {
@@ -265,6 +280,11 @@ body {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
+    overflow-y: auto;       /* THE scroll region for elements */
+    min-height: 0;
+    flex: 1 1 auto;
+    align-content: start;
+    padding-right: 4px;
 }
 
 .gallery-item {
@@ -606,6 +626,23 @@ button:hover {
 .h-w  { left: -7px;  top: 50%;   margin-top: -7px; cursor: ew-resize; }
 
 /* ===== CROP PANEL CONTROLS ===== */
+.flip-btn {
+    width: 100%;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    padding: 8px;
+    background: #f8f9fa;
+    color: #555;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+}
+.flip-btn:hover { border-color: #667eea; color: #667eea; }
+.flip-btn.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
 .crop-btn, .reset-crop-btn {
     width: 100%;
     font-size: 0.85rem;

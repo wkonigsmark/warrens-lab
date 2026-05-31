@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-30T21:43:29+00:00",
+  "generated": "2026-05-31T10:22:33+00:00",
   "categoryOrder": [
     "animals",
     "constructs",
@@ -983,11 +983,88 @@
         "src": "assets/images/nature/coast-cliff-waterfall-1.png"
       },
       {
+        "file": "creek-1.png",
+        "name": "creek",
+        "num": 1,
+        "label": "Creek 1",
+        "src": "assets/images/nature/creek-1.png"
+      },
+      {
         "file": "desert-1.png",
         "name": "desert",
         "num": 1,
         "label": "Desert 1",
         "src": "assets/images/nature/desert-1.png"
+      },
+      {
+        "file": "flower-1.png",
+        "name": "flower",
+        "num": 1,
+        "label": "Flower 1",
+        "src": "assets/images/nature/flower-1.png"
+      },
+      {
+        "file": "flower-10.png",
+        "name": "flower",
+        "num": 10,
+        "label": "Flower 10",
+        "src": "assets/images/nature/flower-10.png"
+      },
+      {
+        "file": "flower-2.png",
+        "name": "flower",
+        "num": 2,
+        "label": "Flower 2",
+        "src": "assets/images/nature/flower-2.png"
+      },
+      {
+        "file": "flower-3.png",
+        "name": "flower",
+        "num": 3,
+        "label": "Flower 3",
+        "src": "assets/images/nature/flower-3.png"
+      },
+      {
+        "file": "flower-4.png",
+        "name": "flower",
+        "num": 4,
+        "label": "Flower 4",
+        "src": "assets/images/nature/flower-4.png"
+      },
+      {
+        "file": "flower-5.png",
+        "name": "flower",
+        "num": 5,
+        "label": "Flower 5",
+        "src": "assets/images/nature/flower-5.png"
+      },
+      {
+        "file": "flower-6.png",
+        "name": "flower",
+        "num": 6,
+        "label": "Flower 6",
+        "src": "assets/images/nature/flower-6.png"
+      },
+      {
+        "file": "flower-7.png",
+        "name": "flower",
+        "num": 7,
+        "label": "Flower 7",
+        "src": "assets/images/nature/flower-7.png"
+      },
+      {
+        "file": "flower-8.png",
+        "name": "flower",
+        "num": 8,
+        "label": "Flower 8",
+        "src": "assets/images/nature/flower-8.png"
+      },
+      {
+        "file": "flower-9.png",
+        "name": "flower",
+        "num": 9,
+        "label": "Flower 9",
+        "src": "assets/images/nature/flower-9.png"
       },
       {
         "file": "forest-1.png",
@@ -1046,6 +1123,34 @@
         "src": "assets/images/nature/pond-1.png"
       },
       {
+        "file": "pond-2.png",
+        "name": "pond",
+        "num": 2,
+        "label": "Pond 2",
+        "src": "assets/images/nature/pond-2.png"
+      },
+      {
+        "file": "pond-3.png",
+        "name": "pond",
+        "num": 3,
+        "label": "Pond 3",
+        "src": "assets/images/nature/pond-3.png"
+      },
+      {
+        "file": "pond-4.png",
+        "name": "pond",
+        "num": 4,
+        "label": "Pond 4",
+        "src": "assets/images/nature/pond-4.png"
+      },
+      {
+        "file": "pond-5.png",
+        "name": "pond",
+        "num": 5,
+        "label": "Pond 5",
+        "src": "assets/images/nature/pond-5.png"
+      },
+      {
         "file": "rainbow-1.png",
         "name": "rainbow",
         "num": 1,
@@ -1102,6 +1207,13 @@
         "src": "assets/images/nature/rainbow-8.png"
       },
       {
+        "file": "river-1.png",
+        "name": "river",
+        "num": 1,
+        "label": "River 1",
+        "src": "assets/images/nature/river-1.png"
+      },
+      {
         "file": "sun-1.png",
         "name": "sun",
         "num": 1,
@@ -1149,6 +1261,20 @@
         "num": 1,
         "label": "Volcano 1",
         "src": "assets/images/nature/volcano-1.png"
+      },
+      {
+        "file": "water-sea-1.png",
+        "name": "water-sea",
+        "num": 1,
+        "label": "Water Sea 1",
+        "src": "assets/images/nature/water-sea-1.png"
+      },
+      {
+        "file": "water-sea-2.png",
+        "name": "water-sea",
+        "num": 2,
+        "label": "Water Sea 2",
+        "src": "assets/images/nature/water-sea-2.png"
       },
       {
         "file": "waterfall-1.png",
@@ -1344,12 +1470,12 @@
     ]
   },
   "summary": {
-    "totalImages": 188,
-    "totalTypes": 90,
+    "totalImages": 206,
+    "totalTypes": 94,
     "byCategory": {
       "animals": 86,
       "constructs": 31,
-      "nature": 54,
+      "nature": 72,
       "food": 3,
       "objects": 3,
       "misc": 0,
@@ -1383,6 +1509,7 @@
       "coast-cliff": 3,
       "coast-cliff-waterfall": 1,
       "cougar": 2,
+      "creek": 1,
       "cupcake": 1,
       "deer": 1,
       "desert": 1,
@@ -1393,6 +1520,7 @@
       "elephant": 2,
       "fence": 3,
       "fire-station": 1,
+      "flower": 10,
       "forest": 1,
       "fossa": 1,
       "frog": 3,
@@ -1421,11 +1549,12 @@
       "panda": 1,
       "plant": 2,
       "police-station": 1,
-      "pond": 1,
+      "pond": 5,
       "puppy": 1,
       "rainbow": 8,
       "red-panda": 1,
       "rhinoceros": 1,
+      "river": 1,
       "road": 9,
       "school": 2,
       "scooter": 1,
@@ -1443,6 +1572,7 @@
       "unicorn": 9,
       "volcano": 1,
       "wallaby": 1,
+      "water-sea": 2,
       "waterfall": 5,
       "wave-sea-ocean": 4,
       "wolf": 2,
