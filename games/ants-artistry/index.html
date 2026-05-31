@@ -7,17 +7,42 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
     <meta name="theme-color" content="#1a1a1a">
-    <link rel="stylesheet" href="styles.css?v=6">
+    <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
 
-<header class="app-banner">
-    <img src="assets/banners/banner-ants-artisty.png" alt="Ants & Artistry" class="banner-img">
-</header>
-
 <div class="container">
-    <!-- Sidebar: Category Selection -->
+    <!-- Sidebar: branding, tools, and element library -->
     <aside class="sidebar">
+        <div class="sidebar-brand">
+            <img src="assets/banners/banner-ants-artisty.png" alt="Ants & Artistry" class="brand-logo">
+        </div>
+
+        <!-- Tool rows (moved off the canvas to free space) -->
+        <div class="tool-section">
+            <div class="tool-row">
+                <button id="portrait-btn" class="orientation-btn active" title="Portrait (8.5 x 11)">
+                    📄 Portrait
+                </button>
+                <button id="landscape-btn" class="orientation-btn" title="Landscape (11 x 8.5)">
+                    📋 Landscape
+                </button>
+            </div>
+            <div class="tool-row">
+                <button id="add-text-btn" class="tool-wide" title="Add a text box">🔤 Add Text</button>
+            </div>
+            <div class="tool-row">
+                <button id="undo-btn" title="Undo (⌘Z)" disabled>↶</button>
+                <button id="redo-btn" title="Redo (⌘⇧Z)" disabled>↷</button>
+                <button id="help-btn" title="Keyboard shortcuts">⌨️</button>
+                <button id="clear-canvas-btn" title="Clear canvas">🗑 Clear</button>
+            </div>
+            <div class="tool-row">
+                <button id="save-btn" class="tool-primary" title="Save as PNG">💾 Save</button>
+                <button id="print-btn" class="tool-primary" title="Print">🖨️ Print</button>
+            </div>
+        </div>
+
         <div class="sidebar-header">
             <h2>Elements</h2>
             <div class="search-wrap">
@@ -44,27 +69,6 @@
 
     <!-- Main Canvas Area -->
     <main class="main-content">
-        <div class="toolbar">
-            <div class="canvas-controls">
-                <button id="portrait-btn" class="orientation-btn active" title="Portrait (8.5 x 11)">
-                    <span>📄</span> Portrait
-                </button>
-                <button id="landscape-btn" class="orientation-btn" title="Landscape (11 x 8.5)">
-                    <span>📋</span> Landscape
-                </button>
-            </div>
-
-            <div class="action-controls">
-                <button id="add-text-btn" title="Add a text box">🔤 Text</button>
-                <button id="undo-btn" title="Undo (⌘Z)" disabled>↶</button>
-                <button id="redo-btn" title="Redo (⌘⇧Z)" disabled>↷</button>
-                <button id="help-btn" title="Keyboard shortcuts">⌨️</button>
-                <button id="clear-canvas-btn" title="Clear canvas">Clear</button>
-                <button id="save-btn" title="Save as PNG">💾 Save</button>
-                <button id="print-btn" title="Print">🖨️ Print</button>
-            </div>
-        </div>
-
         <!-- Canvas -->
         <div class="canvas-wrapper">
             <div id="canvas" class="canvas portrait">
@@ -179,7 +183,7 @@
     </div>
 </div>
 
-<script src="script.js?v=6"></script>
+<script src="script.js?v=7"></script>
 
 </body>
 </html>

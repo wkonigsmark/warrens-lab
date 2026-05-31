@@ -74,9 +74,9 @@
       width: min(100%, 980px);
       min-height: calc(100vh - 56px);
       display: grid;
-      grid-template-rows: auto minmax(240px, 40vh) auto auto;
+      grid-template-rows: auto minmax(240px, 40vh) auto auto auto;
       align-content: center;
-      gap: 18px;
+      gap: 16px;
       text-align: center;
     }
 
@@ -159,45 +159,38 @@
       white-space: nowrap;
     }
 
-    .subtitle {
-      max-width: 650px;
-      margin: 0 auto;
-      color: var(--muted);
-      font-size: clamp(1.05rem, 2.4vw, 1.35rem);
-      line-height: 1.45;
-    }
-
     .countdown {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      width: min(100%, 560px);
+      gap: 8px;
+      width: min(100%, 410px);
       margin: 0 auto;
+      opacity: 0.78;
     }
 
     .time-card {
       min-width: 0;
-      padding: 12px 8px 11px;
+      padding: 9px 8px 8px;
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: linear-gradient(180deg, var(--panel-strong), var(--panel));
-      box-shadow: 0 20px 80px rgba(0, 0, 0, 0.18);
+      background: rgba(255, 255, 255, 0.045);
+      box-shadow: 0 12px 42px rgba(0, 0, 0, 0.12);
       backdrop-filter: blur(16px);
     }
 
     .time-card strong {
       display: block;
       color: var(--ink);
-      font-size: clamp(1.65rem, 6vw, 3.15rem);
+      font-size: clamp(1.2rem, 3.3vw, 2rem);
       line-height: 0.95;
       font-variant-numeric: tabular-nums;
     }
 
     .time-card span {
       display: block;
-      margin-top: 7px;
+      margin-top: 5px;
       color: var(--muted);
-      font-size: 0.72rem;
+      font-size: 0.62rem;
       font-weight: 900;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -491,7 +484,7 @@
 
     @media (max-width: 640px) {
       .hero {
-        grid-template-rows: auto minmax(150px, 22vh) auto auto;
+        grid-template-rows: auto minmax(150px, 22vh) auto auto auto;
         gap: 8px;
       }
 
@@ -521,6 +514,7 @@
 
       .countdown {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: min(100%, 360px);
       }
 
       .w-index-tape {
@@ -566,7 +560,14 @@
         <h1 id="page-title" class="fallback-title">Warren's<br>World Cup<br>Pool</h1>
       </div>
 
-      <p class="subtitle">Pool entries, scoreboard, rankings, fixtures, and analysis. Coming soon.</p>
+      <div class="module-strip" aria-label="Planned hub sections">
+        <a href="pool/">Pool Entry</a>
+        <a href="rankings-odds/">W-Index</a>
+        <a href="groups/">Group Analysis</a>
+        <a href="meta/#group-fixtures">Fixtures</a>
+        <a href="simulation/">Simulator</a>
+        <a href="scoreboard/">Scoreboard</a>
+      </div>
 
       <div class="countdown" aria-label="Countdown to World Cup kickoff">
         <div class="time-card">
@@ -585,15 +586,6 @@
           <strong id="seconds">00</strong>
           <span>Seconds</span>
         </div>
-      </div>
-
-      <div class="module-strip" aria-label="Planned hub sections">
-        <a href="pool/">Pool Entry</a>
-        <a href="rankings-odds/">W-Index</a>
-        <a href="groups/">Group Analysis</a>
-        <a href="meta/#group-fixtures">Fixtures</a>
-        <a href="simulation/">Simulator</a>
-        <a href="scoreboard/">Scoreboard</a>
       </div>
 
       <div class="coming-soon-strip" aria-label="Coming soon sections">

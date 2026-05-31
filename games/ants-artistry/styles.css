@@ -7,40 +7,15 @@
 body {
     font-family: 'Outfit', sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 20px;
-    gap: 20px;
-}
-
-/* ===== APP BANNER (hero branding) ===== */
-.app-banner {
-    width: 100%;
-    max-width: 1400px;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-    line-height: 0;
-}
-
-.banner-img {
-    width: 100%;
-    height: auto;
-    max-height: 190px;
-    object-fit: cover;
-    object-position: center;
-    display: block;
+    height: 100vh;
+    padding: 12px;
 }
 
 .container {
     display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 20px;
+    grid-template-columns: 270px 1fr;
     width: 100%;
-    max-width: 1400px;
+    height: 100%;
     background: white;
     border-radius: 12px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -54,17 +29,66 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    max-height: 90vh;
 }
 
-.sidebar-header {
-    padding: 20px;
+/* Full-color banner card at top of sidebar */
+.sidebar-brand {
+    padding: 12px;
+    border-bottom: 1px solid #e3e6ea;
+}
+
+.brand-logo {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+}
+
+/* Tool rows */
+.tool-section {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
     border-bottom: 2px solid #dee2e6;
     background: white;
 }
 
+.tool-row {
+    display: flex;
+    gap: 7px;
+}
+
+.tool-row > button {
+    flex: 1;
+    padding: 9px 6px;
+    font-size: 0.85rem;
+}
+
+.tool-wide { width: 100%; }
+
+.tool-primary {
+    background: #28a745 !important;
+    color: white !important;
+    border-color: #28a745 !important;
+}
+.tool-primary:hover { background: #218838 !important; border-color: #218838 !important; }
+
+#clear-canvas-btn {
+    background: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+#clear-canvas-btn:hover { background: #c82333; border-color: #c82333; }
+
+.sidebar-header {
+    padding: 14px 16px 12px;
+    background: white;
+}
+
 .sidebar-header h2 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: #333;
 }
 
@@ -772,16 +796,20 @@ button:hover {
 
 /* Responsive */
 @media (max-width: 1024px) {
+    body { height: auto; }
+
     .container {
         grid-template-columns: 1fr;
+        height: auto;
     }
 
     .sidebar {
         grid-column: 1;
-        max-height: 300px;
         border-right: none;
         border-bottom: 1px solid #dee2e6;
     }
+
+    .main-content { min-height: 70vh; }
 
     .categories {
         flex-direction: row;
