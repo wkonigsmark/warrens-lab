@@ -867,6 +867,10 @@
               <strong>Send Venmo</strong>
               <span>Export or copy the entry, then send payment separately.</span>
             </article>
+            <article class="pool-step">
+              <strong>Submit once</strong>
+              <span>Entries are final after submission. To play multiple brackets, submit each one separately.</span>
+            </article>
           </div>
           <div class="pool-actions">
             <button class="wc-button" type="button" id="start-entry">Start Entry</button>
@@ -905,6 +909,7 @@
               <label for="email">Email address</label>
               <input class="wc-input" id="email" type="email" autocomplete="email" placeholder="you@example.com" value="${escapeAttr(state.entry.email)}" required>
             </div>
+            <p class="pool-copy">Submissions are final once sent. If you want multiple brackets, create and submit each bracket separately.</p>
             <div class="pool-actions">
               <button class="wc-button" type="submit">Start Group A</button>
               <button class="wc-button secondary" type="button" id="back-home">Back</button>
