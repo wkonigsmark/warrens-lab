@@ -1080,6 +1080,26 @@ function setupTuningControls() {
         rebuildAfterTuningChange();
     };
 
+    // Collapse the whole tuning section behind a toggle so it's out of the way.
+    const toggle = document.getElementById('tuning-toggle');
+    if (toggle) toggle.onclick = () => {
+        const panel = document.getElementById('tuning-panel');
+        const show = panel.hidden;
+        panel.hidden = !show;
+        toggle.classList.toggle('open', show);
+        toggle.setAttribute('aria-expanded', String(show));
+    };
+
+    // One-click revert to standard, available any time the tuning is non-standard.
+    const reset = document.getElementById('tuning-reset');
+    if (reset) reset.onclick = () => {
+        select.value = 'standard';
+        currentTuningKey = 'standard';
+        STRINGS = tuningToStrings(TUNINGS.standard);
+        showCustomEditor(false);
+        rebuildAfterTuningChange();
+    };
+
     const editBtn = document.getElementById('tuning-edit-btn');
     if (editBtn) editBtn.onclick = () => {
         const panel = document.getElementById('tuning-custom');
@@ -1087,6 +1107,25 @@ function setupTuningControls() {
     };
 
     buildCustomEditor();
+    refreshTuningIndicator();
+}
+
+// Reflect the active tuning on the collapsed toggle, and surface the reset
+// button (plus a highlight) whenever we're off standard.
+function refreshTuningIndicator() {
+    const isStandard = currentTuningKey === 'standard';
+    const name = currentTuningKey === 'custom'
+        ? 'Custom'
+        : (TUNINGS[currentTuningKey] ? TUNINGS[currentTuningKey].name.split(' (')[0] : 'Custom');
+
+    const label = document.getElementById('tuning-current');
+    if (label) label.textContent = name;
+
+    const reset = document.getElementById('tuning-reset');
+    if (reset) reset.hidden = isStandard;
+
+    const toggle = document.getElementById('tuning-toggle');
+    if (toggle) toggle.classList.toggle('non-standard', !isStandard);
 }
 
 // Build the per-string note + octave selectors to match the current STRINGS.
@@ -1142,6 +1181,7 @@ function rebuildAfterTuningChange() {
     scaleDupPrefs = {};
     renderFretboard();
     updateTheory();
+    refreshTuningIndicator();
 }
 
 // This file is now an ES module, so its functions are module-scoped. The HTML

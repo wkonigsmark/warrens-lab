@@ -56,6 +56,10 @@ grant insert on public.pool_entries to anon;
 grant insert on public.pool_entry_picks to anon;
 grant usage on sequence public.pool_entry_picks_id_seq to anon;
 
+grant usage on schema public to service_role;
+grant select, update, delete on public.pool_entries to service_role;
+grant select on public.pool_entry_picks to service_role;
+
 create or replace function public.get_pool_purse_summary()
 returns table (
   total_entries bigint,

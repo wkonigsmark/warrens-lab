@@ -262,8 +262,9 @@
       await loadEntries();
     } catch (error) {
       console.warn(error);
-      setStatus("Local admin server offline");
-      table.innerHTML = `<tr><td colspan="7">Start the local admin server, then refresh. ${escapeHtml(error.message)}</td></tr>`;
+      const offline = error instanceof TypeError && error.message === "Failed to fetch";
+      setStatus(offline ? "Local admin server offline" : "Admin request failed");
+      table.innerHTML = `<tr><td colspan="7">${offline ? "Start the local admin server, then refresh." : "Admin server reached Supabase, but the request failed."} ${escapeHtml(error.message)}</td></tr>`;
     }
   </script>
   <script src="../shared/world-cup-audio.js" defer></script>

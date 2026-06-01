@@ -21,7 +21,7 @@ body {
     color: var(--text-primary);
     font-family: 'Outfit', sans-serif;
     min-height: 100vh;
-    padding: 40px 20px;
+    padding: 16px 20px;
 }
 
 header {
@@ -189,16 +189,47 @@ h1 {
     margin-top: 10px;
 }
 
-/* --- Tuning selector --- */
+/* --- Tuning selector (collapsed by default) --- */
 .tuning-bar {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
     margin-top: 14px;
 }
-.tuning-bar .label {
+.tuning-toggle .caret {
+    display: inline-block;
+    font-size: 0.7rem;
+    transition: transform 0.2s;
+}
+.tuning-toggle.open .caret { transform: rotate(180deg); }
+/* Make a non-standard tuning obvious even while collapsed. Extra specificity so
+   these win over the generic .control-btn border/color defined later. */
+.tuning-bar .tuning-toggle.non-standard { border-color: var(--gold); color: var(--gold); }
+.tuning-bar .tuning-reset { border-color: var(--gold); color: var(--gold); }
+.tuning-bar .tuning-reset:hover { background: var(--gold); color: #1a1a1a; box-shadow: 0 0 15px var(--gold); }
+
+.tuning-panel {
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 6px;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+}
+.tuning-panel-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.tuning-panel .label {
     font-size: 0.7rem;
     font-weight: 800;
     letter-spacing: 1.5px;
@@ -215,12 +246,11 @@ h1 {
     font-size: 0.85rem;
 }
 .tuning-custom {
-    flex-basis: 100%;
+    width: 100%;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 12px;
-    margin-top: 6px;
     padding-top: 12px;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -304,11 +334,11 @@ h1 {
 }
 
 .theory-dashboard {
-    margin-top: 15px;
+    margin-top: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
 }
 
 .theory-group {
@@ -537,19 +567,27 @@ h1 {
 .manuscript-panel {
     background: rgba(255, 255, 255, 0.02);
     border-radius: 8px;
-    padding: 10px;
+    padding: 8px;
     margin-top: 5px;
     display: flex;
     justify-content: center;
     width: 100%;
-    height: 300px;
+    height: 150px;
     overflow: hidden;
 }
 
 .manuscript-container {
     width: 100%;
     max-width: 600px;
-    height: 300px;
+    height: 100%;
+}
+
+/* Scale the staff SVG to fit its (now shorter) container instead of a fixed
+   300px block — keeps the fretboard from being pushed below the fold. */
+.staff-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 
 .staff-line, .ledger-line {

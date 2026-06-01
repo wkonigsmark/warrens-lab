@@ -23,10 +23,18 @@
         </div>
 
         <div class="tuning-bar">
-            <span class="label">TUNING:</span>
-            <select id="tuning-select"></select>
-            <button id="tuning-edit-btn" class="control-btn">EDIT STRINGS</button>
-            <div id="tuning-custom" class="tuning-custom" hidden></div>
+            <button id="tuning-toggle" class="control-btn tuning-toggle" aria-expanded="false">
+                TUNING: <span id="tuning-current">Standard</span> <span class="caret">▾</span>
+            </button>
+            <button id="tuning-reset" class="control-btn tuning-reset" hidden>↺ STANDARD</button>
+            <div id="tuning-panel" class="tuning-panel" hidden>
+                <div class="tuning-panel-row">
+                    <span class="label">PRESET:</span>
+                    <select id="tuning-select"></select>
+                    <button id="tuning-edit-btn" class="control-btn">EDIT STRINGS</button>
+                </div>
+                <div id="tuning-custom" class="tuning-custom" hidden></div>
+            </div>
         </div>
 
         <div class="theory-dashboard">
