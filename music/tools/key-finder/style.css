@@ -195,3 +195,16 @@ select {
     padding: 3px 10px;
     color: var(--dim);
 }
+
+/* Deep-link affordance: any scale name opens on the guitar fretboard. */
+.tip { font-size: 0.8rem; color: var(--dim); margin: -2px 0 2px 2px; }
+.scale-link {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.25);
+    transition: color 0.12s, border-color 0.12s;
+}
+.scale-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.color-chip.scale-link { border: 1px solid var(--line); }
+.color-chip.scale-link:hover { color: var(--accent); border-color: var(--accent); }

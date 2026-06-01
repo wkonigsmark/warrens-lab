@@ -161,11 +161,13 @@ export function perChordSuggestions(progression, catalog, globalTop, { preferFla
 
         // The mode of the home collection rooted on this chord — the scale you
         // play here while staying in the key. Found by matching note-collections.
+        // Scale candidates carry { label, rootPc, scaleId } so the UI can both
+        // display them and deep-link them onto an instrument view.
         let primaryMode = null;
         for (const scale of catalog.filter(isHeptatonic)) {
             const pcs = scalePcs(scale, chord.rootPc);
             if (intersectionSize(pcs, homePcs) === homePcs.size && pcs.size === homePcs.size) {
-                primaryMode = `${fmt(chord.rootPc)} ${scale.name}`;
+                primaryMode = { label: `${fmt(chord.rootPc)} ${scale.name}`, rootPc: chord.rootPc, scaleId: scale.id };
                 break;
             }
         }
@@ -175,8 +177,8 @@ export function perChordSuggestions(progression, catalog, globalTop, { preferFla
         for (const scale of catalog) {
             const pcs = scalePcs(scale, chord.rootPc);
             const label = `${fmt(chord.rootPc)} ${scale.name}`;
-            if (isSubset(chord.pcs, pcs) && label !== primaryMode) {
-                colorOptions.push(label);
+            if (isSubset(chord.pcs, pcs) && label !== (primaryMode && primaryMode.label)) {
+                colorOptions.push({ label, rootPc: chord.rootPc, scaleId: scale.id });
             }
             if (colorOptions.length >= 3) break;
         }

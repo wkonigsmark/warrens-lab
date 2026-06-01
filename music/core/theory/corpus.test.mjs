@@ -62,7 +62,10 @@ const top = (p) => detectGlobal(p, catalog)[0];
     check(perChord.every((c) => c.relationToGlobal === 'diatonic'), 'all ii-V-I chords diatonic to C', '');
     const dm = perChord[0];
     check(dm.roman === 'ii', 'Dm7 is the ii', `got ${dm.roman}`);
-    check(dm.primaryMode === 'D Dorian', 'play D Dorian over the ii', `got ${dm.primaryMode}`);
+    check(dm.primaryMode && dm.primaryMode.label === 'D Dorian' && dm.primaryMode.scaleId === 'dorian' && dm.primaryMode.rootPc === PC.D,
+        'play D Dorian (structured) over the ii', `got ${JSON.stringify(dm.primaryMode)}`);
+    check(dm.colorOptions.every((o) => o.label && typeof o.rootPc === 'number' && o.scaleId),
+        'color options are structured for deep-linking', `got ${JSON.stringify(dm.colorOptions)}`);
 }
 
 // 7. Borrowed chord flagged as outside: C–F–G–Ab–C in C (♭VI from parallel minor).

@@ -122,8 +122,41 @@ async function loadScales() {
         
         // Initial population for the main theory select
         filterScales(true);
+
+        // If we arrived from a Key Finder deep-link, preload that scale.
+        applyDeepLink();
     } catch (err) {
         console.error("Failed to load scales:", err);
+    }
+}
+
+// Slug must match core/theory/scales.js so ?scale=<id> resolves to a scale.
+function slugifyScaleName(name) {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+// Read ?root=<pitchClass>&scale=<slug> and load that scale in SCALE mode.
+function applyDeepLink() {
+    const params = new URLSearchParams(window.location.search);
+    const rootParam = params.get('root');
+    const scaleParam = params.get('scale');
+    if (rootParam === null && !scaleParam) return;
+
+    if (rootParam !== null) {
+        const pc = parseInt(rootParam, 10);
+        if (pc >= 0 && pc < 12) document.getElementById('root-select').value = CHROMATIC_SCALE[pc];
+    }
+
+    if (scaleParam) {
+        // Clear any search filter so every scale option is present, then select.
+        const searchEl = document.getElementById('scale-search');
+        if (searchEl) searchEl.value = '';
+        filterScales();
+        const idx = SCALES_DATA.findIndex((s) => slugifyScaleName(s.name) === scaleParam);
+        if (idx >= 0) document.getElementById('scale-select-main').value = String(idx);
+        switchMode('SCALE');
+    } else {
+        updateTheory();
     }
 }
 

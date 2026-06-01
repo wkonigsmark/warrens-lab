@@ -21,6 +21,15 @@ const state = {
 
 const $ = (id) => document.getElementById(id);
 
+// Deep-link a scale candidate onto the guitar fretboard. root = pitch class
+// (0–11, enharmonic-safe), scale = catalog slug. Opens in a new tab so the
+// player keeps their progression here.
+const GUITAR_URL = '../../instruments/guitar/index.html';
+const guitarHref = (rootPc, scaleId) =>
+    `${GUITAR_URL}?root=${rootPc}&scale=${encodeURIComponent(scaleId)}`;
+const scaleLink = (label, rootPc, scaleId, extraClass = '') =>
+    `<a class="scale-link ${extraClass}" href="${guitarHref(rootPc, scaleId)}" target="_blank" rel="noopener" title="Open ${label} on the guitar fretboard">${label}</a>`;
+
 // --- Setup ------------------------------------------------------------------
 
 function populateSelects() {
@@ -116,12 +125,13 @@ function renderResults() {
         : '';
 
     el.innerHTML = `
+        <p class="tip">Click any scale to open it on the guitar fretboard ↗</p>
         <div class="home-card conf-${top.confidence}">
             <div class="home-head">
                 <span class="home-label">HOME BASE</span>
                 <span class="badge">${confidenceLabel(top.confidence)} · ${Math.round(top.coverage * 100)}%</span>
             </div>
-            <div class="home-name">${top.name}</div>
+            <div class="home-name">${scaleLink(top.name, top.tonicPc, top.scaleId)}</div>
             ${top.outsideNotes.length
                 ? `<div class="outside">Outside notes: ${top.outsideNotes.join(', ')}</div>`
                 : `<div class="outside clean">Every chord tone fits.</div>`}
@@ -132,7 +142,7 @@ function renderResults() {
             <span class="section-label">OTHER CANDIDATES</span>
             ${rest.map((g) => `
                 <div class="alt-row">
-                    <span class="alt-name">${g.name}</span>
+                    <span class="alt-name">${scaleLink(g.name, g.tonicPc, g.scaleId)}</span>
                     <span class="alt-meta">${confidenceLabel(g.confidence)} · ${Math.round(g.coverage * 100)}%</span>
                 </div>`).join('')}
         </div>` : ''}
@@ -150,10 +160,10 @@ function renderChordRow(c) {
         ? '<span class="tag in">in key</span>'
         : '<span class="tag out">borrowed</span>';
     const play = c.primaryMode
-        ? `<span class="play">play <strong>${c.primaryMode}</strong></span>`
+        ? `<span class="play">play <strong>${scaleLink(c.primaryMode.label, c.primaryMode.rootPc, c.primaryMode.scaleId)}</strong></span>`
         : '<span class="play muted">no in-key mode — treat as a color chord</span>';
     const colors = c.colorOptions.length
-        ? `<div class="colors">${c.colorOptions.map((o) => `<span class="color-chip">${o}</span>`).join('')}</div>`
+        ? `<div class="colors">${c.colorOptions.map((o) => scaleLink(o.label, o.rootPc, o.scaleId, 'color-chip')).join('')}</div>`
         : '';
     return `
         <div class="chord-row">
