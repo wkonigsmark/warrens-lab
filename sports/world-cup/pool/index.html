@@ -867,6 +867,22 @@
       return `WC26-${raw.slice(0, 4)}-${raw.slice(4)}`;
     }
 
+    function generateUuid() {
+      if (crypto.randomUUID) return crypto.randomUUID();
+      const bytes = new Uint8Array(16);
+      crypto.getRandomValues(bytes);
+      bytes[6] = (bytes[6] & 0x0f) | 0x40;
+      bytes[8] = (bytes[8] & 0x3f) | 0x80;
+      const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0"));
+      return [
+        hex.slice(0, 4).join(""),
+        hex.slice(4, 6).join(""),
+        hex.slice(6, 8).join(""),
+        hex.slice(8, 10).join(""),
+        hex.slice(10, 16).join(""),
+      ].join("-");
+    }
+
     function ensureEntryCode() {
       state.entryId ||= generateEntryCode();
       return state.entryId;
@@ -1562,6 +1578,170 @@
       `;
     }
 
+    function totalGroupGoalsValue() {
+      const value = Number(state.tiebreakers.totalGroupGoals);
+      return Number.isInteger(value) && value > 0 ? value : null;
+    }
+
+    function validateSubmission() {
+      if (!state.entry.bracketName || !state.entry.venmo || !state.entry.email) return "Bracket name, Venmo, and email are required.";
+      if (!state.entry.email.includes("@")) return "Please enter a valid email address.";
+      if (!isEntryComplete()) return "Complete all group and third-place picks before submitting.";
+      if (!totalGroupGoalsValue()) return "Enter your total group-play goals tiebreaker.";
+      return "";
+    }
+
+    function buildPickRows(entryId = null) {
+      const rows = [];
+      GROUP_IDS.forEach((group) => {
+        state.groupPicks[group].forEach((teamId, index) => {
+          const team = teamData(teamId);
+          rows.push({
+            ...(entryId ? { entry_id: entryId } : {}),
+            section: "group_order",
+            group_letter: group,
+            rank: index + 1,
+            team_id: team.id,
+            team_name: team.name,
+            w_index: Number.isFinite(team.wIndex) ? Number(team.wIndex.toFixed(1)) : null,
+            w_index_rank: team.wRank || null,
+          });
+        });
+      });
+
+      state.thirdPicks.forEach((teamId, index) => {
+        const team = teamData(teamId);
+        rows.push({
+          ...(entryId ? { entry_id: entryId } : {}),
+          section: "third_place_order",
+          group_letter: team.group,
+          rank: index + 1,
+          team_id: team.id,
+          team_name: team.name,
+          w_index: Number.isFinite(team.wIndex) ? Number(team.wIndex.toFixed(1)) : null,
+          w_index_rank: team.wRank || null,
+        });
+      });
+      return rows;
+    }
+
+    function buildSubmissionPayload() {
+      return {
+        version: "pool-entry-v1",
+        submittedFrom: "world-cup/pool",
+        entryCode: ensureEntryCode(),
+        tiebreakers: {
+          totalGroupGoals: totalGroupGoalsValue(),
+        },
+        groupPicks: state.groupPicks,
+        thirdPicks: state.thirdPicks,
+        thirdPlaceKey: thirdPlaceKey(),
+        roundOf32: buildRoundOf32().map((match) => ({
+          id: match.id,
+          a: { teamId: match.a.team?.id || null, label: match.a.label },
+          b: { teamId: match.b.team?.id || null, label: match.b.label },
+        })),
+        wIndexSnapshot: Object.fromEntries(Object.entries(teamsById).map(([teamId]) => {
+          const data = wIndexByTeam.get(teamId) || {};
+          return [teamId, { score: data.score ?? null, rank: data.rank ?? null }];
+        })),
+      };
+    }
+
+    async function loadSupabaseConfig() {
+      supabaseConfigPromise ||= import("../data/supabase-config.js")
+        .then((module) => module.supabaseConfig)
+        .then((config) => {
+          if (!config?.url || !config?.anonKey || config.url.includes("YOUR_PROJECT_REF")) {
+            throw new Error("Supabase config is not filled in yet. Copy data/supabase-config.example.js to data/supabase-config.js and add your project URL and anon key.");
+          }
+          return config;
+        });
+      return supabaseConfigPromise;
+    }
+
+    async function supabaseRest(path, { method = "GET", body, prefer } = {}) {
+      const config = await loadSupabaseConfig();
+      const response = await fetch(`${config.url.replace(/\/$/, "")}/rest/v1/${path}`, {
+        method,
+        headers: {
+          apikey: config.anonKey,
+          Authorization: `Bearer ${config.anonKey}`,
+          "Content-Type": "application/json",
+          ...(prefer ? { Prefer: prefer } : {}),
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `${response.status} ${response.statusText}`);
+      }
+      if (response.status === 204) return null;
+      return response.json();
+    }
+
+    async function submitEntry() {
+      const validationError = validateSubmission();
+      if (validationError) {
+        state.submitError = validationError;
+        state.submitStatus = "";
+        render();
+        return;
+      }
+
+      state.submitting = true;
+      state.submitError = "";
+      state.submitStatus = "Submitting entry...";
+      render();
+
+      try {
+        let entryDbId = "";
+        for (let attempt = 0; attempt < 3; attempt += 1) {
+          ensureEntryCode();
+          entryDbId = generateUuid();
+          try {
+            await supabaseRest("pool_entries", {
+              method: "POST",
+              prefer: "return=minimal",
+              body: {
+                id: entryDbId,
+                entry_code: state.entryId,
+                bracket_name: state.entry.bracketName,
+                email: state.entry.email,
+                venmo: state.entry.venmo,
+                status: "pending_payment",
+                paid: false,
+                test_entry: false,
+                user_agent: navigator.userAgent,
+                source: "world-cup-pool",
+                payload: buildSubmissionPayload(),
+              },
+            });
+            break;
+          } catch (error) {
+            if (!String(error.message).includes("duplicate key") || attempt === 2) throw error;
+            state.entryId = generateEntryCode();
+          }
+        }
+
+        await supabaseRest("pool_entry_picks", {
+          method: "POST",
+          prefer: "return=minimal",
+          body: buildPickRows(entryDbId),
+        });
+
+        state.submitted = true;
+        state.submitStatus = `Submitted. Entry code: ${state.entryId}. Send Venmo separately to confirm payment.`;
+        showToast("Entry submitted");
+      } catch (error) {
+        console.warn(error);
+        state.submitError = `Submission failed: ${error.message}. You can still copy or export CSV as a fallback.`;
+      } finally {
+        state.submitting = false;
+        render();
+      }
+    }
+
     function csvEscape(value) {
       const stringValue = String(value ?? "");
       return /[",\n\r]/.test(stringValue) ? `"${stringValue.replace(/"/g, '""')}"` : stringValue;
@@ -1569,12 +1749,14 @@
 
     function buildCsv() {
       const submittedAt = new Date().toISOString();
+      ensureEntryCode();
       const headers = [
         "entry_id",
         "submitted_at",
         "bracket_name",
         "venmo",
         "email",
+        "total_group_goals_tiebreaker",
         "section",
         "group",
         "rank",
@@ -1594,6 +1776,7 @@
             state.entry.bracketName,
             state.entry.venmo,
             state.entry.email,
+            totalGroupGoalsValue() || "",
             "group_order",
             group,
             index + 1,
@@ -1613,6 +1796,7 @@
           state.entry.bracketName,
           state.entry.venmo,
           state.entry.email,
+          totalGroupGoalsValue() || "",
           "third_place_order",
           team.group,
           index + 1,
@@ -1627,7 +1811,7 @@
     }
 
     async function copyCsv() {
-      state.entryId ||= `WC26-${Date.now()}`;
+      ensureEntryCode();
       const csv = buildCsv();
       try {
         await navigator.clipboard.writeText(csv);
@@ -1640,7 +1824,7 @@
     }
 
     function exportCsv() {
-      state.entryId ||= `WC26-${Date.now()}`;
+      ensureEntryCode();
       const csv = buildCsv();
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
       const url = URL.createObjectURL(blob);
@@ -1663,6 +1847,7 @@
     }
 
     function hasUnsavedProgress() {
+      if (state.submitted) return false;
       return Boolean(
         state.entry.bracketName ||
         state.entry.venmo ||

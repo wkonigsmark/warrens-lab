@@ -50,3 +50,33 @@ on public.pool_entry_picks
 for insert
 to anon
 with check (true);
+
+grant usage on schema public to anon;
+grant insert on public.pool_entries to anon;
+grant insert on public.pool_entry_picks to anon;
+grant usage on sequence public.pool_entry_picks_id_seq to anon;
+
+create or replace function public.get_pool_purse_summary()
+returns table (
+  total_entries bigint,
+  paid_entries bigint,
+  pending_entries bigint,
+  total_purse integer,
+  paid_purse integer,
+  pending_purse integer
+)
+language sql
+security definer
+set search_path = public
+as $$
+  select
+    count(*) filter (where voided = false and test_entry = false) as total_entries,
+    count(*) filter (where voided = false and test_entry = false and paid = true) as paid_entries,
+    count(*) filter (where voided = false and test_entry = false and paid = false) as pending_entries,
+    (count(*) filter (where voided = false and test_entry = false) * 50)::integer as total_purse,
+    (count(*) filter (where voided = false and test_entry = false and paid = true) * 50)::integer as paid_purse,
+    (count(*) filter (where voided = false and test_entry = false and paid = false) * 50)::integer as pending_purse
+  from public.pool_entries;
+$$;
+
+grant execute on function public.get_pool_purse_summary() to anon;

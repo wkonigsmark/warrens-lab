@@ -360,6 +360,38 @@ Store full submission payload, including W-Index snapshot/data version, so each 
 - At kickoff, disable submit and remove insert policy.
 - Export locked entries.
 
+## Local Setup Files
+
+Current implementation files:
+
+- `supabase/schema.sql`: run this in the Supabase SQL editor.
+- `data/supabase-config.js`: local/public frontend config for submit and purse tally.
+- `data/supabase-admin-config.js`: local admin config with service role key.
+- `data/supabase-config.example.js`: committed example.
+- `data/supabase-admin-config.example.js`: committed example.
+- `admin/index.html`: private/local admin console.
+- `pool/index.html`: public entry flow with Supabase submit.
+
+The real config files are ignored by git:
+
+```text
+sports/world-cup/data/supabase-config.js
+sports/world-cup/data/supabase-admin-config.js
+```
+
+Public config should use the Supabase anon key. Admin config should use the service role key and should never be deployed publicly.
+
+Setup order:
+
+1. Open Supabase SQL editor.
+2. Run `sports/world-cup/supabase/schema.sql`.
+3. Add project URL and anon key to `data/supabase-config.js`.
+4. Add project URL and service role key to `data/supabase-admin-config.js`.
+5. Submit one test entry from `/world-cup/pool/`.
+6. Open `/world-cup/admin/`.
+7. Mark the test entry paid, pending, test, voided, and deleted to confirm admin control.
+8. Confirm homepage purse tally updates.
+
 ## Sources
 
 - Supabase pricing and Free plan limits: https://supabase.com/pricing

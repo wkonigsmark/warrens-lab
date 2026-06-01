@@ -4,8 +4,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Coming Soon | Warren's World Cup Pool</title>
+  <title>Pool Admin | Warren's World Cup Pool</title>
   <link rel="stylesheet" href="../shared/world-cup.css">
+  <style>
+    .admin-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .admin-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0 28px;
+    }
+
+    .admin-row-pending {
+      background: rgba(255, 93, 93, 0.1);
+    }
+
+    .admin-row-paid {
+      background: rgba(36, 180, 126, 0.08);
+    }
+
+    .admin-row-test {
+      opacity: 0.68;
+    }
+
+    .admin-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .admin-actions .wc-button {
+      min-height: 30px;
+      padding: 0 10px;
+      font-size: 0.72rem;
+    }
+
+    @media (max-width: 760px) {
+      .admin-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -14,21 +59,224 @@
       <a class="wc-brand" href="../">Warren's World Cup Pool</a>
       <nav class="wc-nav" aria-label="World Cup sections">
         <a href="../">Home</a>
-        <a href="../meta/">Meta</a>
-        <a href="../rankings-odds/">W-Index</a>
-        <a href="../groups/">Groups</a>
+        <a href="../pool/">Pool</a>
+        <a href="../scoreboard/">Scoreboard</a>
+        <a href="./" aria-current="page">Admin</a>
       </nav>
     </header>
 
     <section class="wc-hero">
       <div>
-        <div class="wc-eyebrow">Admin</div>
-        <h1 class="wc-title">Coming Soon...</h1>
-        <p class="wc-copy">Admin tools will live here.</p>
+        <div class="wc-eyebrow">Private Local Tool</div>
+        <h1 class="wc-title">Pool Admin</h1>
+        <p class="wc-copy">Manage submissions, confirm payments, delete test entries, and export the current database. Keep the service role key local only.</p>
       </div>
-      <a class="wc-pill" href="../">Back Home</a>
+      <span class="wc-pill" id="admin-status">Loading config...</span>
+    </section>
+
+    <section class="admin-summary">
+      <div class="wc-stat"><strong id="entry-count">--</strong><span>Entries</span></div>
+      <div class="wc-stat"><strong id="paid-count">--</strong><span>Paid</span></div>
+      <div class="wc-stat"><strong id="pending-count">--</strong><span>Pending</span></div>
+      <div class="wc-stat"><strong id="paid-purse">$--</strong><span>Paid purse</span></div>
+    </section>
+
+    <section class="wc-section">
+      <div class="wc-section-header">
+        <div>
+          <h2>Entries</h2>
+          <p>Pending payments are red. Test entries can be hard-deleted before launch.</p>
+        </div>
+      </div>
+      <div class="admin-toolbar">
+        <button class="wc-button" id="refresh-entries" type="button">Refresh</button>
+        <button class="wc-button secondary" id="export-entries" type="button">Export Entries CSV</button>
+        <button class="wc-button secondary" id="export-picks" type="button">Export Picks CSV</button>
+      </div>
+      <div class="wc-table-wrap">
+        <table class="wc-table">
+          <thead>
+            <tr>
+              <th>Submitted</th>
+              <th>Code</th>
+              <th>Bracket</th>
+              <th>Email</th>
+              <th>Venmo</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="entry-table">
+            <tr><td colspan="7">Loading entries...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   </main>
+
+  <script type="module">
+    const status = document.getElementById("admin-status");
+    const table = document.getElementById("entry-table");
+    const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+    let adminConfig;
+    let entries = [];
+    let picks = [];
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
+      })[char]);
+    }
+
+    function setStatus(message) {
+      status.textContent = message;
+    }
+
+    async function loadConfig() {
+      const { supabaseAdminConfig } = await import("../data/supabase-admin-config.js");
+      if (!supabaseAdminConfig?.url || !supabaseAdminConfig?.serviceRoleKey || supabaseAdminConfig.url.includes("YOUR_PROJECT_REF")) {
+        throw new Error("Copy data/supabase-admin-config.example.js to data/supabase-admin-config.js and add your project URL and service role key.");
+      }
+      adminConfig = supabaseAdminConfig;
+    }
+
+    async function supabaseRest(path, { method = "GET", body, prefer } = {}) {
+      const response = await fetch(`${adminConfig.url.replace(/\/$/, "")}/rest/v1/${path}`, {
+        method,
+        headers: {
+          apikey: adminConfig.serviceRoleKey,
+          Authorization: `Bearer ${adminConfig.serviceRoleKey}`,
+          "Content-Type": "application/json",
+          ...(prefer ? { Prefer: prefer } : {}),
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+      if (!response.ok) throw new Error(await response.text());
+      if (response.status === 204) return null;
+      return response.json();
+    }
+
+    function csvEscape(value) {
+      const stringValue = String(value ?? "");
+      return /[",\n\r]/.test(stringValue) ? `"${stringValue.replace(/"/g, '""')}"` : stringValue;
+    }
+
+    function downloadCsv(filename, rows) {
+      if (!rows.length) return;
+      const headers = Object.keys(rows[0]);
+      const csv = [headers, ...rows.map((row) => headers.map((header) => row[header]))]
+        .map((row) => row.map(csvEscape).join(","))
+        .join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function renderSummary() {
+      const liveEntries = entries.filter((entry) => !entry.voided && !entry.test_entry);
+      const paidEntries = liveEntries.filter((entry) => entry.paid);
+      const pendingEntries = liveEntries.filter((entry) => !entry.paid);
+      document.getElementById("entry-count").textContent = liveEntries.length;
+      document.getElementById("paid-count").textContent = paidEntries.length;
+      document.getElementById("pending-count").textContent = pendingEntries.length;
+      document.getElementById("paid-purse").textContent = money.format(paidEntries.length * 50);
+    }
+
+    function renderEntries() {
+      renderSummary();
+      if (!entries.length) {
+        table.innerHTML = `<tr><td colspan="7">No entries yet.</td></tr>`;
+        return;
+      }
+      table.innerHTML = entries.map((entry) => {
+        const rowClass = entry.test_entry ? "admin-row-test" : entry.paid ? "admin-row-paid" : entry.voided ? "admin-row-test" : "admin-row-pending";
+        return `
+          <tr class="${rowClass}">
+            <td>${new Date(entry.submitted_at).toLocaleString()}</td>
+            <td><strong>${escapeHtml(entry.entry_code)}</strong></td>
+            <td>${escapeHtml(entry.bracket_name)}</td>
+            <td>${escapeHtml(entry.email)}</td>
+            <td>${escapeHtml(entry.venmo)}</td>
+            <td>${escapeHtml(entry.status)}${entry.paid ? " / paid" : ""}${entry.test_entry ? " / test" : ""}${entry.voided ? " / voided" : ""}</td>
+            <td>
+              <div class="admin-actions">
+                <button class="wc-button" type="button" data-action="paid" data-id="${entry.id}">Paid</button>
+                <button class="wc-button secondary" type="button" data-action="pending" data-id="${entry.id}">Pending</button>
+                <button class="wc-button secondary" type="button" data-action="test" data-id="${entry.id}">Test</button>
+                <button class="wc-button secondary" type="button" data-action="void" data-id="${entry.id}">Void</button>
+                ${entry.test_entry ? `<button class="wc-button secondary" type="button" data-action="delete-test" data-id="${entry.id}">Delete</button>` : ""}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadEntries() {
+      setStatus("Loading entries...");
+      entries = await supabaseRest("pool_entries?select=*&order=submitted_at.desc");
+      picks = await supabaseRest("pool_entry_picks?select=*&order=entry_id.asc,section.asc,group_letter.asc,rank.asc");
+      renderEntries();
+      setStatus(`${entries.length} entries loaded`);
+    }
+
+    async function updateEntry(id, patch) {
+      await supabaseRest(`pool_entries?id=eq.${id}`, {
+        method: "PATCH",
+        prefer: "return=minimal",
+        body: patch,
+      });
+      await loadEntries();
+    }
+
+    async function deleteTestEntry(id) {
+      const entry = entries.find((item) => item.id === id);
+      if (!entry?.test_entry) return;
+      if (!window.confirm(`Delete test entry ${entry.entry_code}?`)) return;
+      await supabaseRest(`pool_entries?id=eq.${id}`, { method: "DELETE", prefer: "return=minimal" });
+      await loadEntries();
+    }
+
+    table.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const id = button.dataset.id;
+      const action = button.dataset.action;
+      try {
+        if (action === "paid") await updateEntry(id, { paid: true, status: "paid", test_entry: false, voided: false });
+        if (action === "pending") await updateEntry(id, { paid: false, status: "pending_payment", test_entry: false, voided: false });
+        if (action === "test") await updateEntry(id, { paid: false, status: "test", test_entry: true, voided: false });
+        if (action === "void") await updateEntry(id, { paid: false, status: "voided", voided: true });
+        if (action === "delete-test") await deleteTestEntry(id);
+      } catch (error) {
+        console.warn(error);
+        setStatus(`Action failed: ${error.message}`);
+      }
+    });
+
+    document.getElementById("refresh-entries").addEventListener("click", loadEntries);
+    document.getElementById("export-entries").addEventListener("click", () => downloadCsv(`world-cup-pool-entries-${Date.now()}.csv`, entries));
+    document.getElementById("export-picks").addEventListener("click", () => downloadCsv(`world-cup-pool-picks-${Date.now()}.csv`, picks));
+
+    try {
+      await loadConfig();
+      await loadEntries();
+    } catch (error) {
+      console.warn(error);
+      setStatus("Admin config missing");
+      table.innerHTML = `<tr><td colspan="7">${escapeHtml(error.message)}</td></tr>`;
+    }
+  </script>
   <script src="../shared/world-cup-audio.js" defer></script>
 </body>
 

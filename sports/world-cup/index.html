@@ -221,6 +221,40 @@
       backdrop-filter: blur(12px);
     }
 
+    .purse-tally {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      width: min(100%, 560px);
+      margin: 0 auto;
+    }
+
+    .purse-card {
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.045);
+      backdrop-filter: blur(14px);
+    }
+
+    .purse-card strong {
+      display: block;
+      color: var(--ink);
+      font-size: clamp(1.05rem, 3vw, 1.55rem);
+      line-height: 1;
+    }
+
+    .purse-card span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 0.62rem;
+      font-weight: 950;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
     .w-index-tape {
       position: fixed;
       left: 0;
@@ -553,6 +587,11 @@
         width: min(100%, 360px);
       }
 
+      .purse-tally {
+        grid-template-columns: 1fr;
+        width: min(100%, 320px);
+      }
+
       .w-index-tape {
         grid-template-columns: 1fr;
       }
@@ -603,6 +642,21 @@
         <a href="meta/#group-fixtures">Fixtures</a>
         <a href="simulation/">Simulator</a>
         <a href="scoreboard/">Scoreboard</a>
+      </div>
+
+      <div class="purse-tally" id="purse-tally" aria-label="Pool purse tally">
+        <div class="purse-card">
+          <strong id="total-purse">--</strong>
+          <span>Total submitted</span>
+        </div>
+        <div class="purse-card">
+          <strong id="paid-purse">--</strong>
+          <span>Paid confirmed</span>
+        </div>
+        <div class="purse-card">
+          <strong id="pending-purse">--</strong>
+          <span>Pending payment</span>
+        </div>
       </div>
 
       <div class="countdown" aria-label="Countdown to World Cup kickoff">
@@ -669,6 +723,43 @@
       renderCountdown();
       setInterval(renderCountdown, 1000);
     })();
+  </script>
+
+  <script type="module">
+    const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    const totalPurse = document.getElementById('total-purse');
+    const paidPurse = document.getElementById('paid-purse');
+    const pendingPurse = document.getElementById('pending-purse');
+
+    function setPurseFallback() {
+      totalPurse.textContent = '$50 x entries';
+      paidPurse.textContent = '$50 x paid';
+      pendingPurse.textContent = 'Connect DB';
+    }
+
+    try {
+      const { supabaseConfig } = await import('./data/supabase-config.js');
+      if (!supabaseConfig?.url || !supabaseConfig?.anonKey || supabaseConfig.url.includes('YOUR_PROJECT_REF')) {
+        throw new Error('Supabase config not filled in');
+      }
+      const response = await fetch(`${supabaseConfig.url.replace(/\/$/, '')}/rest/v1/rpc/get_pool_purse_summary`, {
+        method: 'POST',
+        headers: {
+          apikey: supabaseConfig.anonKey,
+          Authorization: `Bearer ${supabaseConfig.anonKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: '{}',
+      });
+      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+      const [summary] = await response.json();
+      totalPurse.textContent = `${summary.total_entries} / ${currency.format(summary.total_purse)}`;
+      paidPurse.textContent = `${summary.paid_entries} / ${currency.format(summary.paid_purse)}`;
+      pendingPurse.textContent = `${summary.pending_entries} / ${currency.format(summary.pending_purse)}`;
+    } catch (error) {
+      console.warn('Pool purse summary unavailable:', error);
+      setPurseFallback();
+    }
   </script>
 
   <script type="module">

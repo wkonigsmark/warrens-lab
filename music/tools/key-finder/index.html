@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Finder | Music Theory Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>KEY <span class="accent">FINDER</span></h1>
+        <p class="tagline">Build a progression — find the scales, modes &amp; key that fit.</p>
+    </header>
+
+    <main>
+        <!-- Builder -->
+        <section class="builder">
+            <div class="builder-row">
+                <label>ROOT
+                    <select id="root-select"></select>
+                </label>
+                <label>QUALITY
+                    <select id="quality-select"></select>
+                </label>
+                <button id="add-btn" class="btn primary">ADD CHORD</button>
+                <div class="spacer"></div>
+                <div class="spelling-toggle" role="group" aria-label="Accidental spelling">
+                    <button id="sharp-btn" class="btn toggle active">♯</button>
+                    <button id="flat-btn" class="btn toggle">♭</button>
+                </div>
+            </div>
+
+            <div class="progression-bar">
+                <div id="chip-list" class="chip-list"></div>
+                <button id="clear-btn" class="btn ghost" hidden>CLEAR</button>
+            </div>
+        </section>
+
+        <!-- Results -->
+        <section id="results" class="results">
+            <div class="empty-state">Add a few chords to find the key.</div>
+        </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

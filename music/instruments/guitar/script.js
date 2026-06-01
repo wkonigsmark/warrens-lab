@@ -1,35 +1,9 @@
-const CHROMATIC_SCALE = [
-    'C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab', 'A', 'A#/Bb', 'B'
-];
+// Shared theory now lives in /core/theory — imported instead of duplicated.
+import { CHROMATIC_NAMES } from '../../core/theory/pitch-class.js';
+import { CHORD_INTERVALS } from '../../core/theory/chords.js';
 
-const CHORD_FORMS = {
-    'maj': [0, 4, 7],
-    'min': [0, 3, 7],
-    'dim': [0, 3, 6],
-    'aug': [0, 4, 8],
-    'dom7': [0, 4, 7, 10],
-    'maj7': [0, 4, 7, 11],
-    'min7': [0, 3, 7, 10],
-    'm7b5': [0, 3, 6, 10],
-    'dim7': [0, 3, 6, 9],
-    'maj6': [0, 4, 7, 9],
-    'min6': [0, 3, 7, 9],
-    'dom9': [0, 4, 7, 10, 2],
-    'dom7b9': [0, 4, 7, 10, 1],
-    'dom11': [0, 4, 7, 10, 2, 5],
-    'dom13': [0, 4, 7, 10, 9],
-    'dom13_9': [0, 4, 7, 10, 2, 9],
-    'dom13b9': [0, 4, 7, 10, 1, 9],
-    'dom13s11': [0, 4, 7, 10, 6, 9],
-    'maj9': [0, 4, 7, 11, 2],
-    'maj13': [0, 4, 7, 11, 9],
-    'min9': [0, 3, 7, 10, 2],
-    'min11': [0, 3, 7, 10, 5],
-    'min13': [0, 3, 7, 10, 9],
-    'sus4': [0, 5, 7],
-    '7sus4': [0, 5, 7, 10],
-    'sus2': [0, 2, 7]
-};
+const CHROMATIC_SCALE = CHROMATIC_NAMES;
+const CHORD_FORMS = CHORD_INTERVALS;
 
 let SCALES_DATA = [];
 let currentScaleNotes = [];
@@ -957,5 +931,15 @@ function updateDrillDisplay() {
     sequenceHtml += '</div>';
     display.innerHTML = sequenceHtml;
 }
+
+// This file is now an ES module, so its functions are module-scoped. The HTML
+// still wires controls via inline onclick/onchange handlers, which resolve
+// against the global scope — so expose those handlers on window explicitly.
+Object.assign(window, {
+    switchMode, updateTheory, clearBoard, saveToBank,
+    toggleMetronome, toggleMetronomePopup, togglePracticeCenter,
+    filterScales, updateBPM, updateSheetTitle,
+    applySuggestedChord, buildExactChord, checkBankEmpty, toggleMentorCollapse,
+});
 
 document.addEventListener('DOMContentLoaded', initFretboard);
