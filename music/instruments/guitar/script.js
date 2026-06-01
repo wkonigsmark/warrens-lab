@@ -132,7 +132,7 @@ function initFretboard() {
 
 async function loadScales() {
     try {
-        const response = await fetch('./music-scales.json');
+        const response = await fetch('../../core/theory/scales.json');
         SCALES_DATA = await response.json();
         
         const select = document.getElementById('scale-select');
