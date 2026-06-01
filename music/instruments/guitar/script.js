@@ -9,14 +9,39 @@ let SCALES_DATA = [];
 let currentScaleNotes = [];
 let currentMode = 'CHORD'; // 'CHORD' or 'SCALE'
 
-const STRINGS = [
-    { startNote: 'E', octave: 5 }, // High e (Written)
-    { startNote: 'B', octave: 4 },
-    { startNote: 'G', octave: 4 },
-    { startNote: 'D', octave: 4 },
-    { startNote: 'A', octave: 3 },
-    { startNote: 'E', octave: 3 }  // Low E (Written)
-];
+// When a scale position contains the same pitch on two strings, we show one as
+// the "lead" and de-emphasize the duplicate. This maps an absolute pitch
+// (octave*12 + pitchClass) -> the note-node id the player chose as lead, so a
+// flip survives re-renders. Cleared whenever the theory controls change.
+let scaleDupPrefs = {};
+
+// --- Tunings (guitar-local config) ------------------------------------------
+// Each tuning lists its 6 open strings HIGH→LOW (index 0 = high e = string 1),
+// matching the fretboard row order. startNote values are CHROMATIC_SCALE
+// entries; octaves follow the guitar's written register (an octave above
+// sounding, as the tool has always used). Promote to /core only if another
+// string instrument needs it later.
+const TUNINGS = {
+    standard:  { name: 'Standard (E A D G B e)',   strings: [['E', 5], ['B', 4], ['G', 4], ['D', 4], ['A', 3], ['E', 3]] },
+    dropD:     { name: 'Drop D (D A D G B e)',      strings: [['E', 5], ['B', 4], ['G', 4], ['D', 4], ['A', 3], ['D', 3]] },
+    dropC:     { name: 'Drop C (C G C F A d)',      strings: [['D', 5], ['A', 4], ['F', 4], ['C', 4], ['G', 3], ['C', 3]] },
+    openG:     { name: 'Open G (D G D G B d)',      strings: [['D', 5], ['B', 4], ['G', 4], ['D', 4], ['G', 3], ['D', 3]] },
+    openD:     { name: 'Open D (D A D F♯ A d)',     strings: [['D', 5], ['A', 4], ['F#/Gb', 4], ['D', 4], ['A', 3], ['D', 3]] },
+    openE:     { name: 'Open E (E B E G♯ B e)',     strings: [['E', 5], ['B', 4], ['G#/Ab', 4], ['E', 4], ['B', 3], ['E', 3]] },
+    dadgad:    { name: 'DADGAD (D A D G A d)',       strings: [['D', 5], ['A', 4], ['G', 4], ['D', 4], ['A', 3], ['D', 3]] },
+    halfStep:  { name: 'Half-step down (E♭ tuning)', strings: [['D#/Eb', 5], ['A#/Bb', 4], ['F#/Gb', 4], ['C#/Db', 4], ['G#/Ab', 3], ['D#/Eb', 3]] },
+};
+
+// Expand a tuning's [note, octave] pairs into the {startNote, octave} objects
+// the rest of the code expects. Returns a fresh copy so it stays mutable.
+function tuningToStrings(tuning) {
+    return tuning.strings.map(([startNote, octave]) => ({ startNote, octave }));
+}
+
+// The active tuning. `let` so the tuning selector can swap it; everything that
+// reads STRINGS (fretboard build, staff, pitch math) picks up the change.
+let STRINGS = tuningToStrings(TUNINGS.standard);
+let currentTuningKey = 'standard';
 
 const NOTE_NAME_TO_STEP = { 'C': 0, 'C#': 0, 'Db': 1, 'D': 1, 'D#': 1, 'Eb': 2, 'E': 2, 'F': 3, 'F#': 3, 'Gb': 4, 'G': 4, 'G#': 4, 'Ab': 5, 'A': 5, 'A#': 5, 'Bb': 6, 'B': 6 };
 // More precise: map to white-key index
@@ -32,6 +57,14 @@ const INLAY_FRETS = [3, 5, 7, 9, 12, 15, 17];
 let currentChordNotes = [];
 
 function initFretboard() {
+    renderFretboard();
+    setupTuningControls();
+    updateTheory();
+    loadScales();
+}
+
+// Build (or rebuild) the fretboard DOM from the current STRINGS tuning.
+function renderFretboard() {
     const board = document.getElementById('fretboard');
     if (!board) return;
     board.innerHTML = '';
@@ -75,8 +108,17 @@ function initFretboard() {
             }
 
             noteNode.onclick = () => {
+                // In SCALE mode, tapping a de-emphasized duplicate promotes it
+                // to the lead for that pitch (and demotes the current lead),
+                // rather than toggling note selection.
+                if (currentMode === 'SCALE' && noteNode.classList.contains('dup-secondary')) {
+                    scaleDupPrefs[nodePitch(noteNode.id)] = noteNode.id;
+                    updateScaleMode();
+                    return;
+                }
+
                 const isTurningOn = !noteNode.classList.contains('active');
-                
+
                 // Only enforce "one note per string" if in CHORD mode
                 if (isTurningOn && currentMode === 'CHORD') {
                     row.querySelectorAll('.note-node.active').forEach(activeNode => {
@@ -99,9 +141,6 @@ function initFretboard() {
         }
         board.appendChild(row);
     });
-    
-    updateTheory();
-    loadScales();
 }
 
 async function loadScales() {
@@ -236,6 +275,10 @@ function switchMode(newMode) {
 }
 
 function updateTheory() {
+    // A control change (root/scale/position/mode) resets any duplicate flips;
+    // flips themselves call updateScaleMode() directly so they persist.
+    scaleDupPrefs = {};
+
     if (currentMode === 'SCALE') {
         updateScaleMode();
         return;
@@ -252,7 +295,7 @@ function updateTheory() {
     if (mentor) mentor.innerHTML = '';
     
     document.querySelectorAll('.note-node').forEach(el => {
-        el.classList.remove('suggested', 'root-tonic', 'dimmed-note');
+        el.classList.remove('suggested', 'root-tonic', 'dimmed-note', 'dup-secondary', 'dup-lead');
     });
     
     const rootIdx = CHROMATIC_SCALE.indexOf(root);
@@ -319,7 +362,7 @@ function updateScaleMode() {
     const fretEnd = fretStart + 4;
     
     document.querySelectorAll('.note-node').forEach(el => {
-        el.classList.remove('suggested', 'root-tonic', 'dimmed-note');
+        el.classList.remove('suggested', 'root-tonic', 'dimmed-note', 'dup-secondary', 'dup-lead');
     });
     
     currentScaleNotes = scale.intervals.map(inter => CHROMATIC_SCALE[(rootIdx + inter) % 12]);
@@ -359,15 +402,65 @@ function updateScaleMode() {
         }
     });
 
+    // Resolve same-pitch duplicates within the position (one lead per pitch).
+    const dupCount = resolvePositionDuplicates();
+
     // Update Meta Info
     info.innerHTML = `
         <span class="scale-tag">${scale.category.type}</span>
         <span class="scale-tag cult">${scale.cultural_tags[0] || ''}</span>
         <span class="scale-tag mood">${scale.mood_tags[0] || ''}</span>
+        ${dupCount ? `<span class="scale-tag dup">⇄ ${dupCount} doubled pitch${dupCount > 1 ? 'es' : ''} — tap a faded note to swap the lead</span>` : ''}
     `;
 
     showMentorRecommendations(scale);
     drawScaleManuscript(currentScaleNotes);
+}
+
+// Absolute pitch of a fret node: octave*12 + pitch class. Two nodes with the
+// same value are literally the same pitch (same note, same octave).
+function nodePitch(nodeId) {
+    const parts = nodeId.split('-').map(Number);
+    const stringData = STRINGS[parts[1]];
+    const total = CHROMATIC_SCALE.indexOf(stringData.startNote) + parts[2];
+    return (stringData.octave + Math.floor(total / 12)) * 12 + (total % 12);
+}
+
+function nodeStringIdx(nodeId) {
+    return parseInt(nodeId.split('-')[1], 10);
+}
+
+// Among the in-position scale notes, find pitches that occur on more than one
+// string and mark one as the lead (the rest as de-emphasized duplicates).
+// Returns how many doubled pitches were found.
+function resolvePositionDuplicates() {
+    const groups = {};
+    document.querySelectorAll('.note-node.suggested:not(.dimmed-note)').forEach(node => {
+        const pitch = nodePitch(node.id);
+        (groups[pitch] = groups[pitch] || []).push(node);
+    });
+
+    let dupCount = 0;
+    Object.entries(groups).forEach(([pitch, nodes]) => {
+        if (nodes.length < 2) return;
+        dupCount++;
+
+        // Default position logic: lead = highest-pitched string (lowest string
+        // index), which is the lower-fret spot, keeping the box compact.
+        nodes.sort((a, b) => nodeStringIdx(a.id) - nodeStringIdx(b.id));
+        let lead = nodes[0];
+
+        // Honor a player's flip preference for this pitch if it's still valid.
+        const preferredId = scaleDupPrefs[pitch];
+        if (preferredId) {
+            const chosen = nodes.find(n => n.id === preferredId);
+            if (chosen) lead = chosen;
+        }
+
+        nodes.forEach(n => n.classList.add(n === lead ? 'dup-lead' : 'dup-secondary'));
+    });
+
+    return dupCount;
 }
 
 const CHORD_FORMULAS = {
@@ -963,6 +1056,92 @@ function updateDrillDisplay() {
     
     sequenceHtml += '</div>';
     display.innerHTML = sequenceHtml;
+}
+
+// --- Tuning selector --------------------------------------------------------
+
+function setupTuningControls() {
+    const select = document.getElementById('tuning-select');
+    if (!select) return;
+
+    select.innerHTML = Object.entries(TUNINGS)
+        .map(([key, t]) => `<option value="${key}">${t.name}</option>`)
+        .join('') + '<option value="custom">Custom…</option>';
+    select.value = currentTuningKey;
+
+    select.onchange = () => {
+        if (select.value === 'custom') {
+            showCustomEditor(true);   // edit current strings; STRINGS unchanged until edited
+            return;
+        }
+        currentTuningKey = select.value;
+        STRINGS = tuningToStrings(TUNINGS[select.value]);
+        showCustomEditor(false);
+        rebuildAfterTuningChange();
+    };
+
+    const editBtn = document.getElementById('tuning-edit-btn');
+    if (editBtn) editBtn.onclick = () => {
+        const panel = document.getElementById('tuning-custom');
+        showCustomEditor(panel.hidden);
+    };
+
+    buildCustomEditor();
+}
+
+// Build the per-string note + octave selectors to match the current STRINGS.
+function buildCustomEditor() {
+    const panel = document.getElementById('tuning-custom');
+    if (!panel) return;
+
+    const noteOpts = CHROMATIC_SCALE
+        .map((n) => `<option value="${n}">${formatNoteName(n)}</option>`).join('');
+    const octOpts = [6, 5, 4, 3, 2]
+        .map((o) => `<option value="${o}">${o}</option>`).join('');
+
+    panel.innerHTML = STRINGS.map((s, i) => `
+        <div class="tuning-string">
+            <span class="ts-label">${i + 1}</span>
+            <select class="ts-note" data-str="${i}">${noteOpts}</select>
+            <select class="ts-oct" data-str="${i}">${octOpts}</select>
+        </div>`).join('');
+
+    panel.querySelectorAll('.ts-note').forEach((sel) => {
+        sel.value = STRINGS[+sel.dataset.str].startNote;
+        sel.onchange = applyCustomTuning;
+    });
+    panel.querySelectorAll('.ts-oct').forEach((sel) => {
+        sel.value = String(STRINGS[+sel.dataset.str].octave);
+        sel.onchange = applyCustomTuning;
+    });
+}
+
+function showCustomEditor(show) {
+    const panel = document.getElementById('tuning-custom');
+    if (!panel) return;
+    if (show) buildCustomEditor();
+    panel.hidden = !show;
+}
+
+// Read the per-string selectors into STRINGS and mark the tuning as Custom.
+function applyCustomTuning() {
+    const panel = document.getElementById('tuning-custom');
+    const next = STRINGS.map((s, i) => ({
+        startNote: panel.querySelector(`.ts-note[data-str="${i}"]`).value,
+        octave: parseInt(panel.querySelector(`.ts-oct[data-str="${i}"]`).value, 10),
+    }));
+    STRINGS = next;
+    currentTuningKey = 'custom';
+    document.getElementById('tuning-select').value = 'custom';
+    rebuildAfterTuningChange();
+}
+
+// After any tuning change: pitches moved, so clear duplicate flips, rebuild the
+// board from the new STRINGS, and re-apply the current chord/scale view.
+function rebuildAfterTuningChange() {
+    scaleDupPrefs = {};
+    renderFretboard();
+    updateTheory();
 }
 
 // This file is now an ES module, so its functions are module-scoped. The HTML

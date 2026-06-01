@@ -189,6 +189,54 @@ h1 {
     margin-top: 10px;
 }
 
+/* --- Tuning selector --- */
+.tuning-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 14px;
+}
+.tuning-bar .label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+}
+.tuning-bar select,
+.tuning-string select {
+    background: #1a1f29;
+    color: var(--text-primary);
+    border: 1px solid #2e3543;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 0.85rem;
+}
+.tuning-custom {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 6px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.tuning-string {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+.tuning-string .ts-label {
+    font-size: 0.6rem;
+    font-weight: 800;
+    color: var(--text-dim);
+}
+.tuning-string select { min-width: 62px; padding: 4px 6px; font-size: 0.8rem; }
+
 .mode-tabs {
     display: flex;
     background: rgba(255,255,255,0.05);
@@ -315,6 +363,12 @@ h1 {
 
 .scale-tag.mood { border-color: var(--gold); color: var(--gold); }
 .scale-tag.cult { border-color: var(--note-accent); color: var(--note-accent); }
+.scale-tag.dup {
+    border-color: rgba(52, 152, 219, 0.5);
+    color: var(--note-accent);
+    text-transform: none;
+    letter-spacing: 0;
+}
 
 .mentor-area {
     margin-top: 10px;
@@ -450,6 +504,21 @@ h1 {
     opacity: 0.2;
     border-color: #333;
     box-shadow: none;
+}
+
+/* Doubled pitch within a position: the de-emphasized alternate. Reads as a
+   hollow "available, but not the lead" marker; tap it to make it the lead. */
+.note-node.suggested.dup-secondary .note-circle {
+    background: transparent;
+    border: 1px dashed rgba(52, 152, 219, 0.55);
+    box-shadow: none;
+    opacity: 0.4;
+    color: var(--text-dim);
+}
+.note-node.suggested.dup-secondary:hover .note-circle {
+    opacity: 0.85;
+    border-style: solid;
+    cursor: pointer;
 }
 
 /* THE MASTER SELECTION - HIGHEST PRIORITY */

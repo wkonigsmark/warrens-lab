@@ -69,7 +69,7 @@
       <div>
         <div class="wc-eyebrow">Private Local Tool</div>
         <h1 class="wc-title">Pool Admin</h1>
-        <p class="wc-copy">Manage submissions, confirm payments, delete test entries, and export the current database. Keep the service role key local only.</p>
+        <p class="wc-copy">Manage submissions, confirm payments, delete test entries, and export the current database through the local admin server.</p>
       </div>
       <span class="wc-pill" id="admin-status">Loading config...</span>
     </section>
@@ -118,7 +118,7 @@
     const status = document.getElementById("admin-status");
     const table = document.getElementById("entry-table");
     const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-    let adminConfig;
+    const adminApiBase = "http://127.0.0.1:8787/api";
     let entries = [];
     let picks = [];
 
@@ -136,28 +136,18 @@
       status.textContent = message;
     }
 
-    async function loadConfig() {
-      const { supabaseAdminConfig } = await import("../data/supabase-admin-config.js");
-      if (!supabaseAdminConfig?.url || !supabaseAdminConfig?.serviceRoleKey || supabaseAdminConfig.url.includes("YOUR_PROJECT_REF")) {
-        throw new Error("Copy data/supabase-admin-config.example.js to data/supabase-admin-config.js and add your project URL and service role key.");
-      }
-      adminConfig = supabaseAdminConfig;
-    }
-
-    async function supabaseRest(path, { method = "GET", body, prefer } = {}) {
-      const response = await fetch(`${adminConfig.url.replace(/\/$/, "")}/rest/v1/${path}`, {
+    async function adminFetch(path, { method = "GET", body } = {}) {
+      const response = await fetch(`${adminApiBase}${path}`, {
         method,
         headers: {
-          apikey: adminConfig.serviceRoleKey,
-          Authorization: `Bearer ${adminConfig.serviceRoleKey}`,
           "Content-Type": "application/json",
-          ...(prefer ? { Prefer: prefer } : {}),
         },
         body: body ? JSON.stringify(body) : undefined,
       });
       if (!response.ok) throw new Error(await response.text());
-      if (response.status === 204) return null;
-      return response.json();
+      const text = await response.text();
+      if (!text) return null;
+      return JSON.parse(text);
     }
 
     function csvEscape(value) {
@@ -224,16 +214,16 @@
 
     async function loadEntries() {
       setStatus("Loading entries...");
-      entries = await supabaseRest("pool_entries?select=*&order=submitted_at.desc");
-      picks = await supabaseRest("pool_entry_picks?select=*&order=entry_id.asc,section.asc,group_letter.asc,rank.asc");
+      const data = await adminFetch("/entries");
+      entries = data.entries || [];
+      picks = data.picks || [];
       renderEntries();
       setStatus(`${entries.length} entries loaded`);
     }
 
     async function updateEntry(id, patch) {
-      await supabaseRest(`pool_entries?id=eq.${id}`, {
+      await adminFetch(`/entries/${encodeURIComponent(id)}`, {
         method: "PATCH",
-        prefer: "return=minimal",
         body: patch,
       });
       await loadEntries();
@@ -243,7 +233,7 @@
       const entry = entries.find((item) => item.id === id);
       if (!entry?.test_entry) return;
       if (!window.confirm(`Delete test entry ${entry.entry_code}?`)) return;
-      await supabaseRest(`pool_entries?id=eq.${id}`, { method: "DELETE", prefer: "return=minimal" });
+      await adminFetch(`/entries/${encodeURIComponent(id)}`, { method: "DELETE" });
       await loadEntries();
     }
 
@@ -269,12 +259,11 @@
     document.getElementById("export-picks").addEventListener("click", () => downloadCsv(`world-cup-pool-picks-${Date.now()}.csv`, picks));
 
     try {
-      await loadConfig();
       await loadEntries();
     } catch (error) {
       console.warn(error);
-      setStatus("Admin config missing");
-      table.innerHTML = `<tr><td colspan="7">${escapeHtml(error.message)}</td></tr>`;
+      setStatus("Local admin server offline");
+      table.innerHTML = `<tr><td colspan="7">Start the local admin server, then refresh. ${escapeHtml(error.message)}</td></tr>`;
     }
   </script>
   <script src="../shared/world-cup-audio.js" defer></script>
