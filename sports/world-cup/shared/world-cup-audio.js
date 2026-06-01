@@ -14,7 +14,6 @@
   const audio = document.createElement("audio");
   audio.id = "wc-theme-audio";
   audio.src = audioUrl;
-  audio.autoplay = true;
   audio.loop = true;
   audio.preload = "auto";
   audio.volume = 0.34;
@@ -107,12 +106,6 @@
     }
   });
 
-  function startFromGesture() {
-    if (userPaused || !audio.paused) return;
-    idlePaused = false;
-    playTheme();
-  }
-
   function pauseForIdle() {
     if (userPaused || audio.paused) return;
     idlePaused = true;
@@ -123,10 +116,6 @@
 
   function resetIdleTimer() {
     window.clearTimeout(idleTimer);
-    if (idlePaused && !userPaused) {
-      idlePaused = false;
-      playTheme();
-    }
     idleTimer = window.setTimeout(pauseForIdle, idleLimitMs);
   }
 
@@ -136,19 +125,14 @@
         resetIdleTimer();
         return;
       }
-      startFromGesture();
       resetIdleTimer();
     }, { passive: true });
   });
   window.addEventListener("pageshow", () => {
-    if (!userPaused && audio.paused) playTheme();
     resetIdleTimer();
   });
 
   audio.addEventListener("loadedmetadata", restoreTime, { once: true });
-  audio.addEventListener("canplay", () => {
-    if (!userPaused && audio.paused) playTheme();
-  }, { once: true });
   audio.addEventListener("play", renderButton);
   audio.addEventListener("pause", renderButton);
   audio.addEventListener("volumechange", renderButton);
@@ -160,5 +144,4 @@
   restoreTime();
   renderButton();
   resetIdleTimer();
-  playTheme();
 })();
