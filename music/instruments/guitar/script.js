@@ -59,8 +59,22 @@ let currentChordNotes = [];
 function initFretboard() {
     renderFretboard();
     setupTuningControls();
+    setupCollapsibles();
     updateTheory();
     loadScales();
+}
+
+// Generic collapsible panels: a .panel-head[data-target] toggles the hidden
+// state (and caret) of the element with that id.
+function setupCollapsibles() {
+    document.querySelectorAll('.panel-head[data-target]').forEach(head => {
+        head.addEventListener('click', () => {
+            const body = document.getElementById(head.dataset.target);
+            if (!body) return;
+            body.hidden = !body.hidden;
+            head.classList.toggle('open', !body.hidden);
+        });
+    });
 }
 
 // Build (or rebuild) the fretboard DOM from the current STRINGS tuning.
@@ -289,11 +303,11 @@ function updateTheory() {
     const checklist = document.getElementById('theory-checklist');
     const infoPanel = document.getElementById('scale-info-panel');
     
-    // Clear scale-specific info in chord mode
+    // Clear scale-specific info in chord mode and hide the diatonic-chord panel.
     if (infoPanel) infoPanel.innerHTML = '';
-    const mentor = document.querySelector('.mentor-area');
-    if (mentor) mentor.innerHTML = '';
-    
+    const mentorSection = document.getElementById('mentor-section');
+    if (mentorSection) mentorSection.hidden = true;
+
     document.querySelectorAll('.note-node').forEach(el => {
         el.classList.remove('suggested', 'root-tonic', 'dimmed-note', 'dup-secondary', 'dup-lead');
     });
@@ -553,53 +567,38 @@ function toggleMentorCollapse() {
 }
 
 function showMentorRecommendations(scale) {
-    let dashboard = document.querySelector('.theory-dashboard');
-    let mentor = document.querySelector('.mentor-area');
-    
-    if (!mentor) {
-        mentor = document.createElement('div');
-        mentor.className = 'mentor-area';
-        dashboard.appendChild(mentor);
-    }
-    
+    const section = document.getElementById('mentor-section');
+    const host = document.getElementById('mentor-host');
+    if (!section || !host) return;
+
     const stacks = getDiatonicStacks(currentScaleNotes);
 
     if (stacks.length > 0) {
-        mentor.innerHTML = `
-            <div class="mentor-title" style="cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 0;" onclick="toggleMentorCollapse()">
-                MENTOR: DIATONIC CHORDS <span id="mentor-collapse-indicator" style="font-size:0.6rem; opacity: 0.7;">${isMentorCollapsed ? '▼ SHOW' : '▲ HIDE'}</span>
-            </div>
-            <div id="mentor-content" class="mentor-content ${isMentorCollapsed ? 'collapsed' : ''}">
-                <div class="recommendations" style="display: flex; gap: 8px; overflow-x: auto; padding-top: 15px; padding-bottom: 5px; flex-wrap: nowrap; align-items: flex-start; max-width: 100%; justify-content: center;">
-                ${stacks.map(s => `
-                    <div class="diatonic-col">
-                        <div class="diatonic-header">
-                            <span style="font-size: 0.7rem; color: var(--gold); line-height: 1;">${s.numeral}</span>
-                            <span style="font-weight: 800; font-size: 1.1rem;">${formatNoteName(s.root)}</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
-                            ${s.chords.map(c => `
-                                <div class="rec-chip" style="margin:0; width: 100%; padding: 4px 0; text-align: center; box-sizing: border-box; font-size: 0.75rem;" onclick="buildExactChord('${s.root}', '${c.form}')">${c.label}</div>
-                            `).join('')}
-                        </div>
+        host.innerHTML = `
+            <div class="recommendations">
+            ${stacks.map(s => `
+                <div class="diatonic-col">
+                    <div class="diatonic-header">
+                        <span style="font-size: 0.7rem; color: var(--gold);">${s.numeral}</span>
+                        <span style="font-weight: 800; font-size: 1.1rem;">${formatNoteName(s.root)}</span>
                     </div>
-                `).join('')}
+                    <div class="diatonic-chips">
+                        ${s.chords.map(c => `
+                            <div class="rec-chip" style="margin:0; padding: 4px 8px; text-align: center; font-size: 0.75rem;" onclick="buildExactChord('${s.root}', '${c.form}')">${c.label}</div>
+                        `).join('')}
+                    </div>
                 </div>
-            </div>
-        `;
+            `).join('')}
+            </div>`;
     } else {
         const chords = scale.common_chords || [];
-        mentor.innerHTML = `
-            <div class="mentor-title" style="cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 0;" onclick="toggleMentorCollapse()">
-                MENTOR: COMMON CHORD QUALITIES <span id="mentor-collapse-indicator" style="font-size:0.6rem; opacity: 0.7;">${isMentorCollapsed ? '▼ SHOW' : '▲ HIDE'}</span>
-            </div>
-            <div id="mentor-content" class="mentor-content ${isMentorCollapsed ? 'collapsed' : ''}">
-                <div class="recommendations" style="padding-top: 15px;">
-                    ${chords.map(c => `<div class="rec-chip" onclick="applySuggestedChord('${c}')">${c.toUpperCase()}</div>`).join('')}
-                </div>
-            </div>
-        `;
+        host.innerHTML = `
+            <div class="recommendations">
+                ${chords.map(c => `<div class="rec-chip" onclick="applySuggestedChord('${c}')">${c.toUpperCase()}</div>`).join('')}
+            </div>`;
     }
+
+    section.hidden = false;   // reveal the panel; it stays collapsed until opened
 }
 
 function applySuggestedChord(form) {
@@ -801,6 +800,14 @@ function saveToBank() {
     const bank = document.getElementById('voicing-bank');
     const emptyState = document.getElementById('empty-state');
     if (emptyState) emptyState.style.display = 'none';
+
+    // The bank is collapsed by default — open it so the new voicing is visible.
+    const bankBody = document.getElementById('bank-body');
+    if (bankBody && bankBody.hidden) {
+        bankBody.hidden = false;
+        const head = document.querySelector('.bank-section .panel-head');
+        if (head) head.classList.add('open');
+    }
 
     const resultSpan = document.createElement('div');
     resultSpan.className = 'voicing-card';
