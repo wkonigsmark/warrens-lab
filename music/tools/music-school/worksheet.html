@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music School — Worksheet Maker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="worksheet.css">
+</head>
+<body>
+  <!-- Controls: hidden when printing -->
+  <div class="controls no-print">
+    <a class="back" href="index.html">← Games</a>
+    <label>Topics:
+      <span id="topic-checks"></span>
+    </label>
+    <label>Level:
+      <select id="level"><option value="1">🐣 Starter</option><option value="2">🐥 Getting it</option><option value="3">🦅 Tricky</option></select>
+    </label>
+    <label>Questions: <input id="count" type="number" min="4" max="30" value="12"></label>
+    <label><input id="answers" type="checkbox"> Answer key</label>
+    <button id="make" class="big">Make ✨</button>
+    <button id="print" class="big">🖨️ Print</button>
+  </div>
+
+  <!-- Printable sheet -->
+  <main id="sheet" class="sheet"></main>
+
+  <script type="module" src="worksheet.js"></script>
+</body>
+</html>

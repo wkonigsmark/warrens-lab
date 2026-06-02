@@ -45,6 +45,58 @@
       font-size: 0.72rem;
     }
 
+    .admin-lock {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 24% 18%, rgba(36, 180, 126, 0.22), transparent 34%),
+        radial-gradient(circle at 78% 28%, rgba(74, 163, 255, 0.18), transparent 30%),
+        rgba(3, 13, 10, 0.88);
+      backdrop-filter: blur(16px);
+    }
+
+    .admin-lock[hidden] {
+      display: none;
+    }
+
+    .admin-lock-card {
+      width: min(100%, 430px);
+      padding: 24px;
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.055));
+      box-shadow: var(--wc-shadow);
+    }
+
+    .admin-lock-card h2 {
+      margin: 8px 0 8px;
+      color: var(--wc-ink);
+      font-size: clamp(2rem, 8vw, 3.2rem);
+      line-height: 0.94;
+    }
+
+    .admin-lock-card p {
+      margin: 0 0 18px;
+      color: var(--wc-muted);
+      line-height: 1.45;
+    }
+
+    .admin-lock-form {
+      display: grid;
+      gap: 10px;
+    }
+
+    .admin-lock-error {
+      min-height: 20px;
+      color: var(--wc-red);
+      font-size: 0.86rem;
+      font-weight: 850;
+    }
+
     @media (max-width: 760px) {
       .admin-summary {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -114,7 +166,29 @@
     </section>
   </main>
 
+  <div class="admin-lock" id="admin-lock" role="dialog" aria-modal="true" aria-labelledby="admin-lock-title">
+    <article class="admin-lock-card">
+      <div class="wc-eyebrow">Private Admin</div>
+      <h2 id="admin-lock-title">Enter PIN</h2>
+      <p>This page controls pool payments and test entries. Use the local admin server only when you need to manage submissions.</p>
+      <form class="admin-lock-form" id="admin-lock-form">
+        <label class="wc-field" for="admin-pin">
+          <span>Admin PIN</span>
+          <input class="wc-input" id="admin-pin" type="password" inputmode="numeric" autocomplete="off" placeholder="PIN" required>
+        </label>
+        <button class="wc-button" type="submit">Unlock Admin</button>
+        <div class="admin-lock-error" id="admin-lock-error" role="status"></div>
+      </form>
+    </article>
+  </div>
+
   <script type="module">
+    const ADMIN_PIN = "2019";
+    const ADMIN_UNLOCK_KEY = "wc-admin-unlocked";
+    const lock = document.getElementById("admin-lock");
+    const lockForm = document.getElementById("admin-lock-form");
+    const pinInput = document.getElementById("admin-pin");
+    const lockError = document.getElementById("admin-lock-error");
     const status = document.getElementById("admin-status");
     const table = document.getElementById("entry-table");
     const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
@@ -136,11 +210,42 @@
       status.textContent = message;
     }
 
+    function unlockAdmin() {
+      sessionStorage.setItem(ADMIN_UNLOCK_KEY, "true");
+      lock.hidden = true;
+      loadEntries();
+    }
+
+    function requirePin() {
+      if (sessionStorage.getItem(ADMIN_UNLOCK_KEY) === "true") {
+        lock.hidden = true;
+        loadEntries();
+        return;
+      }
+      lock.hidden = false;
+      setStatus("PIN required");
+      table.innerHTML = `<tr><td colspan="7">Enter the admin PIN to load entries.</td></tr>`;
+      setTimeout(() => pinInput.focus(), 50);
+    }
+
+    lockForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (pinInput.value.trim() === ADMIN_PIN) {
+        lockError.textContent = "";
+        unlockAdmin();
+        return;
+      }
+      pinInput.value = "";
+      lockError.textContent = "Incorrect PIN.";
+      pinInput.focus();
+    });
+
     async function adminFetch(path, { method = "GET", body } = {}) {
       const response = await fetch(`${adminApiBase}${path}`, {
         method,
         headers: {
           "Content-Type": "application/json",
+          "X-Admin-Pin": sessionStorage.getItem(ADMIN_UNLOCK_KEY) === "true" ? ADMIN_PIN : "",
         },
         body: body ? JSON.stringify(body) : undefined,
       });
@@ -213,12 +318,19 @@
     }
 
     async function loadEntries() {
-      setStatus("Loading entries...");
-      const data = await adminFetch("/entries");
-      entries = data.entries || [];
-      picks = data.picks || [];
-      renderEntries();
-      setStatus(`${entries.length} entries loaded`);
+      try {
+        setStatus("Loading entries...");
+        const data = await adminFetch("/entries");
+        entries = data.entries || [];
+        picks = data.picks || [];
+        renderEntries();
+        setStatus(`${entries.length} entries loaded`);
+      } catch (error) {
+        console.warn(error);
+        const offline = error instanceof TypeError && error.message === "Failed to fetch";
+        setStatus(offline ? "Local admin server offline" : "Admin request failed");
+        table.innerHTML = `<tr><td colspan="7">${offline ? "Start the local admin server, then refresh." : "Admin server reached Supabase, but the request failed."} ${escapeHtml(error.message)}</td></tr>`;
+      }
     }
 
     async function updateEntry(id, patch) {
@@ -258,14 +370,7 @@
     document.getElementById("export-entries").addEventListener("click", () => downloadCsv(`world-cup-pool-entries-${Date.now()}.csv`, entries));
     document.getElementById("export-picks").addEventListener("click", () => downloadCsv(`world-cup-pool-picks-${Date.now()}.csv`, picks));
 
-    try {
-      await loadEntries();
-    } catch (error) {
-      console.warn(error);
-      const offline = error instanceof TypeError && error.message === "Failed to fetch";
-      setStatus(offline ? "Local admin server offline" : "Admin request failed");
-      table.innerHTML = `<tr><td colspan="7">${offline ? "Start the local admin server, then refresh." : "Admin server reached Supabase, but the request failed."} ${escapeHtml(error.message)}</td></tr>`;
-    }
+    requirePin();
   </script>
   <script src="../shared/world-cup-audio.js" defer></script>
 </body>

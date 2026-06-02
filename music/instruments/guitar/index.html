@@ -20,7 +20,6 @@
             </div>
             <button class="control-btn" onclick="toggleMetronomePopup()">METRONOME</button>
             <button class="control-btn practice-btn" onclick="togglePracticeCenter(true)">PRACTICE</button>
-            <button class="control-btn clear-btn" onclick="clearBoard()">CLEAR</button>
             <button id="tuning-toggle" class="control-btn tuning-toggle" aria-expanded="false">
                 TUNING: <span id="tuning-current">Standard</span> <span class="caret">▾</span>
             </button>
@@ -145,7 +144,10 @@
                 </div>
             </div>
 
-            <button class="control-btn save-btn" onclick="saveToBank()">SAVE TO BANK</button>
+            <div class="sidebar-actions">
+                <button class="control-btn clear-btn" onclick="clearBoard()">CLEAR</button>
+                <button class="control-btn save-btn" onclick="saveToBank()">SAVE</button>
+            </div>
         </aside>
 
         <main class="board-area">

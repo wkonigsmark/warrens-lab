@@ -1,0 +1,41 @@
+/* Print-first styling for the worksheet. Screen shows a paper-like sheet;
+   @media print strips controls and forces clean black-on-white. */
+.controls {
+  display: flex; flex-wrap: wrap; gap: 14px; align-items: center;
+  justify-content: center; padding: 14px; max-width: 900px; margin: 0 auto;
+  font-weight: 600;
+}
+.controls select, .controls input[type=number] {
+  font: inherit; padding: 6px 8px; border-radius: 8px; border: 2px solid #eadfce;
+}
+.controls .big { margin-top: 0; padding: 10px 20px; font-size: 1rem; }
+#topic-checks { display: inline-flex; flex-wrap: wrap; gap: 8px; }
+#topic-checks label { font-weight: 500; background: #fff; padding: 4px 8px; border-radius: 8px; }
+
+.sheet {
+  max-width: 760px; margin: 16px auto; padding: 40px;
+  background: #fff; box-shadow: 0 8px 30px rgba(0,0,0,.12); border-radius: 6px;
+}
+.sheet h1 { text-align: center; margin: 0 0 4px; }
+.sheet .meta { text-align: center; color: #777; margin: 0 0 24px; }
+.namebar { display: flex; gap: 30px; margin-bottom: 24px; font-weight: 600; }
+.namebar span { border-bottom: 2px solid #333; flex: 1; padding-bottom: 2px; }
+
+.qgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 32px; }
+.q { break-inside: avoid; }
+.q .num { font-weight: 800; }
+.q .qprompt { font-weight: 600; margin: 2px 0 6px; }
+.q .glyphs { display: flex; gap: 14px; align-items: center; min-height: 90px; }
+.q .opts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.q .opt {
+  border: 2px solid #333; border-radius: 10px; padding: 6px 12px;
+  font-weight: 700; min-width: 40px; text-align: center;
+}
+.q .opt.key { background: #e8f5e9; border-color: #43a047; }
+.q .opt svg { vertical-align: middle; }
+
+@media print {
+  body { background: #fff; }
+  .no-print { display: none !important; }
+  .sheet { box-shadow: none; margin: 0; max-width: none; padding: 0; }
+}

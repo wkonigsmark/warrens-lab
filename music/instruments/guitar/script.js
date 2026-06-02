@@ -811,14 +811,14 @@ function saveToBank() {
 
     const resultSpan = document.createElement('div');
     resultSpan.className = 'voicing-card';
-    
+
     const notes = Array.from(activeNodes).map(n => n.dataset.note).join(' - ');
     // Draw a specialized small version for the bank
-    const staffHtml = drawManuscript(activeNodes, 250); 
+    const staffHtml = drawManuscript(activeNodes, 250);
     // Redraw the original UI one so it doesn't stay small!
     drawManuscript(activeNodes, 500);
-    
-    const miniFretboardHtml = generateMiniFretboard(activeNodes);
+
+    const miniFretboardHtml = generateMiniFretboard(activeNodes, STRINGS);
     
     // Get display name for the form
     const formEl = document.getElementById('form-select');
@@ -830,7 +830,7 @@ function saveToBank() {
             <div class="card-staff">${staffHtml}</div>
             <div class="card-mini-fret">${miniFretboardHtml}</div>
         </div>
-        <button class="remove-btn" onclick="this.parentElement.remove(); checkBankEmpty();">REMOVE</button>
+        <button class="remove-btn" onclick="this.parentElement.remove(); checkBankEmpty();">×</button>
     `;
     
     bank.appendChild(resultSpan);
@@ -850,26 +850,26 @@ function updateSheetTitle() {
     display.textContent = input.value || "CURATED CHORDS";
 }
 
-function generateMiniFretboard(activeNodes) {
+function generateMiniFretboard(activeNodes, tuning = null) {
     const frets = Array.from(activeNodes).map(n => parseInt(n.id.split('-')[2]));
     const minFret = Math.min(...frets);
     const startFret = minFret === 0 ? 0 : Math.max(1, minFret);
     const displayFrets = 5;
-    
-    const w = 150, h = 120;
+
+    const w = 150, h = 135;  // Increased height for tuning labels
     const svgNs = "http://www.w3.org/2000/svg";
     let svg = `<svg viewBox="0 0 ${w} ${h}" xmlns="${svgNs}">`;
-    
+
     // Draw Nut or top line
     const nutWidth = startFret === 0 ? 4 : 1;
     svg += `<line x1="20" y1="20" x2="130" y2="20" stroke="black" stroke-width="${nutWidth}" />`;
-    
+
     // Draw 6 strings
     for (let i = 0; i < 6; i++) {
         const x = 20 + i * 22;
         svg += `<line x1="${x}" y1="20" x2="${x}" y2="110" stroke="#333" stroke-width="1" />`;
     }
-    
+
     // Draw 5 fret lines
     for (let i = 1; i <= displayFrets; i++) {
         const y = 20 + i * 18;
@@ -886,10 +886,10 @@ function generateMiniFretboard(activeNodes) {
         const idParts = node.id.split('-').map(Number);
         const sIdx = idParts[1];
         const f = idParts[2];
-        
+
         // Reverse the mapping: 5 becomes 0 (Left), 0 becomes 5 (Right)
-        const x = 20 + (5 - sIdx) * 22; 
-        
+        const x = 20 + (5 - sIdx) * 22;
+
         if (f === 0) {
             svg += `<circle cx="${x}" cy="10" r="4" fill="none" stroke="black" stroke-width="1.5" />`;
         } else if (f >= startFret && f < startFret + displayFrets) {
@@ -898,8 +898,30 @@ function generateMiniFretboard(activeNodes) {
         }
     });
 
+    // Draw tuning labels below the fretboard if not standard
+    if (tuning && !isStandardTuning(tuning)) {
+        for (let i = 0; i < 6; i++) {
+            const string = tuning[i];  // {startNote, octave}
+            const note = string.startNote;
+            const x = 20 + (5 - i) * 22;  // Same flipping as notes
+            svg += `<text x="${x}" y="125" font-size="9" text-anchor="middle" fill="#666" font-weight="bold">${note}</text>`;
+        }
+    }
+
     svg += `</svg>`;
     return svg;
+}
+
+function isStandardTuning(tuning) {
+    const standard = [
+        { startNote: 'E', octave: 4 },
+        { startNote: 'B', octave: 3 },
+        { startNote: 'G', octave: 3 },
+        { startNote: 'D', octave: 3 },
+        { startNote: 'A', octave: 2 },
+        { startNote: 'E', octave: 2 }
+    ];
+    return tuning.every((s, i) => s.startNote === standard[i].startNote && s.octave === standard[i].octave);
 }
 
 function toggleMetronomePopup() {

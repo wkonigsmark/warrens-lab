@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 ENV_PATH = ROOT / ".env"
 PORT = int(os.environ.get("WORLD_CUP_ADMIN_PORT", "8787"))
+ADMIN_PIN = os.environ.get("WORLD_CUP_ADMIN_PIN", "2019")
 
 
 def load_env_file():
@@ -83,7 +84,7 @@ class AdminHandler(BaseHTTPRequestHandler):
     def end_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, PATCH, DELETE, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Admin-Pin")
         super().end_headers()
 
     def do_OPTIONS(self):
@@ -96,6 +97,7 @@ class AdminHandler(BaseHTTPRequestHandler):
                 self.respond({"ok": True, "supabaseConfigured": bool(SUPABASE_URL and SERVICE_ROLE_KEY)})
                 return
             if self.path == "/api/entries":
+                self.require_pin()
                 entries = supabase_request("pool_entries?select=*&order=submitted_at.desc")
                 picks = supabase_request("pool_entry_picks?select=*&order=entry_id.asc,section.asc,group_letter.asc,rank.asc")
                 self.respond({"entries": entries or [], "picks": picks or []})
@@ -110,6 +112,7 @@ class AdminHandler(BaseHTTPRequestHandler):
             if not entry_id:
                 self.respond({"error": "Not found"}, status=404)
                 return
+            self.require_pin()
             patch = self.read_json()
             supabase_request(entry_path(entry_id), method="PATCH", body=patch, prefer="return=minimal")
             self.respond({"ok": True})
@@ -122,6 +125,7 @@ class AdminHandler(BaseHTTPRequestHandler):
             if not entry_id:
                 self.respond({"error": "Not found"}, status=404)
                 return
+            self.require_pin()
             rows = supabase_request(f"{entry_path(entry_id)}&select=id,entry_code,test_entry")
             if not rows:
                 self.respond({"error": "Entry not found"}, status=404)
@@ -139,6 +143,11 @@ class AdminHandler(BaseHTTPRequestHandler):
         if not self.path.startswith(prefix):
             return ""
         return urllib.parse.unquote(self.path[len(prefix):].split("?", 1)[0])
+
+    def require_pin(self):
+        if self.headers.get("X-Admin-Pin") == ADMIN_PIN:
+            return
+        raise PermissionError("Invalid or missing admin PIN")
 
     def read_json(self):
         length = int(self.headers.get("Content-Length", "0"))

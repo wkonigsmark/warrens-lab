@@ -1,0 +1,75 @@
+/* Bright, big-target, kid-friendly. Distinct from the dark lab tools on
+   purpose — this is for 3–10 year-olds tapping with fingers. */
+:root {
+  --ink: #2b2b3a;
+  --bg: #fdf6ec;
+  --accent: #ff7043;
+  --good: #43a047;
+  --bad: #e53935;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Outfit', system-ui, sans-serif;
+  background: radial-gradient(circle at 50% -10%, #fff7ef, var(--bg));
+  color: var(--ink);
+  min-height: 100vh;
+}
+.top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px;
+}
+.top h1 { font-size: 1.4rem; margin: 0; }
+.back {
+  text-decoration: none; color: var(--ink); font-weight: 600;
+  background: #fff; padding: 8px 14px; border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.08);
+}
+.card {
+  max-width: 640px; margin: 12px auto; padding: 26px;
+  background: #fff; border-radius: 24px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.10);
+  text-align: center;
+}
+.hidden { display: none; }
+h2 { font-weight: 800; margin: 18px 0 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.chip {
+  border: 3px solid #eee; background: #faf7f2; color: var(--ink);
+  font: inherit; font-weight: 600; padding: 12px 18px; border-radius: 16px;
+  cursor: pointer; transition: transform .08s, border-color .15s;
+}
+.chip:hover { transform: translateY(-2px); }
+.chip.sel { border-color: var(--accent); background: #fff1ea; }
+.big {
+  margin-top: 22px; font: inherit; font-weight: 800; font-size: 1.25rem;
+  color: #fff; background: var(--accent); border: none;
+  padding: 16px 34px; border-radius: 18px; cursor: pointer;
+  box-shadow: 0 6px 0 #e25b34;
+}
+.big:active { transform: translateY(3px); box-shadow: 0 3px 0 #e25b34; }
+
+.scorebar { display: flex; justify-content: space-between; font-weight: 700; color: #888; }
+.prompt { font-size: 1.5rem; font-weight: 800; margin: 14px 0; }
+.figure { display: flex; justify-content: center; gap: 18px; margin: 10px 0 18px; min-height: 120px; align-items: center; }
+.figure svg { background: #fff; }
+.ears { font-size: 4rem; }
+.listen {
+  font: inherit; font-weight: 700; border: 3px solid var(--accent);
+  background: #fff; color: var(--accent); padding: 10px 20px;
+  border-radius: 14px; cursor: pointer; margin-bottom: 12px;
+}
+.choices { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+.choice {
+  font: inherit; font-weight: 800; font-size: 1.6rem;
+  min-width: 90px; min-height: 90px; padding: 14px 20px;
+  border: 4px solid #eadfce; background: #fff; border-radius: 20px;
+  cursor: pointer; transition: transform .08s;
+}
+.choice:hover { transform: scale(1.05); }
+.choice.right { border-color: var(--good); background: #e8f5e9; }
+.choice.wrong { border-color: var(--bad); background: #ffebee; }
+.choice svg { pointer-events: none; }
+.feedback { font-size: 1.6rem; font-weight: 800; min-height: 2rem; margin-top: 16px; }
+.feedback.good { color: var(--good); }
+.feedback.bad { color: var(--bad); }
