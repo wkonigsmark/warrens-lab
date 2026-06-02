@@ -1,7 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import AngleStage from '../AngleStage'
-import LinePairFigure from '../LinePairFigure'
+import QuestionFigure from '../QuestionFigure'
 import { isCorrect } from '../../lib/angleQuiz'
 
 const COUNT = 5
@@ -118,7 +117,7 @@ export default function QuizShell({ level, onBack }) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
           {/* Figure */}
           <motion.div key={`fig-${index}`} className="bg-white rounded-2xl shadow-lg p-6 flex items-center justify-center min-h-[320px]" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-            <Figure q={q} reveal={phase === 'feedback'} />
+            <QuestionFigure q={q} reveal={phase === 'feedback'} />
           </motion.div>
 
           {/* Question + answer */}
@@ -187,18 +186,6 @@ export default function QuizShell({ level, onBack }) {
         </div>
       </div>
     </div>
-  )
-}
-
-function Figure({ q, reveal }) {
-  if (q.figure === 'linePair') return <LinePairFigure known={q.known} />
-  return (
-    <AngleStage
-      angle={q.angle}
-      interactive={false}
-      showProtractor
-      showLabel={q.showLabel || reveal}
-    />
   )
 }
 

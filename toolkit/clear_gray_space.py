@@ -172,6 +172,20 @@ def clear_connected_key_background(
         pixels[x, y] = (r, g, b, 0)
 
 
+def clear_all_key_color(
+    img: Image.Image,
+    key_rgb: tuple[int, int, int],
+    tolerance: float,
+    hue_tolerance: float,
+) -> None:
+    pixels = img.load()
+    for y in range(img.height):
+        for x in range(img.width):
+            if is_key_color(pixels[x, y], key_rgb, tolerance, hue_tolerance):
+                r, g, b, _ = pixels[x, y]
+                pixels[x, y] = (r, g, b, 0)
+
+
 def is_background_like(pixel, min_lightness: int, max_channel_spread: int, max_lightness: int | None = None) -> bool:
     r, g, b, a = pixel
     if a == 0:
@@ -520,6 +534,7 @@ def clear_small_negative_light_components(
 def clear_background(
     src_path: Path,
     key_color: str | None,
+    key_all: bool,
     key_tolerance: float,
     key_hue_tolerance: float,
     min_lightness: int,
@@ -550,12 +565,20 @@ def clear_background(
         key_rgb = parse_key_color(key_color)
         if key_rgb is None:
             key_rgb = estimate_edge_key_color(img)
-        clear_connected_key_background(
-            img=img,
-            key_rgb=key_rgb,
-            tolerance=key_tolerance,
-            hue_tolerance=key_hue_tolerance,
-        )
+        if key_all:
+            clear_all_key_color(
+                img=img,
+                key_rgb=key_rgb,
+                tolerance=key_tolerance,
+                hue_tolerance=key_hue_tolerance,
+            )
+        else:
+            clear_connected_key_background(
+                img=img,
+                key_rgb=key_rgb,
+                tolerance=key_tolerance,
+                hue_tolerance=key_hue_tolerance,
+            )
     else:
         clear_gray_background(
             img=img,
@@ -734,6 +757,7 @@ def process_all(args: argparse.Namespace) -> int:
         img = clear_background(
             src_path=src_path,
             key_color=args.key_color,
+            key_all=args.key_all,
             key_tolerance=args.key_tolerance,
             key_hue_tolerance=args.key_hue_tolerance,
             min_lightness=args.min_lightness,
@@ -784,6 +808,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--force", action="store_true", help="Overwrite files already in finished-img.")
     parser.add_argument("--format", choices=("png", "svg", "both"), default="png", help="Output format.")
     parser.add_argument("--key-color", default=None, help="Remove an edge-connected color background, e.g. magenta, auto, or #e40076.")
+    parser.add_argument("--key-all", action="store_true", help="Remove matching key-color pixels even when they are not connected to the edge.")
     parser.add_argument("--key-tolerance", type=float, default=90, help="RGB distance tolerance for --key-color.")
     parser.add_argument("--key-hue-tolerance", type=float, default=0.055, help="Hue tolerance for --key-color, from 0 to 0.5.")
     parser.add_argument("--crop", action="store_true", help="Crop output to the non-transparent artwork.")

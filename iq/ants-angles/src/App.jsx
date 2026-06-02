@@ -4,13 +4,21 @@ import AngleStage from './components/AngleStage'
 import AngleReadout from './components/AngleReadout'
 import AngleControls from './components/AngleControls'
 import QuizMode from './components/quiz/QuizMode'
+import WorksheetMode from './components/worksheet/WorksheetMode'
+import TriangleStage from './components/TriangleStage'
+import TriangleReadout from './components/TriangleReadout'
+import TriangleControls, { DEFAULT_TRIANGLE } from './components/TriangleControls'
+import PolygonStage from './components/PolygonStage'
+import PolygonReadout from './components/PolygonReadout'
+import PolygonControls, { DEFAULT_POLYGON } from './components/PolygonControls'
+import Glossary from './components/Glossary'
 
-// Topic tabs — Angles is built; the rest are the roadmap (triangles, polygons
-// & area, circles & Pi, volume). They render a friendly placeholder for now.
+// Topic tabs — Angles & Triangles are built; the rest are the roadmap
+// (polygons & area, circles & Pi, volume). Unbuilt ones show a placeholder.
 const TOPICS = [
   { id: 'angles', label: 'Angles', emoji: '📐', ready: true },
-  { id: 'triangles', label: 'Triangles', emoji: '🔺', ready: false },
-  { id: 'area', label: 'Area & Polygons', emoji: '⬛', ready: false },
+  { id: 'triangles', label: 'Triangles', emoji: '🔺', ready: true },
+  { id: 'area', label: 'Area & Polygons', emoji: '⬛', ready: true },
   { id: 'circles', label: 'Circles & Pi', emoji: '⭕', ready: false },
 ]
 
@@ -19,6 +27,11 @@ export default function App() {
   const [topic, setTopic] = useState('angles')
   const [angle, setAngle] = useState(45)
   const [snap, setSnap] = useState(0)
+  const [triangle, setTriangle] = useState(DEFAULT_TRIANGLE)
+  const [triSnap, setTriSnap] = useState(true)
+  const [polygon, setPolygon] = useState(DEFAULT_POLYGON)
+  const [polySnap, setPolySnap] = useState(true)
+  const [polySquares, setPolySquares] = useState(false)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-indigo-100">
@@ -26,7 +39,7 @@ export default function App() {
 
       <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Mode switch */}
-        <div className="mb-5 flex flex-wrap justify-center gap-2">
+        <div className="no-print mb-5 flex flex-wrap justify-center gap-2">
           {[
             { id: 'explore', label: '🧭 Explore', grad: 'from-indigo-500 to-purple-600' },
             { id: 'quiz', label: '📚 Quiz', grad: 'from-green-500 to-emerald-600' },
@@ -78,16 +91,51 @@ export default function App() {
           </div>
         )}
 
-        {mode === 'explore' && topic !== 'angles' && <Placeholder topic={topic} />}
+        {mode === 'explore' && topic === 'triangles' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
+              <h2 className="text-xl font-bold text-gray-800 mb-1">Triangle Explorer</h2>
+              <p className="text-sm text-gray-400 mb-4">Drag any corner (A, B, C) — watch the three angles always add up to 180°.</p>
+              <TriangleStage vertices={triangle} onChange={setTriangle} snap={triSnap} />
+            </div>
+            <div className="lg:col-span-1 flex flex-col gap-4">
+              <TriangleReadout vertices={triangle} />
+              <TriangleControls onPreset={setTriangle} snap={triSnap} onSnapChange={setTriSnap} />
+            </div>
+          </div>
+        )}
+
+        {mode === 'explore' && topic === 'area' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
+              <h2 className="text-xl font-bold text-gray-800 mb-1">Polygon Explorer</h2>
+              <p className="text-sm text-gray-400 mb-4">Drag the corners to reshape. Turn on unit squares to <em>see</em> the area.</p>
+              <PolygonStage vertices={polygon} onChange={setPolygon} snap={polySnap} showSquares={polySquares} />
+            </div>
+            <div className="lg:col-span-1 flex flex-col gap-4">
+              <PolygonReadout vertices={polygon} />
+              <PolygonControls
+                onPreset={setPolygon}
+                snap={polySnap}
+                onSnapChange={setPolySnap}
+                showSquares={polySquares}
+                onSquaresChange={setPolySquares}
+              />
+            </div>
+          </div>
+        )}
+
+        {mode === 'explore' && ['angles', 'triangles', 'area'].includes(topic) && (
+          <div className="mt-6">
+            <Glossary topic={topic} />
+          </div>
+        )}
+
+        {mode === 'explore' && !['angles', 'triangles', 'area'].includes(topic) && <Placeholder topic={topic} />}
 
         {mode === 'quiz' && <QuizMode />}
 
-        {mode === 'worksheet' && (
-          <ComingSoon
-            title="Worksheets"
-            body="Printable angle-practice sheets, generated fresh each time — same print pipeline as Ants & Axes."
-          />
-        )}
+        {mode === 'worksheet' && <WorksheetMode />}
       </div>
     </div>
   )

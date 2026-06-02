@@ -25,11 +25,13 @@ export default function AngleStage({
   showProtractor = true,
   interactive = true,
   showLabel = true,
+  bw = false,
 }) {
   const svgRef = useRef(null)
   const [dragging, setDragging] = useState(false)
 
   const cls = classifyAngle(angle)
+  const accent = bw ? '#000' : cls.color
   const baseEnd = { x: CX + RAY_LEN, y: CY }
   const movingVec = degreesToVector(angle, RAY_LEN)
   const movingEnd = { x: CX + movingVec.x, y: CY + movingVec.y }
@@ -129,7 +131,7 @@ export default function AngleStage({
 
       {/* Swept angle arc */}
       {angle > 0 && (
-        <path d={arcPath(CX, CY, ARC_R, angle)} fill="none" stroke={cls.color} strokeWidth="4" strokeLinecap="round" />
+        <path d={arcPath(CX, CY, ARC_R, angle)} fill="none" stroke={accent} strokeWidth="4" strokeLinecap="round" />
       )}
 
       {/* Right-angle square marker */}
@@ -137,7 +139,7 @@ export default function AngleStage({
         <path
           d={`M ${CX + 26} ${CY} L ${CX + 26} ${CY - 26} L ${CX} ${CY - 26}`}
           fill="none"
-          stroke={cls.color}
+          stroke={accent}
           strokeWidth="3"
         />
       )}
@@ -146,7 +148,7 @@ export default function AngleStage({
       <line x1={CX} y1={CY} x2={baseEnd.x} y2={baseEnd.y} stroke="#1f2937" strokeWidth="4" strokeLinecap="round" />
 
       {/* Moving ray */}
-      <line x1={CX} y1={CY} x2={movingEnd.x} y2={movingEnd.y} stroke={cls.color} strokeWidth="4" strokeLinecap="round" />
+      <line x1={CX} y1={CY} x2={movingEnd.x} y2={movingEnd.y} stroke={accent} strokeWidth="4" strokeLinecap="round" />
 
       {/* Degree label inside the arc */}
       {showLabel && (
@@ -157,7 +159,7 @@ export default function AngleStage({
           dominantBaseline="middle"
           fontSize="26"
           fontWeight="bold"
-          fill={cls.color}
+          fill={accent}
         >
           {Math.round(angle)}°
         </text>
@@ -173,7 +175,7 @@ export default function AngleStage({
           cy={movingEnd.y}
           r="13"
           fill="white"
-          stroke={cls.color}
+          stroke={accent}
           strokeWidth="4"
           className="cursor-grab active:cursor-grabbing"
           onMouseDown={startDrag}
@@ -182,7 +184,7 @@ export default function AngleStage({
           animate={dragging ? { scale: 1.2 } : { scale: 1 }}
         />
       ) : (
-        <circle cx={movingEnd.x} cy={movingEnd.y} r="7" fill={cls.color} />
+        <circle cx={movingEnd.x} cy={movingEnd.y} r="7" fill={accent} />
       )}
     </svg>
   )
