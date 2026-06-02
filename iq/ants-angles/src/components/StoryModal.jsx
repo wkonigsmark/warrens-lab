@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 // a colored rail and optional inline visuals. Driven entirely by a `story`
 // object — see PiStory.jsx / DegreesStory.jsx. Field names are flexible so the
 // existing π data (year/who/value) works unchanged (tag/title/badge are aliases).
-export default function StoryModal({ open, story, onClose }) {
+export default function StoryModal({ open, story, onClose, onNavigate }) {
   useEffect(() => {
     if (!open) return
     const onKey = (e) => e.key === 'Escape' && onClose()
@@ -48,7 +48,7 @@ export default function StoryModal({ open, story, onClose }) {
               <button onClick={onClose} className="text-gray-400 hover:text-gray-700 text-2xl leading-none w-9 h-9 rounded-full hover:bg-gray-100">×</button>
             </div>
 
-            <div className="px-6 py-5 space-y-8">
+            <div className="px-6 py-5 space-y-8 pb-2">
               {story.sections.map((section, si) => (
                 <section key={si}>
                   <div className="flex items-baseline gap-3 mb-3">
@@ -80,7 +80,27 @@ export default function StoryModal({ open, story, onClose }) {
                   <span className="font-bold">Why it matters: </span>{story.closer}
                 </div>
               )}
+
+              {/* bottom padding so content isn't hidden behind the sticky footer */}
+              {story.links && <div className="h-4" />}
             </div>
+            {/* Sticky footer — always visible, no scrolling required */}
+            {story.links && onNavigate && (
+              <div className="sticky bottom-0 bg-white border-t border-gray-100 px-6 py-4 rounded-b-2xl flex gap-3">
+                <button
+                  onClick={() => { onClose(); onNavigate('quiz', story.links.quizCategory) }}
+                  className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 rounded-xl hover:shadow-lg transition-shadow text-sm"
+                >
+                  📚 Go to Quiz →
+                </button>
+                <button
+                  onClick={() => { onClose(); onNavigate('worksheet', story.links.worksheetId) }}
+                  className="flex-1 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold py-3 rounded-xl hover:shadow-lg transition-shadow text-sm"
+                >
+                  🖨 Go to Worksheets →
+                </button>
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}

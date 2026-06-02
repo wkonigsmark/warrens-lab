@@ -125,4 +125,5 @@ export const degreesStory = {
   ],
   closer:
     'We could have picked any number for a full turn — people have even tried 400 "gradians." But 360 won because it grew out of how the Babylonians counted, matched the days in a year, and divides more cleanly than almost any other number near it.',
+  links: { quizCategory: 'Angles', worksheetId: 'partner' },
 }

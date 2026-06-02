@@ -57,7 +57,7 @@ export default function App() {
           {/* Chart */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-lg p-6">
-              <Chart points={points} onPointClick={addPoint} />
+              <Chart points={points} onPointClick={addPoint} showMidpoint={true} />
             </div>
 
             {/* Calculations Panel */}

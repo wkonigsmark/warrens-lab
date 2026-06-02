@@ -27,6 +27,12 @@ const LEVELS = [
     subtitle: 'Find Y-Intercept',
     description: 'Calculate the slope, then use it to find where the line crosses the Y-axis.',
   },
+  {
+    id: 'mp',
+    title: 'Distance & Midpoint',
+    subtitle: 'Find the distance and midpoint of two points',
+    description: 'Use the distance formula d = √(∆x² + ∆y²) and find the midpoint M = ((x₁+x₂)/2, (y₁+y₂)/2).',
+  },
 ]
 
 export default function WorksheetMode({ onExit }) {

@@ -6,7 +6,7 @@ const CELL_SIZE = 40
 const MAX_VALUE = 12
 const TOP_PADDING = 25
 
-export default function Chart({ points, onPointClick, showCoordinates = true }) {
+export default function Chart({ points, onPointClick, showCoordinates = true, showMidpoint = false }) {
   const svgRef = useRef(null)
 
   const handleSvgClick = (e) => {
@@ -183,6 +183,32 @@ export default function Chart({ points, onPointClick, showCoordinates = true }) 
               />
             </motion.g>
           ))}
+
+          {/* Midpoint (only when 2 points and showMidpoint enabled) */}
+          {showMidpoint && points.length === 2 && (() => {
+            const midX = (points[0].x + points[1].x) / 2
+            const midY = (points[0].y + points[1].y) / 2
+            const cx = 50 + midX * CELL_SIZE
+            const cy = TOP_PADDING + (MAX_VALUE - midY) * CELL_SIZE
+            return (
+              <motion.g
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.4 }}
+              >
+                <circle cx={cx} cy={cy} r="6" fill="#10b981" stroke="#047857" strokeWidth="2" />
+                <text
+                  x={cx + 10}
+                  y={cy - 10}
+                  fontSize="14"
+                  fontWeight="bold"
+                  fill="#047857"
+                >
+                  M
+                </text>
+              </motion.g>
+            )
+          })()}
         </svg>
       </div>
 

@@ -56,4 +56,5 @@ export const piStory = {
   sections: PI_ERAS,
   closer: PI_CLOSER,
   visuals: { polygons: PolygonSqueeze, series: SeriesViz, symbol: SymbolViz, digits: DigitsViz },
+  links: { quizCategory: 'Circles', worksheetId: 'radius-diameter' },
 }

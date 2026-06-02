@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { TOPICS, getTopic } from '../../lib/angleWorksheet'
 import { visibleItems } from '../../lib/wholeNumbers'
@@ -6,9 +6,25 @@ import WholeNumbersToggle from '../quiz/WholeNumbersToggle'
 import Worksheet from './Worksheet'
 
 // Topic picker → mode picker (master / mentor) → printable worksheet.
-export default function WorksheetMode({ wholeOnly, onWholeChange }) {
+export default function WorksheetMode({ wholeOnly, onWholeChange, focusTopicId, onFocusConsumed }) {
   const [topicId, setTopicId] = useState(null)
   const [mode, setMode] = useState(null)
+  const focusRef = useRef({})
+
+  // Scroll to + briefly highlight the focused topic button on arrival from a story.
+  useEffect(() => {
+    if (!focusTopicId) return
+    const timer = setTimeout(() => {
+      const el = focusRef.current[focusTopicId]
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        el.classList.add('ring-2', 'ring-amber-400', 'ring-offset-2')
+        setTimeout(() => el.classList.remove('ring-2', 'ring-amber-400', 'ring-offset-2'), 1800)
+      }
+      onFocusConsumed?.()
+    }, 150)
+    return () => clearTimeout(timer)
+  }, [focusTopicId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const shown = visibleItems(TOPICS, wholeOnly)
   const hiddenCount = TOPICS.length - shown.length
@@ -53,6 +69,7 @@ export default function WorksheetMode({ wholeOnly, onWholeChange }) {
         {shown.map((t, i) => (
           <motion.button
             key={t.id}
+            ref={el => { focusRef.current[t.id] = el }}
             onClick={() => setTopicId(t.id)}
             className="bg-white rounded-2xl shadow-lg p-5 text-left hover:shadow-xl transition-shadow"
             initial={{ opacity: 0, y: 10 }}

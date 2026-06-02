@@ -108,11 +108,64 @@ function generateLevel3Problems() {
   return problems
 }
 
+// Pythagorean triples (positive, fit in 0-12 grid) — keeps distance whole-number
+// for the worksheet so kids can verify clean answers.
+const PYTH_TRIPLES = [
+  [3, 4],
+  [4, 3],
+  [6, 8],
+  [8, 6],
+  [5, 12],
+  [12, 5],
+  [9, 12],
+  [12, 9],
+]
+
+function generateMidpointProblem() {
+  const [absDx, absDy] = PYTH_TRIPLES[Math.floor(Math.random() * PYTH_TRIPLES.length)]
+  const dx = Math.random() < 0.5 ? absDx : -absDx
+  const dy = Math.random() < 0.5 ? absDy : -absDy
+  // Position so both points fit in [0, MAX_VALUE]
+  const minX1 = Math.max(0, -dx)
+  const maxX1 = Math.min(MAX_VALUE, MAX_VALUE - dx)
+  const minY1 = Math.max(0, -dy)
+  const maxY1 = Math.min(MAX_VALUE, MAX_VALUE - dy)
+  const x1 = minX1 + Math.floor(Math.random() * (maxX1 - minX1 + 1))
+  const y1 = minY1 + Math.floor(Math.random() * (maxY1 - minY1 + 1))
+  const x2 = x1 + dx
+  const y2 = y1 + dy
+  const distance = Math.sqrt(dx * dx + dy * dy)
+  const midX = (x1 + x2) / 2
+  const midY = (y1 + y2) / 2
+  return {
+    p1: { x: x1, y: y1 },
+    p2: { x: x2, y: y2 },
+    distance,
+    midX,
+    midY,
+  }
+}
+
+function generateMidpointProblems() {
+  const problems = []
+  let attempts = 0
+  while (problems.length < 4 && attempts < 200) {
+    const q = generateMidpointProblem()
+    const dup = problems.some(
+      (r) => r.p1.x === q.p1.x && r.p1.y === q.p1.y && r.p2.x === q.p2.x && r.p2.y === q.p2.y
+    )
+    if (!dup) problems.push(q)
+    attempts++
+  }
+  return problems
+}
+
 function generateProblems(level) {
   if (level === 1) return generateLevel1Problems()
   if (level === '2a') return generateLevel2Problems(false)
   if (level === '2b') return generateLevel2Problems(true)
   if (level === 3) return generateLevel3Problems()
+  if (level === 'mp') return generateMidpointProblems()
   return []
 }
 
@@ -123,6 +176,7 @@ const LEVEL_TITLES = {
   '2a': 'Level 2A: Calculate Slope (Positive)',
   '2b': 'Level 2B: Calculate Slope (Positive or Negative)',
   3: 'Level 3: Find the Y-Intercept',
+  mp: 'Distance & Midpoint',
 }
 
 function FormulaKey({ level }) {
@@ -164,6 +218,16 @@ function FormulaKey({ level }) {
       </div>
     )
   }
+  if (level === 'mp') {
+    return (
+      <div className="border-2 border-gray-800 rounded p-2 text-sm bg-gray-50 print:bg-white">
+        <span className="font-bold mr-2">Key:</span>
+        Distance d = √((x₂ − x₁)² + (y₂ − y₁)²)
+        <span className="mx-3">•</span>
+        Midpoint M = ((x₁ + x₂) ÷ 2, (y₁ + y₂) ÷ 2)
+      </div>
+    )
+  }
   return null
 }
 
@@ -200,6 +264,16 @@ function ProblemBlanks({ level, index }) {
         <p>
           b = <Blank width="1in" />
         </p>
+      )}
+      {level === 'mp' && (
+        <>
+          <p className="mb-4">
+            d = <Blank width="1in" />
+          </p>
+          <p>
+            M = ( <Blank /> , <Blank /> )
+          </p>
+        </>
       )}
     </div>
   )
@@ -262,6 +336,8 @@ export default function Worksheet({ level, mode, onBack }) {
                     'Identify the two points, then calculate the slope (m).'}
                   {level === 3 &&
                     'Identify the points, calculate the slope, then find the y-intercept (b).'}
+                  {level === 'mp' &&
+                    'Identify the points, then find the distance (d) and midpoint (M).'}
                 </p>
               </div>
             </div>

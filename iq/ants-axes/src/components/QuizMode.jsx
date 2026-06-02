@@ -4,6 +4,7 @@ import QuizLevel1 from './QuizLevel1'
 import QuizLevel2A from './QuizLevel2A'
 import QuizLevel2B from './QuizLevel2B'
 import QuizLevel3 from './QuizLevel3'
+import QuizLevelMidpoint from './QuizLevelMidpoint'
 
 export default function QuizMode({ onExit }) {
   const [selectedLevel, setSelectedLevel] = useState(null)
@@ -20,7 +21,11 @@ export default function QuizMode({ onExit }) {
             animate={{ opacity: 1, scale: 1 }}
           >
             <h1 className="text-3xl font-bold text-gray-800 mb-2">Choose Mode</h1>
-            <p className="text-gray-600 mb-8">Level {selectedLevel === '2a' ? '2A' : selectedLevel === '2b' ? '2B' : selectedLevel}</p>
+            <p className="text-gray-600 mb-8">
+              {selectedLevel === 'mp'
+                ? 'Midpoint'
+                : `Level ${selectedLevel === '2a' ? '2A' : selectedLevel === '2b' ? '2B' : selectedLevel}`}
+            </p>
 
             <div className="space-y-4">
               <motion.button
@@ -72,6 +77,10 @@ export default function QuizMode({ onExit }) {
 
   if (selectedLevel === 3 && selectedMode) {
     return <QuizLevel3 mode={selectedMode} onBack={() => { setSelectedLevel(null); setSelectedMode(null) }} />
+  }
+
+  if (selectedLevel === 'mp' && selectedMode) {
+    return <QuizLevelMidpoint mode={selectedMode} onBack={() => { setSelectedLevel(null); setSelectedMode(null) }} />
   }
 
   return (
@@ -162,6 +171,25 @@ export default function QuizMode({ onExit }) {
               </div>
               <p className="text-gray-600">Find Y-Intercept</p>
               <p className="text-sm text-gray-500 mt-2">Identify where a line crosses the Y-axis. Results will always be whole numbers.</p>
+            </div>
+          </motion.button>
+
+          {/* Midpoint - Enabled */}
+          <motion.button
+            onClick={() => setSelectedLevel('mp')}
+            className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-shadow border-2 border-green-500"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: { delay: 0.4 } }}
+          >
+            <div className="text-left">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-2xl font-bold text-gray-800">Midpoint</h2>
+                <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">Available</span>
+              </div>
+              <p className="text-gray-600">Find the Midpoint of Two Points</p>
+              <p className="text-sm text-gray-500 mt-2">Use M = ((x₁+x₂)/2, (y₁+y₂)/2) to find the midpoint between two points.</p>
             </div>
           </motion.button>
         </div>

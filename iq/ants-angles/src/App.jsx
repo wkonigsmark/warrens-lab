@@ -18,6 +18,7 @@ import UnrollStrip from './components/UnrollStrip'
 import StoryModal from './components/StoryModal'
 import { piStory } from './components/stories/PiStory'
 import { degreesStory } from './components/stories/DegreesStory'
+import { pythagorasStory } from './components/stories/PythagorasStory'
 import Glossary from './components/Glossary'
 
 // Topic tabs — Angles & Triangles are built; the rest are the roadmap
@@ -43,6 +44,7 @@ export default function App() {
   const [radius, setRadius] = useState(3)
   const [unroll, setUnroll] = useState(false)
   const [story, setStory] = useState(null) // active StoryModal content, or null
+  const [storyFocus, setStoryFocus] = useState(null) // { mode, target } set when navigating from a story
   const [wholeOnly, setWholeOnly] = useState(true) // universal: only whole-number answers
 
   return (
@@ -114,7 +116,15 @@ export default function App() {
         {mode === 'explore' && topic === 'triangles' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-1">Triangle Explorer</h2>
+              <div className="flex items-start justify-between gap-3 mb-1">
+                <h2 className="text-xl font-bold text-gray-800">Triangle Explorer</h2>
+                <button
+                  onClick={() => setStory(pythagorasStory)}
+                  className="flex-shrink-0 text-sm font-bold text-white bg-gradient-to-r from-violet-600 to-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-shadow"
+                >
+                  📜 Pythagoras Story
+                </button>
+              </div>
               <p className="text-sm text-gray-400 mb-4">Drag any corner (A, B, C) — watch the three angles always add up to 180°.</p>
               <TriangleStage vertices={triangle} onChange={setTriangle} snap={triSnap} showSquares={triSquares} />
             </div>
@@ -176,12 +186,21 @@ export default function App() {
 
         {mode === 'explore' && !['angles', 'triangles', 'area', 'circles'].includes(topic) && <Placeholder topic={topic} />}
 
-        {mode === 'quiz' && <QuizMode wholeOnly={wholeOnly} onWholeChange={setWholeOnly} />}
+        {mode === 'quiz' && <QuizMode wholeOnly={wholeOnly} onWholeChange={setWholeOnly} focusCategory={storyFocus?.mode === 'quiz' ? storyFocus.target : null} onFocusConsumed={() => setStoryFocus(null)} />}
 
-        {mode === 'worksheet' && <WorksheetMode wholeOnly={wholeOnly} onWholeChange={setWholeOnly} />}
+        {mode === 'worksheet' && <WorksheetMode wholeOnly={wholeOnly} onWholeChange={setWholeOnly} focusTopicId={storyFocus?.mode === 'worksheet' ? storyFocus.target : null} onFocusConsumed={() => setStoryFocus(null)} />}
       </div>
 
-      <StoryModal open={!!story} story={story} onClose={() => setStory(null)} />
+      <StoryModal
+        open={!!story}
+        story={story}
+        onClose={() => setStory(null)}
+        onNavigate={(targetMode, target) => {
+          setStory(null)
+          setMode(targetMode)
+          setStoryFocus({ mode: targetMode, target })
+        }}
+      />
     </div>
   )
 }
