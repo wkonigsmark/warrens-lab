@@ -117,6 +117,19 @@
       color: var(--wc-ink);
     }
 
+    .pool-rules-list .pool-payment-warning {
+      color: #ffb4a8;
+      border: 1px solid rgba(255, 93, 74, 0.55);
+      background: rgba(255, 93, 74, 0.12);
+      border-radius: var(--wc-radius);
+      padding: 10px 12px;
+      font-weight: 850;
+    }
+
+    .pool-rules-list .pool-payment-warning strong {
+      color: #fff4ef;
+    }
+
     .pool-actions {
       display: flex;
       flex-wrap: wrap;
@@ -1008,10 +1021,12 @@
             <article class="pool-rules-card">
               <h3>Scoring & payouts</h3>
               <ul class="pool-rules-list">
-                <li><strong>Scoring:</strong> 3 points for a correct group winner, 2 for a correct runner-up, 1 for each correct advancing third-place team, plus a bonus for a perfect 1-4 group.</li>
-                <li><strong>Tiebreakers:</strong> perfect groups are calculated from your picks; total group-play goals is the manual closest-number tiebreaker.</li>
+                <li><strong>Scoring:</strong> 4 points for a correct group winner, 3 for 2nd place, 2 for 3rd place, and 1 for 4th place. Correctly picking a third-place team to advance adds 2 more points.</li>
+                <li><strong>Max score:</strong> 120 points from group rankings plus 16 points from the eight advancing third-place teams, for a 136-point ceiling.</li>
+                <li><strong>Tiebreakers:</strong> 1st is perfect groups, 2nd is correct third-place advancers, and 3rd is closest absolute difference to total group-play goals.</li>
                 <li><strong>Payment:</strong> send Venmo separately after submission. Paid entries are confirmed by the commissioner.</li>
-                <li><strong>Payouts:</strong> final purse and payout structure will be posted before kickoff based on confirmed paid entries.</li>
+                <li class="pool-payment-warning"><strong>Venmo memo:</strong> please include your bracket name and email in your Venmo memo to help me connect payment to your bracket.</li>
+                <li><strong>Payouts:</strong> $50 per entry. Five percent goes to the organizer, then the net pool pays 70% to 1st, 20% to 2nd, and 10% to 3rd.</li>
               </ul>
             </article>
           </div>

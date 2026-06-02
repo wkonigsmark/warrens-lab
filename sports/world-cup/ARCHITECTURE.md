@@ -111,23 +111,32 @@ Entry status should support at least:
 
 ## Scoring Thinking
 
-The main score should reward clear group prediction skill. Precision-heavy outcomes, such as exact Round of 32 matchups, should be used as tie-breakers because third-place permutations can become chaotic.
+The main score rewards exact group-play prediction skill. The pool is group play only; the projected Round of 32 bracket is useful context, but knockout results are not part of this stage's score.
 
-Potential Stage 1 scoring:
+Stage 1 scoring:
 
-- Correct group winner: 3 points
-- Correct group runner-up: 2 points
-- Correct advancing third-place team: 1 point
-- Correct eliminated fourth-place team: 1 point
-- Perfect full group order bonus: 2 points
+- Correct group winner: 4 points
+- Correct group runner-up: 3 points
+- Correct group third place: 2 points
+- Correct group fourth place: 1 point
+- Correct third-place team advancing to the knockout round: 2 additional points
 
-Potential tie-breakers:
+Maximum score is `12 groups x 10 points = 120`, plus `8 advancing third-place teams x 2 points = 16`, for a total ceiling of `136`.
 
-1. Correct exact Round of 32 teams.
-2. Correct exact Round of 32 matchups.
-3. Correct exact Round of 32 slot placement.
-4. Correct ordered top 8 third-place teams.
-5. Submission time, only if everything else is tied.
+Tie-breakers:
+
+1. Number of groups picked perfectly from 1st through 4th.
+2. Number of third-place knockout advancers picked correctly.
+3. Closest absolute difference to total goals scored in group play.
+
+Payout structure:
+
+- Total purse: confirmed paid entries x `$50`
+- Organizer fee: `5%` of total purse
+- Net pool: `95%` of total purse
+- Winner: `70%` of net pool
+- Runner-up: `20%` of net pool
+- Third place: `10%` of net pool
 
 ## Build Philosophy
 

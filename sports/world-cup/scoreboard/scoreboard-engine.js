@@ -3,14 +3,19 @@
  */
 
 export const SCORING_RULES = {
-  groupQualifier: 2,     // Correctly predicting a team to qualify to KOs (independent of position)
-  groupWinnerBonus: 1,   // Additional bonus for predicting the exact 1st place in a group
-  r32: 2,
-  r16: 4,
-  qf: 8,
-  sf: 16,
-  thirdPlace: 10,
-  champion: 32
+  groupPositions: [4, 3, 2, 1],
+  thirdPlaceAdvancer: 2,
+  maxGroupPoints: 120,
+  maxThirdPlacePoints: 16,
+  maxTotal: 136,
+  entryFee: 50,
+  organizerFeeRate: 0.05,
+  netPoolRate: 0.95,
+  payoutShares: {
+    first: 0.70,
+    second: 0.20,
+    third: 0.10
+  }
 };
 
 // Helper to sort standings mathematically
@@ -141,94 +146,88 @@ export function calculateThirdPlaceStandings(groupTables) {
 export function scoreEntry(entry, actualMatches, groupStandings, thirdPlaceStandings, bracketMatches) {
   let score = 0;
   const breakDown = {
-    groupQualifiers: 0,
-    groupWinners: 0,
-    r32: 0,
-    r16: 0,
-    qf: 0,
-    sf: 0,
-    thirdPlace: 0,
-    champion: 0,
+    groupPositionPoints: 0,
+    groupPositionHits: 0,
+    positionHits: [0, 0, 0, 0],
+    perfectGroups: 0,
+    thirdPlaceAdvancerPoints: 0,
+    thirdPlaceAdvancerHits: 0,
+    maxTotal: SCORING_RULES.maxTotal,
+    tiebreakers: {
+      perfectGroups: 0,
+      thirdPlaceAdvancers: 0,
+      goalDelta: null
+    },
     total: 0
   };
 
-  // Compile a set of ALL actual qualified team IDs
-  const actualQualified = new Set();
-  
-  Object.keys(groupStandings).forEach(gLetter => {
-    const standings = groupStandings[gLetter];
-    if (standings && standings.length >= 2) {
-      actualQualified.add(standings[0].id);
-      actualQualified.add(standings[1].id);
+  const groupPredictions = entry.groupPredictions || {};
+  const groupMatches = (actualMatches || []).filter(match => match.matchNumber <= 72);
+  const completedGroups = new Set();
+
+  Object.keys(groupPredictions).forEach(gLetter => {
+    const matchesForGroup = groupMatches.filter(match => match.group === gLetter);
+    if (matchesForGroup.length === 6 && matchesForGroup.every(match => match.status === "completed")) {
+      completedGroups.add(gLetter);
     }
   });
 
-  thirdPlaceStandings.forEach(t => {
-    if (t.status === 'Q') {
-      actualQualified.add(t.id);
-    }
-  });
+  Object.keys(groupPredictions).forEach(gLetter => {
+    if (!completedGroups.has(gLetter)) return;
 
-  // Score Group Stage Predictions
-  Object.keys(entry.groupPredictions).forEach(gLetter => {
-    const predicted = entry.groupPredictions[gLetter]; // e.g. ["USA", "ENG", "IRN", "WAL"]
-    if (!predicted || predicted.length < 2) return;
+    const predicted = groupPredictions[gLetter] || [];
+    const actual = groupStandings[gLetter] || [];
+    let perfect = predicted.length >= 4 && actual.length >= 4;
 
-    const p1 = predicted[0];
-    const p2 = predicted[1];
+    SCORING_RULES.groupPositions.forEach((points, index) => {
+      const predictedTeamId = predicted[index];
+      const actualTeamId = actual[index]?.id;
+      const isCorrect = predictedTeamId && actualTeamId && predictedTeamId === actualTeamId;
 
-    if (actualQualified.has(p1)) {
-      score += SCORING_RULES.groupQualifier;
-      breakDown.groupQualifiers++;
-    }
-    if (actualQualified.has(p2)) {
-      score += SCORING_RULES.groupQualifier;
-      breakDown.groupQualifiers++;
-    }
-
-    // Winner exact match bonus
-    const actual = groupStandings[gLetter];
-    if (actual && actual.length > 0) {
-      if (actual[0].id === p1) {
-        score += SCORING_RULES.groupWinnerBonus;
-        breakDown.groupWinners++;
+      if (isCorrect) {
+        score += points;
+        breakDown.groupPositionPoints += points;
+        breakDown.groupPositionHits++;
+        breakDown.positionHits[index]++;
+      } else {
+        perfect = false;
       }
-    }
+    });
+
+    if (perfect) breakDown.perfectGroups++;
   });
 
-  // Helper for scoring knockout matches
-  const scoreKoMatch = (matchId, rulePoints, categoryKey) => {
-    const actualMatch = bracketMatches.find(m => m.id === matchId);
-    if (actualMatch && actualMatch.winner) {
-      const predictedWinner = entry.bracketPredictions[matchId];
-      if (predictedWinner && predictedWinner === actualMatch.winner) {
-        score += rulePoints;
-        breakDown[categoryKey]++;
+  const actualThirdAdvancers = new Set(
+    (thirdPlaceStandings || [])
+      .filter(team => team.status === "Q")
+      .map(team => team.id)
+  );
+  const predictedThirdAdvancers = entry.thirdPicks || entry.thirdPlacePredictions || [];
+  const allGroupMatchesComplete = groupMatches.length === 72
+    && groupMatches.every(match => match.status === "completed");
+
+  if (allGroupMatchesComplete) {
+    predictedThirdAdvancers.forEach(teamId => {
+      if (actualThirdAdvancers.has(teamId)) {
+        score += SCORING_RULES.thirdPlaceAdvancer;
+        breakDown.thirdPlaceAdvancerPoints += SCORING_RULES.thirdPlaceAdvancer;
+        breakDown.thirdPlaceAdvancerHits++;
       }
-    }
-  };
+    });
+  }
 
-  // R32: 73 to 88
-  for (let id = 73; id <= 88; id++) {
-    scoreKoMatch(id, SCORING_RULES.r32, 'r32');
-  }
-  // R16: 89 to 96
-  for (let id = 89; id <= 96; id++) {
-    scoreKoMatch(id, SCORING_RULES.r16, 'r16');
-  }
-  // QF: 97 to 100
-  for (let id = 97; id <= 100; id++) {
-    scoreKoMatch(id, SCORING_RULES.qf, 'qf');
-  }
-  // SF: 101 to 102
-  for (let id = 101; id <= 102; id++) {
-    scoreKoMatch(id, SCORING_RULES.sf, 'sf');
-  }
-  // Third Place: 103
-  scoreKoMatch(103, SCORING_RULES.thirdPlace, 'thirdPlace');
-  // Champion: 104
-  scoreKoMatch(104, SCORING_RULES.champion, 'champion');
+  const actualGoals = groupMatches.reduce((sum, match) => {
+    if (match.matchNumber > 72 || match.status !== "completed") return sum;
+    return sum + Number(match.homeScore || 0) + Number(match.awayScore || 0);
+  }, 0);
+  const goalsPick = Number(entry.tiebreakers?.totalGroupGoals ?? entry.totalGroupGoalsTiebreaker);
 
+  if (allGroupMatchesComplete && Number.isFinite(goalsPick)) {
+    breakDown.tiebreakers.goalDelta = Math.abs(goalsPick - actualGoals);
+  }
+
+  breakDown.tiebreakers.perfectGroups = breakDown.perfectGroups;
+  breakDown.tiebreakers.thirdPlaceAdvancers = breakDown.thirdPlaceAdvancerHits;
   breakDown.total = score;
   return breakDown;
 }
@@ -256,6 +255,7 @@ export function seedDefaultEntries(teams, wIndexMap) {
       playerName: profile.name,
       avatar: profile.avatar,
       groupPredictions: {},
+      thirdPicks: [],
       bracketPredictions: {}
     };
 
@@ -320,6 +320,7 @@ export function seedDefaultEntries(teams, wIndexMap) {
       group: g,
       pts: 3, gd: 0, gf: 2, status: 'Q' // mock qualify
     })).slice(0, 8);
+    entry.thirdPicks = mockThirds.map(t => t.id);
 
     // Run deterministic mapping to mock their bracket
     const mockAdvancingThirds = mockThirds.map(t => t.group).sort();

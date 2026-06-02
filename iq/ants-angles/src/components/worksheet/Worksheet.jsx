@@ -7,12 +7,12 @@ function Blank({ width = '1in' }) {
   return <span className="inline-block border-b-2 border-gray-800 align-baseline" style={{ width, height: '0.3in', minWidth: width }} />
 }
 
-export default function Worksheet({ topic, mode, onBack }) {
+export default function Worksheet({ topic, mode, onBack, wholeOnly = false }) {
   const [seed, setSeed] = useState(0)
   const [showKey, setShowKey] = useState(false)
   const isArithmetic = topic.kind === 'arithmetic'
   const count = topic.count || 6
-  const problems = useMemo(() => buildProblems(topic, count), [topic, seed, count])
+  const problems = useMemo(() => buildProblems(topic, count, wholeOnly), [topic, seed, count, wholeOnly])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-indigo-100 print:bg-white">

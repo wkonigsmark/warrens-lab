@@ -227,14 +227,31 @@ Recommended approach:
 
 This keeps the user flow fast and avoids building payment automation before it is necessary.
 
-## Tiebreakers
+## Scoring And Tiebreakers
 
-V1 tiebreakers:
+Group-play pool scoring:
+
+- Correct group winner: 4 points
+- Correct 2nd place team: 3 points
+- Correct 3rd place team: 2 points
+- Correct 4th place team: 1 point
+- Correct third-place team advancing to the knockout round: 2 additional points
+
+Maximum score:
+
+- Group rankings: `12 groups x (4 + 3 + 2 + 1) = 120`
+- Advancing third-place teams: `8 x 2 = 16`
+- Total: `136`
+
+Official tiebreakers:
 
 1. Perfect groups.
-2. Total goals scored in group play.
+2. Third-place knockout advancers picked correctly.
+3. Total goals scored in group play.
 
 Perfect groups is not a user input. It is computed after group play by counting how many groups the user ranked exactly 1 through 4.
+
+Third-place knockout advancers are computed from the user's top eight third-place selections.
 
 Total group-play goals is a user input. The scoring tiebreaker is closest absolute difference from the actual total, whether the submitted number is above or below the final value.
 
@@ -251,8 +268,19 @@ Recommended `pool_entries.payload` shape:
 Recommended entry-screen copy:
 
 ```text
-Tiebreakers: perfect groups are calculated from your picks. Enter your prediction for total goals scored across group play.
+Tiebreakers: perfect groups and third-place advancers are calculated from your picks. Enter your prediction for total goals scored across group play.
 ```
+
+## Payouts
+
+Payout accounting:
+
+- Total purse: `confirmed_paid_entries * 50`
+- Organizer fee: `total_purse * 0.05`
+- Net pool: `total_purse * 0.95`
+- Winner: `net_pool * 0.70`
+- Runner-up: `net_pool * 0.20`
+- Third place: `net_pool * 0.10`
 
 ## Homepage Purse Tally
 

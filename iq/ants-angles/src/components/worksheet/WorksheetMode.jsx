@@ -1,15 +1,20 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { TOPICS, getTopic } from '../../lib/angleWorksheet'
+import { visibleItems } from '../../lib/wholeNumbers'
+import WholeNumbersToggle from '../quiz/WholeNumbersToggle'
 import Worksheet from './Worksheet'
 
 // Topic picker → mode picker (master / mentor) → printable worksheet.
-export default function WorksheetMode() {
+export default function WorksheetMode({ wholeOnly, onWholeChange }) {
   const [topicId, setTopicId] = useState(null)
   const [mode, setMode] = useState(null)
 
+  const shown = visibleItems(TOPICS, wholeOnly)
+  const hiddenCount = TOPICS.length - shown.length
+
   if (topicId && mode) {
-    return <Worksheet topic={getTopic(topicId)} mode={mode} onBack={() => { setTopicId(null); setMode(null) }} />
+    return <Worksheet topic={getTopic(topicId)} mode={mode} wholeOnly={wholeOnly} onBack={() => { setTopicId(null); setMode(null) }} />
   }
 
   if (topicId && !mode) {
@@ -39,11 +44,13 @@ export default function WorksheetMode() {
     <div className="max-w-2xl mx-auto">
       <motion.div className="text-center mb-8" initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="text-3xl font-bold text-gray-800">🖨 Printable Worksheets</h1>
-        <p className="text-gray-500 mt-1">Generate a fresh 6-problem sheet to print and practice on paper.</p>
+        <p className="text-gray-500 mt-1">Generate a fresh sheet to print and practice on paper.</p>
       </motion.div>
 
+      <WholeNumbersToggle wholeOnly={wholeOnly} onChange={onWholeChange} hiddenCount={hiddenCount} />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {TOPICS.map((t, i) => (
+        {shown.map((t, i) => (
           <motion.button
             key={t.id}
             onClick={() => setTopicId(t.id)}

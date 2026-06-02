@@ -2,13 +2,14 @@ import { useState, useMemo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import QuestionFigure from '../QuestionFigure'
 import { isCorrect } from '../../lib/angleQuiz'
+import { generateWhole } from '../../lib/wholeNumbers'
 
 const COUNT = 5
 
 // Drives one quiz level end-to-end: generates questions, shows the figure +
 // answer UI, gives instant feedback, tracks the score, and renders results.
 // Levels differ only by their pure `generate()` function (see angleQuiz.js).
-export default function QuizShell({ level, onBack }) {
+export default function QuizShell({ level, onBack, wholeOnly = false }) {
   const [seed, setSeed] = useState(0)
   const [index, setIndex] = useState(0)
   const [phase, setPhase] = useState('asking') // 'asking' | 'feedback'
@@ -18,8 +19,8 @@ export default function QuizShell({ level, onBack }) {
   const inputRef = useRef(null)
 
   const questions = useMemo(
-    () => Array.from({ length: COUNT }, () => level.generate()),
-    [level, seed]
+    () => Array.from({ length: COUNT }, () => (wholeOnly ? generateWhole(level.generate) : level.generate())),
+    [level, seed, wholeOnly]
   )
   const q = questions[index]
   const isLast = index === COUNT - 1

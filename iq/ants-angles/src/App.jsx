@@ -15,7 +15,9 @@ import CircleStage from './components/CircleStage'
 import CircleReadout from './components/CircleReadout'
 import CircleControls from './components/CircleControls'
 import UnrollStrip from './components/UnrollStrip'
-import PiHistoryModal from './components/PiHistoryModal'
+import StoryModal from './components/StoryModal'
+import { piStory } from './components/stories/PiStory'
+import { degreesStory } from './components/stories/DegreesStory'
 import Glossary from './components/Glossary'
 
 // Topic tabs — Angles & Triangles are built; the rest are the roadmap
@@ -40,7 +42,8 @@ export default function App() {
   const [polySquares, setPolySquares] = useState(false)
   const [radius, setRadius] = useState(3)
   const [unroll, setUnroll] = useState(false)
-  const [piHistory, setPiHistory] = useState(false)
+  const [story, setStory] = useState(null) // active StoryModal content, or null
+  const [wholeOnly, setWholeOnly] = useState(true) // universal: only whole-number answers
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-indigo-100">
@@ -89,7 +92,15 @@ export default function App() {
         {mode === 'explore' && topic === 'angles' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-1">Angle Explorer</h2>
+              <div className="flex items-start justify-between gap-3 mb-1">
+                <h2 className="text-xl font-bold text-gray-800">Angle Explorer</h2>
+                <button
+                  onClick={() => setStory(degreesStory)}
+                  className="flex-shrink-0 text-sm font-bold text-white bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-2 rounded-lg hover:shadow-lg transition-shadow"
+                >
+                  📜 Why 360°?
+                </button>
+              </div>
               <p className="text-sm text-gray-400 mb-4">Drag the handle — or tap anywhere — to open and close the angle.</p>
               <AngleStage angle={angle} onAngleChange={setAngle} snap={snap} />
             </div>
@@ -140,7 +151,7 @@ export default function App() {
               <div className="flex items-start justify-between gap-3 mb-1">
                 <h2 className="text-xl font-bold text-gray-800">Circle Explorer</h2>
                 <button
-                  onClick={() => setPiHistory(true)}
+                  onClick={() => setStory(piStory)}
                   className="flex-shrink-0 text-sm font-bold text-white bg-gradient-to-r from-violet-500 to-indigo-600 px-4 py-2 rounded-lg hover:shadow-lg transition-shadow"
                 >
                   📜 The Story of π
@@ -165,12 +176,12 @@ export default function App() {
 
         {mode === 'explore' && !['angles', 'triangles', 'area', 'circles'].includes(topic) && <Placeholder topic={topic} />}
 
-        {mode === 'quiz' && <QuizMode />}
+        {mode === 'quiz' && <QuizMode wholeOnly={wholeOnly} onWholeChange={setWholeOnly} />}
 
-        {mode === 'worksheet' && <WorksheetMode />}
+        {mode === 'worksheet' && <WorksheetMode wholeOnly={wholeOnly} onWholeChange={setWholeOnly} />}
       </div>
 
-      <PiHistoryModal open={piHistory} onClose={() => setPiHistory(false)} />
+      <StoryModal open={!!story} story={story} onClose={() => setStory(null)} />
     </div>
   )
 }

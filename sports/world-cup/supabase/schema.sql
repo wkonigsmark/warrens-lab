@@ -67,20 +67,40 @@ returns table (
   pending_entries bigint,
   total_purse integer,
   paid_purse integer,
-  pending_purse integer
+  pending_purse integer,
+  organizer_fee integer,
+  net_pool integer,
+  first_prize integer,
+  second_prize integer,
+  third_prize integer
 )
 language sql
 security definer
 set search_path = public
 as $$
+  with purse as (
+    select
+      count(*) filter (where voided = false and test_entry = false) as total_entries,
+      count(*) filter (where voided = false and test_entry = false and paid = true) as paid_entries,
+      count(*) filter (where voided = false and test_entry = false and paid = false) as pending_entries,
+      (count(*) filter (where voided = false and test_entry = false) * 50)::numeric as total_purse,
+      (count(*) filter (where voided = false and test_entry = false and paid = true) * 50)::numeric as paid_purse,
+      (count(*) filter (where voided = false and test_entry = false and paid = false) * 50)::numeric as pending_purse
+    from public.pool_entries
+  )
   select
-    count(*) filter (where voided = false and test_entry = false) as total_entries,
-    count(*) filter (where voided = false and test_entry = false and paid = true) as paid_entries,
-    count(*) filter (where voided = false and test_entry = false and paid = false) as pending_entries,
-    (count(*) filter (where voided = false and test_entry = false) * 50)::integer as total_purse,
-    (count(*) filter (where voided = false and test_entry = false and paid = true) * 50)::integer as paid_purse,
-    (count(*) filter (where voided = false and test_entry = false and paid = false) * 50)::integer as pending_purse
-  from public.pool_entries;
+    total_entries,
+    paid_entries,
+    pending_entries,
+    total_purse::integer,
+    paid_purse::integer,
+    pending_purse::integer,
+    round(paid_purse * 0.05)::integer as organizer_fee,
+    round(paid_purse * 0.95)::integer as net_pool,
+    round((paid_purse * 0.95) * 0.70)::integer as first_prize,
+    round((paid_purse * 0.95) * 0.20)::integer as second_prize,
+    round((paid_purse * 0.95) * 0.10)::integer as third_prize
+  from purse;
 $$;
 
 grant execute on function public.get_pool_purse_summary() to anon;

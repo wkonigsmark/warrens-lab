@@ -584,8 +584,8 @@
                 <th style="width: 50px;">Rank</th>
                 <th style="width: 70px; text-align: center;">Shift</th>
                 <th>Participant</th>
-                <th style="text-align: right;">Group Picks</th>
-                <th style="text-align: right;">KO Picks</th>
+                <th style="text-align: right;">Group Positions</th>
+                <th style="text-align: right;">Thirds</th>
                 <th style="text-align: right;">Accuracy</th>
                 <th style="text-align: right; width: 120px; color: var(--wc-gold);">Points</th>
               </tr>
@@ -982,8 +982,16 @@
         };
       });
 
-      // 3. Sort leaderboard by points
-      scoredList.sort((a, b) => b.points - a.points);
+      // 3. Sort leaderboard by points, then official group-play tiebreakers
+      scoredList.sort((a, b) => {
+        if (b.points !== a.points) return b.points - a.points;
+        if (b.breakdown.perfectGroups !== a.breakdown.perfectGroups) return b.breakdown.perfectGroups - a.breakdown.perfectGroups;
+        if (b.breakdown.thirdPlaceAdvancerHits !== a.breakdown.thirdPlaceAdvancerHits) return b.breakdown.thirdPlaceAdvancerHits - a.breakdown.thirdPlaceAdvancerHits;
+        const aGoalDelta = a.breakdown.tiebreakers.goalDelta;
+        const bGoalDelta = b.breakdown.tiebreakers.goalDelta;
+        if (aGoalDelta !== null && bGoalDelta !== null && aGoalDelta !== bGoalDelta) return aGoalDelta - bGoalDelta;
+        return String(a.entry.playerName).localeCompare(String(b.entry.playerName));
+      });
 
       // 4. Map rank, tracking shifts
       const newRanks = {};
@@ -1042,10 +1050,12 @@
         else if (player.rank === 2) rankClass = "rank-2";
         else if (player.rank === 3) rankClass = "rank-3";
 
-        const accuracy = Math.round(((player.breakdown.groupQualifiers + player.breakdown.r32 + player.breakdown.r16 + player.breakdown.qf + player.breakdown.sf + player.breakdown.thirdPlace + player.breakdown.champion) / 54) * 100);
+        const accuracy = Math.round((player.points / SCORING_RULES.maxTotal) * 100);
+        const tiebreakTitle = `Perfect groups: ${player.breakdown.perfectGroups}; third advancers: ${player.breakdown.thirdPlaceAdvancerHits}/8`;
 
         const row = document.createElement("tr");
         row.setAttribute("data-player", player.entry.playerName);
+        row.title = tiebreakTitle;
         row.innerHTML = `
           <td><span class="rank-badge ${rankClass}">${player.rank}</span></td>
           <td style="text-align: center;">${shiftHtml}</td>
@@ -1055,10 +1065,10 @@
               <span>${player.entry.playerName}</span>
             </div>
           </td>
-          <td style="text-align: right; font-weight:700;">${player.breakdown.groupQualifiers}/24 <span style="font-size:0.75rem; color:var(--wc-muted)">(${player.breakdown.groupWinners} exact)</span></td>
-          <td style="text-align: right; font-weight:700;">${player.breakdown.r32 + player.breakdown.r16 + player.breakdown.qf + player.breakdown.sf + player.breakdown.thirdPlace + player.breakdown.champion}/32</td>
+          <td style="text-align: right; font-weight:700;">${player.breakdown.groupPositionPoints}/120 <span style="font-size:0.75rem; color:var(--wc-muted)">(${player.breakdown.groupPositionHits}/48 hits)</span></td>
+          <td style="text-align: right; font-weight:700;">${player.breakdown.thirdPlaceAdvancerPoints}/16 <span style="font-size:0.75rem; color:var(--wc-muted)">(${player.breakdown.thirdPlaceAdvancerHits}/8)</span></td>
           <td style="text-align: right; font-weight:700; color:var(--wc-blue);">${accuracy}%</td>
-          <td style="text-align: right; font-weight:900; font-size:1.05rem; color:var(--wc-gold);">${player.points} pts</td>
+          <td style="text-align: right; font-weight:900; font-size:1.05rem; color:var(--wc-gold);">${player.points}/${SCORING_RULES.maxTotal}</td>
         `;
         
         elements.leaderboardBody.appendChild(row);
@@ -1077,33 +1087,25 @@
             
             // Build prediction overview tables HTML
             let groupPredHtml = "";
-            let koPredHtml = "";
+            let thirdPredHtml = "";
+            const actualThirdAdvancers = new Set(thirdPlaceStandings.filter(t => t.status === "Q").map(t => t.id));
 
             // Group predictions card html
-            Object.keys(player.entry.groupPredictions).slice(0, 4).forEach(g => {
+            Object.keys(player.entry.groupPredictions).forEach(g => {
               const list = player.entry.groupPredictions[g];
               groupPredHtml += `
                 <div class="prediction-card">
                   <h4 class="prediction-card-title">Group ${g} Picks</h4>
                   ${list.map((tid, idx) => {
-                    const qualifiedSet = new Set();
-                    if (groupTables[g] && groupTables[g].length >= 2) {
-                      qualifiedSet.add(groupTables[g][0].id);
-                      qualifiedSet.add(groupTables[g][1].id);
-                    }
-                    thirdPlaceStandings.forEach(t => { if(t.status === 'Q') qualifiedSet.add(t.id); });
-                    
-                    const isGreen = qualifiedSet.has(tid);
-                    const isWinnerBonus = (idx === 0 && groupTables[g]?.[0]?.id === tid);
+                    const isExact = groupTables[g]?.[idx]?.id === tid;
                     
                     let statusColor = "color: var(--wc-muted);";
-                    if (isGreen) statusColor = "color: var(--wc-green); font-weight: 850;";
-                    if (isWinnerBonus) statusColor = "color: var(--wc-gold); font-weight: 900;";
+                    if (isExact) statusColor = "color: var(--wc-green); font-weight: 900;";
 
                     return `
                       <div class="prediction-list-item">
                         <span style="${statusColor}">${idx+1}. ${teamName(tid)}</span>
-                        <span>${isGreen ? '✅' : '❌'}</span>
+                        <span>${isExact ? '✓' : '×'}</span>
                       </div>
                     `;
                   }).join("")}
@@ -1111,27 +1113,15 @@
               `;
             });
 
-            // Knockout picks card html
-            const keyMatches = [73, 89, 97, 101, 104];
-            keyMatches.forEach(mId => {
-              const actual = actualMatches.find(x => x.matchNumber === mId);
-              const predicted = player.entry.bracketPredictions[mId];
-              const isCorrect = actual && actual.winnerId === predicted && actual.status === 'completed';
-              
-              let matchLabel = `Match ${mId}`;
-              if (mId === 73) matchLabel = "Round of 32 (M73)";
-              else if (mId === 89) matchLabel = "Round of 16 (M89)";
-              else if (mId === 97) matchLabel = "Quarterfinal (M97)";
-              else if (mId === 101) matchLabel = "Semifinal (M101)";
-              else if (mId === 104) matchLabel = "Grand Champion (M104)";
-
-              koPredHtml += `
+            (player.entry.thirdPicks || []).forEach((teamId, index) => {
+              const isCorrect = actualThirdAdvancers.has(teamId);
+              thirdPredHtml += `
                 <div class="prediction-list-item" style="padding: 8px 0;">
                   <div>
-                    <div style="font-size:0.68rem; color:var(--wc-gold); font-weight:800; text-transform:uppercase;">${matchLabel}</div>
-                    <div style="font-weight:850; font-size:0.85rem; color:${isCorrect ? 'var(--wc-green)' : (actual?.status === 'completed' ? 'var(--wc-red)' : 'var(--wc-ink)')}">${teamName(predicted)}</div>
+                    <div style="font-size:0.68rem; color:var(--wc-gold); font-weight:800; text-transform:uppercase;">Third-place pick #${index + 1}</div>
+                    <div style="font-weight:850; font-size:0.85rem; color:${isCorrect ? 'var(--wc-green)' : 'var(--wc-ink)'}">${teamName(teamId)}</div>
                   </div>
-                  <span>${actual?.status !== 'completed' ? '⏳' : (isCorrect ? '✅' : '❌')}</span>
+                  <span>${isCorrect ? '✓' : '×'}</span>
                 </div>
               `;
             });
@@ -1140,16 +1130,17 @@
               <td colspan="7">
                 <div class="predictions-grid">
                   <div>
-                    <h3 style="margin-top:0; font-size:0.88rem; text-transform:uppercase; color:var(--wc-ink); letter-spacing:0.05em; font-weight:900;">📋 Sample Group Standing Predictions</h3>
+                    <h3 style="margin-top:0; font-size:0.88rem; text-transform:uppercase; color:var(--wc-ink); letter-spacing:0.05em; font-weight:900;">Group standing predictions</h3>
                     <div style="display:flex; flex-direction:column; gap:12px;">
                       ${groupPredHtml}
                     </div>
                   </div>
                   <div class="prediction-card">
-                    <h3 style="margin-top:0; font-size:0.88rem; text-transform:uppercase; color:var(--wc-ink); letter-spacing:0.05em; font-weight:900;">🏆 Major Knockout Tree Predictions</h3>
+                    <h3 style="margin-top:0; font-size:0.88rem; text-transform:uppercase; color:var(--wc-ink); letter-spacing:0.05em; font-weight:900;">Third-place advancers</h3>
                     <div style="display:flex; flex-direction:column; gap:8px;">
-                      ${koPredHtml}
+                      ${thirdPredHtml}
                     </div>
+                    <p style="margin:12px 0 0; color:var(--wc-muted); font-weight:750;">Tiebreaks: ${player.breakdown.perfectGroups} perfect groups, ${player.breakdown.thirdPlaceAdvancerHits}/8 third-place advancers${player.breakdown.tiebreakers.goalDelta === null ? "" : `, ${player.breakdown.tiebreakers.goalDelta} goals off`}.</p>
                   </div>
                 </div>
               </td>
@@ -1439,22 +1430,24 @@
     // Generate Standings CSV
     function generateStandingsCsv() {
       const { standingsOutput } = scoreLeaderboard();
-      const headers = ["Rank", "Shift", "Player", "Avatar", "Group Qualifiers Correct", "Exact Group Winners", "Knockout Predictions Correct", "Total Accuracy %", "Total Points"];
+      const headers = ["Rank", "Shift", "Player", "Avatar", "Group Position Points", "Group Position Hits", "Perfect Groups", "Third Advancer Points", "Third Advancer Hits", "Goal Tiebreak Delta", "Total Accuracy %", "Total Points"];
       const rows = [headers];
 
       standingsOutput.forEach(player => {
-        const accuracy = Math.round(((player.breakdown.groupQualifiers + player.breakdown.r32 + player.breakdown.r16 + player.breakdown.qf + player.breakdown.sf + player.breakdown.thirdPlace + player.breakdown.champion) / 54) * 100);
+        const accuracy = Math.round((player.points / SCORING_RULES.maxTotal) * 100);
         const shiftVal = player.shift > 0 ? `+${player.shift}` : (player.shift < 0 ? player.shift : "0");
-        const koCorrect = player.breakdown.r32 + player.breakdown.r16 + player.breakdown.qf + player.breakdown.sf + player.breakdown.thirdPlace + player.breakdown.champion;
 
         rows.push([
           player.rank,
           shiftVal,
           player.entry.playerName,
           player.entry.avatar,
-          player.breakdown.groupQualifiers,
-          player.breakdown.groupWinners,
-          koCorrect,
+          player.breakdown.groupPositionPoints,
+          player.breakdown.groupPositionHits,
+          player.breakdown.perfectGroups,
+          player.breakdown.thirdPlaceAdvancerPoints,
+          player.breakdown.thirdPlaceAdvancerHits,
+          player.breakdown.tiebreakers.goalDelta ?? "",
           `${accuracy}%`,
           player.points
         ]);
