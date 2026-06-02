@@ -221,6 +221,52 @@
       backdrop-filter: blur(12px);
     }
 
+    .pool-cta {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      width: min(100%, 650px);
+      margin: 0 auto;
+    }
+
+    .pool-cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 58px;
+      padding: 0 34px;
+      border: 1px solid rgba(244, 201, 93, 0.78);
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(244, 201, 93, 0.98), rgba(255, 246, 213, 0.96));
+      color: #07130f;
+      font-size: clamp(1.05rem, 3vw, 1.35rem);
+      font-weight: 950;
+      text-decoration: none;
+      box-shadow:
+        0 0 0 7px rgba(244, 201, 93, 0.12),
+        0 0 46px rgba(244, 201, 93, 0.42),
+        0 22px 62px rgba(0, 0, 0, 0.28);
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .pool-cta-button:hover,
+    .pool-cta-button:focus-visible {
+      transform: translateY(-1px);
+      box-shadow:
+        0 0 0 9px rgba(244, 201, 93, 0.16),
+        0 0 62px rgba(244, 201, 93, 0.54),
+        0 25px 70px rgba(0, 0, 0, 0.32);
+    }
+
+    .pool-cta-copy {
+      max-width: 590px;
+      margin: 0;
+      color: rgba(247, 244, 235, 0.78);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      text-wrap: balance;
+    }
+
     .purse-tally {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -587,6 +633,10 @@
         width: min(100%, 360px);
       }
 
+      .pool-cta-button {
+        width: min(100%, 310px);
+      }
+
       .purse-tally {
         grid-template-columns: 1fr;
         width: min(100%, 320px);
@@ -635,8 +685,12 @@
         <h1 id="page-title" class="fallback-title">Warren's<br>World Cup<br>Pool</h1>
       </div>
 
+      <div class="pool-cta">
+        <a class="pool-cta-button" href="pool/">Join the Pool</a>
+        <p class="pool-cta-copy">This pool is for group play only. Rank all 12 groups and the top eight third-place teams to complete your entry.</p>
+      </div>
+
       <div class="module-strip" aria-label="Planned hub sections">
-        <a href="pool/">Pool Entry</a>
         <a href="rankings-odds/">W-Index</a>
         <a href="groups/">Group Analysis</a>
         <a href="meta/#group-fixtures">Fixtures</a>

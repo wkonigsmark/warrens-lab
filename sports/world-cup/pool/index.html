@@ -74,6 +74,49 @@
       line-height: 1.45;
     }
 
+    .pool-rules {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .pool-rules-card {
+      padding: 16px;
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .pool-rules-card h2,
+    .pool-rules-card h3 {
+      margin: 0 0 10px;
+      color: var(--wc-ink);
+      line-height: 1.05;
+    }
+
+    .pool-rules-card h2 {
+      font-size: clamp(1.45rem, 4vw, 2.2rem);
+    }
+
+    .pool-rules-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .pool-rules-list li {
+      color: var(--wc-muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .pool-rules-list strong {
+      color: var(--wc-ink);
+    }
+
     .pool-actions {
       display: flex;
       flex-wrap: wrap;
@@ -616,6 +659,7 @@
       }
 
       .pool-steps,
+      .pool-rules,
       .pool-picker-grid,
       .pool-meta-grid,
       .pool-review-grid {
@@ -951,6 +995,26 @@
         </section>
 
         <section class="pool-panel pool-card-pad">
+          <div class="pool-rules">
+            <article class="pool-rules-card">
+              <h2>Group-play pool rules</h2>
+              <ul class="pool-rules-list">
+                <li><strong>Pick the final order of every group.</strong> Rank teams 1 through 4 for all 12 groups.</li>
+                <li><strong>Choose the eight advancing third-place teams.</strong> Your order sets the projected Round of 32 bracket.</li>
+                <li><strong>Submit once.</strong> Entries are final after submission. Multiple brackets are allowed, but each bracket needs its own entry and payment.</li>
+                <li><strong>Track it live.</strong> Once group play starts, the scoreboard will show where each bracket stands and which teams each entry should be pulling for.</li>
+              </ul>
+            </article>
+            <article class="pool-rules-card">
+              <h3>Scoring & payouts</h3>
+              <ul class="pool-rules-list">
+                <li><strong>Scoring:</strong> 3 points for a correct group winner, 2 for a correct runner-up, 1 for each correct advancing third-place team, plus a bonus for a perfect 1-4 group.</li>
+                <li><strong>Tiebreakers:</strong> perfect groups are calculated from your picks; total group-play goals is the manual closest-number tiebreaker.</li>
+                <li><strong>Payment:</strong> send Venmo separately after submission. Paid entries are confirmed by the commissioner.</li>
+                <li><strong>Payouts:</strong> final purse and payout structure will be posted before kickoff based on confirmed paid entries.</li>
+              </ul>
+            </article>
+          </div>
           <div class="pool-steps">
             <article class="pool-step">
               <strong>Fill out your picks</strong>
