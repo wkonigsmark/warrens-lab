@@ -11,6 +11,11 @@ import TriangleControls, { DEFAULT_TRIANGLE } from './components/TriangleControl
 import PolygonStage from './components/PolygonStage'
 import PolygonReadout from './components/PolygonReadout'
 import PolygonControls, { DEFAULT_POLYGON } from './components/PolygonControls'
+import CircleStage from './components/CircleStage'
+import CircleReadout from './components/CircleReadout'
+import CircleControls from './components/CircleControls'
+import UnrollStrip from './components/UnrollStrip'
+import PiHistoryModal from './components/PiHistoryModal'
 import Glossary from './components/Glossary'
 
 // Topic tabs — Angles & Triangles are built; the rest are the roadmap
@@ -19,7 +24,7 @@ const TOPICS = [
   { id: 'angles', label: 'Angles', emoji: '📐', ready: true },
   { id: 'triangles', label: 'Triangles', emoji: '🔺', ready: true },
   { id: 'area', label: 'Area & Polygons', emoji: '⬛', ready: true },
-  { id: 'circles', label: 'Circles & Pi', emoji: '⭕', ready: false },
+  { id: 'circles', label: 'Circles & Pi', emoji: '⭕', ready: true },
 ]
 
 export default function App() {
@@ -29,9 +34,13 @@ export default function App() {
   const [snap, setSnap] = useState(0)
   const [triangle, setTriangle] = useState(DEFAULT_TRIANGLE)
   const [triSnap, setTriSnap] = useState(true)
+  const [triSquares, setTriSquares] = useState(false)
   const [polygon, setPolygon] = useState(DEFAULT_POLYGON)
   const [polySnap, setPolySnap] = useState(true)
   const [polySquares, setPolySquares] = useState(false)
+  const [radius, setRadius] = useState(3)
+  const [unroll, setUnroll] = useState(false)
+  const [piHistory, setPiHistory] = useState(false)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-indigo-100">
@@ -96,11 +105,11 @@ export default function App() {
             <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
               <h2 className="text-xl font-bold text-gray-800 mb-1">Triangle Explorer</h2>
               <p className="text-sm text-gray-400 mb-4">Drag any corner (A, B, C) — watch the three angles always add up to 180°.</p>
-              <TriangleStage vertices={triangle} onChange={setTriangle} snap={triSnap} />
+              <TriangleStage vertices={triangle} onChange={setTriangle} snap={triSnap} showSquares={triSquares} />
             </div>
             <div className="lg:col-span-1 flex flex-col gap-4">
-              <TriangleReadout vertices={triangle} />
-              <TriangleControls onPreset={setTriangle} snap={triSnap} onSnapChange={setTriSnap} />
+              <TriangleReadout vertices={triangle} showSquares={triSquares} />
+              <TriangleControls onPreset={setTriangle} snap={triSnap} onSnapChange={setTriSnap} showSquares={triSquares} onSquaresChange={setTriSquares} />
             </div>
           </div>
         )}
@@ -125,18 +134,43 @@ export default function App() {
           </div>
         )}
 
-        {mode === 'explore' && ['angles', 'triangles', 'area'].includes(topic) && (
+        {mode === 'explore' && topic === 'circles' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
+              <div className="flex items-start justify-between gap-3 mb-1">
+                <h2 className="text-xl font-bold text-gray-800">Circle Explorer</h2>
+                <button
+                  onClick={() => setPiHistory(true)}
+                  className="flex-shrink-0 text-sm font-bold text-white bg-gradient-to-r from-violet-500 to-indigo-600 px-4 py-2 rounded-lg hover:shadow-lg transition-shadow"
+                >
+                  📜 The Story of π
+                </button>
+              </div>
+              <p className="text-sm text-gray-400 mb-4">Drag the edge to change the radius — watch how π links the circle together.</p>
+              <CircleStage radius={radius} onRadiusChange={setRadius} snap />
+              {unroll && <UnrollStrip radius={radius} />}
+            </div>
+            <div className="lg:col-span-1 flex flex-col gap-4">
+              <CircleReadout radius={radius} />
+              <CircleControls radius={radius} onRadiusChange={setRadius} unroll={unroll} onUnrollChange={setUnroll} />
+            </div>
+          </div>
+        )}
+
+        {mode === 'explore' && ['angles', 'triangles', 'area', 'circles'].includes(topic) && (
           <div className="mt-6">
             <Glossary topic={topic} />
           </div>
         )}
 
-        {mode === 'explore' && !['angles', 'triangles', 'area'].includes(topic) && <Placeholder topic={topic} />}
+        {mode === 'explore' && !['angles', 'triangles', 'area', 'circles'].includes(topic) && <Placeholder topic={topic} />}
 
         {mode === 'quiz' && <QuizMode />}
 
         {mode === 'worksheet' && <WorksheetMode />}
       </div>
+
+      <PiHistoryModal open={piHistory} onClose={() => setPiHistory(false)} />
     </div>
   )
 }

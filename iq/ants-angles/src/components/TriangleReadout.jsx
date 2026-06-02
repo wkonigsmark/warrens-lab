@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion'
-import { roundedAngles, perimeter, area, classifyByAngle, classifyBySide, isDegenerate } from '../lib/triangles'
+import { roundedAngles, perimeter, area, classifyByAngle, classifyBySide, isDegenerate, pythagorean, PYTHAG_COLORS } from '../lib/triangles'
 import { VERTEX_COLORS, VERTEX_NAMES } from './TriangleStage'
 
+const fmt = (v) => (Math.abs(v - Math.round(v)) < 0.05 ? Math.round(v) : v.toFixed(1))
+
 // Live triangle facts. Headline is the angle-sum: A + B + C = 180°, always.
-export default function TriangleReadout({ vertices }) {
+export default function TriangleReadout({ vertices, showSquares = false }) {
   const [A, B, C] = vertices
   if (isDegenerate(A, B, C)) {
     return (
@@ -51,6 +53,31 @@ export default function TriangleReadout({ vertices }) {
           ))}
         </div>
       </div>
+
+      {/* Pythagorean panel (squares mode) */}
+      {showSquares && (() => {
+        const { legs, hyp, sum, isRight } = pythagorean(A, B, C)
+        const Chip = ({ v, color }) => (
+          <span className="px-2 py-1 rounded-lg text-white font-bold" style={{ backgroundColor: color }}>{fmt(v)}</span>
+        )
+        return (
+          <div className="bg-white rounded-2xl shadow-lg p-4">
+            <div className="text-xs uppercase tracking-wide text-gray-400 font-semibold mb-2">Squares on the sides</div>
+            <div className="flex items-center justify-center gap-1.5 flex-wrap text-lg">
+              <Chip v={legs[0]} color={PYTHAG_COLORS[0]} />
+              <span className="text-gray-400 font-bold">+</span>
+              <Chip v={legs[1]} color={PYTHAG_COLORS[1]} />
+              <span className="text-gray-400 font-bold">{isRight ? '=' : '≠'}</span>
+              <Chip v={hyp} color={PYTHAG_COLORS[2]} />
+            </div>
+            <div className="text-center text-sm mt-2 font-semibold" style={{ color: isRight ? '#16a34a' : '#94a3b8' }}>
+              {isRight
+                ? `✓ a² + b² = c²  (${fmt(sum)} = ${fmt(hyp)}) — it's a right triangle!`
+                : `${fmt(sum)} ≠ ${fmt(hyp)} — not a right triangle yet`}
+            </div>
+          </div>
+        )
+      })()}
 
       {/* Measurements */}
       <div className="grid grid-cols-2 gap-3">

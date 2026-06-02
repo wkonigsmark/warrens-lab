@@ -1,7 +1,7 @@
 // Preset triangles (grid coords, y points down) + snap toggle. Lets a kid jump
 // straight to "show me a right triangle" the way the Angle Explorer has presets.
 export const PRESETS = {
-  Right: [{ x: 2, y: 10 }, { x: 2, y: 3 }, { x: 9, y: 10 }],
+  Right: [{ x: 4, y: 9 }, { x: 4, y: 6 }, { x: 8, y: 9 }], // classic 3-4-5
   Equilateral: [{ x: 2, y: 10 }, { x: 6, y: 3.07 }, { x: 10, y: 10 }],
   Isosceles: [{ x: 2, y: 10 }, { x: 6, y: 3 }, { x: 10, y: 10 }],
   Obtuse: [{ x: 1, y: 8 }, { x: 8, y: 5 }, { x: 11, y: 8 }],
@@ -9,7 +9,7 @@ export const PRESETS = {
 
 export const DEFAULT_TRIANGLE = [{ x: 2, y: 9 }, { x: 5, y: 3 }, { x: 10, y: 7 }]
 
-export default function TriangleControls({ onPreset, snap, onSnapChange }) {
+export default function TriangleControls({ onPreset, snap, onSnapChange, showSquares, onSquaresChange }) {
   return (
     <div className="bg-white rounded-2xl shadow-lg p-5 flex flex-col gap-4">
       <div>
@@ -26,6 +26,11 @@ export default function TriangleControls({ onPreset, snap, onSnapChange }) {
           ))}
         </div>
       </div>
+
+      <label className="flex items-center justify-between cursor-pointer">
+        <span className="text-sm font-semibold text-gray-700">Show squares (a² + b² = c²)</span>
+        <input type="checkbox" checked={showSquares} onChange={(e) => onSquaresChange(e.target.checked)} className="w-5 h-5 accent-indigo-500" />
+      </label>
 
       <label className="flex items-center justify-between cursor-pointer">
         <span className="text-sm font-semibold text-gray-700">Snap to grid</span>

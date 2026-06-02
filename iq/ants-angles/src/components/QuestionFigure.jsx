@@ -1,5 +1,7 @@
 import AngleStage from './AngleStage'
 import LinePairFigure from './LinePairFigure'
+import CircleFigure from './CircleFigure'
+import RightTriangleFigure from './RightTriangleFigure'
 import { PointFigure, CrossFigure, TriangleFigure } from './quiz/Figures'
 
 // One place that maps a question object → its figure. Shared by Quiz Mode
@@ -14,6 +16,10 @@ export default function QuestionFigure({ q, reveal = false, bw = false }) {
       return <CrossFigure given={q.given} variant={q.variant} bw={bw} />
     case 'triangle':
       return <TriangleFigure angles={q.angles} unknownIndex={q.unknownIndex} bw={bw} />
+    case 'circle':
+      return <CircleFigure mark={q.mark} label={q.markLabel} bw={bw} />
+    case 'rightTriangle':
+      return <RightTriangleFigure a={q.a} b={q.b} labelA={q.labelA} labelB={q.labelB} labelC={q.labelC} bw={bw} />
     default:
       // 'protractor' — on worksheets we hide the tick scale for a cleaner figure.
       return (

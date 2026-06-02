@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { roundedAngles, anglesOf } from '../lib/triangles'
+import { roundedAngles, anglesOf, PYTHAG_COLORS } from '../lib/triangles'
 
 const GRID = 12
 const CELL = 38
@@ -40,7 +40,21 @@ function inwardDir(V, P, Q) {
   return { x: x / L, y: y / L }
 }
 
-export default function TriangleStage({ vertices, onChange, snap = true }) {
+const fmtArea = (v) => (Math.abs(v - Math.round(v)) < 0.05 ? Math.round(v) : v.toFixed(1))
+
+// Build the outward square on edge V→W (third vertex T tells us "outward").
+function squareOnEdge(V, W, T, color) {
+  const e = { x: W.x - V.x, y: W.y - V.y }
+  let n = { x: -e.y, y: e.x } // perpendicular (magnitude = edge length)
+  const M = { x: (V.x + W.x) / 2, y: (V.y + W.y) / 2 }
+  const out = { x: M.x - T.x, y: M.y - T.y }
+  if (n.x * out.x + n.y * out.y < 0) { n = { x: -n.x, y: -n.y } }
+  const corners = [V, W, { x: W.x + n.x, y: W.y + n.y }, { x: V.x + n.x, y: V.y + n.y }]
+  const center = { x: M.x + n.x / 2, y: M.y + n.y / 2 }
+  return { corners, center, color, len: Math.hypot(e.x, e.y) }
+}
+
+export default function TriangleStage({ vertices, onChange, snap = true, showSquares = false }) {
   const svgRef = useRef(null)
   const [drag, setDrag] = useState(null) // index being dragged
 
@@ -49,6 +63,25 @@ export default function TriangleStage({ vertices, onChange, snap = true }) {
   const exact = anglesOf(vertices[0], vertices[1], vertices[2])
   const labelArr = [labels.A, labels.B, labels.C]
   const exactArr = [exact.A, exact.B, exact.C]
+
+  // Squares on each side, colored by area rank (matches the readout chips).
+  let squares = []
+  let viewBox = `0 0 ${SIZE} ${SIZE}`
+  if (showSquares) {
+    const edges = [0, 1, 2].map((i) => ({ i, V: px[i], W: px[(i + 1) % 3], T: px[(i + 2) % 3], len: Math.hypot(px[(i + 1) % 3].x - px[i].x, px[(i + 1) % 3].y - px[i].y) }))
+    const order = [...edges].sort((m, n) => m.len - n.len)
+    const colorByEdge = {}
+    order.forEach((edge, rank) => { colorByEdge[edge.i] = PYTHAG_COLORS[rank] })
+    squares = edges.map((edge) => squareOnEdge(edge.V, edge.W, edge.T, colorByEdge[edge.i]))
+
+    // Auto-frame so the squares never clip off the canvas.
+    const pts = [...squares.flatMap((s) => s.corners), { x: 0, y: 0 }, { x: SIZE, y: SIZE }]
+    const xs = pts.map((p) => p.x), ys = pts.map((p) => p.y)
+    const pad = 14
+    const minX = Math.min(...xs) - pad, minY = Math.min(...ys) - pad
+    const maxX = Math.max(...xs) + pad, maxY = Math.max(...ys) + pad
+    viewBox = `${minX} ${minY} ${maxX - minX} ${maxY - minY}`
+  }
 
   const clientToGrid = (clientX, clientY) => {
     const svg = svgRef.current
@@ -88,7 +121,7 @@ export default function TriangleStage({ vertices, onChange, snap = true }) {
   return (
     <svg
       ref={svgRef}
-      viewBox={`0 0 ${SIZE} ${SIZE}`}
+      viewBox={viewBox}
       className="w-full h-auto max-w-[480px] mx-auto touch-none select-none"
     >
       {/* Grid */}
@@ -99,6 +132,16 @@ export default function TriangleStage({ vertices, onChange, snap = true }) {
         </g>
       ))}
       <rect x={PAD} y={PAD} width={GRID * CELL} height={GRID * CELL} fill="none" stroke="#e2e8f0" strokeWidth="1.5" />
+
+      {/* Squares on the sides (Pythagorean mode) */}
+      {squares.map((s, i) => (
+        <g key={`sq${i}`}>
+          <polygon points={s.corners.map((p) => `${p.x},${p.y}`).join(' ')} fill={s.color} fillOpacity="0.18" stroke={s.color} strokeWidth="2" strokeLinejoin="round" />
+          <text x={s.center.x} y={s.center.y} textAnchor="middle" dominantBaseline="middle" fontSize="17" fontWeight="bold" fill={s.color}>
+            {fmtArea((s.len / CELL) ** 2)}
+          </text>
+        </g>
+      ))}
 
       {/* Triangle body */}
       <polygon points={px.map((p) => `${p.x},${p.y}`).join(' ')} fill="#eef2ff" stroke="#1f2937" strokeWidth="3" strokeLinejoin="round" />
