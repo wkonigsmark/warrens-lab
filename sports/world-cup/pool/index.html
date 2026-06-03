@@ -120,14 +120,34 @@
     .pool-rules-list .pool-payment-warning {
       color: #ffb4a8;
       border: 1px solid rgba(255, 93, 74, 0.55);
-      background: rgba(255, 93, 74, 0.12);
+      background: linear-gradient(135deg, rgba(255, 93, 74, 0.22), rgba(255, 93, 74, 0.08));
       border-radius: var(--wc-radius);
-      padding: 10px 12px;
-      font-weight: 850;
+      box-shadow: 0 18px 42px rgba(255, 93, 74, 0.13);
+      margin-top: 22px;
+      padding: 16px 18px;
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+      font-weight: 950;
+      line-height: 1.28;
     }
 
     .pool-rules-list .pool-payment-warning strong {
       color: #fff4ef;
+    }
+
+    .pool-rules-list .pool-payment-warning .memo-label {
+      display: block;
+      margin-bottom: 7px;
+      color: #ffdf76;
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .pool-rules-list .pool-payment-warning a {
+      color: #fff4ef;
+      font-weight: 950;
+      text-decoration-color: rgba(255, 244, 239, 0.65);
     }
 
     .pool-actions {
@@ -242,7 +262,8 @@
 
     .pool-rank-stack,
     .pool-team-grid,
-    .pool-fixture-list,
+    .pool-windex-list,
+    .pool-matchup-list,
     .pool-review-grid {
       display: grid;
       gap: 10px;
@@ -418,7 +439,76 @@
       font-size: 1rem;
     }
 
-    .pool-fixture {
+    .pool-group-insight-kpis {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin: 0 0 12px;
+      color: var(--wc-muted);
+      font-size: 0.84rem;
+      font-weight: 950;
+    }
+
+    .pool-windex-row {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+      border-top: 1px solid var(--wc-line);
+    }
+
+    .pool-windex-row strong {
+      display: block;
+      color: var(--wc-ink);
+      font-size: 1.08rem;
+      line-height: 1.1;
+    }
+
+    .pool-windex-score {
+      color: var(--wc-ink);
+      font-size: 1.05rem;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .pool-path-pill {
+      display: inline-flex;
+      width: fit-content;
+      margin-top: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: #06100d;
+      font-size: 0.64rem;
+      font-weight: 950;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .pool-path-pill.favorite {
+      background: #2f8f57;
+      color: #eefbf0;
+    }
+
+    .pool-path-pill.runner-up {
+      background: #62be75;
+    }
+
+    .pool-path-pill.third {
+      background: #c8873d;
+    }
+
+    .pool-path-pill.last {
+      background: #bd4a45;
+      color: #fff3ee;
+    }
+
+    .pool-matchup-list {
+      margin-top: 14px;
+    }
+
+    .pool-fixture,
+    .pool-matchup-row {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       gap: 12px;
@@ -427,6 +517,16 @@
       color: rgba(247, 244, 235, 0.86);
       font-size: 0.88rem;
       font-weight: 850;
+    }
+
+    .pool-matchup-row {
+      padding: 8px 0;
+      font-size: 0.9rem;
+    }
+
+    .pool-matchup-row strong {
+      color: var(--wc-ink);
+      font-variant-numeric: tabular-nums;
     }
 
     .pool-fixture small {
@@ -757,7 +857,7 @@
 
   <script src="../archive/world-cup-1/bracket_lookup.js"></script>
   <script type="module">
-    import { groupStageMatches, groups, teamsById } from "../data/world-cup-2026.js";
+    import { groups, teamsById } from "../data/world-cup-2026.js";
     import { W_INDEX_URL as W_INDEX_CSV_URL, fetchWithTimeout, wIndexBaselineRows } from "../data/w-index-baseline.js";
 
     const GROUP_IDS = "ABCDEFGHIJKL".split("");
@@ -1000,11 +1100,11 @@
       app.innerHTML = `
         <section class="pool-hero">
           <div>
-            <div class="wc-eyebrow">Beta Pool Entry</div>
-            <h1 class="pool-title">Group picks, fast.</h1>
-            <p class="pool-copy">Rank every group from 1 to 4, then choose the top eight third-place teams. That is the full beta entry for the group-play pool.</p>
+            <div class="wc-eyebrow">Pool Entry</div>
+            <h1 class="pool-title">Group rules.</h1>
+            <p class="pool-copy">Rank every group from 1 to 4, then choose the top eight third-place teams. That is the full entry for the group-play pool.</p>
+            <p class="pool-copy">Stay tuned for a knockout round pool once group play concludes!</p>
           </div>
-          <span class="wc-pill">${state.wIndexStatus}</span>
         </section>
 
         <section class="pool-panel pool-card-pad">
@@ -1016,6 +1116,7 @@
                 <li><strong>Choose the eight advancing third-place teams.</strong> Your order sets the projected Round of 32 bracket.</li>
                 <li><strong>Submit once.</strong> Entries are final after submission. Multiple brackets are allowed, but each bracket needs its own entry and payment.</li>
                 <li><strong>Track it live.</strong> Once group play starts, the scoreboard will show where each bracket stands and which teams each entry should be pulling for.</li>
+                <li class="pool-payment-warning"><span class="memo-label">Important Venmo Memo</span><strong>Include your bracket name and email</strong> in your Venmo memo so I can connect payment to your bracket.</li>
               </ul>
             </article>
             <article class="pool-rules-card">
@@ -1024,8 +1125,7 @@
                 <li><strong>Scoring:</strong> 4 points for a correct group winner, 3 for 2nd place, 2 for 3rd place, and 1 for 4th place. Correctly picking a third-place team to advance adds 2 more points.</li>
                 <li><strong>Max score:</strong> 120 points from group rankings plus 16 points from the eight advancing third-place teams, for a 136-point ceiling.</li>
                 <li><strong>Tiebreakers:</strong> 1st is perfect groups, 2nd is correct third-place advancers, and 3rd is closest absolute difference to total group-play goals.</li>
-                <li><strong>Payment:</strong> send Venmo separately after submission. Paid entries are confirmed by the commissioner.</li>
-                <li class="pool-payment-warning"><strong>Venmo memo:</strong> please include your bracket name and email in your Venmo memo to help me connect payment to your bracket.</li>
+                <li><strong>Payment:</strong> send $50 by Venmo to <a href="https://venmo.com/u/Warren-Konigsmark" target="_blank" rel="noopener">@Warren-Konigsmark</a>. If Venmo asks for phone verification, the last four digits are 6274.</li>
                 <li><strong>Payouts:</strong> $50 per entry. Five percent goes to the organizer, then the net pool pays 70% to 1st, 20% to 2nd, and 10% to 3rd.</li>
               </ul>
             </article>
@@ -1041,7 +1141,7 @@
             </article>
             <article class="pool-step">
               <strong>Send Venmo</strong>
-              <span>Export or copy the entry, then send payment separately.</span>
+              <span>Send $50 to @Warren-Konigsmark with your bracket name and email in the memo.</span>
             </article>
             <article class="pool-step">
               <strong>Submit once</strong>
@@ -1239,6 +1339,23 @@
       const total = scores.reduce((sum, score) => sum + score, 0);
       const average = scores.length ? total / scores.length : 0;
       const top = rows[0];
+      const matchupDiffs = [];
+
+      rows.forEach((team, index) => {
+        rows.slice(index + 1).forEach((opponent) => {
+          if (!Number.isFinite(team.wIndex) || !Number.isFinite(opponent.wIndex)) return;
+          matchupDiffs.push({
+            label: `${team.name} v ${opponent.name}`,
+            diff: Math.abs(team.wIndex - opponent.wIndex),
+          });
+        });
+      });
+
+      matchupDiffs.sort((a, b) => a.diff - b.diff || a.label.localeCompare(b.label));
+      const parity = matchupDiffs.reduce((sum, matchup) => sum + matchup.diff, 0);
+      const close10 = matchupDiffs.filter((matchup) => matchup.diff <= 10).length;
+      const roleLabels = ["Favorite", "Runner up", "Third", "Last"];
+      const roleClasses = ["favorite", "runner-up", "third", "last"];
 
       return `
         <div class="pool-meta-grid">
@@ -1256,29 +1373,34 @@
           </div>
         </div>
         <section class="pool-fixtures pool-panel pool-card-pad">
-          <h3>Group ${group} fixtures</h3>
-          <div class="pool-fixture-list">
-            ${groupStageMatches
-              .filter((match) => match.group === group)
-              .map((match) => `
-                <div class="pool-fixture">
-                  <span>${escapeHtml(match.homeName)} v ${escapeHtml(match.awayName)}<br><small>${formatMatchTime(match.utc)} · ${escapeHtml(match.venue.city)}</small></span>
-                  <small>M${match.matchNumber}</small>
-                </div>
-              `).join("")}
+          <h3>Group ${group} W-Index order</h3>
+          <div class="pool-group-insight-kpis">
+            <span>Total ${total.toFixed(1)}%</span>
+            <span>Parity ${parity.toFixed(1)}</span>
+            <span>&le;10 close ${close10}/6</span>
+          </div>
+          <div class="pool-windex-list">
+            ${rows.map((team, index) => `
+              <div class="pool-windex-row">
+                ${flagImage(team, 160)}
+                <span>
+                  <strong>${escapeHtml(team.name)}</strong>
+                  <span class="pool-path-pill ${roleClasses[index] || "last"}">${roleLabels[index] || "Last"}</span>
+                </span>
+                <span class="pool-windex-score">${formatScore(team.wIndex)}</span>
+              </div>
+            `).join("")}
+          </div>
+          <div class="pool-matchup-list">
+            ${matchupDiffs.map((matchup) => `
+              <div class="pool-matchup-row">
+                <span>${escapeHtml(matchup.label)}</span>
+                <strong>${matchup.diff.toFixed(1)}</strong>
+              </div>
+            `).join("")}
           </div>
         </section>
       `;
-    }
-
-    function formatMatchTime(utc) {
-      return new Intl.DateTimeFormat(undefined, {
-        month: "short",
-        day: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-        timeZoneName: "short",
-      }).format(new Date(utc));
     }
 
     function autoFillFinalGroupSlot(group) {
@@ -1500,7 +1622,7 @@
       app.innerHTML = `
         <section class="pool-hero">
           <div>
-            <div class="wc-eyebrow">Beta Export</div>
+            <div class="wc-eyebrow">Entry Review</div>
             <h1 class="pool-title">Entry ready.</h1>
             <p class="pool-copy">${escapeHtml(state.entry.bracketName)} · ${escapeHtml(state.entry.venmo)} · ${escapeHtml(state.entry.email)} · ${state.entryId}</p>
           </div>
@@ -1849,7 +1971,7 @@
         });
 
         state.submitted = true;
-        state.submitStatus = `Submitted. Entry code: ${state.entryId}. Send Venmo separately to confirm payment.`;
+        state.submitStatus = `Submitted. Entry code: ${state.entryId}. Send $50 to @Warren-Konigsmark on Venmo and include your bracket name and email in the memo.`;
         showToast("Entry submitted");
       } catch (error) {
         console.warn(error);

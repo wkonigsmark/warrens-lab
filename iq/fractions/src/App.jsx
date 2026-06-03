@@ -4,6 +4,7 @@ import Lesson from './components/Lesson'
 import Lesson2 from './components/Lesson2'
 import Lesson3 from './components/Lesson3'
 import Lesson4 from './components/Lesson4'
+import Lesson5 from './components/Lesson5'
 import QuizMode from './components/quiz/QuizMode'
 import WorksheetMode from './components/worksheet/WorksheetMode'
 import PlayMode from './components/play/PlayMode'
@@ -39,7 +40,7 @@ export default function App() {
           ))}
         </div>
 
-        {mode === 'learn' && <LearnMode />}
+        {mode === 'learn' && <LearnMode onGoToMode={setMode} />}
         {mode === 'play' && <PlayMode />}
         {mode === 'quiz' && <QuizMode />}
         {mode === 'worksheet' && <WorksheetMode />}
@@ -54,18 +55,23 @@ const LESSONS = [
   { id: 2, label: 'Lesson 2 · Equal fractions & adding', Cmp: Lesson2 },
   { id: 3, label: 'Lesson 3 · Adding different bottoms', Cmp: Lesson3 },
   { id: 4, label: 'Lesson 4 · Fraction of a number', Cmp: Lesson4 },
+  { id: 5, label: 'Lesson 5 · Improper & mixed numbers', Cmp: Lesson5 },
 ]
 
-function LearnMode() {
+function LearnMode({ onGoToMode }) {
   const [lesson, setLesson] = useState(1)
   const Active = LESSONS.find((l) => l.id === lesson).Cmp
+
+  const pickLesson = (id) => { setLesson(id); window.scrollTo({ top: 0 }) }
+  const goToMode = (m) => { onGoToMode(m); window.scrollTo({ top: 0 }) }
+
   return (
     <div>
       <div className="flex flex-wrap justify-center gap-2 mb-2">
         {LESSONS.map((l) => (
           <button
             key={l.id}
-            onClick={() => { setLesson(l.id); window.scrollTo({ top: 0 }) }}
+            onClick={() => pickLesson(l.id)}
             className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
               lesson === l.id ? 'bg-white shadow text-amber-600' : 'bg-white/50 text-gray-500 hover:bg-white/80'
             }`}
@@ -75,6 +81,36 @@ function LearnMode() {
         ))}
       </div>
       <Active />
+      <LessonFooter lessonId={lesson} onPickLesson={pickLesson} onGoToMode={goToMode} />
+    </div>
+  )
+}
+
+// "What next?" footer shown at the bottom of every lesson: continue to the next
+// lesson (if there is one), or jump straight into Play / Quiz / Worksheets.
+function LessonFooter({ lessonId, onPickLesson, onGoToMode }) {
+  const next = LESSONS.find((l) => l.id === lessonId + 1)
+  return (
+    <div className="max-w-2xl mx-auto mt-2 mb-14 bg-white rounded-2xl shadow-lg p-6 text-center">
+      <h3 className="text-lg font-black text-gray-800 mb-4">What next? 🎯</h3>
+
+      {next && (
+        <button
+          onClick={() => onPickLesson(next.id)}
+          className="w-full mb-5 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold py-3.5 rounded-xl hover:shadow-lg transition-shadow"
+        >
+          Next → {next.label}
+        </button>
+      )}
+
+      <p className="text-sm text-gray-400 mb-3">
+        {next ? 'Or practice what you learned:' : "🏆 You've finished the lessons! Time to practice:"}
+      </p>
+      <div className="grid grid-cols-3 gap-2">
+        <button onClick={() => onGoToMode('play')} className="bg-pink-50 text-pink-600 font-bold py-3 rounded-xl hover:bg-pink-100 transition-colors">🧭 Play</button>
+        <button onClick={() => onGoToMode('quiz')} className="bg-green-50 text-green-600 font-bold py-3 rounded-xl hover:bg-green-100 transition-colors">📚 Quiz</button>
+        <button onClick={() => onGoToMode('worksheet')} className="bg-indigo-50 text-indigo-600 font-bold py-3 rounded-xl hover:bg-indigo-100 transition-colors">🖨 Worksheets</button>
+      </div>
     </div>
   )
 }

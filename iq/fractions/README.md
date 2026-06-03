@@ -62,11 +62,14 @@ A vertical sequence of `<Scene>`s that fade in as you scroll. The arc, deliberat
 
 ---
 
-### The three lessons
-1. **What is a fraction?** — whole pie → cut into 4 → 1/4 → counting up → bigger bottom = smaller piece → read a fraction → not-just-pies (bar)
+### The lessons
+1. **What is a fraction?** — whole pie → cut into 4 → 1/4 → **two ways to write it (stacked ↔ slash)** + quick reps → counting up → bigger bottom = smaller piece → read a fraction → not-just-pies (bar)
 2. **Equal fractions & adding** — equivalent fractions (1/2 = 2/4 = 4/8) → add & subtract with the same bottom number
 3. **Adding different bottoms** — make the pieces match using equal fractions, then add the tops (1/2 + 1/3 → 3/6 + 2/6 = 5/6); intuition-first, no formal LCD drilling
 4. **Fraction of a number** — split a group of things into equal groups (bottom number) and take some (top number): 1/3 of 12 = 4, 2/3 of 12 = 8
+5. **Improper & mixed numbers** — fractions past one whole; 5/4 fills a pie and spills into the next = 1¼; convert both directions
+
+Every lesson ends with a **"What next?"** footer — continue to the next lesson, or jump to Play / Quiz / Worksheets.
 
 ### Quiz levels (all regenerate every play)
 1. **Name the Fraction** — read a shaded pie, pick the fraction (multiple choice)

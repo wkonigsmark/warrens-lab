@@ -38,7 +38,13 @@ Same shell as the rest of the family (top bar) — **all four are live**:
 
 ---
 
-## The Learn lesson (current build)
+## The Learn lessons (current build)
+
+Learn now holds **multiple scroll-down lessons**, picked from pills at the top; each one ends
+with a **"What next?"** footer (continue to the next lesson, or jump into Play / Quiz /
+Worksheets). Same family pattern as Ants & Fractions.
+
+### Lesson 1 · What is an exponent?
 
 A vertical sequence of `<Scene>`s that fade in as you scroll. The arc, deliberately slow,
 and leaning on what the child already knows (multiplication):
@@ -64,6 +70,34 @@ and leaning on what the child already knows (multiplication):
 19. **The mystery of exponent 0:** count *down* the staircase (÷ base each step) → anything⁰ = 1
 20. Celebrate + a peek at what's next
 
+### Lesson 2 · Cubes & 3-D
+
+The gentle next step — exponent 2 made a *square*, so exponent 3 makes a *cube*. Just one more
+dimension, still whole numbers, still picture-first (uses the new `Cube3D` isometric visual):
+
+1. From squares to cubes — the flat 3² square gains depth → a 3³ cube
+2. Two cubed — 2³ = 2×2×2 = an 8-block cube
+3. Why we say **"cubed"** — exponent 3 builds a cube, like exponent 2 builds a square
+4. Counting the blocks — 3³ = 3 layers of a 3×3 square = 27
+5. **Try it:** read a power off a cube (`ReadCubePrompt`, 3 guided steps)
+6. The cube numbers: 1³, 2³, 3³, 4³ = 1, 8, 27, 64
+7. Cubes grow faster than squares (4² = 16 vs 4³ = 64)
+8. Celebrate — squared = a square (flat), cubed = a cube (solid)
+
+### Lesson 3 · Negative exponents
+
+Picks up where Lesson 1's exponent-0 staircase ended and keeps walking *down* below zero
+(genuinely the hardest topic — sequenced last on purpose):
+
+1. Going below zero — recap the descending staircase (each step ÷ base)
+2. One step below: 2⁰ = 1 → 2⁻¹ = ½
+3. Smaller and smaller: ½, ¼, ⅛ … shrinks toward 0 but never reaches it
+4. The rule: a negative exponent means **"1 over"** the power (2⁻³ = 1/2³ = 1/8)
+5. **Try it:** flip a negative power into a fraction (`FlipPowerPrompt`, 2 guided steps)
+6. Powers of 10 the tiny way: 10⁻¹ = 0.1, 10⁻² = 0.01 … (decimals / place value)
+7. **Try it:** a second flip (base 3)
+8. Celebrate — the whole staircase: positive = big, 0 = 1, negative = tiny
+
 ### Design principles
 - **Picture first, words tiny.** Every concept has a concrete visual before any symbol.
 - **Build on what they know.** Exponents are framed as "fast multiplying," the way
@@ -78,23 +112,28 @@ and leaning on what the child already knows (multiplication):
 
 ```
 src/
-  App.jsx                         # shell: 4-mode bar (no-print), renders the active mode
+  App.jsx                         # shell: 4-mode bar (no-print) + LearnMode (lesson pills + "What next?" footer)
   index.css
   components/
-    Banner.jsx                    # CSS hero (PNG banner asset still TODO)
+    Banner.jsx                    # full-color <img> hero (no-print)
+    Lesson.jsx                    # 📖 Lesson 1 — what is an exponent (+ product/quotient rules, exp 0)
+    Lesson2.jsx                   # 📖 Lesson 2 — cubes & 3-D
+    Lesson3.jsx                   # 📖 Lesson 3 — negative exponents
     DotArray.jsx                  # ⭐ reusable rows×cols grid of squares — makes n² literally a square
+    Cube3D.jsx                    # ⭐ isometric n×n×n cube of blocks — makes n³ literally a cube
     PowerLabel.jsx                # big base + raised exponent; optional captions / expand / value
     GrowthChain.jsx               # the doubling staircase (powers grow FAST)
     Scene.jsx                     # scroll-into-view section wrapper
-    Lesson.jsx                    # 📖 Learn — composes all the scroll-down scenes
     Playground.jsx                # 🧭 Play — base/exponent steppers + live square/cube/staircase
-    Quiz.jsx                      # 📚 Quiz — 5 leveled generators, scoring, guided feedback
+    Quiz.jsx                      # 📚 Quiz — 7 leveled generators, scoring, guided feedback
     Worksheets.jsx                # 🖨 Worksheets — topic picker + branded printable sheet
     prompts/
       ExpandPrompt.jsx            # build a power by using the base N times
       ReadPowerPrompt.jsx         # count to read a power off a square
       ProductRulePrompt.jsx       # discover "same base → add exponents" by counting
       QuotientRulePrompt.jsx      # discover "same base → subtract exponents" by canceling
+      ReadCubePrompt.jsx          # read a power off a 3-D cube (Lesson 2)
+      FlipPowerPrompt.jsx         # discover "negative exponent = 1 over the power" (Lesson 3)
   lib/
     worksheets.js                 # worksheet topic generators (8) + difficulty ranges
 public/
@@ -102,7 +141,7 @@ public/
   text_banner_ants_exponents.png  # b&w wordmark (brands the printed worksheets)
 ```
 
-`DotArray`, `PowerLabel`, and `GrowthChain` are pure/presentational and reused everywhere —
+`DotArray`, `Cube3D`, `PowerLabel`, and `GrowthChain` are pure/presentational and reused everywhere —
 add a scene to `Lesson.jsx` and lean on them.
 
 ---
