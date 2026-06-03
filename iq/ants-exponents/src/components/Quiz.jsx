@@ -120,8 +120,13 @@ const LEVELS = [
     name: 'Multiply powers',
     make() {
       const b = rint(2, 5)
-      const x = rint(1, 4)
-      const y = rint(1, 4)
+      let x, y
+      // Skip combos where x+y === x×y (only 2,2) so the tempting "multiply the
+      // exponents" wrong answer is always distinct from the correct sum.
+      do {
+        x = rint(1, 4)
+        y = rint(1, 4)
+      } while (x + y === x * y)
       const ans = x + y
       return {
         prompt: (
@@ -130,9 +135,11 @@ const LEVELS = [
           </Big>
         ),
         sub: 'same base → add the exponents',
+        // x×y is the classic mistake (multiplying instead of adding) — list it
+        // first so it always survives into the four choices.
         choices: choices(ans, [x * y, x, y, ans + 1]),
         answer: ans,
-        explain: `Same base, so ADD the exponents: ${x} + ${y} = ${ans}. So ${b}${sup(x)} × ${b}${sup(y)} = ${b}${sup(ans)}.`,
+        explain: `Same base, so ADD the exponents: ${x} + ${y} = ${ans} (don't multiply them!). So ${b}${sup(x)} × ${b}${sup(y)} = ${b}${sup(ans)}.`,
       }
     },
   },
@@ -143,6 +150,11 @@ const LEVELS = [
       const x = rint(3, 6)
       const y = rint(1, x - 1) // keep the result positive
       const ans = x - y
+      // x+y (added instead of subtracted) is the #1 trap — always shown.
+      // The "divided the exponents" mistake is only a tidy distractor when it's
+      // a whole number that isn't already the answer, so add it conditionally.
+      const dists = [x + y, x, y, ans + 1]
+      if (x % y === 0 && x / y !== ans) dists.splice(1, 0, x / y)
       return {
         prompt: (
           <Big>
@@ -150,9 +162,9 @@ const LEVELS = [
           </Big>
         ),
         sub: 'same base → subtract the exponents',
-        choices: choices(ans, [x, y, x + y, Math.max(1, Math.round(x / y))]),
+        choices: choices(ans, dists),
         answer: ans,
-        explain: `Same base, so SUBTRACT the exponents: ${x} − ${y} = ${ans}. So ${b}${sup(x)} ÷ ${b}${sup(y)} = ${b}${sup(ans)}.`,
+        explain: `Same base, so SUBTRACT the exponents: ${x} − ${y} = ${ans} (don't add them!). So ${b}${sup(x)} ÷ ${b}${sup(y)} = ${b}${sup(ans)}.`,
       }
     },
   },

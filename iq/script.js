@@ -5,14 +5,32 @@
  * Also handles collapsible category menus.
  */
 
-// Setup collapsible categories
+// Setup collapsible categories (accordion behavior — only one open at a time)
 function setupCategoryCollapsibles() {
     document.querySelectorAll('.category-header[data-target]').forEach(header => {
         header.addEventListener('click', function() {
             const body = document.getElementById(header.dataset.target);
             if (!body) return;
-            body.hidden = !body.hidden;
-            header.classList.toggle('open', !body.hidden);
+
+            // If this category is already open, just close it
+            if (!body.hidden) {
+                body.hidden = true;
+                header.classList.remove('open');
+                return;
+            }
+
+            // Close all other categories
+            document.querySelectorAll('.category-header[data-target]').forEach(otherHeader => {
+                const otherBody = document.getElementById(otherHeader.dataset.target);
+                if (otherBody && !otherBody.hidden) {
+                    otherBody.hidden = true;
+                    otherHeader.classList.remove('open');
+                }
+            });
+
+            // Open this category
+            body.hidden = false;
+            header.classList.add('open');
         });
     });
 }
