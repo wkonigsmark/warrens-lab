@@ -4,6 +4,7 @@ import PowerLabel from './PowerLabel'
 import GrowthChain from './GrowthChain'
 import ExpandPrompt from './prompts/ExpandPrompt'
 import ReadPowerPrompt from './prompts/ReadPowerPrompt'
+import ProductRulePrompt from './prompts/ProductRulePrompt'
 
 // The scroll-down lesson. Each <Scene> is one gentle step: read a little, look
 // at a picture, sometimes try something. It builds from "an exponent is fast
@@ -178,19 +179,76 @@ export default function Lesson() {
         <ReadPowerPrompt n={5} />
       </Scene>
 
-      {/* 12 — celebrate */}
+      {/* 12 — exponent rule: intro + proof */}
+      <Scene>
+        <Words title="A neat rule: multiplying powers">
+          Watch what happens when we multiply two powers that have the <strong>same base</strong>.
+          Let's write them both out the long way and see.
+        </Words>
+        <div className="text-center text-2xl sm:text-3xl font-black text-gray-700 space-y-3">
+          <p>
+            2<sup className="text-violet-600">2</sup> × 2<sup className="text-violet-600">3</sup>
+          </p>
+          <p className="text-xl sm:text-2xl text-gray-500">
+            = (<span className="text-indigo-600">2 × 2</span>) × (<span className="text-indigo-600">2 × 2 × 2</span>)
+          </p>
+          <p className="text-xl sm:text-2xl text-gray-500">
+            = <span className="text-indigo-600">2 × 2 × 2 × 2 × 2</span> = 2<sup className="text-violet-600">5</sup>
+          </p>
+        </div>
+        <p className="text-center text-gray-500 mt-7 text-lg">
+          All the 2s just joined into one line! Two 2s plus three 2s makes <strong>five</strong> 2s.
+        </p>
+      </Scene>
+
+      {/* 13 — the rule stated, with a second example */}
+      <Scene>
+        <Words title="Same base? Add the exponents ⚡">
+          So you don't have to write them all out. When the base is the same, you can just{' '}
+          <strong>add the little numbers</strong> (the exponents).
+        </Words>
+        <p className="text-center text-3xl sm:text-4xl font-black text-gray-700">
+          2<sup className="text-violet-600">2</sup> × 2<sup className="text-violet-600">3</sup> ={' '}
+          2<sup className="text-violet-600">2+3</sup> = 2<sup className="text-violet-600">5</sup>
+        </p>
+        <p className="text-center text-gray-500 mt-6 text-lg">
+          It works for any base. For example, 10<sup>2</sup> × 10<sup>3</sup> = 10<sup>5</sup> —
+          that's 100 × 1,000 = 100,000. ✅
+        </p>
+      </Scene>
+
+      {/* 14 — try the rule */}
+      <Scene>
+        <ProductRulePrompt base={3} a={2} c={2} />
+      </Scene>
+
+      {/* 15 — the one catch */}
+      <Scene>
+        <Words title="One catch!">
+          This shortcut only works when the <strong>bases match</strong>. If the bases are
+          different — like 2<sup>3</sup> × 3<sup>2</sup> — you can't just add the exponents, because
+          you're multiplying different things.
+        </Words>
+        <p className="text-center text-xl sm:text-2xl font-black text-gray-600">
+          2<sup className="text-violet-600">2</sup> × 2<sup className="text-violet-600">3</sup> = 2<sup className="text-violet-600">5</sup> <span className="text-green-600">✓</span>
+          <span className="mx-4 text-gray-300">but</span>
+          2<sup className="text-violet-600">2</sup> × 3<sup className="text-violet-600">3</sup> ≠ <span className="text-gray-400">anything</span><sup className="text-violet-600">5</sup> <span className="text-rose-500">✗</span>
+        </p>
+      </Scene>
+
+      {/* 16 — celebrate */}
       <Scene>
         <Words title="You did it! 🎉">
           An exponent is just <strong>fast multiplying</strong>. The <strong>base</strong> is the
-          number you multiply, and the <strong>exponent</strong> is how many times you use it.
-          That's the big secret!
+          number you multiply, the <strong>exponent</strong> is how many times you use it — and when
+          two powers share a base, you just <strong>add the exponents</strong>. Big secrets unlocked!
         </Words>
         <div className="flex justify-center">
           <PowerLabel base={4} exp={2} expand value big />
         </div>
         <p className="text-center text-gray-400 mt-6">
-          More to come: cubes (the exponent 3, a real 3-D cube!), the powers-of-10 place-value
-          link, and the exponent rules for multiplying powers together.
+          More to come: cubes in real 3-D, dividing powers (subtract the exponents), and the
+          mystery of what happens at exponent 0.
         </p>
       </Scene>
     </div>

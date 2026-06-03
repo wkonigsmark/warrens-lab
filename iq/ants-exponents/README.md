@@ -25,15 +25,16 @@ client-side and deterministic.
 
 ---
 
-## The three modes
+## The four modes
 
-Same shell as the rest of the family (top bar) — **all three are live**:
+Same shell as the rest of the family (top bar) — **all four are live**:
 
 | Mode | Status | What it is |
 |------|--------|------------|
 | 📖 **Learn** | ✅ built | A scroll-down lesson: each step reads in very simple words, shows a clear visual, and sometimes asks the child to try something with guided feedback. |
 | 🧭 **Play** | ✅ built | A drag-to-explore playground: step the base and exponent and watch the power, the answer, a matching picture (square at ², stacked "layers" cube at ³), the growth staircase, and a "fast multiplying vs. plain multiplying" surprise all update live. |
 | 📚 **Quiz** | ✅ built | 15 leveled questions (5 levels × 3) with a progress bar, running score, and guided feedback that shows the worked-out reason on a miss. Fresh questions each run. |
+| 🖨 **Worksheets** | ✅ built | Printable practice — pick a topic (Squares, Powers, Powers of 10, Write-as-a-Power, Expand & Solve, Mixed), choose a difficulty (Easier / Standard / Harder), get a single branded page with an optional answer key. "↻ New Sheet" regenerates; the toolbar + nav hide on print. |
 
 ---
 
@@ -53,7 +54,11 @@ and leaning on what the child already knows (multiplication):
 9. The wow: exponents grow **FAST** — the powers-of-2 doubling staircase + paper-folding
 10. A neat trick: powers of 10 = count the zeros
 11. **Try it:** read a bigger square (5²)
-12. Celebrate + a peek at what's next
+12. **Exponent rule:** multiplying powers — write 2² × 2³ out the long way and watch the 2s join up
+13. The rule stated: **same base → add the exponents** (2² × 2³ = 2²⁺³ = 2⁵)
+14. **Try it:** discover the rule by counting (`ProductRulePrompt`)
+15. **One catch:** the shortcut only works when the bases match
+16. Celebrate + a peek at what's next
 
 ### Design principles
 - **Picture first, words tiny.** Every concept has a concrete visual before any symbol.
@@ -69,7 +74,7 @@ and leaning on what the child already knows (multiplication):
 
 ```
 src/
-  App.jsx                         # shell: 3-mode bar, renders the Lesson
+  App.jsx                         # shell: 4-mode bar (no-print), renders the active mode
   index.css
   components/
     Banner.jsx                    # CSS hero (PNG banner asset still TODO)
@@ -80,9 +85,16 @@ src/
     Lesson.jsx                    # 📖 Learn — composes all the scroll-down scenes
     Playground.jsx                # 🧭 Play — base/exponent steppers + live square/cube/staircase
     Quiz.jsx                      # 📚 Quiz — 5 leveled generators, scoring, guided feedback
+    Worksheets.jsx                # 🖨 Worksheets — topic picker + branded printable sheet
     prompts/
       ExpandPrompt.jsx            # build a power by using the base N times
       ReadPowerPrompt.jsx         # count to read a power off a square
+      ProductRulePrompt.jsx       # discover "same base → add exponents" by counting
+  lib/
+    worksheets.js                 # worksheet topic generators + difficulty ranges
+public/
+  banner-ants-exponents.png       # full-color hero (used by Banner.jsx)
+  text_banner_ants_exponents.png  # b&w wordmark (brands the printed worksheets)
 ```
 
 `DotArray`, `PowerLabel`, and `GrowthChain` are pure/presentational and reused everywhere —
@@ -92,10 +104,7 @@ add a scene to `Lesson.jsx` and lean on them.
 
 ## Roadmap
 
-- **More Learn scenes:** exponent *rules* (multiplying powers adds the exponents), and the
-  powers-of-10 ↔ place-value link drawn out.
-- **🖨 Worksheets:** printable practice, reusing the Ants & Angles worksheet engine.
-- **Quiz extras:** a "negative space" level (what does exponent 1 / a base of 1 do?) and
-  optional harder levels (4-digit powers, base 10 up to 10⁹).
-- **Banner art:** paint `banner-ants-exponents.png` for `/public` and swap `Banner.jsx`
-  to an `<img>` to match the family exactly.
+- **More Learn scenes:** dividing powers (subtract the exponents) and the mystery of exponent 0.
+- **Quiz extras:** a product-rule level (2² × 2³ = ?) and optional harder levels
+  (4-digit powers, base 10 up to 10⁹).
+- **Worksheet extras:** a product-rule / cubes-only sheet.

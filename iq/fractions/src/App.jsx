@@ -3,6 +3,7 @@ import Banner from './components/Banner'
 import Lesson from './components/Lesson'
 import Lesson2 from './components/Lesson2'
 import Lesson3 from './components/Lesson3'
+import Lesson4 from './components/Lesson4'
 import QuizMode from './components/quiz/QuizMode'
 import WorksheetMode from './components/worksheet/WorksheetMode'
 import PlayMode from './components/play/PlayMode'
@@ -52,6 +53,7 @@ const LESSONS = [
   { id: 1, label: 'Lesson 1 · What is a fraction?', Cmp: Lesson },
   { id: 2, label: 'Lesson 2 · Equal fractions & adding', Cmp: Lesson2 },
   { id: 3, label: 'Lesson 3 · Adding different bottoms', Cmp: Lesson3 },
+  { id: 4, label: 'Lesson 4 · Fraction of a number', Cmp: Lesson4 },
 ]
 
 function LearnMode() {

@@ -1,4 +1,5 @@
 import Pie from './Pie'
+import GroupSet from './GroupSet'
 import { range } from '../lib/fractionQuiz'
 
 // Renders the picture for a quiz/worksheet question from its `fig` data.
@@ -13,6 +14,13 @@ export default function FractionFigure({ fig, bw = false, size }) {
   // A blank pie with the cuts drawn — for "color the fraction" worksheets.
   if (fig.kind === 'pieBlank') {
     return <Pie parts={fig.parts} shaded={[]} size={size || 200} bw={bw} />
+  }
+
+  // A group of objects split into equal groups (a fraction of a number).
+  // `cell` is the per-object size — small for print (bw), bigger on screen.
+  // (Deliberately ignores the pie-oriented `size` prop, which is a whole-SVG size.)
+  if (fig.kind === 'group') {
+    return <GroupSet total={fig.total} den={fig.den} selected={range(fig.num)} cell={bw ? 19 : 34} bw={bw} />
   }
 
   if (fig.kind === 'compare') {

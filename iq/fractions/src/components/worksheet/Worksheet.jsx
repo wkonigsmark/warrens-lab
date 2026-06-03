@@ -33,10 +33,12 @@ export default function Worksheet({ topic, mode, onBack }) {
         <div className="worksheet-page bg-white shadow-lg p-8 print:shadow-none" style={{ width: '8.5in', maxWidth: '100%', minHeight: '11in' }}>
           {/* Header */}
           <div className="border-b-2 border-gray-800 pb-2 mb-4 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-2xl font-black">🥧 Ants &amp; Fractions</p>
-              <p className="text-base font-bold">{topic.title}</p>
-              <p className="text-sm text-gray-600">{topic.instructions}</p>
+            <div className="flex items-end gap-3 flex-shrink-0">
+              <img src="/text_banner_fractions.png" alt="Fractions" className="h-14 w-auto object-contain" />
+              <div>
+                <p className="text-base font-bold whitespace-nowrap">{topic.title}</p>
+                <p className="text-sm text-gray-600">{topic.instructions}</p>
+              </div>
             </div>
             <div className="text-sm flex flex-col gap-2 items-end flex-shrink-0 whitespace-nowrap">
               <span>Name: <Blank width="6em" /></span>
@@ -83,6 +85,21 @@ function Problem({ q, idx }) {
         <div className="scale-90 origin-left"><FractionFigure fig={q.fig} bw size={84} /></div>
         <span className="font-bold whitespace-nowrap ml-1" style={{ fontSize: '16pt' }}>{q.prompt}</span>
         <Blank width="0.9in" />
+      </div>
+    )
+  }
+
+  if (q.layout === 'group') {
+    return (
+      <div className="worksheet-problem border border-gray-400 rounded p-3">
+        <div className="flex items-baseline gap-2 mb-2">
+          {n}
+          <span className="font-bold" style={{ fontSize: '14pt' }}>{q.prompt}</span>
+        </div>
+        <div className="flex justify-center my-2">
+          <FractionFigure fig={q.fig} bw />
+        </div>
+        <p style={{ fontSize: '12pt' }}>Answer: <Blank width="1.1in" /></p>
       </div>
     )
   }

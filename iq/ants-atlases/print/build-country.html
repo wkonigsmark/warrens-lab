@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ants & Atlases · Build Your Own Country</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="build-country.css?v=1">
+</head>
+<body>
+
+    <!-- Screen-only controls (hidden when printing) -->
+    <div class="page-controls">
+        <a href="../index.html" class="back-link">← Back to Ants & Atlases</a>
+        <div class="ctrl-title">Build Your Own Country</div>
+        <button class="print-btn" onclick="window.print()">🖨 Print worksheet</button>
+    </div>
+
+    <article class="worksheet" id="worksheet">
+
+        <header class="ws-header">
+            <div class="ws-tag">Ants & Atlases · Be the Founder!</div>
+            <h1>Build Your Own Country</h1>
+            <p class="ws-sub">You just discovered a brand-new country! Invent everything about it.</p>
+        </header>
+
+        <!-- Country name banner -->
+        <section class="name-banner">
+            <span class="banner-icon">🚩</span>
+            <div class="banner-fill">
+                <span class="banner-label">My country is called…</span>
+                <span class="banner-line"></span>
+            </div>
+        </section>
+
+        <!-- Flag + Map draw boxes -->
+        <section class="draw-row">
+            <div class="draw-box">
+                <div class="draw-tag">Design your flag 🎨</div>
+                <div class="draw-area"></div>
+            </div>
+            <div class="draw-box">
+                <div class="draw-tag">Draw your country's shape 🗺️ <span class="draw-hint">(mark your capital with a ⭐)</span></div>
+                <div class="draw-area"></div>
+            </div>
+        </section>
+
+        <!-- Quick facts -->
+        <section class="facts-row">
+            <div class="fact-cell">
+                <span class="fact-label">Capital city</span>
+                <span class="fact-line"></span>
+            </div>
+            <div class="fact-cell">
+                <span class="fact-label">Which continent?</span>
+                <span class="fact-line"></span>
+            </div>
+            <div class="fact-cell">
+                <span class="fact-label">How many people live there?</span>
+                <span class="fact-line"></span>
+            </div>
+        </section>
+
+        <!-- National animal + food draw boxes -->
+        <section class="draw-row">
+            <div class="draw-box short">
+                <div class="draw-tag">National animal 🐾</div>
+                <div class="draw-area"></div>
+                <div class="draw-namer"><span class="fact-label">Its name:</span><span class="fact-line"></span></div>
+            </div>
+            <div class="draw-box short">
+                <div class="draw-tag">National food 🍲</div>
+                <div class="draw-area"></div>
+                <div class="draw-namer"><span class="fact-label">Its name:</span><span class="fact-line"></span></div>
+            </div>
+        </section>
+
+        <!-- Language + climate -->
+        <section class="lang-climate">
+            <div class="lang-cell">
+                <span class="fact-label">How do you say "hello" here?</span>
+                <span class="fact-line big"></span>
+            </div>
+            <div class="climate-cell">
+                <span class="fact-label">What's the weather like?</span>
+                <div class="climate-chips">
+                    <span class="climate-chip">☀️ Sunny</span>
+                    <span class="climate-chip">🌧️ Rainy</span>
+                    <span class="climate-chip">❄️ Snowy</span>
+                    <span class="climate-chip">🏖️ Beachy</span>
+                    <span class="climate-chip">🏔️ Mountainous</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Amazing fact -->
+        <section class="amazing">
+            <span class="fact-label">✨ One amazing thing about my country:</span>
+            <span class="write-line"></span>
+            <span class="write-line"></span>
+        </section>
+
+        <footer class="ws-footer">
+            <div class="ws-meta">
+                <span>Founder: <span class="meta-line"></span></span>
+                <span>Date: <span class="meta-line"></span></span>
+            </div>
+            <div class="ws-credit">Ants & Atlases</div>
+        </footer>
+
+    </article>
+
+</body>
+</html>

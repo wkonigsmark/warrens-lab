@@ -21,3 +21,36 @@ svg {
   -webkit-user-select: none;
   user-select: none;
 }
+
+/* ---- Printing the worksheets ---- */
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 0.5in;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  body,
+  html {
+    background: white !important;
+    color: black !important;
+  }
+
+  .worksheet-page {
+    background: white !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 0 !important;
+  }
+
+  .worksheet-problem {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}

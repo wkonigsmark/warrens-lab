@@ -3,13 +3,16 @@ import Banner from './components/Banner'
 import Lesson from './components/Lesson'
 import Playground from './components/Playground'
 import Quiz from './components/Quiz'
+import Worksheets from './components/Worksheets'
 
-// Same three-mode shell as the rest of the Ants & ___ family — all three live:
-// Learn (scroll-down lesson), Play (drag-to-explore), Quiz (leveled questions).
+// Same shell as the rest of the Ants & ___ family — all four modes live:
+// Learn (scroll-down lesson), Play (drag-to-explore), Quiz (leveled questions),
+// Worksheets (printable practice).
 const MODES = [
   { id: 'learn', label: '📖 Learn', grad: 'from-indigo-500 to-violet-600', ready: true },
   { id: 'play', label: '🧭 Play', grad: 'from-sky-500 to-cyan-600', ready: true },
   { id: 'quiz', label: '📚 Quiz', grad: 'from-green-500 to-emerald-600', ready: true },
+  { id: 'worksheets', label: '🖨 Worksheets', grad: 'from-rose-500 to-pink-600', ready: true },
 ]
 
 export default function App() {
@@ -20,7 +23,7 @@ export default function App() {
       <Banner />
 
       <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="mb-2 flex flex-wrap justify-center gap-2">
+        <div className="no-print mb-2 flex flex-wrap justify-center gap-2">
           {MODES.map((m) => (
             <button
               key={m.id}
@@ -38,6 +41,7 @@ export default function App() {
         {mode === 'learn' && <Lesson />}
         {mode === 'play' && <Playground />}
         {mode === 'quiz' && <Quiz />}
+        {mode === 'worksheets' && <Worksheets />}
       </div>
     </div>
   )
