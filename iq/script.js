@@ -2,7 +2,20 @@
  * IQ Hub — script.js
  * Minimal. Just a subtle cursor glow that follows the mouse
  * to give the white canvas a sense of life without being showy.
+ * Also handles collapsible category menus.
  */
+
+// Setup collapsible categories
+function setupCategoryCollapsibles() {
+    document.querySelectorAll('.category-header[data-target]').forEach(header => {
+        header.addEventListener('click', function() {
+            const body = document.getElementById(header.dataset.target);
+            if (!body) return;
+            body.hidden = !body.hidden;
+            header.classList.toggle('open', !body.hidden);
+        });
+    });
+}
 
 document.addEventListener('mousemove', (e) => {
     // Subtle warm glow that follows cursor — barely perceptible, like light through mist
@@ -29,4 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         z-index: 0;
     `;
     document.body.appendChild(glow);
+
+    // Setup collapsible categories
+    setupCategoryCollapsibles();
 });

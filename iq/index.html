@@ -23,80 +23,116 @@
             <p id="tagline">An educational toolkit</p>
         </header>
 
-        <!-- Tool Grid -->
+        <!-- Tool Grid with Categories -->
         <nav id="toolkit" aria-label="Educational tools">
 
-            <a href="ants-apples/index.html" class="tool-card" style="--delay: 0.65s">
-                <div class="tool-icon">🍎</div>
-                <div class="tool-info">
-                    <h3>Ants & Apples</h3>
-                    <p>Arithmetic adventures for young minds</p>
+            <!-- Math Category -->
+            <button class="category-header" data-target="math-category">
+                <div class="category-icon">📐</div>
+                <div class="category-info">
+                    <h3>Math</h3>
+                    <p>Arithmetic, Algebra, Geometry</p>
                 </div>
-                <div class="tool-arrow">→</div>
-            </a>
+                <span class="category-caret">▾</span>
+            </button>
+            <div id="math-category" class="category-tools" hidden>
+                <a href="ants-apples/index.html" class="tool-card" style="--delay: 0.65s">
+                    <div class="tool-icon">🍎</div>
+                    <div class="tool-info">
+                        <h3>Ants & Apples</h3>
+                        <p>Arithmetic adventures for young minds</p>
+                    </div>
+                    <div class="tool-arrow">→</div>
+                </a>
+                <a href="ants-algebra/index.html" class="tool-card journey-link" style="--delay: 0.8s">
+                    <div class="tool-icon">🧮</div>
+                    <div class="tool-info">
+                        <h3>Ants & Algebra</h3>
+                        <p>Solve for x — algebra for growing minds</p>
+                    </div>
+                    <div class="tool-arrow">→</div>
+                </a>
+                <a href="ants-angles/index.html" class="tool-card" style="--delay: 0.95s">
+                    <div class="tool-icon">📐</div>
+                    <div class="tool-info">
+                        <h3>Ants & Angles</h3>
+                        <p>Geometry Playground</p>
+                    </div>
+                    <div class="tool-arrow">→</div>
+                </a>
+                <a href="ants-exponents/index.html" class="tool-card" style="--delay: 1.1s">
+                    <div class="tool-icon">⬆️</div>
+                    <div class="tool-info">
+                        <h3>Ants & Exponents</h3>
+                        <p>The Fast Way to Multiply</p>
+                    </div>
+                    <div class="tool-arrow">→</div>
+                </a>
+                <a href="fractions/index.html" class="tool-card" style="--delay: 1.25s">
+                    <div class="tool-icon">🥧</div>
+                    <div class="tool-info">
+                        <h3>Ants & Fractions</h3>
+                        <p>Pieces of a Whole</p>
+                    </div>
+                    <div class="tool-arrow">→</div>
+                </a>
+            </div>
 
-            <a href="lexicon/index.html" class="tool-card" style="--delay: 0.8s">
-                <div class="tool-icon">📖</div>
-                <div class="tool-info">
-                    <h3>Lexicon</h3>
-                    <p>Language roots and word origins</p>
+            <!-- Reading/Writing Category -->
+            <button class="category-header" data-target="reading-category">
+                <div class="category-icon">📚</div>
+                <div class="category-info">
+                    <h3>Reading/Writing</h3>
+                    <p>Vocabulary, Spelling, Speed Reading</p>
                 </div>
-                <div class="tool-arrow">→</div>
-            </a>
+                <span class="category-caret">▾</span>
+            </button>
+            <div id="reading-category" class="category-tools" hidden>
+                <a href="lexicon/index.html" class="tool-card" style="--delay: 0.65s">
+                    <div class="tool-icon">📖</div>
+                    <div class="tool-info">
+                        <h3>Lexicon</h3>
+                        <p>Language roots and word origins</p>
+                    </div>
+                    <div class="tool-arrow">→</div>
+                </a>
+                <a href="stencil/index.html" class="tool-card" style="--delay: 0.8s">
+                    <div class="tool-icon">✏️</div>
+                    <div class="tool-info">
+                        <h3>Stencil</h3>
+                        <p>Vocabulary, spelling & word games</p>
+                    </div>
+                    <div class="tool-arrow">→</div>
+                </a>
+                <a href="word-ninja/index.html" class="tool-card journey-link" style="--delay: 0.95s">
+                    <div class="tool-icon">🥷</div>
+                    <div class="tool-info">
+                        <h3>Word Ninja</h3>
+                        <p>Speed sight word challenges</p>
+                    </div>
+                    <div class="tool-arrow">→</div>
+                </a>
+            </div>
 
-            <a href="stencil/index.html" class="tool-card" style="--delay: 0.95s">
-                <div class="tool-icon">✏️</div>
-                <div class="tool-info">
-                    <h3>Stencil</h3>
-                    <p>Vocabulary, spelling & word games</p>
+            <!-- History Category -->
+            <button class="category-header" data-target="history-category">
+                <div class="category-icon">🕰️</div>
+                <div class="category-info">
+                    <h3>History</h3>
+                    <p>Timeline & Historical Events</p>
                 </div>
-                <div class="tool-arrow">→</div>
-            </a>
-
-            <a href="chronos/index.html" class="tool-card" style="--delay: 1.1s">
-                <div class="tool-icon">🕰️</div>
-                <div class="tool-info">
-                    <h3>Chronos</h3>
-                    <p>Descend through the history of time</p>
-                </div>
-                <div class="tool-arrow">→</div>
-            </a>
-
-            <a href="word-ninja/index.html" class="tool-card journey-link" style="--delay: 1.25s">
-                <div class="tool-icon">🥷</div>
-                <div class="tool-info">
-                    <h3>Word Ninja</h3>
-                    <p>Speed sight word challenges</p>
-                </div>
-                <div class="tool-arrow">→</div>
-            </a>
-
-            <a href="ants-algebra/index.html" class="tool-card journey-link" style="--delay: 1.4s">
-                <div class="tool-icon">🧮</div>
-                <div class="tool-info">
-                    <h3>Ants & Algebra</h3>
-                    <p>Solve for x — algebra for growing minds</p>
-                </div>
-                <div class="tool-arrow">→</div>
-            </a>
-
-            <a href="https://ants-axes.vercel.app/" target="_blank" rel="noopener" class="tool-card journey-link" style="--delay: 1.55s">
-                <div class="tool-icon">📊</div>
-                <div class="tool-info">
-                    <h3>Ants & Axes</h3>
-                    <p>Charting & Data Visualization</p>
-                </div>
-                <div class="tool-arrow">→</div>
-            </a>
-
-            <a href="ants-atlases/index.html" class="tool-card beta-highlight" style="--delay: 1.7s">
-                <div class="tool-icon">🗺️</div>
-                <div class="tool-info">
-                    <h3>Ants & Atlases <span class="beta-badge">BETA</span></h3>
-                    <p>Geographic exploration and world mapping</p>
-                </div>
-                <div class="tool-arrow">→</div>
-            </a>
+                <span class="category-caret">▾</span>
+            </button>
+            <div id="history-category" class="category-tools" hidden>
+                <a href="chronos/index.html" class="tool-card" style="--delay: 0.65s">
+                    <div class="tool-icon">🕰️</div>
+                    <div class="tool-info">
+                        <h3>Chronos</h3>
+                        <p>Descend through the history of time</p>
+                    </div>
+                    <div class="tool-arrow">→</div>
+                </a>
+            </div>
 
         </nav>
 
