@@ -23,7 +23,7 @@ export default function QuizMode({ onExit }) {
             <h1 className="text-3xl font-bold text-gray-800 mb-2">Choose Mode</h1>
             <p className="text-gray-600 mb-8">
               {selectedLevel === 'mp'
-                ? 'Midpoint'
+                ? 'Distance & Midpoint'
                 : `Level ${selectedLevel === '2a' ? '2A' : selectedLevel === '2b' ? '2B' : selectedLevel}`}
             </p>
 
@@ -174,7 +174,7 @@ export default function QuizMode({ onExit }) {
             </div>
           </motion.button>
 
-          {/* Midpoint - Enabled */}
+          {/* Distance & Midpoint - Enabled */}
           <motion.button
             onClick={() => setSelectedLevel('mp')}
             className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-shadow border-2 border-green-500"
@@ -185,11 +185,11 @@ export default function QuizMode({ onExit }) {
           >
             <div className="text-left">
               <div className="flex items-center justify-between mb-2">
-                <h2 className="text-2xl font-bold text-gray-800">Midpoint</h2>
+                <h2 className="text-2xl font-bold text-gray-800">Distance &amp; Midpoint</h2>
                 <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">Available</span>
               </div>
-              <p className="text-gray-600">Find the Midpoint of Two Points</p>
-              <p className="text-sm text-gray-500 mt-2">Use M = ((x₁+x₂)/2, (y₁+y₂)/2) to find the midpoint between two points.</p>
+              <p className="text-gray-600">Find the Distance and Midpoint of Two Points</p>
+              <p className="text-sm text-gray-500 mt-2">Use d = √(∆x² + ∆y²) for distance and M = ((x₁+x₂)/2, (y₁+y₂)/2) for the midpoint.</p>
             </div>
           </motion.button>
         </div>

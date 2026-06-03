@@ -19,6 +19,7 @@ import StoryModal from './components/StoryModal'
 import { piStory } from './components/stories/PiStory'
 import { degreesStory } from './components/stories/DegreesStory'
 import { pythagorasStory } from './components/stories/PythagorasStory'
+import ExploreNav from './components/ExploreNav'
 import Glossary from './components/Glossary'
 
 // Topic tabs — Angles & Triangles are built; the rest are the roadmap
@@ -46,6 +47,12 @@ export default function App() {
   const [story, setStory] = useState(null) // active StoryModal content, or null
   const [storyFocus, setStoryFocus] = useState(null) // { mode, target } set when navigating from a story
   const [wholeOnly, setWholeOnly] = useState(true) // universal: only whole-number answers
+
+  // Navigate from an Explore panel directly to the matching quiz or worksheet.
+  const goTo = (targetMode, target) => {
+    setMode(targetMode)
+    setStoryFocus({ mode: targetMode, target })
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-indigo-100">
@@ -103,7 +110,8 @@ export default function App() {
                   📜 Why 360°?
                 </button>
               </div>
-              <p className="text-sm text-gray-400 mb-4">Drag the handle — or tap anywhere — to open and close the angle.</p>
+              <p className="text-sm text-gray-400">Drag the handle — or tap anywhere — to open and close the angle.</p>
+              <ExploreNav onQuiz={() => goTo('quiz', 'Angles')} onWorksheet={() => goTo('worksheet', 'partner')} />
               <AngleStage angle={angle} onAngleChange={setAngle} snap={snap} />
             </div>
             <div className="lg:col-span-1 flex flex-col gap-4">
@@ -125,7 +133,8 @@ export default function App() {
                   📜 Pythagoras Story
                 </button>
               </div>
-              <p className="text-sm text-gray-400 mb-4">Drag any corner (A, B, C) — watch the three angles always add up to 180°.</p>
+              <p className="text-sm text-gray-400">Drag any corner (A, B, C) — watch the three angles always add up to 180°.</p>
+              <ExploreNav onQuiz={() => goTo('quiz', 'Right Triangles')} onWorksheet={() => goTo('worksheet', 'pyth-hyp')} />
               <TriangleStage vertices={triangle} onChange={setTriangle} snap={triSnap} showSquares={triSquares} />
             </div>
             <div className="lg:col-span-1 flex flex-col gap-4">
@@ -139,7 +148,8 @@ export default function App() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
               <h2 className="text-xl font-bold text-gray-800 mb-1">Polygon Explorer</h2>
-              <p className="text-sm text-gray-400 mb-4">Drag the corners to reshape. Turn on unit squares to <em>see</em> the area.</p>
+              <p className="text-sm text-gray-400">Drag the corners to reshape. Turn on unit squares to <em>see</em> the area.</p>
+              <ExploreNav onQuiz={() => goTo('quiz', 'Angles')} onWorksheet={() => goTo('worksheet', 'mixed')} />
               <PolygonStage vertices={polygon} onChange={setPolygon} snap={polySnap} showSquares={polySquares} />
             </div>
             <div className="lg:col-span-1 flex flex-col gap-4">
@@ -167,7 +177,8 @@ export default function App() {
                   📜 The Story of π
                 </button>
               </div>
-              <p className="text-sm text-gray-400 mb-4">Drag the edge to change the radius — watch how π links the circle together.</p>
+              <p className="text-sm text-gray-400">Drag the edge to change the radius — watch how π links the circle together.</p>
+              <ExploreNav onQuiz={() => goTo('quiz', 'Circles')} onWorksheet={() => goTo('worksheet', 'radius-diameter')} />
               <CircleStage radius={radius} onRadiusChange={setRadius} snap />
               {unroll && <UnrollStrip radius={radius} />}
             </div>

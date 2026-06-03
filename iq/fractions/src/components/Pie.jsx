@@ -15,7 +15,11 @@ export default function Pie({
   shaded = [],
   onToggle,
   size = 240,
+  bw = false, // black-&-white for printed worksheets
 }) {
+  const filled = bw ? '#cbd5e1' : FILLED
+  const empty = bw ? '#ffffff' : EMPTY
+  const ink = bw ? '#000000' : CRUST
   const r = size / 2 - 8
   const c = size / 2
   const shadedSet = new Set(shaded)
@@ -30,7 +34,9 @@ export default function Pie({
         cx={c}
         cy={c}
         r={r}
-        fill={shadedSet.has(0) ? FILLED : EMPTY}
+        fill={shadedSet.has(0) ? filled : empty}
+        stroke={ink}
+        strokeWidth="2.5"
         onClick={interactive ? () => onToggle(0) : undefined}
         style={interactive ? { cursor: 'pointer' } : undefined}
       />,
@@ -47,8 +53,8 @@ export default function Pie({
         <path
           key={i}
           d={d}
-          fill={shadedSet.has(i) ? FILLED : EMPTY}
-          stroke={CRUST}
+          fill={shadedSet.has(i) ? filled : empty}
+          stroke={ink}
           strokeWidth="2.5"
           strokeLinejoin="round"
           onClick={interactive ? () => onToggle(i) : undefined}
@@ -61,11 +67,11 @@ export default function Pie({
 
   return (
     <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} className="max-w-full h-auto">
-      {/* plate behind the pie */}
-      <circle cx={c} cy={c} r={r + 6} fill="#fef3c7" />
+      {/* plate behind the pie (color only) */}
+      {!bw && <circle cx={c} cy={c} r={r + 6} fill="#fef3c7" />}
       {pieces}
       {/* outer crust on top so it never gets covered by a slice fill */}
-      <circle cx={c} cy={c} r={r} fill="none" stroke={CRUST} strokeWidth="3.5" />
+      <circle cx={c} cy={c} r={r} fill="none" stroke={ink} strokeWidth="3.5" />
     </svg>
   )
 }
