@@ -116,9 +116,49 @@ const LEVELS = [
       }
     },
   },
+  {
+    name: 'Multiply powers',
+    make() {
+      const b = rint(2, 5)
+      const x = rint(1, 4)
+      const y = rint(1, 4)
+      const ans = x + y
+      return {
+        prompt: (
+          <Big>
+            {b}{sup(x)} × {b}{sup(y)} = {b}<span className="text-violet-600">▢</span>
+          </Big>
+        ),
+        sub: 'same base → add the exponents',
+        choices: choices(ans, [x * y, x, y, ans + 1]),
+        answer: ans,
+        explain: `Same base, so ADD the exponents: ${x} + ${y} = ${ans}. So ${b}${sup(x)} × ${b}${sup(y)} = ${b}${sup(ans)}.`,
+      }
+    },
+  },
+  {
+    name: 'Divide powers',
+    make() {
+      const b = rint(2, 5)
+      const x = rint(3, 6)
+      const y = rint(1, x - 1) // keep the result positive
+      const ans = x - y
+      return {
+        prompt: (
+          <Big>
+            {b}{sup(x)} ÷ {b}{sup(y)} = {b}<span className="text-violet-600">▢</span>
+          </Big>
+        ),
+        sub: 'same base → subtract the exponents',
+        choices: choices(ans, [x, y, x + y, Math.max(1, Math.round(x / y))]),
+        answer: ans,
+        explain: `Same base, so SUBTRACT the exponents: ${x} − ${y} = ${ans}. So ${b}${sup(x)} ÷ ${b}${sup(y)} = ${b}${sup(ans)}.`,
+      }
+    },
+  },
 ]
 
-const PER_LEVEL = 3
+const PER_LEVEL = 2
 
 function buildQuiz() {
   const qs = []

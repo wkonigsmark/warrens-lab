@@ -5,6 +5,7 @@ import GrowthChain from './GrowthChain'
 import ExpandPrompt from './prompts/ExpandPrompt'
 import ReadPowerPrompt from './prompts/ReadPowerPrompt'
 import ProductRulePrompt from './prompts/ProductRulePrompt'
+import QuotientRulePrompt from './prompts/QuotientRulePrompt'
 
 // The scroll-down lesson. Each <Scene> is one gentle step: read a little, look
 // at a picture, sometimes try something. It builds from "an exponent is fast
@@ -236,19 +237,83 @@ export default function Lesson() {
         </p>
       </Scene>
 
-      {/* 16 — celebrate */}
+      {/* 16 — dividing powers: intro + proof (cancel) */}
+      <Scene>
+        <Words title="The other way: dividing powers">
+          If multiplying powers makes us <strong>add</strong>, what does <strong>dividing</strong> do?
+          Let's write 2<sup className="text-violet-600">5</sup> ÷ 2<sup className="text-violet-600">2</sup> out
+          the long way and cross off the matching 2s.
+        </Words>
+        <div className="text-center text-xl sm:text-2xl font-black text-gray-700">
+          <div className="inline-flex flex-col items-center">
+            <span>
+              <span className="text-indigo-300 line-through">2 × 2 ×</span>{' '}
+              <span className="text-indigo-600">2 × 2 × 2</span>
+            </span>
+            <span className="block w-full h-0.5 bg-gray-700 my-1.5" />
+            <span className="text-indigo-300 line-through">2 × 2</span>
+          </div>
+          <p className="mt-4 text-gray-500">
+            = <span className="text-indigo-600">2 × 2 × 2</span> = 2<sup className="text-violet-600">3</sup>
+          </p>
+        </div>
+        <p className="text-center text-gray-500 mt-6 text-lg">
+          Two 2s on the bottom cancel two 2s on top. <strong>Five minus two leaves three.</strong>
+        </p>
+      </Scene>
+
+      {/* 17 — the rule stated */}
+      <Scene>
+        <Words title="Same base? Subtract the exponents ⚡">
+          So when you divide powers with the same base, just <strong>subtract</strong> the little
+          numbers.
+        </Words>
+        <p className="text-center text-3xl sm:text-4xl font-black text-gray-700">
+          2<sup className="text-violet-600">5</sup> ÷ 2<sup className="text-violet-600">2</sup> ={' '}
+          2<sup className="text-violet-600">5−2</sup> = 2<sup className="text-violet-600">3</sup>
+        </p>
+        <p className="text-center text-gray-500 mt-6 text-lg">
+          Multiply → add the exponents. Divide → subtract them. Two secrets that go together. 🤝
+        </p>
+      </Scene>
+
+      {/* 18 — try the quotient rule */}
+      <Scene>
+        <QuotientRulePrompt base={2} a={4} c={1} />
+      </Scene>
+
+      {/* 19 — the exponent-0 mystery */}
+      <Scene>
+        <Words title="The mystery of the zero 🕵️">
+          Here's a brain-tickler. Go <em>down</em> the staircase — each step divides by the base.
+          What happens at <strong>zero</strong>?
+        </Words>
+        <div className="text-center text-2xl sm:text-3xl font-black text-gray-700 space-y-1">
+          <p>2<sup className="text-violet-600">3</sup> = 8</p>
+          <p>2<sup className="text-violet-600">2</sup> = 4 <span className="text-gray-300 text-lg">(÷2)</span></p>
+          <p>2<sup className="text-violet-600">1</sup> = 2 <span className="text-gray-300 text-lg">(÷2)</span></p>
+          <p>2<sup className="text-violet-600">0</sup> = <span className="text-emerald-600">1</span> <span className="text-gray-300 text-lg">(÷2)</span></p>
+        </div>
+        <p className="text-center text-gray-500 mt-6 text-lg">
+          Keep dividing by 2 and you land on <strong>1</strong>. It's true for every base:{' '}
+          <strong>anything to the power 0 is 1.</strong> 🤯
+        </p>
+      </Scene>
+
+      {/* 20 — celebrate */}
       <Scene>
         <Words title="You did it! 🎉">
-          An exponent is just <strong>fast multiplying</strong>. The <strong>base</strong> is the
-          number you multiply, the <strong>exponent</strong> is how many times you use it — and when
-          two powers share a base, you just <strong>add the exponents</strong>. Big secrets unlocked!
+          An exponent is <strong>fast multiplying</strong>: the <strong>base</strong> is what you
+          multiply, the <strong>exponent</strong> is how many times. Same base? <strong>Add</strong>{' '}
+          when multiplying, <strong>subtract</strong> when dividing — and the power of{' '}
+          <strong>0</strong> is always <strong>1</strong>. You unlocked them all! 🔓
         </Words>
         <div className="flex justify-center">
           <PowerLabel base={4} exp={2} expand value big />
         </div>
         <p className="text-center text-gray-400 mt-6">
-          More to come: cubes in real 3-D, dividing powers (subtract the exponents), and the
-          mystery of what happens at exponent 0.
+          More to come: cubes in real 3-D, negative exponents (powers smaller than 1), and a
+          story about an ant colony that doubles every single day.
         </p>
       </Scene>
     </div>

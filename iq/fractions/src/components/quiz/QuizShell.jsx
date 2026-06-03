@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import FractionFigure from '../FractionFigure'
+import Frac from '../Frac'
 import { isCorrect } from '../../lib/fractionQuiz'
 
 const COUNT = 5
@@ -115,7 +116,7 @@ export default function QuizShell({ level, onBack }) {
                   else style = 'bg-gray-100 text-gray-400'
                 }
                 return (
-                  <button key={c} disabled={phase === 'feedback'} onClick={() => submit(c)} className={`py-3 rounded-xl font-black text-xl transition-colors ${style}`}>{c}</button>
+                  <button key={c} disabled={phase === 'feedback'} onClick={() => submit(c)} className={`py-3 rounded-xl font-black text-2xl transition-colors flex justify-center ${style}`}><Frac value={c} /></button>
                 )
               })}
             </div>

@@ -33,13 +33,113 @@
     </div>
 
     <nav id="main-nav" class="nav-menu">
-      <a href="iq/index.html" class="nav-item">
-        <div class="item-icon">🧠</div>
-        <div class="item-info">
-          <h3 class="item-title">IQ</h3>
-          <p class="item-subtext">Academy & Brain Training</p>
+      <!-- IQ Categories Container -->
+      <div class="iq-categories">
+        <!-- Category 1: Math -->
+        <button class="category-header" data-target="math-tools">
+          <div class="header-content">
+            <div class="category-icon">📐</div>
+            <div class="category-info">
+              <h3 class="category-title">Math</h3>
+              <p class="category-subtext">Arithmetic, Algebra, Geometry</p>
+            </div>
+          </div>
+          <span class="caret">▾</span>
+        </button>
+        <div id="math-tools" class="category-body" hidden>
+          <a href="iq/ants-apples/index.html" class="tool-item">
+            <div class="tool-icon">🍎</div>
+            <div class="tool-info">
+              <h4>Ants & Apples</h4>
+              <p>Arithmetic adventures for young minds</p>
+            </div>
+          </a>
+          <a href="iq/ants-algebra/index.html" class="tool-item">
+            <div class="tool-icon">🧮</div>
+            <div class="tool-info">
+              <h4>Ants & Algebra</h4>
+              <p>Solve for x — algebra for growing minds</p>
+            </div>
+          </a>
+          <a href="iq/ants-angles/index.html" class="tool-item">
+            <div class="tool-icon">📐</div>
+            <div class="tool-info">
+              <h4>Ants & Angles</h4>
+              <p>Geometry Playground</p>
+            </div>
+          </a>
+          <a href="iq/ants-exponents/index.html" class="tool-item">
+            <div class="tool-icon">⬆️</div>
+            <div class="tool-info">
+              <h4>Ants & Exponents</h4>
+              <p>The Fast Way to Multiply</p>
+            </div>
+          </a>
+          <a href="iq/fractions/index.html" class="tool-item">
+            <div class="tool-icon">🥧</div>
+            <div class="tool-info">
+              <h4>Ants & Fractions</h4>
+              <p>Pieces of a Whole</p>
+            </div>
+          </a>
         </div>
-      </a>
+
+        <!-- Category 2: Reading/Writing -->
+        <button class="category-header" data-target="reading-tools">
+          <div class="header-content">
+            <div class="category-icon">📚</div>
+            <div class="category-info">
+              <h3 class="category-title">Reading/Writing</h3>
+              <p class="category-subtext">Vocabulary, Spelling, Speed Reading</p>
+            </div>
+          </div>
+          <span class="caret">▾</span>
+        </button>
+        <div id="reading-tools" class="category-body" hidden>
+          <a href="iq/lexicon/index.html" class="tool-item">
+            <div class="tool-icon">📖</div>
+            <div class="tool-info">
+              <h4>Lexicon</h4>
+              <p>Language roots and word origins</p>
+            </div>
+          </a>
+          <a href="iq/stencil/index.html" class="tool-item">
+            <div class="tool-icon">✏️</div>
+            <div class="tool-info">
+              <h4>Stencil</h4>
+              <p>Vocabulary, spelling & word games</p>
+            </div>
+          </a>
+          <a href="iq/word-ninja/index.html" class="tool-item">
+            <div class="tool-icon">🥷</div>
+            <div class="tool-info">
+              <h4>Word Ninja</h4>
+              <p>Speed sight word challenges</p>
+            </div>
+          </a>
+        </div>
+
+        <!-- Category 3: History -->
+        <button class="category-header" data-target="history-tools">
+          <div class="header-content">
+            <div class="category-icon">🕰️</div>
+            <div class="category-info">
+              <h3 class="category-title">History</h3>
+              <p class="category-subtext">Timeline & Historical Events</p>
+            </div>
+          </div>
+          <span class="caret">▾</span>
+        </button>
+        <div id="history-tools" class="category-body" hidden>
+          <a href="iq/chronos/index.html" class="tool-item">
+            <div class="tool-icon">🕰️</div>
+            <div class="tool-info">
+              <h4>Chronos</h4>
+              <p>Descend through the history of time</p>
+            </div>
+          </a>
+        </div>
+      </div>
       <a href="games/index.html" class="nav-item">
         <div class="item-icon">🎓</div>
         <div class="item-info">
@@ -135,16 +235,30 @@
         showMenu();
       }
 
+      function setupCategoryCollapsibles() {
+        document.querySelectorAll('.category-header[data-target]').forEach(header => {
+          header.addEventListener('click', () => {
+            const body = document.getElementById(header.dataset.target);
+            if (!body) return;
+            body.hidden = !body.hidden;
+            header.classList.toggle('open', !body.hidden);
+          });
+        });
+      }
+
       function showMenu() {
         navEl.classList.add("visible");
 
-        // Cascade reveal pattern
-        const items = navEl.querySelectorAll(".nav-item");
-        items.forEach((item, index) => {
+        // Cascade reveal pattern for nav items and category headers
+        const revealItems = navEl.querySelectorAll(".nav-item, .category-header");
+        revealItems.forEach((item, index) => {
           setTimeout(() => {
             item.classList.add("revealed");
           }, index * 120); // Sequence delay
         });
+
+        // Setup category collapsibles
+        setupCategoryCollapsibles();
 
         hintEl.style.opacity = "0";
         setTimeout(() => hintEl.remove(), 400);

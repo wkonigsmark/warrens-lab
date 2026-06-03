@@ -33,8 +33,8 @@ Same shell as the rest of the family (top bar) — **all four are live**:
 |------|--------|------------|
 | 📖 **Learn** | ✅ built | A scroll-down lesson: each step reads in very simple words, shows a clear visual, and sometimes asks the child to try something with guided feedback. |
 | 🧭 **Play** | ✅ built | A drag-to-explore playground: step the base and exponent and watch the power, the answer, a matching picture (square at ², stacked "layers" cube at ³), the growth staircase, and a "fast multiplying vs. plain multiplying" surprise all update live. |
-| 📚 **Quiz** | ✅ built | 15 leveled questions (5 levels × 3) with a progress bar, running score, and guided feedback that shows the worked-out reason on a miss. Fresh questions each run. |
-| 🖨 **Worksheets** | ✅ built | Printable practice — pick a topic (Squares, Powers, Powers of 10, Write-as-a-Power, Expand & Solve, Mixed), choose a difficulty (Easier / Standard / Harder), get a single branded page with an optional answer key. "↻ New Sheet" regenerates; the toolbar + nav hide on print. |
+| 📚 **Quiz** | ✅ built | 14 leveled questions (7 levels × 2) with a progress bar, running score, and guided feedback that shows the worked-out reason on a miss. Levels: Squares, Small powers, Write-as-a-power, Powers of 10, Which-is-bigger, **Multiply powers**, **Divide powers**. Fresh questions each run. |
+| 🖨 **Worksheets** | ✅ built | Printable practice — pick a topic (Squares, Powers, Powers of 10, Write-as-a-Power, Expand & Solve, **Multiply Powers**, **Divide Powers**, Mixed), choose a difficulty (Easier / Standard / Harder), get a single branded page with an optional answer key. "↻ New Sheet" regenerates; the toolbar + nav hide on print. |
 
 ---
 
@@ -58,7 +58,11 @@ and leaning on what the child already knows (multiplication):
 13. The rule stated: **same base → add the exponents** (2² × 2³ = 2²⁺³ = 2⁵)
 14. **Try it:** discover the rule by counting (`ProductRulePrompt`)
 15. **One catch:** the shortcut only works when the bases match
-16. Celebrate + a peek at what's next
+16. **Dividing powers:** write 2⁵ ÷ 2² as a fraction and cancel the matching 2s
+17. The rule stated: **same base → subtract the exponents** (2⁵ ÷ 2² = 2⁵⁻² = 2³)
+18. **Try it:** discover the quotient rule by canceling (`QuotientRulePrompt`)
+19. **The mystery of exponent 0:** count *down* the staircase (÷ base each step) → anything⁰ = 1
+20. Celebrate + a peek at what's next
 
 ### Design principles
 - **Picture first, words tiny.** Every concept has a concrete visual before any symbol.
@@ -90,8 +94,9 @@ src/
       ExpandPrompt.jsx            # build a power by using the base N times
       ReadPowerPrompt.jsx         # count to read a power off a square
       ProductRulePrompt.jsx       # discover "same base → add exponents" by counting
+      QuotientRulePrompt.jsx      # discover "same base → subtract exponents" by canceling
   lib/
-    worksheets.js                 # worksheet topic generators + difficulty ranges
+    worksheets.js                 # worksheet topic generators (8) + difficulty ranges
 public/
   banner-ants-exponents.png       # full-color hero (used by Banner.jsx)
   text_banner_ants_exponents.png  # b&w wordmark (brands the printed worksheets)
@@ -104,7 +109,5 @@ add a scene to `Lesson.jsx` and lean on them.
 
 ## Roadmap
 
-- **More Learn scenes:** dividing powers (subtract the exponents) and the mystery of exponent 0.
-- **Quiz extras:** a product-rule level (2² × 2³ = ?) and optional harder levels
-  (4-digit powers, base 10 up to 10⁹).
-- **Worksheet extras:** a product-rule / cubes-only sheet.
+See **[ROADMAP.md](./ROADMAP.md)** for the full plan. Next up: negative exponents (powers
+smaller than 1), a real 3-D cube in Play, and a story mode (an ant colony that doubles daily).

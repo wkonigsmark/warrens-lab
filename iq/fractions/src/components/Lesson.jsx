@@ -4,6 +4,7 @@ import Bar from './Bar'
 import FractionLabel from './FractionLabel'
 import ShadePrompt from './prompts/ShadePrompt'
 import BuildFractionPrompt from './prompts/BuildFractionPrompt'
+import NotationPrompt from './prompts/NotationPrompt'
 
 // The scroll-down lesson. Each <Scene> is one gentle step: read a little, look
 // at a picture, sometimes try something. It builds from "a whole pie" up to
@@ -74,6 +75,34 @@ export default function Lesson() {
           The <span className="font-bold text-amber-800">bottom</span> number is how many slices the
           whole pie was cut into.
         </p>
+      </Scene>
+
+      {/* 4b — two ways to write the same fraction (stacked vs slash) */}
+      <Scene>
+        <Words title="Two ways to write it">
+          We can write a fraction <strong>stacked</strong> — top number over bottom number — or on{' '}
+          <strong>one line</strong> with a slash. Both mean exactly the same thing!
+        </Words>
+        <div className="flex flex-wrap items-center justify-center gap-6">
+          <FractionLabel num={1} den={4} big />
+          <span className="text-4xl font-black text-gray-300">means the same as</span>
+          <span className="text-7xl font-black">
+            <span className="text-amber-500">1</span>
+            <span className="text-gray-400">/</span>
+            <span className="text-amber-800">4</span>
+          </span>
+        </div>
+        <p className="text-center text-gray-500 mt-7 text-lg">
+          The slash <strong>/</strong> is just the line, tilted. The number <em>before</em> it is the{' '}
+          <span className="font-bold text-amber-500">top</span> (how many we have); the number{' '}
+          <em>after</em> it is the <span className="font-bold text-amber-800">bottom</span> (pieces in the
+          whole). You'll see the slash form in the games and worksheets.
+        </p>
+      </Scene>
+
+      {/* 4c — quick reps on the two notations */}
+      <Scene>
+        <NotationPrompt />
       </Scene>
 
       {/* 5 — first do-it prompt */}
