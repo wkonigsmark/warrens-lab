@@ -16,6 +16,10 @@ eggs/
 .eggs/
 lib/
 lib64/
+# ...but keep the JS source lib/ folders in the Vite apps (these are app source,
+# not Python build output). Without this, the Python `lib/` rule above silently
+# drops src/lib/ and breaks the Vercel build ("Could not resolve ../../lib/...").
+!iq/*/src/lib/
 parts/
 sdist/
 var/
