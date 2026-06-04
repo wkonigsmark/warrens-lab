@@ -199,6 +199,13 @@ function genFractionOf() {
   }
 }
 
+// Simplify helper (reuse from fractions.js logic inline to avoid circular deps)
+const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b))
+const simplify = (n, d) => {
+  const g = gcd(n, d)
+  return { num: n / g, den: d / g }
+}
+
 // Level 9 — Improper & Mixed Numbers (both directions) ---------------------
 const mixedStr = (w, r, d) => `${w} ${r}/${d}`
 
@@ -242,6 +249,29 @@ function genImproperMixed() {
   }
 }
 
+// Level 10 — Multiplying Fractions (area model visual) ----------------------
+function genMultiply() {
+  const num1 = randInt(1, 3)
+  const den1 = pick([2, 3, 4])
+  const num2 = randInt(1, 3)
+  const den2 = pick([2, 3, 4])
+
+  const prodNum = num1 * num2
+  const prodDen = den1 * den2
+  const { num: simpNum, den: simpDen } = simplify(prodNum, prodDen)
+
+  return {
+    type: 'fraction',
+    fig: { kind: 'area', num1, den1, num2, den2 },
+    promptTitle: `Multiply: ${num1}/${den1} × ${num2}/${den2}`,
+    promptText: 'Multiply the top numbers. Multiply the bottom numbers. Simplify if you can.',
+    hint: `${num1} × ${num2} = ${prodNum}  and  ${den1} × ${den2} = ${prodDen}`,
+    answer: { num: simpNum, den: simpDen },
+    formatAnswer: `${simpNum}/${simpDen}`,
+    formatGuess: (g) => (g && g.num !== '' ? `${g.num}/${g.den}` : '—'),
+  }
+}
+
 // Level registry -----------------------------------------------------------
 export const LEVELS = [
   { id: 1, title: 'Name the Fraction', blurb: 'Look at the shaded pie and pick the fraction.', accent: '#22c55e', generate: genName },
@@ -253,6 +283,7 @@ export const LEVELS = [
   { id: 7, title: 'Subtract Fractions', blurb: 'Subtract two fractions with the same bottom number.', accent: '#14b8a6', generate: genSubtractSame },
   { id: 8, title: 'Fraction of a Number', blurb: 'Split a group into equal parts and take some.', accent: '#f97316', generate: genFractionOf },
   { id: 9, title: 'Improper & Mixed Numbers', blurb: 'Swap between improper fractions and mixed numbers.', accent: '#6366f1', generate: genImproperMixed },
+  { id: 10, title: 'Multiplying Fractions', blurb: 'Multiply two fractions and simplify the answer.', accent: '#d946ef', generate: genMultiply },
 ]
 
 export function getLevel(id) {
@@ -270,6 +301,7 @@ export const GENERATORS = {
   subtractSame: genSubtractSame,
   fractionOf: genFractionOf,
   improperMixed: genImproperMixed,
+  multiply: genMultiply,
 }
 
 // Grade a single answer for any level type.

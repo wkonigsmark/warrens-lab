@@ -1,6 +1,7 @@
 import Pie from './Pie'
 import GroupSet from './GroupSet'
 import PieStack from './PieStack'
+import AreaModel from './AreaModel'
 import { range } from '../lib/fractionQuiz'
 
 // Renders the picture for a quiz/worksheet question from its `fig` data.
@@ -52,6 +53,11 @@ export default function FractionFigure({ fig, bw = false, size }) {
         <span className={`text-3xl font-black ${bw ? 'text-black' : 'text-gray-300'}`}>?</span>
       </div>
     )
+  }
+
+  // Multiplying fractions: a grid showing the overlap of two fractions.
+  if (fig.kind === 'area') {
+    return <AreaModel num1={fig.num1} den1={fig.den1} num2={fig.num2} den2={fig.den2} bw={bw} />
   }
 
   return null

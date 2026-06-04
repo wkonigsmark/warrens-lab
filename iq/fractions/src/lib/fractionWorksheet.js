@@ -138,6 +138,33 @@ function genEquivalent() {
   }
 }
 
+// Simplify helper (same as quiz)
+const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b))
+const simplify = (n, d) => {
+  const g = gcd(n, d)
+  return { num: n / g, den: d / g }
+}
+
+// "Multiply two fractions" — area model visual with simplification.
+function genMultiply() {
+  const num1 = randInt(1, 3)
+  const den1 = pick([2, 3, 4])
+  const num2 = randInt(1, 3)
+  const den2 = pick([2, 3, 4])
+
+  const prodNum = num1 * num2
+  const prodDen = den1 * den2
+  const { num: simpNum, den: simpDen } = simplify(prodNum, prodDen)
+
+  return {
+    layout: 'figcard',
+    fig: { kind: 'area', num1, den1, num2, den2 },
+    prompt: `${num1}/${den1} × ${num2}/${den2} = `,
+    answer: `${simpNum}/${simpDen}`,
+    formatAnswer: `${simpNum}/${simpDen}`,
+  }
+}
+
 export const TOPICS = [
   {
     id: 'name',
@@ -204,12 +231,20 @@ export const TOPICS = [
     gen: genMixedNumber,
   },
   {
+    id: 'multiply',
+    title: 'Multiplying Fractions',
+    instructions: 'Multiply two fractions. Use the area model to help. Simplify your answer.',
+    rules: 'Multiply tops together. Multiply bottoms together. Then reduce to simplest form.',
+    count: 6,
+    gen: genMultiply,
+  },
+  {
     id: 'mixed',
     title: 'Mixed Review',
     instructions: 'A mix of every kind of fraction problem.',
-    rules: 'Name it · color it · fill the whole · add or subtract · fraction of a number.',
+    rules: 'Name it · color it · fill the whole · add or subtract · multiply · fraction of a number.',
     count: 6,
-    gen: () => pick([genName, genShade, genFillWhole, genAdd, genSubtract, genEquivalent, genFractionOf, genMixedNumber])(),
+    gen: () => pick([genName, genShade, genFillWhole, genAdd, genSubtract, genEquivalent, genFractionOf, genMixedNumber, genMultiply])(),
   },
 ]
 
