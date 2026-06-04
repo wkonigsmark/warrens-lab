@@ -309,7 +309,11 @@ export function isCorrect(q, value) {
   if (q.type === 'choice') return value === q.answer
   if (q.type === 'number') return Number(value) === q.answer
   if (q.type === 'fraction') {
-    return Number(value?.num) === q.answer.num && Number(value?.den) === q.answer.den
+    // Compare simplified forms — so 2/6 and 1/3 are both correct.
+    // This rewards the counting process (2/6) and doesn't trap kids before simplification is taught.
+    const guessSimp = simplify(Number(value?.num || 0), Number(value?.den || 1))
+    const answerSimp = q.answer
+    return guessSimp.num === answerSimp.num && guessSimp.den === answerSimp.den
   }
   return false
 }

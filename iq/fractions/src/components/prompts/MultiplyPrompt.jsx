@@ -63,6 +63,11 @@ export default function MultiplyPrompt({ num1, den1, num2, den2 }) {
               {reduces && <span className="text-amber-600">= <Frac num={simp.num} den={simp.den} className="text-2xl" /></span>}
               <span>🎉</span>
             </p>
+            {reduces && (
+              <p className="text-sm text-amber-700 mt-2">
+                You counted <strong>{prod}</strong> boxes out of <strong>{total}</strong> = <Frac num={prod} den={total} /> which simplifies to <Frac num={simp.num} den={simp.den} />. Both are correct!
+              </p>
+            )}
             <button onClick={restart} className="mt-3 text-sm text-gray-400 underline">try it again</button>
           </motion.div>
         )}
