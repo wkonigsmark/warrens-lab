@@ -5,6 +5,7 @@ import Lesson2 from './components/Lesson2'
 import Lesson3 from './components/Lesson3'
 import Lesson4 from './components/Lesson4'
 import Lesson5 from './components/Lesson5'
+import Lesson6 from './components/Lesson6'
 import QuizMode from './components/quiz/QuizMode'
 import WorksheetMode from './components/worksheet/WorksheetMode'
 import PlayMode from './components/play/PlayMode'
@@ -56,6 +57,7 @@ const LESSONS = [
   { id: 3, label: 'Lesson 3 · Adding different bottoms', Cmp: Lesson3 },
   { id: 4, label: 'Lesson 4 · Fraction of a number', Cmp: Lesson4 },
   { id: 5, label: 'Lesson 5 · Improper & mixed numbers', Cmp: Lesson5 },
+  { id: 6, label: 'Lesson 6 · Multiplying fractions', Cmp: Lesson6 },
 ]
 
 function LearnMode({ onGoToMode }) {

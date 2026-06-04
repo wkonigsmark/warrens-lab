@@ -1,5 +1,6 @@
 import Pie from './Pie'
 import GroupSet from './GroupSet'
+import PieStack from './PieStack'
 import { range } from '../lib/fractionQuiz'
 
 // Renders the picture for a quiz/worksheet question from its `fig` data.
@@ -21,6 +22,11 @@ export default function FractionFigure({ fig, bw = false, size }) {
   // (Deliberately ignores the pie-oriented `size` prop, which is a whole-SVG size.)
   if (fig.kind === 'group') {
     return <GroupSet total={fig.total} den={fig.den} selected={range(fig.num)} cell={bw ? 19 : 34} bw={bw} />
+  }
+
+  // An improper fraction across several pies (fill one, spill into the next).
+  if (fig.kind === 'stack') {
+    return <PieStack num={fig.num} den={fig.den} size={bw ? 66 : 104} bw={bw} />
   }
 
   if (fig.kind === 'compare') {

@@ -567,8 +567,8 @@
       <!-- Tab 1: Leaderboard Standings -->
       <div class="sim-view-panel active" id="panel-standings">
         <div class="matches-export-bar" style="display: flex; gap: 12px; margin-bottom: 16px; align-items: center; justify-content: flex-end; flex-wrap: wrap;">
-          <span style="font-size: 0.8rem; color: var(--wc-muted); font-weight: 850; margin-right: auto;">
-            🏆 Live pool standings ready for Warren's spreadsheet tracking
+          <span id="standings-source-note" style="font-size: 0.8rem; color: var(--wc-muted); font-weight: 850; margin-right: auto;">
+            🏆 Submitted entries load from the local admin server; fallback entries appear if it is offline.
           </span>
           <button class="wc-button secondary" id="copy-standings-btn" style="padding: 6px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
             📋 Copy Standings
@@ -711,6 +711,8 @@
     } from "./scoreboard-engine.js";
 
     const W_INDEX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
+    const ADMIN_API_BASE = "http://127.0.0.1:8787/api";
+    const ADMIN_PIN = "2019";
 
     // Application State
     let wIndexMap = new Map();
@@ -721,6 +723,7 @@
     // UI Selectors
     const elements = {
       syncStatus: document.getElementById("sync-status"),
+      standingsSourceNote: document.getElementById("standings-source-note"),
       tabs: document.querySelectorAll(".sim-tab-btn"),
       panels: document.querySelectorAll(".sim-view-panel"),
       leaderboardBody: document.getElementById("leaderboard-body"),
@@ -786,6 +789,135 @@
 
     function teamName(teamId) {
       return teamsById[teamId]?.name || `TBD (${teamId})`;
+    }
+
+    function setSyncStatus(message, tone = "green") {
+      const tones = {
+        green: {
+          border: "var(--wc-green)",
+          color: "var(--wc-green)",
+          background: "rgba(36, 180, 126, 0.1)",
+        },
+        gold: {
+          border: "var(--wc-gold)",
+          color: "var(--wc-gold)",
+          background: "rgba(242, 207, 107, 0.12)",
+        },
+        red: {
+          border: "var(--wc-red)",
+          color: "var(--wc-red)",
+          background: "rgba(255, 93, 93, 0.1)",
+        },
+      };
+      const selected = tones[tone] || tones.green;
+      elements.syncStatus.textContent = message;
+      elements.syncStatus.style.borderColor = selected.border;
+      elements.syncStatus.style.color = selected.color;
+      elements.syncStatus.style.background = selected.background;
+    }
+
+    function parsePayload(payload) {
+      if (!payload) return {};
+      if (typeof payload === "string") {
+        try {
+          return JSON.parse(payload);
+        } catch (error) {
+          return {};
+        }
+      }
+      return payload;
+    }
+
+    function entryKey(entry) {
+      return entry.entryCode || entry.playerName;
+    }
+
+    function convertSubmittedEntry(entry, pickRows) {
+      const payload = parsePayload(entry.payload);
+      const groupPredictions = {};
+
+      if (payload.groupPicks && typeof payload.groupPicks === "object") {
+        Object.entries(payload.groupPicks).forEach(([groupLetter, picks]) => {
+          if (Array.isArray(picks)) groupPredictions[groupLetter] = picks.filter(Boolean);
+        });
+      } else {
+        const groupedRows = pickRows
+          .filter(row => row.section === "group_order")
+          .sort((a, b) => Number(a.rank || 0) - Number(b.rank || 0));
+
+        groupedRows.forEach(row => {
+          if (!row.group_letter || !row.team_id) return;
+          groupPredictions[row.group_letter] ||= [];
+          groupPredictions[row.group_letter].push(row.team_id);
+        });
+      }
+
+      const thirdPicks = Array.isArray(payload.thirdPicks)
+        ? payload.thirdPicks.filter(Boolean)
+        : pickRows
+          .filter(row => row.section === "third_place_order")
+          .sort((a, b) => Number(a.rank || 0) - Number(b.rank || 0))
+          .map(row => row.team_id)
+          .filter(Boolean);
+
+      const totalGroupGoals = Number(payload.tiebreakers?.totalGroupGoals);
+      const isCompleteEnough = Object.keys(groupPredictions).length === 12 && thirdPicks.length >= 8;
+      if (!isCompleteEnough) return null;
+
+      return {
+        playerName: entry.bracket_name || entry.entry_code || "Unnamed Entry",
+        entryCode: entry.entry_code,
+        avatar: entry.test_entry ? "T" : (entry.paid ? "$" : "!"),
+        groupPredictions,
+        thirdPicks: thirdPicks.slice(0, 8),
+        bracketPredictions: {},
+        tiebreakers: {
+          totalGroupGoals: Number.isFinite(totalGroupGoals) ? totalGroupGoals : null,
+        },
+        paid: Boolean(entry.paid),
+        testEntry: Boolean(entry.test_entry),
+        status: entry.status || "pending_payment",
+        submittedAt: entry.submitted_at || "",
+      };
+    }
+
+    function convertSubmittedEntries({ entries = [], picks = [] }) {
+      const picksByEntry = new Map();
+      picks.forEach(row => {
+        if (!row.entry_id) return;
+        if (!picksByEntry.has(row.entry_id)) picksByEntry.set(row.entry_id, []);
+        picksByEntry.get(row.entry_id).push(row);
+      });
+
+      return entries
+        .filter(entry => !entry.voided)
+        .map(entry => convertSubmittedEntry(entry, picksByEntry.get(entry.id) || []))
+        .filter(Boolean);
+    }
+
+    async function loadPoolEntries() {
+      try {
+        const response = await fetchWithTimeout(`${ADMIN_API_BASE}/entries`, {
+          headers: { "X-Admin-Pin": ADMIN_PIN },
+        }, 2500);
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+
+        const data = await response.json();
+        const submittedEntries = convertSubmittedEntries(data);
+        if (!submittedEntries.length) {
+          throw new Error("No complete submitted entries found");
+        }
+
+        setSyncStatus(`🏆 ${submittedEntries.length} submitted entr${submittedEntries.length === 1 ? "y" : "ies"} loaded`, "green");
+        elements.standingsSourceNote.textContent = `🏆 Scoring ${submittedEntries.length} submitted entr${submittedEntries.length === 1 ? "y" : "ies"} from Supabase via the local admin server.`;
+        return submittedEntries;
+      } catch (error) {
+        console.warn("Submitted entries unavailable, using seeded scoreboard entries:", error);
+        const fallbackEntries = seedDefaultEntries(teams, wIndexMap);
+        setSyncStatus("🏆 Sandbox fallback entries active", "gold");
+        elements.standingsSourceNote.textContent = "🏆 Local admin server offline, so the scoreboard is using seeded sandbox entries.";
+        return fallbackEntries;
+      }
     }
 
     // Initialize matches array (1 to 104)
@@ -998,11 +1130,12 @@
       const standingsOutput = scoredList.map((item, index) => {
         const rank = index + 1;
         const name = item.entry.playerName;
-        newRanks[name] = rank;
+        const key = entryKey(item.entry);
+        newRanks[key] = rank;
 
         let shift = 0;
-        if (previousRanks[name]) {
-          shift = previousRanks[name] - rank; // e.g. Rank 4 -> Rank 1 is +3 shift
+        if (previousRanks[key]) {
+          shift = previousRanks[key] - rank; // e.g. Rank 4 -> Rank 1 is +3 shift
         }
 
         return {
@@ -1054,7 +1187,8 @@
         const tiebreakTitle = `Perfect groups: ${player.breakdown.perfectGroups}; third advancers: ${player.breakdown.thirdPlaceAdvancerHits}/8`;
 
         const row = document.createElement("tr");
-        row.setAttribute("data-player", player.entry.playerName);
+        const key = entryKey(player.entry);
+        row.setAttribute("data-player", key);
         row.title = tiebreakTitle;
         row.innerHTML = `
           <td><span class="rank-badge ${rankClass}">${player.rank}</span></td>
@@ -1075,7 +1209,7 @@
 
         // Click listener for Expandable prediction summary row
         row.addEventListener("click", () => {
-          const detailRowId = `details-${player.entry.playerName.replace(/\s+/g, '-')}`;
+          const detailRowId = `details-${key.replace(/[^a-z0-9_-]/gi, '-')}`;
           let detailsRow = document.getElementById(detailRowId);
           
           if (detailsRow) {
@@ -1399,13 +1533,8 @@
           wIndexMap.set(t.id, defaultVal / 100);
         });
       } finally {
-        elements.syncStatus.textContent = "🏆 Standings Sandbox Active";
-        elements.syncStatus.style.borderColor = "var(--wc-green)";
-        elements.syncStatus.style.color = "var(--wc-green)";
-        elements.syncStatus.style.background = "rgba(36, 180, 126, 0.1)";
-
         // Initialize entries & load cached sandbox matches
-        poolEntries = seedDefaultEntries(teams, wIndexMap);
+        poolEntries = await loadPoolEntries();
         
         const cachedMatches = localStorage.getItem("world_cup_sandbox_matches");
         if (cachedMatches) {

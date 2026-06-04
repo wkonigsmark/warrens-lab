@@ -68,6 +68,7 @@ A vertical sequence of `<Scene>`s that fade in as you scroll. The arc, deliberat
 3. **Adding different bottoms** — make the pieces match using equal fractions, then add the tops (1/2 + 1/3 → 3/6 + 2/6 = 5/6); intuition-first, no formal LCD drilling
 4. **Fraction of a number** — split a group of things into equal groups (bottom number) and take some (top number): 1/3 of 12 = 4, 2/3 of 12 = 8
 5. **Improper & mixed numbers** — fractions past one whole; 5/4 fills a pie and spills into the next = 1¼; convert both directions
+6. **Multiplying fractions** — × means "of"; the **area model** shows the overlap; rule falls out (multiply tops, multiply bottoms), then simplify
 
 Every lesson ends with a **"What next?"** footer — continue to the next lesson, or jump to Play / Quiz / Worksheets.
 
@@ -80,12 +81,13 @@ Every lesson ends with a **"What next?"** footer — continue to the next lesson
 6. **Equivalent Fractions** — spot the fraction showing the same amount
 7. **Subtract Fractions** — same bottom number; subtract the tops
 8. **Fraction of a Number** — split a group of objects and take some (1/3 of 12)
+9. **Improper & Mixed Numbers** — swap between improper fractions and mixed numbers (both directions)
 
 ### Worksheet topics (all regenerate every print)
 Name the Fraction · Color the Fraction (blank pies to shade) · Fill the Whole ·
 Add Fractions · Subtract Fractions · Equivalent Fractions · Fraction of a Number ·
-Mixed Review. Each prints from one randomized build; "↻ New Sheet" rerolls, and an
-optional answer key is one checkbox.
+Improper & Mixed Numbers · Mixed Review. Each prints from one randomized build;
+"↻ New Sheet" rerolls, and an optional answer key is one checkbox.
 
 ---
 

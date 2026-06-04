@@ -25,7 +25,8 @@ Guiding rules (don't break these):
 | Simplest form / reducing | Play (live hint) |
 | Number-line representation | Play › Number Line |
 | **Fraction of a number / a set** (1/3 of 12 = 4) | **Lesson 4, Play › Fraction of a Group, Quiz 8, Worksheet** |
-| **Improper fractions & mixed numbers** (5/4 = 1¼) | **Lesson 5** (PieStack visual + guided convert both ways) |
+| **Improper fractions & mixed numbers** (5/4 = 1¼) | **Lesson 5, Quiz 9, Worksheet** (PieStack visual + guided convert both ways) |
+| **Multiplying fractions** ("half of a half") | **Lesson 6** (AreaModel overlap visual + guided MultiplyPrompt) |
 | Stacked ↔ slash notation (taught explicitly) | Lesson 1 (explainer + NotationPrompt); quiz choices stacked via `Frac` |
 | "What next?" navigation at the end of every lesson | `LessonFooter` in `App.jsx` |
 
@@ -48,9 +49,9 @@ Guiding rules (don't break these):
 
 ## 🔜 Phase 2 — beyond one whole
 
-4. **Improper / mixed — Quiz + Worksheet + Play.** Lesson 5 is built (the concept &
-   conversions both ways); next is a Quiz level and Worksheet topic that reuse it (a
-   `PieStack` figure case in `FractionFigure`), plus a Play tool that shows >1 whole.
+4. **Improper / mixed — Play tool.** Lesson 5 + Quiz 9 + Worksheet are built (concept &
+   conversions both ways, `PieStack` figure in `FractionFigure`); a Play tool that shows
+   >1 whole (drag pieces past the first pie) is the only remaining piece.
 
 5. **Ordering several fractions** — put `1/2, 1/4, 3/4` in order.
    *Visual:* stack them on one number line.
@@ -60,9 +61,9 @@ Guiding rules (don't break these):
 
 ## 🔜 Phase 3 — operations & connections
 
-6. **Multiplying fractions** — "half of a half is a quarter."
-   *Visual:* the **area model** (a square shaded one way ×, the other way) — a great new visual component.
-   *Build:* Lesson 6 · Play › Area tool · Quiz · Worksheet.
+6. **Multiplying — Quiz + Worksheet + Play.** Lesson 6 is built (the `AreaModel` overlap
+   visual + guided `MultiplyPrompt`); next is a Quiz level and Worksheet topic (reuse
+   `AreaModel` as a `FractionFigure` case + `simplify` for the answer), plus a Play › Area tool.
 
 7. **Fractions ↔ decimals ↔ percentages** — `1/2 = 0.5 = 50%`.
    *Why:* connects to money, scores, everyday life.
