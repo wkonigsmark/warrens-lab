@@ -3,6 +3,8 @@ import Banner from './components/Banner'
 import Lesson1 from './components/Lesson1'
 import Lesson2 from './components/Lesson2'
 import Lesson3 from './components/Lesson3'
+import Lesson4 from './components/Lesson4'
+import Lesson5 from './components/Lesson5'
 import PlayMode from './components/play/PlayMode'
 import ChallengeMode from './components/challenge/ChallengeMode'
 import QuizMode from './components/quiz/QuizMode'
@@ -54,6 +56,8 @@ const LESSONS = [
   { id: 1, label: 'Lesson 1 · What is a percent?', Cmp: Lesson1 },
   { id: 2, label: 'Lesson 2 · Percents & fractions', Cmp: Lesson2 },
   { id: 3, label: 'Lesson 3 · Percent of a number', Cmp: Lesson3 },
+  { id: 4, label: 'Lesson 4 · Meet decimals', Cmp: Lesson4 },
+  { id: 5, label: 'Lesson 5 · Three ways: ½ = 0.5 = 50%', Cmp: Lesson5 },
 ]
 
 function LearnMode({ onGoToMode }) {

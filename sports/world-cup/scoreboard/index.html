@@ -89,6 +89,72 @@
       margin-bottom: 28px;
     }
 
+    .scoreboard-toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .scoreboard-search {
+      flex: 1 1 280px;
+      max-width: 430px;
+      min-height: 42px;
+      border: 1px solid var(--wc-line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--wc-ink);
+      font: inherit;
+      font-weight: 750;
+      padding: 10px 16px;
+      outline: none;
+    }
+
+    .scoreboard-search::placeholder {
+      color: rgba(247, 244, 235, 0.45);
+    }
+
+    .scoreboard-search:focus {
+      border-color: rgba(244, 201, 93, 0.8);
+      box-shadow: 0 0 0 3px rgba(244, 201, 93, 0.12);
+    }
+
+    .rooting-call {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 190px;
+      max-width: 280px;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .rooting-call strong {
+      color: var(--wc-green);
+      font-size: 0.86rem;
+      font-weight: 950;
+    }
+
+    .rooting-call span {
+      color: var(--wc-muted);
+      font-size: 0.68rem;
+      font-weight: 750;
+      line-height: 1.25;
+    }
+
+    .rooting-call.neutral strong {
+      color: var(--wc-gold);
+    }
+
+    .empty-scoreboard-row {
+      color: var(--wc-muted);
+      font-weight: 750;
+      text-align: center;
+      padding: 26px 18px !important;
+    }
+
     .leaderboard-table {
       width: 100%;
       border-collapse: collapse;
@@ -607,6 +673,9 @@
       
       <!-- Tab 1: Leaderboard Standings -->
       <div class="sim-view-panel active" id="panel-standings">
+        <div class="scoreboard-toolbar">
+          <input class="scoreboard-search" id="scoreboard-search" type="search" placeholder="Search bracket, entry code, email, Venmo, or winner pick..." autocomplete="off">
+        </div>
         <div class="matches-export-bar" style="display: flex; gap: 12px; margin-bottom: 16px; align-items: center; justify-content: flex-end; flex-wrap: wrap;">
           <span id="standings-source-note" style="font-size: 0.8rem; color: var(--wc-muted); font-weight: 850; margin-right: auto;">
             🏆 Submitted entries load from the local admin server; fallback entries appear if it is offline.
@@ -625,6 +694,7 @@
                 <th style="width: 50px;">Rank</th>
                 <th style="width: 70px; text-align: center;">Shift</th>
                 <th>Participant</th>
+                <th>Rooting Guide</th>
                 <th style="text-align: right;">Group Positions</th>
                 <th style="text-align: right;">Thirds</th>
                 <th style="text-align: right;">Accuracy</th>
@@ -769,6 +839,7 @@
       panels: document.querySelectorAll(".sim-view-panel"),
       leaderboardBody: document.getElementById("leaderboard-body"),
       matchGrid: document.getElementById("match-center-grid"),
+      scoreboardSearch: document.getElementById("scoreboard-search"),
       matchFilters: document.querySelectorAll(".match-filter-btn"),
       sandboxChaosSlider: document.getElementById("sandbox-chaos-slider"),
       sandboxChaosLabel: document.getElementById("sandbox-chaos-label"),
@@ -873,6 +944,25 @@
       return entry.entryCode || entry.playerName;
     }
 
+    function normalizeSearchText(value) {
+      return String(value || "").toLowerCase().trim();
+    }
+
+    function ordinalLabel(position) {
+      const suffix = position === 1 ? "st" : position === 2 ? "nd" : position === 3 ? "rd" : "th";
+      return `${position}${suffix}`;
+    }
+
+    function entrySearchText(entry) {
+      return normalizeSearchText([
+        entry.playerName,
+        entry.entryCode,
+        entry.email,
+        entry.venmo,
+        entry.avatarTeamId ? teamName(entry.avatarTeamId) : "",
+      ].join(" "));
+    }
+
     function impliedWinnerTeamId(groupPredictions) {
       const pickedGroupWinners = Object.values(groupPredictions || {})
         .map(picks => Array.isArray(picks) ? picks[0] : null)
@@ -927,6 +1017,8 @@
       return {
         playerName: entry.bracket_name || entry.entry_code || "Unnamed Entry",
         entryCode: entry.entry_code,
+        email: entry.email || "",
+        venmo: entry.venmo_handle || "",
         avatarTeamId: impliedWinnerTeamId(groupPredictions),
         groupPredictions,
         thirdPicks: thirdPicks.slice(0, 8),
@@ -1212,6 +1304,124 @@
       return { standingsOutput, groupTables, thirdPlaceStandings };
     }
 
+    function nextUnplayedGroupMatch() {
+      return actualMatches
+        .filter(match => match.matchNumber <= 72 && match.status !== "completed" && match.home && match.away)
+        .sort((a, b) => a.matchNumber - b.matchNumber)[0] || null;
+    }
+
+    function scoreEntryGroupAlignment(entry, groupTable, groupLetter) {
+      const predicted = entry.groupPredictions?.[groupLetter] || [];
+      let points = 0;
+      let hits = 0;
+
+      SCORING_RULES.groupPositions.forEach((value, index) => {
+        if (predicted[index] && predicted[index] === groupTable[index]?.id) {
+          points += value;
+          hits++;
+        }
+      });
+
+      return { points, hits };
+    }
+
+    function projectedTableForMatch(match, outcome) {
+      const projectedMatches = actualMatches.map(existing => ({ ...existing }));
+      const projected = projectedMatches.find(existing => existing.matchNumber === match.matchNumber);
+      if (!projected) return [];
+
+      projected.status = "completed";
+      projected.resultNote = "";
+      projected.winnerId = outcome.winnerId;
+      projected.homeScore = outcome.homeScore;
+      projected.awayScore = outcome.awayScore;
+
+      return calculateGroupTables(projectedMatches, teams)[match.group] || [];
+    }
+
+    function describeProjectedTeamPosition(entry, table, match, preferredTeamId) {
+      const projectedIndex = table.findIndex(team => team.id === preferredTeamId);
+      const pickedIndex = (entry.groupPredictions?.[match.group] || []).indexOf(preferredTeamId);
+
+      if (projectedIndex >= 0 && pickedIndex >= 0 && projectedIndex === pickedIndex) {
+        return `${teamName(preferredTeamId)} would move to ${ordinalLabel(projectedIndex + 1)} in Group ${match.group}, exactly where ${entry.playerName} has them.`;
+      }
+
+      const alignedTeam = table.find((team, index) => (entry.groupPredictions?.[match.group] || [])[index] === team.id);
+      if (alignedTeam) {
+        const alignedIndex = table.findIndex(team => team.id === alignedTeam.id);
+        return `${teamName(alignedTeam.id)} would sit ${ordinalLabel(alignedIndex + 1)} in Group ${match.group}, matching ${entry.playerName}.`;
+      }
+
+      const projectedTeam = projectedIndex >= 0 ? `${teamName(preferredTeamId)} would project ${ordinalLabel(projectedIndex + 1)}` : "This is the least damaging outcome";
+      return `${projectedTeam} in Group ${match.group} based on current simulated results.`;
+    }
+
+    function rootingGuideForEntry(entry, groupTables) {
+      const match = nextUnplayedGroupMatch();
+      if (!match) {
+        return {
+          title: "Group stage settled",
+          detail: "No upcoming group match is available for rooting math.",
+          neutral: true,
+        };
+      }
+
+      const currentScore = scoreEntryGroupAlignment(entry, groupTables[match.group] || [], match.group);
+      const outcomes = [
+        {
+          label: teamName(match.home),
+          outcomeText: `${teamName(match.home)} win`,
+          winnerId: match.home,
+          homeScore: 1,
+          awayScore: 0,
+          preferredTeamId: match.home,
+        },
+        {
+          label: "Draw",
+          outcomeText: "Draw",
+          winnerId: null,
+          homeScore: 1,
+          awayScore: 1,
+          preferredTeamId: match.home,
+        },
+        {
+          label: teamName(match.away),
+          outcomeText: `${teamName(match.away)} win`,
+          winnerId: match.away,
+          homeScore: 0,
+          awayScore: 1,
+          preferredTeamId: match.away,
+        },
+      ].map(outcome => {
+        const table = projectedTableForMatch(match, outcome);
+        const score = scoreEntryGroupAlignment(entry, table, match.group);
+        return {
+          ...outcome,
+          table,
+          score,
+          gain: score.points - currentScore.points,
+        };
+      }).sort((a, b) => {
+        if (b.score.points !== a.score.points) return b.score.points - a.score.points;
+        if (b.gain !== a.gain) return b.gain - a.gain;
+        if (b.score.hits !== a.score.hits) return b.score.hits - a.score.hits;
+        return 0;
+      });
+
+      const best = outcomes[0];
+      const title = best.winnerId ? `Root for ${best.label}` : "Root for a draw";
+      const pointsText = best.gain > 0
+        ? `+${best.gain} projected Group ${match.group} point${best.gain === 1 ? "" : "s"}`
+        : `${best.score.points} projected Group ${match.group} point${best.score.points === 1 ? "" : "s"}`;
+
+      return {
+        title,
+        detail: `M${match.matchNumber}: ${best.outcomeText}. ${describeProjectedTeamPosition(entry, best.table, match, best.preferredTeamId)} ${pointsText}.`,
+        neutral: !best.winnerId,
+      };
+    }
+
     // Render Tab Panel Views
     function switchTab(tabId) {
       elements.tabs.forEach(btn => {
@@ -1227,10 +1437,23 @@
 
     function renderStandings() {
       const { standingsOutput, groupTables, thirdPlaceStandings } = scoreLeaderboard();
+      const searchTerm = normalizeSearchText(elements.scoreboardSearch?.value || "");
+      const visibleStandings = searchTerm
+        ? standingsOutput.filter(player => entrySearchText(player.entry).includes(searchTerm))
+        : standingsOutput;
       
       elements.leaderboardBody.innerHTML = "";
       
-      standingsOutput.forEach(player => {
+      if (!visibleStandings.length) {
+        elements.leaderboardBody.innerHTML = `
+          <tr>
+            <td class="empty-scoreboard-row" colspan="8">No brackets match that search.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      visibleStandings.forEach(player => {
         let shiftHtml = `<span class="shift-indicator neutral">-</span>`;
         if (player.shift > 0) {
           shiftHtml = `<span class="shift-indicator up">↑ ${player.shift}</span>`;
@@ -1245,6 +1468,7 @@
 
         const accuracy = Math.round((player.points / SCORING_RULES.maxTotal) * 100);
         const tiebreakTitle = `Perfect groups: ${player.breakdown.perfectGroups}; third advancers: ${player.breakdown.thirdPlaceAdvancerHits}/8`;
+        const rootingGuide = rootingGuideForEntry(player.entry, groupTables);
 
         const row = document.createElement("tr");
         const key = entryKey(player.entry);
@@ -1257,6 +1481,12 @@
             <div class="player-profile">
               ${playerAvatarHtml(player.entry)}
               <span>${player.entry.playerName}</span>
+            </div>
+          </td>
+          <td>
+            <div class="rooting-call ${rootingGuide.neutral ? "neutral" : ""}">
+              <strong>${rootingGuide.title}</strong>
+              <span>${rootingGuide.detail}</span>
             </div>
           </td>
           <td style="text-align: right; font-weight:700;">${player.breakdown.groupPositionPoints}/120 <span style="font-size:0.75rem; color:var(--wc-muted)">(${player.breakdown.groupPositionHits}/48 hits)</span></td>
@@ -1354,7 +1584,7 @@
             });
 
             exp.innerHTML = `
-              <td colspan="7">
+              <td colspan="8">
                 <div class="predictions-grid">
                   <div>
                     <h3 style="margin-top:0; font-size:0.88rem; text-transform:uppercase; color:var(--wc-ink); letter-spacing:0.05em; font-weight:900;">Group standing predictions</h3>
@@ -1833,6 +2063,10 @@
       elements.tabs.forEach(btn => {
         btn.addEventListener("click", () => switchTab(btn.dataset.tab));
       });
+
+      if (elements.scoreboardSearch) {
+        elements.scoreboardSearch.addEventListener("input", () => renderStandings());
+      }
 
       // Match center filter clicks
       elements.matchFilters.forEach(btn => {

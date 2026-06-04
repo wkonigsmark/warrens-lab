@@ -5,8 +5,12 @@ Sequence is fine here — concepts don't have to land together. Lead with percen
 write the same amount."
 
 ## Done (v1) — full five-mode shell
-- Learn (basic percentages complete): Lesson 1 (what is a percent) + Lesson 2
-  (percents ↔ fractions) + Lesson 3 (percent of a number — dots/groups + toy)
+- Learn — Percentages (complete): L1 what is a percent · L2 percents ↔ fractions ·
+  L3 percent of a number (dots/groups + toy).
+- Learn — Decimals (started): L4 Meet decimals (tenths on the 0→1 line; number line +
+  tenths bar + DecimalLab toy) · L5 Three ways ½ = 0.5 = 50% (fraction/decimal/percent
+  trio cards). Tenths only — no hundredths yet.
+- Play: added 📏 Number Line tool (DecimalLab) beside the Percent Grid.
 - Play: Percent Grid toy (drag / slide / presets, fraction link)
 - Challenge: easy-win game mode — finite 10-question round → "You did it!" finish
   screen (Play again / Learn / Free Play). "Make it!" (target match) + "How much?"
@@ -18,15 +22,13 @@ write the same amount."
   Print. Topics: Name · Color · Percents & Fractions · Compare · Percent of a Number ·
   Mixed Review.
 
-## Next up
-- Basic percentages are now fully covered (Learn L1–L3) → ready to start decimals.
-- Optional: more Challenge question types ("Match the fraction", "Which grid?",
-  "More or less than half?").
-
-## Then (decimals — same amounts, new notation)
-- Lesson · *Tenths on the 0→1 line* — 0.5 is halfway; one decimal place = tenths.
-- Show the trio together: ½ = 0.5 = 50% (the big payoff, links all three).
-- Play toy: a 0→1 number line you drag, reading out as fraction / decimal / percent.
+## Next up (decimals)
+- Extend Quiz + Worksheets to decimals: read-the-line, write the decimal, match the
+  trio (½ / 0.5 / 50%), order decimals on the line. (Currently decimals are Learn +
+  Play only.)
+- Maybe a decimals Challenge question type (drag the dot to a target decimal).
+- Later: hundredths (0.25, 0.05) — unlocks ¼ = 0.25 = 25% and the full grid as
+  hundredths. Hold until tenths are solid.
 
 ## Later (polish)
 - A banner PNG (color hero + b&w worksheet logo), like the other Ants tools —

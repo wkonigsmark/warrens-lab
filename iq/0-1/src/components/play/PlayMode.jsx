@@ -1,18 +1,35 @@
+import { useState } from 'react'
 import PercentLab from '../PercentLab'
+import DecimalLab from '../DecimalLab'
 
-// Play has one toy for v1: the percent grid lab. More tools (a 0→1 number
-// line, fraction↔percent matching, decimals) will slot in beside it later,
-// using the same little toolbar the other Ants tools use.
+// Free-play toys, switched with a little toolbar like the rest of the family.
+// No right answers — just poke and discover.
+const TOOLS = [
+  { id: 'grid', label: '🔲 Percent Grid', Cmp: PercentLab },
+  { id: 'line', label: '📏 Number Line', Cmp: DecimalLab },
+]
+
 export default function PlayMode() {
+  const [tool, setTool] = useState('grid')
+  const Active = TOOLS.find((t) => t.id === tool).Cmp
+
   return (
     <div>
       <div className="flex flex-wrap justify-center gap-2 mb-6">
-        <span className="px-4 py-2 rounded-full text-sm font-semibold bg-white shadow text-cyan-600">
-          🔲 Percent Grid
-        </span>
+        {TOOLS.map((t) => (
+          <button
+            key={t.id}
+            onClick={() => setTool(t.id)}
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+              tool === t.id ? 'bg-white shadow text-cyan-600' : 'bg-white/50 text-gray-500 hover:bg-white/80'
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
       </div>
       <div className="bg-white/60 rounded-3xl shadow-sm p-6">
-        <PercentLab />
+        <Active />
       </div>
     </div>
   )

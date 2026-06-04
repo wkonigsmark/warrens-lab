@@ -12,14 +12,19 @@ fractions they already know.
 
 The full Ants-family five-mode shell, all on the 100-square grid:
 
-- **Learn** (basic percentages, complete)
-  - Lesson 1 · *What is a percent?* — out of 100; 0% / 100% / 50%; then a live grid to poke at.
-  - Lesson 2 · *Percents & fractions* — ¼=25%, ½=50%, ¾=75%, whole=100%.
-  - Lesson 3 · *Percent of a number* — 50% of 10 = 5; split a group into equal parts
-    and take some (dots model), with a "tap a percent of 20" toy.
+- **Learn**
+  - *Percentages (complete):*
+    - Lesson 1 · *What is a percent?* — out of 100; 0% / 100% / 50%; then a live grid to poke at.
+    - Lesson 2 · *Percents & fractions* — ¼=25%, ½=50%, ¾=75%, whole=100%.
+    - Lesson 3 · *Percent of a number* — 50% of 10 = 5; split a group, take some (dots model) + a toy.
+  - *Decimals:*
+    - Lesson 4 · *Meet decimals* — tenths on the 0→1 line; 0.5 = half; each tenth = 10% (number line + tenths bar + a toy).
+    - Lesson 5 · *Three ways: ½ = 0.5 = 50%* — fractions, decimals, percents as the same amount (grid + line trio cards).
 - **Play**
   - 🔲 **Percent Grid** — drag / slide / tap presets to fill 0–100; big readout,
     "X out of 100," and the friendly fraction lights up at ¼·½·¾·whole.
+  - 📏 **Number Line** — drag the 0→1 line (snaps to tenths); shows the same amount
+    as a decimal, tenths, percent, and grid fill all at once.
 - **Challenge** — a short **10-question round** of easy-win mini-games on the same
   grid mechanic, then a "You did it!" finish screen (Play again / Learn / Free Play):
   - *Make it!* — drag/slide to hit a target (e.g. "Make it 50%!" / "Make one half!");
