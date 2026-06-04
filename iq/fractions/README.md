@@ -1,5 +1,7 @@
 # 🥧 Ants & Fractions
 
+**Live:** https://ants-fractions.vercel.app/ (deployed on Vercel from `iq/fractions`, like `ants-axes`).
+
 A gentle, visual introduction to fractions for kids — scroll down and learn what a
 fraction *is*, one tiny step at a time, by cutting up pies. Sibling to **Ants & Axes**
 and **Ants & Angles**; part of Warren's Lab.
