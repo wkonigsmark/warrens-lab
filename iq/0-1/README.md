@@ -12,9 +12,11 @@ fractions they already know.
 
 The full Ants-family five-mode shell, all on the 100-square grid:
 
-- **Learn**
+- **Learn** (basic percentages, complete)
   - Lesson 1 · *What is a percent?* — out of 100; 0% / 100% / 50%; then a live grid to poke at.
   - Lesson 2 · *Percents & fractions* — ¼=25%, ½=50%, ¾=75%, whole=100%.
+  - Lesson 3 · *Percent of a number* — 50% of 10 = 5; split a group into equal parts
+    and take some (dots model), with a "tap a percent of 20" toy.
 - **Play**
   - 🔲 **Percent Grid** — drag / slide / tap presets to fill 0–100; big readout,
     "X out of 100," and the friendly fraction lights up at ¼·½·¾·whole.

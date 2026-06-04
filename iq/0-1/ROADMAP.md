@@ -5,7 +5,8 @@ Sequence is fine here — concepts don't have to land together. Lead with percen
 write the same amount."
 
 ## Done (v1) — full five-mode shell
-- Learn: Lesson 1 (what is a percent) + Lesson 2 (percents ↔ fractions)
+- Learn (basic percentages complete): Lesson 1 (what is a percent) + Lesson 2
+  (percents ↔ fractions) + Lesson 3 (percent of a number — dots/groups + toy)
 - Play: Percent Grid toy (drag / slide / presets, fraction link)
 - Challenge: easy-win game mode — finite 10-question round → "You did it!" finish
   screen (Play again / Learn / Free Play). "Make it!" (target match) + "How much?"
@@ -17,12 +18,10 @@ write the same amount."
   Print. Topics: Name · Color · Percents & Fractions · Compare · Percent of a Number ·
   Mixed Review.
 
-## Next up (percents)
-- More Challenge question types: "Match the fraction" (make ½ → 50%),
-  "Which grid?" (pick the grid that matches a given %), "More or less than half?".
-- Lesson 3 · *Percent of a number* — teach 50% of 10 = 5 in Learn (Quiz/Worksheets
-  already practice it). Ties to Fractions' "fraction of a number".
-- A few more friendly percents in lessons: 10%, 20% (each row of the grid = 10%).
+## Next up
+- Basic percentages are now fully covered (Learn L1–L3) → ready to start decimals.
+- Optional: more Challenge question types ("Match the fraction", "Which grid?",
+  "More or less than half?").
 
 ## Then (decimals — same amounts, new notation)
 - Lesson · *Tenths on the 0→1 line* — 0.5 is halfway; one decimal place = tenths.

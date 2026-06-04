@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Banner from './components/Banner'
 import Lesson1 from './components/Lesson1'
 import Lesson2 from './components/Lesson2'
+import Lesson3 from './components/Lesson3'
 import PlayMode from './components/play/PlayMode'
 import ChallengeMode from './components/challenge/ChallengeMode'
 import QuizMode from './components/quiz/QuizMode'
@@ -52,6 +53,7 @@ export default function App() {
 const LESSONS = [
   { id: 1, label: 'Lesson 1 · What is a percent?', Cmp: Lesson1 },
   { id: 2, label: 'Lesson 2 · Percents & fractions', Cmp: Lesson2 },
+  { id: 3, label: 'Lesson 3 · Percent of a number', Cmp: Lesson3 },
 ]
 
 function LearnMode({ onGoToMode }) {
@@ -102,7 +104,7 @@ function LessonFooter({ lessonId, onPickLesson, onGoToMode }) {
       <p className="text-sm text-gray-400 mb-3">
         {next ? 'Or try it yourself:' : "🏆 You've finished the lessons! Now try it:"}
       </p>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         <button
           onClick={() => onGoToMode('play')}
           className="bg-sky-50 text-sky-600 font-bold py-3 rounded-xl hover:bg-sky-100 transition-colors"
@@ -114,6 +116,12 @@ function LessonFooter({ lessonId, onPickLesson, onGoToMode }) {
           className="bg-violet-50 text-violet-600 font-bold py-3 rounded-xl hover:bg-violet-100 transition-colors"
         >
           🎯 Challenge
+        </button>
+        <button
+          onClick={() => onGoToMode('quiz')}
+          className="bg-green-50 text-green-600 font-bold py-3 rounded-xl hover:bg-green-100 transition-colors"
+        >
+          📚 Quiz
         </button>
       </div>
     </div>
