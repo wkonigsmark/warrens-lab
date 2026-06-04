@@ -367,6 +367,7 @@ Store full submission payload, including W-Index snapshot/data version, so each 
 
 ## Launch Checklist
 
+- Use `BETA_TESTING_AND_LIVE_SCORING.md` for the full beta-entry, simulation, and live-score handoff process.
 - Create Supabase tables.
 - Enable RLS.
 - Add insert-only policies.
