@@ -749,7 +749,7 @@
       calculateThirdPlaceStandings, 
       scoreEntry, 
       seedDefaultEntries 
-    } from "./scoreboard-engine.js?v=live-score-20260604";
+    } from "./scoreboard-engine.js?v=third-actuals-20260604";
 
     const W_INDEX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
     const ADMIN_API_BASE = "http://127.0.0.1:8787/api";
@@ -1282,7 +1282,20 @@
             // Build prediction overview tables HTML
             let groupPredHtml = "";
             let thirdPredHtml = "";
-            const actualThirdAdvancers = new Set(thirdPlaceStandings.filter(t => t.status === "Q").map(t => t.id));
+            const actualThirdQualifiers = thirdPlaceStandings.filter(t => t.status === "Q").slice(0, 8);
+            const actualThirdAdvancers = new Set(actualThirdQualifiers.map(t => t.id));
+            const groupStageMatches = actualMatches.filter(match => match.matchNumber <= 72);
+            const groupStageComplete = groupStageMatches.length === 72 && groupStageMatches.every(match => match.status === "completed");
+            const thirdActualLabel = groupStageComplete ? "Actual qualifying eight" : "Current qualifying eight";
+            const tiebreakers = player.breakdown.tiebreakers || {};
+            const hasGoalFormula = tiebreakers.goalDelta !== null
+              && tiebreakers.goalDelta !== undefined
+              && Number.isFinite(Number(tiebreakers.actualGoals))
+              && Number.isFinite(Number(tiebreakers.goalGuess));
+            const goalRawDiff = hasGoalFormula ? Number(tiebreakers.actualGoals) - Number(tiebreakers.goalGuess) : null;
+            const goalTiebreakText = hasGoalFormula
+              ? `; Goals: ${tiebreakers.actualGoals} actual - ${tiebreakers.goalGuess} guess = ${goalRawDiff}; ABS = ${tiebreakers.goalDelta}`
+              : "";
 
             // Group predictions card html
             Object.keys(player.entry.groupPredictions).forEach(g => {
@@ -1317,15 +1330,25 @@
               `;
             });
 
-            (player.entry.thirdPicks || []).forEach((teamId, index) => {
-              const isCorrect = actualThirdAdvancers.has(teamId);
+            thirdPredHtml += `
+              <div class="prediction-compare prediction-compare-head">
+                <span>Your selected eight</span>
+                <span>${thirdActualLabel}</span>
+                <span></span>
+              </div>
+            `;
+
+            Array.from({ length: 8 }).forEach((_, index) => {
+              const pickedTeamId = (player.entry.thirdPicks || [])[index];
+              const actualTeamId = actualThirdQualifiers[index]?.id;
+              const isCorrect = pickedTeamId && actualThirdAdvancers.has(pickedTeamId);
+              const pickStyle = isCorrect ? "color: var(--wc-green); font-weight: 900;" : "color: var(--wc-ink);";
+
               thirdPredHtml += `
-                <div class="prediction-list-item" style="padding: 8px 0;">
-                  <div>
-                    <div style="font-size:0.68rem; color:var(--wc-gold); font-weight:800; text-transform:uppercase;">Selected third-place advancer</div>
-                    <div style="font-weight:850; font-size:0.85rem; color:${isCorrect ? 'var(--wc-green)' : 'var(--wc-ink)'}">${teamName(teamId)}</div>
-                  </div>
-                  <span>${isCorrect ? '✓' : '×'}</span>
+                <div class="prediction-compare">
+                  <span class="prediction-pick" style="${pickStyle}">${pickedTeamId ? teamName(pickedTeamId) : "Pending"}</span>
+                  <span class="prediction-actual">${actualTeamId ? `${index + 1}. ${teamName(actualTeamId)}` : `${index + 1}. Pending`}</span>
+                  <span style="text-align:right;">${isCorrect ? '✓' : '×'}</span>
                 </div>
               `;
             });
@@ -1344,7 +1367,8 @@
                     <div style="display:flex; flex-direction:column; gap:8px;">
                       ${thirdPredHtml}
                     </div>
-                    <p style="margin:12px 0 0; color:var(--wc-muted); font-weight:750;">Tiebreaks: ${player.breakdown.perfectGroups} perfect groups, ${player.breakdown.thirdPlaceAdvancerHits}/8 third-place advancers${player.breakdown.tiebreakers.goalDelta === null ? "" : `, ${player.breakdown.tiebreakers.goalDelta} goals off`}.</p>
+                    <p style="margin:10px 0 0; color:var(--wc-muted); font-size:0.76rem; font-weight:750;">Third-place order is not scored. Any selected team that appears in the qualifying eight earns 2 points.</p>
+                    <p style="margin:12px 0 0; color:var(--wc-muted); font-weight:750;">Tiebreaks: ${player.breakdown.perfectGroups} perfect groups, ${player.breakdown.thirdPlaceAdvancerHits}/8 third-place advancers${goalTiebreakText}.</p>
                   </div>
                 </div>
               </td>

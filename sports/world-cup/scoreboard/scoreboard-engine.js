@@ -156,6 +156,8 @@ export function scoreEntry(entry, actualMatches, groupStandings, thirdPlaceStand
     tiebreakers: {
       perfectGroups: 0,
       thirdPlaceAdvancers: 0,
+      actualGoals: 0,
+      goalGuess: null,
       goalDelta: null
     },
     total: 0
@@ -226,6 +228,8 @@ export function scoreEntry(entry, actualMatches, groupStandings, thirdPlaceStand
     return sum + Number(match.homeScore || 0) + Number(match.awayScore || 0);
   }, 0);
   const goalsPick = Number(entry.tiebreakers?.totalGroupGoals ?? entry.totalGroupGoalsTiebreaker);
+  breakDown.tiebreakers.actualGoals = actualGoals;
+  breakDown.tiebreakers.goalGuess = Number.isFinite(goalsPick) ? goalsPick : null;
 
   if (allGroupMatchesComplete && Number.isFinite(goalsPick)) {
     breakDown.tiebreakers.goalDelta = Math.abs(goalsPick - actualGoals);
