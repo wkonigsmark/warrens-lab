@@ -191,6 +191,16 @@
       border-radius: 50%;
       display: grid;
       place-items: center;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      flex: 0 0 32px;
+    }
+
+    .player-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     /* Expandable Predictions Panel */
@@ -225,6 +235,37 @@
       color: var(--wc-gold);
       letter-spacing: 0.08em;
       margin: 0 0 10px 0;
+    }
+
+    .prediction-compare {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 28px;
+      gap: 10px;
+      align-items: center;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.78rem;
+    }
+
+    .prediction-compare:last-child {
+      border-bottom: 0;
+    }
+
+    .prediction-compare-head {
+      color: var(--wc-gold);
+      font-size: 0.62rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding-bottom: 5px;
+    }
+
+    .prediction-pick,
+    .prediction-actual {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .prediction-list-item {
@@ -708,7 +749,7 @@
       calculateThirdPlaceStandings, 
       scoreEntry, 
       seedDefaultEntries 
-    } from "./scoreboard-engine.js";
+    } from "./scoreboard-engine.js?v=live-score-20260604";
 
     const W_INDEX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
     const ADMIN_API_BASE = "http://127.0.0.1:8787/api";
@@ -832,6 +873,25 @@
       return entry.entryCode || entry.playerName;
     }
 
+    function impliedWinnerTeamId(groupPredictions) {
+      const pickedGroupWinners = Object.values(groupPredictions || {})
+        .map(picks => Array.isArray(picks) ? picks[0] : null)
+        .filter(Boolean);
+
+      if (!pickedGroupWinners.length) return null;
+
+      return pickedGroupWinners
+        .map(teamId => ({ teamId, rating: wIndexMap.get(teamId) || 0 }))
+        .sort((a, b) => b.rating - a.rating)[0].teamId;
+    }
+
+    function playerAvatarHtml(entry) {
+      if (entry.avatarTeamId) {
+        return `<span class="player-avatar"><img src="${flagUrl(entry.avatarTeamId)}" alt="${teamName(entry.avatarTeamId)} flag"></span>`;
+      }
+      return `<span class="player-avatar">${entry.avatar || ""}</span>`;
+    }
+
     function convertSubmittedEntry(entry, pickRows) {
       const payload = parsePayload(entry.payload);
       const groupPredictions = {};
@@ -867,7 +927,7 @@
       return {
         playerName: entry.bracket_name || entry.entry_code || "Unnamed Entry",
         entryCode: entry.entry_code,
-        avatar: entry.test_entry ? "T" : (entry.paid ? "$" : "!"),
+        avatarTeamId: impliedWinnerTeamId(groupPredictions),
         groupPredictions,
         thirdPicks: thirdPicks.slice(0, 8),
         bracketPredictions: {},
@@ -1195,7 +1255,7 @@
           <td style="text-align: center;">${shiftHtml}</td>
           <td>
             <div class="player-profile">
-              <span class="player-avatar">${player.entry.avatar}</span>
+              ${playerAvatarHtml(player.entry)}
               <span>${player.entry.playerName}</span>
             </div>
           </td>
@@ -1227,19 +1287,29 @@
             // Group predictions card html
             Object.keys(player.entry.groupPredictions).forEach(g => {
               const list = player.entry.groupPredictions[g];
+              const currentGroupTable = groupTables[g] || [];
+              const completedMatches = actualMatches.filter(match => match.group === g && match.status === "completed").length;
+              const actualLabel = completedMatches === 6 ? "Actual final" : `Current ${completedMatches}/6`;
               groupPredHtml += `
                 <div class="prediction-card">
-                  <h4 class="prediction-card-title">Group ${g} Picks</h4>
+                  <h4 class="prediction-card-title">Group ${g}: picks vs actuals</h4>
+                  <div class="prediction-compare prediction-compare-head">
+                    <span>Your pick</span>
+                    <span>${actualLabel}</span>
+                    <span></span>
+                  </div>
                   ${list.map((tid, idx) => {
-                    const isExact = groupTables[g]?.[idx]?.id === tid;
+                    const actualTeamId = currentGroupTable[idx]?.id;
+                    const isExact = actualTeamId === tid;
                     
                     let statusColor = "color: var(--wc-muted);";
                     if (isExact) statusColor = "color: var(--wc-green); font-weight: 900;";
 
                     return `
-                      <div class="prediction-list-item">
-                        <span style="${statusColor}">${idx+1}. ${teamName(tid)}</span>
-                        <span>${isExact ? '✓' : '×'}</span>
+                      <div class="prediction-compare">
+                        <span class="prediction-pick" style="${statusColor}">${idx+1}. ${teamName(tid)}</span>
+                        <span class="prediction-actual">${actualTeamId ? `${idx+1}. ${teamName(actualTeamId)}` : `${idx+1}. Pending`}</span>
+                        <span style="text-align:right;">${isExact ? '✓' : '×'}</span>
                       </div>
                     `;
                   }).join("")}
@@ -1252,7 +1322,7 @@
               thirdPredHtml += `
                 <div class="prediction-list-item" style="padding: 8px 0;">
                   <div>
-                    <div style="font-size:0.68rem; color:var(--wc-gold); font-weight:800; text-transform:uppercase;">Third-place pick #${index + 1}</div>
+                    <div style="font-size:0.68rem; color:var(--wc-gold); font-weight:800; text-transform:uppercase;">Selected third-place advancer</div>
                     <div style="font-weight:850; font-size:0.85rem; color:${isCorrect ? 'var(--wc-green)' : 'var(--wc-ink)'}">${teamName(teamId)}</div>
                   </div>
                   <span>${isCorrect ? '✓' : '×'}</span>
@@ -1570,7 +1640,7 @@
           player.rank,
           shiftVal,
           player.entry.playerName,
-          player.entry.avatar,
+          player.entry.avatarTeamId ? teamName(player.entry.avatarTeamId) : (player.entry.avatar || ""),
           player.breakdown.groupPositionPoints,
           player.breakdown.groupPositionHits,
           player.breakdown.perfectGroups,

@@ -164,20 +164,25 @@ export function scoreEntry(entry, actualMatches, groupStandings, thirdPlaceStand
   const groupPredictions = entry.groupPredictions || {};
   const groupMatches = (actualMatches || []).filter(match => match.matchNumber <= 72);
   const completedGroups = new Set();
+  const startedGroups = new Set();
 
   Object.keys(groupPredictions).forEach(gLetter => {
     const matchesForGroup = groupMatches.filter(match => match.group === gLetter);
+    if (matchesForGroup.some(match => match.status === "completed")) {
+      startedGroups.add(gLetter);
+    }
     if (matchesForGroup.length === 6 && matchesForGroup.every(match => match.status === "completed")) {
       completedGroups.add(gLetter);
     }
   });
 
   Object.keys(groupPredictions).forEach(gLetter => {
-    if (!completedGroups.has(gLetter)) return;
+    if (!startedGroups.has(gLetter)) return;
 
     const predicted = groupPredictions[gLetter] || [];
     const actual = groupStandings[gLetter] || [];
-    let perfect = predicted.length >= 4 && actual.length >= 4;
+    const isGroupComplete = completedGroups.has(gLetter);
+    let perfect = isGroupComplete && predicted.length >= 4 && actual.length >= 4;
 
     SCORING_RULES.groupPositions.forEach((points, index) => {
       const predictedTeamId = predicted[index];

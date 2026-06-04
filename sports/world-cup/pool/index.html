@@ -868,7 +868,7 @@
       step: "welcome",
       activeGroupIndex: 0,
       entry: { bracketName: "", venmo: "", email: "" },
-      tiebreakers: { totalGroupGoals: "" },
+      tiebreakers: { totalGroupGoals: "180" },
       groupPicks: Object.fromEntries(GROUP_IDS.map((group) => [group, []])),
       thirdPicks: [],
       entryId: "",
@@ -1636,8 +1636,8 @@
           </div>
           <div class="wc-field pool-tiebreaker-card">
             <label for="total-group-goals">Tiebreaker: total group-play goals</label>
-            <input class="wc-input" id="total-group-goals" type="number" inputmode="numeric" min="1" max="300" placeholder="Example: 132" value="${escapeAttr(state.tiebreakers.totalGroupGoals)}" ${state.submitted ? "disabled" : ""} required>
-            <p class="pool-tiebreaker-help">This is the only manual tiebreaker. Perfect groups are calculated from your picks; this number wins by closest absolute difference to the real group-play goal total.</p>
+            <input class="wc-input" id="total-group-goals" type="number" inputmode="numeric" min="1" max="300" placeholder="Suggested: 180" value="${escapeAttr(state.tiebreakers.totalGroupGoals)}" ${state.submitted ? "disabled" : ""} required>
+            <p class="pool-tiebreaker-help">Suggested baseline: 180 goals, which is 2.5 total goals per game across 72 group-stage matches. Perfect groups are calculated from your picks; this number wins by closest absolute difference to the real group-play goal total.</p>
           </div>
           ${state.submitStatus || state.submitError ? `<div class="pool-submit-status ${submitStatusClass}">${escapeHtml(state.submitError || state.submitStatus)}</div>` : ""}
           <div class="pool-actions">
