@@ -954,12 +954,18 @@
     }
 
     function entrySearchText(entry) {
+      const pickedTeamIds = [
+        ...Object.values(entry.groupPredictions || {}).flat(),
+        ...(entry.thirdPicks || []),
+        entry.avatarTeamId,
+      ].filter(Boolean);
+
       return normalizeSearchText([
         entry.playerName,
         entry.entryCode,
         entry.email,
         entry.venmo,
-        entry.avatarTeamId ? teamName(entry.avatarTeamId) : "",
+        ...pickedTeamIds.flatMap(teamId => [teamId, teamName(teamId)]),
       ].join(" "));
     }
 
