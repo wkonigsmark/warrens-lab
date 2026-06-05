@@ -13,6 +13,7 @@ import {
     downloadJSON, parseImport, slug,
 } from './library.js';
 import { PRESETS } from './presets.js';
+import { LESSONS, lessonById } from './lessons.js';
 
 const els = {
     rangeSelect: document.getElementById('range-select'),
@@ -42,6 +43,8 @@ const els = {
     libImport: document.getElementById('lib-import'),
     libFile: document.getElementById('lib-file'),
     starterList: document.getElementById('starter-list'),
+    lessonList: document.getElementById('lesson-list'),
+    metronomeToggle: document.getElementById('metronome-toggle'),
 };
 
 let library = [];        // saved compositions (mirrors localStorage)
@@ -56,6 +59,7 @@ const state = {
     clef: DEFAULT_CLEF,
     staffShift: RANGES[DEFAULT_RANGE].staffShift || 0, // octaves notation moves from sounding
     showLetters: false,
+    metronome: false,   // click track during playback
     title: '',
     composer: '',
     currentId: null,    // id of the library song being edited (null = unsaved)
@@ -157,7 +161,8 @@ function play() {
     state.playing = true;
     els.play.disabled = true;
     els.play.textContent = '♪ Playing…';
-    const { schedule, totalMs } = playScore(state.notes, state.tempo);
+    const { schedule, totalMs } = playScore(state.notes, state.tempo,
+        { metronome: state.metronome, beatsPerBar: BEATS_PER_BAR });
     // Sweep the playhead by lighting up each note as it sounds.
     schedule.forEach(({ note, offsetMs }) => {
         playTimers.push(setTimeout(() => renderStaff(note.start), offsetMs));
@@ -255,7 +260,8 @@ function applyPiece(p) {
 // storage errors (private mode, quota) rather than break the tool.
 function saveState() {
     try {
-        localStorage.setItem(STORE_KEY, JSON.stringify({ ...currentPiece(), currentId: state.currentId }));
+        localStorage.setItem(STORE_KEY, JSON.stringify(
+            { ...currentPiece(), currentId: state.currentId, metronome: state.metronome }));
     } catch (_) { /* ignore */ }
 }
 
@@ -265,6 +271,7 @@ function loadState() {
         if (!saved) return;
         applyPiece(saved);
         if (typeof saved.currentId === 'string') state.currentId = saved.currentId;
+        state.metronome = !!saved.metronome;
     } catch (_) { /* ignore */ }
 }
 
@@ -276,11 +283,17 @@ function syncControlsToState() {
     els.composer.value = state.composer;
     updateShiftControls();
     updateLettersToggle();
+    updateMetronomeToggle();
 }
 
 function updateLettersToggle() {
     els.lettersToggle.classList.toggle('active', state.showLetters);
     els.lettersToggle.setAttribute('aria-pressed', String(state.showLetters));
+}
+
+function updateMetronomeToggle() {
+    els.metronomeToggle.classList.toggle('active', state.metronome);
+    els.metronomeToggle.setAttribute('aria-pressed', String(state.metronome));
 }
 
 // --- Library --------------------------------------------------------------
@@ -397,6 +410,85 @@ function importFromText(text) {
     flashButton(els.libImport, `✓ Imported ${added}`);
 }
 
+// --- Lessons (printable practice sheets) ----------------------------------
+const beatsOf = (notes) => notes.reduce((m, n) => Math.max(m, n.start + n.durBeats), 0);
+const barsOf = (notes) => Math.max(1, Math.ceil(beatsOf(notes) / BEATS_PER_BAR));
+
+// Build the printable practice sheet: a stack of labelled mini-staves that grow
+// from the first move up to the whole phrase. Pure notation — the point is the
+// notes on the page, not the screen.
+function buildPracticeSheetHTML(L) {
+    const exercises = L.steps.map((step, i) => {
+        const last = i === L.steps.length - 1;
+        const label = last ? 'Put it together — the whole phrase!' : `Warm-up ${i + 1}`;
+        const score = renderScore(
+            { bars: barsOf(step.target), notes: step.target },
+            { colored: false, showLetters: true, staffShift: L.staffShift, clef: L.clef, barsPerSystem: 4 },
+        );
+        return `<div class="ms-exercise">`
+            + `<div class="ms-ex-label"><span class="ms-ex-num">${label}</span>${escapeHtml(step.prompt)}</div>`
+            + `<div class="ms-score">${score}</div>`
+            + `</div>`;
+    }).join('');
+    return `<h2 class="ms-title">${escapeHtml(L.title)} — Practice Sheet</h2>`
+        + `<p class="ms-by">${escapeHtml(L.subtitle)} · play each line, then the whole thing</p>`
+        + exercises;
+}
+
+function printPracticeSheet(id) {
+    const L = lessonById(id);
+    if (!L) return;
+    els.manuscript.innerHTML = buildPracticeSheetHTML(L);
+    window.print();
+    renderManuscript(); // restore the normal (current-piece) manuscript afterwards
+}
+
+// Load a lesson's full phrase onto the canvas so it can be heard (with the
+// metronome). Like a starter: a fresh, unsaved piece.
+function loadLesson(id) {
+    const L = lessonById(id);
+    if (!L) return;
+    stopPlayback();
+    const finalTarget = L.steps[L.steps.length - 1].target;
+    applyPiece({
+        rangeId: L.rangeId, clef: L.clef, staffShift: L.staffShift, bars: L.bars,
+        tempo: L.tempo, showLetters: true, title: `${L.title} (practice)`, composer: '',
+        notes: finalTarget,
+    });
+    state.currentId = null;
+    syncControlsToState();
+    refreshControls();
+    render();
+    renderLibrary();
+    els.staff.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+
+function renderLessons() {
+    els.lessonList.innerHTML = '';
+    for (const L of LESSONS) {
+        const li = document.createElement('li');
+        li.className = 'lib-item';
+
+        const load = document.createElement('button');
+        load.type = 'button';
+        load.className = 'lib-load';
+        load.innerHTML = `<span class="lib-name"></span><span class="lib-meta"></span>`;
+        load.querySelector('.lib-name').textContent = L.title;
+        load.querySelector('.lib-meta').textContent = `${L.subtitle} · ${L.steps.length} steps`;
+        load.addEventListener('click', () => loadLesson(L.id));
+
+        const printBtn = document.createElement('button');
+        printBtn.type = 'button';
+        printBtn.className = 'lib-icon lib-print';
+        printBtn.title = 'Print the practice sheet';
+        printBtn.textContent = '🖨';
+        printBtn.addEventListener('click', () => printPracticeSheet(L.id));
+
+        li.append(load, printBtn);
+        els.lessonList.appendChild(li);
+    }
+}
+
 // The built-in starter shelf — read-only (load + export, no delete).
 function renderStarters() {
     els.starterList.innerHTML = '';
@@ -499,6 +591,12 @@ function init() {
         render();
     });
 
+    els.metronomeToggle.addEventListener('click', () => {
+        state.metronome = !state.metronome;
+        updateMetronomeToggle();
+        saveState();
+    });
+
     els.title.addEventListener('input', () => { state.title = els.title.value; renderManuscript(); saveState(); });
     els.composer.addEventListener('input', () => { state.composer = els.composer.value; renderManuscript(); saveState(); });
 
@@ -529,6 +627,7 @@ function init() {
 
     syncControlsToState();
     refreshControls();
+    renderLessons();
     renderStarters();
     renderLibrary();
     render();

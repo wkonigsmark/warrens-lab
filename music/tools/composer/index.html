@@ -44,6 +44,11 @@
       </div>
 
       <div class="control">
+        <label>Metronome</label>
+        <button id="metronome-toggle" class="toggle" type="button" aria-pressed="false">🥁 Click</button>
+      </div>
+
+      <div class="control">
         <label>Clef</label>
         <div id="clef-group" class="segmented" role="group" aria-label="Clef"></div>
       </div>
@@ -83,6 +88,14 @@
     </div>
 
     <p class="hint">Tip: pick a <em>note length</em>, then click an empty square to drop a note. Click a coloured note to remove it. Press <strong>Play</strong> to hear your melody, <strong>Save</strong> to keep it, or <strong>Print</strong> for a manuscript.</p>
+
+    <section class="library lessons" aria-label="Lessons">
+      <div class="library-head">
+        <h2 class="library-title">🎓 Lessons</h2>
+        <p class="library-sub">Step-by-step <strong>practice sheets</strong> that build up to a tune. Hit <strong>🖨 Print</strong> for the worksheet; tap a lesson to hear it (with the metronome).</p>
+      </div>
+      <ul id="lesson-list" class="library-list"></ul>
+    </section>
 
     <section class="library starters" aria-label="Starter songs">
       <div class="library-head">

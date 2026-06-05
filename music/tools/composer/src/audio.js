@@ -33,8 +33,9 @@ export function playNote(note) {
 
 // Walk the whole score. `notes` are {start (beats from 0), pitch, durBeats}.
 // Returns the total duration (seconds) and the wall-clock start times so the
-// UI can sweep a playhead in sync.
-export function playScore(notes, tempo = 96) {
+// UI can sweep a playhead in sync. `opts.metronome` adds a click on every beat
+// (a firm tick on beat 1 of each bar, softer elsewhere) — practice scaffolding.
+export function playScore(notes, tempo = 96, opts = {}) {
     const c = ac();
     if (c.state === 'suspended') c.resume();
     const secPerBeat = 60 / tempo;
@@ -46,7 +47,29 @@ export function playScore(notes, tempo = 96) {
         return { note: n, offsetMs: (at - c.currentTime) * 1000 };
     });
     const totalBeats = notes.reduce((m, n) => Math.max(m, n.start + n.durBeats), 0);
+    if (opts.metronome) {
+        const beatsPerBar = opts.beatsPerBar || 4;
+        for (let b = 0; b < totalBeats; b++) {
+            const downbeat = b % beatsPerBar === 0;
+            tone(downbeat ? 1320 : 990, t0 + b * secPerBeat, 0.06,
+                { type: 'square', gain: downbeat ? 0.16 : 0.1 });
+        }
+    }
     return { schedule, totalMs: totalBeats * secPerBeat * 1000, t0 };
+}
+
+// A standalone metronome count-in / steady click for a given number of beats.
+export function playMetronome(beats, tempo = 96, beatsPerBar = 4) {
+    const c = ac();
+    if (c.state === 'suspended') c.resume();
+    const secPerBeat = 60 / tempo;
+    const t0 = c.currentTime + 0.05;
+    for (let b = 0; b < beats; b++) {
+        const downbeat = b % beatsPerBar === 0;
+        tone(downbeat ? 1320 : 990, t0 + b * secPerBeat, 0.06,
+            { type: 'square', gain: downbeat ? 0.16 : 0.1 });
+    }
+    return { totalMs: beats * secPerBeat * 1000 };
 }
 
 export function isPlaybackSupported() {

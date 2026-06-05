@@ -293,7 +293,9 @@ input[type="range"] { width: 150px; accent-color: var(--accent); }
   margin-bottom: 12px;
 }
 .library-title { margin: 0; font-size: 18px; font-weight: 800; }
-.starters .library-head { flex-direction: column; align-items: flex-start; gap: 4px; }
+.starters .library-head,
+.lessons .library-head { flex-direction: column; align-items: flex-start; gap: 4px; }
+.lib-print:hover { background: #fff5ee; color: var(--accent); }
 .library-sub { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
 .library-sub strong { color: var(--accent); }
 .lib-count {
@@ -363,6 +365,19 @@ input[type="range"] { width: 150px; accent-color: var(--accent); }
 .ms-title { margin: 0 0 4px; font-size: 26px; font-weight: 800; text-align: center; }
 .ms-by { margin: 0 0 22px; text-align: center; color: #555; font-size: 13px; }
 .ms-score svg { width: 100%; height: auto; }
+
+/* practice-sheet exercises */
+.ms-exercise { margin: 0 0 18px; }
+.ms-ex-label { font-size: 13px; color: #333; margin: 0 0 2px; }
+.ms-ex-num {
+  display: inline-block;
+  font-weight: 800;
+  color: #000;
+  margin-right: 8px;
+}
+@media print {
+  .ms-exercise { break-inside: avoid; page-break-inside: avoid; }
+}
 
 @media print {
   body { background: #fff; }

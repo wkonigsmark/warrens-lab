@@ -59,6 +59,36 @@
       display: block;
       object-fit: cover;
     }
+    .fixtures-search {
+      width: min(100%, 620px);
+      min-height: 48px;
+      border: 1px solid var(--wc-line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--wc-ink);
+      font: inherit;
+      font-weight: 850;
+      padding: 12px 18px;
+      outline: none;
+    }
+    .fixtures-search::placeholder {
+      color: rgba(247, 244, 235, 0.48);
+    }
+    .fixtures-search:focus {
+      border-color: rgba(244, 201, 93, 0.78);
+      box-shadow: 0 0 0 3px rgba(244, 201, 93, 0.12);
+    }
+    .fixtures-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 18px 0 22px;
+    }
+    .fixtures-section-title {
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 
@@ -83,71 +113,22 @@
       <div>
         <div class="wc-eyebrow">Tournament Schedule</div>
         <h1 class="wc-title">World Cup 2026 Fixtures</h1>
-        <p class="wc-copy">
-          Every group-play and knockout fixture in one place, with browser-local kickoff times, venues, and W-Index matchup context.
-        </p>
-      </div>
-      <div class="wc-pill" id="viewer-time-zone">Local time loading</div>
-    </section>
-
-    <section class="wc-stat-row" aria-label="Tournament totals">
-      <div class="wc-stat">
-        <strong id="team-count">48</strong>
-        <span>Teams</span>
-      </div>
-      <div class="wc-stat">
-        <strong id="group-count">12</strong>
-        <span>Groups</span>
-      </div>
-      <div class="wc-stat">
-        <strong id="match-count">104</strong>
-        <span>Matches</span>
-      </div>
-      <div class="wc-stat">
-        <strong>16</strong>
-        <span>Host Cities</span>
       </div>
     </section>
 
-    <section class="wc-callout">
-      Fixture times convert to your browser timezone automatically. Venue-local kickoff data remains preserved in the shared tournament data.
-    </section>
-
-    <section class="wc-section">
-      <div class="wc-section-header">
-        <div>
-          <h2>Fixture Files</h2>
-          <p>Raw schedule lists for auditing, spreadsheets, scoring logic, and future database imports.</p>
-        </div>
-      </div>
-      <div class="wc-grid">
-        <article class="wc-card wc-card-pad">
-          <span class="wc-chip">Audit Sheet</span>
-          <p class="wc-copy"><a href="../meta/DATA_POINTS.md">Teams, fixtures, knockout schedule, and venues in Markdown</a></p>
-        </article>
-        <article class="wc-card wc-card-pad">
-          <span class="wc-chip">CSV</span>
-          <p class="wc-copy"><a href="../data/teams.csv">Teams</a> · <a href="../data/fixtures.csv">All fixtures</a></p>
-        </article>
-        <article class="wc-card wc-card-pad">
-          <span class="wc-chip">CSV</span>
-          <p class="wc-copy"><a href="../data/group-fixtures.csv">Group fixtures</a> · <a href="../data/knockout-fixtures.csv">Knockout fixtures</a> · <a href="../data/venues.csv">Venues</a></p>
-        </article>
-      </div>
-    </section>
+    <div class="fixtures-controls" aria-label="Fixture search and filters">
+      <input class="fixtures-search" id="fixture-search" type="search" placeholder="Search games by team, group, city, venue, stage, or match number..." autocomplete="off">
+      <select id="venue-filter" class="wc-select">
+        <option value="All">All Venues</option>
+      </select>
+    </div>
 
     <section class="wc-section" id="group-fixtures">
-      <div class="wc-section-header">
-        <div>
-          <h2>Group Fixtures</h2>
-          <p>Venue-local kickoff is preserved. Viewer time converts automatically using the browser timezone.</p>
-        </div>
+      <div class="wc-section-header fixtures-section-title">
+        <h2>Group Fixtures</h2>
       </div>
-      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 12px;">
         <div class="wc-filter-row" id="group-filter" aria-label="Filter group fixtures" style="margin-bottom: 0;"></div>
-        <select id="venue-filter" class="wc-select">
-          <option value="All">All Venues</option>
-        </select>
       </div>
       <div class="wc-table-wrap">
         <table class="wc-table">
@@ -168,11 +149,8 @@
     </section>
 
     <section class="wc-section" id="knockout">
-      <div class="wc-section-header">
-        <div>
-          <h2>Knockout Schedule</h2>
-          <p>Official bracket slots from the Round of 32 through the final, including the third-place match.</p>
-        </div>
+      <div class="wc-section-header fixtures-section-title">
+        <h2>Knockout Schedule</h2>
       </div>
       <div class="wc-filter-row" id="stage-filter" aria-label="Filter knockout fixtures"></div>
       <div class="wc-table-wrap">
@@ -189,16 +167,6 @@
         </table>
       </div>
     </section>
-
-    <section class="wc-section">
-      <div class="wc-section-header">
-        <div>
-          <h2>Sources</h2>
-          <p>Fixture data should be periodically re-checked as FIFA and venue naming can change.</p>
-        </div>
-      </div>
-      <div id="source-list" class="wc-grid"></div>
-    </section>
   </main>
 
   <script type="module">
@@ -207,24 +175,17 @@
       groups,
       knockoutMatches,
       matches,
-      sources,
       teams,
       teamsById,
-      tournament,
       venues,
     } from "../data/world-cup-2026.js";
-
-    const viewerTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "local time";
-    document.getElementById("viewer-time-zone").textContent = `Viewer time: ${viewerTimeZone}`;
-    document.getElementById("team-count").textContent = tournament.teamsCount;
-    document.getElementById("group-count").textContent = tournament.groupsCount;
-    document.getElementById("match-count").textContent = tournament.matchesCount;
 
     const W_INDEX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
     let wIndexByTeam = new Map();
     let matchRatings = new Map();
     let groupFixturesSortColumn = "Match";
     let groupFixturesSortAscending = true;
+    let fixtureSearchTerm = "";
 
     function parseCsv(text) {
       const rows = [];
@@ -399,6 +360,32 @@
       return `${match.venue.name}<br><span class="wc-small">${match.venue.city}, ${match.venue.country}</span>`;
     }
 
+    function fixtureSearchText(match) {
+      const home = teamsById[match.home];
+      const away = teamsById[match.away];
+      return normalizeName([
+        `M${match.matchNumber}`,
+        match.matchNumber,
+        match.stage,
+        match.group ? `Group ${match.group}` : "",
+        home?.name,
+        home?.shortName,
+        home?.id,
+        away?.name,
+        away?.shortName,
+        away?.id,
+        match.venue?.name,
+        match.venue?.city,
+        match.venue?.country,
+        formatViewerTime(match),
+      ].filter(Boolean).join(" "));
+    }
+
+    function matchesFixtureSearch(match) {
+      if (!fixtureSearchTerm) return true;
+      return fixtureSearchText(match).includes(fixtureSearchTerm);
+    }
+
     function fixtureLabel(match) {
       return `
         <div style="display: flex; flex-direction: column; gap: 3px;">
@@ -501,6 +488,8 @@
         filtered = filtered.filter((match) => match.venueId === selectedVenue);
       }
 
+      filtered = filtered.filter(matchesFixtureSearch);
+
       filtered.sort((a, b) => {
         let valA, valB;
         if (groupFixturesSortColumn === "Match") {
@@ -533,7 +522,9 @@
         return a.matchNumber - b.matchNumber;
       });
 
-      document.getElementById("group-fixtures-body").innerHTML = filtered.map(groupRowFor).join("");
+      document.getElementById("group-fixtures-body").innerHTML = filtered.length
+        ? filtered.map(groupRowFor).join("")
+        : `<tr><td colspan="7" class="wc-muted">No group fixtures match that search.</td></tr>`;
       
       const filterValues = ["All", "Top Rated", ...Object.keys(groups)];
       renderFilter("group-filter", filterValues, group, renderGroupFixtures);
@@ -567,8 +558,12 @@
       if (selectedVenue !== "All") {
         filtered = filtered.filter((match) => match.venueId === selectedVenue);
       }
+
+      filtered = filtered.filter(matchesFixtureSearch);
       
-      document.getElementById("knockout-body").innerHTML = filtered.map(rowFor).join("");
+      document.getElementById("knockout-body").innerHTML = filtered.length
+        ? filtered.map(rowFor).join("")
+        : `<tr><td colspan="4" class="wc-muted">No knockout fixtures match that search.</td></tr>`;
       renderFilter("stage-filter", ["All", ...stages], stage, renderKnockout);
     }
 
@@ -609,7 +604,13 @@
     initVenueFilter();
     renderGroupFixtures();
     renderKnockout();
-    renderSources();
+    document.getElementById("fixture-search").addEventListener("input", (event) => {
+      fixtureSearchTerm = normalizeName(event.target.value);
+      const activeGroupFilter = document.querySelector("#group-filter .is-active")?.dataset?.value || "All";
+      const activeStageFilter = document.querySelector("#stage-filter .is-active")?.dataset?.value || "All";
+      renderGroupFixtures(activeGroupFilter);
+      renderKnockout(activeStageFilter);
+    });
     loadWIndex();
   </script>
   <script src="../shared/world-cup-audio.js" defer></script>
