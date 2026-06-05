@@ -34,7 +34,7 @@ export default function Worksheet({ topic, mode, onBack }) {
           {/* Header */}
           <div className="border-b-2 border-gray-800 pb-2 mb-4 flex items-end justify-between gap-4">
             <div className="flex items-end gap-3 flex-shrink-0">
-              <div className="text-3xl font-black tracking-tight whitespace-nowrap">0 <span className="text-gray-400">→</span> 1</div>
+              <img src="/text_logo_0_1.png" alt="0 → 1" className="h-16 w-auto object-contain" />
               <div>
                 <p className="text-base font-bold whitespace-nowrap">{topic.title}</p>
                 <p className="text-sm text-gray-600">{topic.instructions}</p>

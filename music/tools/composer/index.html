@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Composer · Music</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🎼</span>
+      <div>
+        <h1>Composer <span class="beta-badge">BETA</span></h1>
+        <p class="tagline">Build your own melody — click, hear it, see it written.</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="controls" aria-label="Composer controls">
+      <div class="control">
+        <label>Instrument</label>
+        <select id="range-select"></select>
+      </div>
+
+      <div class="control">
+        <label>Bars</label>
+        <div id="bars-group" class="segmented" role="group" aria-label="Number of bars"></div>
+      </div>
+
+      <div class="control">
+        <label>Note length</label>
+        <div id="duration-group" class="segmented" role="group" aria-label="Note length"></div>
+      </div>
+
+      <div class="control">
+        <label>Tempo <span id="tempo-readout">96</span></label>
+        <input id="tempo" type="range" min="60" max="160" step="2" value="96">
+      </div>
+
+      <div class="control">
+        <label>Mentor mode</label>
+        <button id="letters-toggle" class="toggle" type="button" aria-pressed="false">🔤 Letters</button>
+      </div>
+
+      <div class="control actions">
+        <button id="play" class="btn btn-play">▶ Play</button>
+        <button id="print" class="btn btn-ghost">🖨 Print</button>
+        <button id="clear" class="btn btn-ghost">✕ Clear</button>
+      </div>
+    </section>
+
+    <div class="board">
+      <div class="board-head">
+        <input id="piece-title" class="piece-title-input" type="text"
+               placeholder="Untitled Melody" maxlength="60" aria-label="Piece title">
+        <input id="piece-composer" class="piece-composer-input" type="text"
+               placeholder="Composed by…" maxlength="40" aria-label="Composer name">
+      </div>
+      <div class="scroll" id="scroll">
+        <div class="grid-wrap" id="grid"></div>
+        <div class="staff-wrap" id="staff"></div>
+      </div>
+    </div>
+
+    <p class="hint">Tip: pick a <em>note length</em>, then click an empty square to drop a note. Click a coloured note to remove it. Press <strong>Play</strong> to hear your melody, or <strong>Print</strong> to save your manuscript.</p>
+  </main>
+
+  <!-- Print-only manuscript: a clean black-and-white score for the page. -->
+  <section id="manuscript" class="manuscript" aria-hidden="true"></section>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

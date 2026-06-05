@@ -10,11 +10,38 @@ teaches, tracks growth over time, and always knows what to recommend next.
 - Results report: proficiency band + score bar per topic
 - "Practice this next" deep-link to the weakest topic's sibling tool
 
+## Adaptive engine — core built (not yet wired to UI)
+`src/lib/adaptive.js` — a transparent weighted adaptive staircase on a 1–10
+difficulty scale. Correct→step up, wrong→step down; up-steps smaller than down so
+it settles where the student wins ~70% (the sweet spot); the step shrinks on each
+reversal to converge; response time is a second signal (fast+correct = climb
+harder, slow+correct = hold, fast+wrong = drop). Pure & immutable → drops into
+React directly. Proven with a simulated-student harness (`adaptive.sim.js`,
+`node src/lib/adaptive.sim.js`): across abilities 2.5→9.5 it lands every learner
+in a 64–75% win band, and a fast kid gets harder work than a slow kid at the same
+raw ability. Reports a sweet-spot `level` + `difficultyTier()` (Easier / Standard
+/ Harder / Advanced) that the resource report will map to worksheets.
+
+## Question bank — widened to 1–10 (done)
+`src/lib/competencies.js` — every competency now has a 10-level difficulty curve
+with a written `rubric` (the contract the engine, report, and worksheet mapping
+lean on) and a `generate(difficulty)` that randomizes operands so nothing is
+memorizable. Whole-number friendly, multiple-choice throughout. Fuzz-checked by
+`competencies.check.js` (`node src/lib/competencies.check.js`): 6 × 10 × 400 draws
+all pass invariants (answer always among choices, no degenerate option sets), plus
+a one-sample-per-level eyeball table. Levels span e.g. Arithmetic add-within-10 →
+2-digit×1-digit; Exponents small squares → negative exponents; Algebra x+a=b →
+variable-on-both-sides. (The live run still uses levels 1–3 until the engine is
+wired in — no regression.)
+
 ## Next up
-- **Adaptive laddering** — stop climbing a topic once they miss; start the next
-  topic at a level matched to recent performance. Fewer questions, sharper signal.
-- **More resolution** — more questions per level, or item-response style scoring,
-  so bands aren't just 0/⅓/⅔/1.
+- **Wire the engine into the run** — replace the fixed 3-rung ladder with the
+  adaptive loop (`adaptive.js` serving `generate(nextDifficulty)`); capture answer
+  time per question. *Open tuning Q:* depth vs. length — current settings average
+  ~9 Qs/topic (×6 topics = long). Likely cap total questions or run fewer topics deep.
+- **Resource report** — (competency, tier) → curated worksheet deep-links for
+  parents/teachers; needs sibling worksheets to be deep-linkable by difficulty
+  (audit pending).
 - **Reading/writing & science** — extend beyond math to the Lexicon / Stencil /
   chemistry / anatomy tools so the check-up covers the whole toolkit.
 

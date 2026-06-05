@@ -141,7 +141,7 @@ export function calculateThirdPlaceStandings(groupTables) {
 }
 
 /**
- * Computes pool scoring for a single entry against official results
+ * Computes pool scoring for a single entry against current or final group tables.
  */
 export function scoreEntry(entry, actualMatches, groupStandings, thirdPlaceStandings, bracketMatches) {
   let score = 0;

@@ -155,6 +155,45 @@
       padding: 26px 18px !important;
     }
 
+    .scoring-note {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 14px;
+      margin-bottom: 16px;
+      padding: 16px;
+      border: 1px solid rgba(244, 201, 93, 0.3);
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(244, 201, 93, 0.12), rgba(255, 255, 255, 0.035));
+    }
+
+    .scoring-note h3 {
+      margin: 0 0 6px;
+      color: var(--wc-gold);
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .scoring-note p {
+      margin: 0;
+      color: var(--wc-muted);
+      font-size: 0.82rem;
+      font-weight: 750;
+      line-height: 1.45;
+    }
+
+    .scoring-note strong {
+      color: var(--wc-ink);
+      font-weight: 950;
+    }
+
+    @media (max-width: 760px) {
+      .scoring-note {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .leaderboard-table {
       width: 100%;
       border-collapse: collapse;
@@ -652,10 +691,10 @@
 
     <section class="wc-hero">
       <div>
-        <div class="wc-eyebrow">Pool Scoring & Sandbox Arena</div>
+        <div class="wc-eyebrow">Projected Pool Scoring & Sandbox Arena</div>
         <h1 class="wc-title">Tournament Scoreboard Hub</h1>
         <p class="wc-copy">
-          Track live standings, review all 104 matches, and run sandbox simulations to test pool entry performance.
+          Track projected standings, review all 104 matches, and run sandbox simulations to test pool entry performance.
         </p>
       </div>
       <div class="wc-pill" id="sync-status">Loading W-Index data...</div>
@@ -663,7 +702,7 @@
 
     <!-- Navigation Tabs -->
     <nav class="tab-selectors" id="scoreboard-tabs-nav">
-      <button class="sim-tab-btn active" data-tab="standings">🏆 Pool Standings</button>
+      <button class="sim-tab-btn active" data-tab="standings">🏆 Projected Standings</button>
       <button class="sim-tab-btn" data-tab="matches">📅 Match Center</button>
       <button class="sim-tab-btn" data-tab="sandbox">🎛️ Commissioner Sandbox</button>
     </nav>
@@ -673,18 +712,28 @@
       
       <!-- Tab 1: Leaderboard Standings -->
       <div class="sim-view-panel active" id="panel-standings">
+        <section class="scoring-note" aria-label="Projected scoring note">
+          <div>
+            <h3>Projected During Group Play</h3>
+            <p><strong>Points shown during group play are projections.</strong> They reflect how each bracket would score if the current group tables finished exactly as they stand right now.</p>
+          </div>
+          <div>
+            <h3>Official After Final Whistle</h3>
+            <p><strong>Official position points are awarded only after all 6 matches in that group are complete.</strong> Third-place advancer points are awarded after all 72 group-stage matches are complete.</p>
+          </div>
+        </section>
         <div class="scoreboard-toolbar">
           <input class="scoreboard-search" id="scoreboard-search" type="search" placeholder="Search bracket, entry code, email, Venmo, or winner pick..." autocomplete="off">
         </div>
         <div class="matches-export-bar" style="display: flex; gap: 12px; margin-bottom: 16px; align-items: center; justify-content: flex-end; flex-wrap: wrap;">
           <span id="standings-source-note" style="font-size: 0.8rem; color: var(--wc-muted); font-weight: 850; margin-right: auto;">
-            🏆 Submitted entries load from the local admin server; fallback entries appear if it is offline.
+            🏆 Submitted entries load from the local admin server; projected standings appear during group play.
           </span>
           <button class="wc-button secondary" id="copy-standings-btn" style="padding: 6px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
-            📋 Copy Standings
+            📋 Copy Projections
           </button>
           <button class="wc-button" id="export-standings-btn" style="padding: 6px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
-            📥 Export Standings CSV
+            📥 Export Projections CSV
           </button>
         </div>
         <div class="leaderboard-table-wrap">
@@ -695,10 +744,10 @@
                 <th style="width: 70px; text-align: center;">Shift</th>
                 <th>Participant</th>
                 <th>Rooting Guide</th>
-                <th style="text-align: right;">Group Positions</th>
-                <th style="text-align: right;">Thirds</th>
-                <th style="text-align: right;">Accuracy</th>
-                <th style="text-align: right; width: 120px; color: var(--wc-gold);">Points</th>
+                <th style="text-align: right;">Projected Group Positions</th>
+                <th style="text-align: right;">Projected Thirds</th>
+                <th style="text-align: right;">Projected Accuracy</th>
+                <th style="text-align: right; width: 120px; color: var(--wc-gold);">Projected Points</th>
               </tr>
             </thead>
             <tbody id="leaderboard-body">
@@ -707,7 +756,7 @@
           </table>
         </div>
         <p style="font-size: 0.78rem; color: var(--wc-muted); text-align: center; font-style: italic;">
-          💡 Tip: Click any row to expand and view that participant's prediction sheet vs actual outcomes.
+          💡 Tip: Click any row to compare that bracket's picks against current or final group outcomes.
         </p>
       </div>
 
@@ -746,7 +795,7 @@
           <div class="sandbox-card">
             <h3 style="margin-top: 0; color: var(--wc-gold); text-transform: uppercase; font-size: 0.95rem; letter-spacing: 0.05em; font-weight:950;">⚡ Sandbox Controls</h3>
             <p style="font-size: 0.8rem; color: var(--wc-muted); margin-bottom: 20px;">
-              Simulate matches using stochastic algorithms or clear the board to see how points and ranks adapt instantly.
+              Simulate matches using stochastic algorithms or clear the board to see how projected points and ranks adapt instantly.
             </p>
             
             <!-- Chaos level slider -->
@@ -1067,13 +1116,13 @@
         }
 
         setSyncStatus(`🏆 ${submittedEntries.length} submitted entr${submittedEntries.length === 1 ? "y" : "ies"} loaded`, "green");
-        elements.standingsSourceNote.textContent = `🏆 Scoring ${submittedEntries.length} submitted entr${submittedEntries.length === 1 ? "y" : "ies"} from Supabase via the local admin server.`;
+        elements.standingsSourceNote.textContent = `🏆 Projecting ${submittedEntries.length} submitted entr${submittedEntries.length === 1 ? "y" : "ies"} from Supabase. Group-position points become official only when each group is complete; third-place advancer points become official after all 72 group matches.`;
         return submittedEntries;
       } catch (error) {
         console.warn("Submitted entries unavailable, using seeded scoreboard entries:", error);
         const fallbackEntries = seedDefaultEntries(teams, wIndexMap);
         setSyncStatus("🏆 Sandbox fallback entries active", "gold");
-        elements.standingsSourceNote.textContent = "🏆 Local admin server offline, so the scoreboard is using seeded sandbox entries.";
+        elements.standingsSourceNote.textContent = "🏆 Local admin server offline, so projected scoring is using seeded sandbox entries.";
         return fallbackEntries;
       }
     }
@@ -1245,7 +1294,7 @@
       setPair(104, getW(101), getW(102));
     }
 
-    // Runs live scoring recalculation across all player entries
+    // Runs projected scoring recalculation across all player entries
     function scoreLeaderboard() {
       // 1. Gather group table context
       const groupTables = calculateGroupTables(actualMatches, teams);
@@ -1272,7 +1321,7 @@
         };
       });
 
-      // 3. Sort leaderboard by points, then official group-play tiebreakers
+      // 3. Sort leaderboard by projected points, then official group-play tiebreakers
       scoredList.sort((a, b) => {
         if (b.points !== a.points) return b.points - a.points;
         if (b.breakdown.perfectGroups !== a.breakdown.perfectGroups) return b.breakdown.perfectGroups - a.breakdown.perfectGroups;
@@ -1793,7 +1842,7 @@
         const completedTotal = actualMatches.filter(m => m.status === "completed").length;
         showSandboxToast(
           `${simulatedCount} match${simulatedCount === 1 ? "" : "es"} simulated`,
-          `${completedTotal}/104 matches are now complete. Standings and match center refreshed.`,
+          `${completedTotal}/104 matches are now complete. Projected standings and match center refreshed.`,
           "✓"
         );
       } else {
@@ -1889,7 +1938,7 @@
     // Generate Standings CSV
     function generateStandingsCsv() {
       const { standingsOutput } = scoreLeaderboard();
-      const headers = ["Rank", "Shift", "Player", "Avatar", "Group Position Points", "Group Position Hits", "Perfect Groups", "Third Advancer Points", "Third Advancer Hits", "Goal Tiebreak Delta", "Total Accuracy %", "Total Points"];
+      const headers = ["Projected Rank", "Shift", "Player", "Avatar Team", "Projected Group Position Points", "Projected Group Position Hits", "Perfect Groups", "Projected Third Advancer Points", "Projected Third Advancer Hits", "Goal Tiebreak Delta", "Projected Accuracy %", "Projected Total Points"];
       const rows = [headers];
 
       standingsOutput.forEach(player => {
