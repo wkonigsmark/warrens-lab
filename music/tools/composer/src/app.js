@@ -70,8 +70,10 @@ const scaleOf = () => buildScale(RANGES[state.rangeId].low, RANGES[state.rangeId
 // notation honest — no ties needed in v1).
 function fits(beat, durBeats) {
     const totalBeats = state.bars * BEATS_PER_BAR;
-    if (beat < 0 || beat + durBeats > totalBeats) return false;
-    return Math.floor(beat / BEATS_PER_BAR) === Math.floor((beat + durBeats - 1) / BEATS_PER_BAR);
+    if (beat < 0 || beat + durBeats > totalBeats + 1e-9) return false;
+    // must not cross a barline: start and last instant live in the same bar
+    const barOf = (b) => Math.floor(b / BEATS_PER_BAR);
+    return barOf(beat) === barOf(beat + durBeats - 1e-9);
 }
 
 function placeNote(pitch, beat) {

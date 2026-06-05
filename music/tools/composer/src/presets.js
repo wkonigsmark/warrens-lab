@@ -3,9 +3,10 @@
 // one octave, quarter/half/whole, 4/4) so they fit the default C5–A6 xylophone
 // and a beginner's first reading. Traditional tunes — not modern arrangements.
 //
-// Encoding: a compact string of beat tokens. "C5" = quarter, "C5:2" = half,
-// "C5:4" = whole, "_" / "_:2" = a rest (advances beats with no note). "|" marks
-// a barline and is purely decorative. parse() expands it to {start, pitch, durBeats}.
+// Encoding: a compact string of beat tokens. "C5" = quarter, "C5:0.5" = eighth,
+// "C5:2" = half, "C5:4" = whole, "_" / "_:0.5" = a rest (advances beats with no
+// note). "|" marks a barline and is purely decorative. parse() expands it to
+// {start, pitch, durBeats}.
 
 function parse(notation) {
     const tokens = notation.replace(/\|/g, ' ').trim().split(/\s+/).filter(Boolean);
@@ -13,7 +14,7 @@ function parse(notation) {
     const notes = [];
     for (const tok of tokens) {
         const [pitch, dur] = tok.split(':');
-        const durBeats = dur ? parseInt(dur, 10) : 1;
+        const durBeats = dur ? parseFloat(dur) : 1;
         if (pitch !== '_') notes.push({ start: beat, pitch, durBeats });
         beat += durBeats;
     }
@@ -65,4 +66,11 @@ export const PRESETS = [
 
     song('preset-jingle', 'Jingle Bells (chorus)', 'J. Pierpont',
         'E5 E5 E5:2 | E5 E5 E5:2 | E5 G5 C5 D5 | E5:4'),
+
+    // Eighth notes in action — "Sonnez les matines" is a run of eighths. Written
+    // a step up (do = G5) so the low "din-dan-don" sol still fits the C5–A6 bars.
+    song('preset-frere', 'Frère Jacques', 'Traditional',
+        'G5 A5 B5 G5 | G5 A5 B5 G5 | B5 C6 D6:2 | B5 C6 D6:2 | ' +
+        'D6:0.5 E6:0.5 D6:0.5 C6:0.5 B5 G5 | D6:0.5 E6:0.5 D6:0.5 C6:0.5 B5 G5 | ' +
+        'G5 D5 G5:2 | G5 D5 G5:2'),
 ];

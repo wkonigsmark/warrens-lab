@@ -41,12 +41,15 @@ function renderNote(n, localBeat, { colored, showLetters, staffShift, topStep, b
     // Notation may sit octaves from the sounding pitch (clef + staffShift). The
     // head moves; the letter name is octave-agnostic so mentor mode is unaffected.
     const step = diatonicStep(n.pitch) + staffShift * 7;
-    const cx = xOfBeat(localBeat) + BEAT_W * 0.5;
+    // centre the head over the note's own time span so it lines up with the grid
+    // block above (eighth → quarter of a beat in, whole → middle of the bar).
+    const cx = xOfBeat(localBeat) + (n.durBeats * BEAT_W) / 2;
     const cy = yOf(step, topStep, baseTop);
     const midY = baseTop + 2 * GAP; // geometric middle line — stem-direction pivot
     const rx = GAP * 0.66, ry = GAP * 0.5;
     const open = n.durBeats >= 2;        // half & whole have open heads
     const hasStem = n.durBeats < 4;      // whole note has no stem
+    const hasFlag = n.durBeats < 1;      // eighth note gets a flag
     const fill = colored ? NOTE_COLORS[letterOf(n.pitch)] : '#1f2430';
 
     let svg = '';
@@ -54,8 +57,8 @@ function renderNote(n, localBeat, { colored, showLetters, staffShift, topStep, b
         const y = yOf(s, topStep, baseTop);
         svg += `<line x1="${cx - rx - 5}" y1="${y}" x2="${cx + rx + 5}" y2="${y}" stroke="#b6bccb" stroke-width="1.4"/>`;
     }
-    // head — open (hollow) for half & whole, filled for quarter. Hollow in both
-    // colour and B&W modes so quarter vs half is always visually distinct.
+    // head — open (hollow) for half & whole, filled for quarter/eighth. Hollow in
+    // both colour and B&W modes so quarter vs half is always visually distinct.
     svg += open
         ? `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#fff" stroke="${fill}" stroke-width="2.4"/>`
         : `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}"/>`;
@@ -64,6 +67,11 @@ function renderNote(n, localBeat, { colored, showLetters, staffShift, topStep, b
         const sx = up ? cx + rx - 0.5 : cx - rx + 0.5;
         const sy2 = up ? cy - GAP * 3 : cy + GAP * 3;
         svg += `<line x1="${sx}" y1="${cy}" x2="${sx}" y2="${sy2}" stroke="${fill}" stroke-width="2.2"/>`;
+        if (hasFlag) {
+            // a single flag off the stem tip, curving away from the head
+            const d = up ? 1 : -1;
+            svg += `<path d="M ${sx} ${sy2} q ${GAP * 0.85} ${d * GAP * 0.55} ${GAP * 0.45} ${d * GAP * 1.45}" fill="none" stroke="${fill}" stroke-width="3" stroke-linecap="round"/>`;
+        }
     }
     // mentor mode: the letter name, centred in the head.
     if (showLetters) {

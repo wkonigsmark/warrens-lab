@@ -104,3 +104,36 @@ as $$
 $$;
 
 grant execute on function public.get_pool_purse_summary() to anon;
+
+create or replace function public.get_public_scoreboard_entries()
+returns table (
+  id uuid,
+  entry_code text,
+  bracket_name text,
+  status text,
+  paid boolean,
+  test_entry boolean,
+  voided boolean,
+  submitted_at timestamptz,
+  payload jsonb
+)
+language sql
+security definer
+set search_path = public
+as $$
+  select
+    id,
+    entry_code,
+    bracket_name,
+    status,
+    paid,
+    test_entry,
+    voided,
+    submitted_at,
+    payload
+  from public.pool_entries
+  where voided = false
+  order by submitted_at desc;
+$$;
+
+grant execute on function public.get_public_scoreboard_entries() to anon;

@@ -11,6 +11,82 @@ treble range) with an "8" over the clef. Set per range via `staffShift` in
 `model.js` (`-1` = octave down). Other presets (`c4-a5`, `c4-g5`, `c4-c6`) have
 `staffShift: 0` for write-as-sounds.
 
+---
+
+## Next horizon (planned — set 2026-06-05)
+
+The tool is feature-complete as a *composer*. The next arc turns it into a
+*teacher*: guided practice, a cleaner/again-portable surface, richer rhythm, and
+more content. Phases below are Warren's; notes + dependencies are mine.
+
+### Phase 1 — Learning layer (the big one)
+
+**1A · Lessons built off library pieces.**
+Bite-sized, *repeatable* exercises that teach the actual "changes" (the
+note-to-note moves) inside a known piece — e.g. drill just the `E E F G` opening
+of Ode to Joy, or the `C C G G A A G` leap-and-step of Twinkle, before playing
+the whole thing.
+- Likely a **Lesson mode**: take a piece → break it into short phrases/motifs →
+  student practices each (call-and-response: the app plays it, the student
+  echoes it on the grid), then chains phrases into the full tune.
+- Reuses everything we have (grid input, playback, mentor letters) + the
+  **easy-win/repetition/celebration** loop that drives buy-in for Warren's kids'
+  tools.
+- Open question: how phrases are defined — hand-annotated per preset (fast to
+  start) vs auto-segmented (see 1B). Recommend hand-authoring 2–3 lessons first
+  to find the right shape, *then* automate.
+
+**1B · Scalable auto-generation of practice pieces.**
+An engine that *simplifies* existing pieces and *generates* graded drills:
+strip a tune to all-quarters, narrow its range, isolate one motif, or
+procedurally build rhythm patterns (clap-backs, ostinati).
+- Pure functions over the note model: `simplifyRhythm()`, `isolatePhrase()`,
+  `transpose()`, `generateRhythmDrill(pattern)`, `gradeDifficulty()`. A content
+  layer on top of `{start, pitch, durBeats}` — no new rendering needed.
+- **This is the engine behind 1A at scale.** Sequence: 1A (hand-authored proof)
+  → 1B (automate what worked) → 1A library fills itself out.
+- Synergizes with the parked **tonic-resolve / theory analyzer** idea.
+
+### Phase 2 — Surface polish
+
+**2A · UI cleanup / visual declutter.**
+The control bar + stacked library sections have grown busy. Candidates: group
+controls (compose / staff / playback), make sections collapsible or tabbed, and
+fix the **tall empty grid** (13 rows even when a song only uses C5–G5 — could
+crop to the instrument's used band or add a compact mode).
+
+**2B · Mobile optimization.**
+Responsive layout + touch. Real blocker today: eighth-note cells are ~20px wide —
+too small for fingers. Needs bigger touch targets (maybe a zoom, or larger
+`BEAT_W` on small screens), wrapping controls, and a grid/staff that work in a
+phone viewport. **Do 2A and 2B together** — clean + responsive is one pass.
+
+### Phase 3 — Richer rhythm & meter
+
+**3 · 3/4 time signature + triplets.**
+- 3/4 is a modest change: `BEATS_PER_BAR` becomes configurable (3 vs 4), plus a
+  time-sig control; barline/`fits()` logic already keys off it. Unlocks waltzes
+  and **Happy Birthday**, Rock-a-bye, etc.
+- Triplets are bigger: the grid is currently 2 slots/beat; triplets need 3. Going
+  to **6 slots/beat** (LCM) supports both eighths and triplets, but makes the
+  grid denser — ties into 2A/2B (touch targets). Notation needs tuplet brackets.
+- Recommend shipping **3/4 first** (cheap, high payoff), triplets as a follow-up.
+
+### Phase 4 — Content
+
+**4 · Grow the public-domain library.**
+Ongoing. Partly *gated by Phase 3* (3/4 + triplets unlock Happy Birthday, Row
+Row Row Your Boat, many folk tunes). Worth adding **difficulty tags / categories**
+to the starter shelf as it grows. Keep the "traditional melody, pre-1923 /
+verified PD" bar.
+
+### Suggested sequencing (my read)
+`2A+2B` (polish + mobile — the tool's earned it and it de-risks everything after)
+→ `1A` (hand-authored lessons) → `3` 3/4 (cheap win) → `1B` (automation) →
+`4` ongoing + triplets. Phases are independent enough to reorder by appetite.
+
+---
+
 ## Done — 2026-06-05 (second build)
 
 ### 1. Name the piece + print/save a manuscript ✅
@@ -78,6 +154,28 @@ treble range) with an "8" over the clef. Set per range via `staffShift` in
   also exports to a file.
 - To add more songs: append a `song(...)` to `PRESETS` (must total 16/32/48
   beats = 4/8/12 bars; no barline-crossing notes).
+
+### 7. Eighth notes (shipped 2026-06-05) ✅
+- Added **Eighth** to the note palette. The grid now runs at eighth-note
+  resolution: each beat is `SLOTS_PER_BEAT` (2) cells (`model.js`), so notes can
+  sit on the half-beat. Visual hierarchy on the grid: faint line every eighth,
+  medium on the beat (`.beat-start`), strong at the bar (`.bar-start`).
+- `notation.js`: eighth heads get a **flag** off the stem; note heads now centre
+  over their own time span (so they line up with the grid block, and eighths sit
+  in their half-slot). `fits()` and overlap checks made fraction-safe.
+- Cells expose `data-pitch` / `data-slot` for reliable targeting/testing.
+- New eighth-note starter: **Frère Jacques** (written do=G5 so the low
+  "din-dan-don" sol = D5 still fits C5–A6). Preset DSL now parses `:0.5` (eighth)
+  via `parseFloat`. Total starters: 10.
+- Unlocks more repertoire (eighth-note tunes that were skipped before). Still
+  parked for lack of support: 3/4 meter (Happy Birthday, Rock-a-bye) and triplet
+  feel (Row Row Row Your Boat).
+
+### Dev note
+- Local preview now served by `~/.claude/nocache_server.py` (sends
+  `Cache-Control: no-store`) instead of `python -m http.server`, because the
+  browser was heuristically caching ES modules and serving stale per-file
+  mixes during iteration. `.claude/launch.json` "composer" points at it.
 
 ## Later / parked
 - **Cloud sync (Supabase-class)** — only if cross-device access or shareable

@@ -72,11 +72,16 @@ export function buildScale(low, high) {
 export const BEATS_PER_BAR = 4; // 4/4 — the natural fit for whole/half/quarter.
 
 export const DURATIONS = [
+    { id: 'eighth',  beats: 0.5, label: 'Eighth', glyph: '' },
     { id: 'quarter', beats: 1, label: 'Quarter', glyph: '♩' },
     { id: 'half',    beats: 2, label: 'Half',    glyph: '♩ –' },
     { id: 'whole',   beats: 4, label: 'Whole',   glyph: '○' },
 ];
 export const durationById = (id) => DURATIONS.find((d) => d.id === id);
+
+// Grid subdivision: the smallest placeable unit is an eighth note (half a beat),
+// so each beat is two "slots". Grid columns and fit-checks derive from this.
+export const SLOTS_PER_BEAT = 2;
 
 export const BAR_OPTIONS = [4, 8, 12];
 
