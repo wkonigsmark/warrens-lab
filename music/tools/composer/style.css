@@ -232,6 +232,11 @@ input[type="range"] { width: 150px; accent-color: var(--accent); }
   color: var(--muted);
   padding-right: 10px;
   justify-content: flex-end;
+  /* keep the note names pinned while the bars scroll horizontally */
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #fff;
 }
 .row-label .dot { width: 11px; height: 11px; border-radius: 50%; flex: none; }
 
@@ -369,4 +374,42 @@ input[type="range"] { width: 150px; accent-color: var(--accent); }
     color: #000;
   }
   @page { margin: 16mm; }
+}
+
+/* --- Mobile / small screens -------------------------------------------- */
+@media (max-width: 640px) {
+  .topbar { padding: 14px 14px 4px; }
+  .brand { gap: 10px; }
+  .logo { font-size: 30px; padding: 6px 9px; border-radius: 13px; }
+  h1 { font-size: 22px; }
+  .tagline { display: none; }                 /* save vertical space */
+  main { padding: 6px 12px 36px; }
+
+  /* tighter control card */
+  .controls { gap: 10px 14px; padding: 12px 12px; border-radius: 14px; }
+  .control { gap: 5px; }
+  .control > label { font-size: 10.5px; letter-spacing: 0.4px; }
+  select { padding: 8px 10px; }
+  input[type="range"] { width: 130px; }
+  .segmented { padding: 3px; gap: 3px; }
+  .seg { padding: 7px 11px; }
+
+  /* action buttons become a clean full-width row of equal buttons */
+  .control.actions { width: 100%; margin-left: 0; gap: 8px; }
+  .control.actions .btn { flex: 1; padding: 11px 6px; text-align: center; }
+
+  /* slightly shorter rows so the 13-row grid isn't so tall */
+  .grid { grid-template-rows: repeat(var(--rows), 26px); }
+  .row-label { font-size: 11px; padding-right: 8px; }
+
+  /* compact cards + library */
+  .board { border-radius: 14px; }
+  .scroll { padding: 14px 12px; }
+  .board-head { padding: 12px 14px 2px; }
+  .piece-title-input { font-size: 19px; min-width: 140px; }
+  .library { padding: 14px 14px 16px; border-radius: 14px; }
+  .library-actions { width: 100%; }
+  .library-actions .btn { flex: 1; }
+  .lib-load { padding: 10px 12px; }
+  .lib-icon { width: 38px; }
 }

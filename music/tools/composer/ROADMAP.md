@@ -49,17 +49,25 @@ procedurally build rhythm patterns (clap-backs, ostinati).
 
 ### Phase 2 — Surface polish
 
-**2A · UI cleanup / visual declutter.**
-The control bar + stacked library sections have grown busy. Candidates: group
-controls (compose / staff / playback), make sections collapsible or tabbed, and
-fix the **tall empty grid** (13 rows even when a song only uses C5–G5 — could
-crop to the instrument's used band or add a compact mode).
+**2A · UI cleanup / visual declutter.** _(first pass shipped 2026-06-05)_
+- ✅ **Sticky note-name labels** — the pitch column (`.row-label`) is now
+  `position: sticky; left: 0` so the names stay pinned while the bars scroll
+  horizontally (helps desktop AND mobile; was easy to lose your row before).
+- ✅ Mobile `@media (max-width:640px)` block: compacted the control card
+  (574px → 412px), full-width equal-width action-button row, shorter grid rows
+  (`--row-h` → 26px), tighter cards + library, hid the tagline.
+- Still open: grouping controls into sections (compose / staff / playback); the
+  **tall grid** (13 instrument rows even for low songs — those rows are valid
+  pitches so cropping would block input; a vertical-scroll or compact mode is the
+  real fix, deferred).
 
-**2B · Mobile optimization.**
-Responsive layout + touch. Real blocker today: eighth-note cells are ~20px wide —
-too small for fingers. Needs bigger touch targets (maybe a zoom, or larger
-`BEAT_W` on small screens), wrapping controls, and a grid/staff that work in a
-phone viewport. **Do 2A and 2B together** — clean + responsive is one pass.
+**2B · Mobile optimization.** _(first pass shipped 2026-06-05)_
+- ✅ Responsive layout verified at 375px: no horizontal overflow, controls wrap,
+  library rows clean, tapping cells to place notes works. Desktop unregressed.
+- Still open: **eighth-note cells are ~20px wide** — tappable but tight for
+  little fingers. Bumping needs care: the grid shares `BEAT_W` with the staff for
+  column alignment, so a mobile zoom / larger-beat mode must scale both together
+  (or accept grid↔staff drift). Deferred as a focused follow-up.
 
 ### Phase 3 — Richer rhythm & meter
 
@@ -177,12 +185,6 @@ verified PD" bar.
   browser was heuristically caching ES modules and serving stale per-file
   mixes during iteration. `.claude/launch.json` "composer" points at it.
 
-## Later / parked
-- **Cloud sync (Supabase-class)** — only if cross-device access or shareable
-  links/gallery become wanted. Adds auth + hosted DB + maintenance to the
-  otherwise-static site.
-- Per-composer grouping/filter within the library (currently one shared list).
-
 ### 6. Manuscript line-wrapping (shipped 2026-06-05) ✅
 - `notation.js` rebuilt around stacked **systems**: `renderScore(..., { barsPerSystem })`
   wraps a long piece onto multiple staff rows. Each system repeats the clef +
@@ -192,9 +194,16 @@ verified PD" bar.
   rows instead of running off the page). The **on-screen staff stays a single
   scrolling line** (`barsPerSystem` omitted) so it keeps aligning with the grid
   above it and the playhead sweep still works.
-- Theory guidance — e.g. as a melody wanders, suggest resolving to the tonic.
-  Data model (`{start, pitch, durBeats}` over a known scale) already supports a
-  future analyzer. (Warren's original "heroic" idea.)
-- More instruments; accidentals / key swaps (F→F♯, B→B♭) — already a marked
+
+## Later / parked (smaller items)
+- **Theory guidance / tonic-resolve analyzer** — as a melody wanders, suggest
+  resolving to the tonic. The `{start, pitch, durBeats}`-over-a-known-scale model
+  already supports a future analyzer. (Warren's original "heroic" idea; now also
+  feeds Phase 1B.)
+- **More instruments; accidentals / key swaps** (F→F♯, B→B♭) — already a marked
   FUTURE HOOK in `model.js`.
-- Eighth notes; harder-mode constraints.
+- **Cloud sync (Supabase-class)** — only if cross-device access or shareable
+  links/gallery become wanted. Adds auth + hosted DB + maintenance to the
+  otherwise-static site.
+- **Per-composer grouping/filter** within the library (currently one shared list).
+- **Load-from-file straight to canvas** (bypass the library on import).
