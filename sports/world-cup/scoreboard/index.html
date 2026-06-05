@@ -881,6 +881,7 @@
     let actualMatches = [];
     let poolEntries = [];
     let previousRanks = {}; // For computing standing position changes (↑/↓)
+    let sandboxUnlocked = sessionStorage.getItem("world_cup_sandbox_unlocked") === "true";
     
     // UI Selectors
     const elements = {
@@ -1539,6 +1540,10 @@
 
     // Render Tab Panel Views
     function switchTab(tabId) {
+      if (tabId === "sandbox" && !requestSandboxAccess()) {
+        return;
+      }
+
       elements.tabs.forEach(btn => {
         if (btn.dataset.tab === tabId) btn.classList.add("active");
         else btn.classList.remove("active");
@@ -1548,6 +1553,22 @@
         if (p.id === `panel-${tabId}`) p.classList.add("active");
         else p.classList.remove("active");
       });
+    }
+
+    function requestSandboxAccess() {
+      if (sandboxUnlocked) return true;
+
+      const pin = window.prompt("Enter commissioner PIN to access the sandbox.");
+      if (pin === ADMIN_PIN) {
+        sandboxUnlocked = true;
+        sessionStorage.setItem("world_cup_sandbox_unlocked", "true");
+        return true;
+      }
+
+      if (pin !== null) {
+        window.alert("Incorrect PIN.");
+      }
+      return false;
     }
 
     function renderStandings() {
