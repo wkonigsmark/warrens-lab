@@ -1099,13 +1099,43 @@
     const _preloadLogo = new Image();
     _preloadLogo.src = 'assets/text_logo_ants_acorns.png';
 
-    // Victory sounds — alternate between the two on each solve so the player
-    // hears variety. Stored in localStorage so the rotation survives reloads.
+    // Victory sounds — rotate through every audio file in sfx/ so the player
+    // hears variety. The list is fetched dynamically at page load: drop any
+    // new .m4a/.mp3/.wav/.ogg into the folder and it's picked up automatically.
+    // The rotation index is in localStorage so it survives reloads (and the
+    // modulo on .length means adding or removing files won't break it).
+    // We keep a hardcoded fallback so the game still has sound if the dir
+    // listing isn't available (e.g. on a static host with indexes off).
     const VICTORY_SFX = [
       'sfx/you-cracked-the-code-oh-yea.m4a',
       'sfx/yes-you-cracked-the-code.m4a',
     ];
-    VICTORY_SFX.forEach(src => { const a = new Audio(); a.preload = 'auto'; a.src = src; });
+    const _preloadAudio = (srcs) => srcs.forEach(src => {
+      const a = new Audio(); a.preload = 'auto'; a.src = src;
+    });
+    _preloadAudio(VICTORY_SFX);
+
+    (async function discoverVictorySfx() {
+      try {
+        const res = await fetch('sfx/');
+        if (!res.ok) return;
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const found = Array.from(doc.querySelectorAll('a'))
+          .map(a => decodeURIComponent((a.getAttribute('href') || '').split('/').pop() || ''))
+          .filter(name => /\.(m4a|mp3|wav|ogg)$/i.test(name))
+          .map(name => 'sfx/' + name);
+        // De-dupe (just in case) and skip if the dir listing came back empty.
+        const unique = Array.from(new Set(found));
+        if (unique.length > 0) {
+          VICTORY_SFX.length = 0;
+          unique.forEach(src => VICTORY_SFX.push(src));
+          _preloadAudio(VICTORY_SFX);
+        }
+      } catch (e) {
+        // Fetch blocked (e.g. file://) or directory listing disabled — keep fallback.
+      }
+    })();
 
     function playVictorySound() {
       try {
