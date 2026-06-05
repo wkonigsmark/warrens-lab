@@ -44,12 +44,26 @@
       </div>
 
       <div class="control">
+        <label>Clef</label>
+        <div id="clef-group" class="segmented" role="group" aria-label="Clef"></div>
+      </div>
+
+      <div class="control">
+        <label>Octave <span id="shift-readout">0</span></label>
+        <div class="stepper">
+          <button id="shift-down" class="step-btn" type="button" aria-label="Shift staff down an octave">−</button>
+          <button id="shift-up" class="step-btn" type="button" aria-label="Shift staff up an octave">+</button>
+        </div>
+      </div>
+
+      <div class="control">
         <label>Mentor mode</label>
         <button id="letters-toggle" class="toggle" type="button" aria-pressed="false">🔤 Letters</button>
       </div>
 
       <div class="control actions">
         <button id="play" class="btn btn-play">▶ Play</button>
+        <button id="save" class="btn btn-ghost">💾 Save</button>
         <button id="print" class="btn btn-ghost">🖨 Print</button>
         <button id="clear" class="btn btn-ghost">✕ Clear</button>
       </div>
@@ -68,7 +82,29 @@
       </div>
     </div>
 
-    <p class="hint">Tip: pick a <em>note length</em>, then click an empty square to drop a note. Click a coloured note to remove it. Press <strong>Play</strong> to hear your melody, or <strong>Print</strong> to save your manuscript.</p>
+    <p class="hint">Tip: pick a <em>note length</em>, then click an empty square to drop a note. Click a coloured note to remove it. Press <strong>Play</strong> to hear your melody, <strong>Save</strong> to keep it, or <strong>Print</strong> for a manuscript.</p>
+
+    <section class="library starters" aria-label="Starter songs">
+      <div class="library-head">
+        <h2 class="library-title">🎵 Starter Songs</h2>
+        <p class="library-sub">Classic public-domain tunes to play, learn, and remix. Load one, then press <strong>💾 Save</strong> to add your own version to My Songs.</p>
+      </div>
+      <ul id="starter-list" class="library-list"></ul>
+    </section>
+
+    <section class="library" aria-label="Saved songs">
+      <div class="library-head">
+        <h2 class="library-title">📚 My Songs <span id="lib-count" class="lib-count">0</span></h2>
+        <div class="library-actions">
+          <button id="lib-new" class="btn btn-ghost">＋ New</button>
+          <button id="lib-export-all" class="btn btn-ghost">⬇ Export all</button>
+          <button id="lib-import" class="btn btn-ghost">⬆ Import</button>
+          <input id="lib-file" type="file" accept="application/json,.json" hidden>
+        </div>
+      </div>
+      <ul id="lib-list" class="library-list"></ul>
+      <p id="lib-empty" class="library-empty">No saved songs yet — compose something and press <strong>💾 Save</strong> to keep it here. Each song also exports as a file you can back up or share.</p>
+    </section>
   </main>
 
   <!-- Print-only manuscript: a clean black-and-white score for the page. -->

@@ -2,12 +2,14 @@
   const STORAGE_PREFIX = "wcAudio:";
   const timeKey = `${STORAGE_PREFIX}time`;
   const pausedKey = `${STORAGE_PREFIX}paused`;
+  const intendsPlayingKey = `${STORAGE_PREFIX}intendsPlaying`;
   const scriptUrl = document.currentScript?.src || new URL("world-cup-audio.js", window.location.href).href;
   const audioUrl = new URL("../assets/america-the-beautiful.mp3", scriptUrl).href;
   const idleLimitMs = 30000;
 
   let blocked = false;
   let userPaused = sessionStorage.getItem(pausedKey) === "true";
+  let intendsPlaying = localStorage.getItem(intendsPlayingKey) === "true";
   let idlePaused = false;
   let idleTimer;
 
@@ -82,8 +84,10 @@
 
   function pauseTheme() {
     userPaused = true;
+    intendsPlaying = false;
     idlePaused = false;
     sessionStorage.setItem(pausedKey, "true");
+    localStorage.setItem(intendsPlayingKey, "false");
     audio.pause();
     saveTime();
     renderButton();
@@ -91,8 +95,10 @@
 
   function resumeTheme() {
     userPaused = false;
+    intendsPlaying = true;
     idlePaused = false;
     sessionStorage.setItem(pausedKey, "false");
+    localStorage.setItem(intendsPlayingKey, "true");
     audio.muted = false;
     playTheme();
     renderButton();
@@ -108,7 +114,9 @@
 
   function pauseForIdle() {
     if (userPaused || audio.paused) return;
+    intendsPlaying = false;
     idlePaused = true;
+    localStorage.setItem(intendsPlayingKey, "false");
     audio.pause();
     saveTime();
     renderButton();
@@ -130,6 +138,9 @@
   });
   window.addEventListener("pageshow", () => {
     resetIdleTimer();
+    if (intendsPlaying && !userPaused && !idlePaused) {
+      playTheme();
+    }
   });
 
   audio.addEventListener("loadedmetadata", restoreTime, { once: true });
@@ -144,4 +155,8 @@
   restoreTime();
   renderButton();
   resetIdleTimer();
+  if (intendsPlaying && !userPaused) {
+    audio.addEventListener("canplay", playTheme, { once: true });
+    playTheme();
+  }
 })();

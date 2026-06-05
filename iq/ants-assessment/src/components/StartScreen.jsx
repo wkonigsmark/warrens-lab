@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { COMPETENCIES } from '../lib/competencies'
+import CalibrationPanel from './CalibrationPanel'
 
 // Pick which skills to check, then start. Default: everything ticked — a full
 // check-up. Tap any card to leave it out for a quicker, focused session.
-export default function StartScreen({ onStart }) {
+export default function StartScreen({ onStart, config, onConfigChange }) {
   const [selected, setSelected] = useState(() => new Set(COMPETENCIES.map((c) => c.id)))
+  const [showCalibrate, setShowCalibrate] = useState(false)
 
   const toggle = (id) => {
     setSelected((prev) => {
@@ -16,16 +18,25 @@ export default function StartScreen({ onStart }) {
   }
 
   const chosen = COMPETENCIES.filter((c) => selected.has(c.id))
-  const questionCount = chosen.length * 3
+  const minQ = chosen.length * config.minQuestions
+  const maxQ = chosen.length * config.maxQuestions
 
   return (
     <div className="max-w-3xl mx-auto">
       <motion.div className="text-center mb-6" initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="text-3xl font-black text-gray-800">What should we check today? 🔎</h1>
         <p className="text-gray-500 mt-1">
-          Tap a topic to switch it on or off. Three quick questions each — no pressure!
+          Tap a topic to switch it on or off. Each topic adapts — it finds the right level for the student.
         </p>
+        <button
+          onClick={() => setShowCalibrate((s) => !s)}
+          className="mt-3 text-xs font-bold text-cyan-700 bg-cyan-50 hover:bg-cyan-100 px-3 py-1.5 rounded-full"
+        >
+          🔧 {showCalibrate ? 'Hide' : 'Calibrate'}
+        </button>
       </motion.div>
+
+      {showCalibrate && <CalibrationPanel config={config} onChange={onConfigChange} />}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {COMPETENCIES.map((c, i) => {
@@ -67,7 +78,7 @@ export default function StartScreen({ onStart }) {
           Start the check-up →
         </button>
         <p className="text-xs text-gray-400 mt-2">
-          {chosen.length === 0 ? 'Pick at least one topic' : `${questionCount} questions · about ${Math.max(1, Math.round(questionCount * 0.25))} min`}
+          {chosen.length === 0 ? 'Pick at least one topic' : `~${minQ}–${maxQ} questions · adapts to the student`}
         </p>
       </div>
     </div>

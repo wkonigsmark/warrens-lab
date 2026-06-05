@@ -34,14 +34,36 @@ a one-sample-per-level eyeball table. Levels span e.g. Arithmetic add-within-10 
 variable-on-both-sides. (The live run still uses levels 1–3 until the engine is
 wired in — no regression.)
 
+## Adaptive run — wired in (done)
+The live check-up now runs the real adaptive loop: per topic, `AdaptiveRunner`
+serves `generate(nextDifficulty(learner))`, captures answer time via
+`performance.now()`, feeds `record()`, and climbs/descends until the engine
+settles — then moves to the next topic. `AdaptiveResults` reports each topic's
+settled 1–10 level + tier + the rubric line it's "working around", plus avg time.
+Verified live (difficulty climbs 5→7→8→10 on correct answers; topic transitions
+clean; results render with time) and via `flow.sim.js` (full logic across all 6
+topics). Build green.
+
+**Calibration-first (the whole point for classroom testing):**
+- `lib/config.js` — all tunables in one place (start difficulty, min/max questions
+  per topic, reversals-to-settle, challenge/up-down ratio, fast/slow time
+  thresholds). Persisted to localStorage; also accepts `?key=value` URL overrides.
+- `CalibrationPanel` — live sliders behind a 🔧 Calibrate toggle on the start
+  screen. Tune between students, re-run immediately, no code.
+- Session export — results screen has a calibration drawer: per-question trace
+  chips (difficulty · ✓/✗ · time, θ on hover), an optional student label, **Copy
+  JSON**, and **Save session** (localStorage history, `loadSessions()`).
+- Hardened the question transition to enter-only animation (no AnimatePresence
+  exit-gating) so a backgrounded/throttled tab can't wedge mid-question.
+
+*Open tuning Q (now Warren's to calibrate with real kids):* depth vs. length —
+defaults run ~5–10 Qs/topic. The Calibrate panel is the dial.
+
 ## Next up
-- **Wire the engine into the run** — replace the fixed 3-rung ladder with the
-  adaptive loop (`adaptive.js` serving `generate(nextDifficulty)`); capture answer
-  time per question. *Open tuning Q:* depth vs. length — current settings average
-  ~9 Qs/topic (×6 topics = long). Likely cap total questions or run fewer topics deep.
 - **Resource report** — (competency, tier) → curated worksheet deep-links for
   parents/teachers; needs sibling worksheets to be deep-linkable by difficulty
-  (audit pending).
+  (audit pending). The tier + `tool.url` are already on the results screen as the
+  bridge; this turns it into a real per-level worksheet list.
 - **Reading/writing & science** — extend beyond math to the Lexicon / Stencil /
   chemistry / anatomy tools so the check-up covers the whole toolkit.
 

@@ -4,17 +4,21 @@
 // register) is a one-place edit. No DOM, no audio — pure data.
 
 // --- The instrument's register -------------------------------------------
-// Each preset is just a low/high natural-note bound. Default is a standard
-// 1.5-octave diatonic xylophone (C4..A5, 13 bars). To go higher/lower or
-// give the tool a bigger instrument later, add a preset or change the bounds —
-// everything downstream (grid rows, staff, audio) derives from buildScale().
+// Each preset is a low/high natural-note bound (the REAL sounding pitches —
+// grid labels and audio use these) plus `staffShift`: how many octaves to move
+// the notation when drawing the treble clef. A xylophone is a transposing
+// instrument — it SOUNDS an octave above what's written — so its real C5–A6 is
+// notated C4–A5 (staffShift: -1), keeping sight-reading in the friendly main
+// treble range while the bars still sound true. A small "8" over the clef marks
+// this, exactly like guitar/glockenspiel notation. staffShift 0 = write as-is.
+// Everything downstream derives from buildScale() + staffShift.
 export const RANGES = {
-    'c4-a5': { label: 'Xylophone · C4–A5 (1.5 octave)', low: 'C4', high: 'A5' },
-    'c4-g5': { label: 'Xylophone · C4–G5', low: 'C4', high: 'G5' },
-    'c5-a6': { label: 'Glockenspiel · C5–A6', low: 'C5', high: 'A6' },
-    'c4-c6': { label: 'Wide · C4–C6 (2 octaves)', low: 'C4', high: 'C6' },
+    'c5-a6': { label: 'Xylophone · C5–A6 (1.5 octave)', low: 'C5', high: 'A6', staffShift: -1 },
+    'c4-a5': { label: 'Treble · C4–A5 (no transpose)', low: 'C4', high: 'A5', staffShift: 0 },
+    'c4-g5': { label: 'Treble · C4–G5', low: 'C4', high: 'G5', staffShift: 0 },
+    'c4-c6': { label: 'Wide · C4–C6 (2 octaves)', low: 'C4', high: 'C6', staffShift: 0 },
 };
-export const DEFAULT_RANGE = 'c4-a5';
+export const DEFAULT_RANGE = 'c5-a6';
 
 // Naturals only for now. FUTURE HOOK: a key/accidentals layer would swap
 // specific letters (F→F#, B→Bb) by inserting them into this letter cycle.
@@ -79,3 +83,21 @@ export const BAR_OPTIONS = [4, 8, 12];
 // Shared horizontal scale (px per beat). The grid and the staff both use it so
 // a column on the grid lines up under its note on the staff.
 export const BEAT_W = 40;
+
+// --- Clefs ----------------------------------------------------------------
+// The staff can be drawn in either clef. `topStep` is the diatonic step of the
+// top staff line (the bottom line is always 8 steps lower = four line-gaps);
+// the renderer positions notes relative to it. The glyph* fields tune the SVG
+// clef symbol. Clef + octave shift together decide where a melody sits — e.g.
+// treble + −1 octave keeps the C5–A6 xylophone in the easy C4–A5 reading zone,
+// while bass + −2 octaves would centre that same melody on the bass staff.
+export const CLEFS = {
+    treble: { label: 'Treble', glyph: '𝄞', topStep: diatonicStep('F5'), glyphSize: 4.2, glyphX: 22, glyphBaseline: 3.1 },
+    bass:   { label: 'Bass',   glyph: '𝄢', topStep: diatonicStep('A3'), glyphSize: 2.7, glyphX: 22, glyphBaseline: 1.7 },
+};
+export const DEFAULT_CLEF = 'treble';
+
+// Octave-shift bounds for the staff control (how far the notation can move from
+// the sounding pitch, in octaves).
+export const SHIFT_MIN = -2;
+export const SHIFT_MAX = 2;

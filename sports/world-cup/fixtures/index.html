@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Cup 2026 Meta | Warren's World Cup Pool</title>
+  <title>World Cup 2026 Fixtures | Warren's World Cup Pool</title>
   <link rel="stylesheet" href="../shared/world-cup.css">
   <style>
     .wc-table th[data-sort] {
@@ -68,8 +68,8 @@
       <a class="wc-brand" href="../">Warren's World Cup Pool</a>
       <nav class="wc-nav" aria-label="World Cup sections">
         <a href="../pool/">Pool</a>
-        <a class="wc-nav-hidden" href="./" aria-hidden="true" tabindex="-1">Meta</a>
-        <a href="../fixtures/">Fixtures</a>
+        <a class="wc-nav-hidden" href="../meta/" aria-hidden="true" tabindex="-1">Meta</a>
+        <a href="./" aria-current="page">Fixtures</a>
         <a href="../rankings-odds/">W-Index</a>
         <a href="../groups/">Groups</a>
         <a href="../scoreboard/">Scoreboard</a>
@@ -81,11 +81,10 @@
 
     <section class="wc-hero">
       <div>
-        <div class="wc-eyebrow">Tournament Reference Layer</div>
-        <h1 class="wc-title">World Cup 2026 Meta</h1>
+        <div class="wc-eyebrow">Tournament Schedule</div>
+        <h1 class="wc-title">World Cup 2026 Fixtures</h1>
         <p class="wc-copy">
-          Teams, groups, fixtures, venues, kickoff times, bracket slots, and the little structural facts that every pool,
-          simulation, ranking, and scoreboard view should share.
+          Every group-play and knockout fixture in one place, with browser-local kickoff times, venues, and W-Index matchup context.
         </p>
       </div>
       <div class="wc-pill" id="viewer-time-zone">Local time loading</div>
@@ -111,21 +110,20 @@
     </section>
 
     <section class="wc-callout">
-      This page intentionally treats match data as reusable infrastructure. The pool UX, simulator, scoreboard, and
-      future editorial tools should import the same data file instead of carrying their own fixture copies.
+      Fixture times convert to your browser timezone automatically. Venue-local kickoff data remains preserved in the shared tournament data.
     </section>
 
     <section class="wc-section">
       <div class="wc-section-header">
         <div>
-          <h2>Data Files</h2>
-          <p>Raw lists for auditing, spreadsheets, scoring logic, and future database imports.</p>
+          <h2>Fixture Files</h2>
+          <p>Raw schedule lists for auditing, spreadsheets, scoring logic, and future database imports.</p>
         </div>
       </div>
       <div class="wc-grid">
         <article class="wc-card wc-card-pad">
           <span class="wc-chip">Audit Sheet</span>
-          <p class="wc-copy"><a href="DATA_POINTS.md">Teams, fixtures, knockout schedule, and venues in Markdown</a></p>
+          <p class="wc-copy"><a href="../meta/DATA_POINTS.md">Teams, fixtures, knockout schedule, and venues in Markdown</a></p>
         </article>
         <article class="wc-card wc-card-pad">
           <span class="wc-chip">CSV</span>
@@ -138,70 +136,57 @@
       </div>
     </section>
 
-    <section class="wc-section" id="groups">
+    <section class="wc-section" id="group-fixtures">
       <div class="wc-section-header">
         <div>
-          <h2>Groups</h2>
-          <p>All 48 nations grouped by the final draw.</p>
+          <h2>Group Fixtures</h2>
+          <p>Venue-local kickoff is preserved. Viewer time converts automatically using the browser timezone.</p>
         </div>
       </div>
-      <div class="wc-grid" id="group-grid"></div>
-    </section>
-
-    <section class="wc-section" id="teams">
-      <div class="wc-section-header">
-        <div>
-          <h2>Nation Meta</h2>
-          <p>Baseline team metadata for future W-Index, odds, and pool-entry views.</p>
-        </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px;">
+        <div class="wc-filter-row" id="group-filter" aria-label="Filter group fixtures" style="margin-bottom: 0;"></div>
+        <select id="venue-filter" class="wc-select">
+          <option value="All">All Venues</option>
+        </select>
       </div>
       <div class="wc-table-wrap">
         <table class="wc-table">
-          <thead>
+          <thead id="group-fixtures-head">
             <tr>
-              <th>Nation</th>
-              <th>Group</th>
-              <th>Confederation</th>
-              <th>Code</th>
-              <th>Role</th>
+              <th data-sort="Match">Match</th>
+              <th data-sort="Fixture">Fixture</th>
+              <th data-sort="Viewer Time">Viewer Time</th>
+              <th data-sort="Venue">Venue</th>
+              <th data-sort="Total W-Index">Total W-Index</th>
+              <th data-sort="Diff">Diff</th>
+              <th data-sort="Rating">Rating</th>
             </tr>
           </thead>
-          <tbody id="team-body"></tbody>
+          <tbody id="group-fixtures-body"></tbody>
         </table>
       </div>
     </section>
 
-    <section class="wc-section" id="venues">
+    <section class="wc-section" id="knockout">
       <div class="wc-section-header">
         <div>
-          <h2>Venues</h2>
-          <p>Host stadiums, cities, countries, timezones, and assigned match count.</p>
+          <h2>Knockout Schedule</h2>
+          <p>Official bracket slots from the Round of 32 through the final, including the third-place match.</p>
         </div>
       </div>
-      <div class="wc-grid" id="venue-grid"></div>
-    </section>
-
-    <section class="wc-section">
-      <div class="wc-section-header">
-        <div>
-          <h2>Critical Rules</h2>
-          <p>Structural details that matter for pool scoring and bracket generation.</p>
-        </div>
-      </div>
-      <div class="wc-grid">
-        <article class="wc-card wc-card-pad">
-          <span class="wc-chip">Advancement</span>
-          <p class="wc-copy">Top two from each group plus the eight best third-place teams reach the Round of 32.</p>
-        </article>
-        <article class="wc-card wc-card-pad">
-          <span class="wc-chip">Pool Implication</span>
-          <p class="wc-copy">Correct third-place ordering is high leverage because it controls which bracket slots are
-            filled.</p>
-        </article>
-        <article class="wc-card wc-card-pad">
-          <span class="wc-chip">Final Weekend</span>
-          <p class="wc-copy">The semifinal losers play the third-place match one day before the final.</p>
-        </article>
+      <div class="wc-filter-row" id="stage-filter" aria-label="Filter knockout fixtures"></div>
+      <div class="wc-table-wrap">
+        <table class="wc-table">
+          <thead>
+            <tr>
+              <th>Match</th>
+              <th>Slot</th>
+              <th>Viewer Time</th>
+              <th>Venue</th>
+            </tr>
+          </thead>
+          <tbody id="knockout-body"></tbody>
+        </table>
       </div>
     </section>
 
@@ -561,22 +546,19 @@
       });
     }
 
-    const groupFixturesHead = document.getElementById("group-fixtures-head");
-    if (groupFixturesHead) {
-      groupFixturesHead.addEventListener("click", (e) => {
-        const th = e.target.closest("th[data-sort]");
-        if (!th) return;
-        const column = th.dataset.sort;
-        if (groupFixturesSortColumn === column) {
-          groupFixturesSortAscending = !groupFixturesSortAscending;
-        } else {
-          groupFixturesSortColumn = column;
-          groupFixturesSortAscending = (column !== "Rating" && column !== "Total W-Index");
-        }
-        const activeFilter = document.querySelector("#group-filter .is-active")?.dataset?.value || "All";
-        renderGroupFixtures(activeFilter);
-      });
-    }
+    document.getElementById("group-fixtures-head").addEventListener("click", (e) => {
+      const th = e.target.closest("th[data-sort]");
+      if (!th) return;
+      const column = th.dataset.sort;
+      if (groupFixturesSortColumn === column) {
+        groupFixturesSortAscending = !groupFixturesSortAscending;
+      } else {
+        groupFixturesSortColumn = column;
+        groupFixturesSortAscending = (column !== "Rating" && column !== "Total W-Index");
+      }
+      const activeFilter = document.querySelector("#group-filter .is-active")?.dataset?.value || "All";
+      renderGroupFixtures(activeFilter);
+    });
 
     function renderKnockout(stage = "All") {
       const stages = [...new Set(knockoutMatches.map((match) => match.stage))];
@@ -624,10 +606,11 @@
       `).join("");
     }
 
-    renderGroups();
-    renderTeams();
-    renderVenues();
+    initVenueFilter();
+    renderGroupFixtures();
+    renderKnockout();
     renderSources();
+    loadWIndex();
   </script>
   <script src="../shared/world-cup-audio.js" defer></script>
 </body>
