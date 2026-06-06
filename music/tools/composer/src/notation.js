@@ -86,9 +86,10 @@ function renderSystem(opts) {
     const {
         barsThis, startBeat, baseTop, clefCfg, notes, width,
         colored, showLetters, staffShift, isFirst, isLast, playheadBeat,
+        beatsPerBar = 4, timeSignature = '4/4',
     } = opts;
     const topStep = clefCfg.topStep;
-    const sysBeats = barsThis * BEATS_PER_BAR;
+    const sysBeats = barsThis * beatsPerBar;
 
     let svg = '';
     // five staff lines
@@ -97,7 +98,7 @@ function renderSystem(opts) {
         svg += `<line x1="${STAFF_LEFT}" y1="${y}" x2="${width - RIGHT_PAD}" y2="${y}" stroke="#c9cedd" stroke-width="1.4"/>`;
     }
     // barlines — thick at the very start and very end of the whole piece
-    for (let b = 0; b <= sysBeats; b += BEATS_PER_BAR) {
+    for (let b = 0; b <= sysBeats; b += beatsPerBar) {
         const x = xOfBeat(b);
         const thick = (isFirst && b === 0) || (isLast && b === sysBeats);
         svg += `<line x1="${x}" y1="${baseTop}" x2="${x}" y2="${baseTop + STAFF_H}" stroke="${thick ? '#1f2430' : '#c9cedd'}" stroke-width="${thick ? 2.4 : 1.2}"/>`;
@@ -112,9 +113,10 @@ function renderSystem(opts) {
     }
     // time signature — only on the first system (standard engraving)
     if (isFirst) {
+        const [numerator, denominator] = timeSignature.split('/');
         const tsX = STAFF_LEFT + 12;
-        svg += `<text x="${tsX}" y="${baseTop + 1.7 * GAP}" font-size="${GAP * 1.5}" font-weight="700" fill="#1f2430" font-family="serif">4</text>`
-             + `<text x="${tsX}" y="${baseTop + 3.5 * GAP}" font-size="${GAP * 1.5}" font-weight="700" fill="#1f2430" font-family="serif">4</text>`;
+        svg += `<text x="${tsX}" y="${baseTop + 1.7 * GAP}" font-size="${GAP * 1.5}" font-weight="700" fill="#1f2430" font-family="serif">${numerator}</text>`
+             + `<text x="${tsX}" y="${baseTop + 3.5 * GAP}" font-size="${GAP * 1.5}" font-weight="700" fill="#1f2430" font-family="serif">${denominator}</text>`;
     }
     // notes that fall in this system
     for (const n of notes) {
@@ -132,12 +134,12 @@ function renderSystem(opts) {
 
 export function renderScore(
     { bars, notes },
-    { colored = false, playheadBeat = null, showLetters = false, staffShift = 0, clef = 'treble', barsPerSystem = null } = {},
+    { colored = false, playheadBeat = null, showLetters = false, staffShift = 0, clef = 'treble', barsPerSystem = null, beatsPerBar = 4, timeSignature = '4/4' } = {},
 ) {
     const clefCfg = CLEFS[clef] || CLEFS.treble;
     const perSys = (barsPerSystem && barsPerSystem > 0) ? Math.min(barsPerSystem, bars) : bars;
     const systemsCount = Math.max(1, Math.ceil(bars / perSys));
-    const width = BEATS_LEFT + perSys * BEATS_PER_BAR * BEAT_W + RIGHT_PAD;
+    const width = BEATS_LEFT + perSys * beatsPerBar * BEAT_W + RIGHT_PAD;
     const height = MARGIN * 2 + systemsCount * SYSTEM_H;
 
     let body = '';
@@ -146,12 +148,13 @@ export function renderScore(
         const barsThis = Math.min(perSys, bars - startBar);
         body += renderSystem({
             barsThis,
-            startBeat: startBar * BEATS_PER_BAR,
+            startBeat: startBar * beatsPerBar,
             baseTop: MARGIN + TOP_PAD + s * SYSTEM_H,
             clefCfg, notes, width, colored, showLetters, staffShift,
             isFirst: s === 0,
             isLast: s === systemsCount - 1,
             playheadBeat,
+            beatsPerBar, timeSignature,
         });
     }
     return `<svg class="score" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">${body}</svg>`;

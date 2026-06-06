@@ -69,7 +69,15 @@ export function buildScale(low, high) {
 }
 
 // --- Rhythm ---------------------------------------------------------------
-export const BEATS_PER_BAR = 4; // 4/4 — the natural fit for whole/half/quarter.
+export const TIME_SIGNATURES = [
+    { id: '4/4', label: '4/4', beatsPerBar: 4, description: 'Four beats per bar (common time)' },
+    { id: '3/4', label: '3/4', beatsPerBar: 3, description: 'Three beats per bar (waltz time)' },
+];
+export const DEFAULT_TIME_SIG = '4/4';
+export const timeSignatureById = (id) => TIME_SIGNATURES.find((ts) => ts.id === id);
+
+// Default for backwards compatibility; app.js uses the dynamic state.timeSignature instead.
+export const BEATS_PER_BAR = 4;
 
 export const DURATIONS = [
     { id: 'eighth',  beats: 0.5, label: 'Eighth', glyph: '' },
@@ -83,7 +91,7 @@ export const durationById = (id) => DURATIONS.find((d) => d.id === id);
 // so each beat is two "slots". Grid columns and fit-checks derive from this.
 export const SLOTS_PER_BEAT = 2;
 
-export const BAR_OPTIONS = [4, 8, 12];
+export const BAR_OPTIONS = [4, 5, 6, 8, 12];  // 5 and 6 for 3/4 time pieces
 
 // Shared horizontal scale (px per beat). The grid and the staff both use it so
 // a column on the grid lines up under its note on the staff.

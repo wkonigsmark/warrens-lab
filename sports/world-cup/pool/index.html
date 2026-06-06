@@ -157,6 +157,42 @@
       margin-top: 20px;
     }
 
+    .pool-entry-launch {
+      display: grid;
+      justify-items: center;
+      margin: 4px auto 24px;
+    }
+
+    .pool-start-button {
+      min-width: min(100%, 320px);
+      min-height: 58px;
+      padding: 0 34px;
+      border: 1px solid rgba(244, 201, 93, 0.78);
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(244, 201, 93, 0.98), rgba(255, 246, 213, 0.96));
+      color: #07130f;
+      font-size: clamp(1.05rem, 3vw, 1.35rem);
+      font-weight: 950;
+      box-shadow:
+        0 0 0 7px rgba(244, 201, 93, 0.12),
+        0 0 46px rgba(244, 201, 93, 0.42),
+        0 22px 62px rgba(0, 0, 0, 0.28);
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .pool-start-button:hover,
+    .pool-start-button:focus-visible {
+      transform: translateY(-1px);
+      box-shadow:
+        0 0 0 9px rgba(244, 201, 93, 0.16),
+        0 0 62px rgba(244, 201, 93, 0.54),
+        0 25px 70px rgba(0, 0, 0, 0.32);
+    }
+
+    .pool-analysis-link {
+      justify-content: center;
+    }
+
     .pool-form {
       display: grid;
       gap: 14px;
@@ -1108,6 +1144,10 @@
           </div>
         </section>
 
+        <div class="pool-entry-launch">
+          <button class="wc-button pool-start-button" type="button" id="start-entry">Start Entry</button>
+        </div>
+
         <section class="pool-panel pool-card-pad">
           <div class="pool-rules">
             <article class="pool-rules-card">
@@ -1150,8 +1190,7 @@
               <span>Entries are final after submission. To play multiple brackets, submit each one separately.</span>
             </article>
           </div>
-          <div class="pool-actions">
-            <button class="wc-button" type="button" id="start-entry">Start Entry</button>
+          <div class="pool-actions pool-analysis-link">
             <a class="wc-button secondary" href="../groups/">View Group Analysis</a>
           </div>
         </section>

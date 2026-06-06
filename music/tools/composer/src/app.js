@@ -3,11 +3,15 @@
 
 import {
     RANGES, DEFAULT_RANGE, buildScale, DURATIONS, durationById,
-    BAR_OPTIONS, BEATS_PER_BAR, CLEFS, DEFAULT_CLEF, SHIFT_MIN, SHIFT_MAX,
+    BAR_OPTIONS, BEATS_PER_BAR, TIME_SIGNATURES, DEFAULT_TIME_SIG, timeSignatureById,
+    CLEFS, DEFAULT_CLEF, SHIFT_MIN, SHIFT_MAX,
 } from './model.js';
 import { renderGrid } from './grid.js';
 import { renderScore } from './notation.js';
-import { playNote, playScore } from './audio.js';
+import {
+    playNote, playScore, silencePlayback,
+    startMetronome, stopMetronome, setMetronomeTempo,
+} from './audio.js';
 import {
     loadLibrary, saveLibrary, genId, upsertPiece, deletePiece,
     downloadJSON, parseImport, slug,
@@ -44,6 +48,7 @@ const els = {
     libFile: document.getElementById('lib-file'),
     starterList: document.getElementById('starter-list'),
     lessonList: document.getElementById('lesson-list'),
+    timeSigGroup: document.getElementById('time-sig-group'),
     metronomeToggle: document.getElementById('metronome-toggle'),
 };
 
@@ -56,6 +61,7 @@ const state = {
     bars: 4,
     durationId: 'quarter',
     tempo: 96,
+    timeSignature: DEFAULT_TIME_SIG,  // '4/4' or '3/4'
     clef: DEFAULT_CLEF,
     staffShift: RANGES[DEFAULT_RANGE].staffShift || 0, // octaves notation moves from sounding
     showLetters: false,
@@ -68,15 +74,17 @@ const state = {
 };
 
 const scaleOf = () => buildScale(RANGES[state.rangeId].low, RANGES[state.rangeId].high);
+const beatsPerBar = () => timeSignatureById(state.timeSignature)?.beatsPerBar || BEATS_PER_BAR;
 
 // --- Placement rules ------------------------------------------------------
 // A note must fit before the end and must not cross a barline (keeps the
 // notation honest — no ties needed in v1).
 function fits(beat, durBeats) {
-    const totalBeats = state.bars * BEATS_PER_BAR;
+    const bpb = beatsPerBar();
+    const totalBeats = state.bars * bpb;
     if (beat < 0 || beat + durBeats > totalBeats + 1e-9) return false;
     // must not cross a barline: start and last instant live in the same bar
-    const barOf = (b) => Math.floor(b / BEATS_PER_BAR);
+    const barOf = (b) => Math.floor(b / bpb);
     return barOf(beat) === barOf(beat + durBeats - 1e-9);
 }
 
@@ -106,9 +114,11 @@ function flashInvalid() {
 // --- Rendering ------------------------------------------------------------
 function render(playheadBeat = null) {
     const scale = scaleOf();
+    const bpb = beatsPerBar();
     renderGrid(els.grid, {
         scale, bars: state.bars, notes: state.notes,
         onCellClick: placeNote, onNoteClick: removeNote,
+        beatsPerBar: bpb,
     });
     renderStaff(playheadBeat);
     renderManuscript();
@@ -116,9 +126,10 @@ function render(playheadBeat = null) {
 }
 
 function renderStaff(playheadBeat) {
+    const bpb = beatsPerBar();
     els.staff.innerHTML = renderScore(
         { bars: state.bars, notes: state.notes },
-        { colored: true, playheadBeat, showLetters: state.showLetters, staffShift: state.staffShift, clef: state.clef },
+        { colored: true, playheadBeat, showLetters: state.showLetters, staffShift: state.staffShift, clef: state.clef, beatsPerBar: bpb, timeSignature: state.timeSignature },
     );
 }
 
@@ -128,10 +139,11 @@ function renderManuscript() {
     const by = (state.composer || '').trim();
     const date = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
     const byLine = by ? `Composed by ${escapeHtml(by)} · ${date}` : date;
+    const bpb = beatsPerBar();
     const score = renderScore(
         { bars: state.bars, notes: state.notes },
         // wrap onto stacked staves so long pieces fit the printed page
-        { colored: false, showLetters: state.showLetters, staffShift: state.staffShift, clef: state.clef, barsPerSystem: 4 },
+        { colored: false, showLetters: state.showLetters, staffShift: state.staffShift, clef: state.clef, barsPerSystem: 4, beatsPerBar: bpb, timeSignature: state.timeSignature },
     );
     els.manuscript.innerHTML =
         `<h2 class="ms-title">${escapeHtml(title)}</h2>` +
@@ -150,24 +162,29 @@ let playTimers = [];
 function stopPlayback() {
     playTimers.forEach(clearTimeout);
     playTimers = [];
+    silencePlayback();          // cut any notes scheduled ahead of the stop
     state.playing = false;
-    els.play.disabled = false;
     els.play.textContent = '▶ Play';
+    els.play.classList.remove('playing');
     renderStaff(null);
 }
 
 function play() {
     if (state.playing || state.notes.length === 0) return;
     state.playing = true;
-    els.play.disabled = true;
-    els.play.textContent = '♪ Playing…';
-    const { schedule, totalMs } = playScore(state.notes, state.tempo,
-        { metronome: state.metronome, beatsPerBar: BEATS_PER_BAR });
+    els.play.textContent = '■ Stop';   // same button becomes Stop
+    els.play.classList.add('playing');
+    const { schedule, totalMs } = playScore(state.notes, state.tempo);
     // Sweep the playhead by lighting up each note as it sounds.
     schedule.forEach(({ note, offsetMs }) => {
         playTimers.push(setTimeout(() => renderStaff(note.start), offsetMs));
     });
     playTimers.push(setTimeout(stopPlayback, totalMs + 250));
+}
+
+// Click Play (or hit space) to start; click again (or space) to stop.
+function togglePlay() {
+    if (state.playing) stopPlayback(); else play();
 }
 
 // --- Controls -------------------------------------------------------------
@@ -190,7 +207,21 @@ function refreshControls() {
         () => state.bars,
         (n) => {
             state.bars = n;
-            const max = n * BEATS_PER_BAR;
+            const bpb = beatsPerBar();
+            const max = n * bpb;
+            state.notes = state.notes.filter((x) => x.start + x.durBeats <= max);
+            refreshControls(); render();
+        },
+    );
+    buildSegmented(
+        els.timeSigGroup,
+        TIME_SIGNATURES.map((ts) => ({ value: ts.id, label: ts.label })),
+        () => state.timeSignature,
+        (id) => {
+            state.timeSignature = id;
+            // revalidate notes against new bar structure
+            const bpb = timeSignatureById(id).beatsPerBar;
+            const max = state.bars * bpb;
             state.notes = state.notes.filter((x) => x.start + x.durBeats <= max);
             refreshControls(); render();
         },
@@ -229,8 +260,8 @@ function nudgeShift(delta) {
 // A "piece" is the saveable subset of state — used by the autosave, the library,
 // and file export alike, so all three stay in lockstep.
 function currentPiece() {
-    const { rangeId, bars, durationId, tempo, clef, staffShift, showLetters, title, composer, notes } = state;
-    return { rangeId, bars, durationId, tempo, clef, staffShift, showLetters, title, composer, notes };
+    const { rangeId, bars, durationId, tempo, timeSignature, clef, staffShift, showLetters, title, composer, notes } = state;
+    return { rangeId, bars, durationId, tempo, timeSignature, clef, staffShift, showLetters, title, composer, notes };
 }
 
 // Apply a saved/imported piece onto state, validating each field so a stale or
@@ -241,6 +272,7 @@ function applyPiece(p) {
     state.bars = BAR_OPTIONS.includes(p.bars) ? p.bars : 4;
     state.durationId = durationById(p.durationId) ? p.durationId : 'quarter';
     state.tempo = typeof p.tempo === 'number' ? p.tempo : 96;
+    state.timeSignature = timeSignatureById(p.timeSignature) ? p.timeSignature : DEFAULT_TIME_SIG;
     state.clef = CLEFS[p.clef] ? p.clef : DEFAULT_CLEF;
     state.staffShift = typeof p.staffShift === 'number'
         ? Math.min(SHIFT_MAX, Math.max(SHIFT_MIN, Math.round(p.staffShift)))
@@ -261,7 +293,7 @@ function applyPiece(p) {
 function saveState() {
     try {
         localStorage.setItem(STORE_KEY, JSON.stringify(
-            { ...currentPiece(), currentId: state.currentId, metronome: state.metronome }));
+            { ...currentPiece(), currentId: state.currentId }));
     } catch (_) { /* ignore */ }
 }
 
@@ -271,7 +303,6 @@ function loadState() {
         if (!saved) return;
         applyPiece(saved);
         if (typeof saved.currentId === 'string') state.currentId = saved.currentId;
-        state.metronome = !!saved.metronome;
     } catch (_) { /* ignore */ }
 }
 
@@ -579,6 +610,7 @@ function init() {
     els.tempo.addEventListener('input', () => {
         state.tempo = +els.tempo.value;
         els.tempoReadout.textContent = state.tempo;
+        setMetronomeTempo(state.tempo); // keep a running metronome in step
         saveState();
     });
 
@@ -594,14 +626,27 @@ function init() {
     els.metronomeToggle.addEventListener('click', () => {
         state.metronome = !state.metronome;
         updateMetronomeToggle();
-        saveState();
+        if (state.metronome) startMetronome(state.tempo, beatsPerBar());
+        else stopMetronome();
     });
 
     els.title.addEventListener('input', () => { state.title = els.title.value; renderManuscript(); saveState(); });
     els.composer.addEventListener('input', () => { state.composer = els.composer.value; renderManuscript(); saveState(); });
 
-    els.play.addEventListener('click', play);
+    els.play.addEventListener('click', togglePlay);
     els.save.addEventListener('click', saveToLibrary);
+
+    // Spacebar starts/stops playback — unless you're typing in a field or a
+    // button is focused (let the focused control handle its own space).
+    document.addEventListener('keydown', (e) => {
+        if (e.code !== 'Space' && e.key !== ' ') return;
+        const t = e.target;
+        const tag = t && t.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || tag === 'BUTTON'
+            || (t && t.isContentEditable)) return;
+        e.preventDefault();
+        togglePlay();
+    });
     els.print.addEventListener('click', () => { renderManuscript(); window.print(); });
     els.clear.addEventListener('click', () => {
         if (state.notes.length === 0) return;

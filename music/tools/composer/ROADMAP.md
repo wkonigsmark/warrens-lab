@@ -21,20 +21,37 @@ more content. Phases below are Warren's; notes + dependencies are mine.
 
 ### Phase 1 — Learning layer (the big one)
 
-**1A · Lessons built off library pieces.**
-Bite-sized, *repeatable* exercises that teach the actual "changes" (the
-note-to-note moves) inside a known piece — e.g. drill just the `E E F G` opening
-of Ode to Joy, or the `C C G G A A G` leap-and-step of Twinkle, before playing
-the whole thing.
-- Likely a **Lesson mode**: take a piece → break it into short phrases/motifs →
-  student practices each (call-and-response: the app plays it, the student
-  echoes it on the grid), then chains phrases into the full tune.
-- Reuses everything we have (grid input, playback, mentor letters) + the
-  **easy-win/repetition/celebration** loop that drives buy-in for Warren's kids'
-  tools.
-- Open question: how phrases are defined — hand-annotated per preset (fast to
-  start) vs auto-segmented (see 1B). Recommend hand-authoring 2–3 lessons first
-  to find the right shape, *then* automate.
+**1A · Lessons built off library pieces.** _(first pass shipped 2026-06-05)_
+**Reframed by Warren → PRINTABLE practice sheets, not a screen game.** The build-up
+exercises are supplemental *notation* a student takes to the instrument; the
+on-screen part stays minimal (hear it + metronome). Focus is the notes, not UX.
+- ✅ `src/lessons.js`: hand-authored lessons as **cumulative steps** (each step =
+  the phrase-so-far, with a kid-facing prompt naming the *change* — "leap up to
+  G"). Three lessons: Hot Cross Buns, Twinkle Line 1, Ode to Joy Line 1.
+- ✅ **🖨 Print → practice sheet**: `buildPracticeSheetHTML()` renders each step
+  as a labelled B&W mini-staff (Warm-up 1 → … → "Put it together"), letters in
+  the noteheads, stacked, `break-inside: avoid`. Reuses `renderScore`.
+  - ✅ **Fits one page**: practice-sheet staves use a fixed compact height
+    (`.ms-exercise .ms-score svg { height:116px; width:auto }`) instead of the
+    full-page width the single-piece manuscript uses — Twinkle's 5 exercises now
+    land on one sheet (~720px tall). Left-aligned, growing in width per phrase.
+- ✅ **🎓 Lessons shelf** (read-only): 🖨 prints the sheet; tapping the row loads
+  the full phrase on the canvas to hear.
+- ✅ **Metronome** — a real **standalone** click (`startMetronome`/`stopMetronome`
+  in audio.js, lookahead scheduler for steady timing, firm downbeat + soft
+  off-beats). Toggle on/off; the tempo slider adjusts it live (`setMetronomeTempo`).
+  Session-only (not persisted; no auto-start on load). Earlier version only
+  clicked during playback and the toggle alone did nothing — fixed.
+
+### Playback controls (shipped 2026-06-05)
+- **Play ⇄ Stop on one button**: clicking toggles; `togglePlay()`. Stop now
+  *actually* silences notes that were scheduled ahead — playback voices route
+  through a master gain that `silencePlayback()` mutes. Stop state is red.
+- **Spacebar** starts/stops from anywhere, except while typing in a field or with
+  a button focused (those handle their own space).
+- Next: lessons covering the *whole* piece (not just line 1); count-in before
+  playback; per-piece sheets (print a starter song's prep exercises).
+- NOT built (deliberately, per Warren): interactive ghost-tap/echo game UI.
 
 **1B · Scalable auto-generation of practice pieces.**
 An engine that *simplifies* existing pieces and *generates* graded drills:

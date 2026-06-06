@@ -117,6 +117,8 @@ input[type="range"] { width: 150px; accent-color: var(--accent); }
 .btn:active { transform: translateY(1px); }
 .btn-play { background: var(--accent); color: #fff; box-shadow: 0 6px 16px rgba(255, 138, 61, 0.35); }
 .btn-play:disabled { opacity: 0.7; cursor: default; }
+/* while playing, the same button is a Stop control */
+.btn-play.playing { background: #e8533f; box-shadow: 0 6px 16px rgba(232, 83, 63, 0.38); }
 .btn-ghost { background: #fff; color: var(--muted); border: 1px solid var(--line); }
 .btn-ghost:hover { color: var(--ink); }
 .btn.flashed { color: #2e9e5b; border-color: #2e9e5b; }
@@ -362,19 +364,22 @@ input[type="range"] { width: 150px; accent-color: var(--accent); }
 /* --- Manuscript (print only) ------------------------------------------- */
 /* Hidden on screen; revealed and laid out cleanly when printing. */
 .manuscript { display: none; }
-.ms-title { margin: 0 0 4px; font-size: 26px; font-weight: 800; text-align: center; }
-.ms-by { margin: 0 0 22px; text-align: center; color: #555; font-size: 13px; }
+.ms-title { margin: 0 0 3px; font-size: 22px; font-weight: 800; text-align: center; }
+.ms-by { margin: 0 0 12px; text-align: center; color: #555; font-size: 12px; }
 .ms-score svg { width: 100%; height: auto; }
 
-/* practice-sheet exercises */
-.ms-exercise { margin: 0 0 18px; }
-.ms-ex-label { font-size: 13px; color: #333; margin: 0 0 2px; }
+/* practice-sheet exercises: compact, fixed-height staves (left-aligned, growing
+   in width as the phrase grows) so the whole set fits on one page. */
+.ms-exercise { margin: 0 0 8px; }
+.ms-ex-label { font-size: 13px; color: #333; margin: 0; }
 .ms-ex-num {
   display: inline-block;
   font-weight: 800;
   color: #000;
   margin-right: 8px;
 }
+.ms-exercise .ms-score { line-height: 0; margin-top: -14px; }
+.ms-exercise .ms-score svg { width: auto; height: 116px; max-width: 100%; }
 @media print {
   .ms-exercise { break-inside: avoid; page-break-inside: avoid; }
 }

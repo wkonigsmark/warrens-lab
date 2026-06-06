@@ -6,8 +6,8 @@
 
 import { NOTE_COLORS, letterOf, BEATS_PER_BAR, BEAT_W, SLOTS_PER_BEAT } from './model.js';
 
-export function renderGrid(container, { scale, bars, notes, onCellClick, onNoteClick }) {
-    const slotsPerBar = BEATS_PER_BAR * SLOTS_PER_BEAT;
+export function renderGrid(container, { scale, bars, notes, onCellClick, onNoteClick, beatsPerBar = 4 }) {
+    const slotsPerBar = beatsPerBar * SLOTS_PER_BEAT;
     const totalSlots = bars * slotsPerBar;
     const rows = scale.slice().reverse(); // high pitch first (top row)
 

@@ -21,12 +21,14 @@ function parse(notation) {
     return { notes, beats: beat };
 }
 
-function song(id, title, composer, notation) {
+function song(id, title, composer, notation, timeSignature = '4/4') {
     const { notes, beats } = parse(notation);
+    const beatsPerBar = timeSignature === '3/4' ? 3 : 4;
     return {
         id, title, composer,
         rangeId: 'c5-a6', clef: 'treble', staffShift: -1, // default xylophone, written an octave down
-        bars: Math.max(4, Math.ceil(beats / 4)),
+        bars: Math.max(4, Math.ceil(beats / beatsPerBar)),
+        timeSignature,
         durationId: 'quarter', tempo: 96, showLetters: false,
         notes, builtin: true,
     };
@@ -73,4 +75,13 @@ export const PRESETS = [
         'G5 A5 B5 G5 | G5 A5 B5 G5 | B5 C6 D6:2 | B5 C6 D6:2 | ' +
         'D6:0.5 E6:0.5 D6:0.5 C6:0.5 B5 G5 | D6:0.5 E6:0.5 D6:0.5 C6:0.5 B5 G5 | ' +
         'G5 D5 G5:2 | G5 D5 G5:2'),
+
+    // 3/4 time signatures
+    song('preset-happybirthday', 'Happy Birthday', 'Traditional',
+        'G5 G5 A5 | G5 C6 B5 | G5 G5 A5 | G5 C6 B5 | G5 G5:2',
+        '3/4'),
+
+    song('preset-rockabye', 'Rock-a-bye Baby', 'Traditional',
+        'C5 D5 E5 | F5 G5:2 | C5 D5 E5 | F5 G5:2 | G5 A5 B5 | C6 A5 G5',
+        '3/4'),
 ];
