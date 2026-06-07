@@ -17,7 +17,8 @@ import {
     downloadJSON, parseImport, slug,
 } from './library.js';
 import { PRESETS } from './presets.js';
-import { LESSONS, lessonById } from './lessons.js';
+import { LESSONS, lessonById, buildLessonFromAnalysis } from './lessons.js';
+import { analyzeForPhrases } from './analyze.js';
 
 const els = {
     rangeSelect: document.getElementById('range-select'),
@@ -33,6 +34,7 @@ const els = {
     play: document.getElementById('play'),
     save: document.getElementById('save'),
     print: document.getElementById('print'),
+    generateLesson: document.getElementById('generate-lesson'),
     clear: document.getElementById('clear'),
     title: document.getElementById('piece-title'),
     composer: document.getElementById('piece-composer'),
@@ -46,6 +48,17 @@ const els = {
     libExportAll: document.getElementById('lib-export-all'),
     libImport: document.getElementById('lib-import'),
     libFile: document.getElementById('lib-file'),
+    libPasteJson: document.getElementById('lib-paste-json'),
+    pasteJsonModal: document.getElementById('paste-json-modal'),
+    pasteJsonInput: document.getElementById('paste-json-input'),
+    pasteJsonTitleInput: document.getElementById('paste-json-title-input'),
+    pasteJsonComposerInput: document.getElementById('paste-json-composer-input'),
+    pasteJsonStatus: document.getElementById('paste-json-status'),
+    pasteJsonPreview: document.getElementById('paste-json-preview'),
+    pasteJsonSave: document.getElementById('paste-json-save'),
+    pasteJsonClose: document.getElementById('paste-json-close'),
+    pasteJsonCancel: document.getElementById('paste-json-cancel'),
+    pasteJsonOverlay: document.querySelector('#paste-json-modal .modal-overlay'),
     starterList: document.getElementById('starter-list'),
     lessonList: document.getElementById('lesson-list'),
     timeSigGroup: document.getElementById('time-sig-group'),
@@ -441,6 +454,138 @@ function importFromText(text) {
     flashButton(els.libImport, `✓ Imported ${added}`);
 }
 
+// --- JSON Paste Modal (Phase 5A) ----------------------------------------
+function openPasteJsonModal() {
+    els.pasteJsonModal.setAttribute('aria-hidden', 'false');
+    els.pasteJsonInput.focus();
+    els.pasteJsonInput.value = '';
+    els.pasteJsonTitleInput.value = '';
+    els.pasteJsonComposerInput.value = '';
+    els.pasteJsonStatus.textContent = '';
+    els.pasteJsonStatus.className = '';
+    els.pasteJsonPreview.textContent = '';
+    els.pasteJsonPreview.classList.remove('active');
+    els.pasteJsonSave.disabled = true;
+}
+
+function closePasteJsonModal() {
+    els.pasteJsonModal.setAttribute('aria-hidden', 'true');
+}
+
+function validateAndPreviewPasteJson() {
+    const jsonText = els.pasteJsonInput.value.trim();
+    const status = els.pasteJsonStatus;
+    const preview = els.pasteJsonPreview;
+    const saveBtn = els.pasteJsonSave;
+
+    status.textContent = '';
+    status.className = '';
+    preview.textContent = '';
+    preview.classList.remove('active');
+    saveBtn.disabled = true;
+
+    if (!jsonText) return;
+
+    let raw;
+    try {
+        raw = parseImport(jsonText);
+    } catch (e) {
+        status.textContent = `❌ Invalid JSON: ${e.message}`;
+        status.className = 'error';
+        return;
+    }
+
+    if (!raw || !raw.length) {
+        status.textContent = '❌ No songs found in this JSON';
+        status.className = 'error';
+        return;
+    }
+
+    // Validate and summarize the pieces
+    const validPieces = [];
+    for (const p of raw) {
+        if (!p || typeof p !== 'object') continue;
+        const noteCount = Array.isArray(p.notes) ? p.notes.length : 0;
+        validPieces.push({
+            title: (p.title || 'Untitled Melody').toString().slice(0, 60),
+            composer: (p.composer || '').toString().slice(0, 40),
+            noteCount,
+        });
+    }
+
+    if (!validPieces.length) {
+        status.textContent = '❌ No valid songs found';
+        status.className = 'error';
+        return;
+    }
+
+    // If user has provided a title/composer, use the first piece
+    if (validPieces.length === 1) {
+        const userTitle = els.pasteJsonTitleInput.value.trim();
+        const userComposer = els.pasteJsonComposerInput.value.trim();
+        if (userTitle) validPieces[0].title = userTitle;
+        if (userComposer) validPieces[0].composer = userComposer;
+    }
+
+    // Show preview
+    const previewHtml = validPieces.map((p, i) =>
+        `<div>${i + 1}. <strong>${escapeHtml(p.title)}</strong> by ${escapeHtml(p.composer || '(no composer)')} — ${p.noteCount} notes</div>`
+    ).join('');
+    preview.innerHTML = previewHtml;
+    preview.classList.add('active');
+
+    status.textContent = `✓ Ready to import ${validPieces.length} song${validPieces.length === 1 ? '' : 's'}`;
+    status.className = 'success';
+    saveBtn.disabled = false;
+}
+
+function savePasteJsonToLibrary() {
+    const jsonText = els.pasteJsonInput.value.trim();
+    if (!jsonText) return;
+
+    let raw;
+    try {
+        raw = parseImport(jsonText);
+    } catch (_) {
+        els.pasteJsonStatus.textContent = '❌ Could not parse JSON';
+        els.pasteJsonStatus.className = 'error';
+        return;
+    }
+
+    if (!raw || !raw.length) return;
+
+    let added = 0;
+    for (let i = 0; i < raw.length; i++) {
+        const p = raw[i];
+        if (!p || typeof p !== 'object') continue;
+
+        const piece = { ...p };
+        if (!piece.id) piece.id = genId();
+
+        // If this is the only piece and user provided custom title/composer, use them
+        if (raw.length === 1) {
+            const userTitle = els.pasteJsonTitleInput.value.trim();
+            const userComposer = els.pasteJsonComposerInput.value.trim();
+            if (userTitle) piece.title = userTitle;
+            if (userComposer) piece.composer = userComposer;
+        }
+
+        piece.title = (piece.title || 'Imported Melody').toString().slice(0, 60);
+        piece.composer = (piece.composer || '').toString().slice(0, 40);
+        piece.savedAt = piece.savedAt || new Date().toISOString();
+        if (!Array.isArray(piece.notes)) piece.notes = [];
+
+        library = upsertPiece(library, piece);
+        added++;
+    }
+
+    saveLibrary(library);
+    renderLibrary();
+
+    closePasteJsonModal();
+    flashButton(els.libPasteJson, `✓ Imported ${added}`);
+}
+
 // --- Lessons (printable practice sheets) ----------------------------------
 const beatsOf = (notes) => notes.reduce((m, n) => Math.max(m, n.start + n.durBeats), 0);
 const barsOf = (notes) => Math.max(1, Math.ceil(beatsOf(notes) / BEATS_PER_BAR));
@@ -472,6 +617,50 @@ function printPracticeSheet(id) {
     els.manuscript.innerHTML = buildPracticeSheetHTML(L);
     window.print();
     renderManuscript(); // restore the normal (current-piece) manuscript afterwards
+}
+
+// Generate a lesson from the current song by analyzing phrase structure.
+function generateLessonFromCurrentSong() {
+    if (state.notes.length === 0) {
+        window.alert('Load or compose a song first.');
+        return;
+    }
+
+    // Analyze the loaded song
+    const bpb = beatsPerBar();
+    const analysis = analyzeForPhrases(state.notes, state.bars, bpb);
+
+    if (analysis.phrases.length === 0) {
+        window.alert('Could not detect phrases in this song.');
+        return;
+    }
+
+    // Ask the user for configuration
+    const simplifyRhythm = window.confirm(
+        `Detected ${analysis.phrases.length} phrases.\n\n` +
+        'Simplify rhythm for early steps (convert to quarters)?\n\n' +
+        'Click OK to simplify, Cancel to keep original rhythms.'
+    );
+
+    // Build the lesson
+    const lesson = buildLessonFromAnalysis(
+        `${state.title || 'Untitled'} — Lessons`,
+        `Learn and practice ${analysis.phrases.length} phrases`,
+        analysis,
+        { simplifyRhythm, beatsPerBar: bpb, clef: state.clef, staffShift: state.staffShift }
+    );
+
+    // Render the practice sheet
+    els.manuscript.innerHTML = buildPracticeSheetHTML(lesson);
+
+    // Show print dialog
+    window.print();
+
+    // Restore manuscript
+    renderManuscript();
+
+    // Optionally: offer to save the generated lesson as a hand-authored one
+    // (For now, just printing; later we could add it to the library.)
 }
 
 // Load a lesson's full phrase onto the canvas so it can be heard (with the
@@ -648,6 +837,7 @@ function init() {
         togglePlay();
     });
     els.print.addEventListener('click', () => { renderManuscript(); window.print(); });
+    els.generateLesson.addEventListener('click', generateLessonFromCurrentSong);
     els.clear.addEventListener('click', () => {
         if (state.notes.length === 0) return;
         stopPlayback();
@@ -666,6 +856,23 @@ function init() {
         reader.onload = () => importFromText(String(reader.result));
         reader.readAsText(file);
         els.libFile.value = ''; // allow re-importing the same file
+    });
+
+    // JSON Paste Modal (Phase 5A)
+    els.libPasteJson.addEventListener('click', openPasteJsonModal);
+    els.pasteJsonClose.addEventListener('click', closePasteJsonModal);
+    els.pasteJsonCancel.addEventListener('click', closePasteJsonModal);
+    els.pasteJsonOverlay.addEventListener('click', closePasteJsonModal);
+    els.pasteJsonInput.addEventListener('input', validateAndPreviewPasteJson);
+    els.pasteJsonTitleInput.addEventListener('input', validateAndPreviewPasteJson);
+    els.pasteJsonComposerInput.addEventListener('input', validateAndPreviewPasteJson);
+    els.pasteJsonSave.addEventListener('click', savePasteJsonToLibrary);
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && els.pasteJsonModal.getAttribute('aria-hidden') === 'false') {
+            closePasteJsonModal();
+        }
     });
 
     library = loadLibrary();

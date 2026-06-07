@@ -1123,11 +1123,10 @@
         elements.standingsSourceNote.textContent = `🏆 Projecting ${submittedEntries.length} submitted entr${submittedEntries.length === 1 ? "y" : "ies"} from Supabase. Group-position points become official only when each group is complete; third-place advancer points become official after all 72 group matches.`;
         return submittedEntries;
       } catch (error) {
-        console.warn("Public Supabase entries unavailable, using seeded scoreboard entries:", error);
-        const fallbackEntries = seedDefaultEntries(teams, wIndexMap);
-        setSyncStatus("🏆 Sandbox fallback entries active", "gold");
-        elements.standingsSourceNote.textContent = "🏆 Supabase entries unavailable, so projected scoring is using seeded sandbox entries.";
-        return fallbackEntries;
+        console.warn("Public Supabase entries unavailable:", error);
+        setSyncStatus("Standings temporarily unavailable", "red");
+        elements.standingsSourceNote.textContent = "Submitted brackets could not be loaded. Please check back shortly.";
+        return [];
       }
     }
 
@@ -1583,7 +1582,7 @@
       if (!visibleStandings.length) {
         elements.leaderboardBody.innerHTML = `
           <tr>
-            <td class="empty-scoreboard-row" colspan="8">No brackets match that search.</td>
+            <td class="empty-scoreboard-row" colspan="8">${searchTerm ? "No brackets match that search." : "Submitted brackets are not available right now."}</td>
           </tr>
         `;
         return;
@@ -2307,7 +2306,6 @@
       loadWIndexFeed();
     });
   </script>
-  <script src="../shared/world-cup-audio.js" defer></script>
 </body>
 
 </html>

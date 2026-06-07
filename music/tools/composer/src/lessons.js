@@ -52,3 +52,70 @@ export const LESSONS = [
 ];
 
 export const lessonById = (id) => LESSONS.find((l) => l.id === id);
+
+// Build a lesson from analyzed phrases (Phase 1B auto-generation).
+export function buildLessonFromAnalysis(title, subtitle, analysis, options = {}) {
+    const { simplifyRhythm = false, beatsPerBar = 4, clef = 'treble', staffShift = -1 } = options;
+
+    // Build cumulative steps from the analyzed phrases
+    let cumulativeNotes = [];
+    const steps = [];
+
+    for (let i = 0; i < analysis.phrases.length; i++) {
+        const phrase = analysis.phrases[i];
+        cumulativeNotes = [...cumulativeNotes, ...phrase.notes];
+
+        // Remap beats to be contiguous from 0
+        const firstStart = cumulativeNotes[0]?.start || 0;
+        const remappedNotes = cumulativeNotes.map(n => ({
+            ...n,
+            start: n.start - firstStart,
+        }));
+
+        // Optionally simplify rhythm for early steps
+        let notesForStep = remappedNotes;
+        if (simplifyRhythm && i < Math.ceil(analysis.phrases.length * 0.66)) {
+            notesForStep = notesForStep.map(n => ({ ...n, durBeats: 1 }));
+        }
+
+        steps.push({
+            prompt: `${phrase.label}: ${i + 1}/${analysis.phrases.length}`,
+            target: notesForStep,
+        });
+    }
+
+    // Add a final "put it together" step
+    if (analysis.phrases.length > 1) {
+        const firstStart = cumulativeNotes[0]?.start || 0;
+        const allNotes = cumulativeNotes.map(n => ({
+            ...n,
+            start: n.start - firstStart,
+        }));
+        steps.push({
+            prompt: "Put it together — the complete piece! 🎵",
+            target: allNotes,
+        });
+    }
+
+    // Calculate bars needed
+    const totalBeats = cumulativeNotes.reduce((m, n) => Math.max(m, n.start + n.durBeats), 0);
+    const barsNeeded = Math.max(4, Math.ceil(totalBeats / beatsPerBar));
+
+    return {
+        id: `generated-${Date.now()}`,
+        title,
+        subtitle,
+        rangeId: 'c5-a6',
+        clef,
+        staffShift,
+        bars: barsNeeded,
+        tempo: 96,
+        timeSignature: '4/4',
+        durationId: 'quarter',
+        showLetters: true,
+        steps: steps.map((s, idx) => ({
+            prompt: s.prompt,
+            target: s.target,
+        })),
+    };
+}

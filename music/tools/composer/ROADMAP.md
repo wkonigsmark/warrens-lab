@@ -212,6 +212,46 @@ verified PD" bar.
   scrolling line** (`barsPerSystem` omitted) so it keeps aligning with the grid
   above it and the playhead sweep still works.
 
+## Phase 5 — Content pipeline & chord foundations (planned — 2026-06-07)
+
+**5A · HookTheory import + library pipeline**
+Sustainable way to add songs from HookTheory (or any source with scale-degree
+notation) and permanently expand the starter library without code edits.
+- **Converter stack**: `hooktheory-converter.js` (Node) + `hooktheory-decode.html`
+  (browser tool). Handles G Mixolydian, all modes, configurable base octave.
+- **Import workflow**: 
+  1. Paste HookTheory JSON → converter → get composer JSON
+  2. **📋 Paste JSON modal** in the UI (new): a button that opens a dialog accepting
+     raw JSON, validates it, optionally pre-fills metadata (title, composer), then
+     saves directly to "My Songs" library (bypass the file picker).
+  3. Child or teacher can crib from HookTheory, get an instant playable tune,
+     optionally tweak it before saving.
+- **Starter library growth path**: Admin-authored lessons/drills can live in a
+  separate `src/lessons-contrib.js` (hand-curated, tested, with pedagogical
+  labels). HookTheory → JSON → library is the *automated* feed for pure melodies.
+
+**5B · Extended bar support (4 → 64+)**
+Current: `BAR_OPTIONS = [4, 5, 6, 8, 12]`. Need flexible upper bound.
+- Swap hard-coded array for a **min/max range** (min 4, max 64) with a **text input**
+  or stepper in the controls. No preset, just a number field.
+- **Grid will scroll** (already does for width; just need height if the song is very
+  long, which is rare but good to allow).
+- **Manuscript wrapping** already works per-system, so 64 bars just means more
+  systems on the printout. No rendering risk.
+
+**5C · Chord support (phase 1: display)**
+Chords shown on the staff; playback is optional (not automatic).
+- **Chord model**: extend `{start, pitch, durBeats}` notes with optional `chords`
+  array: `[{beat, root, type, inversion, ...}]` (reuse HookTheory schema).
+- **Display**: chord symbols above the staff (e.g., "Gmaj7" at beat 1). Notation
+  layer renders them; no impact on grid or audio.
+- **No playback yet** — the UI has a toggle: "🎵 Play chords" (mutes for now, ready
+  for future voicing engine).
+- **Roadmap for voicing (post-Phase 5)**: generate piano/guitar voicings, layer
+  with melody playback, optional visualization.
+
+---
+
 ## Later / parked (smaller items)
 - **Theory guidance / tonic-resolve analyzer** — as a melody wanders, suggest
   resolving to the tonic. The `{start, pitch, durBeats}`-over-a-known-scale model
@@ -224,3 +264,6 @@ verified PD" bar.
   otherwise-static site.
 - **Per-composer grouping/filter** within the library (currently one shared list).
 - **Load-from-file straight to canvas** (bypass the library on import).
+- **Harmonic voicing engine** (post-Phase 5C) — given a chord progression + melody,
+  generate playable voicings (piano, guitar, synth pads). Ties to Phase 5C display
+  layer.

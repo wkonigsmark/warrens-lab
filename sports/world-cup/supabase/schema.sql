@@ -133,6 +133,7 @@ as $$
     payload
   from public.pool_entries
   where voided = false
+    and test_entry = false
   order by submitted_at desc;
 $$;
 

@@ -75,6 +75,7 @@
         <button id="play" class="btn btn-play">▶ Play</button>
         <button id="save" class="btn btn-ghost">💾 Save</button>
         <button id="print" class="btn btn-ghost">🖨 Print</button>
+        <button id="generate-lesson" class="btn btn-ghost" title="Auto-generate practice steps from this song">🎓 Generate Lesson</button>
         <button id="clear" class="btn btn-ghost">✕ Clear</button>
       </div>
     </section>
@@ -116,7 +117,8 @@
         <div class="library-actions">
           <button id="lib-new" class="btn btn-ghost">＋ New</button>
           <button id="lib-export-all" class="btn btn-ghost">⬇ Export all</button>
-          <button id="lib-import" class="btn btn-ghost">⬆ Import</button>
+          <button id="lib-import" class="btn btn-ghost">⬆ Import file</button>
+          <button id="lib-paste-json" class="btn btn-ghost">📋 Paste JSON</button>
           <input id="lib-file" type="file" accept="application/json,.json" hidden>
         </div>
       </div>
@@ -127,6 +129,39 @@
 
   <!-- Print-only manuscript: a clean black-and-white score for the page. -->
   <section id="manuscript" class="manuscript" aria-hidden="true"></section>
+
+  <!-- JSON Paste Modal (Phase 5A) -->
+  <div id="paste-json-modal" class="modal" aria-hidden="true" aria-labelledby="paste-json-title">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="paste-json-title">Paste JSON to Library</h2>
+        <button id="paste-json-close" class="modal-close" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="paste-json-status"></div>
+        <div class="form-group">
+          <label for="paste-json-input">JSON (HookTheory, composer, or any song format):</label>
+          <textarea id="paste-json-input" placeholder="Paste JSON here... (accepts HookTheory format, single song, or array of songs)" rows="10"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="paste-json-title-input">Title:</label>
+            <input type="text" id="paste-json-title-input" placeholder="Song title" maxlength="60">
+          </div>
+          <div class="form-group">
+            <label for="paste-json-composer-input">Composer:</label>
+            <input type="text" id="paste-json-composer-input" placeholder="Composer name" maxlength="40">
+          </div>
+        </div>
+        <div id="paste-json-preview" class="paste-preview"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="paste-json-cancel" class="btn btn-ghost">Cancel</button>
+        <button id="paste-json-save" class="btn btn-ghost" disabled>Save to Library</button>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="src/app.js"></script>
 </body>

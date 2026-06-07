@@ -117,7 +117,7 @@
       color: var(--wc-ink);
     }
 
-    .pool-rules-list .pool-payment-warning {
+    .pool-payment-warning {
       color: #ffb4a8;
       border: 1px solid rgba(255, 93, 74, 0.55);
       background: linear-gradient(135deg, rgba(255, 93, 74, 0.22), rgba(255, 93, 74, 0.08));
@@ -130,11 +130,11 @@
       line-height: 1.28;
     }
 
-    .pool-rules-list .pool-payment-warning strong {
+    .pool-payment-warning strong {
       color: #fff4ef;
     }
 
-    .pool-rules-list .pool-payment-warning .memo-label {
+    .pool-payment-warning .memo-label {
       display: block;
       margin-bottom: 7px;
       color: #ffdf76;
@@ -144,7 +144,7 @@
       text-transform: uppercase;
     }
 
-    .pool-rules-list .pool-payment-warning a {
+    .pool-payment-warning a {
       color: #fff4ef;
       font-weight: 950;
       text-decoration-color: rgba(255, 244, 239, 0.65);
@@ -160,7 +160,17 @@
     .pool-entry-launch {
       display: grid;
       justify-items: center;
+      gap: 18px;
       margin: 4px auto 24px;
+    }
+
+    .pool-entry-memo {
+      width: min(100%, 720px);
+      margin-top: 0;
+      padding: 17px 20px;
+      text-align: center;
+      font-size: clamp(1rem, 2.5vw, 1.16rem);
+      font-weight: 800;
     }
 
     .pool-start-button {
@@ -1145,6 +1155,10 @@
         </section>
 
         <div class="pool-entry-launch">
+          <aside class="pool-payment-warning pool-entry-memo" aria-label="Important Venmo memo">
+            <span class="memo-label">Important Venmo Memo</span>
+            Include your <strong>bracket name and email</strong> in your Venmo memo so I can connect payment to your bracket.
+          </aside>
           <button class="wc-button pool-start-button" type="button" id="start-entry">Start Entry</button>
         </div>
 
@@ -1158,7 +1172,6 @@
                 <li><strong>Submit once.</strong> Entries are final after submission. Multiple brackets are allowed, but each bracket needs its own entry and payment.</li>
                 <li><strong>Track it live.</strong> Once group play starts, the scoreboard will show where each bracket stands and which teams each entry should be pulling for.</li>
                 <li><strong>Points are not awarded game by game.</strong> Think of group play like a race: every match can jockey teams into better or worse position, but the final score is calculated only once the whole group has crossed the finish line.</li>
-                <li class="pool-payment-warning"><span class="memo-label">Important Venmo Memo</span><strong>Include your bracket name and email</strong> in your Venmo memo so I can connect payment to your bracket.</li>
               </ul>
             </article>
             <article class="pool-rules-card">
@@ -2170,7 +2183,6 @@
     render();
     loadWIndex();
   </script>
-  <script src="../shared/world-cup-audio.js" defer></script>
 </body>
 
 </html>
