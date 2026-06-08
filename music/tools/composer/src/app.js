@@ -472,6 +472,55 @@ function closePasteJsonModal() {
     els.pasteJsonModal.setAttribute('aria-hidden', 'true');
 }
 
+// Detect and convert HookTheory format (scale degrees) to composer format (pitch letters)
+function convertHookTheoryIfNeeded(data) {
+    if (!data) return data;
+
+    // Check if this looks like HookTheory format (has notes with "sd" field)
+    const notes = Array.isArray(data.notes) ? data.notes : (data.notes ? [data.notes] : []);
+    const isHookTheory = notes.length > 0 && notes[0].sd !== undefined && notes[0].pitch === undefined;
+
+    if (!isHookTheory) return data;
+
+    // Get key info for scale degree -> pitch conversion
+    const keyInfo = data.keys && data.keys[0];
+    const tonic = keyInfo?.tonic || 'C';
+    const mode = keyInfo?.scale || 'major';
+
+    // Helper: convert scale degree (1-7) + octave to pitch letter
+    const sdToPitch = (sd, octave) => {
+        const intervals = {
+            major: [0, 2, 4, 5, 7, 9, 11],
+            minor: [0, 2, 3, 5, 7, 8, 10],
+            mixolydian: [0, 2, 4, 5, 7, 9, 10],
+            dorian: [0, 2, 3, 5, 7, 9, 10],
+        };
+        const noteValues = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+        const letters = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+        const tonicSemi = noteValues[tonic] || 0;
+        const modeIntervals = intervals[mode] || intervals.major;
+        const semitoneOffset = modeIntervals[(sd - 1) % 7];
+        const pitchSemitone = (tonicSemi + semitoneOffset) % 12;
+        for (const [letter, semi] of Object.entries(noteValues)) {
+            if (semi === pitchSemitone) return letter;
+        }
+        return 'C';
+    };
+
+    // Convert all notes
+    // HookTheory uses octave 0 = middle register; add 5 to get to xylophone range (C5–A6)
+    const baseOctave = 5;
+    const convertedNotes = notes
+        .filter(n => !n.isRest)
+        .map(n => ({
+            start: (n.beat || 1) - 1,
+            pitch: sdToPitch(parseInt(n.sd) || 1, baseOctave + (n.octave || 0)) + (baseOctave + (n.octave || 0)),
+            durBeats: n.duration || 1,
+        }));
+
+    return { ...data, notes: convertedNotes };
+}
+
 function validateAndPreviewPasteJson() {
     const jsonText = els.pasteJsonInput.value.trim();
     const status = els.pasteJsonStatus;
@@ -500,6 +549,9 @@ function validateAndPreviewPasteJson() {
         status.className = 'error';
         return;
     }
+
+    // Convert HookTheory format if detected
+    raw = raw.map(p => convertHookTheoryIfNeeded(p));
 
     // Validate and summarize the pieces
     const validPieces = [];
@@ -553,6 +605,9 @@ function savePasteJsonToLibrary() {
     }
 
     if (!raw || !raw.length) return;
+
+    // Convert HookTheory format if detected
+    raw = raw.map(p => convertHookTheoryIfNeeded(p));
 
     let added = 0;
     for (let i = 0; i < raw.length; i++) {

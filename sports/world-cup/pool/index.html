@@ -200,7 +200,15 @@
     }
 
     .pool-analysis-link {
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
+      gap: 18px;
+      margin-top: 32px;
+    }
+
+    .pool-analysis-link .pool-start-button {
+      width: min(100%, 320px);
     }
 
     .pool-form {
@@ -1159,7 +1167,7 @@
             <span class="memo-label">Important Venmo Memo</span>
             Include your <strong>bracket name and email</strong> in your Venmo memo so I can connect payment to your bracket.
           </aside>
-          <button class="wc-button pool-start-button" type="button" id="start-entry">Start Entry</button>
+          <button class="wc-button pool-start-button" type="button" data-start-entry>Start Entry</button>
         </div>
 
         <section class="pool-panel pool-card-pad">
@@ -1204,14 +1212,17 @@
             </article>
           </div>
           <div class="pool-actions pool-analysis-link">
+            <button class="wc-button pool-start-button" type="button" data-start-entry>Start Entry</button>
             <a class="wc-button secondary" href="../groups/">View Group Analysis</a>
           </div>
         </section>
       `;
 
-      document.getElementById("start-entry").addEventListener("click", () => {
-        state.step = "intro";
-        render(true);
+      document.querySelectorAll("[data-start-entry]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.step = "intro";
+          render(true);
+        });
       });
     }
 
