@@ -241,6 +241,50 @@
       background: rgba(255, 93, 93, 0.12);
     }
 
+    .pool-submit-confirmation {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+      padding: clamp(18px, 4vw, 26px);
+      border: 1px solid rgba(36, 180, 126, 0.55);
+      border-radius: var(--wc-radius);
+      background:
+        linear-gradient(135deg, rgba(36, 180, 126, 0.2), rgba(244, 201, 93, 0.1)),
+        rgba(255, 255, 255, 0.045);
+      box-shadow: 0 18px 48px rgba(36, 180, 126, 0.12);
+    }
+
+    .pool-submit-confirmation h3,
+    .pool-submit-confirmation p {
+      margin: 0;
+    }
+
+    .pool-submit-confirmation h3 {
+      color: var(--wc-ink);
+      font-size: clamp(1.25rem, 4vw, 1.8rem);
+    }
+
+    .pool-submit-confirmation p {
+      color: var(--wc-muted);
+      line-height: 1.5;
+    }
+
+    .pool-submit-confirmation a {
+      color: var(--wc-gold);
+      font-weight: 950;
+    }
+
+    .pool-submit-confirmation .payment-memo {
+      padding: 13px 15px;
+      border: 1px solid rgba(255, 93, 74, 0.55);
+      border-radius: var(--wc-radius);
+      background: rgba(255, 93, 74, 0.13);
+      color: #fff4ef;
+      font-size: 1rem;
+      font-weight: 850;
+      line-height: 1.45;
+    }
+
     .pool-tiebreaker-card {
       display: grid;
       gap: 10px;
@@ -1578,7 +1622,18 @@
     }
 
     function isEntryComplete() {
-      return GROUP_IDS.every((group) => state.groupPicks[group].length === 4) && state.thirdPicks.length === 8;
+      const groupsComplete = GROUP_IDS.every((group) => {
+        const picks = state.groupPicks[group] || [];
+        const expectedTeamIds = new Set(groups[group] || []);
+        return picks.length === 4
+          && new Set(picks).size === 4
+          && picks.every((teamId) => expectedTeamIds.has(teamId));
+      });
+      const validThirdIds = new Set(GROUP_IDS.map((group) => state.groupPicks[group]?.[2]).filter(Boolean));
+      const thirdsComplete = state.thirdPicks.length === 8
+        && new Set(state.thirdPicks).size === 8
+        && state.thirdPicks.every((teamId) => validThirdIds.has(teamId));
+      return groupsComplete && thirdsComplete;
     }
 
     function bindReviewFab() {
@@ -1704,7 +1759,21 @@
             <input class="wc-input" id="total-group-goals" type="number" inputmode="numeric" min="1" max="300" placeholder="Suggested: 180" value="${escapeAttr(state.tiebreakers.totalGroupGoals)}" ${state.submitted ? "disabled" : ""} required>
             <p class="pool-tiebreaker-help">Suggested baseline: 180 goals, which is 2.5 total goals per game across 72 group-stage matches. Perfect groups are calculated from your picks; this number wins by closest absolute difference to the real group-play goal total.</p>
           </div>
-          ${state.submitStatus || state.submitError ? `<div class="pool-submit-status ${submitStatusClass}">${escapeHtml(state.submitError || state.submitStatus)}</div>` : ""}
+          ${state.submitted ? `
+            <div class="pool-submit-confirmation" role="status">
+              <div class="wc-eyebrow">Entry successfully submitted</div>
+              <h3>One last step: send your $50 entry payment.</h3>
+              <p>
+                Pay <a href="https://venmo.com/u/Warren-Konigsmark" target="_blank" rel="noopener">@Warren-Konigsmark</a>
+                on Venmo. If Venmo requests phone verification, the last four digits are <strong>6274</strong>.
+              </p>
+              <div class="payment-memo">
+                Venmo memo: include bracket name <strong>${escapeHtml(state.entry.bracketName)}</strong>
+                and email <strong>${escapeHtml(state.entry.email)}</strong> so the payment can be matched to this entry.
+              </div>
+              <p>Entry code: <strong>${escapeHtml(state.entryId)}</strong></p>
+            </div>
+          ` : state.submitStatus || state.submitError ? `<div class="pool-submit-status ${submitStatusClass}">${escapeHtml(state.submitError || state.submitStatus)}</div>` : ""}
           <div class="pool-actions">
             <button class="wc-button" type="button" id="submit-entry" ${state.submitting || state.submitted ? "disabled" : ""}>${state.submitting ? "Submitting..." : state.submitted ? "Submitted" : "Submit Entry"}</button>
             <button class="wc-button" type="button" id="copy-csv">Copy CSV</button>
@@ -1884,14 +1953,14 @@
 
     function totalGroupGoalsValue() {
       const value = Number(state.tiebreakers.totalGroupGoals);
-      return Number.isInteger(value) && value > 0 ? value : null;
+      return Number.isInteger(value) && value >= 1 && value <= 300 ? value : null;
     }
 
     function validateSubmission() {
       if (!state.entry.bracketName || !state.entry.venmo || !state.entry.email) return "Bracket name, Venmo, and email are required.";
       if (!state.entry.email.includes("@")) return "Please enter a valid email address.";
-      if (!isEntryComplete()) return "Complete all group and third-place picks before submitting.";
-      if (!totalGroupGoalsValue()) return "Enter your total group-play goals tiebreaker.";
+      if (!isEntryComplete()) return "Complete all 12 group rankings and select exactly eight third-place advancing teams before submitting.";
+      if (!totalGroupGoalsValue()) return "Enter a whole-number total group-play goals tiebreaker from 1 to 300.";
       return "";
     }
 
