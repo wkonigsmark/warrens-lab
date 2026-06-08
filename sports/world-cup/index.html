@@ -301,6 +301,60 @@
       text-transform: uppercase;
     }
 
+    .payout-breakdown {
+      width: min(100%, 720px);
+      margin: 0 auto;
+      padding: 14px 16px;
+      border: 1px solid rgba(244, 201, 93, 0.24);
+      border-radius: 8px;
+      background: rgba(244, 201, 93, 0.055);
+      backdrop-filter: blur(14px);
+    }
+
+    .payout-summary,
+    .payout-prizes {
+      display: grid;
+      gap: 12px;
+    }
+
+    .payout-summary {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .payout-prizes {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      padding-top: 12px;
+    }
+
+    .payout-item {
+      min-width: 0;
+      text-align: center;
+    }
+
+    .payout-item strong {
+      display: block;
+      color: var(--ink);
+      font-size: clamp(1rem, 2.4vw, 1.3rem);
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .payout-item span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.61rem;
+      font-weight: 950;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .payout-prizes .payout-item strong {
+      color: var(--gold);
+    }
+
     .w-index-tape {
       position: fixed;
       left: 0;
@@ -591,6 +645,16 @@
         width: min(100%, 320px);
       }
 
+      .payout-breakdown {
+        width: min(100%, 360px);
+        padding: 13px;
+      }
+
+      .payout-summary,
+      .payout-prizes {
+        gap: 8px;
+      }
+
       .w-index-tape {
         grid-template-columns: 1fr;
       }
@@ -654,6 +718,37 @@
           <span>Pending payment</span>
         </div>
       </div>
+
+      <section class="payout-breakdown" aria-label="Current pool payout breakdown">
+        <div class="payout-summary">
+          <div class="payout-item">
+            <strong id="payout-total">--</strong>
+            <span>Submitted purse</span>
+          </div>
+          <div class="payout-item">
+            <strong id="organizer-fee">--</strong>
+            <span>Organizer fee · 5%</span>
+          </div>
+          <div class="payout-item">
+            <strong id="net-pool">--</strong>
+            <span>Net pool · 95%</span>
+          </div>
+        </div>
+        <div class="payout-prizes">
+          <div class="payout-item">
+            <strong id="first-prize">--</strong>
+            <span>1st place · 70%</span>
+          </div>
+          <div class="payout-item">
+            <strong id="second-prize">--</strong>
+            <span>2nd place · 20%</span>
+          </div>
+          <div class="payout-item">
+            <strong id="third-prize">--</strong>
+            <span>3rd place · 10%</span>
+          </div>
+        </div>
+      </section>
 
       <div class="module-strip" aria-label="Planned hub sections">
         <a href="rankings-odds/">W-Index</a>
@@ -732,14 +827,42 @@
 
   <script type="module">
     const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    const payoutCurrency = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
     const totalPurse = document.getElementById('total-purse');
     const paidPurse = document.getElementById('paid-purse');
     const pendingPurse = document.getElementById('pending-purse');
+    const payoutTotal = document.getElementById('payout-total');
+    const organizerFee = document.getElementById('organizer-fee');
+    const netPool = document.getElementById('net-pool');
+    const firstPrize = document.getElementById('first-prize');
+    const secondPrize = document.getElementById('second-prize');
+    const thirdPrize = document.getElementById('third-prize');
 
     function setPurseFallback() {
       totalPurse.textContent = '$50 x entries';
       paidPurse.textContent = '$50 x paid';
       pendingPurse.textContent = 'Connect DB';
+      [payoutTotal, organizerFee, netPool, firstPrize, secondPrize, thirdPrize].forEach((element) => {
+        element.textContent = '--';
+      });
+    }
+
+    function renderSubmittedPayouts(total) {
+      const submittedPurse = Number(total) || 0;
+      const fee = submittedPurse * 0.05;
+      const net = submittedPurse - fee;
+
+      payoutTotal.textContent = payoutCurrency.format(submittedPurse);
+      organizerFee.textContent = payoutCurrency.format(fee);
+      netPool.textContent = payoutCurrency.format(net);
+      firstPrize.textContent = payoutCurrency.format(net * 0.70);
+      secondPrize.textContent = payoutCurrency.format(net * 0.20);
+      thirdPrize.textContent = payoutCurrency.format(net * 0.10);
     }
 
     try {
@@ -761,6 +884,7 @@
       totalPurse.textContent = `${summary.total_entries} / ${currency.format(summary.total_purse)}`;
       paidPurse.textContent = `${summary.paid_entries} / ${currency.format(summary.paid_purse)}`;
       pendingPurse.textContent = `${summary.pending_entries} / ${currency.format(summary.pending_purse)}`;
+      renderSubmittedPayouts(summary.total_purse);
     } catch (error) {
       console.warn('Pool purse summary unavailable:', error);
       setPurseFallback();
