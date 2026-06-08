@@ -211,6 +211,20 @@ input[type="range"] { width: 150px; accent-color: var(--accent); }
 
 .scroll { overflow-x: auto; padding: 18px; }
 
+/* Tall instruments (piano, 88 keys) cap the grid into a scrollable viewport.
+   The grid-wrap becomes the scroller for BOTH axes (so the sticky note-name
+   column keeps working), the outer .scroll stops scrolling, and the staff
+   below is kept horizontally in step via a small JS scroll-sync. */
+.scroll.tall { overflow: hidden; }
+.grid-wrap.tall {
+  max-height: 58vh;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+.staff-wrap.tall { overflow-x: hidden; }
+
 .grid {
   display: grid;
   grid-template-columns: var(--label-w) repeat(var(--slots), var(--slot-w));
@@ -253,6 +267,10 @@ input[type="range"] { width: 150px; accent-color: var(--accent); }
 .cell.beat-start { border-left: 1.5px solid #e2e6f1; }  /* medium line on the beat */
 .cell.bar-start { border-left: 2px solid #cdd4e6; }     /* strong line at the bar */
 .cell:hover { background: #fff5ee; box-shadow: inset 0 0 0 2px var(--accent); }
+/* black-key (sharp) rows get a faint grey wash → the piano black/white striping */
+.cell.black-key { background: #eef0f5; }
+.cell.black-key.bar-alt { background: #e9ebf2; }
+.row-label.black-key { color: #3a3f4b; }
 
 .note-block {
   border: none;

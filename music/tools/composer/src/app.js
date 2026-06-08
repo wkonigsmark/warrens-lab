@@ -2,7 +2,7 @@
 // together. Keep state minimal; re-render from it after every change.
 
 import {
-    RANGES, DEFAULT_RANGE, buildScale, DURATIONS, durationById,
+    RANGES, DEFAULT_RANGE, buildScale, buildChromaticScale, DURATIONS, durationById,
     BAR_OPTIONS, BEATS_PER_BAR, TIME_SIGNATURES, DEFAULT_TIME_SIG, timeSignatureById,
     CLEFS, DEFAULT_CLEF, SHIFT_MIN, SHIFT_MAX,
 } from './model.js';
@@ -38,6 +38,7 @@ const els = {
     clear: document.getElementById('clear'),
     title: document.getElementById('piece-title'),
     composer: document.getElementById('piece-composer'),
+    scroll: document.getElementById('scroll'),
     grid: document.getElementById('grid'),
     staff: document.getElementById('staff'),
     manuscript: document.getElementById('manuscript'),
@@ -86,7 +87,13 @@ const state = {
     playing: false,
 };
 
-const scaleOf = () => buildScale(RANGES[state.rangeId].low, RANGES[state.rangeId].high);
+// The instrument's pitch rows — chromatic (white + black keys) for piano-style
+// ranges, naturals-only otherwise.
+const scaleForRange = (rangeId) => {
+    const r = RANGES[rangeId] || RANGES[DEFAULT_RANGE];
+    return r.chromatic ? buildChromaticScale(r.low, r.high) : buildScale(r.low, r.high);
+};
+const scaleOf = () => scaleForRange(state.rangeId);
 const beatsPerBar = () => timeSignatureById(state.timeSignature)?.beatsPerBar || BEATS_PER_BAR;
 
 // --- Placement rules ------------------------------------------------------
@@ -125,17 +132,42 @@ function flashInvalid() {
 }
 
 // --- Rendering ------------------------------------------------------------
+// Ranges taller than this many rows get a capped, vertically-scrollable grid
+// viewport (piano's 88 keys would otherwise be ~2,600px tall).
+const TALL_ROWS = 20;
+
 function render(playheadBeat = null) {
     const scale = scaleOf();
     const bpb = beatsPerBar();
+    const tall = scale.length > TALL_ROWS;
+    els.scroll.classList.toggle('tall', tall);
+    els.grid.classList.toggle('tall', tall);
+    els.staff.classList.toggle('tall', tall);
     renderGrid(els.grid, {
         scale, bars: state.bars, notes: state.notes,
         onCellClick: placeNote, onNoteClick: removeNote,
         beatsPerBar: bpb,
     });
+    if (tall) centerGridOnMusic(scale);
     renderStaff(playheadBeat);
     renderManuscript();
     saveState();
+}
+
+// On a tall (piano) grid, scroll the viewport so the actual notes — or a sensible
+// middle-register default — sit in view, instead of staring at the empty sub-bass.
+function centerGridOnMusic(scale) {
+    const rows = scale.slice().reverse(); // top row first, matching the grid
+    const rowH = els.grid.querySelector('.row-label')?.getBoundingClientRect().height || 30;
+    // pick a focus pitch: highest placed note, else middle C-ish
+    const focusPitch = state.notes.length
+        ? state.notes.reduce((hi, n) => (rows.indexOf(n.pitch) < rows.indexOf(hi) ? n.pitch : hi), state.notes[0].pitch)
+        : (rows.includes('C5') ? 'C5' : rows[Math.floor(rows.length / 2)]);
+    const idx = rows.indexOf(focusPitch);
+    if (idx < 0) return;
+    // put the focus row a bit below the top of the viewport
+    const target = Math.max(0, idx * rowH - els.grid.clientHeight * 0.35);
+    els.grid.scrollTop = target;
 }
 
 function renderStaff(playheadBeat) {
@@ -294,7 +326,7 @@ function applyPiece(p) {
     state.title = (p.title || '').toString();
     state.composer = (p.composer || '').toString();
     // keep only notes that fit the restored range + bar count
-    const valid = new Set(buildScale(RANGES[state.rangeId].low, RANGES[state.rangeId].high));
+    const valid = new Set(scaleForRange(state.rangeId));
     const max = state.bars * BEATS_PER_BAR;
     state.notes = Array.isArray(p.notes)
         ? p.notes.filter((n) => valid.has(n.pitch) && n.start + n.durBeats <= max)
@@ -849,6 +881,12 @@ function init() {
         const valid = new Set(scaleOf());
         state.notes = state.notes.filter((n) => valid.has(n.pitch));
         render();
+    });
+
+    // On the tall (piano) grid the grid owns horizontal scrolling; keep the
+    // single-line staff underneath aligned to the same bars.
+    els.grid.addEventListener('scroll', () => {
+        if (els.grid.classList.contains('tall')) els.staff.scrollLeft = els.grid.scrollLeft;
     });
 
     els.tempo.addEventListener('input', () => {

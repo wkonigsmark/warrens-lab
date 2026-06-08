@@ -27,8 +27,7 @@
         </div>
 
         <div id="settings-solve" class="settings-row">
-          <span class="label">Op:</span>
-          <div class="op-settings" style="margin:0;">
+          <div class="op-settings">
             <button id="op-add" class="op-btn active" type="button" title="Addition">+</button>
             <button id="op-sub" class="op-btn" type="button" title="Subtraction">−</button>
             <button id="op-mul" class="op-btn" type="button" title="Multiplication">×</button>
@@ -49,8 +48,6 @@
         </div>
 
         <div id="settings-chainx" class="settings-row" style="display:none;">
-          <span class="label">Solve for x</span>
-          <span class="divider"></span>
           <button id="chainx-mode-toggle" class="toggle-btn" type="button">Simple</button>
           <button id="chainx-neg-toggle" class="toggle-btn" type="button">Pos only</button>
         </div>

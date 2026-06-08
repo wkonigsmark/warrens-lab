@@ -12,11 +12,14 @@
 // treble range while the bars still sound true. A small "8" over the clef marks
 // this, exactly like guitar/glockenspiel notation. staffShift 0 = write as-is.
 // Everything downstream derives from buildScale() + staffShift.
+// `chromatic: true` ranges include the black keys (sharps) and build via
+// buildChromaticScale; the rest are naturals-only via buildScale.
 export const RANGES = {
     'c5-a6': { label: 'Xylophone · C5–A6 (1.5 octave)', low: 'C5', high: 'A6', staffShift: -1 },
     'c4-a5': { label: 'Treble · C4–A5 (no transpose)', low: 'C4', high: 'A5', staffShift: 0 },
     'c4-g5': { label: 'Treble · C4–G5', low: 'C4', high: 'G5', staffShift: 0 },
     'c4-c6': { label: 'Wide · C4–C6 (2 octaves)', low: 'C4', high: 'C6', staffShift: 0 },
+    'piano-88': { label: 'Piano · A0–C8 (88 keys)', low: 'A0', high: 'C8', staffShift: 0, chromatic: true },
 };
 export const DEFAULT_RANGE = 'c5-a6';
 
@@ -31,6 +34,9 @@ export const NOTE_COLORS = {
     G: '#00acc1', A: '#3949ab', B: '#8e24aa',
 };
 
+// Black keys (sharps) share one dark colour — like a real piano's black keys.
+export const BLACK_KEY_COLOR = '#3a3f4b';
+
 // --- Note ↔ number maths --------------------------------------------------
 // Semitone offset of each natural within its octave (C = 0).
 const SEMI = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
@@ -39,11 +45,18 @@ const SEMI = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 const DIA = { C: 0, D: 1, E: 2, F: 3, G: 4, A: 5, B: 6 };
 
 export const letterOf = (note) => note[0];
-export const octaveOf = (note) => parseInt(note.slice(1), 10);
+// Accidental: '#' (sharp) or '' (natural). Chromatic scales spell black keys as
+// sharps; parsing also tolerates a 'b' (flat) if one ever appears in imported data.
+export const accidentalOf = (note) => (note[1] === '#' || note[1] === 'b') ? note[1] : '';
+export const isSharp = (note) => note[1] === '#';
+// Octave digits follow the letter (+ optional accidental): "C5" or "C#5".
+export const octaveOf = (note) => parseInt(note.replace(/[^\d-]/g, ''), 10);
 
-// MIDI number: C4 = 60 (middle C).
+// MIDI number: C4 = 60 (middle C). An accidental nudges ±1 semitone.
 export function noteToMidi(note) {
-    return (octaveOf(note) + 1) * 12 + SEMI[letterOf(note)];
+    const acc = accidentalOf(note);
+    const bump = acc === '#' ? 1 : acc === 'b' ? -1 : 0;
+    return (octaveOf(note) + 1) * 12 + SEMI[letterOf(note)] + bump;
 }
 // Equal-tempered frequency from MIDI. A4 (69) = 440 Hz.
 export const midiToFreq = (midi) => 440 * Math.pow(2, (midi - 69) / 12);
@@ -65,6 +78,21 @@ export function buildScale(low, high) {
         const octave = Math.floor(s / 7);
         out.push(`${letter}${octave}`);
     }
+    return out;
+}
+
+// Sharp spelling of each chromatic pitch class (C = 0).
+const CHROMATIC = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+// Pitch name (sharp spelling) for a MIDI number. C4 = 60 → "C4".
+export function midiToNoteName(midi) {
+    const pc = ((midi % 12) + 12) % 12;
+    const octave = Math.floor(midi / 12) - 1;
+    return CHROMATIC[pc] + octave;
+}
+// Build every semitone from low..high inclusive — white AND black keys, sharp-spelled.
+export function buildChromaticScale(low, high) {
+    const out = [];
+    for (let m = noteToMidi(low); m <= noteToMidi(high); m++) out.push(midiToNoteName(m));
     return out;
 }
 

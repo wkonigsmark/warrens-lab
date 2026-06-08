@@ -4,7 +4,10 @@
 // resolution). Click an empty cell to drop the selected-duration note; click a
 // placed note to remove it. Pure rendering — all state lives in app.js.
 
-import { NOTE_COLORS, letterOf, BEATS_PER_BAR, BEAT_W, SLOTS_PER_BEAT } from './model.js';
+import { NOTE_COLORS, BLACK_KEY_COLOR, letterOf, isSharp, BEATS_PER_BAR, BEAT_W, SLOTS_PER_BEAT } from './model.js';
+
+// Colour for a pitch: its boomwhacker hue, or the shared dark tone for black keys.
+const colorOf = (pitch) => (isSharp(pitch) ? BLACK_KEY_COLOR : NOTE_COLORS[letterOf(pitch)]);
 
 export function renderGrid(container, { scale, bars, notes, onCellClick, onNoteClick, beatsPerBar = 4 }) {
     const slotsPerBar = beatsPerBar * SLOTS_PER_BEAT;
@@ -18,9 +21,10 @@ export function renderGrid(container, { scale, bars, notes, onCellClick, onNoteC
 
     // label + cell layer
     rows.forEach((pitch, r) => {
-        const color = NOTE_COLORS[letterOf(pitch)];
+        const color = colorOf(pitch);
+        const black = isSharp(pitch);
         const label = document.createElement('div');
-        label.className = 'row-label';
+        label.className = 'row-label' + (black ? ' black-key' : '');
         label.style.gridRow = r + 1;
         label.innerHTML = `<span class="dot" style="background:${color}"></span>${pitch}`;
         grid.appendChild(label);
@@ -29,7 +33,7 @@ export function renderGrid(container, { scale, bars, notes, onCellClick, onNoteC
             const beat = slot / SLOTS_PER_BEAT;
             const cell = document.createElement('button');
             cell.type = 'button';
-            cell.className = 'cell';
+            cell.className = 'cell' + (black ? ' black-key' : '');
             if (slot % slotsPerBar === 0 && slot !== 0) cell.classList.add('bar-start');
             else if (slot % SLOTS_PER_BEAT === 0) cell.classList.add('beat-start'); // on-the-beat
             if (Math.floor(slot / slotsPerBar) % 2 === 1) cell.classList.add('bar-alt');
@@ -47,7 +51,7 @@ export function renderGrid(container, { scale, bars, notes, onCellClick, onNoteC
     notes.forEach((n) => {
         const r = rows.indexOf(n.pitch);
         if (r < 0) return; // pitch outside current range — skip
-        const color = NOTE_COLORS[letterOf(n.pitch)];
+        const color = colorOf(n.pitch);
         const block = document.createElement('button');
         block.type = 'button';
         block.className = 'note-block';

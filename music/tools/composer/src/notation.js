@@ -4,7 +4,7 @@
 // (used by the printed manuscript); omit it for a single scrolling line (used
 // by the on-screen staff, which stays aligned with the grid above it).
 
-import { diatonicStep, letterOf, NOTE_COLORS, BEATS_PER_BAR, BEAT_W, CLEFS } from './model.js';
+import { diatonicStep, letterOf, isSharp, NOTE_COLORS, BLACK_KEY_COLOR, BEATS_PER_BAR, BEAT_W, CLEFS } from './model.js';
 
 const GAP = 14;            // px between staff lines
 const STAFF_LEFT = 64;     // x where the staff lines begin (after the clef)
@@ -50,12 +50,17 @@ function renderNote(n, localBeat, { colored, showLetters, staffShift, topStep, b
     const open = n.durBeats >= 2;        // half & whole have open heads
     const hasStem = n.durBeats < 4;      // whole note has no stem
     const hasFlag = n.durBeats < 1;      // eighth note gets a flag
-    const fill = colored ? NOTE_COLORS[letterOf(n.pitch)] : '#1f2430';
+    const sharp = isSharp(n.pitch);
+    const fill = colored ? (sharp ? BLACK_KEY_COLOR : NOTE_COLORS[letterOf(n.pitch)]) : '#1f2430';
 
     let svg = '';
     for (const s of ledgerSteps(step, topStep)) {
         const y = yOf(s, topStep, baseTop);
         svg += `<line x1="${cx - rx - 5}" y1="${y}" x2="${cx + rx + 5}" y2="${y}" stroke="#b6bccb" stroke-width="1.4"/>`;
+    }
+    // accidental — a ♯ sits just left of the head (black keys are sharp-spelled)
+    if (sharp) {
+        svg += `<text x="${cx - rx - 7}" y="${cy}" font-size="${GAP * 1.5}" text-anchor="middle" dominant-baseline="central" fill="${fill}" font-family="serif">♯</text>`;
     }
     // head — open (hollow) for half & whole, filled for quarter/eighth. Hollow in
     // both colour and B&W modes so quarter vs half is always visually distinct.

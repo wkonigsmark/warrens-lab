@@ -112,6 +112,40 @@ verified PD" bar.
 
 ---
 
+## Done — 2026-06-08
+
+### Chromatic 88-key piano ✅
+- New **Piano · A0–C8 (88 keys)** instrument in the range selector — the first
+  **chromatic** range (`chromatic: true` in `RANGES`). Adds the black keys, which
+  the tool never had: the whole model was naturals-only before.
+- **model.js**: pitches now parse accidentals (`accidentalOf`, `isSharp`); `octaveOf`
+  reads the trailing digits so `"C#5"` parses; `noteToMidi` bumps ±1 semitone for
+  ♯/♭ (so **audio "just works"** for black keys — `freqOf` is unchanged). New
+  `buildChromaticScale(low, high)` + `midiToNoteName` (sharp spelling) walk every
+  semitone. `BLACK_KEY_COLOR` (#3a3f4b) — one dark tone for all sharps, like a
+  real piano's black keys.
+- **grid.js**: sharp rows get a `black-key` class — dark dot, faint grey cell
+  striping (the piano black/white pattern), dark note-blocks.
+- **notation.js**: a **♯ glyph** is drawn just left of the head for sharps (the
+  head still sits on its natural line, standard engraving). Coloured sharps use
+  the dark tone.
+- **Scrollable grid viewport**: 88 rows would be ~2,600px tall, so tall ranges
+  (>20 rows) cap the grid into a `max-height:58vh` scroller (`.grid-wrap.tall`).
+  The grid owns both scroll axes so the **sticky note-name column still works**;
+  the outer `.scroll` stops scrolling and the single-line staff below is kept in
+  horizontal step via a small JS `scrollLeft` sync. On entry the viewport
+  **auto-centres** on the placed notes (or mid-register) instead of the empty
+  sub-bass.
+- Switching back to a naturals range drops any black-key notes (range filter) and
+  exits tall mode cleanly. Verified end-to-end: 88 rows / 36 black keys, placing
+  C#5 renders dark + a ♯ on the staff, audio plays, scroll-sync holds, no console
+  errors.
+- **Bonus**: this also de-risks the paused HookTheory JSON import — with a full
+  A0–C8 range, imported notes can no longer silently fall *outside* the playable
+  rows, so the octave-mapping bug becomes visible/debuggable.
+- **Future hook now half-built**: flats. Parsing already tolerates `'b'`; only the
+  *spelling* is sharp-only. A key-aware speller (Bb vs A#) is the remaining piece.
+
 ## Done — 2026-06-05 (second build)
 
 ### 1. Name the piece + print/save a manuscript ✅
