@@ -267,6 +267,43 @@
       text-wrap: balance;
     }
 
+    .pool-payment-callout {
+      display: grid;
+      gap: 5px;
+      width: min(100%, 590px);
+      margin: 7px auto 3px;
+      padding: 14px 18px;
+      border: 1px solid rgba(244, 201, 93, 0.58);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(244, 201, 93, 0.18), rgba(255, 93, 74, 0.12)),
+        rgba(255, 255, 255, 0.045);
+      box-shadow: 0 16px 46px rgba(244, 201, 93, 0.12);
+      text-align: center;
+      backdrop-filter: blur(14px);
+    }
+
+    .pool-payment-callout strong {
+      color: var(--ink);
+      font-size: clamp(1.15rem, 3vw, 1.45rem);
+      line-height: 1.2;
+    }
+
+    .pool-payment-callout a {
+      color: var(--gold);
+      font-weight: 950;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .pool-payment-callout span {
+      color: rgba(247, 244, 235, 0.8);
+      font-size: 0.88rem;
+      font-weight: 750;
+      line-height: 1.4;
+      text-wrap: balance;
+    }
+
     .purse-tally {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -700,6 +737,10 @@
 
       <div class="pool-cta">
         <a class="pool-cta-button" href="pool/">Join the Pool</a>
+        <div class="pool-payment-callout" aria-label="Pool entry payment instructions">
+          <strong>$50 entry · Pay <a href="https://venmo.com/u/Warren-Konigsmark" target="_blank" rel="noopener">@Warren-Konigsmark</a></strong>
+          <span>Venmo verification: last four digits <strong>6274</strong>. Include your bracket name and email in the payment memo.</span>
+        </div>
         <p class="pool-cta-copy">This pool is for group play only. Rank all 12 groups and the top eight third-place teams to complete your entry.</p>
         <p class="pool-cta-copy">Stay tuned for a knockout round pool once group play concludes!</p>
       </div>
@@ -830,8 +871,8 @@
     const payoutCurrency = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     });
     const totalPurse = document.getElementById('total-purse');
     const paidPurse = document.getElementById('paid-purse');
