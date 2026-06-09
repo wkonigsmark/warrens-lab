@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import FractionFigure from '../FractionFigure'
 import Frac from '../Frac'
@@ -17,6 +17,7 @@ export default function QuizShell({ level, onBack }) {
   const [value, setValue] = useState('')          // number levels
   const [frac, setFrac] = useState({ num: '', den: '' }) // fraction levels
   const [lastCorrect, setLastCorrect] = useState(false)
+  const [reviewIdx, setReviewIdx] = useState(null) // which problem to review (or null)
 
   const questions = useMemo(
     () => Array.from({ length: COUNT }, () => level.generate()),
@@ -45,8 +46,24 @@ export default function QuizShell({ level, onBack }) {
     setIndex((i) => i + 1); setValue(''); setFrac({ num: '', den: '' }); setPhase('asking')
   }
 
+  // Keyboard shortcuts: Return in feedback phase advances to next question.
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter' && phase === 'feedback') {
+        e.preventDefault()
+        next()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [phase, isLast, index])
+
   // Results screen ------------------------------------------------------
   if (phase === 'done') {
+    if (reviewIdx !== null) {
+      return <ReviewModal question={questions[reviewIdx]} answer={answers[reviewIdx]} idx={reviewIdx} level={level} onClose={() => setReviewIdx(null)} />
+    }
+
     const messages = ['Keep practicing! 💪', 'Nice start! 🙂', 'Good work! 👍', 'Great job! 🌟', 'Almost perfect! 🚀', 'Perfect score! 🏆']
     return (
       <div className="max-w-2xl mx-auto">
@@ -57,13 +74,17 @@ export default function QuizShell({ level, onBack }) {
 
           <div className="space-y-2 mb-8 text-left">
             {questions.map((qq, i) => (
-              <div key={i} className={`flex items-center justify-between p-3 rounded-lg border-2 ${answers[i]?.correct ? 'border-green-400 bg-green-50' : 'border-red-300 bg-red-50'}`}>
+              <button
+                key={i}
+                onClick={() => setReviewIdx(i)}
+                className={`w-full flex items-center justify-between p-3 rounded-lg border-2 cursor-pointer hover:shadow-md transition-all ${answers[i]?.correct ? 'border-green-400 bg-green-50 hover:bg-green-100' : 'border-red-300 bg-red-50 hover:bg-red-100'}`}
+              >
                 <span className="font-semibold text-gray-700">{answers[i]?.correct ? '✓' : '✗'} Question {i + 1}</span>
                 <span className="text-sm text-gray-600">
                   {!answers[i]?.correct && <span className="mr-2">you: {qq.formatGuess(answers[i]?.guess)}</span>}
                   <span className="font-bold text-gray-800">{qq.formatAnswer}</span>
                 </span>
-              </div>
+              </button>
             ))}
           </div>
 
@@ -146,6 +167,7 @@ export default function QuizShell({ level, onBack }) {
                 <input
                   type="number" value={frac.num} disabled={phase === 'feedback'}
                   onChange={(e) => setFrac((f) => ({ ...f, num: e.target.value }))}
+                  onKeyDown={(e) => e.key === 'Enter' && submit(frac)}
                   placeholder="?" aria-label="top number"
                   className="w-20 text-center text-2xl font-bold border-2 border-gray-200 rounded-xl py-2 focus:outline-none focus:border-amber-400 disabled:bg-gray-50"
                 />
@@ -153,6 +175,7 @@ export default function QuizShell({ level, onBack }) {
                 <input
                   type="number" value={frac.den} disabled={phase === 'feedback'}
                   onChange={(e) => setFrac((f) => ({ ...f, den: e.target.value }))}
+                  onKeyDown={(e) => e.key === 'Enter' && submit(frac)}
                   placeholder="?" aria-label="bottom number"
                   className="w-20 text-center text-2xl font-bold border-2 border-gray-200 rounded-xl py-2 focus:outline-none focus:border-amber-400 disabled:bg-gray-50"
                 />
@@ -180,6 +203,74 @@ export default function QuizShell({ level, onBack }) {
           <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600 mt-auto self-start">← Back to Levels</button>
         </motion.div>
       </div>
+    </div>
+  )
+}
+
+// Review a single problem after quiz completes.
+function ReviewModal({ question, answer, idx, level, onClose }) {
+  return (
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <motion.div
+        className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+      >
+        <div className="p-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-800">Question {idx + 1}</h2>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            {/* Figure */}
+            <div className="bg-gray-50 rounded-xl p-4 flex items-center justify-center min-h-[250px]">
+              <FractionFigure fig={question.fig} />
+            </div>
+
+            {/* Question */}
+            <div className="flex flex-col justify-center">
+              <h3 className="text-xl font-bold text-gray-800 mb-2">{question.promptTitle}</h3>
+              {question.promptText && <p className="text-sm text-gray-500 mb-4">{question.promptText}</p>}
+
+              <div className={`rounded-lg p-4 ${answer.correct ? 'bg-green-50 border-2 border-green-300' : 'bg-red-50 border-2 border-red-300'}`}>
+                <p className="text-sm text-gray-600 mb-1">Your answer:</p>
+                <p className={`text-lg font-bold ${answer.correct ? 'text-green-700' : 'text-red-700'}`}>
+                  {question.formatGuess(answer.guess)}
+                </p>
+              </div>
+
+              {!answer.correct && (
+                <div className="mt-4 rounded-lg p-4 bg-blue-50 border-2 border-blue-300">
+                  <p className="text-sm text-gray-600 mb-1">Correct answer:</p>
+                  <p className="text-lg font-bold text-blue-700">{question.formatAnswer}</p>
+                </div>
+              )}
+
+              {answer.correct && (
+                <div className="mt-4 text-center">
+                  <p className="text-3xl">✓ Correct!</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              onClick={onClose}
+              className="flex-1 text-white font-bold py-3 rounded-lg hover:shadow-lg transition-shadow"
+              style={{ backgroundColor: level.accent }}
+            >
+              Back to Results
+            </button>
+          </div>
+        </div>
+      </motion.div>
     </div>
   )
 }
