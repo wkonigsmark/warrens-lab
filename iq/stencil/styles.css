@@ -1392,3 +1392,29 @@ body {
         font-size: 1.2rem;
     }
 }
+
+/* Draw & Write Variation Modal Styles */
+.draw-write-var-btn {
+    padding: 14px 16px;
+    background: #f8f9fa;
+    border: 2px solid #d0d7de;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.draw-write-var-btn:hover {
+    background: #e8f0ff;
+    border-color: #0969da;
+    box-shadow: 0 2px 8px rgba(9, 105, 218, 0.15);
+}
+
+.draw-write-var-btn:active {
+    transform: scale(0.98);
+}
+
+#drawWriteVariationModal .modal-content {
+    max-width: 500px;
+}

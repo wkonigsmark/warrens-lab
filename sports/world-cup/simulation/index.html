@@ -628,6 +628,626 @@
       text-transform: uppercase;
       flex-shrink: 0;
     }
+
+    /* Monte Carlo probability atlas */
+    .mc-atlas {
+      margin: 30px 0 34px;
+      border-top: 1px solid var(--wc-line);
+      border-bottom: 1px solid var(--wc-line);
+      padding: 30px 0 34px;
+    }
+
+    .mc-atlas-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    .mc-atlas-title {
+      margin: 6px 0 8px;
+      font-size: clamp(2rem, 5vw, 4.6rem);
+      line-height: 0.92;
+      color: var(--wc-ink);
+    }
+
+    .mc-atlas-copy {
+      max-width: 720px;
+      margin: 0;
+      color: var(--wc-muted);
+      line-height: 1.55;
+    }
+
+    .mc-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .mc-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+      padding: 8px 12px;
+      border: 1px solid var(--wc-line);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .mc-run-select,
+    .mc-filter {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--wc-ink);
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 900;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .mc-run-select option,
+    .mc-filter option {
+      color: #07130f;
+    }
+
+    .mc-progress {
+      height: 4px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.08);
+      margin-bottom: 18px;
+    }
+
+    .mc-progress-bar {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #4ea7ff, var(--wc-gold), var(--wc-green));
+      transition: width 0.16s ease;
+    }
+
+    .mc-status {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      color: var(--wc-faint);
+      font-size: 0.76rem;
+      font-weight: 850;
+    }
+
+    .mc-contenders {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .mc-contender {
+      position: relative;
+      min-height: 138px;
+      overflow: hidden;
+      border: 1px solid var(--wc-line);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.035);
+      padding: 14px;
+    }
+
+    .mc-contender::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: var(--title-probability, 0%);
+      max-height: 100%;
+      background: linear-gradient(180deg, rgba(36, 180, 126, 0.02), rgba(36, 180, 126, 0.22));
+      pointer-events: none;
+    }
+
+    .mc-contender-rank,
+    .mc-contender-body {
+      position: relative;
+      z-index: 1;
+    }
+
+    .mc-contender-rank {
+      color: var(--wc-gold);
+      font-size: 0.67rem;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .mc-contender-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      height: 96px;
+      gap: 6px;
+    }
+
+    .mc-contender-team {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      font-size: 0.86rem;
+      font-weight: 900;
+    }
+
+    .mc-contender-team span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .mc-contender-probability {
+      color: var(--wc-ink);
+      font-size: 1.55rem;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .mc-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .mc-search {
+      flex: 1 1 240px;
+      min-height: 42px;
+      border: 1px solid var(--wc-line);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--wc-ink);
+      padding: 0 13px;
+      font: inherit;
+      font-size: 0.84rem;
+      outline: none;
+    }
+
+    .mc-search:focus,
+    .mc-control:focus-within {
+      border-color: rgba(244, 201, 93, 0.5);
+    }
+
+    .mc-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px 14px;
+      margin: 12px 0 16px;
+      color: var(--wc-faint);
+      font-size: 0.68rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .mc-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .mc-legend-swatch {
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      background: var(--stage-color);
+    }
+
+    .mc-stage-list {
+      border-top: 1px solid var(--wc-line);
+    }
+
+    .mc-stage-row {
+      display: grid;
+      grid-template-columns: minmax(180px, 1.1fr) minmax(360px, 3fr) minmax(150px, 0.8fr);
+      gap: 18px;
+      align-items: center;
+      min-height: 64px;
+      border-bottom: 1px solid var(--wc-line);
+      padding: 9px 4px;
+    }
+
+    .mc-stage-team {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .mc-stage-team-copy {
+      min-width: 0;
+    }
+
+    .mc-stage-team-name {
+      overflow: hidden;
+      color: var(--wc-ink);
+      font-size: 0.88rem;
+      font-weight: 900;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .mc-stage-team-meta {
+      margin-top: 2px;
+      color: var(--wc-faint);
+      font-size: 0.66rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .mc-spectrum {
+      display: flex;
+      width: 100%;
+      height: 26px;
+      overflow: hidden;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .mc-spectrum-segment {
+      width: var(--segment-width);
+      min-width: 0;
+      height: 100%;
+      background: var(--stage-color);
+      transition: filter 0.15s, opacity 0.15s;
+    }
+
+    .mc-spectrum-segment:hover {
+      filter: brightness(1.25);
+    }
+
+    .mc-stage-metrics {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .mc-stage-title {
+      color: var(--wc-gold);
+      font-size: 0.9rem;
+      font-weight: 950;
+    }
+
+    .mc-stage-reach {
+      margin-top: 3px;
+      color: var(--wc-faint);
+      font-size: 0.66rem;
+      font-weight: 800;
+    }
+
+    .mc-placeholder {
+      padding: 34px 16px;
+      border: 1px dashed var(--wc-line);
+      color: var(--wc-muted);
+      text-align: center;
+    }
+
+    /* Monte Carlo flag scatter */
+    .ff-section {
+      margin: 34px 0 38px;
+      padding: 30px 0 36px;
+      border-bottom: 1px solid var(--wc-line);
+    }
+
+    .ff-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 20px;
+    }
+
+    .ff-title {
+      margin: 6px 0 8px;
+      color: var(--wc-ink);
+      font-size: clamp(2rem, 5vw, 4.2rem);
+      line-height: 0.94;
+    }
+
+    .ff-copy {
+      max-width: 720px;
+      margin: 0;
+      color: var(--wc-muted);
+      line-height: 1.55;
+    }
+
+    .ff-insights {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .ff-insight {
+      min-height: 84px;
+      padding: 13px 15px;
+      border: 1px solid var(--wc-line);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .ff-insight-label {
+      color: var(--wc-faint);
+      font-size: 0.65rem;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .ff-insight-value {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      color: var(--wc-ink);
+      font-size: 1rem;
+      font-weight: 950;
+    }
+
+    .ff-insight-detail {
+      margin-top: 3px;
+      color: var(--wc-gold);
+      font-size: 0.7rem;
+      font-weight: 850;
+    }
+
+    .ff-chart-shell {
+      position: relative;
+      min-height: 610px;
+      padding: 22px 22px 54px 72px;
+      border: 1px solid var(--wc-line);
+      border-radius: 6px;
+      background: rgba(4, 18, 14, 0.56);
+      overflow: hidden;
+    }
+
+    .ff-chart {
+      position: relative;
+      width: 100%;
+      height: 530px;
+      border-left: 1px solid rgba(247, 244, 235, 0.3);
+      border-bottom: 1px solid rgba(247, 244, 235, 0.3);
+    }
+
+    .ff-grid-line {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .ff-grid-line.horizontal {
+      right: 0;
+      left: 0;
+      bottom: var(--grid-position);
+      border-top: 1px solid rgba(247, 244, 235, 0.09);
+    }
+
+    .ff-grid-line.vertical {
+      top: 0;
+      bottom: 0;
+      left: var(--grid-position);
+      border-left: 1px solid rgba(247, 244, 235, 0.07);
+    }
+
+    .ff-axis-label {
+      position: absolute;
+      color: var(--wc-faint);
+      font-size: 0.62rem;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .ff-axis-label.y {
+      right: calc(100% + 12px);
+      bottom: var(--grid-position);
+      transform: translateY(50%);
+    }
+
+    .ff-axis-label.x {
+      top: calc(100% + 12px);
+      left: var(--grid-position);
+      transform: translateX(-50%);
+    }
+
+    .ff-axis-title {
+      position: absolute;
+      color: var(--wc-gold);
+      font-size: 0.66rem;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .ff-axis-title.x {
+      right: 0;
+      bottom: 14px;
+    }
+
+    .ff-axis-title.y {
+      top: 50%;
+      left: 17px;
+      transform: translate(-50%, -50%) rotate(-90deg);
+      white-space: nowrap;
+    }
+
+    .ff-marker {
+      position: absolute;
+      left: var(--x);
+      bottom: var(--y);
+      z-index: var(--marker-z, 1);
+      width: 34px;
+      height: 28px;
+      padding: 3px;
+      border: 1px solid rgba(247, 244, 235, 0.42);
+      border-radius: 5px;
+      background: rgba(8, 22, 18, 0.92);
+      box-shadow: 0 0 0 var(--halo-size, 0) rgba(50, 183, 125, 0.16);
+      cursor: pointer;
+      transform: translate(calc(-50% + var(--jitter-x)), calc(50% + var(--jitter-y)));
+      transition: z-index 0s, transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .ff-marker:hover,
+    .ff-marker:focus-visible {
+      z-index: 100;
+      border-color: var(--wc-gold);
+      box-shadow: 0 0 0 5px rgba(244, 201, 93, 0.18);
+      outline: none;
+      transform: translate(calc(-50% + var(--jitter-x)), calc(50% + var(--jitter-y))) scale(1.22);
+    }
+
+    .ff-marker img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 2px;
+    }
+
+    .ff-tooltip {
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 10px);
+      width: max-content;
+      max-width: 220px;
+      padding: 8px 10px;
+      border: 1px solid var(--wc-line);
+      border-radius: 5px;
+      background: #0a1814;
+      color: var(--wc-ink);
+      font-size: 0.7rem;
+      font-weight: 850;
+      line-height: 1.4;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%) translateY(4px);
+      transition: opacity 0.12s ease, transform 0.12s ease;
+    }
+
+    .ff-tooltip strong {
+      color: var(--wc-gold);
+    }
+
+    .ff-marker:hover .ff-tooltip,
+    .ff-marker:focus-visible .ff-tooltip {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .ff-empty {
+      display: grid;
+      height: 100%;
+      place-items: center;
+      padding: 30px;
+      color: var(--wc-muted);
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      .mc-atlas-head {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .mc-controls {
+        justify-content: flex-start;
+      }
+
+      .mc-contenders {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .mc-stage-row {
+        grid-template-columns: minmax(150px, 1fr) minmax(260px, 2fr);
+      }
+
+      .mc-stage-metrics {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: space-between;
+        text-align: left;
+        padding-left: 34px;
+      }
+
+      .ff-head {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .ff-insights {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .mc-atlas {
+        padding-top: 24px;
+      }
+
+      .mc-atlas-title {
+        font-size: 2.35rem;
+      }
+
+      .mc-controls,
+      .mc-control,
+      .mc-run-select,
+      #mc-run-btn {
+        width: 100%;
+      }
+
+      .mc-control {
+        justify-content: space-between;
+      }
+
+      .mc-contenders {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .mc-stage-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 13px 2px;
+      }
+
+      .mc-stage-metrics {
+        grid-column: auto;
+        padding-left: 0;
+      }
+
+      .mc-spectrum {
+        height: 22px;
+      }
+
+      .ff-section {
+        padding-top: 24px;
+      }
+
+      .ff-title {
+        font-size: 2.35rem;
+      }
+
+      .ff-chart-shell {
+        min-height: 520px;
+        padding: 18px 10px 50px 52px;
+      }
+
+      .ff-chart {
+        height: 450px;
+      }
+
+      .ff-marker {
+        width: 28px;
+        height: 23px;
+        padding: 2px;
+      }
+
+      .ff-tooltip {
+        max-width: 170px;
+      }
+    }
   </style>
   <!-- Load FIFA permutations combination table synchronously from archive -->
   <script src="../archive/world-cup-1/bracket_lookup.js"></script>
@@ -691,6 +1311,105 @@
         <div class="mode-callout" id="pred-mode-callout" style="display: none;">
           <strong>Pure W-Index Prediction:</strong> Standings are ranked by <strong>Path-Adjusted W-Index %</strong>. Qualified 3rd-place teams (top 8 by Path-Adjusted %) are mapped into the Round of 32 using the FIFA permutations table. From there, teams advance strictly based on their original W-Index strength. No random noise is applied.
         </div>
+      </div>
+    </section>
+
+    <section class="mc-atlas" aria-labelledby="mc-atlas-title">
+      <div class="mc-atlas-head">
+        <div>
+          <div class="wc-eyebrow">Monte Carlo Visualization</div>
+          <h2 class="mc-atlas-title" id="mc-atlas-title">Probability Atlas</h2>
+          <p class="mc-atlas-copy">
+            Run the tournament again and again to see each nation's range of outcomes. Every color band shows the
+            probability that a team's journey ends at that stage.
+          </p>
+        </div>
+        <div class="mc-controls">
+          <label class="mc-control" for="mc-stoch-slider">
+            <span class="slider-label">Stochasticity</span>
+            <input type="range" class="stoch-slider" id="mc-stoch-slider" min="0" max="1" step="0.05" value="0.5">
+            <span class="stoch-value" id="mc-stoch-label">50%</span>
+          </label>
+          <label class="mc-control" for="mc-run-count">
+            <span class="slider-label">Tournaments</span>
+            <select class="mc-run-select" id="mc-run-count">
+              <option value="250">250</option>
+              <option value="1000" selected>1,000</option>
+              <option value="2500">2,500</option>
+            </select>
+          </label>
+          <button class="wc-button" id="mc-run-btn" disabled>Loading Ratings...</button>
+        </div>
+      </div>
+
+      <div class="mc-progress" aria-hidden="true">
+        <div class="mc-progress-bar" id="mc-progress-bar"></div>
+      </div>
+      <div class="mc-status" aria-live="polite">
+        <span id="mc-status-text">Ready once W-Index ratings load.</span>
+        <span id="mc-status-detail">No pool or entry data is used.</span>
+      </div>
+
+      <div class="mc-contenders" id="mc-contenders" hidden></div>
+
+      <div class="mc-toolbar">
+        <input class="mc-search" id="mc-search" type="search" placeholder="Search a nation" aria-label="Search nations">
+        <label class="mc-control" for="mc-group-filter">
+          <span class="slider-label">Group</span>
+          <select class="mc-filter" id="mc-group-filter">
+            <option value="all">All groups</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="G">G</option>
+            <option value="H">H</option>
+            <option value="I">I</option>
+            <option value="J">J</option>
+            <option value="K">K</option>
+            <option value="L">L</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="mc-legend" id="mc-legend"></div>
+      <div class="mc-stage-list" id="mc-stage-list">
+        <div class="mc-placeholder">Run the atlas to reveal the tournament's probability landscape.</div>
+      </div>
+    </section>
+
+    <section class="ff-section" aria-labelledby="ff-title">
+      <div class="ff-head">
+        <div>
+          <div class="wc-eyebrow">Monte Carlo Visualization II</div>
+          <h2 class="ff-title" id="ff-title">Fate Field</h2>
+          <p class="ff-copy">
+            A flag-level view of strength versus survival. Move the terminal point to see which nations rise above
+            their rating, which favorites hold firm, and where the tournament becomes volatile.
+          </p>
+        </div>
+        <label class="mc-control" for="ff-stage-select">
+          <span class="slider-label">Terminal point</span>
+          <select class="mc-filter" id="ff-stage-select">
+            <option value="r32">Reach Round of 32</option>
+            <option value="r16">Reach Round of 16</option>
+            <option value="qf" selected>Reach Quarterfinal</option>
+            <option value="sf">Reach Semifinal</option>
+            <option value="final">Reach Final</option>
+            <option value="champion">Win Tournament</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="ff-insights" id="ff-insights" hidden></div>
+      <div class="ff-chart-shell">
+        <div class="ff-axis-title y" id="ff-y-axis-title">Quarterfinal probability</div>
+        <div class="ff-chart" id="ff-chart">
+          <div class="ff-empty">Run the Probability Atlas above to populate the Fate Field.</div>
+        </div>
+        <div class="ff-axis-title x">W-Index strength</div>
       </div>
     </section>
 
@@ -852,7 +1571,34 @@
       predCallout: document.getElementById("pred-mode-callout"),
       modeStochBtn: document.getElementById("mode-stoch-btn"),
       modePredBtn: document.getElementById("mode-pred-btn"),
+      mcStochSlider: document.getElementById("mc-stoch-slider"),
+      mcStochLabel: document.getElementById("mc-stoch-label"),
+      mcRunCount: document.getElementById("mc-run-count"),
+      mcRunBtn: document.getElementById("mc-run-btn"),
+      mcProgressBar: document.getElementById("mc-progress-bar"),
+      mcStatusText: document.getElementById("mc-status-text"),
+      mcStatusDetail: document.getElementById("mc-status-detail"),
+      mcContenders: document.getElementById("mc-contenders"),
+      mcSearch: document.getElementById("mc-search"),
+      mcGroupFilter: document.getElementById("mc-group-filter"),
+      mcLegend: document.getElementById("mc-legend"),
+      mcStageList: document.getElementById("mc-stage-list"),
+      ffStageSelect: document.getElementById("ff-stage-select"),
+      ffInsights: document.getElementById("ff-insights"),
+      ffChart: document.getElementById("ff-chart"),
+      ffYAxisTitle: document.getElementById("ff-y-axis-title"),
     };
+
+    const MC_STAGES = [
+      { key: "group", label: "Group", color: "#4f5f5a" },
+      { key: "r32", label: "R32", color: "#3f7fb4" },
+      { key: "r16", label: "R16", color: "#44a6b5" },
+      { key: "qf", label: "Quarterfinal", color: "#d8b451" },
+      { key: "sf", label: "Semifinal", color: "#df8747" },
+      { key: "final", label: "Finalist", color: "#d45f68" },
+      { key: "champion", label: "Champion", color: "#32b77d" },
+    ];
+    let monteCarloResults = [];
 
     // Helper functions for matching names and parsing W-Index
     function normalizeName(name) {
@@ -1003,6 +1749,9 @@
       } finally {
         elements.simulateBtn.disabled = false;
         elements.simulateBtn.textContent = "Simulate Group Stage";
+        elements.mcRunBtn.disabled = false;
+        elements.mcRunBtn.textContent = "Run Probability Atlas";
+        elements.mcStatusText.textContent = "Ready for a 1,000-tournament run.";
       }
     }
 
@@ -1457,6 +2206,341 @@
       }
     }
 
+    function snapshotSimulationState() {
+      return {
+        simulatedMatches,
+        groupStandings,
+        thirdPlaceStandings,
+        advancingTeams,
+        bracketSchedule,
+      };
+    }
+
+    function restoreSimulationState(snapshot) {
+      simulatedMatches = snapshot.simulatedMatches;
+      groupStandings = snapshot.groupStandings;
+      thirdPlaceStandings = snapshot.thirdPlaceStandings;
+      advancingTeams = snapshot.advancingTeams;
+      bracketSchedule = snapshot.bracketSchedule;
+    }
+
+    function createMonteCarloAccumulator() {
+      return new Map(teams.map(team => [
+        team.id,
+        {
+          team,
+          counts: Object.fromEntries(MC_STAGES.map(stage => [stage.key, 0])),
+        }
+      ]));
+    }
+
+    function markStage(stageByTeam, teamId, stageIndex) {
+      if (!teamId) return;
+      stageByTeam.set(teamId, Math.max(stageByTeam.get(teamId) || 0, stageIndex));
+    }
+
+    function captureTournamentStages(accumulator) {
+      const stageByTeam = new Map(teams.map(team => [team.id, 0]));
+      const rounds = [
+        [bracketSchedule.r32Matches, 1],
+        [bracketSchedule.r16Matches, 2],
+        [bracketSchedule.qfMatches, 3],
+        [bracketSchedule.sfMatches, 4],
+      ];
+
+      rounds.forEach(([matches, stageIndex]) => {
+        (matches || []).forEach(match => {
+          markStage(stageByTeam, match.t1, stageIndex);
+          markStage(stageByTeam, match.t2, stageIndex);
+        });
+      });
+
+      const finalMatch = bracketSchedule.finalMatch;
+      if (finalMatch) {
+        markStage(stageByTeam, finalMatch.t1, 5);
+        markStage(stageByTeam, finalMatch.t2, 5);
+        markStage(stageByTeam, finalMatch.winner, 6);
+      }
+
+      stageByTeam.forEach((stageIndex, teamId) => {
+        const stage = MC_STAGES[stageIndex];
+        accumulator.get(teamId).counts[stage.key]++;
+      });
+    }
+
+    function buildMonteCarloResults(accumulator, runs) {
+      return [...accumulator.values()].map(({ team, counts }) => {
+        const probabilities = {};
+        MC_STAGES.forEach(stage => {
+          probabilities[stage.key] = counts[stage.key] / runs;
+        });
+
+        const expectedStage = MC_STAGES.reduce(
+          (sum, stage, index) => sum + probabilities[stage.key] * index,
+          0
+        );
+        const reachR32 = 1 - probabilities.group;
+        const reachQF = probabilities.qf + probabilities.sf + probabilities.final + probabilities.champion;
+
+        return { team, counts, probabilities, expectedStage, reachR32, reachQF };
+      }).sort((a, b) =>
+        b.probabilities.champion - a.probabilities.champion ||
+        b.expectedStage - a.expectedStage ||
+        a.team.name.localeCompare(b.team.name)
+      );
+    }
+
+    function formatProbability(value) {
+      const percent = value * 100;
+      if (percent > 0 && percent < 0.1) return "<0.1%";
+      return `${percent.toFixed(percent >= 10 ? 1 : 2)}%`;
+    }
+
+    const FF_STAGE_LABELS = {
+      r32: "Round of 32",
+      r16: "Round of 16",
+      qf: "Quarterfinal",
+      sf: "Semifinal",
+      final: "Final",
+      champion: "Championship",
+    };
+
+    function reachProbability(result, stageKey) {
+      const stageIndex = MC_STAGES.findIndex(stage => stage.key === stageKey);
+      if (stageIndex < 0) return 0;
+      return MC_STAGES.slice(stageIndex).reduce(
+        (sum, stage) => sum + result.probabilities[stage.key],
+        0
+      );
+    }
+
+    function markerJitter(teamId) {
+      const hash = [...teamId].reduce((sum, character) => sum + character.charCodeAt(0), 0);
+      return {
+        x: ((hash % 7) - 3) * 1.2,
+        y: (((hash * 3) % 7) - 3) * 1.1,
+      };
+    }
+
+    function renderFateField() {
+      if (!monteCarloResults.length) return;
+
+      const stageKey = elements.ffStageSelect.value;
+      const stageLabel = FF_STAGE_LABELS[stageKey];
+      const plotted = monteCarloResults.map(result => {
+        const strength = wIndexMap.get(result.team.id) || 0.5;
+        const reach = reachProbability(result, stageKey);
+        return { ...result, strength, reach };
+      });
+
+      const favorite = [...plotted].sort((a, b) => b.reach - a.reach)[0];
+      const strengthRank = new Map(
+        [...plotted]
+          .sort((a, b) => b.strength - a.strength)
+          .map((result, index) => [result.team.id, index + 1])
+      );
+      const reachRank = new Map(
+        [...plotted]
+          .sort((a, b) => b.reach - a.reach)
+          .map((result, index) => [result.team.id, index + 1])
+      );
+      const riser = [...plotted].sort((a, b) => {
+        const aLift = strengthRank.get(a.team.id) - reachRank.get(a.team.id);
+        const bLift = strengthRank.get(b.team.id) - reachRank.get(b.team.id);
+        return bLift - aLift;
+      })[0];
+      const riserLift = strengthRank.get(riser.team.id) - reachRank.get(riser.team.id);
+      const volatile = [...plotted].sort((a, b) => {
+        const aPeak = Math.max(...MC_STAGES.map(stage => a.probabilities[stage.key]));
+        const bPeak = Math.max(...MC_STAGES.map(stage => b.probabilities[stage.key]));
+        return aPeak - bPeak;
+      })[0];
+
+      elements.ffInsights.hidden = false;
+      elements.ffInsights.innerHTML = [
+        {
+          label: `Highest ${stageLabel} chance`,
+          result: favorite,
+          detail: formatProbability(favorite.reach),
+        },
+        {
+          label: "Simulation riser",
+          result: riser,
+          detail: `${riserLift > 0 ? "+" : ""}${riserLift} ranking positions vs W-Index`,
+        },
+        {
+          label: "Widest outcome range",
+          result: volatile,
+          detail: `Most distributed finish profile`,
+        },
+      ].map(insight => `
+        <article class="ff-insight">
+          <div class="ff-insight-label">${insight.label}</div>
+          <div class="ff-insight-value">
+            ${flagImageHtml(insight.result.team)}
+            <span>${insight.result.team.name}</span>
+          </div>
+          <div class="ff-insight-detail">${insight.detail}</div>
+        </article>
+      `).join("");
+
+      const gridValues = [0, 0.25, 0.5, 0.75, 1];
+      const horizontalGrid = gridValues.map(value => `
+        <span class="ff-grid-line horizontal" style="--grid-position:${value * 100}%"></span>
+        <span class="ff-axis-label y" style="--grid-position:${value * 100}%">${Math.round(value * 100)}%</span>
+      `).join("");
+      const verticalGrid = gridValues.map(value => `
+        <span class="ff-grid-line vertical" style="--grid-position:${value * 100}%"></span>
+        <span class="ff-axis-label x" style="--grid-position:${value * 100}%">${Math.round(value * 100)}%</span>
+      `).join("");
+
+      const markers = plotted
+        .sort((a, b) => a.probabilities.champion - b.probabilities.champion)
+        .map((result, index) => {
+          const jitter = markerJitter(result.team.id);
+          const titleChance = result.probabilities.champion;
+          const plotX = Math.min(97.5, Math.max(2.5, result.strength * 100));
+          const plotY = Math.min(97.5, Math.max(2.5, result.reach * 100));
+          const ariaLabel = `${result.team.name}: W-Index ${formatProbability(result.strength)}, ${formatProbability(result.reach)} chance to reach ${stageLabel}, ${formatProbability(titleChance)} chance to win`;
+          return `
+            <button
+              class="ff-marker"
+              type="button"
+              style="--x:${plotX}%;--y:${plotY}%;--jitter-x:${jitter.x}px;--jitter-y:${jitter.y}px;--halo-size:${Math.min(8, titleChance * 34)}px;--marker-z:${index + 1}"
+              aria-label="${ariaLabel}"
+            >
+              <img src="${flagUrl(result.team)}" alt="" loading="lazy">
+              <span class="ff-tooltip">
+                <strong>${result.team.name}</strong><br>
+                W-Index ${formatProbability(result.strength)} · ${stageLabel} ${formatProbability(result.reach)}<br>
+                Title ${formatProbability(titleChance)}
+              </span>
+            </button>
+          `;
+        }).join("");
+
+      elements.ffYAxisTitle.textContent = `${stageLabel} probability`;
+      elements.ffChart.innerHTML = horizontalGrid + verticalGrid + markers;
+    }
+
+    function renderMonteCarloLegend() {
+      elements.mcLegend.innerHTML = MC_STAGES.map(stage => `
+        <span class="mc-legend-item">
+          <span class="mc-legend-swatch" style="--stage-color:${stage.color}"></span>
+          ${stage.label}
+        </span>
+      `).join("");
+    }
+
+    function renderMonteCarloResults() {
+      if (!monteCarloResults.length) return;
+
+      const contenders = monteCarloResults.slice(0, 6);
+      elements.mcContenders.hidden = false;
+      elements.mcContenders.innerHTML = contenders.map((result, index) => `
+        <article class="mc-contender" style="--title-probability:${Math.max(8, result.probabilities.champion * 100)}%">
+          <div class="mc-contender-rank">Title pulse #${index + 1}</div>
+          <div class="mc-contender-body">
+            <div class="mc-contender-team">
+              ${flagImageHtml(result.team)}
+              <span>${result.team.name}</span>
+            </div>
+            <div class="mc-contender-probability">${formatProbability(result.probabilities.champion)}</div>
+          </div>
+        </article>
+      `).join("");
+
+      const search = normalizeName(elements.mcSearch.value);
+      const group = elements.mcGroupFilter.value;
+      const filtered = monteCarloResults.filter(result => {
+        const matchesSearch = !search || normalizeName(result.team.name).includes(search);
+        const matchesGroup = group === "all" || result.team.group === group;
+        return matchesSearch && matchesGroup;
+      });
+
+      if (!filtered.length) {
+        elements.mcStageList.innerHTML = `<div class="mc-placeholder">No nations match this filter.</div>`;
+        return;
+      }
+
+      elements.mcStageList.innerHTML = filtered.map((result, index) => {
+        const mostLikely = MC_STAGES.reduce((best, stage) =>
+          result.probabilities[stage.key] > result.probabilities[best.key] ? stage : best
+        , MC_STAGES[0]);
+
+        const spectrum = MC_STAGES.map(stage => {
+          const probability = result.probabilities[stage.key];
+          if (probability <= 0) return "";
+          return `
+            <span
+              class="mc-spectrum-segment"
+              style="--segment-width:${probability * 100}%;--stage-color:${stage.color}"
+              title="${stage.label}: ${formatProbability(probability)}"
+              aria-label="${stage.label}: ${formatProbability(probability)}"
+            ></span>
+          `;
+        }).join("");
+
+        return `
+          <article class="mc-stage-row">
+            <div class="mc-stage-team">
+              <span class="mc-contender-rank">#${index + 1}</span>
+              ${flagImageHtml(result.team)}
+              <div class="mc-stage-team-copy">
+                <div class="mc-stage-team-name">${result.team.name}</div>
+                <div class="mc-stage-team-meta">Group ${result.team.group} · W-Index ${Math.round((wIndexMap.get(result.team.id) || 0.5) * 100)}%</div>
+              </div>
+            </div>
+            <div class="mc-spectrum" role="img" aria-label="${result.team.name} stage probability distribution">
+              ${spectrum}
+            </div>
+            <div class="mc-stage-metrics">
+              <div class="mc-stage-title">Most likely: ${mostLikely.label} ${formatProbability(result.probabilities[mostLikely.key])}</div>
+              <div class="mc-stage-reach">R32 ${formatProbability(result.reachR32)} · QF ${formatProbability(result.reachQF)} · Title ${formatProbability(result.probabilities.champion)}</div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function runMonteCarlo() {
+      const runs = Number(elements.mcRunCount.value) || 1000;
+      const stochasticity = Number(elements.mcStochSlider.value);
+      const accumulator = createMonteCarloAccumulator();
+      const savedState = snapshotSimulationState();
+      const batchSize = 25;
+
+      elements.mcRunBtn.disabled = true;
+      elements.mcRunBtn.textContent = "Modeling...";
+      elements.mcProgressBar.style.width = "0%";
+      elements.mcStatusText.textContent = `Running ${runs.toLocaleString()} tournaments at ${Math.round(stochasticity * 100)}% stochasticity...`;
+      elements.mcStatusDetail.textContent = "0% complete";
+
+      try {
+        for (let run = 0; run < runs; run++) {
+          simulateTournament("stochastic", stochasticity);
+          captureTournamentStages(accumulator);
+
+          if ((run + 1) % batchSize === 0 || run === runs - 1) {
+            const progress = ((run + 1) / runs) * 100;
+            elements.mcProgressBar.style.width = `${progress}%`;
+            elements.mcStatusDetail.textContent = `${Math.round(progress)}% complete`;
+            await new Promise(resolve => requestAnimationFrame(resolve));
+          }
+        }
+
+        monteCarloResults = buildMonteCarloResults(accumulator, runs);
+        renderMonteCarloResults();
+        renderFateField();
+        elements.mcStatusText.textContent = `${runs.toLocaleString()} tournaments modeled at ${Math.round(stochasticity * 100)}% stochasticity.`;
+        elements.mcStatusDetail.textContent = `${(runs * 104).toLocaleString()} matches simulated · isolated visualization`;
+      } finally {
+        restoreSimulationState(savedState);
+        elements.mcRunBtn.disabled = false;
+        elements.mcRunBtn.textContent = "Run Again";
+      }
+    }
+
     // UI Renders
     function renderStandings() {
       elements.groupStandingsGrid.innerHTML = "";
@@ -1721,6 +2805,14 @@
       elements.stochLabel.textContent = `${val}%`;
     });
 
+    elements.mcStochSlider.addEventListener("input", (event) => {
+      elements.mcStochLabel.textContent = `${Math.round(Number(event.target.value) * 100)}%`;
+    });
+    elements.mcRunBtn.addEventListener("click", runMonteCarlo);
+    elements.mcSearch.addEventListener("input", renderMonteCarloResults);
+    elements.mcGroupFilter.addEventListener("change", renderMonteCarloResults);
+    elements.ffStageSelect.addEventListener("change", renderFateField);
+
     // Mode Selector toggle listeners
     function updateModeUI(mode) {
       activeMode = mode;
@@ -1934,6 +3026,7 @@
     });
 
     // Initialize application on load
+    renderMonteCarloLegend();
     loadWIndexFeed();
   </script>
 </body>

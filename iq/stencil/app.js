@@ -32,6 +32,15 @@ function generateArc(centerX, centerY, radiusX, radiusY, startAngle, endAngle, s
     });
 }
 
+// Helper to generate a smooth, self-crossing figure-eight (single stroke that
+// crosses itself once at the center — avoids the "snowman" and "venn" looks)
+function generateFigure8(centerX, centerY, halfWidth, halfHeight, steps = 48) {
+    return Array.from({ length: steps + 1 }, (_, i) => {
+        const t = (i / steps) * 2 * Math.PI;
+        return [centerX + halfWidth * Math.sin(2 * t), centerY + halfHeight * Math.cos(t)];
+    });
+}
+
 // Simplified Vector Paths (0-1 coordinate space)
 const LETTER_PATHS = {
     'A': [[[0.5, 0], [0.1, 1]], [[0.5, 0], [0.9, 1]], [[0.25, 0.6], [0.75, 0.6]]],
@@ -111,30 +120,37 @@ const NUMERIC_PATHS = {
         [[0.15, 1], [0.85, 1]]
     ],
     '3': [
-        // Top loop - refined to match screenshot
-        [[0.2, 0.22], [0.35, 0.05], [0.55, 0], [0.75, 0.05], [0.85, 0.22], [0.85, 0.4], [0.75, 0.48], [0.45, 0.48]],
-        // Bottom loop - fixed flat bottom with rounded curve
-        [[0.45, 0.48], [0.75, 0.48], [0.92, 0.55], [0.95, 0.75], [0.85, 0.95], [0.55, 1.0], [0.25, 0.95], [0.15, 0.85]]
+        // ONE continuous stroke = top bump arc + bottom bump arc concatenated, so the
+        // two bowls connect into a single clean leftward cusp at the waist (no overlap).
+        // Arc-generated for smoothness; spans sky(0) to grass(1) like the other numbers.
+        [
+            ...generateArc(0.48, 0.26, 0.34, 0.26, -0.8 * Math.PI, 0.62 * Math.PI, 20),
+            ...generateArc(0.5, 0.74, 0.37, 0.26, -0.62 * Math.PI, 0.8 * Math.PI, 20)
+        ]
     ],
     '4': [[[0.8, 0], [0.8, 1]], [[0.8, 0], [0.15, 0.7]], [[0.1, 0.7], [0.95, 0.7]]],
     '5': [
-        [[0.8, 0.02], [0.22, 0.02]],        // Top bar
-        [[0.22, 0.02], [0.22, 0.42]],      // Stem
-        // Open bowl
-        [[0.22, 0.42], [0.5, 0.42], [0.85, 0.55], [0.85, 0.85], [0.5, 1.0], [0.15, 0.88]]
+        [[0.8, 0.02], [0.22, 0.02]],   // Top bar
+        [[0.22, 0.02], [0.22, 0.45]],  // Stem
+        // Smooth rounded belly (dense points = no angular corners)
+        [[0.22, 0.45], [0.46, 0.42], [0.68, 0.5], [0.79, 0.67], [0.75, 0.85], [0.58, 0.96], [0.38, 0.99], [0.2, 0.94], [0.12, 0.86]]
     ],
     '6': [
-        // Rounded organic 6 - continuous stroke
-        [[0.75, 0.12], [0.5, 0.02], [0.25, 0.12], [0.12, 0.4], [0.1, 0.7], [0.25, 0.98], [0.5, 1.0], [0.8, 0.95], [0.92, 0.72], [0.85, 0.48], [0.55, 0.4], [0.15, 0.55]]
+        // Single smooth stroke: spine sweeps down from top-right, around a clean
+        // round bottom loop, and closes back onto the spine (dense points = no corners)
+        [[0.74, 0.1], [0.57, 0.03], [0.39, 0.06], [0.25, 0.19], [0.16, 0.38], [0.12, 0.58], [0.13, 0.72], [0.2, 0.87], [0.34, 0.97], [0.52, 1.0], [0.7, 0.94], [0.82, 0.81], [0.86, 0.66], [0.82, 0.52], [0.7, 0.44], [0.52, 0.41], [0.34, 0.45], [0.19, 0.57]]
     ],
     '7': [[[0.15, 0.02], [0.85, 0.02]], [[0.85, 0.02], [0.4, 0.98]]],
     '8': [
-        // High-resolution infinity loop - widened to match screenshot
-        [[0.5, 0.44], [0.28, 0.32], [0.2, 0.2], [0.32, 0.02], [0.5, 0], [0.68, 0.02], [0.8, 0.2], [0.72, 0.32], [0.5, 0.44], [0.25, 0.6], [0.12, 0.8], [0.3, 0.98], [0.5, 1], [0.7, 0.98], [0.88, 0.8], [0.75, 0.6], [0.5, 0.44]]
+        // Single self-crossing figure-eight: strokes cross at one point in the
+        // middle (a true X), so no snowman gap and no venn-diagram overlap.
+        // halfHeight 0.5 so it touches sky(0) and grass(1) like the other numbers.
+        generateFigure8(0.5, 0.5, 0.32, 0.5, 48)
     ],
     '9': [
-        generateArc(0.5, 0.32, 0.38, 0.32, 0, 2 * Math.PI, 24),
-        [[0.88, 0.32], [0.88, 1]]
+        // Loop tightened into the top half, with a straight tail down the right
+        generateArc(0.5, 0.25, 0.3, 0.25, 0, 2 * Math.PI, 28),
+        [[0.8, 0.25], [0.8, 1]]
     ]
 };
 
@@ -343,7 +359,13 @@ function init() {
         forceNextWord();
         if (controlsContainer) controlsContainer.classList.remove('mobile-open');
     });
-    document.getElementById('printDrawBtn').addEventListener('click', printDrawWriteWorksheet);
+    document.getElementById('printDrawBtn').addEventListener('click', showDrawWriteVariationModal);
+
+    // Draw & Write variation buttons
+    document.getElementById('drawWriteV1Btn').addEventListener('click', () => printDrawWriteWorksheet(1));
+    document.getElementById('drawWriteV2Btn').addEventListener('click', () => printDrawWriteWorksheet(2));
+    document.getElementById('drawWriteV4Btn').addEventListener('click', () => printDrawWriteWorksheet(4));
+    document.getElementById('closeDrawWriteModal').addEventListener('click', closeDrawWriteVariationModal);
 
     const printVocabBtn = document.getElementById('printVocabBtn');
     if (printVocabBtn) printVocabBtn.addEventListener('click', printVocabWorksheet);
@@ -1401,7 +1423,19 @@ function printWorksheet() {
     window.print();
 }
 
-function printDrawWriteWorksheet() {
+function showDrawWriteVariationModal() {
+    const modal = document.getElementById('drawWriteVariationModal');
+    modal.classList.remove('hidden');
+}
+
+function closeDrawWriteVariationModal() {
+    const modal = document.getElementById('drawWriteVariationModal');
+    modal.classList.add('hidden');
+}
+
+function printDrawWriteWorksheet(version = 1) {
+    closeDrawWriteVariationModal();
+
     let printContainer = document.getElementById('printableWorksheet');
     if (!printContainer) {
         printContainer = document.createElement('div');
@@ -1409,33 +1443,80 @@ function printDrawWriteWorksheet() {
         document.body.appendChild(printContainer);
     }
 
-    printContainer.innerHTML = `
-        <div class="large-name-field">Name: <span></span></div>
-        <div class="draw-box"></div>
-        <div class="guides-container">
-            <div class="trace-row no-text short-row">
-                <div class="guide-icons-print">
-                    <span style="position: absolute; top: -6px;">☀️</span>
-                    <span style="position: absolute; top: 14px;">✈️</span>
-                    <span style="position: absolute; top: 34px;">🌱</span>
-                    <span style="position: absolute; top: 54px;">🪱</span>
-                </div>
-                <div class="trace-guide sky"></div>
-                <div class="trace-guide plane"></div>
-                <div class="trace-guide grass"></div>
-                <div class="trace-guide worm"></div>
+    const showPicture = version === 1;
+    const showEmojis = version === 1 || version === 4;
+
+    // Calculate spacing based on version
+    let rowHeight = '130px'; // v1: tall rows for lanky letters
+    let numRows = 3;
+    let pictureHeight = '0px';
+    let pictureMargin = '0px';
+    let topPadding = '30px';
+    let bottomPadding = '15px';
+    let leftRightPadding = '15px';
+
+    if (version === 2) {
+        // v2: Expanded guidelines with emoji support - lots of writing space
+        rowHeight = '75px';
+        numRows = 10; // 10 rows × 75px = 750px, fills nearly entire page
+        topPadding = '12px';
+        bottomPadding = '10px';
+        leftRightPadding = '8px';
+    } else if (version === 4) {
+        // v4: Fill the entire page - maximize both vertical and horizontal space
+        rowHeight = '95px';
+        numRows = 8; // 8 rows × 95px = 760px, nearly fills 8.5" letter (792px)
+        topPadding = '10px';
+        bottomPadding = '10px';
+        leftRightPadding = '8px';
+    }
+
+    // Build guide rows with inline styles only - NO CSS classes for positioning
+    let guideRowsHtml = '';
+    for (let i = 0; i < numRows; i++) {
+        guideRowsHtml += `
+            <div style="position: relative; height: ${rowHeight}; width: 100%; margin: 0; padding: 0;">
+                ${showEmojis ? `
+                    <div style="position: absolute; left: -35px; top: 0; bottom: 0; width: 20px; font-size: 16px; line-height: 1;">
+                        <span style="position: absolute; top: 0%; transform: translateY(-50%);">☀️</span>
+                        <span style="position: absolute; top: 20%; transform: translateY(-50%);">✈️</span>
+                        <span style="position: absolute; top: 45%; transform: translateY(-50%);">🌱</span>
+                        <span style="position: absolute; top: 70%; transform: translateY(-50%);">🪱</span>
+                    </div>
+                ` : ''}
+                <div style="position: absolute; top: 0; left: 0; right: 0; border-top: 1px solid rgba(74, 144, 226, 0.4); height: 0;"></div>
+                <div style="position: absolute; top: 20%; left: 0; right: 0; border-top: 1px dashed rgba(0, 0, 0, 0.2); height: 0;"></div>
+                <div style="position: absolute; top: 45%; left: 0; right: 0; border-top: 2px solid rgba(126, 211, 33, 0.6); height: 0;"></div>
+                <div style="position: absolute; top: 70%; left: 0; right: 0; border-top: 1px solid rgba(139, 119, 101, 0.3); height: 0;"></div>
             </div>
-            <div class="trace-row no-text short-row">
-                <div class="guide-icons-print">
-                    <span style="position: absolute; top: -6px;">☀️</span>
-                    <span style="position: absolute; top: 14px;">✈️</span>
-                    <span style="position: absolute; top: 34px;">🌱</span>
-                    <span style="position: absolute; top: 54px;">🪱</span>
-                </div>
-                <div class="trace-guide sky"></div>
-                <div class="trace-guide plane"></div>
-                <div class="trace-guide grass"></div>
-                <div class="trace-guide worm"></div>
+        `;
+    }
+
+    const pictureSectionHtml = showPicture ? `
+        <div style="width: 100%; height: 400px; border: 2px solid #000; margin-bottom: 20px;"></div>
+    ` : '';
+
+    // Scholarly header - ultra minimal for v4
+    const headerFontSize = version === 4 ? '9px' : '10px';
+    const headerMarginBottom = version === 4 ? '20px' : '20px';
+    const headerHtml = `
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: ${headerMarginBottom}; border-bottom: 1px solid #ccc; padding-bottom: 6px;">
+            <div style="font-size: ${headerFontSize}; color: #999; font-family: 'Georgia', serif; letter-spacing: 0.5px;">
+                STENCIL / Draw & Write ${version === 4 ? '— Advanced' : version === 2 ? '— Guided' : ''}
+            </div>
+            <div style="font-size: ${headerFontSize}; color: #999; font-family: 'Georgia', serif;">
+                Name: _________________ &nbsp; Date: ________
+            </div>
+        </div>
+    `;
+
+    // Build page with ZERO nested padding - control everything at page level
+    printContainer.innerHTML = `
+        <div style="padding: ${topPadding} ${leftRightPadding} ${bottomPadding} ${leftRightPadding}; margin: 0; font-family: 'Helvetica', sans-serif; height: 100vh; display: flex; flex-direction: column;">
+            ${headerHtml}
+            ${pictureSectionHtml}
+            <div style="flex: 1; position: relative; width: 100%; margin: 0; padding: 0;">
+                ${guideRowsHtml}
             </div>
         </div>
     `;

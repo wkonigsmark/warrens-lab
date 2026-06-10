@@ -124,6 +124,29 @@
         </div>
     </div>
 
+    <!-- Draw & Write Worksheet Variation Selector -->
+    <div id="drawWriteVariationModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Draw & Write Worksheet</h2>
+            <p style="margin-bottom: 20px; color: #666; font-size: 14px;">Choose a variation:</p>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <button id="drawWriteV1Btn" class="draw-write-var-btn" data-version="1">
+                    <strong>Full Support</strong>
+                    <span style="font-size: 12px; color: #999; display: block; margin-top: 4px;">Picture reminder with emoji guides — for emerging writers</span>
+                </button>
+                <button id="drawWriteV4Btn" class="draw-write-var-btn" data-version="4">
+                    <strong>Confident Learner</strong>
+                    <span style="font-size: 12px; color: #999; display: block; margin-top: 4px;">Spacious lines with emoji guides — for advancing writers</span>
+                </button>
+                <button id="drawWriteV2Btn" class="draw-write-var-btn" data-version="2">
+                    <strong>Independent Writer</strong>
+                    <span style="font-size: 12px; color: #999; display: block; margin-top: 4px;">Abundant space, no guides — for developing independence</span>
+                </button>
+            </div>
+            <button id="closeDrawWriteModal" class="close-overlay" style="margin-top: 20px;">Cancel</button>
+        </div>
+    </div>
+
     <div class="version-tag">v2.2 milestone</div>
 
     <script src="app.js"></script>
