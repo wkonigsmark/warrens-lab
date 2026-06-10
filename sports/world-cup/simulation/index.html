@@ -1538,8 +1538,7 @@
 
   <script type="module">
     import { groupStageMatches, teams, groups, teamsById } from "../data/world-cup-2026.js";
-
-    const W_INDEX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
+    import { W_INDEX_URL, wIndexBaselineRows } from "../data/w-index-baseline.js";
 
     // Application state
     let wIndexMap = new Map(); // Canonical teamId -> decimal rating (0.0 to 1.0)
@@ -1729,23 +1728,18 @@
         elements.syncStatus.style.color = "var(--wc-green)";
         elements.syncStatus.style.borderColor = "rgba(36, 180, 126, 0.3)";
       } catch (err) {
-        console.warn("W-Index feed fetch failed, utilizing defaults:", err);
-        // Load offline defaults
+        console.warn("W-Index feed fetch failed, utilizing the local baseline:", err);
         wIndexMap.clear();
-        teams.forEach(team => {
-          let defaultVal = 50.0;
-          if (team.id === "FRA" || team.id === "ARG" || team.id === "BRA") defaultVal = 82.0;
-          else if (team.id === "ENG" || team.id === "POR" || team.id === "ESP") defaultVal = 80.0;
-          else if (team.id === "GER" || team.id === "NED" || team.id === "BEL") defaultVal = 77.0;
-          else if (team.id === "USA" || team.id === "COL" || team.id === "URU") defaultVal = 72.0;
-          else if (team.id === "MEX" || team.id === "CAN" || team.id === "NOR") defaultVal = 68.0;
-          wIndexMap.set(team.id, defaultVal / 100);
+        wIndexBaselineRows.forEach(row => {
+          const teamId = findTeamId(row.Team);
+          const score = parsePercent(row["W-Index"]);
+          if (teamId && score !== null) wIndexMap.set(teamId, score / 100);
         });
         
-        elements.syncStatus.textContent = `W-Index Offline (Defaults Loaded)`;
-        elements.syncStatus.style.background = "rgba(255, 93, 93, 0.12)";
-        elements.syncStatus.style.color = "var(--wc-red)";
-        elements.syncStatus.style.borderColor = "rgba(255, 93, 93, 0.3)";
+        elements.syncStatus.textContent = `${wIndexMap.size} W-Index Ratings Active (Local Baseline)`;
+        elements.syncStatus.style.background = "rgba(240, 195, 92, 0.12)";
+        elements.syncStatus.style.color = "var(--wc-gold)";
+        elements.syncStatus.style.borderColor = "rgba(240, 195, 92, 0.3)";
       } finally {
         elements.simulateBtn.disabled = false;
         elements.simulateBtn.textContent = "Simulate Group Stage";
@@ -1792,26 +1786,40 @@
       });
     }
 
-    // Mathematical simulation score calculator
+    function getMatchWinProbability(team1Id, team2Id, stochasticity = 0.5) {
+      const i1 = wIndexMap.has(team1Id) ? wIndexMap.get(team1Id) : 0.5;
+      const i2 = wIndexMap.has(team2Id) ? wIndexMap.get(team2Id) : 0.5;
+      const modelSharpness = 6 + 8 * (1 - stochasticity);
+      const modelProbability = 1 / (1 + Math.exp(-modelSharpness * (i1 - i2)));
+
+      return modelProbability * (1 - stochasticity) + 0.5 * stochasticity;
+    }
+
+    // Generate a plausible scoreline after selecting an outcome from the W-Index edge.
     function getWeightedScore(team1Id, team2Id, stochasticity = 0.5) {
       const i1 = wIndexMap.has(team1Id) ? wIndexMap.get(team1Id) : 0.5;
       const i2 = wIndexMap.has(team2Id) ? wIndexMap.get(team2Id) : 0.5;
+      const ratingGap = Math.abs(i1 - i2);
+      const drawProbability = Math.max(
+        0.08,
+        Math.min(0.3, 0.16 + stochasticity * 0.12 - ratingGap * 0.2)
+      );
+      const team1WinProbability = getMatchWinProbability(team1Id, team2Id, stochasticity);
+      const roll = Math.random();
 
-      const stochBase = Math.random() * 3.5;
-      const fixedBase = 1.5;
+      if (roll < drawProbability) {
+        const drawScore = Math.random() < 0.18 ? 0 : (Math.random() < 0.82 ? 1 : 2);
+        return { score1: drawScore, score2: drawScore };
+      }
 
-      const base1 = Math.floor(fixedBase * (1 - stochasticity) + stochBase * stochasticity);
-      const base2 = Math.floor(fixedBase * (1 - stochasticity) + stochBase * stochasticity);
+      const team1Wins = (roll - drawProbability) / (1 - drawProbability) < team1WinProbability;
+      const loserScore = Math.random() < 0.58 ? 0 : 1;
+      const marginBoost = ratingGap > 0.35 && Math.random() < (0.42 - stochasticity * 0.18) ? 1 : 0;
+      const winnerScore = loserScore + 1 + marginBoost;
 
-      const strengthDiff = i1 - i2;
-      const advantageRange = 2.8;
-      const extra1 = (strengthDiff > 0) ? Math.floor(advantageRange * strengthDiff * (1 - stochasticity) + Math.random() * (advantageRange * strengthDiff) * stochasticity) : 0;
-      const extra2 = (strengthDiff < 0) ? Math.floor(advantageRange * Math.abs(strengthDiff) * (1 - stochasticity) + Math.random() * (advantageRange * Math.abs(strengthDiff)) * stochasticity) : 0;
-
-      return {
-        score1: base1 + extra1,
-        score2: base2 + extra2
-      };
+      return team1Wins
+        ? { score1: winnerScore, score2: loserScore }
+        : { score1: loserScore, score2: winnerScore };
     }
 
     // Simulate entire group stage & bracket tree
@@ -2025,21 +2033,21 @@
         r32Matches.push({ id, t1Desc, t2Desc, t1, t2 });
       };
 
-      addR32(73, 'Winner E', `3rd Group ${mapping['E']?.charAt(1) || 'E'}`, getGroupTeam(1, 'E'), get3rdTeam('E'));
-      addR32(74, 'Winner I', `3rd Group ${mapping['I']?.charAt(1) || 'I'}`, getGroupTeam(1, 'I'), get3rdTeam('I'));
-      addR32(75, 'Runner-up A', 'Runner-up B', getGroupTeam(2, 'A'), getGroupTeam(2, 'B'));
-      addR32(76, 'Winner F', 'Runner-up C', getGroupTeam(1, 'F'), getGroupTeam(2, 'C'));
-      addR32(77, 'Winner C', 'Runner-up F', getGroupTeam(1, 'C'), getGroupTeam(2, 'F'));
+      addR32(73, 'Runner-up A', 'Runner-up B', getGroupTeam(2, 'A'), getGroupTeam(2, 'B'));
+      addR32(74, 'Winner E', `3rd Group ${mapping['E']?.charAt(1) || 'E'}`, getGroupTeam(1, 'E'), get3rdTeam('E'));
+      addR32(75, 'Winner F', 'Runner-up C', getGroupTeam(1, 'F'), getGroupTeam(2, 'C'));
+      addR32(76, 'Winner C', 'Runner-up F', getGroupTeam(1, 'C'), getGroupTeam(2, 'F'));
+      addR32(77, 'Winner I', `3rd Group ${mapping['I']?.charAt(1) || 'I'}`, getGroupTeam(1, 'I'), get3rdTeam('I'));
       addR32(78, 'Runner-up E', 'Runner-up I', getGroupTeam(2, 'E'), getGroupTeam(2, 'I'));
       addR32(79, 'Winner A', `3rd Group ${mapping['A']?.charAt(1) || 'A'}`, getGroupTeam(1, 'A'), get3rdTeam('A'));
       addR32(80, 'Winner L', `3rd Group ${mapping['L']?.charAt(1) || 'L'}`, getGroupTeam(1, 'L'), get3rdTeam('L'));
-      addR32(81, 'Runner-up K', 'Runner-up L', getGroupTeam(2, 'K'), getGroupTeam(2, 'L'));
-      addR32(82, 'Winner H', 'Runner-up J', getGroupTeam(1, 'H'), getGroupTeam(2, 'J'));
-      addR32(83, 'Winner D', `3rd Group ${mapping['D']?.charAt(1) || 'D'}`, getGroupTeam(1, 'D'), get3rdTeam('D'));
-      addR32(84, 'Winner G', `3rd Group ${mapping['G']?.charAt(1) || 'G'}`, getGroupTeam(1, 'G'), get3rdTeam('G'));
+      addR32(81, 'Winner D', `3rd Group ${mapping['D']?.charAt(1) || 'D'}`, getGroupTeam(1, 'D'), get3rdTeam('D'));
+      addR32(82, 'Winner G', `3rd Group ${mapping['G']?.charAt(1) || 'G'}`, getGroupTeam(1, 'G'), get3rdTeam('G'));
+      addR32(83, 'Runner-up K', 'Runner-up L', getGroupTeam(2, 'K'), getGroupTeam(2, 'L'));
+      addR32(84, 'Winner H', 'Runner-up J', getGroupTeam(1, 'H'), getGroupTeam(2, 'J'));
       addR32(85, 'Winner B', `3rd Group ${mapping['B']?.charAt(1) || 'B'}`, getGroupTeam(1, 'B'), get3rdTeam('B'));
-      addR32(86, 'Winner K', `3rd Group ${mapping['K']?.charAt(1) || 'K'}`, getGroupTeam(1, 'K'), get3rdTeam('K'));
-      addR32(87, 'Winner J', 'Runner-up H', getGroupTeam(1, 'J'), getGroupTeam(2, 'H'));
+      addR32(86, 'Winner J', 'Runner-up H', getGroupTeam(1, 'J'), getGroupTeam(2, 'H'));
+      addR32(87, 'Winner K', `3rd Group ${mapping['K']?.charAt(1) || 'K'}`, getGroupTeam(1, 'K'), get3rdTeam('K'));
       addR32(88, 'Runner-up D', 'Runner-up G', getGroupTeam(2, 'D'), getGroupTeam(2, 'G'));
 
       r32Matches.forEach(m => simulateKnockoutMatch(m, mode, stochasticity));
@@ -2059,14 +2067,14 @@
         });
       };
 
-      addR16(89, 73, 74);
-      addR16(90, 75, 76);
-      addR16(91, 77, 78);
+      addR16(89, 74, 77);
+      addR16(90, 73, 75);
+      addR16(91, 76, 78);
       addR16(92, 79, 80);
-      addR16(93, 81, 82);
-      addR16(94, 83, 84);
-      addR16(95, 85, 86);
-      addR16(96, 87, 88);
+      addR16(93, 83, 84);
+      addR16(94, 81, 82);
+      addR16(95, 86, 88);
+      addR16(96, 85, 87);
 
       r16Matches.forEach(m => simulateKnockoutMatch(m, mode, stochasticity));
 
@@ -2086,8 +2094,8 @@
       };
 
       addQF(97, 89, 90);
-      addQF(98, 91, 92);
-      addQF(99, 93, 94);
+      addQF(98, 93, 94);
+      addQF(99, 91, 92);
       addQF(100, 95, 96);
 
       qfMatches.forEach(m => simulateKnockoutMatch(m, mode, stochasticity));
@@ -2190,10 +2198,7 @@
           const i1 = wIndexMap.get(m.t1) || 0.5;
           const i2 = wIndexMap.get(m.t2) || 0.5;
 
-          // Penalties shootout probability
-          const p1Fav = (i1 > i2) ? 0.9 : 0.1;
-          const p1Rand = 0.5;
-          const p1 = p1Fav * (1 - stochasticity) + p1Rand * stochasticity;
+          const p1 = getMatchWinProbability(m.t1, m.t2, stochasticity);
 
           m.winner = Math.random() < p1 ? m.t1 : m.t2;
           m.loser = m.winner === m.t1 ? m.t2 : m.t1;
