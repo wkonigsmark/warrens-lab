@@ -998,8 +998,8 @@
 
     .ff-chart-shell {
       position: relative;
-      min-height: 610px;
-      padding: 22px 22px 54px 72px;
+      min-height: 570px;
+      padding: 18px 18px 50px 64px;
       border: 1px solid var(--wc-line);
       border-radius: 6px;
       background: rgba(4, 18, 14, 0.56);
@@ -1009,9 +1009,33 @@
     .ff-chart {
       position: relative;
       width: 100%;
-      height: 530px;
+      height: 500px;
       border-left: 1px solid rgba(247, 244, 235, 0.3);
       border-bottom: 1px solid rgba(247, 244, 235, 0.3);
+    }
+
+    .ff-leaders {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .ff-leaders line {
+      stroke: rgba(244, 201, 93, 0.38);
+      stroke-width: 1;
+      stroke-dasharray: 2 3;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .ff-leaders circle {
+      fill: var(--wc-gold);
+      stroke: rgba(4, 18, 14, 0.9);
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
     }
 
     .ff-grid-line {
@@ -1077,7 +1101,7 @@
       position: absolute;
       left: var(--x);
       bottom: var(--y);
-      z-index: var(--marker-z, 1);
+      z-index: var(--marker-z, 2);
       width: 34px;
       height: 28px;
       padding: 3px;
@@ -1086,7 +1110,7 @@
       background: rgba(8, 22, 18, 0.92);
       box-shadow: 0 0 0 var(--halo-size, 0) rgba(50, 183, 125, 0.16);
       cursor: pointer;
-      transform: translate(calc(-50% + var(--jitter-x)), calc(50% + var(--jitter-y)));
+      transform: translate(-50%, 50%);
       transition: z-index 0s, transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
@@ -1096,7 +1120,7 @@
       border-color: var(--wc-gold);
       box-shadow: 0 0 0 5px rgba(244, 201, 93, 0.18);
       outline: none;
-      transform: translate(calc(-50% + var(--jitter-x)), calc(50% + var(--jitter-y))) scale(1.22);
+      transform: translate(-50%, 50%) scale(1.22);
     }
 
     .ff-marker img {
@@ -1230,12 +1254,12 @@
       }
 
       .ff-chart-shell {
-        min-height: 520px;
-        padding: 18px 10px 50px 52px;
+        min-height: 480px;
+        padding: 14px 8px 46px 48px;
       }
 
       .ff-chart {
-        height: 450px;
+        height: 420px;
       }
 
       .ff-marker {
@@ -2319,12 +2343,78 @@
       );
     }
 
-    function markerJitter(teamId) {
-      const hash = [...teamId].reduce((sum, character) => sum + character.charCodeAt(0), 0);
-      return {
-        x: ((hash % 7) - 3) * 1.2,
-        y: (((hash * 3) % 7) - 3) * 1.1,
-      };
+    function quantile(sortedValues, percentile) {
+      if (!sortedValues.length) return 0;
+      const position = (sortedValues.length - 1) * percentile;
+      const lowerIndex = Math.floor(position);
+      const upperIndex = Math.ceil(position);
+      const weight = position - lowerIndex;
+      return sortedValues[lowerIndex] * (1 - weight) + sortedValues[upperIndex] * weight;
+    }
+
+    function fateAxisTicks(minimum, maximum, count = 4) {
+      const range = Math.max(1, maximum - minimum);
+      return Array.from({ length: count + 1 }, (_, index) => {
+        const value = minimum + (range * index) / count;
+        return {
+          value,
+          position: (index / count) * 100,
+        };
+      });
+    }
+
+    function spreadFateMarkers(results) {
+      const placed = [];
+      const placements = new Map();
+      const xClearance = window.innerWidth <= 720 ? 5.2 : 3.7;
+      const yClearance = window.innerWidth <= 720 ? 7.2 : 6.2;
+
+      [...results]
+        .sort((a, b) =>
+          b.reach - a.reach ||
+          b.probabilities.champion - a.probabilities.champion ||
+          a.team.name.localeCompare(b.team.name)
+        )
+        .forEach(result => {
+          const hash = [...result.team.id].reduce(
+            (sum, character) => sum + character.charCodeAt(0),
+            0
+          );
+          const candidates = [{ x: result.baseX, y: result.baseY }];
+
+          for (let ring = 1; ring <= 8; ring += 1) {
+            const pointsOnRing = 10 + ring * 2;
+            const angleOffset = (hash % pointsOnRing) * ((Math.PI * 2) / pointsOnRing);
+            for (let point = 0; point < pointsOnRing; point += 1) {
+              const angle = angleOffset + point * ((Math.PI * 2) / pointsOnRing);
+              candidates.push({
+                x: result.baseX + Math.cos(angle) * ring * 2.05,
+                y: result.baseY + Math.sin(angle) * ring * 3.35,
+              });
+            }
+          }
+
+          const placement = candidates.find(candidate => {
+            if (candidate.x < 1.5 || candidate.x > 98.5 || candidate.y < 1.5 || candidate.y > 98.5) {
+              return false;
+            }
+            return placed.every(existing =>
+              Math.abs(candidate.x - existing.x) >= xClearance ||
+              Math.abs(candidate.y - existing.y) >= yClearance
+            );
+          }) || {
+            x: Math.min(98.5, Math.max(1.5, result.baseX)),
+            y: Math.min(98.5, Math.max(1.5, result.baseY)),
+          };
+
+          placed.push(placement);
+          placements.set(result.team.id, {
+            ...placement,
+            moved: Math.hypot(placement.x - result.baseX, placement.y - result.baseY) > 0.8,
+          });
+        });
+
+      return placements;
     }
 
     function renderFateField() {
@@ -2337,6 +2427,38 @@
         const reach = reachProbability(result, stageKey);
         return { ...result, strength, reach };
       });
+      const strengthValues = plotted.map(result => result.strength * 100).sort((a, b) => a - b);
+      const reachValues = plotted.map(result => result.reach * 100);
+      const xMinimum = Math.max(
+        0,
+        Math.floor((quantile(strengthValues, 0.1) - 5) / 5) * 5
+      );
+      const xMaximum = 100;
+      const maximumReach = Math.max(...reachValues);
+      const paddedMaximumReach = maximumReach + (maximumReach < 20 ? 2.5 : 5);
+      const yStep = paddedMaximumReach <= 10
+        ? 2.5
+        : paddedMaximumReach <= 25
+          ? 5
+          : paddedMaximumReach <= 60
+            ? 10
+            : paddedMaximumReach <= 80
+              ? 20
+              : 25;
+      const yMaximum = Math.min(
+        100,
+        Math.max(10, Math.ceil(paddedMaximumReach / yStep) * yStep)
+      );
+      const normalizeX = value =>
+        Math.min(98.5, Math.max(1.5, ((value - xMinimum) / (xMaximum - xMinimum)) * 100));
+      const normalizeY = value =>
+        Math.min(98.5, Math.max(1.5, (value / yMaximum) * 100));
+
+      plotted.forEach(result => {
+        result.baseX = normalizeX(result.strength * 100);
+        result.baseY = normalizeY(result.reach * 100);
+      });
+      const markerPlacements = spreadFateMarkers(plotted);
 
       const favorite = [...plotted].sort((a, b) => b.reach - a.reach)[0];
       const strengthRank = new Map(
@@ -2389,29 +2511,44 @@
         </article>
       `).join("");
 
-      const gridValues = [0, 0.25, 0.5, 0.75, 1];
-      const horizontalGrid = gridValues.map(value => `
-        <span class="ff-grid-line horizontal" style="--grid-position:${value * 100}%"></span>
-        <span class="ff-axis-label y" style="--grid-position:${value * 100}%">${Math.round(value * 100)}%</span>
+      const yTickCount = yMaximum === 30 ? 3 : yMaximum === 50 ? 5 : 4;
+      const yTicks = fateAxisTicks(0, yMaximum, yTickCount);
+      const xTicks = fateAxisTicks(xMinimum, xMaximum);
+      const horizontalGrid = yTicks.map(tick => `
+        <span class="ff-grid-line horizontal" style="--grid-position:${tick.position}%"></span>
+        <span class="ff-axis-label y" style="--grid-position:${tick.position}%">${Math.round(tick.value)}%</span>
       `).join("");
-      const verticalGrid = gridValues.map(value => `
-        <span class="ff-grid-line vertical" style="--grid-position:${value * 100}%"></span>
-        <span class="ff-axis-label x" style="--grid-position:${value * 100}%">${Math.round(value * 100)}%</span>
+      const verticalGrid = xTicks.map(tick => `
+        <span class="ff-grid-line vertical" style="--grid-position:${tick.position}%"></span>
+        <span class="ff-axis-label x" style="--grid-position:${tick.position}%">${Math.round(tick.value)}%</span>
       `).join("");
+
+      const leaders = plotted
+        .map(result => {
+          const placement = markerPlacements.get(result.team.id);
+          if (!placement?.moved) return "";
+          return `
+            <line
+              x1="${result.baseX}"
+              y1="${100 - result.baseY}"
+              x2="${placement.x}"
+              y2="${100 - placement.y}"
+            ></line>
+            <circle cx="${result.baseX}" cy="${100 - result.baseY}" r="0.42"></circle>
+          `;
+        }).join("");
 
       const markers = plotted
         .sort((a, b) => a.probabilities.champion - b.probabilities.champion)
         .map((result, index) => {
-          const jitter = markerJitter(result.team.id);
           const titleChance = result.probabilities.champion;
-          const plotX = Math.min(97.5, Math.max(2.5, result.strength * 100));
-          const plotY = Math.min(97.5, Math.max(2.5, result.reach * 100));
+          const placement = markerPlacements.get(result.team.id);
           const ariaLabel = `${result.team.name}: W-Index ${formatProbability(result.strength)}, ${formatProbability(result.reach)} chance to reach ${stageLabel}, ${formatProbability(titleChance)} chance to win`;
           return `
             <button
               class="ff-marker"
               type="button"
-              style="--x:${plotX}%;--y:${plotY}%;--jitter-x:${jitter.x}px;--jitter-y:${jitter.y}px;--halo-size:${Math.min(8, titleChance * 34)}px;--marker-z:${index + 1}"
+              style="--x:${placement.x}%;--y:${placement.y}%;--halo-size:${Math.min(8, titleChance * 34)}px;--marker-z:${index + 2}"
               aria-label="${ariaLabel}"
             >
               <img src="${flagUrl(result.team)}" alt="" loading="lazy">
@@ -2425,7 +2562,9 @@
         }).join("");
 
       elements.ffYAxisTitle.textContent = `${stageLabel} probability`;
-      elements.ffChart.innerHTML = horizontalGrid + verticalGrid + markers;
+      elements.ffChart.innerHTML = horizontalGrid + verticalGrid +
+        `<svg class="ff-leaders" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${leaders}</svg>` +
+        markers;
     }
 
     function renderMonteCarloLegend() {
