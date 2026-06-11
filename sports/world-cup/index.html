@@ -258,6 +258,24 @@
         0 25px 70px rgba(0, 0, 0, 0.32);
     }
 
+    .pool-cta-button.is-closed {
+      border-color: rgba(255, 115, 101, 0.72);
+      background: rgba(55, 22, 21, 0.94);
+      color: #fff4ef;
+      box-shadow:
+        0 0 0 6px rgba(255, 115, 101, 0.1),
+        0 0 38px rgba(255, 115, 101, 0.2),
+        0 20px 58px rgba(0, 0, 0, 0.3);
+    }
+
+    .pool-cta-button.is-closed:hover,
+    .pool-cta-button.is-closed:focus-visible {
+      box-shadow:
+        0 0 0 8px rgba(255, 115, 101, 0.14),
+        0 0 48px rgba(255, 115, 101, 0.26),
+        0 24px 64px rgba(0, 0, 0, 0.34);
+    }
+
     .pool-cta-copy {
       max-width: 590px;
       margin: 0;
@@ -736,12 +754,11 @@
       </div>
 
       <div class="pool-cta">
-        <a class="pool-cta-button" href="pool/">Join the Pool</a>
-        <div class="pool-payment-callout" aria-label="Pool entry payment instructions">
-          <strong>$50 entry · Pay <a href="https://venmo.com/u/Warren-Konigsmark" target="_blank" rel="noopener">@Warren-Konigsmark</a></strong>
-          <span>Venmo verification: last four digits <strong>6274</strong>. Include your bracket name and email in the payment memo.</span>
+        <a class="pool-cta-button is-closed" href="scoreboard/">Entries Closed · View Scoreboard</a>
+        <div class="pool-payment-callout" aria-label="Pool entries closed">
+          <strong>Group-play entries are now closed.</strong>
+          <span>The pool locked at first kickoff. Follow the standings and results on the scoreboard.</span>
         </div>
-        <p class="pool-cta-copy">This pool is for group play only. Rank all 12 groups and the top eight third-place teams to complete your entry.</p>
         <p class="pool-cta-copy">Stay tuned for a knockout round pool once group play concludes!</p>
       </div>
 

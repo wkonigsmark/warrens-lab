@@ -173,6 +173,41 @@
       font-weight: 800;
     }
 
+    .pool-closed-notice {
+      width: min(100%, 720px);
+      padding: 20px 24px;
+      border: 1px solid rgba(255, 115, 101, 0.58);
+      border-radius: 8px;
+      background: rgba(67, 25, 23, 0.64);
+      color: #fff4ef;
+      text-align: center;
+      box-shadow: 0 20px 58px rgba(0, 0, 0, 0.22);
+    }
+
+    .pool-closed-notice .memo-label {
+      display: block;
+      margin-bottom: 8px;
+      color: #ff9b8e;
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .pool-closed-notice strong,
+    .pool-closed-notice span {
+      display: block;
+    }
+
+    .pool-closed-notice strong {
+      font-size: clamp(1.2rem, 3vw, 1.55rem);
+    }
+
+    .pool-closed-notice span:last-child {
+      margin-top: 7px;
+      color: rgba(255, 244, 239, 0.78);
+    }
+
     .pool-start-button {
       min-width: min(100%, 320px);
       min-height: 58px;
@@ -962,6 +997,7 @@
     const GROUP_IDS = "ABCDEFGHIJKL".split("");
     const app = document.getElementById("pool-app");
     const toast = document.getElementById("pool-toast");
+    const SUBMISSIONS_OPEN = false;
 
     const state = {
       step: "welcome",
@@ -1187,6 +1223,7 @@
     }
 
     function render(resetScroll = false) {
+      if (!SUBMISSIONS_OPEN && state.step !== "welcome") state.step = "welcome";
       if (state.step === "welcome") renderWelcome();
       if (state.step === "intro") renderIntro();
       if (state.step === "groups") renderGroupPicker();
@@ -1199,22 +1236,20 @@
       app.innerHTML = `
         <section class="pool-hero">
           <div>
-            <div class="wc-eyebrow">Pool Entry</div>
-            <h1 class="pool-title">Group rules.</h1>
-            <p class="pool-copy">Rank every group from 1 to 4, then choose the top eight third-place teams. That is the full entry for the group-play pool.</p>
+            <div class="wc-eyebrow">Entries Closed</div>
+            <h1 class="pool-title">Group-play entries are closed.</h1>
+            <p class="pool-copy">The entry window closed at first kickoff. No additional brackets can be submitted.</p>
             <p class="pool-copy">Stay tuned for a knockout round pool once group play concludes!</p>
           </div>
         </section>
 
         <div class="pool-entry-launch">
-          <aside class="pool-payment-warning pool-entry-memo" aria-label="Important Venmo memo">
-            <span class="memo-label">Important Venmo Memo</span>
-            The entry fee is <strong>$50</strong>. Pay
-            <a href="https://venmo.com/u/Warren-Konigsmark" target="_blank" rel="noopener">@Warren-Konigsmark</a>
-            and include your <strong>bracket name and email</strong> in the Venmo memo so I can connect payment to your bracket.
-            If Venmo requests phone verification, the last four digits are <strong>6274</strong>.
+          <aside class="pool-closed-notice" aria-label="Pool entries closed">
+            <span class="memo-label">Entry Window Locked</span>
+            <strong>Existing entries are safe and final.</strong>
+            <span>Follow projected standings, match results, and bracket performance on the scoreboard.</span>
           </aside>
-          <button class="wc-button pool-start-button" type="button" data-start-entry>Start Entry</button>
+          <a class="wc-button pool-start-button" href="../scoreboard/">View Scoreboard</a>
         </div>
 
         <section class="pool-panel pool-card-pad">
@@ -1240,37 +1275,12 @@
               </ul>
             </article>
           </div>
-          <div class="pool-steps">
-            <article class="pool-step">
-              <strong>Fill out your picks</strong>
-              <span>Order all 12 groups in their predicted final standings, then rank the top eight third-place teams.</span>
-            </article>
-            <article class="pool-step">
-              <strong>Name your bracket</strong>
-              <span>Add a unique bracket name and Venmo handle for matching later.</span>
-            </article>
-            <article class="pool-step">
-              <strong>Send Venmo</strong>
-              <span>Send $50 to @Warren-Konigsmark with your bracket name and email in the memo.</span>
-            </article>
-            <article class="pool-step">
-              <strong>Submit once</strong>
-              <span>Entries are final after submission. To play multiple brackets, submit each one separately.</span>
-            </article>
-          </div>
           <div class="pool-actions pool-analysis-link">
-            <button class="wc-button pool-start-button" type="button" data-start-entry>Start Entry</button>
+            <a class="wc-button pool-start-button" href="../scoreboard/">View Scoreboard</a>
             <a class="wc-button secondary" href="../groups/">View Group Analysis</a>
           </div>
         </section>
       `;
-
-      document.querySelectorAll("[data-start-entry]").forEach((button) => {
-        button.addEventListener("click", () => {
-          state.step = "intro";
-          render(true);
-        });
-      });
     }
 
     function renderIntro() {
@@ -1960,6 +1970,7 @@
     }
 
     function validateSubmission() {
+      if (!SUBMISSIONS_OPEN) return "Entries are closed. No additional brackets can be submitted.";
       if (!state.entry.bracketName || !state.entry.venmo || !state.entry.email) return "Bracket name, Venmo, and email are required.";
       if (!state.entry.email.includes("@")) return "Please enter a valid email address.";
       if (!isEntryComplete()) return "Complete all 12 group rankings and select exactly eight third-place advancing teams before submitting.";
@@ -2058,6 +2069,15 @@
     }
 
     async function submitEntry() {
+      if (!SUBMISSIONS_OPEN) {
+        state.submitting = false;
+        state.submitStatus = "";
+        state.submitError = "Entries are closed. No additional brackets can be submitted.";
+        state.step = "welcome";
+        render(true);
+        return;
+      }
+
       const validationError = validateSubmission();
       if (validationError) {
         state.submitError = validationError;

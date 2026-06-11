@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parent
 ENV_PATH = ROOT / ".env"
 PORT = int(os.environ.get("WORLD_CUP_ADMIN_PORT", "8787"))
 ADMIN_PIN = os.environ.get("WORLD_CUP_ADMIN_PIN", "2019")
+PAGE_SIZE = 1000
 
 
 def load_env_file():
@@ -80,6 +81,19 @@ def entry_path(entry_id):
     return f"pool_entries?id=eq.{urllib.parse.quote(entry_id, safe='')}"
 
 
+def supabase_fetch_all(table, order):
+    rows = []
+    offset = 0
+    while True:
+        page = supabase_request(
+            f"{table}?select=*&order={order}&limit={PAGE_SIZE}&offset={offset}"
+        ) or []
+        rows.extend(page)
+        if len(page) < PAGE_SIZE:
+            return rows
+        offset += PAGE_SIZE
+
+
 class AdminHandler(BaseHTTPRequestHandler):
     def end_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -98,8 +112,11 @@ class AdminHandler(BaseHTTPRequestHandler):
                 return
             if self.path == "/api/entries":
                 self.require_pin()
-                entries = supabase_request("pool_entries?select=*&order=submitted_at.desc")
-                picks = supabase_request("pool_entry_picks?select=*&order=entry_id.asc,section.asc,group_letter.asc,rank.asc")
+                entries = supabase_fetch_all("pool_entries", "submitted_at.desc")
+                picks = supabase_fetch_all(
+                    "pool_entry_picks",
+                    "entry_id.asc,section.asc,group_letter.asc,rank.asc",
+                )
                 self.respond({"entries": entries or [], "picks": picks or []})
                 return
             self.respond({"error": "Not found"}, status=404)
