@@ -796,11 +796,11 @@
             </div>
           </div>
 
-          <!-- Manual Overrides Card -->
+          <!-- Manual Results Card -->
           <div class="sandbox-card">
-            <h3 style="margin-top: 0; color: var(--wc-blue); text-transform: uppercase; font-size: 0.95rem; letter-spacing: 0.05em; font-weight:950;">📝 Manual Match Override</h3>
+            <h3 style="margin-top: 0; color: var(--wc-blue); text-transform: uppercase; font-size: 0.95rem; letter-spacing: 0.05em; font-weight:950;">📝 Manual Match Result</h3>
             <p style="font-size: 0.8rem; color: var(--wc-muted); margin-bottom: 20px;">
-              Directly key in custom scores to simulate a specific game day or override actual results.
+              Test a score locally, or save a final score as the official public result. Official results override sandbox simulations everywhere.
             </p>
 
             <form id="override-form" onsubmit="return false;">
@@ -828,7 +828,10 @@
                 </select>
               </div>
 
-              <button class="wc-button" id="override-btn-apply" style="width: 100%;">Apply Custom Scores</button>
+              <div style="display: grid; gap: 10px;">
+                <button class="wc-button secondary" id="override-btn-apply" style="width: 100%;">Apply Sandbox Score</button>
+                <button class="wc-button" id="override-btn-official" style="width: 100%;">Save Official Final Result</button>
+              </div>
             </form>
           </div>
 
@@ -861,6 +864,7 @@
     let actualMatches = [];
     let poolEntries = [];
     let previousRanks = {}; // For computing standing position changes (↑/↓)
+    let officialResultCount = 0;
     let sandboxUnlocked = sessionStorage.getItem("world_cup_sandbox_unlocked") === "true";
     
     // UI Selectors
@@ -887,6 +891,7 @@
       overrideShootoutContainer: document.getElementById("override-shootout-container"),
       overrideShootoutSelect: document.getElementById("override-shootout-select"),
       btnApplyOverride: document.getElementById("override-btn-apply"),
+      btnSaveOfficial: document.getElementById("override-btn-official"),
       copyStandingsBtn: document.getElementById("copy-standings-btn"),
       exportStandingsBtn: document.getElementById("export-standings-btn"),
       copyMatchesBtn: document.getElementById("copy-matches-btn"),
@@ -1158,6 +1163,74 @@
       }
 
       return submittedEntries;
+    }
+
+    async function loadOfficialResults() {
+      let rows = [];
+
+      if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
+        try {
+          const response = await fetchWithTimeout(`${ADMIN_API_BASE}/results`, {
+            headers: { "X-Admin-Pin": ADMIN_PIN },
+          }, 2500);
+          if (response.ok) {
+            const data = await response.json();
+            rows = data.results || [];
+          }
+        } catch (error) {
+          console.warn("Local official-results endpoint unavailable:", error);
+        }
+      }
+
+      if (!rows.length && hasPublicSupabaseConfig()) {
+        try {
+          const response = await fetchWithTimeout(`${supabaseConfig.url.replace(/\/$/, "")}/rest/v1/rpc/get_public_match_results`, {
+            method: "POST",
+            headers: {
+              apikey: supabaseConfig.anonKey,
+              Authorization: `Bearer ${supabaseConfig.anonKey}`,
+              "Content-Type": "application/json",
+            },
+            body: "{}",
+          }, 4500);
+          if (response.ok) rows = await response.json();
+        } catch (error) {
+          console.warn("Public official-results endpoint unavailable:", error);
+        }
+      }
+
+      return rows;
+    }
+
+    function applyOfficialResults(rows) {
+      officialResultCount = rows.length;
+      rows.forEach(row => {
+        const match = actualMatches.find(item => item.matchNumber === Number(row.match_number));
+        if (!match) return;
+        match.home = row.home_team_id || match.home;
+        match.away = row.away_team_id || match.away;
+        match.homeScore = Number(row.home_score || 0);
+        match.awayScore = Number(row.away_score || 0);
+        match.status = row.status || "completed";
+        match.winnerId = row.winner_id || null;
+        match.shootoutWinnerId = row.shootout_winner_id || null;
+        match.resultNote = row.result_note || "";
+        match.source = "official";
+        match.updatedAt = row.updated_at || null;
+      });
+    }
+
+    async function refreshOfficialResults() {
+      const rows = await loadOfficialResults();
+      applyOfficialResults(rows);
+      if (rows.length && elements.syncStatus) {
+        elements.syncStatus.textContent = `🏆 ${poolEntries.length} submitted entries • ${rows.length} official result${rows.length === 1 ? "" : "s"}`;
+      }
+      updateKnockoutPairings();
+      renderStandings();
+      renderMatches(getActiveMatchFilter());
+      loadOverrideMatchSelector();
+      return rows.length;
     }
 
     // Initialize matches array (1 to 104)
@@ -1839,7 +1912,7 @@
       
       let simulatedCount = 0;
       for (const m of actualMatches) {
-        if (m.status === 'completed') continue;
+        if (m.status === 'completed' || m.source === "official") continue;
         
         // Ensure team slots are populated (run knockout calculations dynamically!)
         updateKnockoutPairings();
@@ -1973,6 +2046,7 @@
         } else {
           initMatches();
         }
+        await refreshOfficialResults();
 
         const cachedRanks = localStorage.getItem("world_cup_pool_previous_ranks");
         if (cachedRanks) {
@@ -2194,11 +2268,12 @@
       elements.btnGroup.addEventListener("click", () => runSandboxSimulation(72));
       elements.btnAll.addEventListener("click", () => runSandboxSimulation(104));
       
-      elements.btnReset.addEventListener("click", () => {
+      elements.btnReset.addEventListener("click", async () => {
         localStorage.removeItem("world_cup_sandbox_matches");
         localStorage.removeItem("world_cup_pool_previous_ranks");
         previousRanks = {};
         initMatches();
+        await refreshOfficialResults();
         saveSandboxState();
         renderStandings();
         renderMatches(getActiveMatchFilter());
@@ -2240,6 +2315,10 @@
         const mId = parseInt(elements.overrideMatchSelect.value);
         const m = actualMatches.find(x => x.matchNumber === mId);
         if (!m) return;
+        if (m.source === "official") {
+          showSandboxToast("Official result protected", "Use Save Official Final Result to revise this match.", "!");
+          return;
+        }
 
         const hScore = parseInt(elements.overrideHomeScore.value) || 0;
         const aScore = parseInt(elements.overrideAwayScore.value) || 0;
@@ -2274,8 +2353,70 @@
         loadOverrideMatchSelector();
       });
 
+      elements.btnSaveOfficial.addEventListener("click", async () => {
+        const mId = parseInt(elements.overrideMatchSelect.value);
+        const m = actualMatches.find(x => x.matchNumber === mId);
+        if (!m || !m.home || !m.away) return;
+
+        const hScore = parseInt(elements.overrideHomeScore.value) || 0;
+        const aScore = parseInt(elements.overrideAwayScore.value) || 0;
+        let winnerId = null;
+        let shootoutWinnerId = null;
+        let resultNote = "";
+
+        if (hScore > aScore) winnerId = m.home;
+        else if (aScore > hScore) winnerId = m.away;
+        else if (mId >= 73) {
+          winnerId = elements.overrideShootoutSelect.value;
+          shootoutWinnerId = winnerId;
+          resultNote = "(p)";
+        }
+
+        elements.btnSaveOfficial.disabled = true;
+        elements.btnSaveOfficial.textContent = "Saving Official Result...";
+        try {
+          const response = await fetchWithTimeout(`${ADMIN_API_BASE}/results/${mId}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Admin-Pin": ADMIN_PIN,
+            },
+            body: JSON.stringify({
+              home_team_id: m.home,
+              away_team_id: m.away,
+              home_score: hScore,
+              away_score: aScore,
+              status: "completed",
+              winner_id: winnerId,
+              shootout_winner_id: shootoutWinnerId,
+              result_note: resultNote,
+              source: "manual",
+            }),
+          }, 8000);
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error || `${response.status} ${response.statusText}`);
+
+          applyOfficialResults([data.result]);
+          updateKnockoutPairings();
+          renderStandings();
+          renderMatches(getActiveMatchFilter());
+          loadOverrideMatchSelector();
+          showSandboxToast(
+            `Match ${mId} saved officially`,
+            `${teamName(m.home)} ${hScore}-${aScore} ${teamName(m.away)} is now the public source of truth.`,
+            "✓"
+          );
+        } catch (error) {
+          showSandboxToast("Official result was not saved", error.message, "!");
+        } finally {
+          elements.btnSaveOfficial.disabled = false;
+          elements.btnSaveOfficial.textContent = "Save Official Final Result";
+        }
+      });
+
       // Initialize
       loadWIndexFeed();
+      window.setInterval(refreshOfficialResults, 30000);
     });
   </script>
 </body>

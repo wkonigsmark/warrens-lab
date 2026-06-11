@@ -97,7 +97,7 @@ def supabase_fetch_all(table, order):
 class AdminHandler(BaseHTTPRequestHandler):
     def end_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, PATCH, DELETE, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Admin-Pin")
         super().end_headers()
 
@@ -119,7 +119,51 @@ class AdminHandler(BaseHTTPRequestHandler):
                 )
                 self.respond({"entries": entries or [], "picks": picks or []})
                 return
+            if self.path == "/api/results":
+                self.require_pin()
+                results = supabase_fetch_all("match_results", "match_number.asc")
+                self.respond({"results": results or []})
+                return
             self.respond({"error": "Not found"}, status=404)
+        except Exception as error:
+            self.respond_error(error)
+
+    def do_POST(self):
+        try:
+            match_number = self.extract_match_number()
+            if not match_number:
+                self.respond({"error": "Not found"}, status=404)
+                return
+            self.require_pin()
+            payload = self.read_json()
+            home_score = int(payload.get("home_score", 0))
+            away_score = int(payload.get("away_score", 0))
+            status = payload.get("status", "completed")
+            if home_score < 0 or away_score < 0:
+                raise ValueError("Scores cannot be negative")
+            if status not in ("upcoming", "live", "completed"):
+                raise ValueError("Invalid match status")
+
+            row = {
+                "match_number": match_number,
+                "home_team_id": payload.get("home_team_id"),
+                "away_team_id": payload.get("away_team_id"),
+                "home_score": home_score,
+                "away_score": away_score,
+                "status": status,
+                "winner_id": payload.get("winner_id"),
+                "shootout_winner_id": payload.get("shootout_winner_id"),
+                "result_note": payload.get("result_note", ""),
+                "source": payload.get("source", "manual"),
+                "source_ref": payload.get("source_ref"),
+            }
+            rows = supabase_request(
+                "match_results?on_conflict=match_number",
+                method="POST",
+                body=row,
+                prefer="resolution=merge-duplicates,return=representation",
+            )
+            self.respond({"ok": True, "result": rows[0] if rows else row})
         except Exception as error:
             self.respond_error(error)
 
@@ -160,6 +204,17 @@ class AdminHandler(BaseHTTPRequestHandler):
         if not self.path.startswith(prefix):
             return ""
         return urllib.parse.unquote(self.path[len(prefix):].split("?", 1)[0])
+
+    def extract_match_number(self):
+        prefix = "/api/results/"
+        if not self.path.startswith(prefix):
+            return 0
+        raw_value = self.path[len(prefix):].split("?", 1)[0]
+        try:
+            match_number = int(raw_value)
+        except ValueError:
+            return 0
+        return match_number if 1 <= match_number <= 104 else 0
 
     def require_pin(self):
         if self.headers.get("X-Admin-Pin") == ADMIN_PIN:

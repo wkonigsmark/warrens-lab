@@ -88,9 +88,44 @@ Important scoring behavior:
 
 ## Live Scoring Source Of Truth
 
-Once the tournament starts, the scoreboard should stop relying on sandbox simulation for official standings. The recommended source of truth is a manually controlled score sheet that can be audited.
+Once the tournament starts, the scoreboard stops relying on sandbox simulation for official standings. Supabase `match_results` is the canonical source of truth. The local commissioner panel writes final scores to that table, and the public scoreboard reads them through `get_public_match_results()`.
 
-Recommended spreadsheet columns:
+The commissioner workflow is:
+
+1. Start the local admin server.
+2. Open the scoreboard and unlock Commissioner Sandbox with the admin PIN.
+3. Select the match and enter the final score.
+4. Click `Save Official Final Result`.
+5. Public scoreboards pick up the result on load or during their 30-second refresh.
+
+`Apply Sandbox Score` remains a local-only test control and cannot replace an official result.
+
+## Automated Results Roadmap
+
+Keep automation behind the same `match_results` table:
+
+```text
+score provider -> scheduled importer -> normalize team/match IDs -> upsert match_results -> public scoreboard
+```
+
+Rules for the importer:
+
+- Run server-side or in a scheduled GitHub Action/Netlify Function. Never expose a provider key in browser code.
+- Match provider fixtures to the tournament's canonical `match_number`.
+- Only mark a result `completed` when the provider reports the match final.
+- Preserve `source`, `source_ref`, and `updated_at` for auditing.
+- Alert on unknown teams, duplicate match mappings, or a score that changes after being final.
+- Keep the commissioner form available as the emergency correction path.
+
+API-Football is the most approachable first provider to evaluate because its API includes livescores and fixtures and currently advertises a small free request allowance. Confirm that the 2026 World Cup is covered on the chosen plan before depending on it.
+
+Avoid scraping FIFA, Fox, or ESPN page markup as the primary pipeline. It is harder to audit, can break without notice, and may be restricted by site terms. A scrape can be an emergency comparison signal, but should not directly publish official pool results.
+
+## Optional Google Sheet Bridge
+
+A published Google Sheet can still be useful as a second manual interface. Use the import columns above, fetch its CSV from a protected scheduled job, validate it, and upsert those rows into `match_results`. The public scoreboard should continue reading Supabase rather than reading the sheet directly.
+
+An optional published Google Sheet or automated provider can feed the same table later. Recommended import columns:
 
 ```text
 match_number
@@ -125,9 +160,9 @@ Before kickoff:
 
 During group play:
 
-1. Enter final scores into the live scores spreadsheet.
-2. Mark completed matches as `completed`.
-3. Refresh or sync the scoreboard.
+1. Enter final scores through the commissioner panel.
+2. Confirm the result is marked `completed`.
+3. Refresh or wait up to 30 seconds for the public scoreboard.
 4. Spot-check group standings against FIFA/official standings.
 5. Spot-check 2-3 entries after each match window.
 
@@ -151,8 +186,8 @@ After group play:
 
 ## Open Implementation Work
 
-- Add a live-score import path for a spreadsheet or published CSV.
-- Add a clear scoreboard mode indicator: `Sandbox` vs `Live`.
+- Add an automated importer that upserts provider or Google Sheet results into `match_results`.
+- Add a clear scoreboard mode indicator: `Sandbox` vs `Official`.
 - Add a lock switch for public submissions.
 - Add a final locked entries snapshot path.
 - Add final payout display once paid entries are locked.
