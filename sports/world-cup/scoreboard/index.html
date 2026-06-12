@@ -1629,12 +1629,19 @@
         return String(a.entry.playerName).localeCompare(String(b.entry.playerName));
       });
 
-      // 4. Map rank, tracking shifts
+      // 4. Map rank, tracking shifts (handling ties)
       const newRanks = {};
+      let currentRank = 1;
       const standingsOutput = scoredList.map((item, index) => {
-        const rank = index + 1;
         const name = item.entry.playerName;
         const key = entryKey(item.entry);
+
+        // If this entry has a different score than the previous one, update currentRank
+        if (index > 0 && item.points !== scoredList[index - 1].points) {
+          currentRank = index + 1;
+        }
+
+        const rank = currentRank;
         newRanks[key] = rank;
 
         let shift = 0;

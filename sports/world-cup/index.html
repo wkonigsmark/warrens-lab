@@ -942,7 +942,7 @@
   </script>
 
   <script type="module">
-    import { groups, teams, teamsById } from './data/world-cup-2026.js';
+    import { groups, teams, teamsById, groupStageMatches } from './data/world-cup-2026.js';
     import { W_INDEX_URL, fetchWithTimeout, wIndexBaselineRows } from './data/w-index-baseline.js';
 
     (() => {
@@ -1086,6 +1086,119 @@
         }));
       }
 
+      function renderTeamModal(teamId) {
+        const team = teamsById[teamId];
+        if (!team) return '';
+
+        const teamMatches = groupStageMatches.filter(m => m.home === teamId || m.away === teamId);
+        const previousMatches = teamMatches.filter(m => {
+          const kickoffTime = new Date(m.utc).getTime();
+          return kickoffTime <= Date.now();
+        }).sort((a, b) => new Date(b.utc) - new Date(a.utc));
+
+        const upcomingMatches = teamMatches.filter(m => {
+          const kickoffTime = new Date(m.utc).getTime();
+          return kickoffTime > Date.now();
+        }).sort((a, b) => new Date(a.utc) - new Date(b.utc));
+
+        const groupAnalysis = analysesByGroup.get(team.group);
+
+        let html = `
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px;">
+            ${flagImage(team, 'wc-chip', 80)}
+            <div>
+              <span class="wc-chip">${team.name}</span>
+              <div class="wc-rank-note" style="margin-top: 6px;">Group ${team.group}</div>
+            </div>
+          </div>
+        `;
+
+        // Previous matches
+        if (previousMatches.length > 0) {
+          html += `<div style="margin-bottom: 18px;">
+            <h4 style="color: var(--wc-gold); font-size: 0.9rem; margin-bottom: 8px; font-weight: 850;">Recent Match</h4>
+            ${previousMatches.slice(0, 1).map(match => {
+              const opponent = match.home === teamId ? match.away : match.home;
+              const opponentTeam = teamsById[opponent];
+              const isHome = match.home === teamId;
+              return `
+                <div class="wc-team-row" style="background: rgba(244, 201, 93, 0.08); padding: 10px; border-radius: 6px;">
+                  <div style="flex: 1;">
+                    <div style="font-size: 0.75rem; color: var(--wc-muted); margin-bottom: 4px;">M${match.matchNumber}</div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      ${flagImage(opponentTeam, 'wc-chip', 32)}
+                      <span style="font-size: 0.85rem;">${isHome ? 'vs' : 'vs'} ${opponentTeam.name}</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>`;
+        }
+
+        // Upcoming matches
+        if (upcomingMatches.length > 0) {
+          html += `<div style="margin-bottom: 18px;">
+            <h4 style="color: var(--wc-gold); font-size: 0.9rem; margin-bottom: 8px; font-weight: 850;">Upcoming Matches</h4>
+            ${upcomingMatches.map(match => {
+              const opponent = match.home === teamId ? match.away : match.home;
+              const opponentTeam = teamsById[opponent];
+              const isHome = match.home === teamId;
+              const date = new Date(match.utc);
+              const dateStr = date.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+              return `
+                <div class="wc-team-row" style="background: rgba(255, 255, 255, 0.04); padding: 10px; border-radius: 6px; margin-bottom: 6px;">
+                  <div style="flex: 1;">
+                    <div style="font-size: 0.75rem; color: var(--wc-muted); margin-bottom: 4px;">M${match.matchNumber} • ${dateStr}</div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      ${flagImage(opponentTeam, 'wc-chip', 32)}
+                      <span style="font-size: 0.85rem;">${isHome ? 'vs' : 'vs'} ${opponentTeam.name}</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>`;
+        }
+
+        // Group analysis
+        if (groupAnalysis) {
+          html += `<div style="border-top: 1px solid var(--wc-line); padding-top: 16px; margin-top: 16px;">
+            <h4 style="color: var(--wc-gold); font-size: 0.9rem; margin-bottom: 8px; font-weight: 850;">Group Analysis</h4>
+            <div class="wc-rank-note" style="margin-bottom: 12px;">
+              <span class="wc-small">Total ${scoreLabel(groupAnalysis.total)}</span>
+              <span class="wc-small">Parity ${groupAnalysis.pairwiseDiffSum.toFixed(1)}</span>
+            </div>
+            <div style="margin-bottom: 12px;">
+              ${groupAnalysis.teamRows.map((t) => `
+                <div class="wc-team-row" style="font-size: 0.85rem;">
+                  <span>${flagImage(t, 'wc-chip', 32)}${t.name}</span>
+                  <strong>${scoreLabel(t.score)}</strong>
+                </div>
+              `).join('')}
+            </div>
+            <div style="margin-top: 10px;">
+              ${groupAnalysis.pairs.slice(0, 3).map((pair) => `
+                <div class="wc-team-row" style="font-size: 0.75rem; color: var(--wc-muted);">
+                  <span>${pair.a.name} v ${pair.b.name}</span>
+                  <strong>${pair.diff.toFixed(1)}</strong>
+                </div>
+              `).join('')}
+            </div>
+          </div>`;
+        }
+
+        html += `
+          <div style="margin-top: 20px; display: flex; gap: 10px; border-top: 1px solid var(--wc-line); padding-top: 16px;">
+            <a href="scoreboard/" class="wc-button" style="flex: 1; text-align: center; text-decoration: none; font-size: 0.78rem; min-height: 36px; padding: 0 10px; font-weight: 850; border-radius: var(--wc-radius); display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+              🏆 Scoreboard
+            </a>
+          </div>
+        `;
+
+        return html;
+      }
+
       function renderGroupModal(analysis) {
         return `
           <span class="wc-chip" id="group-modal-title">Group ${analysis.group}</span>
@@ -1212,9 +1325,12 @@
           return;
         }
         const item = event.target.closest('.ticker-item');
-        if (!item?.dataset.group) return;
+        if (!item?.dataset.team) return;
         lastFocusedTickerItem = item;
-        openGroupModal(item.dataset.group);
+        modalContent.innerHTML = renderTeamModal(item.dataset.team);
+        modalOverlay.hidden = false;
+        document.body.style.overflow = 'hidden';
+        modalClose.focus();
       });
 
       tickerWindow.addEventListener('pointerdown', (event) => {
@@ -1240,9 +1356,12 @@
       function endTickerDrag(event) {
         if (!tickerDragging) return;
         tickerDragging = false;
-        if (!tickerDragMoved && event.type === 'pointerup' && tickerPressItem?.dataset.group) {
+        if (!tickerDragMoved && event.type === 'pointerup' && tickerPressItem?.dataset.team) {
           lastFocusedTickerItem = tickerPressItem;
-          openGroupModal(tickerPressItem.dataset.group);
+          modalContent.innerHTML = renderTeamModal(tickerPressItem.dataset.team);
+          modalOverlay.hidden = false;
+          document.body.style.overflow = 'hidden';
+          modalClose.focus();
           tickerClickSuppressed = true;
           window.setTimeout(() => {
             tickerClickSuppressed = false;
@@ -1523,19 +1642,33 @@
       return teamsById[teamId]?.shortName || teamsById[teamId]?.name || `TBD`;
     }
 
-    function formatDateTime(localDate, localTime) {
-      if (!localDate || !localTime) return '--';
+    function formatDateTime(utcTime) {
+      if (!utcTime) return '--';
 
-      const [year, month, day] = localDate.split('-');
-      const [hour, minute] = localTime.split(':');
+      // Parse UTC time
+      const date = new Date(utcTime);
 
-      // Convert to AM/PM
-      const hourNum = parseInt(hour, 10);
-      const ampm = hourNum >= 12 ? 'PM' : 'AM';
-      const displayHour = hourNum % 12 || 12;
+      // Get user's timezone
+      const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-      // Format as M/D hh:mmAM/PM
-      return `${parseInt(month)}/${day} ${displayHour}:${minute}${ampm}`;
+      // Format in user's timezone
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: userTimeZone
+      });
+
+      const parts = formatter.formatToParts(date);
+      const month = parts.find(p => p.type === 'month').value;
+      const dayVal = parts.find(p => p.type === 'day').value;
+      const hour = parts.find(p => p.type === 'hour').value;
+      const minute = parts.find(p => p.type === 'minute').value;
+      const dayperiod = parts.find(p => p.type === 'dayPeriod')?.value || '';
+
+      return `${month}/${dayVal} ${hour}:${minute}${dayperiod}`;
     }
 
     function isMatchUpcoming(match) {
@@ -1566,7 +1699,7 @@
         onmouseover="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(244,201,93,0.3)'"
         onmouseout="this.style.background='rgba(255,255,255,0.03)'; this.style.borderColor='rgba(247,244,235,0.16)'">
           <div style="font-size: 0.7rem; color: rgba(247,244,235,0.6); font-weight: 850; margin-bottom: 4px;">M${match.matchNumber}</div>
-          <div style="font-size: 0.65rem; color: var(--gold); font-weight: 850; margin-bottom: 6px;">${formatDateTime(match.localDate, match.localTime)}</div>
+          <div style="font-size: 0.65rem; color: var(--gold); font-weight: 850; margin-bottom: 6px;">${formatDateTime(match.utc)}</div>
           <div style="display: flex; justify-content: center; align-items: center; gap: 6px; margin-bottom: 6px;">
             <img src="${flagUrl(match.home)}" alt="" style="width: 24px; height: 16px; border-radius: 2px;">
             <span style="font-size: 0.75rem; font-weight: 850; color: var(--ink);">${teamName(match.home)}</span>
