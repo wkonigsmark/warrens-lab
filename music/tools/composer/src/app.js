@@ -3,8 +3,8 @@
 
 import {
     RANGES, DEFAULT_RANGE, buildScale, buildChromaticScale, DURATIONS, durationById,
-    BAR_OPTIONS, BEATS_PER_BAR, TIME_SIGNATURES, DEFAULT_TIME_SIG, timeSignatureById,
-    CLEFS, DEFAULT_CLEF, SHIFT_MIN, SHIFT_MAX,
+    BAR_OPTIONS, MAX_BARS, BEATS_PER_BAR, TIME_SIGNATURES, DEFAULT_TIME_SIG, timeSignatureById,
+    CLEFS, DEFAULT_CLEF, SHIFT_MIN, SHIFT_MAX, noteToMidi, midiToNoteName,
 } from './model.js';
 import { renderGrid } from './grid.js';
 import { renderScore } from './notation.js';
@@ -23,6 +23,9 @@ import { analyzeForPhrases } from './analyze.js';
 const els = {
     rangeSelect: document.getElementById('range-select'),
     barsGroup: document.getElementById('bars-group'),
+    barsReadout: document.getElementById('bars-readout'),
+    barsDown: document.getElementById('bars-down'),
+    barsUp: document.getElementById('bars-up'),
     durationGroup: document.getElementById('duration-group'),
     tempo: document.getElementById('tempo'),
     tempoReadout: document.getElementById('tempo-readout'),
@@ -245,19 +248,32 @@ function buildSegmented(group, items, getActive, onPick) {
     });
 }
 
+// Set the bar count (presets or stepper). Clamps to [4, MAX_BARS] and drops any
+// notes that now fall past the end. Notes are only lost when *shrinking*.
+function setBars(n) {
+    const next = Math.min(MAX_BARS, Math.max(4, Math.round(n)));
+    if (next === state.bars) return;
+    state.bars = next;
+    const max = next * beatsPerBar();
+    state.notes = state.notes.filter((x) => x.start + x.durBeats <= max + 1e-9);
+    refreshControls();
+    render();
+}
+
+function updateBarsControls() {
+    els.barsReadout.textContent = state.bars;
+    els.barsDown.disabled = state.bars <= 4;
+    els.barsUp.disabled = state.bars >= MAX_BARS;
+}
+
 function refreshControls() {
     buildSegmented(
         els.barsGroup,
         BAR_OPTIONS.map((n) => ({ value: n, label: `${n}` })),
         () => state.bars,
-        (n) => {
-            state.bars = n;
-            const bpb = beatsPerBar();
-            const max = n * bpb;
-            state.notes = state.notes.filter((x) => x.start + x.durBeats <= max);
-            refreshControls(); render();
-        },
+        (n) => setBars(n),
     );
+    updateBarsControls();
     buildSegmented(
         els.timeSigGroup,
         TIME_SIGNATURES.map((ts) => ({ value: ts.id, label: ts.label })),
@@ -314,7 +330,8 @@ function currentPiece() {
 function applyPiece(p) {
     if (!p || typeof p !== 'object') return;
     state.rangeId = RANGES[p.rangeId] ? p.rangeId : DEFAULT_RANGE;
-    state.bars = BAR_OPTIONS.includes(p.bars) ? p.bars : 4;
+    // accept any whole bar count up to the max (longer imports/songs), not just presets
+    state.bars = (Number.isInteger(p.bars) && p.bars >= 4 && p.bars <= MAX_BARS) ? p.bars : 4;
     state.durationId = durationById(p.durationId) ? p.durationId : 'quarter';
     state.tempo = typeof p.tempo === 'number' ? p.tempo : 96;
     state.timeSignature = timeSignatureById(p.timeSignature) ? p.timeSignature : DEFAULT_TIME_SIG;
@@ -358,6 +375,7 @@ function syncControlsToState() {
     els.title.value = state.title;
     els.composer.value = state.composer;
     updateShiftControls();
+    updateBarsControls();
     updateLettersToggle();
     updateMetronomeToggle();
 }
@@ -504,53 +522,69 @@ function closePasteJsonModal() {
     els.pasteJsonModal.setAttribute('aria-hidden', 'true');
 }
 
-// Detect and convert HookTheory format (scale degrees) to composer format (pitch letters)
+// Semitone offsets of scale degrees 1–7 within each supported mode.
+const MODE_INTERVALS = {
+    major:      [0, 2, 4, 5, 7, 9, 11],
+    ionian:     [0, 2, 4, 5, 7, 9, 11],
+    minor:      [0, 2, 3, 5, 7, 8, 10],
+    aeolian:    [0, 2, 3, 5, 7, 8, 10],
+    mixolydian: [0, 2, 4, 5, 7, 9, 10],
+    dorian:     [0, 2, 3, 5, 7, 9, 10],
+    phrygian:   [0, 1, 3, 5, 7, 8, 10],
+    lydian:     [0, 2, 4, 6, 7, 9, 11],
+    locrian:    [0, 1, 3, 5, 6, 8, 10],
+};
+
+// HookTheory's octave 0 places the tonic in this scientific octave. The melody
+// lands here on the keyboard; the piano range (A0–C8) keeps every note in view
+// so nothing falls off the edge.
+const HT_TONIC_OCTAVE = 4;
+
+// Detect HookTheory's scale-degree format and convert it to real pitches.
+// Scale degree (1–7) + relative octave → MIDI (via the tonic) → pitch name. Doing
+// the math in MIDI is what gets the octave roll-over at C right (G5 A5 B5 → C6…),
+// which the old letter-only conversion got wrong.
 function convertHookTheoryIfNeeded(data) {
     if (!data) return data;
 
-    // Check if this looks like HookTheory format (has notes with "sd" field)
     const notes = Array.isArray(data.notes) ? data.notes : (data.notes ? [data.notes] : []);
     const isHookTheory = notes.length > 0 && notes[0].sd !== undefined && notes[0].pitch === undefined;
-
     if (!isHookTheory) return data;
 
-    // Get key info for scale degree -> pitch conversion
     const keyInfo = data.keys && data.keys[0];
     const tonic = keyInfo?.tonic || 'C';
-    const mode = keyInfo?.scale || 'major';
+    const mode = (keyInfo?.scale || 'major').toLowerCase();
+    const intervals = MODE_INTERVALS[mode] || MODE_INTERVALS.major;
 
-    // Helper: convert scale degree (1-7) + octave to pitch letter
-    const sdToPitch = (sd, octave) => {
-        const intervals = {
-            major: [0, 2, 4, 5, 7, 9, 11],
-            minor: [0, 2, 3, 5, 7, 8, 10],
-            mixolydian: [0, 2, 4, 5, 7, 9, 10],
-            dorian: [0, 2, 3, 5, 7, 9, 10],
-        };
-        const noteValues = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
-        const letters = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-        const tonicSemi = noteValues[tonic] || 0;
-        const modeIntervals = intervals[mode] || intervals.major;
-        const semitoneOffset = modeIntervals[(sd - 1) % 7];
-        const pitchSemitone = (tonicSemi + semitoneOffset) % 12;
-        for (const [letter, semi] of Object.entries(noteValues)) {
-            if (semi === pitchSemitone) return letter;
-        }
-        return 'C';
-    };
+    // MIDI of the tonic at a given HookTheory relative octave.
+    const tonicMidiAt = (rel) => noteToMidi(`${tonic}${HT_TONIC_OCTAVE + rel}`);
 
-    // Convert all notes
-    // HookTheory uses octave 0 = middle register; add 5 to get to xylophone range (C5–A6)
-    const baseOctave = 5;
     const convertedNotes = notes
         .filter(n => !n.isRest)
-        .map(n => ({
-            start: (n.beat || 1) - 1,
-            pitch: sdToPitch(parseInt(n.sd) || 1, baseOctave + (n.octave || 0)) + (baseOctave + (n.octave || 0)),
-            durBeats: n.duration || 1,
-        }));
+        .map(n => {
+            const sd = parseInt(n.sd) || 1;                 // 1–7
+            const degIdx = ((sd - 1) % 7 + 7) % 7;          // 0–6
+            const midi = tonicMidiAt(n.octave || 0) + intervals[degIdx];
+            return {
+                start: (n.beat || 1) - 1,                   // HookTheory beats are 1-indexed
+                pitch: midiToNoteName(midi),                // sharp-spelled, any octave
+                durBeats: n.duration || 1,
+            };
+        });
 
-    return { ...data, notes: convertedNotes };
+    // Target the full piano so every imported note is visible and playable.
+    const totalBeats = convertedNotes.reduce((m, x) => Math.max(m, x.start + x.durBeats), 0);
+    const beatsPerBar = (data.timeSignature === '3/4') ? 3 : 4;
+    const bars = Math.max(4, Math.ceil(totalBeats / beatsPerBar));
+
+    return {
+        ...data,
+        notes: convertedNotes,
+        rangeId: 'piano-88',
+        clef: 'treble',
+        staffShift: 0,
+        bars,
+    };
 }
 
 function validateAndPreviewPasteJson() {
@@ -898,6 +932,9 @@ function init() {
 
     els.shiftDown.addEventListener('click', () => nudgeShift(-1));
     els.shiftUp.addEventListener('click', () => nudgeShift(1));
+
+    els.barsDown.addEventListener('click', () => setBars(state.bars - 1));
+    els.barsUp.addEventListener('click', () => setBars(state.bars + 1));
 
     els.lettersToggle.addEventListener('click', () => {
         state.showLetters = !state.showLetters;

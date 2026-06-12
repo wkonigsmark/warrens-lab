@@ -123,6 +123,10 @@ input[type="range"] { width: 150px; accent-color: var(--accent); }
 .btn-ghost:hover { color: var(--ink); }
 .btn.flashed { color: #2e9e5b; border-color: #2e9e5b; }
 
+/* Bars: quick presets + a ± stepper for arbitrary counts (up to MAX_BARS). */
+.bars-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+#bars-readout { color: var(--accent); font-weight: 700; }
+
 .stepper { display: inline-flex; gap: 6px; }
 .step-btn {
   font: inherit;

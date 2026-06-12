@@ -29,8 +29,14 @@
       </div>
 
       <div class="control">
-        <label>Bars</label>
-        <div id="bars-group" class="segmented" role="group" aria-label="Number of bars"></div>
+        <label>Bars <span id="bars-readout">4</span></label>
+        <div class="bars-row">
+          <div id="bars-group" class="segmented" role="group" aria-label="Number of bars"></div>
+          <div class="stepper">
+            <button id="bars-down" class="step-btn" type="button" aria-label="Fewer bars">−</button>
+            <button id="bars-up" class="step-btn" type="button" aria-label="More bars">+</button>
+          </div>
+        </div>
       </div>
 
       <div class="control">

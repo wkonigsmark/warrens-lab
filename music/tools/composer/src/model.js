@@ -119,7 +119,8 @@ export const durationById = (id) => DURATIONS.find((d) => d.id === id);
 // so each beat is two "slots". Grid columns and fit-checks derive from this.
 export const SLOTS_PER_BEAT = 2;
 
-export const BAR_OPTIONS = [4, 5, 6, 8, 12];  // 5 and 6 for 3/4 time pieces
+export const BAR_OPTIONS = [4, 5, 6, 8, 12];  // quick presets (5 & 6 for 3/4 pieces)
+export const MAX_BARS = 64;                   // the ± stepper extends up to here (longer imports/songs)
 
 // Shared horizontal scale (px per beat). The grid and the staff both use it so
 // a column on the grid lines up under its note on the staff.

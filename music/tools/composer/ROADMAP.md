@@ -114,6 +114,19 @@ verified PD" bar.
 
 ## Done — 2026-06-08
 
+### Phase 5B · Extended bars (4 → 64) ✅
+- The bar count was capped at the presets `[4,5,6,8,12]`; `applyPiece` clamped
+  anything else to 4, so a long **HookTheory import truncated to a few bars** even
+  though the conversion was correct. Now:
+- `MAX_BARS = 64` (model.js). `applyPiece` accepts **any whole bar count 4–64**
+  (not just presets), so imports keep their real length.
+- New **± bars stepper** beside the presets (mirrors the octave stepper) with a
+  live readout in the label; shared `setBars(n)` clamps to [4, 64] and only drops
+  notes when *shrinking*. Presets and stepper both route through it.
+- Verified: a 17-bar "Riptide" HookTheory paste loads all notes on the 88-key
+  piano (was clamping to 4); stepper nudges + clamps; no console errors.
+- The HookTheory melody import is now **end-to-end** for full-length songs.
+
 ### Chromatic 88-key piano ✅
 - New **Piano · A0–C8 (88 keys)** instrument in the range selector — the first
   **chromatic** range (`chromatic: true` in `RANGES`). Adds the black keys, which
