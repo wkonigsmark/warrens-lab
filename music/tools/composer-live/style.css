@@ -1,0 +1,94 @@
+/* Composer Live — bright sandbox theme (matches the Composer family). */
+:root {
+  --ink: #1f2430;
+  --muted: #6b7280;
+  --line: #e3e7f1;
+  --accent: #ff8a3d;
+  --accent-2: #5b8cff;
+  --good: #2e9e5b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Outfit', system-ui, sans-serif;
+  color: var(--ink);
+  background: linear-gradient(160deg, #fbfcff 0%, #eef2ff 55%, #fdf0e8 100%);
+  min-height: 100vh;
+}
+
+.topbar { padding: 22px 24px 6px; }
+.brand { display: flex; align-items: center; gap: 14px; }
+.logo { font-size: 34px; background: #fff; padding: 8px 12px; border-radius: 16px; box-shadow: 0 4px 14px rgba(31,36,48,0.08); }
+h1 { margin: 0; font-size: 26px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+.tagline { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.beta-badge {
+  font-size: 11px; font-weight: 800; letter-spacing: 0.6px;
+  color: #fff; background: var(--accent); padding: 3px 9px; border-radius: 999px;
+}
+
+main { padding: 18px 24px 48px; max-width: 980px; }
+
+.panel {
+  background: #fff;
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 6px 22px rgba(31,36,48,0.07);
+}
+.panel-title { margin: 0 0 14px; font-size: 15px; font-weight: 700; color: var(--muted); }
+
+.mic-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.status { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.status strong { color: var(--accent); }
+.status.error { color: #c0392b; }
+.status.live { color: var(--good); }
+
+.btn {
+  font: inherit; font-weight: 700; border: 1px solid var(--line);
+  background: #fff; color: var(--ink); padding: 12px 20px; border-radius: 12px;
+  cursor: pointer; transition: all 0.12s ease;
+}
+.btn-mic { background: var(--accent); color: #fff; border-color: var(--accent); font-size: 16px; }
+.btn-mic:hover { filter: brightness(1.05); }
+.btn-mic.listening { background: #e64a4a; border-color: #e64a4a; }
+
+/* --- Tuner readout ------------------------------------------------------ */
+.readout { margin-top: 22px; text-align: center; }
+.note-name {
+  font-size: 86px; font-weight: 800; line-height: 1;
+  color: var(--ink); letter-spacing: -1px; transition: color 0.1s ease;
+}
+.note-name.active { color: var(--accent-2); }
+
+.tuner { max-width: 420px; margin: 14px auto 0; }
+.tuner-track {
+  position: relative; height: 26px; border-radius: 999px;
+  background: linear-gradient(90deg, #ffe1e1, #eaf6ee 50%, #ffe1e1);
+  border: 1px solid var(--line);
+}
+.tuner-zero {
+  position: absolute; left: 50%; top: -4px; bottom: -4px; width: 2px;
+  background: var(--good); transform: translateX(-1px);
+}
+.tuner-needle {
+  position: absolute; top: 50%; left: 50%;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--accent-2); border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  transform: translate(-50%, -50%); transition: left 0.06s linear, opacity 0.2s ease;
+  opacity: 0;
+}
+.tuner-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 5px; }
+
+.freq { margin-top: 12px; font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.clarity-wrap { display: flex; align-items: center; gap: 8px; justify-content: center; margin-top: 12px; }
+.clarity-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.clarity-track { width: 120px; height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.clarity-fill { height: 100%; width: 0%; background: var(--good); transition: width 0.08s ease; }
+
+/* --- Contour canvas ----------------------------------------------------- */
+.contour-wrap { width: 100%; overflow: hidden; border-radius: 12px; border: 1px solid var(--line); }
+#contour { display: block; width: 100%; height: auto; background: #fcfdff; }

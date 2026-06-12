@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Composer Live · Pitch Sandbox</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🎤</span>
+      <div>
+        <h1>Composer Live <span class="beta-badge">SANDBOX</span></h1>
+        <p class="tagline">Hum a tune — watch the notes appear. (Milestone 1: live pitch)</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="mic-row">
+        <button id="listen" class="btn btn-mic">🎤 Start Listening</button>
+        <p id="status" class="status">Click <strong>Start Listening</strong> and allow the microphone, then hum or sing.</p>
+      </div>
+
+      <!-- Big tuner-style current-note readout -->
+      <div class="readout" id="readout" aria-live="polite">
+        <div class="note-name" id="note-name">—</div>
+        <div class="tuner">
+          <div class="tuner-track">
+            <div class="tuner-zero"></div>
+            <div class="tuner-needle" id="tuner-needle"></div>
+          </div>
+          <div class="tuner-labels"><span>♭ flat</span><span>in tune</span><span>sharp ♯</span></div>
+        </div>
+        <div class="freq" id="freq">— Hz</div>
+        <div class="clarity-wrap" title="How confidently the pitch is being tracked">
+          <span class="clarity-label">signal</span>
+          <div class="clarity-track"><div class="clarity-fill" id="clarity-fill"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scrolling pitch contour: a live piano-roll of what you're singing -->
+    <section class="panel">
+      <h2 class="panel-title">Pitch contour</h2>
+      <div class="contour-wrap">
+        <canvas id="contour" width="900" height="360"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

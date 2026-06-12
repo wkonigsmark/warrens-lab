@@ -1328,6 +1328,7 @@
           </div>
 
           <div class="sim-action-group">
+            <button class="wc-button" id="run-all-btn" disabled style="background: linear-gradient(135deg, var(--wc-gold), #e6a820); color: #07130f; font-weight: 950; gap: 6px;">⚡ Run All Simulations</button>
             <button class="wc-button" id="simulate-btn" disabled>Simulating W-Index...</button>
             <button class="wc-button secondary" id="reset-btn" disabled>Reset</button>
           </div>
@@ -1581,6 +1582,7 @@
       stochSlider: document.getElementById("stoch-slider"),
       stochLabel: document.getElementById("stoch-val-label"),
       chaosSliderGroup: document.getElementById("chaos-slider-group"),
+      runAllBtn: document.getElementById("run-all-btn"),
       simulateBtn: document.getElementById("simulate-btn"),
       resetBtn: document.getElementById("reset-btn"),
       syncStatus: document.getElementById("sync-status"),
@@ -1770,6 +1772,8 @@
         elements.simulateBtn.textContent = "Simulate Group Stage";
         elements.mcRunBtn.disabled = false;
         elements.mcRunBtn.textContent = "Run Probability Atlas";
+        elements.runAllBtn.disabled = false;
+        elements.runAllBtn.textContent = "⚡ Run All Simulations";
         elements.mcStatusText.textContent = "Ready for a 1,000-tournament run.";
       }
     }
@@ -2954,6 +2958,38 @@
       elements.mcStochLabel.textContent = `${Math.round(Number(event.target.value) * 100)}%`;
     });
     elements.mcRunBtn.addEventListener("click", runMonteCarlo);
+
+    elements.runAllBtn.addEventListener("click", async () => {
+      elements.runAllBtn.disabled = true;
+      elements.runAllBtn.textContent = "⚡ Simulating Tournament...";
+      elements.simulateBtn.disabled = true;
+      elements.mcRunBtn.disabled = true;
+
+      // Step 1: run the group stage + bracket sim
+      await new Promise(resolve => {
+        const stochasticity = parseFloat(elements.stochSlider.value);
+        simulateTournament(activeMode, stochasticity);
+        elements.emptyState.style.display = "none";
+        elements.tabsNav.style.display = "flex";
+        elements.resetBtn.disabled = false;
+        renderStandings();
+        renderThirds();
+        renderAdvancers();
+        renderKnockoutBracket();
+        renderMatchResults();
+        switchTab(currentTab);
+        elements.simulateBtn.textContent = "Re-Simulate Tournament";
+        elements.simulateBtn.disabled = false;
+        resolve();
+      });
+
+      // Step 2: run Monte Carlo
+      elements.runAllBtn.textContent = "⚡ Running Probability Atlas...";
+      await runMonteCarlo();
+
+      elements.runAllBtn.disabled = false;
+      elements.runAllBtn.textContent = "⚡ Run All Again";
+    });
     elements.mcSearch.addEventListener("input", renderMonteCarloResults);
     elements.mcGroupFilter.addEventListener("change", renderMonteCarloResults);
     elements.ffStageSelect.addEventListener("change", renderFateField);
