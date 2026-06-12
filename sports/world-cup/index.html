@@ -656,6 +656,46 @@
       opacity: 0.87;
     }
 
+    .scoreboard-nav-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.045);
+      color: var(--ink);
+      font-size: 0.9rem;
+      font-weight: 950;
+      text-decoration: none;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .scoreboard-nav-link::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border: 2px solid var(--gold);
+      border-radius: 999px;
+      opacity: 0;
+      animation: pulse-border 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-border {
+      0%, 100% {
+        opacity: 0;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.6;
+        transform: scale(1.05);
+      }
+    }
+
+    .scoreboard-nav-link:hover {
+      background: rgba(244, 201, 93, 0.15);
+    }
+
     @media (max-width: 640px) {
       .hero {
         grid-template-rows: auto minmax(150px, 22vh) auto auto auto;
@@ -738,7 +778,16 @@
   <canvas id="particle-canvas" aria-hidden="true"></canvas>
 
   <main class="page-shell">
-    <section class="hero" aria-labelledby="page-title">
+    <nav class="module-strip" aria-label="World Cup hub sections" style="position: absolute; top: 28px; left: 18px; right: 18px; width: auto; margin: 0; display: flex; gap: 12px; flex-wrap: wrap;">
+      <a href="scoreboard/" class="scoreboard-nav-link">🏆 Scoreboard</a>
+      <a href="rankings-odds/">W-Index</a>
+      <a href="groups/">Group Analysis</a>
+      <a href="fixtures/">Fixtures</a>
+      <a href="simulation/">Simulator</a>
+      <a href="admin/">Admin</a>
+    </nav>
+
+    <section class="hero" aria-labelledby="page-title" style="margin-top: 60px;">
       <div class="host-mark">
         <div class="host-flags" aria-label="2026 World Cup host nations: Mexico, United States, Canada">
           <span class="host-flag"><img src="https://flagcdn.com/w320/mx.png" alt="Mexico flag"></span>
@@ -753,14 +802,6 @@
         <h1 id="page-title" class="fallback-title">Warren's<br>World Cup<br>World</h1>
       </div>
 
-      <div class="pool-cta">
-        <a class="pool-cta-button is-closed" href="scoreboard/">Entries Closed · View Scoreboard</a>
-        <div class="pool-payment-callout" aria-label="Pool entries closed">
-          <strong>Group-play entries are now closed.</strong>
-          <span>The pool locked at first kickoff. Follow the standings and results on the scoreboard.</span>
-        </div>
-        <p class="pool-cta-copy">Stay tuned for a knockout round pool once group play concludes!</p>
-      </div>
 
       <div class="purse-tally" id="purse-tally" aria-label="Pool purse tally">
         <div class="purse-card">
@@ -808,31 +849,10 @@
         </div>
       </section>
 
-      <div class="module-strip" aria-label="Planned hub sections">
-        <a href="rankings-odds/">W-Index</a>
-        <a href="groups/">Group Analysis</a>
-        <a href="fixtures/">Fixtures</a>
-        <a href="simulation/">Simulator</a>
-        <a href="scoreboard/">Scoreboard</a>
-        <a href="admin/">Admin</a>
-      </div>
-
-      <div class="countdown" aria-label="Countdown to World Cup kickoff">
-        <div class="time-card">
-          <strong id="days">00</strong>
-          <span>Days</span>
-        </div>
-        <div class="time-card">
-          <strong id="hours">00</strong>
-          <span>Hours</span>
-        </div>
-        <div class="time-card">
-          <strong id="minutes">00</strong>
-          <span>Minutes</span>
-        </div>
-        <div class="time-card">
-          <strong id="seconds">00</strong>
-          <span>Seconds</span>
+      <div id="next-fixtures" style="width: min(100%, 800px); margin: 28px auto 0;">
+        <h3 style="color: var(--gold); font-size: 0.75rem; font-weight: 950; letter-spacing: 0.14em; text-transform: uppercase; margin: 0 0 16px;">Coming Up</h3>
+        <div id="fixtures-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px;">
+          <!-- Populated by JavaScript -->
         </div>
       </div>
 
@@ -854,34 +874,6 @@
       <div class="wc-card-pad" id="group-modal-content"></div>
     </section>
   </div>
-
-  <script>
-    (() => {
-      const kickoff = new Date('2026-06-11T15:00:00-04:00').getTime();
-      const parts = {
-        days: document.getElementById('days'),
-        hours: document.getElementById('hours'),
-        minutes: document.getElementById('minutes'),
-        seconds: document.getElementById('seconds')
-      };
-
-      function renderCountdown() {
-        const distance = Math.max(0, kickoff - Date.now());
-        const days = Math.floor(distance / 86400000);
-        const hours = Math.floor((distance % 86400000) / 3600000);
-        const minutes = Math.floor((distance % 3600000) / 60000);
-        const seconds = Math.floor((distance % 60000) / 1000);
-
-        parts.days.textContent = String(days).padStart(2, '0');
-        parts.hours.textContent = String(hours).padStart(2, '0');
-        parts.minutes.textContent = String(minutes).padStart(2, '0');
-        parts.seconds.textContent = String(seconds).padStart(2, '0');
-      }
-
-      renderCountdown();
-      setInterval(renderCountdown, 1000);
-    })();
-  </script>
 
   <script type="module">
     const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
@@ -1342,8 +1334,8 @@
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + sy + rect.height / 2;
         const availableWidth = Math.min(rect.width, W - 28);
-        let fontSize = Math.min(94, availableWidth / 7.3);
-        fontSize = Math.max(34, fontSize);
+        let fontSize = Math.min(68, availableWidth / 7.3);
+        fontSize = Math.max(28, fontSize);
         const lineHeight = fontSize * 0.92;
         const blockHeight = TEXT_LINES.length * lineHeight;
         const startY = centerY - blockHeight / 2;
@@ -1514,6 +1506,79 @@
       resize();
       animate();
     })();
+  </script>
+
+  <script type="module">
+    import { groupStageMatches, teamsById } from './data/world-cup-2026.js';
+    import { supabaseConfig } from './data/supabase-config.js';
+
+    function flagUrl(teamId, width = 40) {
+      const t = teamsById[teamId];
+      if (!t) return 'https://flagcdn.com/w40/un.png';
+      const code = t.id === 'ENG' ? 'gb-eng' : (t.id === 'SCO' ? 'gb-sct' : t.countryCode.toLowerCase());
+      return `https://flagcdn.com/w${width}/${code}.png`;
+    }
+
+    function teamName(teamId) {
+      return teamsById[teamId]?.shortName || teamsById[teamId]?.name || `TBD`;
+    }
+
+    function formatDateTime(localDate, localTime) {
+      if (!localDate || !localTime) return '--';
+
+      const [year, month, day] = localDate.split('-');
+      const [hour, minute] = localTime.split(':');
+
+      // Convert to AM/PM
+      const hourNum = parseInt(hour, 10);
+      const ampm = hourNum >= 12 ? 'PM' : 'AM';
+      const displayHour = hourNum % 12 || 12;
+
+      // Format as M/D hh:mmAM/PM
+      return `${parseInt(month)}/${day} ${displayHour}:${minute}${ampm}`;
+    }
+
+    function isMatchUpcoming(match) {
+      // Check if match hasn't started yet (2+ hours in the future for safety buffer)
+      const kickoffTime = new Date(match.utc).getTime();
+      const now = Date.now();
+      const twoHoursMs = 2 * 60 * 60 * 1000;
+
+      // Show if match is at least 2 hours in the future, or if it's within 2 hours but hasn't passed yet
+      return kickoffTime > now;
+    }
+
+    const fixturesList = document.getElementById('fixtures-list');
+    const upcomingMatches = groupStageMatches.filter(isMatchUpcoming).slice(0, 5);
+
+    if (upcomingMatches.length === 0) {
+      fixturesList.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: rgba(247,244,235,0.5); padding: 20px; font-size: 0.85rem;">No upcoming matches</div>';
+    } else {
+      fixturesList.innerHTML = upcomingMatches.map(match => `
+        <div style="
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(247, 244, 235, 0.16);
+          border-radius: 8px;
+          padding: 10px;
+          text-align: center;
+          transition: all 0.2s ease;
+        "
+        onmouseover="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(244,201,93,0.3)'"
+        onmouseout="this.style.background='rgba(255,255,255,0.03)'; this.style.borderColor='rgba(247,244,235,0.16)'">
+          <div style="font-size: 0.7rem; color: rgba(247,244,235,0.6); font-weight: 850; margin-bottom: 4px;">M${match.matchNumber}</div>
+          <div style="font-size: 0.65rem; color: var(--gold); font-weight: 850; margin-bottom: 6px;">${formatDateTime(match.localDate, match.localTime)}</div>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 6px; margin-bottom: 6px;">
+            <img src="${flagUrl(match.home)}" alt="" style="width: 24px; height: 16px; border-radius: 2px;">
+            <span style="font-size: 0.75rem; font-weight: 850; color: var(--ink);">${teamName(match.home)}</span>
+          </div>
+          <div style="font-size: 0.65rem; color: rgba(247,244,235,0.5); margin-bottom: 6px;">vs</div>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 6px;">
+            <img src="${flagUrl(match.away)}" alt="" style="width: 24px; height: 16px; border-radius: 2px;">
+            <span style="font-size: 0.75rem; font-weight: 850; color: var(--ink);">${teamName(match.away)}</span>
+          </div>
+        </div>
+      `).join('');
+    }
   </script>
 </body>
 

@@ -79,6 +79,81 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    .tab-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tab-dropdown-btn {
+      background: none;
+      border: none;
+      color: var(--wc-muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-dropdown-btn:hover {
+      color: var(--wc-ink);
+      background: var(--wc-panel);
+    }
+
+    .tab-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 4px;
+      background: rgba(7, 19, 15, 0.96);
+      border: 1px solid var(--wc-line);
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.32);
+      backdrop-filter: blur(12px);
+      min-width: 200px;
+      z-index: 10;
+      overflow: hidden;
+      display: none;
+    }
+
+    .tab-dropdown-menu.active {
+      display: block;
+    }
+
+    .tab-dropdown-item {
+      display: block;
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--wc-muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 10px 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .tab-dropdown-item:last-child {
+      border-bottom: none;
+    }
+
+    .tab-dropdown-item:hover {
+      background: var(--wc-panel);
+      color: var(--wc-ink);
+    }
+
+    .tab-dropdown-item.active {
+      background: var(--wc-panel-strong);
+      color: var(--wc-gold);
+    }
+
     /* Leaderboard Styles */
     .leaderboard-table-wrap {
       overflow-x: auto;
@@ -91,34 +166,37 @@
 
     .scoreboard-toolbar {
       display: flex;
-      gap: 12px;
+      gap: 16px;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       flex-wrap: wrap;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
     }
 
     .scoreboard-search {
-      flex: 1 1 280px;
-      max-width: 430px;
-      min-height: 42px;
-      border: 1px solid var(--wc-line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.055);
+      flex: 1 1 300px;
+      min-height: 48px;
+      border: 2px solid rgba(244, 201, 93, 0.3);
+      border-radius: 10px;
+      background: rgba(244, 201, 93, 0.08);
       color: var(--wc-ink);
       font: inherit;
       font-weight: 750;
-      padding: 10px 16px;
+      padding: 12px 18px;
       outline: none;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
     }
 
     .scoreboard-search::placeholder {
-      color: rgba(247, 244, 235, 0.45);
+      color: rgba(247, 244, 235, 0.6);
+      font-weight: 700;
     }
 
     .scoreboard-search:focus {
-      border-color: rgba(244, 201, 93, 0.8);
-      box-shadow: 0 0 0 3px rgba(244, 201, 93, 0.12);
+      border-color: var(--wc-gold);
+      background: rgba(244, 201, 93, 0.12);
+      box-shadow: 0 0 0 4px rgba(244, 201, 93, 0.15), 0 4px 16px rgba(244, 201, 93, 0.12);
     }
 
     .rooting-call {
@@ -225,6 +303,146 @@
 
     .leaderboard-table tbody tr:hover td {
       background: var(--wc-panel);
+    }
+
+    @media (max-width: 768px) {
+      .scoreboard-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .scoreboard-search {
+        width: 100%;
+        max-width: none;
+      }
+
+      .leaderboard-table-wrap {
+        border: none;
+        background: transparent;
+        overflow: visible;
+      }
+
+      .leaderboard-table {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .leaderboard-table thead {
+        display: none;
+      }
+
+      .leaderboard-table tbody {
+        display: contents;
+      }
+
+      .leaderboard-table tbody tr {
+        display: grid;
+        grid-template-columns: 40px 1fr;
+        gap: 8px 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--wc-line);
+        border-radius: 10px;
+        padding: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        align-items: start;
+      }
+
+      .leaderboard-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(244, 201, 93, 0.3);
+      }
+
+      .leaderboard-table tbody tr td {
+        padding: 0 !important;
+        border: none !important;
+        font-size: 0.85rem;
+      }
+
+      .leaderboard-table tbody tr td:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1;
+        text-align: center;
+      }
+
+      .leaderboard-table tbody tr td:nth-child(2) {
+        display: none;
+      }
+
+      .leaderboard-table tbody tr td:nth-child(3) {
+        grid-column: 2;
+        grid-row: 1;
+      }
+
+      .leaderboard-table tbody tr td:nth-child(4) {
+        grid-column: 1 / -1;
+        grid-row: 2;
+      }
+
+      .leaderboard-table tbody tr td:nth-child(5),
+      .leaderboard-table tbody tr td:nth-child(6),
+      .leaderboard-table tbody tr td:nth-child(7),
+      .leaderboard-table tbody tr td:nth-child(8) {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0 !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+        font-size: 0.8rem;
+      }
+
+      .leaderboard-table tbody tr td:nth-child(5)::before {
+        content: "Positions";
+        color: var(--wc-gold);
+        font-weight: 700;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+      }
+
+      .leaderboard-table tbody tr td:nth-child(6)::before {
+        content: "Thirds";
+        color: var(--wc-gold);
+        font-weight: 700;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+      }
+
+      .leaderboard-table tbody tr td:nth-child(7)::before {
+        content: "Accuracy";
+        color: var(--wc-gold);
+        font-weight: 700;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+      }
+
+      .leaderboard-table tbody tr td:nth-child(8)::before {
+        content: "Points";
+        color: var(--wc-gold);
+        font-weight: 700;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+      }
+
+      .player-profile {
+        font-size: 0.95rem;
+      }
+
+      .rooting-call {
+        margin: 0;
+        text-align: left;
+        width: 100%;
+      }
+
+      .rooting-call strong {
+        display: inline;
+        margin-right: 4px;
+      }
+
+      .rooting-call span {
+        display: inline;
+      }
     }
 
     .rank-badge {
@@ -672,20 +890,21 @@
 
     <section class="wc-hero">
       <div>
-        <div class="wc-eyebrow">Projected Pool Scoring & Sandbox Arena</div>
-        <h1 class="wc-title">Tournament Scoreboard Hub</h1>
-        <p class="wc-copy">
-          Track projected standings, review all 104 matches, and run sandbox simulations to test pool entry performance.
-        </p>
+        <h1 class="wc-title">Scoreboard</h1>
+        <div class="wc-pill" id="sync-status" style="margin-top: 16px; width: fit-content;">Loading W-Index data...</div>
       </div>
-      <div class="wc-pill" id="sync-status">Loading W-Index data...</div>
     </section>
 
     <!-- Navigation Tabs -->
     <nav class="tab-selectors" id="scoreboard-tabs-nav">
       <button class="sim-tab-btn active" data-tab="standings">🏆 Projected Standings</button>
-      <button class="sim-tab-btn" data-tab="matches">📅 Match Center</button>
-      <button class="sim-tab-btn" data-tab="sandbox">🎛️ Commissioner Sandbox</button>
+      <div class="tab-dropdown">
+        <button class="tab-dropdown-btn" id="tools-dropdown-toggle">⚙️ Tools <span style="font-size: 0.7rem;">▼</span></button>
+        <div class="tab-dropdown-menu" id="tools-dropdown-menu">
+          <button class="tab-dropdown-item" data-tab="matches">📅 Match Center</button>
+          <button class="tab-dropdown-item" data-tab="sandbox">🎛️ Commissioner Sandbox</button>
+        </div>
+      </div>
     </nav>
 
     <!-- Tab Panels Container -->
@@ -703,19 +922,8 @@
             <p><strong>Official position points are awarded only after all 6 matches in that group are complete.</strong> Third-place advancer points are awarded after all 72 group-stage matches are complete.</p>
           </div>
         </section>
-        <div class="scoreboard-toolbar">
-          <input class="scoreboard-search" id="scoreboard-search" type="search" placeholder="Search bracket, entry code, email, Venmo, or winner pick..." autocomplete="off">
-        </div>
-        <div class="matches-export-bar" style="display: flex; gap: 12px; margin-bottom: 16px; align-items: center; justify-content: flex-end; flex-wrap: wrap;">
-          <span id="standings-source-note" style="font-size: 0.8rem; color: var(--wc-muted); font-weight: 850; margin-right: auto;">
-            🏆 Submitted entries load from Supabase; projected standings appear during group play.
-          </span>
-          <button class="wc-button secondary" id="copy-standings-btn" style="padding: 6px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
-            📋 Copy Projections
-          </button>
-          <button class="wc-button" id="export-standings-btn" style="padding: 6px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
-            📥 Export Projections CSV
-          </button>
+        <div class="scoreboard-toolbar" style="margin-bottom: 16px;">
+          <input class="scoreboard-search" id="scoreboard-search" type="search" placeholder="Search by bracket name..." autocomplete="off" style="flex: 1; max-width: 500px;">
         </div>
         <div class="leaderboard-table-wrap">
           <table class="leaderboard-table" id="leaderboard">
@@ -749,18 +957,6 @@
           <button class="match-filter-btn" data-filter="knockout">Knockouts (73-104)</button>
           <button class="match-filter-btn" data-filter="completed">Completed</button>
           <button class="match-filter-btn" data-filter="upcoming">Upcoming</button>
-        </div>
-        
-        <div class="matches-export-bar" style="display: flex; gap: 12px; margin-top: 16px; margin-bottom: 20px; align-items: center; justify-content: flex-end; flex-wrap: wrap; border-bottom: 1px solid var(--wc-line); padding-bottom: 16px;">
-          <span style="font-size: 0.8rem; color: var(--wc-muted); font-weight: 850; margin-right: auto;">
-            📅 Simulated/Actual match results ready for Warren's spreadsheets
-          </span>
-          <button class="wc-button secondary" id="copy-matches-btn" style="padding: 6px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
-            📋 Copy Matches
-          </button>
-          <button class="wc-button" id="export-matches-btn" style="padding: 6px 14px; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px;">
-            📥 Export Matches CSV
-          </button>
         </div>
         
         <div class="scoreboard-matches-grid" id="match-center-grid">
@@ -870,8 +1066,10 @@
     // UI Selectors
     const elements = {
       syncStatus: document.getElementById("sync-status"),
-      standingsSourceNote: document.getElementById("standings-source-note"),
-      tabs: document.querySelectorAll(".sim-tab-btn"),
+      mainTab: document.querySelector("[data-tab='standings']"),
+      dropdownToggle: document.getElementById("tools-dropdown-toggle"),
+      dropdownMenu: document.getElementById("tools-dropdown-menu"),
+      dropdownItems: document.querySelectorAll(".tab-dropdown-item"),
       panels: document.querySelectorAll(".sim-view-panel"),
       leaderboardBody: document.getElementById("leaderboard-body"),
       matchGrid: document.getElementById("match-center-grid"),
@@ -892,10 +1090,6 @@
       overrideShootoutSelect: document.getElementById("override-shootout-select"),
       btnApplyOverride: document.getElementById("override-btn-apply"),
       btnSaveOfficial: document.getElementById("override-btn-official"),
-      copyStandingsBtn: document.getElementById("copy-standings-btn"),
-      exportStandingsBtn: document.getElementById("export-standings-btn"),
-      copyMatchesBtn: document.getElementById("copy-matches-btn"),
-      exportMatchesBtn: document.getElementById("export-matches-btn"),
       toastRegion: document.getElementById("sandbox-toast-region")
     };
 
@@ -1088,7 +1282,6 @@
         try {
           const submittedEntries = await loadPoolEntriesFromAdmin();
           setSyncStatus(`🏆 ${submittedEntries.length} submitted entr${submittedEntries.length === 1 ? "y" : "ies"} loaded`, "green");
-          elements.standingsSourceNote.textContent = `🏆 Scoring ${submittedEntries.length} submitted entr${submittedEntries.length === 1 ? "y" : "ies"} from Supabase via the local admin server. Group-position points become official only when each group is complete; third-place advancer points become official after all 72 group matches.`;
           return submittedEntries;
         } catch (error) {
           console.warn("Local admin entries unavailable; trying public Supabase scoreboard entries:", error);
@@ -1098,12 +1291,10 @@
       try {
         const submittedEntries = await loadPoolEntriesFromSupabase();
         setSyncStatus(`🏆 ${submittedEntries.length} submitted entr${submittedEntries.length === 1 ? "y" : "ies"} loaded`, "green");
-        elements.standingsSourceNote.textContent = `🏆 Projecting ${submittedEntries.length} submitted entr${submittedEntries.length === 1 ? "y" : "ies"} from Supabase. Group-position points become official only when each group is complete; third-place advancer points become official after all 72 group matches.`;
         return submittedEntries;
       } catch (error) {
         console.warn("Public Supabase entries unavailable:", error);
         setSyncStatus("Standings temporarily unavailable", "red");
-        elements.standingsSourceNote.textContent = "Submitted brackets could not be loaded. Please check back shortly.";
         return [];
       }
     }
@@ -1589,15 +1780,27 @@
         return;
       }
 
-      elements.tabs.forEach(btn => {
+      // Update main tab
+      if (elements.mainTab) {
+        elements.mainTab.classList.toggle("active", tabId === "standings");
+      }
+
+      // Update dropdown items
+      elements.dropdownItems.forEach(btn => {
         if (btn.dataset.tab === tabId) btn.classList.add("active");
         else btn.classList.remove("active");
       });
 
+      // Update panels
       elements.panels.forEach(p => {
         if (p.id === `panel-${tabId}`) p.classList.add("active");
         else p.classList.remove("active");
       });
+
+      // Close dropdown after selection
+      if (elements.dropdownMenu) {
+        elements.dropdownMenu.classList.remove("active");
+      }
     }
 
     function requestSandboxAccess() {
@@ -1681,10 +1884,17 @@
         row.addEventListener("click", () => {
           const detailRowId = `details-${key.replace(/[^a-z0-9_-]/gi, '-')}`;
           let detailsRow = document.getElementById(detailRowId);
-          
+
           if (detailsRow) {
+            // Toggle this row if already expanded
             detailsRow.classList.toggle("active");
           } else {
+            // Close any other expanded rows first
+            const allExpandedRows = elements.leaderboardBody.querySelectorAll(".expanded-predictions.active");
+            allExpandedRows.forEach(expanded => {
+              expanded.classList.remove("active");
+            });
+
             const exp = document.createElement("tr");
             exp.id = detailRowId;
             exp.className = "expanded-predictions active";
@@ -2241,8 +2451,28 @@
       }
 
       // Tab selector clicks
-      elements.tabs.forEach(btn => {
+      if (elements.mainTab) {
+        elements.mainTab.addEventListener("click", () => switchTab("standings"));
+      }
+
+      // Dropdown toggle
+      if (elements.dropdownToggle) {
+        elements.dropdownToggle.addEventListener("click", (e) => {
+          e.stopPropagation();
+          elements.dropdownMenu.classList.toggle("active");
+        });
+      }
+
+      // Dropdown item clicks
+      elements.dropdownItems.forEach(btn => {
         btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", () => {
+        if (elements.dropdownMenu) {
+          elements.dropdownMenu.classList.remove("active");
+        }
       });
 
       if (elements.scoreboardSearch) {
