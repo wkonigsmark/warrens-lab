@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Group Standings | Warren's World Cup Pool</title>
+  <link rel="stylesheet" href="../shared/world-cup.css">
+  <style>
+    .groups-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .group-block {
+      border: 1px solid var(--wc-line);
+      border-radius: var(--wc-radius);
+      background: rgba(255, 255, 255, 0.04);
+      overflow: hidden;
+    }
+
+    .group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.055);
+      border-bottom: 1px solid var(--wc-line);
+    }
+
+    .group-label {
+      font-size: 0.78rem;
+      font-weight: 950;
+      color: var(--wc-gold);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .group-played {
+      font-size: 0.72rem;
+      color: var(--wc-muted);
+      font-weight: 700;
+    }
+
+    .standings-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    .standings-table thead tr {
+      border-bottom: 1px solid var(--wc-line);
+    }
+
+    .standings-table th {
+      padding: 6px 8px;
+      text-align: center;
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--wc-muted);
+    }
+
+    .standings-table th.col-team {
+      text-align: left;
+      padding-left: 12px;
+    }
+
+    .standings-table td {
+      padding: 7px 8px;
+      text-align: center;
+      color: var(--wc-muted);
+    }
+
+    .standings-table td.col-team {
+      text-align: left;
+      padding-left: 12px;
+    }
+
+    .standings-table tbody tr {
+      border-bottom: 1px solid rgba(247, 244, 235, 0.06);
+      transition: background 0.15s;
+    }
+
+    .standings-table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .standings-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    /* Advance positions (top 2 advance, highlight top 2) */
+    .standings-table tbody tr.advances td.col-pos {
+      color: var(--wc-green);
+      font-weight: 900;
+    }
+
+    .team-cell {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .team-cell img {
+      width: 22px;
+      height: 15px;
+      object-fit: cover;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .team-name {
+      font-weight: 700;
+      color: var(--wc-ink);
+      font-size: 0.78rem;
+    }
+
+    .col-pts {
+      font-weight: 900;
+      color: var(--wc-ink) !important;
+    }
+
+    .col-gd.positive { color: var(--wc-green) !important; }
+    .col-gd.negative { color: var(--wc-red) !important; }
+
+    .dash {
+      color: rgba(247, 244, 235, 0.25);
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      font-size: 0.82rem;
+      color: var(--wc-muted);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--wc-green);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--wc-line);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--wc-muted);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    @media (max-width: 900px) {
+      .groups-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .groups-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .standings-table th,
+      .standings-table td {
+        padding: 6px 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wc-shell">
+    <header class="wc-topbar">
+      <a href="../" class="wc-brand">Warren's World Cup Pool</a>
+      <nav class="wc-nav">
+        <a href="../">Home</a>
+        <a href="../pool/">Pool</a>
+        <a href="../fixtures/">Fixtures</a>
+        <a href="../scoreboard/">Scoreboard</a>
+        <a href="../standings/" aria-current="page">Standings</a>
+        <a href="../rankings-odds/">W-Index</a>
+      </nav>
+    </header>
+
+    <section class="wc-hero">
+      <div>
+        <div class="wc-eyebrow">Group Stage</div>
+        <h1 class="wc-title">Standings</h1>
+      </div>
+    </section>
+
+    <div class="status-bar">
+      <div class="status-dot" id="status-dot"></div>
+      <span id="status-text">Loading results…</span>
+    </div>
+
+    <div class="groups-grid" id="groups-grid">
+      <!-- Rendered by JS -->
+    </div>
+
+    <div class="thirds-section" id="thirds-section" style="margin-top: 36px;">
+      <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:14px;">
+        <h2 style="margin:0; font-size:clamp(1.2rem,2.5vw,1.6rem); font-weight:950;">Best Third-Place Teams</h2>
+        <span style="font-size:0.78rem; color:var(--wc-muted);">Top 8 of 12 advance to Round of 32</span>
+      </div>
+      <div class="group-block" style="border-radius:var(--wc-radius); overflow:hidden;">
+        <table class="standings-table" id="thirds-table">
+          <thead>
+            <tr>
+              <th style="width:28px;">#</th>
+              <th style="width:52px;">GRP</th>
+              <th class="col-team">Team</th>
+              <th title="Games Played">GP</th>
+              <th title="Wins">W</th>
+              <th title="Draws">D</th>
+              <th title="Losses">L</th>
+              <th title="Goals For">GF</th>
+              <th title="Goals Against">GA</th>
+              <th title="Goal Difference">GD</th>
+              <th title="Points">Pts</th>
+            </tr>
+          </thead>
+          <tbody id="thirds-body">
+            <tr><td colspan="11" style="text-align:center; color:var(--wc-muted); padding:16px; font-size:0.82rem;">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--wc-green);"></div>
+        <span>Advances (top 2 per group)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--wc-blue);"></div>
+        <span>Best 3rd place (top 8 advance)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--wc-muted); opacity: 0.5;"></div>
+        <span>GD = Goal Difference · GF = Goals For · GA = Goals Against</span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { teams, teamsById, groupStageMatches, groups } from '../data/world-cup-2026.js';
+    import { supabaseConfig } from '../data/supabase-config.js';
+
+    const groupsGrid = document.getElementById('groups-grid');
+    const statusText = document.getElementById('status-text');
+    const statusDot = document.getElementById('status-dot');
+
+    function flagUrl(team) {
+      if (!team) return '';
+      const code = team.id === 'ENG' ? 'gb-eng' : team.id === 'SCO' ? 'gb-sct' : team.countryCode.toLowerCase();
+      return `https://flagcdn.com/w40/${code}.png`;
+    }
+
+    // Build standings for a group given a map of match results
+    function buildGroupStandings(groupLetter, resultsByMatchNumber) {
+      const teamIds = groups[groupLetter];
+      const stats = {};
+
+      for (const id of teamIds) {
+        stats[id] = { id, gp: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 };
+      }
+
+      const groupMatches = groupStageMatches.filter(m => m.group === groupLetter);
+      let gamesPlayed = 0;
+
+      for (const match of groupMatches) {
+        const result = resultsByMatchNumber.get(match.matchNumber);
+        if (!result) continue;
+        gamesPlayed++;
+
+        const { homeScore, awayScore } = result;
+        const h = stats[match.home];
+        const a = stats[match.away];
+        if (!h || !a) continue;
+
+        h.gp++; h.gf += homeScore; h.ga += awayScore; h.gd += homeScore - awayScore;
+        a.gp++; a.gf += awayScore; a.ga += homeScore; a.gd += awayScore - homeScore;
+
+        if (homeScore > awayScore) {
+          h.w++; h.pts += 3; a.l++;
+        } else if (homeScore < awayScore) {
+          a.w++; a.pts += 3; h.l++;
+        } else {
+          h.d++; h.pts++; a.d++; a.pts++;
+        }
+      }
+
+      const teamList = Object.values(stats);
+
+      // Sort: if no games played, alphabetical. Otherwise standard football tiebreakers.
+      if (gamesPlayed === 0) {
+        teamList.sort((a, b) => {
+          const nameA = teamsById[a.id]?.name || '';
+          const nameB = teamsById[b.id]?.name || '';
+          return nameA.localeCompare(nameB);
+        });
+      } else {
+        teamList.sort((a, b) => {
+          if (b.pts !== a.pts) return b.pts - a.pts;
+          if (b.gd !== a.gd) return b.gd - a.gd;
+          if (b.gf !== a.gf) return b.gf - a.gf;
+          const nameA = teamsById[a.id]?.name || '';
+          const nameB = teamsById[b.id]?.name || '';
+          return nameA.localeCompare(nameB);
+        });
+      }
+
+      return { teamList, gamesPlayed, totalGames: groupMatches.length };
+    }
+
+    function dash(val, played) {
+      if (played === 0) return `<span class="dash">–</span>`;
+      return val;
+    }
+
+    function gdCell(gd, played) {
+      if (played === 0) return `<span class="dash">–</span>`;
+      const cls = gd > 0 ? 'positive' : gd < 0 ? 'negative' : '';
+      const str = gd > 0 ? `+${gd}` : `${gd}`;
+      return `<span class="${cls}">${str}</span>`;
+    }
+
+    function renderGroup(groupLetter, { teamList, gamesPlayed, totalGames }) {
+
+      const rows = teamList.map((s, i) => {
+        const team = teamsById[s.id];
+        const pos = i + 1;
+        const advances = pos <= 2 ? 'advances' : '';
+
+        return `
+          <tr class="${advances}">
+            <td class="col-pos">${pos}</td>
+            <td class="col-team">
+              <div class="team-cell">
+                <img src="${flagUrl(team)}" alt="">
+                <span class="team-name">${s.id}</span>
+              </div>
+            </td>
+            <td>${dash(s.gp, gamesPlayed)}</td>
+            <td>${dash(s.w, gamesPlayed)}</td>
+            <td>${dash(s.d, gamesPlayed)}</td>
+            <td>${dash(s.l, gamesPlayed)}</td>
+            <td>${dash(s.gf, gamesPlayed)}</td>
+            <td>${dash(s.ga, gamesPlayed)}</td>
+            <td class="col-gd">${gdCell(s.gd, gamesPlayed)}</td>
+            <td class="col-pts">${gamesPlayed === 0 ? '<span class="dash">–</span>' : s.pts}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const playedLabel = gamesPlayed === 0
+        ? 'Not yet started'
+        : `${gamesPlayed} of ${totalGames} played`;
+
+      return `
+        <div class="group-block">
+          <div class="group-header">
+            <span class="group-label">Group ${groupLetter}</span>
+            <span class="group-played">${playedLabel}</span>
+          </div>
+          <table class="standings-table">
+            <thead>
+              <tr>
+                <th style="width:28px;">#</th>
+                <th class="col-team">Team</th>
+                <th title="Games Played">GP</th>
+                <th title="Wins">W</th>
+                <th title="Draws">D</th>
+                <th title="Losses">L</th>
+                <th title="Goals For">GF</th>
+                <th title="Goals Against">GA</th>
+                <th title="Goal Difference">GD</th>
+                <th title="Points">Pts</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    async function loadResults() {
+      const resultsByMatchNumber = new Map();
+      let resultCount = 0;
+
+      try {
+        const response = await fetch(`${supabaseConfig.url.replace(/\/$/, "")}/rest/v1/rpc/get_public_match_results`, {
+          method: 'POST',
+          headers: {
+            apikey: supabaseConfig.anonKey,
+            Authorization: `Bearer ${supabaseConfig.anonKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: '{}',
+        });
+
+        if (response.ok) {
+          const rows = await response.json();
+          resultCount = rows.length;
+          rows.forEach(row => {
+            resultsByMatchNumber.set(Number(row.match_number), {
+              homeScore: Number(row.home_score ?? 0),
+              awayScore: Number(row.away_score ?? 0),
+              status: row.status || 'completed',
+            });
+          });
+        }
+      } catch (err) {
+        console.warn('Could not load match results:', err);
+      }
+
+      return { resultsByMatchNumber, resultCount };
+    }
+
+    function renderThirdsTable(thirdsData, anyResultsYet) {
+      const thirdsBody = document.getElementById('thirds-body');
+      if (!thirdsBody) return;
+
+      if (!anyResultsYet) {
+        thirdsBody.innerHTML = `<tr><td colspan="11" style="text-align:center; color:var(--wc-muted); padding:16px; font-size:0.82rem;">No results yet — third-place rankings will appear once group matches are played</td></tr>`;
+        return;
+      }
+
+      // Sort: Pts → GD → GF → alphabetical
+      const sorted = [...thirdsData].sort((a, b) => {
+        if (b.pts !== a.pts) return b.pts - a.pts;
+        if (b.gd !== a.gd) return b.gd - a.gd;
+        if (b.gf !== a.gf) return b.gf - a.gf;
+        return (teamsById[a.id]?.name || '').localeCompare(teamsById[b.id]?.name || '');
+      });
+
+      thirdsBody.innerHTML = sorted.map((s, i) => {
+        const team = teamsById[s.id];
+        const pos = i + 1;
+        const advances = pos <= 8;
+        const advanceClass = advances ? 'advances-third' : '';
+        return `
+          <tr class="${advanceClass}">
+            <td class="col-pos"${advances ? ' style="color:var(--wc-blue);font-weight:900;"' : ''}>${pos}</td>
+            <td style="text-align:center; font-size:0.7rem; font-weight:900; color:var(--wc-gold);">${s.group}</td>
+            <td class="col-team">
+              <div class="team-cell">
+                <img src="${flagUrl(team)}" alt="">
+                <span class="team-name">${s.id}</span>
+              </div>
+            </td>
+            <td>${s.gp}</td>
+            <td>${s.w}</td>
+            <td>${s.d}</td>
+            <td>${s.l}</td>
+            <td>${s.gf}</td>
+            <td>${s.ga}</td>
+            <td class="col-gd">${gdCell(s.gd, s.gp)}</td>
+            <td class="col-pts">${s.pts}</td>
+          </tr>
+          ${advances && pos === 8 ? '<tr><td colspan="11" style="border-top:2px solid var(--wc-blue); padding:0;"></td></tr>' : ''}
+        `;
+      }).join('');
+    }
+
+    async function init() {
+      const { resultsByMatchNumber, resultCount } = await loadResults();
+
+      const thirdsData = [];
+
+      groupsGrid.innerHTML = 'ABCDEFGHIJKL'.split('').map(letter => {
+        const standings = buildGroupStandings(letter, resultsByMatchNumber);
+        if (standings.teamList[2]) {
+          thirdsData.push({ ...standings.teamList[2], group: letter });
+        }
+        return renderGroup(letter, standings);
+      }).join('');
+
+      renderThirdsTable(thirdsData, resultCount > 0);
+
+      if (resultCount === 0) {
+        statusDot.style.background = 'var(--wc-muted)';
+        statusDot.style.animation = 'none';
+        statusText.textContent = 'No results recorded yet — order is alphabetical within each group';
+      } else {
+        statusText.textContent = `Live · ${resultCount} match result${resultCount === 1 ? '' : 's'} recorded`;
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

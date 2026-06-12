@@ -700,6 +700,7 @@
       .hero {
         grid-template-rows: auto minmax(150px, 22vh) auto auto auto;
         gap: 8px;
+        margin-top: 140px !important;
       }
 
       .host-mark {
@@ -944,6 +945,38 @@
   <script type="module">
     import { groups, teams, teamsById, groupStageMatches } from './data/world-cup-2026.js';
     import { W_INDEX_URL, fetchWithTimeout, wIndexBaselineRows } from './data/w-index-baseline.js';
+    import { supabaseConfig } from './data/supabase-config.js';
+
+    let matchResults = new Map();
+
+    async function loadMatchResults() {
+      try {
+        const response = await fetchWithTimeout(`${supabaseConfig.url.replace(/\/$/, "")}/rest/v1/rpc/get_public_match_results`, {
+          method: "POST",
+          headers: {
+            apikey: supabaseConfig.anonKey,
+            Authorization: `Bearer ${supabaseConfig.anonKey}`,
+            "Content-Type": "application/json",
+          },
+          body: "{}",
+        }, 4500);
+        if (response.ok) {
+          const results = await response.json();
+          results.forEach(row => {
+            matchResults.set(Number(row.match_number), {
+              homeScore: Number(row.home_score || 0),
+              awayScore: Number(row.away_score || 0),
+              status: row.status || "completed",
+              winnerId: row.winner_id || null,
+            });
+          });
+        }
+      } catch (error) {
+        console.warn("Match results endpoint unavailable:", error);
+      }
+    }
+
+    loadMatchResults();
 
     (() => {
       const ticker = document.getElementById('w-index-ticker');
@@ -1121,13 +1154,26 @@
               const opponent = match.home === teamId ? match.away : match.home;
               const opponentTeam = teamsById[opponent];
               const isHome = match.home === teamId;
+              const result = matchResults.get(match.matchNumber);
+              const teamScore = isHome ? result?.homeScore : result?.awayScore;
+              const opponentScore = isHome ? result?.awayScore : result?.homeScore;
+              const resultText = result ? (teamScore > opponentScore ? 'W' : teamScore < opponentScore ? 'L' : 'D') : '—';
+              const resultColor = resultText === 'W' ? '#24b47e' : resultText === 'L' ? '#ff5d5d' : '#f4c95d';
               return `
                 <div class="wc-team-row" style="background: rgba(244, 201, 93, 0.08); padding: 10px; border-radius: 6px;">
                   <div style="flex: 1;">
                     <div style="font-size: 0.75rem; color: var(--wc-muted); margin-bottom: 4px;">M${match.matchNumber}</div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                      ${flagImage(opponentTeam, 'wc-chip', 32)}
-                      <span style="font-size: 0.85rem;">${isHome ? 'vs' : 'vs'} ${opponentTeam.name}</span>
+                    <div style="display: flex; align-items: center; gap: 8px; justify-content: space-between;">
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        ${flagImage(opponentTeam, 'wc-chip', 32)}
+                        <span style="font-size: 0.85rem;">${isHome ? 'vs' : 'vs'} ${opponentTeam.name}</span>
+                      </div>
+                      <div style="text-align: right;">
+                        ${result ? `
+                          <div style="font-size: 0.9rem; font-weight: 850; color: var(--wc-ink);">${teamScore}–${opponentScore}</div>
+                          <div style="font-size: 0.75rem; font-weight: 850; color: ${resultColor};">${resultText}</div>
+                        ` : '<div style="font-size: 0.75rem; color: var(--wc-muted);">No result</div>'}
+                      </div>
                     </div>
                   </div>
                 </div>
