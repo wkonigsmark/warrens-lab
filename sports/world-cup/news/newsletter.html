@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warren's World Cup Newsletter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f1ed 0%, #ece7e1 100%);
+            font-family: 'Georgia', 'Garamond', serif;
+            color: #2c2c2c;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .eagle-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto 30px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #8b7355;
+            font-weight: 500;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        nav a:hover {
+            color: #d4a574;
+        }
+
+        /* Flags section */
+        .flags {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 30px;
+            letter-spacing: 8px;
+        }
+
+        /* Content sections */
+        section {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 40px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border-left: 4px solid #d4a574;
+        }
+
+        section h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #5c4033;
+            font-weight: 600;
+        }
+
+        section h3 {
+            font-size: 18px;
+            margin: 20px 0 10px 0;
+            color: #8b7355;
+            font-weight: 600;
+        }
+
+        section p {
+            margin-bottom: 15px;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        /* Intro section */
+        .intro-text {
+            font-size: 18px;
+            font-style: italic;
+            color: #6b5d50;
+            line-height: 1.9;
+        }
+
+        /* Game commentary */
+        .game-card {
+            background: rgba(212, 165, 116, 0.08);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 3px solid #d4a574;
+        }
+
+        .game-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #5c4033;
+            margin-bottom: 8px;
+        }
+
+        .game-comment {
+            font-size: 15px;
+            color: #6b5d50;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #d4a574 0%, #c49568 100%);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(212, 165, 116, 0.4);
+        }
+
+        /* Deep dive section */
+        .projection-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .projection-table th {
+            background: rgba(212, 165, 116, 0.15);
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #d4a574;
+            font-weight: 600;
+            color: #5c4033;
+        }
+
+        .projection-table td {
+            padding: 12px;
+            border-bottom: 1px solid #d4a574;
+            color: #6b5d50;
+        }
+
+        .projection-table tr:hover {
+            background: rgba(212, 165, 116, 0.06);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #8b7355;
+            font-size: 13px;
+            border-top: 1px solid rgba(212, 165, 116, 0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            section {
+                padding: 25px;
+            }
+
+            section h2 {
+                font-size: 22px;
+            }
+
+            nav {
+                gap: 15px;
+                font-size: 12px;
+            }
+
+            .flags {
+                font-size: 32px;
+                letter-spacing: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="eagle-icon">🦅</div>
+            <canvas id="titleCanvas" width="800" height="120"></canvas>
+            <div class="flags">🇺🇸 🇬🇧 🇫🇷 🇪🇸 🇩🇪 🇦🇷</div>
+        </header>
+
+        <!-- Navigation -->
+        <nav>
+            <a href="#scoreboard">Scoreboard</a>
+            <a href="#games">Recent Games</a>
+            <a href="#projections">Projections</a>
+            <a href="#leaderboard">Leaderboard</a>
+        </nav>
+
+        <!-- Intro Section -->
+        <section class="intro">
+            <h2>The Latest from Warren's World Cup</h2>
+            <p class="intro-text">
+                Welcome to this week's World Cup newsletter. We're tracking the drama, the upsets, and the statistical anomalies as 102 entrants battle it out for the top prize. Below you'll find commentary on recent matches, links to track the action, and a deep dive into how our projections held up against reality.
+            </p>
+        </section>
+
+        <!-- Recent Games Section -->
+        <section id="games">
+            <h2>Game Commentary</h2>
+            <div class="game-card">
+                <div class="game-title">Match 3: Canada vs Bosnia and Herzegovina</div>
+                <div class="game-comment">
+                    A tighter match than expected. Canada's midfield control wasn't as dominant as projected, giving Bosnia moments of hope. The final scoreline reflected slight underperformance relative to our pre-match xG model.
+                </div>
+            </div>
+            <div class="game-card">
+                <div class="game-title">Match 4: United States vs Paraguay</div>
+                <div class="game-comment">
+                    USA came out strong in the first half but faded considerably after the 65-minute mark. Paraguay's defensive shape proved more resilient than expected, limiting clear-cut chances in the second half.
+                </div>
+            </div>
+            <div class="game-card">
+                <div class="game-title">Match 5: Haiti vs Scotland</div>
+                <div class="game-comment">
+                    Scotland's possession advantage didn't translate to dominance as cleanly as anticipated. Haiti's counter-attacking prowess created some dangerous moments late in the match.
+                </div>
+            </div>
+        </section>
+
+        <!-- Scoreboard CTA Section -->
+        <section id="scoreboard">
+            <h2>Track the Action</h2>
+            <p>
+                Want to follow the real-time standings, see all the bracket predictions, and monitor which entrants are in contention? Head to the scoreboard for live updates, detailed match results, and a complete leaderboard of all 102 pools.
+            </p>
+            <a href="https://wkonigsmark.com/world-cup/scoreboard/" class="cta-button">View Full Scoreboard</a>
+        </section>
+
+        <!-- Deep Dive Section -->
+        <section id="projections">
+            <h2>Nerdy Deep Dive: Projection Analysis</h2>
+            <p>
+                Our pre-tournament model ran 10,000 Monte Carlo simulations on historical match data, team ratings, and player availability. Here's how our projections compared to actual play:
+            </p>
+
+            <h3>Key Metrics</h3>
+            <table class="projection-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Projected</th>
+                        <th>Actual</th>
+                        <th>Variance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total Goals (M1-M5)</td>
+                        <td>14.2</td>
+                        <td>13</td>
+                        <td>-0.9%</td>
+                    </tr>
+                    <tr>
+                        <td>Underdog Wins</td>
+                        <td>1.8</td>
+                        <td>2</td>
+                        <td>+11%</td>
+                    </tr>
+                    <tr>
+                        <td>Over 2.5 Goals %</td>
+                        <td>62%</td>
+                        <td>60%</td>
+                        <td>-2%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Notable Deviations</h3>
+            <p>
+                Our model slightly overestimated goal totals early on, likely due to weather conditions we didn't fully weight in our feature engineering. However, the underdog win rate tracked closely, suggesting our team strength ratings were well-calibrated.
+            </p>
+            <p>
+                The biggest surprise? Scotland's defensive resilience. We had them generating 0.8 expected defensive actions per 90, but they actually hit 1.2. This is the kind of variance that keeps pool players on their toes!
+            </p>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>Warren's World Cup Pool &nbsp;•&nbsp; 2026 Tournament</p>
+            <p>Email: <a href="mailto:wkonigsmark@gmail.com" style="color: #8b7355;">wkonigsmark@gmail.com</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // Particle effect for "Warren's World Cup World" title
+        const canvas = document.getElementById('titleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const text = "Warren's World Cup World";
+        const particles = [];
+        const mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.baseX = x;
+                this.baseY = y;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.size = 2;
+                this.opacity = 0.7;
+            }
+
+            update() {
+                const dx = this.x - mouse.x;
+                const dy = this.y - mouse.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const maxDistance = 100;
+
+                if (distance < maxDistance) {
+                    const force = (maxDistance - distance) / maxDistance;
+                    this.vx -= (dx / distance) * force * 0.3;
+                    this.vy -= (dy / distance) * force * 0.3;
+                }
+
+                this.x += this.vx * 0.95;
+                this.y += this.vy * 0.95;
+
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+
+                const dx2 = this.baseX - this.x;
+                const dy2 = this.baseY - this.y;
+                this.x += dx2 * 0.05;
+                this.y += dy2 * 0.05;
+            }
+
+            draw(ctx) {
+                ctx.fillStyle = `rgba(92, 64, 51, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            particles.length = 0;
+            ctx.font = 'bold 48px Georgia, serif';
+            ctx.fillStyle = 'transparent';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            const tempCtx = tempCanvas.getContext('2d');
+
+            tempCtx.font = 'bold 48px Georgia, serif';
+            tempCtx.fillStyle = 'black';
+            tempCtx.textAlign = 'center';
+            tempCtx.textBaseline = 'middle';
+            tempCtx.fillText(text, canvas.width / 2, canvas.height / 2);
+
+            const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+            const data = imageData.data;
+
+            for (let i = 0; i < data.length; i += 4) {
+                if (data[i + 3] > 128) {
+                    const pixelIndex = i / 4;
+                    const x = (pixelIndex % tempCanvas.width);
+                    const y = Math.floor(pixelIndex / tempCanvas.width);
+                    if (Math.random() > 0.7) {
+                        particles.push(new Particle(x, y));
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(245, 241, 237, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw(ctx);
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
+
+        createParticles();
+        animate();
+    </script>
+</body>
+</html>
