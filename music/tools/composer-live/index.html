@@ -24,6 +24,11 @@
     <section class="panel">
       <div class="mic-row">
         <button id="listen" class="btn btn-mic">🎤 Start Listening</button>
+        <div class="tempo-row">
+          <span class="tempo-label">Tempo</span>
+          <input id="tempo" type="number" min="40" max="220" value="100" step="2" aria-label="Tempo in BPM">
+          <span class="tempo-unit">BPM</span>
+        </div>
         <p id="status" class="status">Click <strong>Start Listening</strong> and allow the microphone, then hum or sing.</p>
       </div>
 
@@ -47,9 +52,47 @@
 
     <!-- Scrolling pitch contour: a live piano-roll of what you're singing -->
     <section class="panel">
-      <h2 class="panel-title">Pitch contour</h2>
+      <h2 class="panel-title">Pitch contour <span class="hint-inline">live · C2–C7</span></h2>
       <div class="contour-wrap">
-        <canvas id="contour" width="900" height="360"></canvas>
+        <canvas id="contour" width="900" height="560"></canvas>
+      </div>
+    </section>
+
+    <!-- The full-take "painting": the whole captured melody, wrapped into rows,
+         shown after you stop. Printable / saveable as PDF. -->
+    <section class="panel" id="painting-panel" hidden>
+      <div class="painting-head">
+        <div>
+          <h2 class="panel-title" style="margin:0">📜 Your melody painting</h2>
+          <p class="painting-sub" id="painting-sub">—</p>
+        </div>
+        <button id="save-painting" class="btn btn-mic">🖨 Save / Print (PDF)</button>
+      </div>
+      <!-- print-only header (hidden on screen, shown on the printed page) -->
+      <div class="print-head">
+        <h1 id="print-title">Melody Painting</h1>
+        <p id="print-meta"></p>
+      </div>
+      <div class="painting-wrap">
+        <canvas id="painting"></canvas>
+      </div>
+    </section>
+
+    <!-- The transcription: the captured melody as discrete notes on a staff.
+         Quantize is optional (cleanup, never forced). Send it to the Composer. -->
+    <section class="panel" id="transcribe-panel" hidden>
+      <div class="painting-head">
+        <div>
+          <h2 class="panel-title" style="margin:0">🎼 Transcription</h2>
+          <p class="painting-sub" id="transcribe-sub">—</p>
+        </div>
+        <label class="quant-toggle"><input type="checkbox" id="quantize-toggle" checked> Quantize to grid</label>
+      </div>
+      <div class="score-wrap" id="score"></div>
+      <div class="send-row">
+        <button id="send-composer" class="btn btn-mic">🎹 Send to Composer</button>
+        <a class="open-composer" href="../composer/index.html" target="_blank" rel="noopener">Open Composer ↗</a>
+        <span id="send-status" class="send-status"></span>
       </div>
     </section>
   </main>

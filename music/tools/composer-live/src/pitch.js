@@ -9,9 +9,10 @@
 // peak that clears 90% of the tallest peak — that's the fundamental, not a
 // multiple of it. Returns { freq, clarity } or null.
 
-// Plausible fundamental range for a child/adult voice or simple instrument.
-export const MIN_HZ = 70;    // ~C#2
-export const MAX_HZ = 1200;  // ~D6
+// Plausible fundamental range — wide enough to cover low humming up through high
+// singing/whistling without clipping melody lines. ~C2 … ~C7.
+export const MIN_HZ = 65;    // ~C2  (65.4 Hz)
+export const MAX_HZ = 2100;  // ~C7  (2093 Hz)
 
 const SILENCE_RMS = 0.01;    // below this = silence; report nothing
 const MIN_CLARITY = 0.6;     // NSDF peak below this = unvoiced/noisy; reject

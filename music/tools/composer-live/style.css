@@ -92,3 +92,45 @@ main { padding: 18px 24px 48px; max-width: 980px; }
 /* --- Contour canvas ----------------------------------------------------- */
 .contour-wrap { width: 100%; overflow: hidden; border-radius: 12px; border: 1px solid var(--line); }
 #contour { display: block; width: 100%; height: auto; background: #fcfdff; }
+.hint-inline { font-weight: 600; color: #b6bccb; font-size: 12px; margin-left: 6px; }
+
+/* --- Painting panel (full take) ----------------------------------------- */
+.painting-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
+.painting-sub { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+.painting-wrap { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--line); background: #fff; }
+#painting { display: block; width: 100%; height: auto; }
+.print-head { display: none; }   /* shown only when printing */
+
+/* --- Tempo control ------------------------------------------------------ */
+.tempo-row { display: inline-flex; align-items: center; gap: 8px; }
+.tempo-label { font-size: 13px; font-weight: 700; color: var(--muted); }
+.tempo-unit { font-size: 12px; color: var(--muted); }
+#tempo {
+  width: 72px; font: inherit; font-weight: 700; text-align: center;
+  padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; color: var(--ink);
+}
+#tempo:focus { outline: none; border-color: var(--accent-2); }
+
+/* --- Transcription panel ------------------------------------------------ */
+.quant-toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--ink); cursor: pointer; }
+.quant-toggle input { width: 17px; height: 17px; accent-color: var(--accent-2); }
+.score-wrap { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--line); background: #fff; padding: 10px 6px; }
+.score-wrap svg { display: block; }
+.send-row { display: flex; align-items: center; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
+.open-composer { font-size: 14px; font-weight: 700; color: var(--accent-2); text-decoration: none; }
+.open-composer:hover { text-decoration: underline; }
+.send-status { font-size: 13px; color: var(--good); }
+
+/* --- Print: show ONLY the painting, as a clean saveable page ------------ */
+@media print {
+  body { background: #fff; }
+  .topbar, main > .panel:not(#painting-panel) { display: none !important; }
+  #painting-panel { box-shadow: none; padding: 0; margin: 0; }
+  .painting-head, .hint-inline { display: none !important; }
+  .print-head { display: block; margin: 0 0 12px; }
+  .print-head h1 { margin: 0; font-size: 24px; font-weight: 800; }
+  .print-head p { margin: 4px 0 0; color: #555; font-size: 13px; }
+  .painting-wrap { border: none; overflow: visible; }
+  #painting { width: 100%; }
+  @page { margin: 14mm; }
+}
