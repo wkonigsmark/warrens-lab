@@ -39,8 +39,10 @@ function currentLevel() {
 }
 
 function pickCountries() {
-  const levels = LEVEL_POOLS[currentLevel()] || [1, 2];
-  const pool = ALL_COUNTRIES.filter((c) => levels.includes(c.level));
+  const sel = currentLevel();
+  const pool = sel === "wc"
+    ? ALL_COUNTRIES.filter((c) => c.wc2026)
+    : ALL_COUNTRIES.filter((c) => (LEVEL_POOLS[sel] || [1, 2]).includes(c.level));
   return shuffle(pool).slice(0, COUNT);
 }
 

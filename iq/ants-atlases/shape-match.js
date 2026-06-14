@@ -33,6 +33,7 @@
     rungProgress: 0,
     target: null,
     locked: false,
+    wcMode: false,
   };
 
   const el = {
@@ -58,7 +59,11 @@
   }
   const sample = (arr) => arr[Math.floor(Math.random() * arr.length)];
   function rung() { return LADDER[state.rungIndex]; }
-  function poolForRung(r) { return state.countries.filter((c) => r.pool.includes(c.level)); }
+  function poolForRung(r) {
+    if (state.wcMode) return state.countries.filter((c) => c.wc2026);
+    return state.countries.filter((c) => r.pool.includes(c.level));
+  }
+  function tierLabelOf(r) { return state.wcMode ? "World Cup 2026" : r.tierLabel; }
 
   function buildRound() {
     const r = rung();
@@ -151,7 +156,7 @@
     }
     const r = rung();
     el.luTitle.textContent = `Level ${r.rung}: ${r.name}!`;
-    el.luSub.textContent = `${r.tierLabel} · ${r.choices} choices`;
+    el.luSub.textContent = `${tierLabelOf(r)} · ${r.choices} choices`;
     el.overlay.classList.remove("hidden");
     renderLadder();
   }
@@ -165,7 +170,7 @@
       if (i === state.rungIndex) chip.classList.add("active");
       if (!unlocked) chip.classList.add("locked");
       chip.innerHTML = `<span class="fm-rung-num">${r.rung}</span><span class="fm-rung-name">${r.name}</span>`;
-      chip.title = unlocked ? `${r.tierLabel} · ${r.choices} choices` : "Locked — keep playing to unlock";
+      chip.title = unlocked ? `${tierLabelOf(r)} · ${r.choices} choices` : "Locked — keep playing to unlock";
       if (unlocked) {
         chip.addEventListener("click", () => {
           if (state.locked) return;
@@ -214,6 +219,20 @@
     // Pool: curated countries (soft data) that also have a drawable silhouette.
     state.countries = AACountries.allCountries().filter(
       (c) => c.landmark && c.iso_a2 && AACountries.silhouette(c.iso_a2)
+    );
+
+    // Mode switch: World Tour (levels) vs World Cup 2026 (slice).
+    const modeButtons = document.querySelectorAll(".fm-mode-btn");
+    modeButtons.forEach((btn) =>
+      btn.addEventListener("click", () => {
+        const wc = btn.dataset.mode === "wc";
+        if (wc === state.wcMode) return;
+        state.wcMode = wc;
+        modeButtons.forEach((b) => b.classList.toggle("active", b === btn));
+        state.rungProgress = 0;
+        renderLadder();
+        renderRound();
+      })
     );
 
     loadProgress();

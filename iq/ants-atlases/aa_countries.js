@@ -160,6 +160,10 @@
     group.innerHTML = "";
 
     const levelFilter = options.levelFilter;
+    // tierFilter, when provided, is a predicate (country) => bool that decides
+    // in-tier membership and overrides levelFilter. Used for non-numeric tiers
+    // like the World Cup slice.
+    const tierFilter = options.tierFilter;
 
     for (const f of state.geo.features) {
       const iso2 = (f.properties["iso-a2"] || f.properties["hc-a2"] || "").toUpperCase();
@@ -170,7 +174,10 @@
 
       const country = state.byIso2.get(iso2) || null;
       const inAtlas = !!country;
-      const inTier = inAtlas && (levelFilter == null || country.level <= levelFilter);
+      const inTier = inAtlas && (
+        tierFilter ? tierFilter(country)
+                   : (levelFilter == null || country.level <= levelFilter)
+      );
 
       const path = document.createElementNS(SVG_NS, "path");
       path.setAttribute("d", d);

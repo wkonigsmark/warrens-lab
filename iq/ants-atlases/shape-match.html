@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="shape-match.css?v=1">
+    <link rel="stylesheet" href="shape-match.css?v=2">
 </head>
 <body>
 
@@ -27,6 +27,11 @@
             </div>
         </div>
     </header>
+
+    <div id="fm-mode-switch" role="group" aria-label="Pool mode">
+        <button class="fm-mode-btn active" data-mode="level">🌍 World Tour</button>
+        <button class="fm-mode-btn" data-mode="wc">⚽ World Cup 2026</button>
+    </div>
 
     <nav id="fm-ladder" aria-label="Difficulty levels"></nav>
 
@@ -53,7 +58,7 @@
         </div>
     </div>
 
-    <script src="aa_countries.js?v=27"></script>
+    <script src="aa_countries.js?v=28"></script>
     <script src="shape-match.js?v=1"></script>
 </body>
 </html>

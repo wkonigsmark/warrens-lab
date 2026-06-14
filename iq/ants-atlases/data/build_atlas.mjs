@@ -103,11 +103,24 @@ async function main() {
   // Stable sort by ISO so output diffs are readable
   sovereign.sort((a, b) => a.cca2.localeCompare(b.cca2));
 
+  // Named slices (e.g. World Cup 2026) cut across the L1-L4 tiers. Each slice
+  // defines a boolean `flag` key and a list of ISO2s; we stamp matching countries
+  // with that flag so every quiz mode can filter to the slice.
+  const slices = soft.slices || {};
+  const sliceFlags = Object.values(slices).map(s => ({
+    flag: s.flag,
+    set: new Set(s.iso2s || [])
+  }));
+
   const countries = sovereign.map(raw => {
     const iso2 = raw.cca2;
     const s = soft.countries[iso2] || {};
     const latlng = raw.latlng || [0, 0];
     const hemi = hemisphere(latlng);
+    const sliceMembership = {};
+    for (const { flag, set } of sliceFlags) {
+      if (flag && set.has(iso2)) sliceMembership[flag] = true;
+    }
     return {
       iso_a2: raw.cca2,
       iso_a3: raw.cca3,
@@ -140,7 +153,9 @@ async function main() {
       bordering_waters: s.bordering_waters || null,
       landmark: s.landmark || null,
       famous_food: s.famous_food || null,
-      fact_card: s.fact_card || null
+      fact_card: s.fact_card || null,
+      // Slice membership flags (e.g. wc2026: true). Absent when not a member.
+      ...sliceMembership
     };
   });
 
@@ -155,6 +170,17 @@ async function main() {
     country_count_in_atlas: countries.filter(co => co.continent === id).length
   }));
 
+  // Surface slice definitions at the top level (label/note/flag), without the
+  // verbose iso2 lists — consumers filter on the per-country boolean flags.
+  const sliceMeta = Object.fromEntries(
+    Object.entries(slices).map(([id, s]) => [id, {
+      flag: s.flag,
+      label: s.label || id,
+      note: s.note || null,
+      count: countries.filter(c => c[s.flag]).length
+    }])
+  );
+
   const atlas = {
     version: 2,
     generated_at: new Date().toISOString(),
@@ -162,6 +188,7 @@ async function main() {
       countries: "https://restcountries.com/v3.1",
       soft_fields: "atlas_soft.json (hand-curated)"
     },
+    slices: sliceMeta,
     continents,
     countries
   };
@@ -171,6 +198,9 @@ async function main() {
   console.log(`  continents: ${continents.length}`);
   console.log(`  countries:  ${countries.length}`);
   console.log(`  tier breakdown:`, tierBreakdown);
+  for (const [id, m] of Object.entries(sliceMeta)) {
+    console.log(`  slice ${id} (${m.flag}): ${m.count} countries`);
+  }
 }
 
 main().catch(err => {

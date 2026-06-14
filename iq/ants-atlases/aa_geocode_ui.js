@@ -83,8 +83,9 @@
       state.dom.tierChips.addEventListener("click", e => {
         const chip = e.target.closest(".gc-tier-chip");
         if (!chip || chip.disabled) return;
-        const level = Number(chip.dataset.level);
-        if (!Number.isFinite(level) || level === state.level) return;
+        const tier = chip.dataset.level; // number string or 'wc'
+        const level = tier === "wc" ? "wc" : Number(tier);
+        if (level === state.level) return;
         changeTier(level);
       });
     }
@@ -94,7 +95,7 @@
   function syncTierChips() {
     if (!state.dom.tierChips) return;
     for (const chip of state.dom.tierChips.querySelectorAll(".gc-tier-chip")) {
-      chip.classList.toggle("active", Number(chip.dataset.level) === state.level);
+      chip.classList.toggle("active", chip.dataset.level === String(state.level));
     }
   }
 
@@ -158,7 +159,7 @@
     resetPanel();
     state.session = AAQuiz.start({
       mode: "geocode",
-      pool: { type: "level", value: state.level || 1 },
+      pool: AAQuiz.poolForTier(state.level || 1),
       hintBudget: 5,
       autoStart: false,
       hooks: {

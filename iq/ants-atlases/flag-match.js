@@ -41,6 +41,7 @@
     rungProgress: 0,      // correct-in-a-row at the current rung
     target: null,         // current correct country
     locked: false,        // true while resolving / animating a round
+    wcMode: false,        // World Cup 2026 slice instead of the level pools
   };
 
   // ---- DOM ----------------------------------------------------------------
@@ -77,8 +78,15 @@
 
   function rung() { return LADDER[state.rungIndex]; }
 
+  // In World Cup mode the universe is the 2026 roster (the rung still controls
+  // choice count + decoy strategy). Otherwise it's the rung's level pool.
   function poolForRung(r) {
+    if (state.wcMode) return state.countries.filter((c) => c.wc2026);
     return state.countries.filter((c) => r.pool.includes(c.level));
+  }
+
+  function tierLabelOf(r) {
+    return state.wcMode ? "World Cup 2026" : r.tierLabel;
   }
 
   // ---- Build the answer set for a round -----------------------------------
@@ -182,7 +190,7 @@
     }
     const r = rung();
     el.luTitle.textContent = `Level ${r.rung}: ${r.name}!`;
-    el.luSub.textContent = `${r.tierLabel} · ${r.choices} choices`;
+    el.luSub.textContent = `${tierLabelOf(r)} · ${r.choices} choices`;
     el.overlay.classList.remove("hidden");
     renderLadder();
   }
@@ -197,7 +205,7 @@
       if (i === state.rungIndex) chip.classList.add("active");
       if (!unlocked) chip.classList.add("locked");
       chip.innerHTML = `<span class="fm-rung-num">${r.rung}</span><span class="fm-rung-name">${r.name}</span>`;
-      chip.title = unlocked ? `${r.tierLabel} · ${r.choices} choices` : "Locked — keep playing to unlock";
+      chip.title = unlocked ? `${tierLabelOf(r)} · ${r.choices} choices` : "Locked — keep playing to unlock";
       if (unlocked) {
         chip.addEventListener("click", () => {
           if (state.locked) return;
@@ -249,6 +257,20 @@
       console.error("Flag Match: failed to load atlas.json", e);
       return;
     }
+
+    // Mode switch: World Tour (levels) vs World Cup 2026 (slice).
+    const modeButtons = document.querySelectorAll(".fm-mode-btn");
+    modeButtons.forEach((btn) =>
+      btn.addEventListener("click", () => {
+        const wc = btn.dataset.mode === "wc";
+        if (wc === state.wcMode) return;
+        state.wcMode = wc;
+        modeButtons.forEach((b) => b.classList.toggle("active", b === btn));
+        state.rungProgress = 0;
+        renderLadder();
+        renderRound();
+      })
+    );
 
     loadProgress();
     state.rungIndex = state.maxRungUnlocked; // resume at the furthest unlocked rung

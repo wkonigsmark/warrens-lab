@@ -9,6 +9,22 @@
       "2": "Top 40 — next 20 most-recognized. L2 Geocode pool (combines with L1).",
       "3": "Top 80 — broader regional coverage. L3 pool.",
       "4": "All ~195 countries. L4 World Tour."
+    },
+    "slices": "Named country sets that cut across the L1-L4 tiers. build_atlas.mjs stamps each listed country with a boolean flag (e.g. wc2026: true) so every quiz mode can filter to the slice."
+  },
+
+  "slices": {
+    "world_cup_2026": {
+      "flag": "wc2026",
+      "label": "World Cup 2026",
+      "note": "The 47 nations of the 2026 FIFA World Cup that exist as distinct entries in our atlas. Scotland is omitted (part of the UK; England maps to GB). Curaçao (CW) is included as a backfilled non-sovereign entry.",
+      "iso2s": [
+        "AR", "ES", "FR", "GB", "PT", "BR", "NL", "BE", "DE", "MA",
+        "HR", "CO", "MX", "UY", "SN", "US", "JP", "CH", "EC", "AT",
+        "NO", "KR", "TR", "DZ", "EG", "CA", "CI", "IR", "PY", "AU",
+        "SE", "CZ", "TN", "PA", "GH", "ZA", "CD", "QA", "IQ", "SA",
+        "NZ", "UZ", "CV", "JO", "BA", "HT", "CW"
+      ]
     }
   },
 
@@ -1667,6 +1683,45 @@
       "fact_card": "Founded in 1847 by formerly enslaved Americans returning to Africa, Liberia was the first African republic — its flag echoes the Stars and Stripes of the United States.",
       "island": false,
       "bordering_waters": ["Atlantic Ocean"]
+    },
+
+    "CV": {
+      "level": 4,
+      "flag_colors": ["blue", "white", "red", "yellow"],
+      "flag_motifs": ["stars", "circle", "stripes"],
+      "climate_band": "arid",
+      "terrain_headline": "volcanic islands",
+      "landmark": "Pico do Fogo",
+      "famous_food": "cachupa",
+      "fact_card": "An archipelago of ten volcanic islands in the Atlantic off West Africa, famous for soulful morna music and its towering active volcano, Pico do Fogo.",
+      "island": true,
+      "bordering_waters": ["Atlantic Ocean"]
+    },
+
+    "BA": {
+      "level": 4,
+      "flag_colors": ["blue", "yellow", "white"],
+      "flag_motifs": ["stars"],
+      "climate_band": "temperate",
+      "terrain_headline": "mountains",
+      "landmark": "Stari Most (Mostar Bridge)",
+      "famous_food": "ćevapi",
+      "fact_card": "A mountainous Balkan country famous for the Stari Most — a graceful 16th-century Ottoman stone bridge in Mostar — where divers leap into the river below.",
+      "island": false,
+      "bordering_waters": ["Adriatic Sea"]
+    },
+
+    "CW": {
+      "level": 4,
+      "flag_colors": ["blue", "yellow", "white"],
+      "flag_motifs": ["stars", "stripes"],
+      "climate_band": "arid",
+      "terrain_headline": "coral island",
+      "landmark": "Willemstad waterfront",
+      "famous_food": "keshi yena",
+      "fact_card": "A Dutch Caribbean island known for the brightly painted colonial waterfront of Willemstad — a World Heritage site — and the vivid blue Curaçao liqueur made there.",
+      "island": true,
+      "bordering_waters": ["Caribbean Sea"]
     }
   }
 }

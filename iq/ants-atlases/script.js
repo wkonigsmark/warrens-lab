@@ -335,17 +335,37 @@ let currentFocus = 'all';
 // Persisted to localStorage so the user's choice survives reloads.
 const LEVEL_STORAGE_KEY = 'ants-atlases.selectedLevel';
 const MAX_AVAILABLE_LEVEL = 4; // bump as we ship new tiers
+const SPECIAL_TIERS = ['wc']; // non-numeric named slices (World Cup, …)
+
+// A tier is valid if it's a level 1..MAX or a recognized special slice.
+function isValidTier(t) {
+    if (SPECIAL_TIERS.includes(t)) return true;
+    const n = Number(t);
+    return Number.isFinite(n) && n >= 1 && n <= MAX_AVAILABLE_LEVEL;
+}
+
 let selectedLevel = (() => {
-    const stored = parseInt(localStorage.getItem(LEVEL_STORAGE_KEY), 10);
-    return Number.isFinite(stored) && stored >= 1 && stored <= MAX_AVAILABLE_LEVEL ? stored : 1;
+    const stored = localStorage.getItem(LEVEL_STORAGE_KEY);
+    if (SPECIAL_TIERS.includes(stored)) return stored;
+    const n = parseInt(stored, 10);
+    return Number.isFinite(n) && n >= 1 && n <= MAX_AVAILABLE_LEVEL ? n : 1;
 })();
 
+// True when `country` belongs to the currently selected tier (level threshold
+// or a named slice like the World Cup).
+function inSelectedTier(country) {
+    if (!country) return false;
+    if (selectedLevel === 'wc') return !!country.wc2026;
+    return (country.level || 4) <= selectedLevel;
+}
+window.inSelectedTier = inSelectedTier;
+
 function setSelectedLevel(level) {
-    if (level < 1 || level > 4) return;
-    selectedLevel = level;
-    localStorage.setItem(LEVEL_STORAGE_KEY, String(level));
+    if (!isValidTier(level)) return;
+    selectedLevel = SPECIAL_TIERS.includes(level) ? level : Number(level);
+    localStorage.setItem(LEVEL_STORAGE_KEY, String(selectedLevel));
     document.querySelectorAll('.tier-chip').forEach(c => {
-        c.classList.toggle('active', Number(c.dataset.level) === level);
+        c.classList.toggle('active', c.dataset.level === String(selectedLevel));
     });
     // Re-render the country layer so highlighting reflects the new tier.
     // We deliberately only re-render the country paths (not the whole map) so the
@@ -392,7 +412,7 @@ async function renderCountries(regionGroup, labelGroup) {
     }
 
     AACountries.renderInto(regionGroup, {
-        levelFilter: selectedLevel,
+        tierFilter: inSelectedTier,
         onHover: (iso2, country) => {
             if (anyQuizActive()) return;
             const name = country?.name || iso2;
@@ -416,7 +436,7 @@ async function renderCountries(regionGroup, labelGroup) {
 
     // ISO labels — only for countries inside the active tier
     for (const country of AACountries.allCountries()) {
-        if (country.level > selectedLevel) continue;
+        if (!inSelectedTier(country)) continue;
         const feature = AACountries.getFeature(country.iso_a2);
         if (!feature) continue;
         const [cx, cy] = AACountries.centroidOfFeature(feature);
@@ -610,8 +630,7 @@ function setupEventListeners() {
         tierBar.addEventListener('click', e => {
             const chip = e.target.closest('.tier-chip');
             if (!chip || chip.disabled) return;
-            const level = Number(chip.dataset.level);
-            setSelectedLevel(level);
+            setSelectedLevel(chip.dataset.level); // may be a number string or 'wc'
         });
         // Reflect persisted level on load
         setSelectedLevel(selectedLevel);

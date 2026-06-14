@@ -87,7 +87,7 @@
 
     state.session = AAQuiz.start({
       mode: "mission",
-      pool: { type: "level", value: level },
+      pool: AAQuiz.poolForTier(level),
       rounds: 10,
       autoStart: false,  // we'll kick off the first round manually so state.session is assigned first
       hooks: {

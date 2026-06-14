@@ -244,6 +244,11 @@
       const maxLevel = Number(spec.value);
       return all.filter(c => (c.level || 4) <= maxLevel);
     }
+    // Named slice: { type: 'slice', value: 'wc2026' } returns countries carrying
+    // that boolean flag (e.g. the 2026 World Cup roster). Stamped by build_atlas.
+    if (spec.type === "slice") {
+      return all.filter(c => c[spec.value]);
+    }
     if (spec.type === "predicate") return all.filter(spec.predicate);
     return all.slice();
   }
@@ -423,8 +428,15 @@
     return session;
   }
 
+  // Map a tier token (1-4, or a named slice like 'wc') to a pool spec.
+  function poolForTier(tier) {
+    if (tier === "wc") return { type: "slice", value: "wc2026" };
+    return { type: "level", value: Number(tier) || 1 };
+  }
+
   global.AAQuiz = {
     start,
+    poolForTier,
     haversine,
     bearing,
     compass8,

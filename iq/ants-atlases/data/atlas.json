@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generated_at": "2026-05-29T16:53:31.192Z",
+  "generated_at": "2026-06-14T17:51:06.142Z",
   "sources": {
     "countries": "https://restcountries.com/v3.1",
     "soft_fields": "atlas_soft.json (hand-curated)"
@@ -508,7 +508,8 @@
       ],
       "landmark": "Iguazu Falls",
       "famous_food": "asado",
-      "fact_card": "Stretches from subtropical jungle in the north to the icy edge of Antarctica in the south."
+      "fact_card": "Stretches from subtropical jungle in the north to the icy edge of Antarctica in the south.",
+      "wc2026": true
     },
     {
       "iso_a2": "AT",
@@ -560,7 +561,8 @@
       "bordering_waters": [],
       "landmark": "Schönbrunn Palace",
       "famous_food": "wiener schnitzel",
-      "fact_card": "A landlocked country in the heart of Europe, famous for its Alpine ski slopes, classical music composers like Mozart and Beethoven, and the grand city of Vienna."
+      "fact_card": "A landlocked country in the heart of Europe, famous for its Alpine ski slopes, classical music composers like Mozart and Beethoven, and the grand city of Vienna.",
+      "wc2026": true
     },
     {
       "iso_a2": "AU",
@@ -610,7 +612,8 @@
       ],
       "landmark": "Sydney Opera House",
       "famous_food": "vegemite",
-      "fact_card": "Both a country and a continent — home to kangaroos, koalas, and the Great Barrier Reef."
+      "fact_card": "Both a country and a continent — home to kangaroos, koalas, and the Great Barrier Reef.",
+      "wc2026": true
     },
     {
       "iso_a2": "AZ",
@@ -684,7 +687,7 @@
       "currency": "BAM",
       "currency_name": "Bosnia and Herzegovina convertible mark",
       "landlocked": false,
-      "island": null,
+      "island": false,
       "borders": [
         "HRV",
         "MNE",
@@ -702,14 +705,23 @@
       "area_bucket": "tiny",
       "flag_emoji": "🇧🇦",
       "flag_svg": "https://flagcdn.com/ba.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "blue",
+        "yellow",
+        "white"
+      ],
+      "flag_motifs": [
+        "stars"
+      ],
+      "climate_band": "temperate",
+      "terrain_headline": "mountains",
+      "bordering_waters": [
+        "Adriatic Sea"
+      ],
+      "landmark": "Stari Most (Mostar Bridge)",
+      "famous_food": "ćevapi",
+      "fact_card": "A mountainous Balkan country famous for the Stari Most — a graceful 16th-century Ottoman stone bridge in Mostar — where divers leap into the river below.",
+      "wc2026": true
     },
     {
       "iso_a2": "BB",
@@ -848,7 +860,8 @@
       ],
       "landmark": "Grand Place in Brussels",
       "famous_food": "waffles",
-      "fact_card": "Headquarters of the European Union — famous for chocolate, waffles, beer, and comic-book heroes like Tintin."
+      "fact_card": "Headquarters of the European Union — famous for chocolate, waffles, beer, and comic-book heroes like Tintin.",
+      "wc2026": true
     },
     {
       "iso_a2": "BF",
@@ -1229,7 +1242,8 @@
       ],
       "landmark": "Christ the Redeemer",
       "famous_food": "feijoada",
-      "fact_card": "Holds most of the Amazon rainforest and is the only country in South America that speaks Portuguese."
+      "fact_card": "Holds most of the Amazon rainforest and is the only country in South America that speaks Portuguese.",
+      "wc2026": true
     },
     {
       "iso_a2": "BS",
@@ -1502,7 +1516,8 @@
       ],
       "landmark": "Niagara Falls",
       "famous_food": "poutine",
-      "fact_card": "The world's second-largest country by area, with more lakes than the rest of the world combined."
+      "fact_card": "The world's second-largest country by area, with more lakes than the rest of the world combined.",
+      "wc2026": true
     },
     {
       "iso_a2": "CD",
@@ -1563,7 +1578,8 @@
       ],
       "landmark": "Congo River",
       "famous_food": "fufu",
-      "fact_card": "Home to the world's second-largest rainforest and the mighty Congo River — the deepest river on Earth — making it one of the most biodiverse places on the planet."
+      "fact_card": "Home to the world's second-largest rainforest and the mighty Congo River — the deepest river on Earth — making it one of the most biodiverse places on the planet.",
+      "wc2026": true
     },
     {
       "iso_a2": "CF",
@@ -1716,7 +1732,8 @@
       "bordering_waters": [],
       "landmark": "Matterhorn",
       "famous_food": "cheese fondue",
-      "fact_card": "A landlocked alpine nation famous for neutrality, chocolate, and four official languages."
+      "fact_card": "A landlocked alpine nation famous for neutrality, chocolate, and four official languages.",
+      "wc2026": true
     },
     {
       "iso_a2": "CI",
@@ -1769,7 +1786,8 @@
       ],
       "landmark": "Basilica of Our Lady of Peace",
       "famous_food": "attiéké",
-      "fact_card": "The world's largest producer of cocoa beans, home of the planet's biggest church by area."
+      "fact_card": "The world's largest producer of cocoa beans, home of the planet's biggest church by area.",
+      "wc2026": true
     },
     {
       "iso_a2": "CL",
@@ -1994,7 +2012,8 @@
       ],
       "landmark": "Cartagena Old City",
       "famous_food": "arepas",
-      "fact_card": "The only South American country with coastlines on both the Pacific Ocean and the Caribbean Sea, and home to the lush Amazon rainforest in its south."
+      "fact_card": "The only South American country with coastlines on both the Pacific Ocean and the Caribbean Sea, and home to the lush Amazon rainforest in its south.",
+      "wc2026": true
     },
     {
       "iso_a2": "CR",
@@ -2110,7 +2129,7 @@
       "currency": "CVE",
       "currency_name": "Cape Verdean escudo",
       "landlocked": false,
-      "island": null,
+      "island": true,
       "borders": [],
       "area_km2": 4033,
       "population": 491233,
@@ -2124,14 +2143,76 @@
       "area_bucket": "tiny",
       "flag_emoji": "🇨🇻",
       "flag_svg": "https://flagcdn.com/cv.svg",
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_colors": [
+        "blue",
+        "white",
+        "red",
+        "yellow"
+      ],
+      "flag_motifs": [
+        "stars",
+        "circle",
+        "stripes"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "volcanic islands",
+      "bordering_waters": [
+        "Atlantic Ocean"
+      ],
+      "landmark": "Pico do Fogo",
+      "famous_food": "cachupa",
+      "fact_card": "An archipelago of ten volcanic islands in the Atlantic off West Africa, famous for soulful morna music and its towering active volcano, Pico do Fogo.",
+      "wc2026": true
+    },
+    {
+      "iso_a2": "CW",
+      "iso_a3": "CUW",
+      "name": "Curaçao",
+      "official_name": "Country of Curaçao",
+      "continent": "north_america",
+      "subregion": "Caribbean",
+      "capital": "Willemstad",
+      "languages": [
+        "Dutch",
+        "Papiamento",
+        "English"
+      ],
+      "currency": "ANG",
+      "currency_name": "Netherlands Antillean guilder",
+      "landlocked": false,
+      "borders": [],
+      "area_km2": 444,
+      "population": 155014,
+      "latlng": [
+        12.116667,
+        -68.933333
+      ],
+      "hemisphere_ns": "N",
+      "hemisphere_ew": "W",
+      "population_bucket": "tiny",
+      "area_bucket": "tiny",
+      "flag_emoji": "🇨🇼",
+      "flag_svg": "https://flagcdn.com/cw.svg",
+      "level": 4,
+      "island": true,
+      "flag_colors": [
+        "blue",
+        "yellow",
+        "white"
+      ],
+      "flag_motifs": [
+        "stars",
+        "stripes"
+      ],
+      "climate_band": "arid",
+      "terrain_headline": "coral island",
+      "bordering_waters": [
+        "Caribbean Sea"
+      ],
+      "landmark": "Willemstad waterfront",
+      "famous_food": "keshi yena",
+      "fact_card": "A Dutch Caribbean island known for the brightly painted colonial waterfront of Willemstad — a World Heritage site — and the vivid blue Curaçao liqueur made there.",
+      "wc2026": true
     },
     {
       "iso_a2": "CY",
@@ -2220,7 +2301,8 @@
       "bordering_waters": [],
       "landmark": "Prague Castle",
       "famous_food": "svíčková",
-      "fact_card": "A central European country famous for fairy-tale castles and the world's highest beer consumption per person."
+      "fact_card": "A central European country famous for fairy-tale castles and the world's highest beer consumption per person.",
+      "wc2026": true
     },
     {
       "iso_a2": "DE",
@@ -2277,7 +2359,8 @@
       ],
       "landmark": "Brandenburg Gate",
       "famous_food": "bratwurst",
-      "fact_card": "Once split in two by a wall through Berlin; reunified in 1990."
+      "fact_card": "Once split in two by a wall through Berlin; reunified in 1990.",
+      "wc2026": true
     },
     {
       "iso_a2": "DJ",
@@ -2511,7 +2594,8 @@
       ],
       "landmark": "Casbah of Algiers",
       "famous_food": "couscous",
-      "fact_card": "Africa's largest country by area, with 80% of its land covered by the Sahara Desert."
+      "fact_card": "Africa's largest country by area, with 80% of its land covered by the Sahara Desert.",
+      "wc2026": true
     },
     {
       "iso_a2": "EC",
@@ -2561,7 +2645,8 @@
       ],
       "landmark": "Galápagos Islands",
       "famous_food": "ceviche",
-      "fact_card": "Named for the equator that runs through it; gateway to the unique animals of the Galápagos Islands."
+      "fact_card": "Named for the equator that runs through it; gateway to the unique animals of the Galápagos Islands.",
+      "wc2026": true
     },
     {
       "iso_a2": "EE",
@@ -2655,7 +2740,8 @@
       ],
       "landmark": "Pyramids of Giza",
       "famous_food": "koshari",
-      "fact_card": "Built one of the world's oldest civilizations along the Nile, the longest river on Earth."
+      "fact_card": "Built one of the world's oldest civilizations along the Nile, the longest river on Earth.",
+      "wc2026": true
     },
     {
       "iso_a2": "ER",
@@ -2755,7 +2841,8 @@
       ],
       "landmark": "Sagrada Família",
       "famous_food": "paella",
-      "fact_card": "Sits on the Iberian Peninsula and once ruled an empire that spanned the Americas."
+      "fact_card": "Sits on the Iberian Peninsula and once ruled an empire that spanned the Americas.",
+      "wc2026": true
     },
     {
       "iso_a2": "ET",
@@ -3004,7 +3091,8 @@
       ],
       "landmark": "Eiffel Tower",
       "famous_food": "baguette",
-      "fact_card": "The world's most-visited country, with mountains, coastlines, and overseas territories on five continents."
+      "fact_card": "The world's most-visited country, with mountains, coastlines, and overseas territories on five continents.",
+      "wc2026": true
     },
     {
       "iso_a2": "GA",
@@ -3096,7 +3184,8 @@
       ],
       "landmark": "Big Ben",
       "famous_food": "fish and chips",
-      "fact_card": "An island nation made of four countries: England, Scotland, Wales, and Northern Ireland."
+      "fact_card": "An island nation made of four countries: England, Scotland, Wales, and Northern Ireland.",
+      "wc2026": true
     },
     {
       "iso_a2": "GD",
@@ -3237,7 +3326,8 @@
       ],
       "landmark": "Cape Coast Castle",
       "famous_food": "jollof rice",
-      "fact_card": "The first sub-Saharan African country to win independence; producer of some of the world's best cocoa."
+      "fact_card": "The first sub-Saharan African country to win independence; producer of some of the world's best cocoa.",
+      "wc2026": true
     },
     {
       "iso_a2": "GM",
@@ -3667,7 +3757,8 @@
       ],
       "landmark": "Dubrovnik Old Town",
       "famous_food": "peka",
-      "fact_card": "Famous for its Adriatic coast of more than 1,000 islands and the medieval walled city of Dubrovnik."
+      "fact_card": "Famous for its Adriatic coast of more than 1,000 islands and the medieval walled city of Dubrovnik.",
+      "wc2026": true
     },
     {
       "iso_a2": "HT",
@@ -3717,7 +3808,8 @@
       ],
       "landmark": "Citadelle Laferrière",
       "famous_food": "griot",
-      "fact_card": "The world's first nation founded by a successful slave revolution, sharing the island of Hispaniola with the Dominican Republic."
+      "fact_card": "The world's first nation founded by a successful slave revolution, sharing the island of Hispaniola with the Dominican Republic.",
+      "wc2026": true
     },
     {
       "iso_a2": "HU",
@@ -4041,7 +4133,8 @@
       ],
       "landmark": "Ziggurat of Ur",
       "famous_food": "masgouf",
-      "fact_card": "Birthplace of civilization in Mesopotamia, the 'land between two rivers' — the Tigris and the Euphrates."
+      "fact_card": "Birthplace of civilization in Mesopotamia, the 'land between two rivers' — the Tigris and the Euphrates.",
+      "wc2026": true
     },
     {
       "iso_a2": "IR",
@@ -4098,7 +4191,8 @@
       ],
       "landmark": "Persepolis",
       "famous_food": "kebab",
-      "fact_card": "Heir to the ancient Persian Empire, with deserts, snow-capped mountains, and the world's best saffron."
+      "fact_card": "Heir to the ancient Persian Empire, with deserts, snow-capped mountains, and the world's best saffron.",
+      "wc2026": true
     },
     {
       "iso_a2": "IS",
@@ -4303,7 +4397,8 @@
       ],
       "landmark": "Petra",
       "famous_food": "mansaf",
-      "fact_card": "Home of Petra, the rose-red city carved into cliffs by the ancient Nabataeans."
+      "fact_card": "Home of Petra, the rose-red city carved into cliffs by the ancient Nabataeans.",
+      "wc2026": true
     },
     {
       "iso_a2": "JP",
@@ -4350,7 +4445,8 @@
       ],
       "landmark": "Mount Fuji",
       "famous_food": "sushi",
-      "fact_card": "A chain of more than 14,000 islands; the sun on its flag represents Japan as 'land of the rising sun.'"
+      "fact_card": "A chain of more than 14,000 islands; the sun on its flag represents Japan as 'land of the rising sun.'",
+      "wc2026": true
     },
     {
       "iso_a2": "KE",
@@ -4721,7 +4817,8 @@
       ],
       "landmark": "Gyeongbokgung Palace",
       "famous_food": "kimchi",
-      "fact_card": "Famous worldwide for K-pop and K-dramas; shares a tense border with North Korea."
+      "fact_card": "Famous worldwide for K-pop and K-dramas; shares a tense border with North Korea.",
+      "wc2026": true
     },
     {
       "iso_a2": "KW",
@@ -5390,7 +5487,8 @@
       ],
       "landmark": "Marrakech Medina",
       "famous_food": "tagine",
-      "fact_card": "Where the Atlas Mountains meet the Sahara and the Atlantic meets the Mediterranean."
+      "fact_card": "Where the Atlas Mountains meet the Sahara and the Atlantic meets the Mediterranean.",
+      "wc2026": true
     },
     {
       "iso_a2": "MC",
@@ -6068,7 +6166,8 @@
       ],
       "landmark": "Chichen Itza",
       "famous_food": "tacos",
-      "fact_card": "Home of the ancient Maya and Aztec civilizations and the birthplace of chocolate."
+      "fact_card": "Home of the ancient Maya and Aztec civilizations and the birthplace of chocolate.",
+      "wc2026": true
     },
     {
       "iso_a2": "MY",
@@ -6435,7 +6534,8 @@
       ],
       "landmark": "Anne Frank House",
       "famous_food": "stroopwafel",
-      "fact_card": "About a third of the country lies below sea level, protected by an enormous system of dikes."
+      "fact_card": "About a third of the country lies below sea level, protected by an enormous system of dikes.",
+      "wc2026": true
     },
     {
       "iso_a2": "NO",
@@ -6489,7 +6589,8 @@
       ],
       "landmark": "Geirangerfjord",
       "famous_food": "salmon",
-      "fact_card": "Carved by glaciers, Norway's coast is a maze of fjords and one of the world's longest coastlines."
+      "fact_card": "Carved by glaciers, Norway's coast is a maze of fjords and one of the world's longest coastlines.",
+      "wc2026": true
     },
     {
       "iso_a2": "NP",
@@ -6626,7 +6727,8 @@
       ],
       "landmark": "Milford Sound",
       "famous_food": "pavlova",
-      "fact_card": "Two main islands shaped by volcanoes and glaciers — home of the kiwi bird and the Māori people."
+      "fact_card": "Two main islands shaped by volcanoes and glaciers — home of the kiwi bird and the Māori people.",
+      "wc2026": true
     },
     {
       "iso_a2": "OM",
@@ -6729,7 +6831,8 @@
       ],
       "landmark": "Panama Canal",
       "famous_food": "sancocho",
-      "fact_card": "Home of the Panama Canal — a 51-mile shortcut between the Atlantic and Pacific Oceans."
+      "fact_card": "Home of the Panama Canal — a 51-mile shortcut between the Atlantic and Pacific Oceans.",
+      "wc2026": true
     },
     {
       "iso_a2": "PE",
@@ -7039,7 +7142,8 @@
       ],
       "landmark": "Belém Tower",
       "famous_food": "pastel de nata",
-      "fact_card": "From this small country, explorers like Vasco da Gama opened up sea routes around the world."
+      "fact_card": "From this small country, explorers like Vasco da Gama opened up sea routes around the world.",
+      "wc2026": true
     },
     {
       "iso_a2": "PW",
@@ -7128,7 +7232,8 @@
       "bordering_waters": [],
       "landmark": "Jesuit Missions of La Santísima Trinidad",
       "famous_food": "chipa",
-      "fact_card": "A landlocked South American country where both Spanish and Guaraní (an indigenous language) are spoken by nearly everyone."
+      "fact_card": "A landlocked South American country where both Spanish and Guaraní (an indigenous language) are spoken by nearly everyone.",
+      "wc2026": true
     },
     {
       "iso_a2": "QA",
@@ -7175,7 +7280,8 @@
       ],
       "landmark": "Museum of Islamic Art",
       "famous_food": "machbous",
-      "fact_card": "A tiny desert peninsula that hosted the 2022 FIFA World Cup, sitting on one of the world's largest natural gas reserves."
+      "fact_card": "A tiny desert peninsula that hosted the 2022 FIFA World Cup, sitting on one of the world's largest natural gas reserves.",
+      "wc2026": true
     },
     {
       "iso_a2": "RO",
@@ -7453,7 +7559,8 @@
       ],
       "landmark": "Kaaba in Mecca",
       "famous_food": "kabsa",
-      "fact_card": "Holds Islam's two holiest cities, Mecca and Medina, and vast deserts of sand and oil."
+      "fact_card": "Holds Islam's two holiest cities, Mecca and Medina, and vast deserts of sand and oil.",
+      "wc2026": true
     },
     {
       "iso_a2": "SB",
@@ -7647,7 +7754,8 @@
       ],
       "landmark": "Stockholm City Hall",
       "famous_food": "meatballs",
-      "fact_card": "One of the most forested countries in Europe, with a coastline scattered with 30,000 islands."
+      "fact_card": "One of the most forested countries in Europe, with a coastline scattered with 30,000 islands.",
+      "wc2026": true
     },
     {
       "iso_a2": "SG",
@@ -7925,7 +8033,8 @@
       ],
       "landmark": "Gorée Island",
       "famous_food": "thieboudienne",
-      "fact_card": "Westernmost country in mainland Africa, famous for music, wrestling, and the welcoming spirit of 'teranga.'"
+      "fact_card": "Westernmost country in mainland Africa, famous for music, wrestling, and the welcoming spirit of 'teranga.'",
+      "wc2026": true
     },
     {
       "iso_a2": "SO",
@@ -8571,7 +8680,8 @@
       ],
       "landmark": "Carthage ruins",
       "famous_food": "brik",
-      "fact_card": "Africa's northernmost country, where ancient Carthage once challenged the Roman Empire."
+      "fact_card": "Africa's northernmost country, where ancient Carthage once challenged the Roman Empire.",
+      "wc2026": true
     },
     {
       "iso_a2": "TO",
@@ -8667,7 +8777,8 @@
       ],
       "landmark": "Hagia Sophia",
       "famous_food": "kebab",
-      "fact_card": "Bridges Europe and Asia — Istanbul is the only major city sitting on two continents."
+      "fact_card": "Bridges Europe and Asia — Istanbul is the only major city sitting on two continents.",
+      "wc2026": true
     },
     {
       "iso_a2": "TT",
@@ -9008,7 +9119,8 @@
       ],
       "landmark": "Grand Canyon",
       "famous_food": "hamburger",
-      "fact_card": "Spans four time zones in the mainland and includes the world's first national park, Yellowstone."
+      "fact_card": "Spans four time zones in the mainland and includes the world's first national park, Yellowstone.",
+      "wc2026": true
     },
     {
       "iso_a2": "UY",
@@ -9059,7 +9171,8 @@
       ],
       "landmark": "Punta del Este",
       "famous_food": "chivito",
-      "fact_card": "A small South American country with vast cattle ranches and the most World Cup soccer trophies per person."
+      "fact_card": "A small South American country with vast cattle ranches and the most World Cup soccer trophies per person.",
+      "wc2026": true
     },
     {
       "iso_a2": "UZ",
@@ -9114,7 +9227,8 @@
       ],
       "landmark": "Registan, Samarkand",
       "famous_food": "plov",
-      "fact_card": "Home to the ancient Silk Road cities of Samarkand and Bukhara — once the most dazzling trading stops in the medieval world — now gleaming with turquoise-tiled mosques."
+      "fact_card": "Home to the ancient Silk Road cities of Samarkand and Bukhara — once the most dazzling trading stops in the medieval world — now gleaming with turquoise-tiled mosques.",
+      "wc2026": true
     },
     {
       "iso_a2": "VA",
@@ -9546,7 +9660,8 @@
       ],
       "landmark": "Table Mountain",
       "famous_food": "bobotie",
-      "fact_card": "Has three capital cities and is home to the world's deepest gold mines."
+      "fact_card": "Has three capital cities and is home to the world's deepest gold mines.",
+      "wc2026": true
     },
     {
       "iso_a2": "ZM",
@@ -9670,5 +9785,13 @@
       "famous_food": "sadza",
       "fact_card": "Home to Victoria Falls — one of the world's largest waterfalls — and the medieval stone ruins of Great Zimbabwe."
     }
-  ]
+  ],
+  "slices": {
+    "world_cup_2026": {
+      "flag": "wc2026",
+      "label": "World Cup 2026",
+      "note": "The 47 nations of the 2026 FIFA World Cup that exist as distinct entries in our atlas. Scotland is omitted (part of the UK; England maps to GB). Curaçao (CW) is included as a backfilled non-sovereign entry.",
+      "count": 47
+    }
+  }
 }

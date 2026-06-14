@@ -327,6 +327,34 @@ body.geocode-active #tier-picker { display: none; }
     cursor: not-allowed;
 }
 
+/* World Cup slice chip — distinct emerald accent + a divider from the L1-L4 run */
+.tier-chip-special {
+    margin-left: 10px;
+    position: relative;
+}
+.tier-chip-special::before {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: 18%;
+    height: 64%;
+    width: 1px;
+    background: var(--glass-border);
+}
+.tier-chip-special:hover:not(:disabled) {
+    background: rgba(16, 185, 129, 0.14);
+    border-color: var(--accent-emerald);
+}
+.tier-chip-special.active {
+    background: var(--accent-emerald);
+    border-color: var(--accent-emerald);
+}
+.gc-tier-chip-special.active {
+    background: var(--accent-emerald);
+    border-color: var(--accent-emerald);
+    color: var(--bg-dark);
+}
+
 /* Region focus chips — only in Countries view, hidden during a quiz */
 #region-focus {
     display: none;
