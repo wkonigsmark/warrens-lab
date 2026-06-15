@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>World Cup Quiz · Study Sheets</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07130f;
+      --ink: #f7f4eb;
+      --muted: rgba(247, 244, 235, 0.68);
+      --line: rgba(247, 244, 235, 0.16);
+      --panel: rgba(255, 255, 255, 0.06);
+      --panel-strong: rgba(255, 255, 255, 0.1);
+      --gold: #f4c95d;
+      --green: #24b47e;
+      --blue: #4aa3ff;
+      --red: #ff5d5d;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--bg); }
+    body {
+      min-height: 100vh; margin: 0; overflow-x: hidden;
+      background:
+        radial-gradient(circle at 22% 12%, rgba(36, 180, 126, 0.22), transparent 32%),
+        radial-gradient(circle at 78% 22%, rgba(74, 163, 255, 0.17), transparent 30%),
+        linear-gradient(140deg, #06100d 0%, #0d1d18 48%, #08100f 100%);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .shell { position: relative; z-index: 1; width: min(100%, 920px); margin: 0 auto; padding: 18px 16px 60px; }
+
+    .nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 22px; }
+    .nav a {
+      color: var(--muted); text-decoration: none; font-size: 0.8rem; font-weight: 700;
+      padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; transition: all 0.15s ease;
+    }
+    .nav a:hover { color: var(--ink); border-color: var(--gold); }
+    .nav a.home-link { color: var(--gold); border-color: rgba(244, 201, 93, 0.4); }
+
+    .masthead { text-align: center; margin-bottom: 22px; }
+    .eyebrow { text-transform: uppercase; letter-spacing: 0.22em; font-size: 0.72rem; font-weight: 800; color: var(--gold); }
+    .masthead h1 { font-size: clamp(1.8rem, 6vw, 2.6rem); line-height: 1.04; margin: 8px 0 6px; font-weight: 950; letter-spacing: -0.02em; }
+    .masthead p { color: var(--muted); margin: 0; font-size: 0.95rem; }
+
+    /* Jump bar */
+    .jumpbar {
+      position: sticky; top: 0; z-index: 5;
+      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+      padding: 10px 0; margin-bottom: 8px;
+      background: linear-gradient(to bottom, rgba(7, 19, 15, 0.95), rgba(7, 19, 15, 0.75));
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--line);
+    }
+    .jumpbar a, .jumpbar button {
+      font-size: 0.82rem; font-weight: 800; color: var(--ink); text-decoration: none;
+      padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line);
+      background: var(--panel); cursor: pointer;
+    }
+    .jumpbar a:hover, .jumpbar button:hover { border-color: var(--gold); }
+    .jumpbar .print-btn { color: var(--gold); }
+
+    section.sheet { margin-top: 30px; }
+    .sheet-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .sheet-head h2 { font-size: 1.5rem; font-weight: 950; margin: 0; }
+    .sheet-head .hint { color: var(--muted); font-size: 0.85rem; }
+
+    /* Title leaderboard */
+    .titles-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .title-chip {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+      padding: 6px 12px 6px 6px; font-weight: 800; font-size: 0.9rem;
+    }
+    .title-chip img { width: 26px; aspect-ratio: 3/2; object-fit: cover; border-radius: 3px; border: 1px solid var(--line); }
+    .title-chip .stars { color: var(--gold); letter-spacing: 1px; }
+
+    /* Groups */
+    .groups-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    @media (max-width: 760px) { .groups-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .groups-grid { grid-template-columns: 1fr; } }
+    .group-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 12px 14px; }
+    .group-card h3 { margin: 0 0 10px; font-size: 1rem; color: var(--gold); letter-spacing: 0.04em; }
+    .team-row { display: flex; align-items: center; gap: 9px; padding: 5px 0; border-top: 1px solid rgba(247,244,235,0.07); }
+    .team-row:first-of-type { border-top: none; }
+    .team-row img { width: 30px; aspect-ratio: 3/2; object-fit: cover; border-radius: 3px; border: 1px solid var(--line); flex: 0 0 auto; }
+    .team-row .tname { font-weight: 700; font-size: 0.92rem; }
+    .team-row .conf { margin-left: auto; font-size: 0.66rem; color: var(--muted); font-weight: 700; white-space: nowrap; }
+
+    /* Flags gallery */
+    .flags-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+    .flag-cell { text-align: center; }
+    .flag-cell img { width: 100%; aspect-ratio: 3/2; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); box-shadow: 0 6px 16px rgba(0,0,0,0.25); }
+    .flag-cell .fname { font-size: 0.82rem; font-weight: 700; margin-top: 6px; line-height: 1.2; }
+    .flag-cell .fcode { font-size: 0.66rem; color: var(--muted); font-weight: 800; letter-spacing: 0.08em; }
+
+    /* Winners table */
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    thead th {
+      text-align: left; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--muted); font-weight: 800; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap;
+    }
+    tbody td { padding: 9px 12px; border-bottom: 1px solid rgba(247,244,235,0.07); }
+    tbody tr:last-child td { border-bottom: none; }
+    .yr { font-weight: 900; color: var(--gold); }
+    .nat { display: inline-flex; align-items: center; gap: 8px; }
+    .nat img { width: 26px; aspect-ratio: 3/2; object-fit: cover; border-radius: 3px; border: 1px solid var(--line); }
+    .champ .nat { font-weight: 800; }
+    .cancelled td { color: var(--muted); font-style: italic; }
+
+    .footer-note { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 34px; }
+
+    /* ---- Print: clean light study sheets ---- */
+    @media print {
+      body { background: #fff; color: #111; }
+      .nav, .jumpbar, .footer-note { display: none !important; }
+      .shell { width: 100%; max-width: none; padding: 0; }
+      section.sheet { break-inside: avoid; page-break-inside: avoid; margin-top: 18px; }
+      .group-card, .title-chip, .table-wrap, .flag-cell img { box-shadow: none; }
+      .group-card, .table-wrap { border-color: #ccc; background: #fff; }
+      .sheet:not(:first-of-type) { page-break-before: always; }
+      .masthead h1, .yr { color: #111; }
+      .eyebrow, .sheet-head h2 { color: #111; }
+      .team-row img, .flag-cell img, .nat img, .title-chip img { border-color: #999; }
+      .conf, .fcode, .hint, .sheet-head .hint { color: #555; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <nav class="nav" aria-label="World Cup hub">
+      <a href="./" class="home-link">← Back to Quiz</a>
+      <a href="../">World Cup Home</a>
+      <a href="../standings/">Standings</a>
+      <a href="../fixtures/">Fixtures</a>
+    </nav>
+
+    <header class="masthead">
+      <div class="eyebrow">Warren's World Cup</div>
+      <h1>📖 Study Sheets</h1>
+      <p>Learn the groups, the flags, and every World Cup winner — then go crush the quiz!</p>
+    </header>
+
+    <div class="jumpbar">
+      <a href="#groups">⚽ Groups</a>
+      <a href="#flags">🚩 Flags</a>
+      <a href="#winners">🏆 Winners</a>
+      <button class="print-btn" onclick="window.print()">🖨 Print</button>
+    </div>
+
+    <!-- GROUPS -->
+    <section class="sheet" id="groups">
+      <div class="sheet-head">
+        <h2>⚽ The 48 Teams by Group</h2>
+        <span class="hint">Top 2 of each group advance, plus the 8 best 3rd-place teams.</span>
+      </div>
+      <div class="groups-grid" id="groups-grid"></div>
+    </section>
+
+    <!-- FLAGS -->
+    <section class="sheet" id="flags">
+      <div class="sheet-head">
+        <h2>🚩 All 48 Flags</h2>
+        <span class="hint">Listed A→Z. Cover the names and test yourself!</span>
+      </div>
+      <div class="flags-grid" id="flags-grid"></div>
+    </section>
+
+    <!-- WINNERS -->
+    <section class="sheet" id="winners">
+      <div class="sheet-head">
+        <h2>🏆 World Cup Winners by Year</h2>
+        <span class="hint">Every champion since 1930.</span>
+      </div>
+      <div class="titles-row" id="titles-row"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Year</th><th>Host</th><th>Champion</th></tr>
+          </thead>
+          <tbody id="winners-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="footer-note">Tip: use 🖨 Print to make paper study sheets for the car. 🚗</p>
+  </div>
+
+  <script src="quiz-teams.js"></script>
+  <script src="quiz-history.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      var teams = window.WC_QUIZ_TEAMS || [];
+      var winners = window.WC_QUIZ_WINNERS || [];
+      var titles = window.WC_QUIZ_TITLES || [];
+
+      function flagCode(t) {
+        if (t.id === "ENG") return "gb-eng";
+        if (t.id === "SCO") return "gb-sct";
+        return (t.iso2 || "").toLowerCase();
+      }
+      var flagUrl = function (code) { return "https://flagcdn.com/w320/" + code + ".png"; };
+      var CONF = {
+        UEFA: "UEFA", CONMEBOL: "CONMEBOL", CONCACAF: "CONCACAF",
+        CAF: "CAF", AFC: "AFC", OFC: "OFC",
+      };
+
+      // ---- Groups ----
+      var groupsGrid = document.getElementById("groups-grid");
+      var letters = [];
+      teams.forEach(function (t) { if (letters.indexOf(t.group) < 0) letters.push(t.group); });
+      letters.sort();
+      letters.forEach(function (L) {
+        var card = document.createElement("div");
+        card.className = "group-card";
+        var rows = teams.filter(function (t) { return t.group === L; })
+          .map(function (t) {
+            return '<div class="team-row">' +
+              '<img src="' + flagUrl(flagCode(t)) + '" alt="">' +
+              '<span class="tname">' + t.name + '</span>' +
+              '<span class="conf">' + (CONF[t.confederation] || t.confederation) + '</span>' +
+              '</div>';
+          }).join("");
+        card.innerHTML = "<h3>Group " + L + "</h3>" + rows;
+        groupsGrid.appendChild(card);
+      });
+
+      // ---- Flags (alphabetical) ----
+      var flagsGrid = document.getElementById("flags-grid");
+      teams.slice().sort(function (a, b) { return a.name.localeCompare(b.name); })
+        .forEach(function (t) {
+          var cell = document.createElement("div");
+          cell.className = "flag-cell";
+          cell.innerHTML =
+            '<img src="' + flagUrl(flagCode(t)) + '" alt="Flag of ' + t.name + '">' +
+            '<div class="fname">' + t.name + '</div>' +
+            '<div class="fcode">' + t.id + '</div>';
+          flagsGrid.appendChild(cell);
+        });
+
+      // ---- Title leaderboard ----
+      var titlesRow = document.getElementById("titles-row");
+      titles.forEach(function (t) {
+        var chip = document.createElement("div");
+        chip.className = "title-chip";
+        var stars = new Array(t.titles + 1).join("★");
+        chip.innerHTML =
+          '<img src="' + flagUrl(t.code) + '" alt="">' +
+          '<span>' + t.nation + '</span>' +
+          '<span class="stars">' + stars + '</span>';
+        chip.title = t.nation + ": " + t.titles + " titles (" + t.years + ")";
+        titlesRow.appendChild(chip);
+      });
+
+      // ---- Winners table ----
+      var body = document.getElementById("winners-body");
+      winners.forEach(function (w) {
+        var tr = document.createElement("tr");
+        if (w.cancelled) {
+          tr.className = "cancelled";
+          tr.innerHTML = '<td class="yr">' + w.year + '</td><td colspan="2">' + (w.note || "Not held") + '</td>';
+        } else {
+          tr.innerHTML =
+            '<td class="yr">' + w.year + '</td>' +
+            '<td><span class="nat"><img src="' + flagUrl(w.hostCode) + '" alt="">' + w.host + '</span></td>' +
+            '<td class="champ"><span class="nat"><img src="' + flagUrl(w.winnerCode) + '" alt="">' + w.winner + '</span></td>';
+        }
+        body.appendChild(tr);
+      });
+    })();
+  </script>
+</body>
+
+</html>

@@ -1,146 +1,6 @@
 {
-  "version": 3,
-  "generated_at": "2026-06-15T11:49:13.754Z",
-  "sources": {
-    "countries": "countries_base.json (offline snapshot; REST Countries origin)",
-    "soft_fields": "atlas_soft.json (hand-curated)"
-  },
-  "slices": {
-    "world_cup_2026": {
-      "flag": "wc2026",
-      "label": "World Cup 2026",
-      "note": "The 47 nations of the 2026 FIFA World Cup that exist as distinct entries in our atlas. Scotland is omitted (part of the UK; England maps to GB). Curaçao (CW) is included as a backfilled non-sovereign entry.",
-      "count": 47
-    }
-  },
-  "continents": [
-    {
-      "id": "africa",
-      "name": "Africa",
-      "icon": "🐘",
-      "signature_animal": "elephant",
-      "signature_biome": "savanna",
-      "bordering_oceans": [
-        "Atlantic",
-        "Indian"
-      ],
-      "hemispheres": [
-        "N",
-        "S",
-        "E",
-        "W"
-      ],
-      "description": "The cradle of humanity — home to the Sahara, the Nile, and the savanna.",
-      "country_count_in_atlas": 54
-    },
-    {
-      "id": "antarctica",
-      "name": "Antarctica",
-      "icon": "🐧",
-      "signature_animal": "penguin",
-      "signature_biome": "ice-sheet",
-      "bordering_oceans": [
-        "Southern",
-        "Atlantic",
-        "Pacific",
-        "Indian"
-      ],
-      "hemispheres": [
-        "S"
-      ],
-      "description": "The frozen southernmost continent — no countries, just research stations.",
-      "country_count_in_atlas": 0
-    },
-    {
-      "id": "asia",
-      "name": "Asia",
-      "icon": "🏮",
-      "signature_animal": "tiger",
-      "signature_biome": "varied",
-      "bordering_oceans": [
-        "Arctic",
-        "Pacific",
-        "Indian"
-      ],
-      "hemispheres": [
-        "N",
-        "E"
-      ],
-      "description": "The largest and most populous continent — home to the world's highest peak, Mount Everest.",
-      "country_count_in_atlas": 47
-    },
-    {
-      "id": "europe",
-      "name": "Europe",
-      "icon": "🏛️",
-      "signature_animal": "brown bear",
-      "signature_biome": "temperate forest",
-      "bordering_oceans": [
-        "Atlantic",
-        "Arctic"
-      ],
-      "hemispheres": [
-        "N",
-        "E",
-        "W"
-      ],
-      "description": "A continent of many small countries packed with old cities, castles, and rivers.",
-      "country_count_in_atlas": 46
-    },
-    {
-      "id": "north_america",
-      "name": "North America",
-      "icon": "🦅",
-      "signature_animal": "bison",
-      "signature_biome": "varied",
-      "bordering_oceans": [
-        "Atlantic",
-        "Pacific",
-        "Arctic"
-      ],
-      "hemispheres": [
-        "N",
-        "W"
-      ],
-      "description": "From the Arctic to the Caribbean — home of the Grand Canyon and the Great Lakes.",
-      "country_count_in_atlas": 24
-    },
-    {
-      "id": "oceania",
-      "name": "Oceania",
-      "icon": "🦘",
-      "signature_animal": "kangaroo",
-      "signature_biome": "outback",
-      "bordering_oceans": [
-        "Pacific",
-        "Indian"
-      ],
-      "hemispheres": [
-        "S",
-        "E"
-      ],
-      "description": "Australia plus thousands of Pacific islands.",
-      "country_count_in_atlas": 14
-    },
-    {
-      "id": "south_america",
-      "name": "South America",
-      "icon": "🐆",
-      "signature_animal": "jaguar",
-      "signature_biome": "rainforest",
-      "bordering_oceans": [
-        "Atlantic",
-        "Pacific"
-      ],
-      "hemispheres": [
-        "N",
-        "S",
-        "W"
-      ],
-      "description": "Home to the Amazon rainforest and the Andes mountains.",
-      "country_count_in_atlas": 12
-    }
-  ],
+  "__doc": "Cached machine-derived (REST Countries-origin) hard fields for every country. The REST Countries v3.1 API was deprecated (2026), so this committed snapshot is now the canonical source of hard fields. build_atlas.mjs merges it with atlas_soft.json (soft + slices). To add a country: add its hard fields here AND a soft entry in atlas_soft.json, then run build_atlas.mjs.",
+  "generated_from": "atlas.json snapshot",
   "countries": [
     {
       "iso_a2": "AD",
@@ -171,17 +31,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇦🇩",
-      "flag_svg": "https://flagcdn.com/ad.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/ad.svg"
     },
     {
       "iso_a2": "AE",
@@ -212,27 +62,7 @@
       "population_bucket": "medium",
       "area_bucket": "tiny",
       "flag_emoji": "🇦🇪",
-      "flag_svg": "https://flagcdn.com/ae.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "green",
-        "white",
-        "black"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "desert",
-      "bordering_waters": [
-        "Persian Gulf",
-        "Gulf of Oman"
-      ],
-      "landmark": "Burj Khalifa",
-      "famous_food": "shawarma",
-      "fact_card": "Seven desert emirates united into one country — home of the Burj Khalifa, the world's tallest building."
+      "flag_svg": "https://flagcdn.com/ae.svg"
     },
     {
       "iso_a2": "AF",
@@ -269,25 +99,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇦🇫",
-      "flag_svg": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_the_Taliban.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "black",
-        "red",
-        "green",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "coat-of-arms"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "mountainous",
-      "bordering_waters": [],
-      "landmark": "Band-e Amir lakes",
-      "famous_food": "kabuli pulao",
-      "fact_card": "A landlocked country at the crossroads of Central, South, and West Asia, home to the towering Hindu Kush mountains."
+      "flag_svg": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_the_Taliban.svg"
     },
     {
       "iso_a2": "AG",
@@ -315,17 +127,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇦🇬",
-      "flag_svg": "https://flagcdn.com/ag.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/ag.svg"
     },
     {
       "iso_a2": "AL",
@@ -358,17 +160,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇦🇱",
-      "flag_svg": "https://flagcdn.com/al.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/al.svg"
     },
     {
       "iso_a2": "AM",
@@ -401,17 +193,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇦🇲",
-      "flag_svg": "https://flagcdn.com/am.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/am.svg"
     },
     {
       "iso_a2": "AO",
@@ -444,26 +226,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇦🇴",
-      "flag_svg": "https://flagcdn.com/ao.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "black",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "star",
-        "wheel"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "plateau and savanna",
-      "bordering_waters": [
-        "Atlantic Ocean"
-      ],
-      "landmark": "Kalandula Falls",
-      "famous_food": "muamba de galinha",
-      "fact_card": "A large country on Africa's southwestern Atlantic coast, rich in oil and diamonds, with dramatic waterfalls and a plateau interior."
+      "flag_svg": "https://flagcdn.com/ao.svg"
     },
     {
       "iso_a2": "AR",
@@ -498,26 +261,7 @@
       "population_bucket": "medium",
       "area_bucket": "large",
       "flag_emoji": "🇦🇷",
-      "flag_svg": "https://flagcdn.com/ar.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "light-blue",
-        "white"
-      ],
-      "flag_motifs": [
-        "sun",
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "pampas",
-      "bordering_waters": [
-        "Atlantic Ocean"
-      ],
-      "landmark": "Iguazu Falls",
-      "famous_food": "asado",
-      "fact_card": "Stretches from subtropical jungle in the north to the icy edge of Antarctica in the south.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/ar.svg"
     },
     {
       "iso_a2": "AT",
@@ -554,23 +298,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇦🇹",
-      "flag_svg": "https://flagcdn.com/at.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "alps",
-      "bordering_waters": [],
-      "landmark": "Schönbrunn Palace",
-      "famous_food": "wiener schnitzel",
-      "fact_card": "A landlocked country in the heart of Europe, famous for its Alpine ski slopes, classical music composers like Mozart and Beethoven, and the grand city of Vienna.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/at.svg"
     },
     {
       "iso_a2": "AU",
@@ -598,30 +326,7 @@
       "population_bucket": "medium",
       "area_bucket": "huge",
       "flag_emoji": "🇦🇺",
-      "flag_svg": "https://flagcdn.com/au.svg",
-      "level": 1,
-      "island": true,
-      "flag_colors": [
-        "blue",
-        "white",
-        "red"
-      ],
-      "flag_motifs": [
-        "stars",
-        "cross"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "outback",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "Indian Ocean",
-        "Coral Sea",
-        "Tasman Sea"
-      ],
-      "landmark": "Sydney Opera House",
-      "famous_food": "vegemite",
-      "fact_card": "Both a country and a continent — home to kangaroos, koalas, and the Great Barrier Reef.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/au.svg"
     },
     {
       "iso_a2": "AZ",
@@ -655,28 +360,7 @@
       "population_bucket": "medium",
       "area_bucket": "tiny",
       "flag_emoji": "🇦🇿",
-      "flag_svg": "https://flagcdn.com/az.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "red",
-        "green",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "crescent",
-        "star"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "caucasus mountains",
-      "bordering_waters": [
-        "Caspian Sea"
-      ],
-      "landmark": "Flame Towers Baku",
-      "famous_food": "plov",
-      "fact_card": "Sitting at the crossroads of Europe and Asia on the Caspian Sea, Azerbaijan is famous for its ancient fire temples — where flames once burned naturally from underground gas."
+      "flag_svg": "https://flagcdn.com/az.svg"
     },
     {
       "iso_a2": "BA",
@@ -710,26 +394,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇧🇦",
-      "flag_svg": "https://flagcdn.com/ba.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "yellow",
-        "white"
-      ],
-      "flag_motifs": [
-        "stars"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "mountains",
-      "bordering_waters": [
-        "Adriatic Sea"
-      ],
-      "landmark": "Stari Most (Mostar Bridge)",
-      "famous_food": "ćevapi",
-      "fact_card": "A mountainous Balkan country famous for the Stari Most — a graceful 16th-century Ottoman stone bridge in Mostar — where divers leap into the river below.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/ba.svg"
     },
     {
       "iso_a2": "BB",
@@ -757,17 +422,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇧🇧",
-      "flag_svg": "https://flagcdn.com/bb.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/bb.svg"
     },
     {
       "iso_a2": "BD",
@@ -798,24 +453,7 @@
       "population_bucket": "large",
       "area_bucket": "small",
       "flag_emoji": "🇧🇩",
-      "flag_svg": "https://flagcdn.com/bd.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "red"
-      ],
-      "flag_motifs": [
-        "circle"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "delta",
-      "bordering_waters": [
-        "Bay of Bengal"
-      ],
-      "landmark": "Sundarbans mangroves",
-      "famous_food": "hilsa fish curry",
-      "fact_card": "One of the most densely populated countries on Earth, sitting on the world's largest river delta."
+      "flag_svg": "https://flagcdn.com/bd.svg"
     },
     {
       "iso_a2": "BE",
@@ -850,26 +488,7 @@
       "population_bucket": "medium",
       "area_bucket": "tiny",
       "flag_emoji": "🇧🇪",
-      "flag_svg": "https://flagcdn.com/be.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "black",
-        "yellow",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "coastal",
-      "bordering_waters": [
-        "North Sea"
-      ],
-      "landmark": "Grand Place in Brussels",
-      "famous_food": "waffles",
-      "fact_card": "Headquarters of the European Union — famous for chocolate, waffles, beer, and comic-book heroes like Tintin.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/be.svg"
     },
     {
       "iso_a2": "BF",
@@ -904,24 +523,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇧🇫",
-      "flag_svg": "https://flagcdn.com/bf.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "green",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "star"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "flat savanna",
-      "bordering_waters": [],
-      "landmark": "Sindou Peaks",
-      "famous_food": "tô",
-      "fact_card": "A flat, landlocked Sahel country in West Africa whose name means 'Land of the Honest People' — it sits at the edge of the expanding Sahara Desert."
+      "flag_svg": "https://flagcdn.com/bf.svg"
     },
     {
       "iso_a2": "BG",
@@ -955,25 +557,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇧🇬",
-      "flag_svg": "https://flagcdn.com/bg.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "white",
-        "green",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "mountains and plains",
-      "bordering_waters": [
-        "Black Sea"
-      ],
-      "landmark": "Rila Monastery",
-      "famous_food": "banitsa",
-      "fact_card": "A Balkan country on the Black Sea coast, home to the stunning Rila Monastery high in the mountains and one of the oldest rose-oil industries in the world."
+      "flag_svg": "https://flagcdn.com/bg.svg"
     },
     {
       "iso_a2": "BH",
@@ -1001,17 +585,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇧🇭",
-      "flag_svg": "https://flagcdn.com/bh.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/bh.svg"
     },
     {
       "iso_a2": "BI",
@@ -1044,17 +618,7 @@
       "population_bucket": "medium",
       "area_bucket": "tiny",
       "flag_emoji": "🇧🇮",
-      "flag_svg": "https://flagcdn.com/bi.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/bi.svg"
     },
     {
       "iso_a2": "BJ",
@@ -1087,17 +651,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇧🇯",
-      "flag_svg": "https://flagcdn.com/bj.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/bj.svg"
     },
     {
       "iso_a2": "BN",
@@ -1127,17 +681,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇧🇳",
-      "flag_svg": "https://flagcdn.com/bn.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/bn.svg"
     },
     {
       "iso_a2": "BO",
@@ -1174,24 +718,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇧🇴",
-      "flag_svg": "https://flagcdn.com/bo.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "yellow",
-        "green"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "coat-of-arms"
-      ],
-      "climate_band": "mixed",
-      "terrain_headline": "mountainous",
-      "bordering_waters": [],
-      "landmark": "Salar de Uyuni",
-      "famous_food": "salteñas",
-      "fact_card": "Home of the world's largest salt flat, which becomes a giant mirror in the rainy season."
+      "flag_svg": "https://flagcdn.com/bo.svg"
     },
     {
       "iso_a2": "BR",
@@ -1230,28 +757,7 @@
       "population_bucket": "mega",
       "area_bucket": "huge",
       "flag_emoji": "🇧🇷",
-      "flag_svg": "https://flagcdn.com/br.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "yellow",
-        "blue",
-        "white"
-      ],
-      "flag_motifs": [
-        "stars",
-        "sphere"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "rainforest",
-      "bordering_waters": [
-        "Atlantic Ocean"
-      ],
-      "landmark": "Christ the Redeemer",
-      "famous_food": "feijoada",
-      "fact_card": "Holds most of the Amazon rainforest and is the only country in South America that speaks Portuguese.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/br.svg"
     },
     {
       "iso_a2": "BS",
@@ -1279,17 +785,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇧🇸",
-      "flag_svg": "https://flagcdn.com/bs.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/bs.svg"
     },
     {
       "iso_a2": "BT",
@@ -1320,17 +816,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇧🇹",
-      "flag_svg": "https://flagcdn.com/bt.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/bt.svg"
     },
     {
       "iso_a2": "BW",
@@ -1364,23 +850,7 @@
       "population_bucket": "small",
       "area_bucket": "medium",
       "flag_emoji": "🇧🇼",
-      "flag_svg": "https://flagcdn.com/bw.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "light-blue",
-        "white",
-        "black"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "savanna",
-      "bordering_waters": [],
-      "landmark": "Okavango Delta",
-      "famous_food": "seswaa",
-      "fact_card": "Home to the Okavango Delta, a vast inland wetland where the river evaporates into the Kalahari Desert instead of reaching the sea."
+      "flag_svg": "https://flagcdn.com/bw.svg"
     },
     {
       "iso_a2": "BY",
@@ -1415,23 +885,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇧🇾",
-      "flag_svg": "https://flagcdn.com/by.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "green",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "plains and forests",
-      "bordering_waters": [],
-      "landmark": "Mir Castle",
-      "famous_food": "draniki",
-      "fact_card": "A flat, forested country in Eastern Europe known for its potato pancakes (draniki), medieval castles, and being one of Europe's last remaining untouched ancient forests at Białowieża."
+      "flag_svg": "https://flagcdn.com/by.svg"
     },
     {
       "iso_a2": "BZ",
@@ -1464,17 +918,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇧🇿",
-      "flag_svg": "https://flagcdn.com/bz.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/bz.svg"
     },
     {
       "iso_a2": "CA",
@@ -1505,27 +949,7 @@
       "population_bucket": "medium",
       "area_bucket": "huge",
       "flag_emoji": "🇨🇦",
-      "flag_svg": "https://flagcdn.com/ca.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "maple-leaf"
-      ],
-      "climate_band": "polar",
-      "terrain_headline": "forested",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "Pacific Ocean",
-        "Arctic Ocean"
-      ],
-      "landmark": "Niagara Falls",
-      "famous_food": "poutine",
-      "fact_card": "The world's second-largest country by area, with more lakes than the rest of the world combined.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/ca.svg"
     },
     {
       "iso_a2": "CD",
@@ -1567,27 +991,7 @@
       "population_bucket": "large",
       "area_bucket": "large",
       "flag_emoji": "🇨🇩",
-      "flag_svg": "https://flagcdn.com/cd.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "yellow",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "star"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "rainforest and river basin",
-      "bordering_waters": [
-        "Atlantic Ocean"
-      ],
-      "landmark": "Congo River",
-      "famous_food": "fufu",
-      "fact_card": "Home to the world's second-largest rainforest and the mighty Congo River — the deepest river on Earth — making it one of the most biodiverse places on the planet.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/cd.svg"
     },
     {
       "iso_a2": "CF",
@@ -1623,26 +1027,7 @@
       "population_bucket": "small",
       "area_bucket": "medium",
       "flag_emoji": "🇨🇫",
-      "flag_svg": "https://flagcdn.com/cf.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "white",
-        "green",
-        "yellow",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "star"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "forest and plateau",
-      "bordering_waters": [],
-      "landmark": "Dzanga-Sangha Forest Reserve",
-      "famous_food": "gozo",
-      "fact_card": "A remote landlocked country at the geographic heart of Africa, home to western lowland gorillas and forest elephants in some of the continent's most intact rainforests."
+      "flag_svg": "https://flagcdn.com/cf.svg"
     },
     {
       "iso_a2": "CG",
@@ -1678,17 +1063,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇨🇬",
-      "flag_svg": "https://flagcdn.com/cg.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/cg.svg"
     },
     {
       "iso_a2": "CH",
@@ -1725,23 +1100,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇨🇭",
-      "flag_svg": "https://flagcdn.com/ch.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "cross"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "mountainous",
-      "bordering_waters": [],
-      "landmark": "Matterhorn",
-      "famous_food": "cheese fondue",
-      "fact_card": "A landlocked alpine nation famous for neutrality, chocolate, and four official languages.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/ch.svg"
     },
     {
       "iso_a2": "CI",
@@ -1775,27 +1134,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇨🇮",
-      "flag_svg": "https://flagcdn.com/ci.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "orange",
-        "white",
-        "green"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "coastal",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "Gulf of Guinea"
-      ],
-      "landmark": "Basilica of Our Lady of Peace",
-      "famous_food": "attiéké",
-      "fact_card": "The world's largest producer of cocoa beans, home of the planet's biggest church by area.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/ci.svg"
     },
     {
       "iso_a2": "CL",
@@ -1827,26 +1166,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇨🇱",
-      "flag_svg": "https://flagcdn.com/cl.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "white",
-        "red",
-        "blue"
-      ],
-      "flag_motifs": [
-        "star",
-        "stripes"
-      ],
-      "climate_band": "mixed",
-      "terrain_headline": "coastal",
-      "bordering_waters": [
-        "Pacific Ocean"
-      ],
-      "landmark": "Easter Island moai",
-      "famous_food": "empanadas",
-      "fact_card": "A long, thin ribbon of a country stretching 2,700 miles down South America's Pacific coast."
+      "flag_svg": "https://flagcdn.com/cl.svg"
     },
     {
       "iso_a2": "CM",
@@ -1882,27 +1202,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇨🇲",
-      "flag_svg": "https://flagcdn.com/cm.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "red",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "star"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "varied",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "Gulf of Guinea"
-      ],
-      "landmark": "Mount Cameroon",
-      "famous_food": "ndolé",
-      "fact_card": "Nicknamed 'Africa in miniature' for packing deserts, rainforests, beaches, and mountains into one country."
+      "flag_svg": "https://flagcdn.com/cm.svg"
     },
     {
       "iso_a2": "CN",
@@ -1947,27 +1247,7 @@
       "population_bucket": "mega",
       "area_bucket": "huge",
       "flag_emoji": "🇨🇳",
-      "flag_svg": "https://flagcdn.com/cn.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "stars"
-      ],
-      "climate_band": "mixed",
-      "terrain_headline": "mountainous",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "South China Sea",
-        "Yellow Sea",
-        "East China Sea"
-      ],
-      "landmark": "Great Wall",
-      "famous_food": "dumplings",
-      "fact_card": "Home to the world's longest wall and, for centuries, the world's largest population."
+      "flag_svg": "https://flagcdn.com/cn.svg"
     },
     {
       "iso_a2": "CO",
@@ -2001,27 +1281,7 @@
       "population_bucket": "large",
       "area_bucket": "medium",
       "flag_emoji": "🇨🇴",
-      "flag_svg": "https://flagcdn.com/co.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "yellow",
-        "blue",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "andes and rainforest",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "Caribbean Sea"
-      ],
-      "landmark": "Cartagena Old City",
-      "famous_food": "arepas",
-      "fact_card": "The only South American country with coastlines on both the Pacific Ocean and the Caribbean Sea, and home to the lush Amazon rainforest in its south.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/co.svg"
     },
     {
       "iso_a2": "CR",
@@ -2052,26 +1312,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇨🇷",
-      "flag_svg": "https://flagcdn.com/cr.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "white",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "rainforest",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "Caribbean Sea"
-      ],
-      "landmark": "Arenal Volcano",
-      "famous_food": "gallo pinto",
-      "fact_card": "A small Central American country with no army; its motto is 'pura vida' and 25% of its land is protected wilderness."
+      "flag_svg": "https://flagcdn.com/cr.svg"
     },
     {
       "iso_a2": "CU",
@@ -2099,28 +1340,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇨🇺",
-      "flag_svg": "https://flagcdn.com/cu.svg",
-      "level": 2,
-      "island": true,
-      "flag_colors": [
-        "blue",
-        "white",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "star"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "island",
-      "bordering_waters": [
-        "Caribbean Sea",
-        "Gulf of Mexico",
-        "Atlantic Ocean"
-      ],
-      "landmark": "Old Havana",
-      "famous_food": "ropa vieja",
-      "fact_card": "The largest island in the Caribbean, famous for its music, vintage cars, and tropical beaches."
+      "flag_svg": "https://flagcdn.com/cu.svg"
     },
     {
       "iso_a2": "CV",
@@ -2148,29 +1368,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇨🇻",
-      "flag_svg": "https://flagcdn.com/cv.svg",
-      "level": 4,
-      "island": true,
-      "flag_colors": [
-        "blue",
-        "white",
-        "red",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "stars",
-        "circle",
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "volcanic islands",
-      "bordering_waters": [
-        "Atlantic Ocean"
-      ],
-      "landmark": "Pico do Fogo",
-      "famous_food": "cachupa",
-      "fact_card": "An archipelago of ten volcanic islands in the Atlantic off West Africa, famous for soulful morna music and its towering active volcano, Pico do Fogo.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/cv.svg"
     },
     {
       "iso_a2": "CW",
@@ -2200,27 +1398,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇨🇼",
-      "flag_svg": "https://flagcdn.com/cw.svg",
-      "level": 4,
-      "island": true,
-      "flag_colors": [
-        "blue",
-        "yellow",
-        "white"
-      ],
-      "flag_motifs": [
-        "stars",
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "coral island",
-      "bordering_waters": [
-        "Caribbean Sea"
-      ],
-      "landmark": "Willemstad waterfront",
-      "famous_food": "keshi yena",
-      "fact_card": "A Dutch Caribbean island known for the brightly painted colonial waterfront of Willemstad — a World Heritage site — and the vivid blue Curaçao liqueur made there.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/cw.svg"
     },
     {
       "iso_a2": "CY",
@@ -2249,17 +1427,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇨🇾",
-      "flag_svg": "https://flagcdn.com/cy.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/cy.svg"
     },
     {
       "iso_a2": "CZ",
@@ -2293,24 +1461,7 @@
       "population_bucket": "medium",
       "area_bucket": "tiny",
       "flag_emoji": "🇨🇿",
-      "flag_svg": "https://flagcdn.com/cz.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "white",
-        "red",
-        "blue"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "mixed",
-      "bordering_waters": [],
-      "landmark": "Prague Castle",
-      "famous_food": "svíčková",
-      "fact_card": "A central European country famous for fairy-tale castles and the world's highest beer consumption per person.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/cz.svg"
     },
     {
       "iso_a2": "DE",
@@ -2348,27 +1499,7 @@
       "population_bucket": "large",
       "area_bucket": "small",
       "flag_emoji": "🇩🇪",
-      "flag_svg": "https://flagcdn.com/de.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "black",
-        "red",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "forested",
-      "bordering_waters": [
-        "North Sea",
-        "Baltic Sea"
-      ],
-      "landmark": "Brandenburg Gate",
-      "famous_food": "bratwurst",
-      "fact_card": "Once split in two by a wall through Berlin; reunified in 1990.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/de.svg"
     },
     {
       "iso_a2": "DJ",
@@ -2401,17 +1532,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇩🇯",
-      "flag_svg": "https://flagcdn.com/dj.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/dj.svg"
     },
     {
       "iso_a2": "DK",
@@ -2441,25 +1562,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇩🇰",
-      "flag_svg": "https://flagcdn.com/dk.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "cross"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "flat",
-      "bordering_waters": [
-        "North Sea",
-        "Baltic Sea"
-      ],
-      "landmark": "The Little Mermaid statue",
-      "famous_food": "smørrebrød",
-      "fact_card": "A tiny Scandinavian kingdom of 400 islands — the birthplace of Hans Christian Andersen and LEGO."
+      "flag_svg": "https://flagcdn.com/dk.svg"
     },
     {
       "iso_a2": "DM",
@@ -2487,17 +1590,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇩🇲",
-      "flag_svg": "https://flagcdn.com/dm.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/dm.svg"
     },
     {
       "iso_a2": "DO",
@@ -2527,27 +1620,7 @@
       "population_bucket": "medium",
       "area_bucket": "tiny",
       "flag_emoji": "🇩🇴",
-      "flag_svg": "https://flagcdn.com/do.svg",
-      "level": 3,
-      "island": true,
-      "flag_colors": [
-        "blue",
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "cross",
-        "coat-of-arms"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "island",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "Caribbean Sea"
-      ],
-      "landmark": "Colonial Zone of Santo Domingo",
-      "famous_food": "mangú",
-      "fact_card": "Shares the island of Hispaniola with Haiti — where Columbus founded the first European city in the Americas."
+      "flag_svg": "https://flagcdn.com/do.svg"
     },
     {
       "iso_a2": "DZ",
@@ -2583,27 +1656,7 @@
       "population_bucket": "medium",
       "area_bucket": "large",
       "flag_emoji": "🇩🇿",
-      "flag_svg": "https://flagcdn.com/dz.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "white",
-        "red"
-      ],
-      "flag_motifs": [
-        "crescent",
-        "star"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "desert",
-      "bordering_waters": [
-        "Mediterranean Sea"
-      ],
-      "landmark": "Casbah of Algiers",
-      "famous_food": "couscous",
-      "fact_card": "Africa's largest country by area, with 80% of its land covered by the Sahara Desert.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/dz.svg"
     },
     {
       "iso_a2": "EC",
@@ -2634,27 +1687,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇪🇨",
-      "flag_svg": "https://flagcdn.com/ec.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "yellow",
-        "blue",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "coat-of-arms"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "mountainous",
-      "bordering_waters": [
-        "Pacific Ocean"
-      ],
-      "landmark": "Galápagos Islands",
-      "famous_food": "ceviche",
-      "fact_card": "Named for the equator that runs through it; gateway to the unique animals of the Galápagos Islands.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/ec.svg"
     },
     {
       "iso_a2": "EE",
@@ -2685,17 +1718,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇪🇪",
-      "flag_svg": "https://flagcdn.com/ee.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/ee.svg"
     },
     {
       "iso_a2": "EG",
@@ -2728,28 +1751,7 @@
       "population_bucket": "large",
       "area_bucket": "medium",
       "flag_emoji": "🇪🇬",
-      "flag_svg": "https://flagcdn.com/eg.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "black"
-      ],
-      "flag_motifs": [
-        "eagle",
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "desert",
-      "bordering_waters": [
-        "Mediterranean Sea",
-        "Red Sea"
-      ],
-      "landmark": "Pyramids of Giza",
-      "famous_food": "koshari",
-      "fact_card": "Built one of the world's oldest civilizations along the Nile, the longest river on Earth.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/eg.svg"
     },
     {
       "iso_a2": "ER",
@@ -2783,17 +1785,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇪🇷",
-      "flag_svg": "https://flagcdn.com/er.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/er.svg"
     },
     {
       "iso_a2": "ES",
@@ -2830,27 +1822,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇪🇸",
-      "flag_svg": "https://flagcdn.com/es.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "coat-of-arms",
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "peninsula",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "Mediterranean Sea"
-      ],
-      "landmark": "Sagrada Família",
-      "famous_food": "paella",
-      "fact_card": "Sits on the Iberian Peninsula and once ruled an empire that spanned the Americas.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/es.svg"
     },
     {
       "iso_a2": "ET",
@@ -2885,24 +1857,7 @@
       "population_bucket": "large",
       "area_bucket": "medium",
       "flag_emoji": "🇪🇹",
-      "flag_svg": "https://flagcdn.com/et.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "yellow",
-        "red",
-        "blue"
-      ],
-      "flag_motifs": [
-        "star"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "highlands",
-      "bordering_waters": [],
-      "landmark": "Rock-Hewn Churches of Lalibela",
-      "famous_food": "injera",
-      "fact_card": "Birthplace of coffee, one of the oldest Christian nations, and home of 'Lucy,' a 3.2-million-year-old human ancestor."
+      "flag_svg": "https://flagcdn.com/et.svg"
     },
     {
       "iso_a2": "FI",
@@ -2935,26 +1890,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇫🇮",
-      "flag_svg": "https://flagcdn.com/fi.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "white",
-        "blue"
-      ],
-      "flag_motifs": [
-        "cross"
-      ],
-      "climate_band": "polar",
-      "terrain_headline": "forested",
-      "bordering_waters": [
-        "Baltic Sea",
-        "Gulf of Bothnia",
-        "Gulf of Finland"
-      ],
-      "landmark": "Suomenlinna Fortress",
-      "famous_food": "karjalanpiirakka",
-      "fact_card": "Land of a thousand lakes and the northern lights — voted the world's happiest country many years in a row."
+      "flag_svg": "https://flagcdn.com/fi.svg"
     },
     {
       "iso_a2": "FJ",
@@ -2984,27 +1920,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇫🇯",
-      "flag_svg": "https://flagcdn.com/fj.svg",
-      "level": 3,
-      "island": true,
-      "flag_colors": [
-        "light-blue",
-        "red",
-        "white",
-        "blue"
-      ],
-      "flag_motifs": [
-        "cross",
-        "coat-of-arms"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "archipelago",
-      "bordering_waters": [
-        "Pacific Ocean"
-      ],
-      "landmark": "Bouma National Heritage Park",
-      "famous_food": "kokoda",
-      "fact_card": "An archipelago of 333 South Pacific islands surrounded by coral reefs and warm turquoise waters."
+      "flag_svg": "https://flagcdn.com/fj.svg"
     },
     {
       "iso_a2": "FM",
@@ -3032,17 +1948,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇫🇲",
-      "flag_svg": "https://flagcdn.com/fm.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/fm.svg"
     },
     {
       "iso_a2": "FR",
@@ -3079,28 +1985,7 @@
       "population_bucket": "large",
       "area_bucket": "medium",
       "flag_emoji": "🇫🇷",
-      "flag_svg": "https://flagcdn.com/fr.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "white",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "varied",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "Mediterranean Sea",
-        "English Channel"
-      ],
-      "landmark": "Eiffel Tower",
-      "famous_food": "baguette",
-      "fact_card": "The world's most-visited country, with mountains, coastlines, and overseas territories on five continents.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/fr.svg"
     },
     {
       "iso_a2": "GA",
@@ -3132,17 +2017,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇬🇦",
-      "flag_svg": "https://flagcdn.com/ga.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/ga.svg"
     },
     {
       "iso_a2": "GB",
@@ -3172,28 +2047,7 @@
       "population_bucket": "large",
       "area_bucket": "small",
       "flag_emoji": "🇬🇧",
-      "flag_svg": "https://flagcdn.com/gb.svg",
-      "level": 1,
-      "island": true,
-      "flag_colors": [
-        "red",
-        "white",
-        "blue"
-      ],
-      "flag_motifs": [
-        "cross"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "rolling hills",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "North Sea",
-        "English Channel"
-      ],
-      "landmark": "Big Ben",
-      "famous_food": "fish and chips",
-      "fact_card": "An island nation made of four countries: England, Scotland, Wales, and Northern Ireland.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/gb.svg"
     },
     {
       "iso_a2": "GD",
@@ -3221,17 +2075,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇬🇩",
-      "flag_svg": "https://flagcdn.com/gd.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/gd.svg"
     },
     {
       "iso_a2": "GE",
@@ -3264,24 +2108,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇬🇪",
-      "flag_svg": "https://flagcdn.com/ge.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "white",
-        "red"
-      ],
-      "flag_motifs": [
-        "cross"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "caucasus mountains",
-      "bordering_waters": [
-        "Black Sea"
-      ],
-      "landmark": "Vardzia Cave Monastery",
-      "famous_food": "khachapuri",
-      "fact_card": "A small country tucked in the Caucasus Mountains between Europe and Asia, with a unique ancient alphabet, cave cities, and one of the world's oldest wine-making traditions."
+      "flag_svg": "https://flagcdn.com/ge.svg"
     },
     {
       "iso_a2": "GH",
@@ -3313,29 +2140,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇬🇭",
-      "flag_svg": "https://flagcdn.com/gh.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "yellow",
-        "green",
-        "black"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "star"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "coastal",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "Gulf of Guinea"
-      ],
-      "landmark": "Cape Coast Castle",
-      "famous_food": "jollof rice",
-      "fact_card": "The first sub-Saharan African country to win independence; producer of some of the world's best cocoa.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/gh.svg"
     },
     {
       "iso_a2": "GM",
@@ -3365,17 +2170,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇬🇲",
-      "flag_svg": "https://flagcdn.com/gm.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/gm.svg"
     },
     {
       "iso_a2": "GN",
@@ -3410,25 +2205,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇬🇳",
-      "flag_svg": "https://flagcdn.com/gn.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "yellow",
-        "green"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "highlands and coast",
-      "bordering_waters": [
-        "Atlantic Ocean"
-      ],
-      "landmark": "Fouta Djallon Highlands",
-      "famous_food": "rice with peanut sauce",
-      "fact_card": "Often called 'the water tower of West Africa' — nearly all of West Africa's major rivers, including the Niger, originate in Guinea's central highlands."
+      "flag_svg": "https://flagcdn.com/gn.svg"
     },
     {
       "iso_a2": "GQ",
@@ -3461,17 +2238,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇬🇶",
-      "flag_svg": "https://flagcdn.com/gq.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/gq.svg"
     },
     {
       "iso_a2": "GR",
@@ -3504,27 +2271,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇬🇷",
-      "flag_svg": "https://flagcdn.com/gr.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "cross"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "islands",
-      "bordering_waters": [
-        "Aegean Sea",
-        "Mediterranean Sea",
-        "Ionian Sea"
-      ],
-      "landmark": "Acropolis of Athens",
-      "famous_food": "gyro",
-      "fact_card": "Birthplace of the Olympic Games and home to over 6,000 islands scattered across two seas."
+      "flag_svg": "https://flagcdn.com/gr.svg"
     },
     {
       "iso_a2": "GT",
@@ -3557,26 +2304,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇬🇹",
-      "flag_svg": "https://flagcdn.com/gt.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "light-blue",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "coat-of-arms"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "mountainous",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "Caribbean Sea"
-      ],
-      "landmark": "Tikal ruins",
-      "famous_food": "pepián",
-      "fact_card": "Heart of the ancient Maya civilization, with active volcanoes and the deep-blue Lake Atitlán."
+      "flag_svg": "https://flagcdn.com/gt.svg"
     },
     {
       "iso_a2": "GW",
@@ -3608,17 +2336,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇬🇼",
-      "flag_svg": "https://flagcdn.com/gw.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/gw.svg"
     },
     {
       "iso_a2": "GY",
@@ -3650,17 +2368,7 @@
       "population_bucket": "tiny",
       "area_bucket": "small",
       "flag_emoji": "🇬🇾",
-      "flag_svg": "https://flagcdn.com/gy.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/gy.svg"
     },
     {
       "iso_a2": "HN",
@@ -3692,26 +2400,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇭🇳",
-      "flag_svg": "https://flagcdn.com/hn.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "stars"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "mountainous",
-      "bordering_waters": [
-        "Caribbean Sea",
-        "Pacific Ocean"
-      ],
-      "landmark": "Copán Maya ruins",
-      "famous_food": "baleadas",
-      "fact_card": "A Central American country with ancient Maya ruins, lush cloud forests, and the world's second-largest barrier reef."
+      "flag_svg": "https://flagcdn.com/hn.svg"
     },
     {
       "iso_a2": "HR",
@@ -3745,28 +2434,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇭🇷",
-      "flag_svg": "https://flagcdn.com/hr.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "blue"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "coat-of-arms"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "coastal",
-      "bordering_waters": [
-        "Adriatic Sea",
-        "Mediterranean Sea"
-      ],
-      "landmark": "Dubrovnik Old Town",
-      "famous_food": "peka",
-      "fact_card": "Famous for its Adriatic coast of more than 1,000 islands and the medieval walled city of Dubrovnik.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/hr.svg"
     },
     {
       "iso_a2": "HT",
@@ -3797,27 +2465,7 @@
       "population_bucket": "medium",
       "area_bucket": "tiny",
       "flag_emoji": "🇭🇹",
-      "flag_svg": "https://flagcdn.com/ht.svg",
-      "level": 4,
-      "island": true,
-      "flag_colors": [
-        "blue",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "coat-of-arms"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "mountainous",
-      "bordering_waters": [
-        "Caribbean Sea",
-        "Atlantic Ocean"
-      ],
-      "landmark": "Citadelle Laferrière",
-      "famous_food": "griot",
-      "fact_card": "The world's first nation founded by a successful slave revolution, sharing the island of Hispaniola with the Dominican Republic.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/ht.svg"
     },
     {
       "iso_a2": "HU",
@@ -3853,23 +2501,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇭🇺",
-      "flag_svg": "https://flagcdn.com/hu.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "green"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "plains",
-      "bordering_waters": [],
-      "landmark": "Hungarian Parliament Building",
-      "famous_food": "goulash",
-      "fact_card": "A landlocked country in central Europe whose language isn't related to any of its neighbors."
+      "flag_svg": "https://flagcdn.com/hu.svg"
     },
     {
       "iso_a2": "ID",
@@ -3901,26 +2533,7 @@
       "population_bucket": "mega",
       "area_bucket": "medium",
       "flag_emoji": "🇮🇩",
-      "flag_svg": "https://flagcdn.com/id.svg",
-      "level": 2,
-      "island": true,
-      "flag_colors": [
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "archipelago",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "Indian Ocean",
-        "Java Sea"
-      ],
-      "landmark": "Borobudur Temple",
-      "famous_food": "nasi goreng",
-      "fact_card": "An archipelago of more than 17,000 islands — the world's largest island nation."
+      "flag_svg": "https://flagcdn.com/id.svg"
     },
     {
       "iso_a2": "IE",
@@ -3951,26 +2564,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇮🇪",
-      "flag_svg": "https://flagcdn.com/ie.svg",
-      "level": 3,
-      "island": true,
-      "flag_colors": [
-        "green",
-        "white",
-        "orange"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "rolling hills",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "Irish Sea"
-      ],
-      "landmark": "Cliffs of Moher",
-      "famous_food": "Irish stew",
-      "fact_card": "The 'Emerald Isle,' famous for endless green pastures, traditional music, and St. Patrick's Day."
+      "flag_svg": "https://flagcdn.com/ie.svg"
     },
     {
       "iso_a2": "IL",
@@ -4005,27 +2599,7 @@
       "population_bucket": "medium",
       "area_bucket": "tiny",
       "flag_emoji": "🇮🇱",
-      "flag_svg": "https://flagcdn.com/il.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "white"
-      ],
-      "flag_motifs": [
-        "star",
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "varied",
-      "bordering_waters": [
-        "Mediterranean Sea",
-        "Red Sea",
-        "Dead Sea"
-      ],
-      "landmark": "Western Wall",
-      "famous_food": "falafel",
-      "fact_card": "A tiny nation at the crossroads of three continents, sacred to Jews, Christians, and Muslims."
+      "flag_svg": "https://flagcdn.com/il.svg"
     },
     {
       "iso_a2": "IN",
@@ -4062,29 +2636,7 @@
       "population_bucket": "mega",
       "area_bucket": "large",
       "flag_emoji": "🇮🇳",
-      "flag_svg": "https://flagcdn.com/in.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "orange",
-        "white",
-        "green",
-        "blue"
-      ],
-      "flag_motifs": [
-        "wheel",
-        "stripes"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "subcontinent",
-      "bordering_waters": [
-        "Indian Ocean",
-        "Arabian Sea",
-        "Bay of Bengal"
-      ],
-      "landmark": "Taj Mahal",
-      "famous_food": "curry",
-      "fact_card": "The world's most populous democracy and home to 22 official languages."
+      "flag_svg": "https://flagcdn.com/in.svg"
     },
     {
       "iso_a2": "IQ",
@@ -4121,28 +2673,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇮🇶",
-      "flag_svg": "https://flagcdn.com/iq.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "black",
-        "green"
-      ],
-      "flag_motifs": [
-        "text",
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "desert",
-      "bordering_waters": [
-        "Persian Gulf"
-      ],
-      "landmark": "Ziggurat of Ur",
-      "famous_food": "masgouf",
-      "fact_card": "Birthplace of civilization in Mesopotamia, the 'land between two rivers' — the Tigris and the Euphrates.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/iq.svg"
     },
     {
       "iso_a2": "IR",
@@ -4178,29 +2709,7 @@
       "population_bucket": "large",
       "area_bucket": "medium",
       "flag_emoji": "🇮🇷",
-      "flag_svg": "https://flagcdn.com/ir.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "white",
-        "red"
-      ],
-      "flag_motifs": [
-        "text",
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "plateau",
-      "bordering_waters": [
-        "Persian Gulf",
-        "Caspian Sea",
-        "Gulf of Oman"
-      ],
-      "landmark": "Persepolis",
-      "famous_food": "kebab",
-      "fact_card": "Heir to the ancient Persian Empire, with deserts, snow-capped mountains, and the world's best saffron.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/ir.svg"
     },
     {
       "iso_a2": "IS",
@@ -4228,26 +2737,7 @@
       "population_bucket": "tiny",
       "area_bucket": "small",
       "flag_emoji": "🇮🇸",
-      "flag_svg": "https://flagcdn.com/is.svg",
-      "level": 3,
-      "island": true,
-      "flag_colors": [
-        "blue",
-        "white",
-        "red"
-      ],
-      "flag_motifs": [
-        "cross"
-      ],
-      "climate_band": "polar",
-      "terrain_headline": "island",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "Arctic Ocean"
-      ],
-      "landmark": "Geysir hot spring",
-      "famous_food": "skyr",
-      "fact_card": "A volcanic island just below the Arctic Circle, with glaciers, geysers, and active volcanoes."
+      "flag_svg": "https://flagcdn.com/is.svg"
     },
     {
       "iso_a2": "IT",
@@ -4283,27 +2773,7 @@
       "population_bucket": "large",
       "area_bucket": "small",
       "flag_emoji": "🇮🇹",
-      "flag_svg": "https://flagcdn.com/it.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "white",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "peninsula",
-      "bordering_waters": [
-        "Mediterranean Sea",
-        "Adriatic Sea",
-        "Tyrrhenian Sea"
-      ],
-      "landmark": "Colosseum",
-      "famous_food": "pizza",
-      "fact_card": "Shaped like a boot kicking the island of Sicily; home of the Roman Empire."
+      "flag_svg": "https://flagcdn.com/it.svg"
     },
     {
       "iso_a2": "JM",
@@ -4332,25 +2802,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇯🇲",
-      "flag_svg": "https://flagcdn.com/jm.svg",
-      "level": 3,
-      "island": true,
-      "flag_colors": [
-        "green",
-        "yellow",
-        "black"
-      ],
-      "flag_motifs": [
-        "cross"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "island",
-      "bordering_waters": [
-        "Caribbean Sea"
-      ],
-      "landmark": "Dunn's River Falls",
-      "famous_food": "jerk chicken",
-      "fact_card": "Birthplace of reggae music and Bob Marley, with some of the Caribbean's most stunning beaches."
+      "flag_svg": "https://flagcdn.com/jm.svg"
     },
     {
       "iso_a2": "JO",
@@ -4384,29 +2836,7 @@
       "population_bucket": "medium",
       "area_bucket": "tiny",
       "flag_emoji": "🇯🇴",
-      "flag_svg": "https://flagcdn.com/jo.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "black",
-        "white",
-        "green",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "star"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "desert",
-      "bordering_waters": [
-        "Red Sea",
-        "Dead Sea"
-      ],
-      "landmark": "Petra",
-      "famous_food": "mansaf",
-      "fact_card": "Home of Petra, the rose-red city carved into cliffs by the ancient Nabataeans.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/jo.svg"
     },
     {
       "iso_a2": "JP",
@@ -4434,27 +2864,7 @@
       "population_bucket": "large",
       "area_bucket": "small",
       "flag_emoji": "🇯🇵",
-      "flag_svg": "https://flagcdn.com/jp.svg",
-      "level": 1,
-      "island": true,
-      "flag_colors": [
-        "white",
-        "red"
-      ],
-      "flag_motifs": [
-        "sun",
-        "circle"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "archipelago",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "Sea of Japan"
-      ],
-      "landmark": "Mount Fuji",
-      "famous_food": "sushi",
-      "fact_card": "A chain of more than 14,000 islands; the sun on its flag represents Japan as 'land of the rising sun.'",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/jp.svg"
     },
     {
       "iso_a2": "KE",
@@ -4489,27 +2899,7 @@
       "population_bucket": "large",
       "area_bucket": "medium",
       "flag_emoji": "🇰🇪",
-      "flag_svg": "https://flagcdn.com/ke.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "black",
-        "red",
-        "green",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "sword"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "savanna",
-      "bordering_waters": [
-        "Indian Ocean"
-      ],
-      "landmark": "Maasai Mara",
-      "famous_food": "ugali",
-      "fact_card": "Crossed by the equator, home to the world's most famous safari grounds and the cradle of human evolution."
+      "flag_svg": "https://flagcdn.com/ke.svg"
     },
     {
       "iso_a2": "KG",
@@ -4543,17 +2933,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇰🇬",
-      "flag_svg": "https://flagcdn.com/kg.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/kg.svg"
     },
     {
       "iso_a2": "KH",
@@ -4585,26 +2965,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇰🇭",
-      "flag_svg": "https://flagcdn.com/kh.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "coat-of-arms"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "river-delta",
-      "bordering_waters": [
-        "Gulf of Thailand"
-      ],
-      "landmark": "Angkor Wat",
-      "famous_food": "amok",
-      "fact_card": "Home to Angkor Wat, the largest religious monument on Earth, built by the Khmer Empire 900 years ago."
+      "flag_svg": "https://flagcdn.com/kh.svg"
     },
     {
       "iso_a2": "KI",
@@ -4633,17 +2994,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇰🇮",
-      "flag_svg": "https://flagcdn.com/ki.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/ki.svg"
     },
     {
       "iso_a2": "KM",
@@ -4673,17 +3024,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇰🇲",
-      "flag_svg": "https://flagcdn.com/km.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/km.svg"
     },
     {
       "iso_a2": "KN",
@@ -4711,17 +3052,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇰🇳",
-      "flag_svg": "https://flagcdn.com/kn.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/kn.svg"
     },
     {
       "iso_a2": "KP",
@@ -4753,28 +3084,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇰🇵",
-      "flag_svg": "https://flagcdn.com/kp.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "blue"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "star",
-        "circle"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "mountains",
-      "bordering_waters": [
-        "Yellow Sea",
-        "Sea of Japan"
-      ],
-      "landmark": "Mount Paektu",
-      "famous_food": "cold noodles",
-      "fact_card": "The northern half of the Korean Peninsula, separated from South Korea since 1953, with rugged mountains and Mount Paektu — a sacred volcano — on its northern border."
+      "flag_svg": "https://flagcdn.com/kp.svg"
     },
     {
       "iso_a2": "KR",
@@ -4804,29 +3114,7 @@
       "population_bucket": "large",
       "area_bucket": "small",
       "flag_emoji": "🇰🇷",
-      "flag_svg": "https://flagcdn.com/kr.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "white",
-        "red",
-        "blue",
-        "black"
-      ],
-      "flag_motifs": [
-        "circle",
-        "trigrams"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "peninsula",
-      "bordering_waters": [
-        "Sea of Japan",
-        "Yellow Sea"
-      ],
-      "landmark": "Gyeongbokgung Palace",
-      "famous_food": "kimchi",
-      "fact_card": "Famous worldwide for K-pop and K-dramas; shares a tense border with North Korea.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/kr.svg"
     },
     {
       "iso_a2": "KW",
@@ -4857,26 +3145,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇰🇼",
-      "flag_svg": "https://flagcdn.com/kw.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "white",
-        "red",
-        "black"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "desert",
-      "bordering_waters": [
-        "Persian Gulf"
-      ],
-      "landmark": "Kuwait Towers",
-      "famous_food": "machboos",
-      "fact_card": "A small but wealthy country at the top of the Persian Gulf, sitting atop some of the world's largest oil reserves, with iconic water towers that store desalinated water."
+      "flag_svg": "https://flagcdn.com/kw.svg"
     },
     {
       "iso_a2": "KZ",
@@ -4911,26 +3180,7 @@
       "population_bucket": "medium",
       "area_bucket": "large",
       "flag_emoji": "🇰🇿",
-      "flag_svg": "https://flagcdn.com/kz.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "sun",
-        "eagle"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "steppe and desert",
-      "bordering_waters": [
-        "Caspian Sea",
-        "Aral Sea"
-      ],
-      "landmark": "Baikonur Cosmodrome",
-      "famous_food": "beshbarmak",
-      "fact_card": "The world's largest landlocked country — bigger than Western Europe — with vast empty steppes, deserts, and the historic Baikonur launch site where the first human went to space."
+      "flag_svg": "https://flagcdn.com/kz.svg"
     },
     {
       "iso_a2": "LA",
@@ -4964,24 +3214,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇱🇦",
-      "flag_svg": "https://flagcdn.com/la.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "blue",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "circle"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "mountains and mekong river",
-      "bordering_waters": [],
-      "landmark": "Luang Prabang Temples",
-      "famous_food": "larb",
-      "fact_card": "The only landlocked country in Southeast Asia, Laos is crisscrossed by the Mekong River and dotted with ancient Buddhist temples draped in saffron-orange."
+      "flag_svg": "https://flagcdn.com/la.svg"
     },
     {
       "iso_a2": "LB",
@@ -5013,25 +3246,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇱🇧",
-      "flag_svg": "https://flagcdn.com/lb.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "tree"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "mountainous",
-      "bordering_waters": [
-        "Mediterranean Sea"
-      ],
-      "landmark": "Cedars of God",
-      "famous_food": "kibbeh",
-      "fact_card": "A small mountainous country on the Mediterranean, named for its towering cedar trees that grace its national flag."
+      "flag_svg": "https://flagcdn.com/lb.svg"
     },
     {
       "iso_a2": "LC",
@@ -5059,17 +3274,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇱🇨",
-      "flag_svg": "https://flagcdn.com/lc.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/lc.svg"
     },
     {
       "iso_a2": "LI",
@@ -5100,17 +3305,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇱🇮",
-      "flag_svg": "https://flagcdn.com/li.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/li.svg"
     },
     {
       "iso_a2": "LK",
@@ -5139,27 +3334,7 @@
       "population_bucket": "medium",
       "area_bucket": "tiny",
       "flag_emoji": "🇱🇰",
-      "flag_svg": "https://flagcdn.com/lk.svg",
-      "level": 3,
-      "island": true,
-      "flag_colors": [
-        "yellow",
-        "red",
-        "green",
-        "orange"
-      ],
-      "flag_motifs": [
-        "coat-of-arms",
-        "sword"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "island",
-      "bordering_waters": [
-        "Indian Ocean"
-      ],
-      "landmark": "Sigiriya Rock Fortress",
-      "famous_food": "kottu roti",
-      "fact_card": "A teardrop-shaped island south of India, famous for cinnamon, tea, and ancient Buddhist temples."
+      "flag_svg": "https://flagcdn.com/lk.svg"
     },
     {
       "iso_a2": "LR",
@@ -5191,26 +3366,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇱🇷",
-      "flag_svg": "https://flagcdn.com/lr.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "blue"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "star"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "coastal rainforest",
-      "bordering_waters": [
-        "Atlantic Ocean"
-      ],
-      "landmark": "Sapo National Park",
-      "famous_food": "jollof rice",
-      "fact_card": "Founded in 1847 by formerly enslaved Americans returning to Africa, Liberia was the first African republic — its flag echoes the Stars and Stripes of the United States."
+      "flag_svg": "https://flagcdn.com/lr.svg"
     },
     {
       "iso_a2": "LS",
@@ -5241,17 +3397,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇱🇸",
-      "flag_svg": "https://flagcdn.com/ls.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/ls.svg"
     },
     {
       "iso_a2": "LT",
@@ -5284,25 +3430,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇱🇹",
-      "flag_svg": "https://flagcdn.com/lt.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "yellow",
-        "green",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "flat",
-      "bordering_waters": [
-        "Baltic Sea"
-      ],
-      "landmark": "Hill of Crosses",
-      "famous_food": "cepelinai",
-      "fact_card": "A small Baltic nation — the first Soviet republic to declare independence — covered in pine forests and pristine lakes."
+      "flag_svg": "https://flagcdn.com/lt.svg"
     },
     {
       "iso_a2": "LU",
@@ -5336,17 +3464,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇱🇺",
-      "flag_svg": "https://flagcdn.com/lu.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/lu.svg"
     },
     {
       "iso_a2": "LV",
@@ -5379,17 +3497,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇱🇻",
-      "flag_svg": "https://flagcdn.com/lv.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/lv.svg"
     },
     {
       "iso_a2": "LY",
@@ -5424,27 +3532,7 @@
       "population_bucket": "small",
       "area_bucket": "medium",
       "flag_emoji": "🇱🇾",
-      "flag_svg": "https://flagcdn.com/ly.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "black",
-        "green"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "crescent",
-        "star"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "desert",
-      "bordering_waters": [
-        "Mediterranean Sea"
-      ],
-      "landmark": "Leptis Magna ruins",
-      "famous_food": "couscous",
-      "fact_card": "Nearly all desert, but holds some of the world's best-preserved ancient Roman ruins along its Mediterranean coast."
+      "flag_svg": "https://flagcdn.com/ly.svg"
     },
     {
       "iso_a2": "MA",
@@ -5477,26 +3565,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇲🇦",
-      "flag_svg": "https://flagcdn.com/ma.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "green"
-      ],
-      "flag_motifs": [
-        "star"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "mixed",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "Mediterranean Sea"
-      ],
-      "landmark": "Marrakech Medina",
-      "famous_food": "tagine",
-      "fact_card": "Where the Atlas Mountains meet the Sahara and the Atlantic meets the Mediterranean.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/ma.svg"
     },
     {
       "iso_a2": "MC",
@@ -5526,17 +3595,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇲🇨",
-      "flag_svg": "https://flagcdn.com/mc.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/mc.svg"
     },
     {
       "iso_a2": "MD",
@@ -5567,17 +3626,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇲🇩",
-      "flag_svg": "https://flagcdn.com/md.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/md.svg"
     },
     {
       "iso_a2": "ME",
@@ -5611,17 +3660,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇲🇪",
-      "flag_svg": "https://flagcdn.com/me.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/me.svg"
     },
     {
       "iso_a2": "MG",
@@ -5650,26 +3689,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇲🇬",
-      "flag_svg": "https://flagcdn.com/mg.svg",
-      "level": 3,
-      "island": true,
-      "flag_colors": [
-        "white",
-        "red",
-        "green"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "island",
-      "bordering_waters": [
-        "Indian Ocean",
-        "Mozambique Channel"
-      ],
-      "landmark": "Avenue of the Baobabs",
-      "famous_food": "romazava",
-      "fact_card": "The world's fourth-largest island, where most plants and animals — including lemurs — exist nowhere else."
+      "flag_svg": "https://flagcdn.com/mg.svg"
     },
     {
       "iso_a2": "MH",
@@ -5698,17 +3718,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇲🇭",
-      "flag_svg": "https://flagcdn.com/mh.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/mh.svg"
     },
     {
       "iso_a2": "MK",
@@ -5742,17 +3752,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇲🇰",
-      "flag_svg": "https://flagcdn.com/mk.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/mk.svg"
     },
     {
       "iso_a2": "ML",
@@ -5788,23 +3788,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇲🇱",
-      "flag_svg": "https://flagcdn.com/ml.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "yellow",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "desert",
-      "bordering_waters": [],
-      "landmark": "Great Mosque of Djenné",
-      "famous_food": "jollof rice",
-      "fact_card": "Ancient home of the Mali Empire and the legendary city of Timbuktu — a center of trans-Saharan trade and Islamic scholarship."
+      "flag_svg": "https://flagcdn.com/ml.svg"
     },
     {
       "iso_a2": "MM",
@@ -5838,28 +3822,7 @@
       "population_bucket": "large",
       "area_bucket": "medium",
       "flag_emoji": "🇲🇲",
-      "flag_svg": "https://flagcdn.com/mm.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "yellow",
-        "green",
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "star"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "mixed",
-      "bordering_waters": [
-        "Andaman Sea",
-        "Bay of Bengal"
-      ],
-      "landmark": "Shwedagon Pagoda",
-      "famous_food": "mohinga",
-      "fact_card": "Land of thousands of golden pagodas, with the Irrawaddy River flowing through its heart."
+      "flag_svg": "https://flagcdn.com/mm.svg"
     },
     {
       "iso_a2": "MN",
@@ -5890,25 +3853,7 @@
       "population_bucket": "small",
       "area_bucket": "medium",
       "flag_emoji": "🇲🇳",
-      "flag_svg": "https://flagcdn.com/mn.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "blue",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "sun",
-        "circle"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "steppe",
-      "bordering_waters": [],
-      "landmark": "Gobi Desert",
-      "famous_food": "buuz",
-      "fact_card": "The world's most sparsely populated country, with nomadic herders riding the same vast steppes as Genghis Khan's empire."
+      "flag_svg": "https://flagcdn.com/mn.svg"
     },
     {
       "iso_a2": "MR",
@@ -5941,27 +3886,7 @@
       "population_bucket": "small",
       "area_bucket": "medium",
       "flag_emoji": "🇲🇷",
-      "flag_svg": "https://flagcdn.com/mr.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "yellow",
-        "red"
-      ],
-      "flag_motifs": [
-        "crescent",
-        "stars",
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "sahara desert",
-      "bordering_waters": [
-        "Atlantic Ocean"
-      ],
-      "landmark": "Ancient Ksour of Ouadane",
-      "famous_food": "thieboudienne",
-      "fact_card": "Covering mostly Sahara Desert, Mauritania is home to ancient fortified cities (ksour) that were once crucial stops on trans-Saharan camel caravan trading routes."
+      "flag_svg": "https://flagcdn.com/mr.svg"
     },
     {
       "iso_a2": "MT",
@@ -5990,17 +3915,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇲🇹",
-      "flag_svg": "https://flagcdn.com/mt.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/mt.svg"
     },
     {
       "iso_a2": "MU",
@@ -6030,17 +3945,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇲🇺",
-      "flag_svg": "https://flagcdn.com/mu.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/mu.svg"
     },
     {
       "iso_a2": "MV",
@@ -6068,17 +3973,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇲🇻",
-      "flag_svg": "https://flagcdn.com/mv.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/mv.svg"
     },
     {
       "iso_a2": "MW",
@@ -6111,17 +4006,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇲🇼",
-      "flag_svg": "https://flagcdn.com/mw.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/mw.svg"
     },
     {
       "iso_a2": "MX",
@@ -6153,29 +4038,7 @@
       "population_bucket": "large",
       "area_bucket": "medium",
       "flag_emoji": "🇲🇽",
-      "flag_svg": "https://flagcdn.com/mx.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "white",
-        "red"
-      ],
-      "flag_motifs": [
-        "eagle",
-        "stripes"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "mountainous",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "Gulf of Mexico",
-        "Caribbean Sea"
-      ],
-      "landmark": "Chichen Itza",
-      "famous_food": "tacos",
-      "fact_card": "Home of the ancient Maya and Aztec civilizations and the birthplace of chocolate.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/mx.svg"
     },
     {
       "iso_a2": "MY",
@@ -6208,29 +4071,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇲🇾",
-      "flag_svg": "https://flagcdn.com/my.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "blue",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "crescent",
-        "star"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "mixed",
-      "bordering_waters": [
-        "South China Sea",
-        "Strait of Malacca"
-      ],
-      "landmark": "Petronas Towers",
-      "famous_food": "nasi lemak",
-      "fact_card": "Split into two parts by the South China Sea, with rainforests, twin skyscrapers, and orangutans."
+      "flag_svg": "https://flagcdn.com/my.svg"
     },
     {
       "iso_a2": "MZ",
@@ -6265,30 +4106,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇲🇿",
-      "flag_svg": "https://flagcdn.com/mz.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "white",
-        "black",
-        "yellow",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "star",
-        "coat-of-arms"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "coastal lowlands",
-      "bordering_waters": [
-        "Indian Ocean",
-        "Mozambique Channel"
-      ],
-      "landmark": "Gorongosa National Park",
-      "famous_food": "piri-piri prawns",
-      "fact_card": "A long, narrow country stretching down southeast Africa's coast, with over 2,500 km of Indian Ocean shoreline and some of Africa's best coral reefs."
+      "flag_svg": "https://flagcdn.com/mz.svg"
     },
     {
       "iso_a2": "NA",
@@ -6329,17 +4147,7 @@
       "population_bucket": "small",
       "area_bucket": "medium",
       "flag_emoji": "🇳🇦",
-      "flag_svg": "https://flagcdn.com/na.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/na.svg"
     },
     {
       "iso_a2": "NE",
@@ -6375,24 +4183,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇳🇪",
-      "flag_svg": "https://flagcdn.com/ne.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "orange",
-        "white",
-        "green"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "circle"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "sahara and sahel",
-      "bordering_waters": [],
-      "landmark": "Agadez Grand Mosque",
-      "famous_food": "dambou",
-      "fact_card": "One of the world's largest countries by area, Niger is mostly Sahara Desert in the north and dry Sahel savanna in the south, centered around the Niger River."
+      "flag_svg": "https://flagcdn.com/ne.svg"
     },
     {
       "iso_a2": "NG",
@@ -6425,25 +4216,7 @@
       "population_bucket": "mega",
       "area_bucket": "medium",
       "flag_emoji": "🇳🇬",
-      "flag_svg": "https://flagcdn.com/ng.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "coastal",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "Gulf of Guinea"
-      ],
-      "landmark": "Aso Rock",
-      "famous_food": "jollof rice",
-      "fact_card": "Africa's most populous country, with over 500 languages spoken."
+      "flag_svg": "https://flagcdn.com/ng.svg"
     },
     {
       "iso_a2": "NI",
@@ -6474,26 +4247,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇳🇮",
-      "flag_svg": "https://flagcdn.com/ni.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "coat-of-arms"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "volcanoes and lakes",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "Caribbean Sea"
-      ],
-      "landmark": "Ometepe Island",
-      "famous_food": "gallo pinto",
-      "fact_card": "Central America's largest country, with a chain of active volcanoes running along its Pacific coast and the largest lake in Central America, Lake Nicaragua."
+      "flag_svg": "https://flagcdn.com/ni.svg"
     },
     {
       "iso_a2": "NL",
@@ -6524,26 +4278,7 @@
       "population_bucket": "medium",
       "area_bucket": "tiny",
       "flag_emoji": "🇳🇱",
-      "flag_svg": "https://flagcdn.com/nl.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "blue"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "flat",
-      "bordering_waters": [
-        "North Sea"
-      ],
-      "landmark": "Anne Frank House",
-      "famous_food": "stroopwafel",
-      "fact_card": "About a third of the country lies below sea level, protected by an enormous system of dikes.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/nl.svg"
     },
     {
       "iso_a2": "NO",
@@ -6577,28 +4312,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇳🇴",
-      "flag_svg": "https://flagcdn.com/no.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "blue"
-      ],
-      "flag_motifs": [
-        "cross"
-      ],
-      "climate_band": "polar",
-      "terrain_headline": "fjords",
-      "bordering_waters": [
-        "North Sea",
-        "Norwegian Sea",
-        "Barents Sea"
-      ],
-      "landmark": "Geirangerfjord",
-      "famous_food": "salmon",
-      "fact_card": "Carved by glaciers, Norway's coast is a maze of fjords and one of the world's longest coastlines.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/no.svg"
     },
     {
       "iso_a2": "NP",
@@ -6629,24 +4343,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇳🇵",
-      "flag_svg": "https://flagcdn.com/np.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "blue",
-        "white"
-      ],
-      "flag_motifs": [
-        "sun",
-        "circle"
-      ],
-      "climate_band": "mixed",
-      "terrain_headline": "mountainous",
-      "bordering_waters": [],
-      "landmark": "Mount Everest",
-      "famous_food": "dal bhat",
-      "fact_card": "Home to Mount Everest, the world's tallest peak, and eight of the world's ten highest mountains. The only country with a non-rectangular flag."
+      "flag_svg": "https://flagcdn.com/np.svg"
     },
     {
       "iso_a2": "NR",
@@ -6675,17 +4372,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇳🇷",
-      "flag_svg": "https://flagcdn.com/nr.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/nr.svg"
     },
     {
       "iso_a2": "NZ",
@@ -6715,28 +4402,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇳🇿",
-      "flag_svg": "https://flagcdn.com/nz.svg",
-      "level": 2,
-      "island": true,
-      "flag_colors": [
-        "blue",
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "stars",
-        "cross"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "islands",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "Tasman Sea"
-      ],
-      "landmark": "Milford Sound",
-      "famous_food": "pavlova",
-      "fact_card": "Two main islands shaped by volcanoes and glaciers — home of the kiwi bird and the Māori people.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/nz.svg"
     },
     {
       "iso_a2": "OM",
@@ -6768,28 +4434,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇴🇲",
-      "flag_svg": "https://flagcdn.com/om.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "green"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "coat-of-arms"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "desert and mountains",
-      "bordering_waters": [
-        "Arabian Sea",
-        "Gulf of Oman",
-        "Strait of Hormuz"
-      ],
-      "landmark": "Wahiba Sands",
-      "famous_food": "shuwa",
-      "fact_card": "An ancient seafaring nation on the southeastern tip of the Arabian Peninsula, with dramatic fjords in the north, vast sand dunes, and a history of frankincense trade."
+      "flag_svg": "https://flagcdn.com/om.svg"
     },
     {
       "iso_a2": "PA",
@@ -6820,27 +4465,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇵🇦",
-      "flag_svg": "https://flagcdn.com/pa.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "white",
-        "red",
-        "blue"
-      ],
-      "flag_motifs": [
-        "stars"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "coastal",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "Caribbean Sea"
-      ],
-      "landmark": "Panama Canal",
-      "famous_food": "sancocho",
-      "fact_card": "Home of the Panama Canal — a 51-mile shortcut between the Atlantic and Pacific Oceans.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/pa.svg"
     },
     {
       "iso_a2": "PE",
@@ -6876,25 +4501,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇵🇪",
-      "flag_svg": "https://flagcdn.com/pe.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "coat-of-arms"
-      ],
-      "climate_band": "mixed",
-      "terrain_headline": "mountainous",
-      "bordering_waters": [
-        "Pacific Ocean"
-      ],
-      "landmark": "Machu Picchu",
-      "famous_food": "ceviche",
-      "fact_card": "Home of Machu Picchu and the Inca Empire, spanning desert coast, Andes peaks, and Amazon rainforest."
+      "flag_svg": "https://flagcdn.com/pe.svg"
     },
     {
       "iso_a2": "PG",
@@ -6926,27 +4533,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇵🇬",
-      "flag_svg": "https://flagcdn.com/pg.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "black",
-        "yellow",
-        "white"
-      ],
-      "flag_motifs": [
-        "stars"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "rainforest",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "Coral Sea"
-      ],
-      "landmark": "Mount Wilhelm",
-      "famous_food": "mumu",
-      "fact_card": "One of the most culturally diverse countries on Earth, where over 800 languages are spoken."
+      "flag_svg": "https://flagcdn.com/pg.svg"
     },
     {
       "iso_a2": "PH",
@@ -6975,29 +4562,7 @@
       "population_bucket": "large",
       "area_bucket": "small",
       "flag_emoji": "🇵🇭",
-      "flag_svg": "https://flagcdn.com/ph.svg",
-      "level": 2,
-      "island": true,
-      "flag_colors": [
-        "red",
-        "white",
-        "blue",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "stars",
-        "sun"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "archipelago",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "South China Sea",
-        "Philippine Sea"
-      ],
-      "landmark": "Banaue Rice Terraces",
-      "famous_food": "adobo",
-      "fact_card": "An archipelago of 7,641 islands with one of the most diverse marine ecosystems on Earth."
+      "flag_svg": "https://flagcdn.com/ph.svg"
     },
     {
       "iso_a2": "PK",
@@ -7031,25 +4596,7 @@
       "population_bucket": "mega",
       "area_bucket": "medium",
       "flag_emoji": "🇵🇰",
-      "flag_svg": "https://flagcdn.com/pk.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "white"
-      ],
-      "flag_motifs": [
-        "crescent",
-        "star"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "mixed",
-      "bordering_waters": [
-        "Arabian Sea"
-      ],
-      "landmark": "Badshahi Mosque",
-      "famous_food": "biryani",
-      "fact_card": "Home to K2, the second-highest mountain on Earth, and one of the world's most populous countries."
+      "flag_svg": "https://flagcdn.com/pk.svg"
     },
     {
       "iso_a2": "PL",
@@ -7085,24 +4632,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇵🇱",
-      "flag_svg": "https://flagcdn.com/pl.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "white",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "plains",
-      "bordering_waters": [
-        "Baltic Sea"
-      ],
-      "landmark": "Wawel Castle",
-      "famous_food": "pierogi",
-      "fact_card": "Home to Europe's last primeval forest and the birthplace of scientist Marie Curie."
+      "flag_svg": "https://flagcdn.com/pl.svg"
     },
     {
       "iso_a2": "PT",
@@ -7132,26 +4662,7 @@
       "population_bucket": "medium",
       "area_bucket": "tiny",
       "flag_emoji": "🇵🇹",
-      "flag_svg": "https://flagcdn.com/pt.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "red",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "coat-of-arms"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "coastal",
-      "bordering_waters": [
-        "Atlantic Ocean"
-      ],
-      "landmark": "Belém Tower",
-      "famous_food": "pastel de nata",
-      "fact_card": "From this small country, explorers like Vasco da Gama opened up sea routes around the world.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/pt.svg"
     },
     {
       "iso_a2": "PW",
@@ -7180,17 +4691,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇵🇼",
-      "flag_svg": "https://flagcdn.com/pw.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/pw.svg"
     },
     {
       "iso_a2": "PY",
@@ -7223,25 +4724,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇵🇾",
-      "flag_svg": "https://flagcdn.com/py.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "blue"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "coat-of-arms"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "plains",
-      "bordering_waters": [],
-      "landmark": "Jesuit Missions of La Santísima Trinidad",
-      "famous_food": "chipa",
-      "fact_card": "A landlocked South American country where both Spanish and Guaraní (an indigenous language) are spoken by nearly everyone.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/py.svg"
     },
     {
       "iso_a2": "QA",
@@ -7271,25 +4754,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇶🇦",
-      "flag_svg": "https://flagcdn.com/qa.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "white",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "desert",
-      "bordering_waters": [
-        "Persian Gulf"
-      ],
-      "landmark": "Museum of Islamic Art",
-      "famous_food": "machbous",
-      "fact_card": "A tiny desert peninsula that hosted the 2022 FIFA World Cup, sitting on one of the world's largest natural gas reserves.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/qa.svg"
     },
     {
       "iso_a2": "RO",
@@ -7323,25 +4788,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇷🇴",
-      "flag_svg": "https://flagcdn.com/ro.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "yellow",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "mountainous",
-      "bordering_waters": [
-        "Black Sea"
-      ],
-      "landmark": "Bran Castle",
-      "famous_food": "sarmale",
-      "fact_card": "Home of the Carpathian Mountains and the legend of Dracula, inspired by 15th-century prince Vlad the Impaler."
+      "flag_svg": "https://flagcdn.com/ro.svg"
     },
     {
       "iso_a2": "RS",
@@ -7378,24 +4825,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇷🇸",
-      "flag_svg": "https://flagcdn.com/rs.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "blue",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "eagle"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "mixed",
-      "bordering_waters": [],
-      "landmark": "Belgrade Fortress",
-      "famous_food": "ćevapi",
-      "fact_card": "A landlocked Balkan country at the confluence of the Sava and Danube rivers, with a 7,000-year history of civilization."
+      "flag_svg": "https://flagcdn.com/rs.svg"
     },
     {
       "iso_a2": "RU",
@@ -7438,29 +4868,7 @@
       "population_bucket": "large",
       "area_bucket": "huge",
       "flag_emoji": "🇷🇺",
-      "flag_svg": "https://flagcdn.com/ru.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "white",
-        "blue",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "polar",
-      "terrain_headline": "vast",
-      "bordering_waters": [
-        "Arctic Ocean",
-        "Pacific Ocean",
-        "Baltic Sea",
-        "Black Sea",
-        "Caspian Sea"
-      ],
-      "landmark": "Red Square",
-      "famous_food": "borscht",
-      "fact_card": "The largest country on Earth, stretching across 11 time zones."
+      "flag_svg": "https://flagcdn.com/ru.svg"
     },
     {
       "iso_a2": "RW",
@@ -7495,24 +4903,7 @@
       "population_bucket": "medium",
       "area_bucket": "tiny",
       "flag_emoji": "🇷🇼",
-      "flag_svg": "https://flagcdn.com/rw.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "yellow",
-        "green"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "sun"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "highlands",
-      "bordering_waters": [],
-      "landmark": "Volcanoes National Park",
-      "famous_food": "ugali",
-      "fact_card": "Nicknamed 'Land of a Thousand Hills,' home to endangered mountain gorillas in misty volcanic forests."
+      "flag_svg": "https://flagcdn.com/rw.svg"
     },
     {
       "iso_a2": "SA",
@@ -7548,27 +4939,7 @@
       "population_bucket": "medium",
       "area_bucket": "large",
       "flag_emoji": "🇸🇦",
-      "flag_svg": "https://flagcdn.com/sa.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "white"
-      ],
-      "flag_motifs": [
-        "text",
-        "sword"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "desert",
-      "bordering_waters": [
-        "Red Sea",
-        "Persian Gulf"
-      ],
-      "landmark": "Kaaba in Mecca",
-      "famous_food": "kabsa",
-      "fact_card": "Holds Islam's two holiest cities, Mecca and Medina, and vast deserts of sand and oil.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/sa.svg"
     },
     {
       "iso_a2": "SB",
@@ -7596,28 +4967,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇸🇧",
-      "flag_svg": "https://flagcdn.com/sb.svg",
-      "level": 4,
-      "island": true,
-      "flag_colors": [
-        "blue",
-        "yellow",
-        "green",
-        "white"
-      ],
-      "flag_motifs": [
-        "stars",
-        "stripes"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "archipelago",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "Coral Sea"
-      ],
-      "landmark": "Guadalcanal",
-      "famous_food": "poi",
-      "fact_card": "An archipelago of nearly 1,000 islands in the South Pacific, with WWII history and pristine coral reefs."
+      "flag_svg": "https://flagcdn.com/sb.svg"
     },
     {
       "iso_a2": "SC",
@@ -7647,17 +4997,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇸🇨",
-      "flag_svg": "https://flagcdn.com/sc.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/sc.svg"
     },
     {
       "iso_a2": "SD",
@@ -7694,26 +5034,7 @@
       "population_bucket": "large",
       "area_bucket": "medium",
       "flag_emoji": "🇸🇩",
-      "flag_svg": "https://flagcdn.com/sd.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "black",
-        "green"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "desert",
-      "bordering_waters": [
-        "Red Sea"
-      ],
-      "landmark": "Pyramids of Meroë",
-      "famous_food": "ful medames",
-      "fact_card": "Holds more pyramids than Egypt — built by the ancient Kingdom of Kush along the Nile."
+      "flag_svg": "https://flagcdn.com/sd.svg"
     },
     {
       "iso_a2": "SE",
@@ -7744,26 +5065,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇸🇪",
-      "flag_svg": "https://flagcdn.com/se.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "cross"
-      ],
-      "climate_band": "polar",
-      "terrain_headline": "forested",
-      "bordering_waters": [
-        "Baltic Sea",
-        "Gulf of Bothnia"
-      ],
-      "landmark": "Stockholm City Hall",
-      "famous_food": "meatballs",
-      "fact_card": "One of the most forested countries in Europe, with a coastline scattered with 30,000 islands.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/se.svg"
     },
     {
       "iso_a2": "SG",
@@ -7794,26 +5096,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇸🇬",
-      "flag_svg": "https://flagcdn.com/sg.svg",
-      "level": 3,
-      "island": true,
-      "flag_colors": [
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "crescent",
-        "stars"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "city-state",
-      "bordering_waters": [
-        "Strait of Malacca",
-        "South China Sea"
-      ],
-      "landmark": "Marina Bay Sands",
-      "famous_food": "Hainanese chicken rice",
-      "fact_card": "A tiny island city-state with one of the world's busiest ports — went from fishing village to global hub in 60 years."
+      "flag_svg": "https://flagcdn.com/sg.svg"
     },
     {
       "iso_a2": "SI",
@@ -7846,17 +5129,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇸🇮",
-      "flag_svg": "https://flagcdn.com/si.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/si.svg"
     },
     {
       "iso_a2": "SK",
@@ -7890,24 +5163,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇸🇰",
-      "flag_svg": "https://flagcdn.com/sk.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "white",
-        "blue",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "coat-of-arms"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "carpathian mountains",
-      "bordering_waters": [],
-      "landmark": "Spiš Castle",
-      "famous_food": "bryndzové halušky",
-      "fact_card": "A landlocked Central European country with hundreds of medieval castles — more castles per square kilometer than almost anywhere in the world."
+      "flag_svg": "https://flagcdn.com/sk.svg"
     },
     {
       "iso_a2": "SL",
@@ -7938,17 +5194,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇸🇱",
-      "flag_svg": "https://flagcdn.com/sl.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/sl.svg"
     },
     {
       "iso_a2": "SM",
@@ -7978,17 +5224,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇸🇲",
-      "flag_svg": "https://flagcdn.com/sm.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/sm.svg"
     },
     {
       "iso_a2": "SN",
@@ -8022,27 +5258,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇸🇳",
-      "flag_svg": "https://flagcdn.com/sn.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "yellow",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "star"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "coastal",
-      "bordering_waters": [
-        "Atlantic Ocean"
-      ],
-      "landmark": "Gorée Island",
-      "famous_food": "thieboudienne",
-      "fact_card": "Westernmost country in mainland Africa, famous for music, wrestling, and the welcoming spirit of 'teranga.'",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/sn.svg"
     },
     {
       "iso_a2": "SO",
@@ -8075,25 +5291,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇸🇴",
-      "flag_svg": "https://flagcdn.com/so.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "white"
-      ],
-      "flag_motifs": [
-        "star"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "coast and semi-desert",
-      "bordering_waters": [
-        "Indian Ocean",
-        "Gulf of Aden"
-      ],
-      "landmark": "Laas Geel Cave Paintings",
-      "famous_food": "canjeero",
-      "fact_card": "Located on the Horn of Africa, Somalia has the longest coastline of any African country, and its ancient cave paintings at Laas Geel are among the oldest in the world."
+      "flag_svg": "https://flagcdn.com/so.svg"
     },
     {
       "iso_a2": "SR",
@@ -8125,17 +5323,7 @@
       "population_bucket": "tiny",
       "area_bucket": "small",
       "flag_emoji": "🇸🇷",
-      "flag_svg": "https://flagcdn.com/sr.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/sr.svg"
     },
     {
       "iso_a2": "SS",
@@ -8170,17 +5358,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇸🇸",
-      "flag_svg": "https://flagcdn.com/ss.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/ss.svg"
     },
     {
       "iso_a2": "ST",
@@ -8208,17 +5386,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇸🇹",
-      "flag_svg": "https://flagcdn.com/st.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/st.svg"
     },
     {
       "iso_a2": "SV",
@@ -8249,25 +5417,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇸🇻",
-      "flag_svg": "https://flagcdn.com/sv.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "coat-of-arms"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "volcanoes",
-      "bordering_waters": [
-        "Pacific Ocean"
-      ],
-      "landmark": "Santa Ana Volcano",
-      "famous_food": "pupusas",
-      "fact_card": "The smallest and most densely populated country in Central America, nicknamed 'The Land of Volcanoes' — its stuffed corn cakes (pupusas) are the national dish."
+      "flag_svg": "https://flagcdn.com/sv.svg"
     },
     {
       "iso_a2": "SY",
@@ -8301,17 +5451,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇸🇾",
-      "flag_svg": "https://flagcdn.com/sy.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/sy.svg"
     },
     {
       "iso_a2": "SZ",
@@ -8343,17 +5483,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇸🇿",
-      "flag_svg": "https://flagcdn.com/sz.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/sz.svg"
     },
     {
       "iso_a2": "TD",
@@ -8389,25 +5519,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇹🇩",
-      "flag_svg": "https://flagcdn.com/td.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "yellow",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "sahara and sahel",
-      "bordering_waters": [
-        "Lake Chad"
-      ],
-      "landmark": "Ennedi Plateau",
-      "famous_food": "boule",
-      "fact_card": "A vast landlocked country where the Sahara Desert in the north gives way to a green Sahel belt in the south, and where ancient cave art dots the otherworldly Ennedi Plateau."
+      "flag_svg": "https://flagcdn.com/td.svg"
     },
     {
       "iso_a2": "TG",
@@ -8439,17 +5551,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇹🇬",
-      "flag_svg": "https://flagcdn.com/tg.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/tg.svg"
     },
     {
       "iso_a2": "TH",
@@ -8482,26 +5584,7 @@
       "population_bucket": "large",
       "area_bucket": "medium",
       "flag_emoji": "🇹🇭",
-      "flag_svg": "https://flagcdn.com/th.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "blue"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "mixed",
-      "bordering_waters": [
-        "Andaman Sea",
-        "Gulf of Thailand"
-      ],
-      "landmark": "Grand Palace in Bangkok",
-      "famous_food": "pad thai",
-      "fact_card": "Known as the 'Land of Smiles' — the only Southeast Asian country never colonized by Europeans."
+      "flag_svg": "https://flagcdn.com/th.svg"
     },
     {
       "iso_a2": "TJ",
@@ -8535,25 +5618,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇹🇯",
-      "flag_svg": "https://flagcdn.com/tj.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "green"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "crown",
-        "stars"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "pamir mountains",
-      "bordering_waters": [],
-      "landmark": "Pamir Highway",
-      "famous_food": "qurutob",
-      "fact_card": "Over 90% of this Central Asian country is covered by mountains — including the soaring Pamirs, nicknamed 'the Roof of the World,' with peaks over 7,000 metres."
+      "flag_svg": "https://flagcdn.com/tj.svg"
     },
     {
       "iso_a2": "TL",
@@ -8584,17 +5649,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇹🇱",
-      "flag_svg": "https://flagcdn.com/tl.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/tl.svg"
     },
     {
       "iso_a2": "TM",
@@ -8628,17 +5683,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇹🇲",
-      "flag_svg": "https://flagcdn.com/tm.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/tm.svg"
     },
     {
       "iso_a2": "TN",
@@ -8669,27 +5714,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇹🇳",
-      "flag_svg": "https://flagcdn.com/tn.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "crescent",
-        "star",
-        "circle"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "coastal",
-      "bordering_waters": [
-        "Mediterranean Sea"
-      ],
-      "landmark": "Carthage ruins",
-      "famous_food": "brik",
-      "fact_card": "Africa's northernmost country, where ancient Carthage once challenged the Roman Empire.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/tn.svg"
     },
     {
       "iso_a2": "TO",
@@ -8718,17 +5743,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇹🇴",
-      "flag_svg": "https://flagcdn.com/to.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/to.svg"
     },
     {
       "iso_a2": "TR",
@@ -8765,28 +5780,7 @@
       "population_bucket": "large",
       "area_bucket": "medium",
       "flag_emoji": "🇹🇷",
-      "flag_svg": "https://flagcdn.com/tr.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "crescent",
-        "star"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "peninsula",
-      "bordering_waters": [
-        "Mediterranean Sea",
-        "Black Sea",
-        "Aegean Sea"
-      ],
-      "landmark": "Hagia Sophia",
-      "famous_food": "kebab",
-      "fact_card": "Bridges Europe and Asia — Istanbul is the only major city sitting on two continents.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/tr.svg"
     },
     {
       "iso_a2": "TT",
@@ -8814,17 +5808,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇹🇹",
-      "flag_svg": "https://flagcdn.com/tt.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/tt.svg"
     },
     {
       "iso_a2": "TV",
@@ -8853,17 +5837,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇹🇻",
-      "flag_svg": "https://flagcdn.com/tv.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/tv.svg"
     },
     {
       "iso_a2": "TW",
@@ -8891,27 +5865,7 @@
       "population_bucket": "medium",
       "area_bucket": "tiny",
       "flag_emoji": "🇹🇼",
-      "flag_svg": "https://flagcdn.com/tw.svg",
-      "level": 3,
-      "island": true,
-      "flag_colors": [
-        "red",
-        "blue",
-        "white"
-      ],
-      "flag_motifs": [
-        "sun"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "island",
-      "bordering_waters": [
-        "Pacific Ocean",
-        "Taiwan Strait",
-        "South China Sea"
-      ],
-      "landmark": "Taipei 101",
-      "famous_food": "beef noodle soup",
-      "fact_card": "A mountainous island off the coast of China, known for night markets, tech giants, and oolong tea."
+      "flag_svg": "https://flagcdn.com/tw.svg"
     },
     {
       "iso_a2": "TZ",
@@ -8949,26 +5903,7 @@
       "population_bucket": "large",
       "area_bucket": "medium",
       "flag_emoji": "🇹🇿",
-      "flag_svg": "https://flagcdn.com/tz.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "yellow",
-        "black",
-        "blue"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "savanna",
-      "bordering_waters": [
-        "Indian Ocean"
-      ],
-      "landmark": "Mount Kilimanjaro",
-      "famous_food": "ugali",
-      "fact_card": "Home of Mount Kilimanjaro — Africa's highest peak — and the Serengeti's great wildebeest migration."
+      "flag_svg": "https://flagcdn.com/tz.svg"
     },
     {
       "iso_a2": "UA",
@@ -9004,25 +5939,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇺🇦",
-      "flag_svg": "https://flagcdn.com/ua.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "plains",
-      "bordering_waters": [
-        "Black Sea",
-        "Sea of Azov"
-      ],
-      "landmark": "Kyiv Pechersk Lavra",
-      "famous_food": "borscht",
-      "fact_card": "Europe's largest country fully on the continent, covered by some of the world's richest farmland."
+      "flag_svg": "https://flagcdn.com/ua.svg"
     },
     {
       "iso_a2": "UG",
@@ -9057,25 +5974,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇺🇬",
-      "flag_svg": "https://flagcdn.com/ug.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "black",
-        "yellow",
-        "red",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "circle"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "highlands",
-      "bordering_waters": [],
-      "landmark": "Bwindi Impenetrable Forest",
-      "famous_food": "matoke",
-      "fact_card": "Source of the Nile and a refuge for mountain gorillas in the misty Bwindi Forest."
+      "flag_svg": "https://flagcdn.com/ug.svg"
     },
     {
       "iso_a2": "US",
@@ -9106,29 +6005,7 @@
       "population_bucket": "mega",
       "area_bucket": "huge",
       "flag_emoji": "🇺🇸",
-      "flag_svg": "https://flagcdn.com/us.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "blue"
-      ],
-      "flag_motifs": [
-        "stars",
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "varied",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "Pacific Ocean",
-        "Gulf of Mexico"
-      ],
-      "landmark": "Grand Canyon",
-      "famous_food": "hamburger",
-      "fact_card": "Spans four time zones in the mainland and includes the world's first national park, Yellowstone.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/us.svg"
     },
     {
       "iso_a2": "UY",
@@ -9159,28 +6036,7 @@
       "population_bucket": "small",
       "area_bucket": "small",
       "flag_emoji": "🇺🇾",
-      "flag_svg": "https://flagcdn.com/uy.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "white",
-        "blue",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "sun",
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "plains",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "Río de la Plata"
-      ],
-      "landmark": "Punta del Este",
-      "famous_food": "chivito",
-      "fact_card": "A small South American country with vast cattle ranches and the most World Cup soccer trophies per person.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/uy.svg"
     },
     {
       "iso_a2": "UZ",
@@ -9215,28 +6071,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇺🇿",
-      "flag_svg": "https://flagcdn.com/uz.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "blue",
-        "white",
-        "green"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "crescent",
-        "stars"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "desert and ancient cities",
-      "bordering_waters": [
-        "Aral Sea"
-      ],
-      "landmark": "Registan, Samarkand",
-      "famous_food": "plov",
-      "fact_card": "Home to the ancient Silk Road cities of Samarkand and Bukhara — once the most dazzling trading stops in the medieval world — now gleaming with turquoise-tiled mosques.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/uz.svg"
     },
     {
       "iso_a2": "VA",
@@ -9267,17 +6102,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇻🇦",
-      "flag_svg": "https://flagcdn.com/va.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/va.svg"
     },
     {
       "iso_a2": "VC",
@@ -9305,17 +6130,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇻🇨",
-      "flag_svg": "https://flagcdn.com/vc.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/vc.svg"
     },
     {
       "iso_a2": "VE",
@@ -9347,27 +6162,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇻🇪",
-      "flag_svg": "https://flagcdn.com/ve.svg",
-      "level": 3,
-      "island": false,
-      "flag_colors": [
-        "yellow",
-        "blue",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "stars"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "varied",
-      "bordering_waters": [
-        "Caribbean Sea",
-        "Atlantic Ocean"
-      ],
-      "landmark": "Angel Falls",
-      "famous_food": "arepa",
-      "fact_card": "Home of Angel Falls — the world's tallest waterfall, plunging from a flat-topped mountain in the Amazon."
+      "flag_svg": "https://flagcdn.com/ve.svg"
     },
     {
       "iso_a2": "VN",
@@ -9399,25 +6194,7 @@
       "population_bucket": "large",
       "area_bucket": "small",
       "flag_emoji": "🇻🇳",
-      "flag_svg": "https://flagcdn.com/vn.svg",
-      "level": 2,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "yellow"
-      ],
-      "flag_motifs": [
-        "star"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "coastal",
-      "bordering_waters": [
-        "South China Sea",
-        "Gulf of Tonkin"
-      ],
-      "landmark": "Ha Long Bay",
-      "famous_food": "pho",
-      "fact_card": "An S-shaped country along the South China Sea, famous for rice terraces and pho noodle soup."
+      "flag_svg": "https://flagcdn.com/vn.svg"
     },
     {
       "iso_a2": "VU",
@@ -9447,17 +6224,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇻🇺",
-      "flag_svg": "https://flagcdn.com/vu.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/vu.svg"
     },
     {
       "iso_a2": "WS",
@@ -9486,26 +6253,7 @@
       "population_bucket": "tiny",
       "area_bucket": "tiny",
       "flag_emoji": "🇼🇸",
-      "flag_svg": "https://flagcdn.com/ws.svg",
-      "level": 4,
-      "island": true,
-      "flag_colors": [
-        "red",
-        "blue",
-        "white"
-      ],
-      "flag_motifs": [
-        "stars",
-        "cross"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "islands",
-      "bordering_waters": [
-        "Pacific Ocean"
-      ],
-      "landmark": "To Sua Ocean Trench",
-      "famous_food": "palusami",
-      "fact_card": "A pair of large volcanic islands in the South Pacific, home to one of the world's oldest Polynesian cultures."
+      "flag_svg": "https://flagcdn.com/ws.svg"
     },
     {
       "iso_a2": "XK",
@@ -9539,17 +6287,7 @@
       "population_bucket": "small",
       "area_bucket": "tiny",
       "flag_emoji": "🇽🇰",
-      "flag_svg": "https://flagcdn.com/xk.svg",
-      "level": 4,
-      "island": null,
-      "flag_colors": null,
-      "flag_motifs": null,
-      "climate_band": null,
-      "terrain_headline": null,
-      "bordering_waters": null,
-      "landmark": null,
-      "famous_food": null,
-      "fact_card": null
+      "flag_svg": "https://flagcdn.com/xk.svg"
     },
     {
       "iso_a2": "YE",
@@ -9580,27 +6318,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇾🇪",
-      "flag_svg": "https://flagcdn.com/ye.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "black"
-      ],
-      "flag_motifs": [
-        "stripes"
-      ],
-      "climate_band": "arid",
-      "terrain_headline": "mountains and desert",
-      "bordering_waters": [
-        "Arabian Sea",
-        "Gulf of Aden",
-        "Red Sea"
-      ],
-      "landmark": "Socotra Island",
-      "famous_food": "saltah",
-      "fact_card": "On the southern tip of the Arabian Peninsula, Yemen is home to Socotra — an island so isolated it evolved alien-looking 'dragon blood' trees found nowhere else on Earth."
+      "flag_svg": "https://flagcdn.com/ye.svg"
     },
     {
       "iso_a2": "ZA",
@@ -9645,31 +6363,7 @@
       "population_bucket": "large",
       "area_bucket": "medium",
       "flag_emoji": "🇿🇦",
-      "flag_svg": "https://flagcdn.com/za.svg",
-      "level": 1,
-      "island": false,
-      "flag_colors": [
-        "red",
-        "white",
-        "blue",
-        "green",
-        "yellow",
-        "black"
-      ],
-      "flag_motifs": [
-        "Y-shape",
-        "stripes"
-      ],
-      "climate_band": "temperate",
-      "terrain_headline": "plateau",
-      "bordering_waters": [
-        "Atlantic Ocean",
-        "Indian Ocean"
-      ],
-      "landmark": "Table Mountain",
-      "famous_food": "bobotie",
-      "fact_card": "Has three capital cities and is home to the world's deepest gold mines.",
-      "wc2026": true
+      "flag_svg": "https://flagcdn.com/za.svg"
     },
     {
       "iso_a2": "ZM",
@@ -9706,25 +6400,7 @@
       "population_bucket": "medium",
       "area_bucket": "medium",
       "flag_emoji": "🇿🇲",
-      "flag_svg": "https://flagcdn.com/zm.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "orange",
-        "black",
-        "red"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "eagle"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "plateau",
-      "bordering_waters": [],
-      "landmark": "Victoria Falls",
-      "famous_food": "nshima",
-      "fact_card": "A landlocked country in southern Africa that shares Victoria Falls — one of the world's greatest waterfalls — with its neighbor Zimbabwe."
+      "flag_svg": "https://flagcdn.com/zm.svg"
     },
     {
       "iso_a2": "ZW",
@@ -9771,27 +6447,7 @@
       "population_bucket": "medium",
       "area_bucket": "small",
       "flag_emoji": "🇿🇼",
-      "flag_svg": "https://flagcdn.com/zw.svg",
-      "level": 4,
-      "island": false,
-      "flag_colors": [
-        "green",
-        "yellow",
-        "red",
-        "black",
-        "white"
-      ],
-      "flag_motifs": [
-        "stripes",
-        "star",
-        "eagle"
-      ],
-      "climate_band": "tropical",
-      "terrain_headline": "highlands",
-      "bordering_waters": [],
-      "landmark": "Victoria Falls",
-      "famous_food": "sadza",
-      "fact_card": "Home to Victoria Falls — one of the world's largest waterfalls — and the medieval stone ruins of Great Zimbabwe."
+      "flag_svg": "https://flagcdn.com/zw.svg"
     }
   ]
 }

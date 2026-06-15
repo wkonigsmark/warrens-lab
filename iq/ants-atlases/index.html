@@ -248,7 +248,18 @@
                 <div class="roadmap-body">
 
                     <div class="roadmap-update">
-                        <span class="update-tag">🗺 Latest update</span>
+                        <span class="update-tag">⚽ Latest update</span>
+                        <p>
+                            <strong>World Cup 2026 slice — a tier that cuts across every mode.</strong> A new <strong>⚽ World Cup</strong> selection isolates the 47 nations of the 2026 FIFA World Cup (Scotland omitted as part of the UK; England → GB; Curaçao backfilled). It's a <em>named slice</em>, not a level: build_atlas stamps each roster nation with a <code>wc2026</code> flag (single source of truth in <code>atlas_soft.json → slices</code>), and every mode can filter to it. Live in: the <strong>Mission</strong> &amp; <strong>Geocode</strong> tier picker (new ⚽ chip + matching map highlight), <strong>Flag Match</strong> &amp; <strong>Shape Match</strong> (a "🌍 World Tour / ⚽ World Cup 2026" mode toggle that keeps the choice-count ladder), and the <strong>Flags</strong> &amp; <strong>Shapes</strong> print worksheets (a "World Cup 2026" difficulty option). Curaçao appears everywhere except Shape Match (no shape in our medium-res geometry). Also: added soft data for Cape Verde &amp; Bosnia.
+                            <br><br>
+                            <strong>Permanent build fix:</strong> the REST Countries v3.1 API was deprecated in 2026 (every endpoint now redirects to a dead error file), which broke the live-fetch atlas build. Fixed for good by going fully offline — the machine-derived "hard" fields are now a committed snapshot (<code>data/countries_base.json</code>), and <code>build_atlas.mjs</code> is a pure offline merger of base + <code>atlas_soft.json</code> (soft fields + slices). No network dependency, deterministic output, can't break from an upstream change. Verified byte-identical to the previous atlas (197 countries, 47 WC).
+                            <br><br>
+                            <strong>Engine bits:</strong> new <code>{type:'slice', value:'wc2026'}</code> pool spec + <code>AAQuiz.poolForTier()</code>; <code>renderInto({tierFilter})</code> predicate for non-numeric tiers; the global tier state now accepts a <code>'wc'</code> token alongside levels 1-4.
+                        </p>
+                    </div>
+
+                    <div class="roadmap-update">
+                        <span class="update-tag">🗺 Earlier update</span>
                         <p>
                             <strong>Shape Match shipped — game + print worksheet.</strong> A new <strong>🗺 Shape Match</strong> identifies a country from its outline silhouette. It's mechanically identical to Flag Match (same 8-rung ladder, smarter distractors, streaks, level-up, localStorage progress) but shows the country's shape instead of its flag. Shapes are rendered live from the Natural Earth geometry via a new <code>AACountries.silhouette()</code> helper that <em>clusters polygons</em> — dropping far-flung outliers (French Guiana on France, Alaska/Hawaii on the US) so the main landmass fills the frame, while keeping nearby islands so archipelagos (Japan, Indonesia, NZ, the Philippines) stay recognizable. A matching <strong>🗺 Shapes of the World</strong> print worksheet (numbered black silhouettes → country names, difficulty selector, shuffle, upside-down answer key) ships alongside.
                             <br><br>
@@ -271,6 +282,9 @@
                             </li>
                             <li>
                                 <strong>Tier ladder + picker (L1-L4 live)</strong> — chip bar above the map. Pool spec <code>{type:'level', value:N}</code> returns all countries with <code>level ≤ N</code>. Selection persists to localStorage. Mission and Geocode read the active tier. Map highlight re-renders instantly on tier change — out-of-pool countries dim to context. Region Focus zoom is preserved across tier switches. The hint engine returns <em>noData</em> responses (which don't consume budget) for L4 picks lacking curated soft fields.
+                            </li>
+                            <li>
+                                <strong>World Cup 2026 slice (⚽) — cross-mode named tier</strong> — isolates the 47 nations of the 2026 FIFA World Cup, independent of the L1-L4 recognition tiers. Single source of truth: a <code>slices</code> block in <code>atlas_soft.json</code> that build_atlas stamps as a per-country <code>wc2026</code> flag. Pool spec <code>{type:'slice', value:'wc2026'}</code>. Wired into Mission, Geocode, Flag Match, Shape Match, and the Flags/Shapes print worksheets. Scotland omitted (part of the UK; England→GB); Curaçao backfilled (shows everywhere except Shape Match — no medium-res geometry). Added soft data for Cape Verde &amp; Bosnia along the way.
                             </li>
                             <li>
                                 <strong>Country-level interactive map</strong> — 212 country paths rendered from Natural Earth GeoJSON. Click any in-pool country to open its info modal. Dim countries are visible context but non-interactive.

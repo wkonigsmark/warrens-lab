@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Warren's World Cup Quiz</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07130f;
+      --ink: #f7f4eb;
+      --muted: rgba(247, 244, 235, 0.68);
+      --line: rgba(247, 244, 235, 0.16);
+      --panel: rgba(255, 255, 255, 0.06);
+      --panel-strong: rgba(255, 255, 255, 0.1);
+      --gold: #f4c95d;
+      --green: #24b47e;
+      --blue: #4aa3ff;
+      --red: #ff5d5d;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { min-height: 100%; background: var(--bg); }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 22% 12%, rgba(36, 180, 126, 0.22), transparent 32%),
+        radial-gradient(circle at 78% 22%, rgba(74, 163, 255, 0.17), transparent 30%),
+        linear-gradient(140deg, #06100d 0%, #0d1d18 48%, #08100f 100%);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 72%);
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 720px);
+      margin: 0 auto;
+      padding: 18px 16px 60px;
+    }
+
+    /* ---- Nav ---- */
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+    .nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      transition: all 0.15s ease;
+    }
+    .nav a:hover { color: var(--ink); border-color: var(--gold); }
+    .nav a.home-link { color: var(--gold); border-color: rgba(244, 201, 93, 0.4); }
+
+    /* ---- Header ---- */
+    .masthead { text-align: center; margin-bottom: 26px; }
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--gold);
+    }
+    .masthead h1 {
+      font-size: clamp(2rem, 7vw, 3.1rem);
+      line-height: 1.02;
+      margin: 8px 0 6px;
+      font-weight: 950;
+      letter-spacing: -0.02em;
+    }
+    .masthead p { color: var(--muted); margin: 0; font-size: 0.96rem; }
+    .host-flags-mini {
+      display: inline-flex; gap: 8px; margin-top: 14px;
+    }
+    .host-flags-mini img {
+      width: 46px; aspect-ratio: 3/2; object-fit: cover;
+      border-radius: 5px; border: 1px solid var(--line);
+    }
+
+    /* ---- Section labels ---- */
+    .section-label {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--muted);
+      margin: 24px 4px 12px;
+    }
+
+    /* ---- Age selector ---- */
+    .age-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .age-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      padding: 12px 6px;
+      border-radius: 14px;
+      border: 1.5px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .age-btn:hover { border-color: rgba(244, 201, 93, 0.5); }
+    .age-btn.active {
+      border-color: var(--gold);
+      background: rgba(244, 201, 93, 0.14);
+      box-shadow: 0 0 0 1px var(--gold) inset;
+    }
+    .age-label { font-weight: 850; font-size: 1rem; }
+    .age-blurb { font-size: 0.72rem; color: var(--muted); }
+
+    /* ---- Category cards ---- */
+    .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .cat-card {
+      display: flex; flex-direction: column; gap: 4px;
+      text-align: left;
+      padding: 18px 16px;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .cat-card:hover { transform: translateY(-3px); border-color: var(--gold); background: var(--panel-strong); }
+    .cat-card:active { transform: translateY(-1px) scale(0.99); }
+    .cat-title { font-weight: 900; font-size: 1.12rem; }
+    .cat-blurb { font-size: 0.82rem; color: var(--muted); }
+    .cat-hero {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, rgba(244, 201, 93, 0.18), rgba(36, 180, 126, 0.12));
+      border-color: rgba(244, 201, 93, 0.45);
+    }
+    .cat-hero .cat-title { font-size: 1.4rem; }
+
+    /* ---- Study CTA ---- */
+    .study-cta {
+      display: flex; align-items: center; gap: 14px;
+      margin-top: 16px; padding: 14px 16px;
+      border-radius: var(--radius); text-decoration: none; color: var(--ink);
+      border: 1.5px dashed rgba(74, 163, 255, 0.5);
+      background: rgba(74, 163, 255, 0.08);
+      transition: all 0.15s ease;
+    }
+    .study-cta:hover { background: rgba(74, 163, 255, 0.14); border-color: var(--blue); }
+    .study-cta .study-emoji { font-size: 1.6rem; }
+    .study-cta strong { display: block; font-size: 1rem; }
+    .study-cta .study-sub { display: block; font-size: 0.82rem; color: var(--muted); }
+    .study-cta .study-arrow { margin-left: auto; font-size: 1.3rem; color: var(--blue); font-weight: 900; }
+
+    /* ---- Game screen ---- */
+    .hidden { display: none !important; }
+
+    .game-top {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .cat-pill {
+      font-weight: 850; font-size: 0.92rem; color: var(--gold);
+    }
+    .quit-btn {
+      background: none; border: 1px solid var(--line); color: var(--muted);
+      border-radius: 999px; padding: 5px 12px; font-size: 0.78rem; font-weight: 700;
+      cursor: pointer;
+    }
+    .quit-btn:hover { color: var(--ink); border-color: var(--red); }
+
+    /* HUD */
+    .hud { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 18px; }
+    .hud-stat {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+      padding: 8px 4px; text-align: center;
+    }
+    .hud-num { font-size: 1.3rem; font-weight: 900; line-height: 1; }
+    .hud-num.streak { color: var(--gold); }
+    .hud-num.best { color: var(--green); }
+    .hud-label {
+      display: block; font-size: 0.62rem; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--muted); margin-top: 4px; font-weight: 700;
+    }
+
+    /* Question card */
+    .q-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px 18px;
+    }
+    .q-media { display: none; justify-content: center; margin-bottom: 16px; }
+    .q-media.has-media { display: flex; }
+    .flag-media {
+      width: min(260px, 70%); aspect-ratio: 3/2; object-fit: cover;
+      border-radius: 10px; border: 1px solid var(--line);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+    .q-text {
+      font-size: clamp(1.15rem, 4vw, 1.5rem);
+      font-weight: 850; text-align: center; line-height: 1.25;
+      margin-bottom: 20px;
+    }
+
+    .choices { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    @media (min-width: 480px) {
+      .choices:not(.flag-choices) { grid-template-columns: 1fr 1fr; }
+    }
+    .choices.flag-choices { grid-template-columns: 1fr 1fr; }
+
+    .choice {
+      padding: 16px 14px;
+      border-radius: 14px;
+      border: 1.5px solid var(--line);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--ink);
+      font-size: 1.02rem;
+      font-weight: 750;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      min-height: 56px;
+    }
+    .choice:hover:not(:disabled) { border-color: var(--gold); background: var(--panel-strong); }
+    .choice:active:not(:disabled) { transform: scale(0.98); }
+    .choice:disabled { cursor: default; }
+    .choice.correct {
+      border-color: var(--green);
+      background: rgba(36, 180, 126, 0.22);
+      color: #c7f5e4;
+      animation: pop 0.3s ease;
+    }
+    .choice.wrong {
+      border-color: var(--red);
+      background: rgba(255, 93, 93, 0.18);
+      color: #ffd4d4;
+    }
+    .choice-flag { padding: 8px; display: flex; align-items: center; justify-content: center; }
+    .choice-flag img {
+      width: 100%; max-width: 150px; aspect-ratio: 3/2; object-fit: cover;
+      border-radius: 8px; border: 1px solid var(--line);
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .feedback {
+      text-align: center; font-weight: 900; font-size: 1.25rem;
+      min-height: 1.4em; margin-top: 18px;
+    }
+    .feedback.good { color: var(--green); }
+    .feedback.bad { color: var(--red); }
+
+    .fact {
+      text-align: center; color: var(--muted); font-size: 0.92rem;
+      line-height: 1.45; margin: 4px auto 0; max-width: 90%;
+      opacity: 0; transform: translateY(6px); transition: all 0.3s ease;
+    }
+    .fact.show { opacity: 1; transform: none; }
+
+    .next-btn {
+      display: block; width: 100%; margin-top: 18px;
+      padding: 15px;
+      border: none; border-radius: 14px;
+      background: linear-gradient(135deg, var(--gold), #e6a820);
+      color: #07130f; font-weight: 950; font-size: 1.05rem;
+      cursor: pointer;
+      opacity: 0; pointer-events: none; transform: translateY(6px);
+      transition: all 0.25s ease;
+    }
+    .next-btn.show { opacity: 1; pointer-events: auto; transform: none; }
+    .next-btn:hover { filter: brightness(1.06); }
+    .next-btn:active { transform: scale(0.99); }
+
+    /* Milestone toast */
+    .milestone {
+      position: fixed; left: 50%; top: 30%;
+      transform: translateX(-50%) scale(0.8);
+      z-index: 40;
+      background: linear-gradient(135deg, var(--gold), #e6a820);
+      color: #07130f; font-weight: 950; font-size: 1.5rem;
+      padding: 16px 28px; border-radius: 18px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+      opacity: 0; pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .milestone.show { opacity: 1; transform: translateX(-50%) scale(1); }
+
+    /* Confetti */
+    .confetti {
+      position: fixed; width: 9px; height: 9px; border-radius: 2px;
+      z-index: 50; pointer-events: none;
+      animation: confetti-fly 0.9s ease-out forwards;
+    }
+    @keyframes confetti-fly {
+      0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+      100% { transform: translate(var(--dx), calc(var(--dy) + 120px)) rotate(420deg); opacity: 0; }
+    }
+
+    .footer-note {
+      text-align: center; color: var(--muted); font-size: 0.78rem;
+      margin-top: 28px; line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <nav class="nav" aria-label="World Cup hub">
+      <a href="../" class="home-link">← World Cup Home</a>
+      <a href="study.html">📖 Study Sheets</a>
+      <a href="../scoreboard/">🏆 Scoreboard</a>
+      <a href="../standings/">Standings</a>
+      <a href="../fixtures/">Fixtures</a>
+    </nav>
+
+    <!-- ================= HOME ================= -->
+    <section id="home">
+      <header class="masthead">
+        <div class="eyebrow">Warren's World Cup</div>
+        <h1>Quiz Time! ⚽</h1>
+        <p>Tons of trivia about the World Cup &amp; the 48 teams. How long can your streak go?</p>
+        <div class="host-flags-mini" aria-hidden="true">
+          <img src="https://flagcdn.com/w160/mx.png" alt="">
+          <img src="https://flagcdn.com/w160/us.png" alt="">
+          <img src="https://flagcdn.com/w160/ca.png" alt="">
+        </div>
+      </header>
+
+      <div class="section-label">1 · Pick a difficulty</div>
+      <div class="age-grid" id="age-grid"></div>
+
+      <div class="section-label">2 · Pick a topic</div>
+      <div class="cat-grid" id="cat-grid"></div>
+
+      <a class="study-cta" href="study.html">
+        <span class="study-emoji">📖</span>
+        <span>
+          <strong>New here? Study first.</strong>
+          <span class="study-sub">See all the groups, flags &amp; World Cup winners by year.</span>
+        </span>
+        <span class="study-arrow">→</span>
+      </a>
+
+      <p class="footer-note">
+        Your best streak is saved on this device. Perfect for long car rides! 🚗
+      </p>
+    </section>
+
+    <!-- ================= GAME ================= -->
+    <section id="game" class="hidden">
+      <div class="game-top">
+        <span class="cat-pill" id="cat-label">Quiz</span>
+        <button class="quit-btn" id="quit-btn">⟵ Change topic</button>
+      </div>
+
+      <div class="hud">
+        <div class="hud-stat"><span class="hud-num" id="score">0</span><span class="hud-label">Score</span></div>
+        <div class="hud-stat"><span class="hud-num streak" id="streak">0</span><span class="hud-label">Streak</span></div>
+        <div class="hud-stat"><span class="hud-num best" id="best">0</span><span class="hud-label">Best</span></div>
+        <div class="hud-stat"><span class="hud-num" id="answered">0</span><span class="hud-label">Asked</span></div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-media" id="q-media"></div>
+        <div class="q-text" id="q-text"></div>
+        <div class="choices" id="choices"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="fact" id="fact"></div>
+        <button class="next-btn" id="next-btn">Next Question →</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="milestone" id="milestone"><span id="milestone-text"></span></div>
+
+  <script src="quiz-teams.js"></script>
+  <script src="quiz-trivia.js"></script>
+  <script src="quiz-history.js"></script>
+  <script src="quiz.js"></script>
+</body>
+
+</html>

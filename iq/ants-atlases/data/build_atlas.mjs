@@ -1,8 +1,23 @@
 #!/usr/bin/env node
-// Generates atlas.json by merging REST Countries (live fetch of every sovereign
-// nation) with atlas_soft.json (hand-curated tier 1-3). Countries without soft
-// fields land at level 4 with null soft data — the engine handles them via the
-// "no info" hint fallback.
+// Builds atlas.json by merging two committed, offline sources:
+//   • countries_base.json — machine-derived "hard" fields (iso codes, name,
+//     capital, languages, currency, borders, area, population, flag URLs,
+//     continent/hemisphere/buckets). Origin: REST Countries, snapshotted.
+//   • atlas_soft.json      — hand-curated "soft" fields (level, flag colors &
+//     motifs, climate, terrain, landmark, food, fact card, bordering waters,
+//     island) plus named "slices" (e.g. the World Cup 2026 roster).
+//
+// WHY OFFLINE: the REST Countries v3.1 API was deprecated in 2026 (every
+// endpoint now 301-redirects to a dead "legacy" error file). The build no
+// longer hits the network, so it can never break from an upstream API change.
+// countries_base.json is the canonical cache; regenerate it only if you adopt a
+// new upstream data source.
+//
+// To add a NEW country:
+//   1. Add its hard fields to countries_base.json (copy the shape of an existing
+//      entry; flag_svg is https://flagcdn.com/<iso2-lowercase>.svg).
+//   2. Add a soft entry (and any slice membership) to atlas_soft.json.
+//   3. Run:  node build_atlas.mjs
 //
 // Usage:  node build_atlas.mjs
 
@@ -11,153 +26,47 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const BASE_PATH = path.join(__dirname, "countries_base.json");
 const SOFT_PATH = path.join(__dirname, "atlas_soft.json");
 const OUT_PATH = path.join(__dirname, "atlas.json");
 
-const FIELDS = [
-  "name", "cca2", "cca3", "region", "subregion", "capital",
-  "languages", "currencies", "landlocked", "borders",
-  "area", "population", "latlng", "flag", "flags", "independent"
-].join(",");
-
-const REGION_TO_CONTINENT = {
-  Africa: "africa",
-  Antarctic: "antarctica",
-  Asia: "asia",
-  Europe: "europe",
-  Oceania: "oceania"
-};
-const SUBREGION_TO_AMERICAS = {
-  "North America": "north_america",
-  "Central America": "north_america",
-  Caribbean: "north_america",
-  "South America": "south_america"
-};
-
-function continentFor(region, subregion) {
-  if (region === "Americas") return SUBREGION_TO_AMERICAS[subregion] || "north_america";
-  return REGION_TO_CONTINENT[region] || "unknown";
-}
-
-function populationBucket(p) {
-  if (p < 1_000_000) return "tiny";
-  if (p < 10_000_000) return "small";
-  if (p < 50_000_000) return "medium";
-  if (p < 200_000_000) return "large";
-  return "mega";
-}
-
-function areaBucket(a) {
-  if (a < 100_000) return "tiny";
-  if (a < 500_000) return "small";
-  if (a < 2_000_000) return "medium";
-  if (a < 5_000_000) return "large";
-  return "huge";
-}
-
-function hemisphere(latlng) {
-  const [lat, lng] = latlng;
-  return { ns: lat >= 0 ? "N" : "S", ew: lng >= 0 ? "E" : "W" };
-}
-
-async function fetchAll() {
-  // /v3.1/all is deprecated by the API. The /independent endpoint with status=true
-  // returns every sovereign nation in one call. Much faster than 195 individual queries.
-  const url = `https://restcountries.com/v3.1/independent?status=true&fields=${FIELDS}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Fetch /independent failed: ${res.status}`);
-  return res.json();
-}
-
-async function fetchOne(iso2) {
-  const url = `https://restcountries.com/v3.1/alpha/${iso2}?fields=${FIELDS}`;
-  const res = await fetch(url);
-  if (!res.ok) return null;
-  return res.json();
-}
+// Soft fields copied from atlas_soft.json onto each country (null when absent).
+const SOFT_FIELDS = [
+  "flag_colors", "flag_motifs", "climate_band", "terrain_headline",
+  "bordering_waters", "landmark", "famous_food", "fact_card"
+];
 
 async function main() {
+  const base = JSON.parse(await fs.readFile(BASE_PATH, "utf8"));
   const soft = JSON.parse(await fs.readFile(SOFT_PATH, "utf8"));
 
-  console.log(`Fetching all countries from REST Countries...`);
-  const all = await fetchAll();
-
-  // Sovereign nations only — drops dependent territories, UN observers without
-  // recognition, and Antarctic claims. ~195 countries.
-  const sovereign = all.filter(c => c.independent === true);
-
-  // REST Countries excludes a handful of entities (Taiwan especially) from the
-  // /independent endpoint because of disputed UN recognition. If our hand-curated
-  // soft data references any such ISOs, fetch them individually and add them in.
-  const haveIsos = new Set(sovereign.map(c => c.cca2));
-  const softIsos = Object.keys(soft.countries);
-  const missing = softIsos.filter(iso => !haveIsos.has(iso));
-  if (missing.length > 0) {
-    console.log(`Backfilling ${missing.length} curated country/ies not in /independent:`, missing.join(", "));
-    const extras = await Promise.all(missing.map(fetchOne));
-    for (const c of extras) if (c) sovereign.push(c);
-  }
-
-  console.log(`Total countries in atlas: ${sovereign.length}.`);
-
-  // Stable sort by ISO so output diffs are readable
-  sovereign.sort((a, b) => a.cca2.localeCompare(b.cca2));
-
   // Named slices (e.g. World Cup 2026) cut across the L1-L4 tiers. Each slice
-  // defines a boolean `flag` key and a list of ISO2s; we stamp matching countries
-  // with that flag so every quiz mode can filter to the slice.
+  // defines a boolean `flag` key + a list of ISO2s; matching countries get stamped.
   const slices = soft.slices || {};
   const sliceFlags = Object.values(slices).map(s => ({
-    flag: s.flag,
-    set: new Set(s.iso2s || [])
+    flag: s.flag, set: new Set(s.iso2s || [])
   }));
 
-  const countries = sovereign.map(raw => {
-    const iso2 = raw.cca2;
+  const countries = base.countries.map(hard => {
+    const iso2 = hard.iso_a2;
     const s = soft.countries[iso2] || {};
-    const latlng = raw.latlng || [0, 0];
-    const hemi = hemisphere(latlng);
-    const sliceMembership = {};
-    for (const { flag, set } of sliceFlags) {
-      if (flag && set.has(iso2)) sliceMembership[flag] = true;
-    }
-    return {
-      iso_a2: raw.cca2,
-      iso_a3: raw.cca3,
-      name: raw.name.common,
-      official_name: raw.name.official,
-      level: s.level || 4,                                  // L1-L3 hand-curated, L4 auto
-      continent: continentFor(raw.region, raw.subregion),
-      subregion: raw.subregion || null,
-      capital: (raw.capital && raw.capital[0]) || null,
-      languages: Object.values(raw.languages || {}),
-      currency: Object.keys(raw.currencies || {})[0] || null,
-      currency_name: Object.values(raw.currencies || {})[0]?.name || null,
-      landlocked: !!raw.landlocked,
+
+    const country = {
+      ...hard,
+      level: s.level || 4,                 // L1-L3 hand-curated, L4 default
       island: s.island ?? null,
-      borders: raw.borders || [],
-      area_km2: raw.area || 0,
-      population: raw.population || 0,
-      latlng,
-      hemisphere_ns: hemi.ns,
-      hemisphere_ew: hemi.ew,
-      population_bucket: populationBucket(raw.population || 0),
-      area_bucket: areaBucket(raw.area || 0),
-      flag_emoji: raw.flag,
-      flag_svg: raw.flags?.svg,
-      // Soft fields — null when not hand-curated. Hint builders handle nulls gracefully.
-      flag_colors: s.flag_colors || null,
-      flag_motifs: s.flag_motifs || null,
-      climate_band: s.climate_band || null,
-      terrain_headline: s.terrain_headline || null,
-      bordering_waters: s.bordering_waters || null,
-      landmark: s.landmark || null,
-      famous_food: s.famous_food || null,
-      fact_card: s.fact_card || null,
-      // Slice membership flags (e.g. wc2026: true). Absent when not a member.
-      ...sliceMembership
     };
+    for (const f of SOFT_FIELDS) country[f] = s[f] ?? null;
+
+    // Stamp slice membership flags (e.g. wc2026: true). Absent when not a member.
+    for (const { flag, set } of sliceFlags) {
+      if (flag && set.has(iso2)) country[flag] = true;
+    }
+    return country;
   });
+
+  // Stable ISO sort for readable diffs.
+  countries.sort((a, b) => a.iso_a2.localeCompare(b.iso_a2));
 
   const tierBreakdown = countries.reduce((acc, c) => {
     acc[c.level] = (acc[c.level] || 0) + 1;
@@ -170,8 +79,7 @@ async function main() {
     country_count_in_atlas: countries.filter(co => co.continent === id).length
   }));
 
-  // Surface slice definitions at the top level (label/note/flag), without the
-  // verbose iso2 lists — consumers filter on the per-country boolean flags.
+  // Top-level slice metadata (label/note/flag + live count), without the iso lists.
   const sliceMeta = Object.fromEntries(
     Object.entries(slices).map(([id, s]) => [id, {
       flag: s.flag,
@@ -182,10 +90,10 @@ async function main() {
   );
 
   const atlas = {
-    version: 2,
+    version: 3,
     generated_at: new Date().toISOString(),
     sources: {
-      countries: "https://restcountries.com/v3.1",
+      countries: "countries_base.json (offline snapshot; REST Countries origin)",
       soft_fields: "atlas_soft.json (hand-curated)"
     },
     slices: sliceMeta,
@@ -203,7 +111,4 @@ async function main() {
   }
 }
 
-main().catch(err => {
-  console.error(err);
-  process.exit(1);
-});
+main().catch(err => { console.error(err); process.exit(1); });
