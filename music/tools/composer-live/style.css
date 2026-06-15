@@ -97,9 +97,26 @@ main { padding: 18px 24px 48px; max-width: 980px; }
 /* --- Painting panel (full take) ----------------------------------------- */
 .painting-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
 .painting-sub { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
-.painting-wrap { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--line); background: #fff; }
+.painting-wrap { position: relative; width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--line); background: #fff; }
 #painting { display: block; width: 100%; height: auto; }
+.painting-wrap.erasing { cursor: crosshair; }
 .print-head { display: none; }   /* shown only when printing */
+
+/* --- Edit bar (register / trim / eraser) -------------------------------- */
+.edit-bar { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; margin-bottom: 14px; padding: 12px 14px; background: #f7f9ff; border: 1px solid var(--line); border-radius: 12px; }
+.edit-group { display: inline-flex; align-items: center; gap: 8px; }
+.edit-label { font-size: 11px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); }
+.edit-dash { color: var(--muted); }
+.edit-val { font-size: 12px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; min-width: 30px; }
+.mini-range { width: 92px; accent-color: var(--accent-2); }
+.edit-bar .btn { padding: 8px 14px; font-size: 14px; }
+.edit-bar .btn[aria-pressed="true"] { background: var(--accent-2); color: #fff; border-color: var(--accent-2); }
+.edit-hint { margin: 8px 2px 0; font-size: 13px; color: var(--accent-2); font-weight: 600; }
+
+/* drag-to-erase selection rectangle (overlaid on the painting) */
+.erase-rect { position: absolute; border: 2px dashed var(--accent-2); background: rgba(91,140,255,0.14); border-radius: 4px; pointer-events: none; z-index: 3; }
+
+@media print { .edit-bar, .edit-hint { display: none !important; } }
 
 /* --- Tempo control ------------------------------------------------------ */
 .tempo-row { display: inline-flex; align-items: center; gap: 8px; }

@@ -15,7 +15,8 @@
   // Data is provided by quiz-teams.js and quiz-trivia.js as plain globals so
   // the quiz works even when opened directly as a file (no ES-module loader).
   const wcTeams = window.WC_QUIZ_TEAMS || [];
-  const triviaQuestions = window.WC_QUIZ_TRIVIA || [];
+  // Trivia pool = World Cup history trivia + Rules of the Game questions.
+  const triviaQuestions = (window.WC_QUIZ_TRIVIA || []).concat(window.WC_QUIZ_RULES || []);
   const wcWinners = (window.WC_QUIZ_WINNERS || []).filter((w) => !w.cancelled);
   const wcTitles = window.WC_QUIZ_TITLES || [];
 
@@ -83,6 +84,12 @@
       blurb: "Continents, capitals & populations",
       trivia: [],
       gens: ["continent", "capital", "biggerPop", "landmark", "whichFromContinent"],
+    },
+    rules: {
+      label: "📏 Rules of the Game",
+      blurb: "Offside, fouls, cards & free kicks",
+      trivia: ["rules"],
+      gens: [],
     },
   };
 

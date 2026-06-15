@@ -68,14 +68,42 @@
         </div>
         <button id="save-painting" class="btn btn-mic">🖨 Save / Print (PDF)</button>
       </div>
+      <!-- post-capture edit tools: register crop, trim, drag-box eraser -->
+      <div class="edit-bar" id="edit-bar">
+        <div class="edit-group">
+          <span class="edit-label">Register</span>
+          <input type="range" id="reg-lo" class="mini-range" min="36" max="96" step="1">
+          <span class="edit-val" id="reg-lo-val">C2</span>
+          <span class="edit-dash">–</span>
+          <input type="range" id="reg-hi" class="mini-range" min="36" max="96" step="1">
+          <span class="edit-val" id="reg-hi-val">C7</span>
+        </div>
+        <div class="edit-group">
+          <span class="edit-label">Trim</span>
+          <input type="range" id="trim-start" class="mini-range" min="0" max="100" step="1" value="0">
+          <span class="edit-val" id="trim-start-val">0:00</span>
+          <span class="edit-dash">–</span>
+          <input type="range" id="trim-end" class="mini-range" min="0" max="100" step="1" value="100">
+          <span class="edit-val" id="trim-end-val">0:00</span>
+        </div>
+        <div class="edit-group">
+          <button id="undo-btn" class="btn btn-ghost" disabled title="Undo last edit (⌘Z)">↶ Undo</button>
+          <button id="redo-btn" class="btn btn-ghost" disabled title="Redo (⇧⌘Z)">↷ Redo</button>
+          <button id="eraser-btn" class="btn btn-ghost" aria-pressed="false">🧽 Eraser</button>
+          <button id="reset-edits" class="btn btn-ghost">↺ Reset</button>
+        </div>
+      </div>
+
       <!-- print-only header (hidden on screen, shown on the printed page) -->
       <div class="print-head">
         <h1 id="print-title">Melody Painting</h1>
         <p id="print-meta"></p>
       </div>
-      <div class="painting-wrap">
+      <div class="painting-wrap" id="painting-wrap">
         <canvas id="painting"></canvas>
+        <div id="erase-rect" class="erase-rect" hidden></div>
       </div>
+      <p class="edit-hint" id="eraser-hint" hidden>🧽 Eraser on — drag a box over any wrong sounds to wipe them.</p>
     </section>
 
     <!-- The transcription: the captured melody as discrete notes on a staff.

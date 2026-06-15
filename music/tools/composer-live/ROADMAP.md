@@ -69,6 +69,29 @@ cleanup" is a core design principle, not a nicety.
   split, renders on staff, loads into the Composer on the 88-key piano. **Live-mic
   test is Warren's.** Known limits (future tuning): onset thresholds vs. breathy/
   legato singing; octave jumps on voice; only eighth-grid quantize for now.
+- **M2.5 · Painting edit tools (DONE 2026-06-08).** Post-capture cleanup, all
+  layered on the immutable `session` and fully reversible (a derived `getEdited()`
+  feeds the painting, transcription, Send-to-Composer, and print alike). Three tools
+  in an edit bar above the painting: **Register** (two sliders crop the pitch band —
+  view zoom AND out-of-band pitches dropped from the notes; auto-hugs the captured
+  melody on reveal); **Trim** (two sliders crop the time window); **🧽 Eraser**
+  (toggle, then drag a box on the painting → those time+pitch samples are nulled).
+  Plus **↺ Reset** (re-inits from the raw take). Edits re-run `applyEdits()` →
+  re-render painting + re-segment notes. Verified via real DOM events: register crop
+  9→7, trim 7→5, partial eraser drag 7→5, reset restores. **Bugs fixed during
+  build:** a TDZ crash (`let editLo = MIDI_LO` before the `const` was declared →
+  used literals); a guard on `setPointerCapture` for synthetic pointers; and a
+  stale-`composerNotes` bug when everything is erased/trimmed (renderTranscription
+  now clears notes on empty instead of early-returning).
+- **M2.6 · Undo / redo for edits (DONE 2026-06-08).** Per-move undo/redo so a single
+  tiny mistake can be fixed without a full Reset. History = a stack of edit-state
+  snapshots (`{editLo, editHi, trimStart, trimEnd, erased}`); `commitMove()` records
+  one step per **finished slider drag** (range `change` event, not each `input` tick),
+  per **eraser box**, and per **Reset** (Reset is now itself one undoable move — undo
+  brings your edits back). ↶ Undo / ↷ Redo buttons (disabled when their stack is
+  empty) + ⌘Z / ⇧⌘Z shortcuts (ignored while typing or when the painting is closed).
+  A fresh capture clears history. Verified: erase→trim→undo(trim)→undo(erase, back to
+  7)→redo; real buttons + disabled states; Reset undoable; keyboard. (≤60-step cap.)
 - **M3 · Smart Quantize (optional).** Snap onsets/durations to the grid given the
   tempo; gentle pitch-snap to nearest scale tone. Always toggleable, per-note
   editable — the raw take stays available.
