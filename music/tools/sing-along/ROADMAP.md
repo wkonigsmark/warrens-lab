@@ -46,9 +46,24 @@ Fully client-side, no backend. Pitch DSP is a self-contained copy of composer-li
   they track transpose/range edits. Verified: label C4→C5→C4 with octave shifts,
   preview fires, guide line drawn, no errors. (First note = the singer's anchor;
   often the tonic but not always — a true tonic drone could be a later option.)
-- **M2 · Levels & juice.** Difficulty tiers (tolerance/tempo; maybe an octave-free
-  easy tier despite the honest default), combo/streak multiplier, hit sparkles,
-  bigger celebration, count-in polish, optional guide-melody playback toggle.
+- **M2.6 · Hit-based scoring + sing-during-count-in + audio fix (DONE 2026-06-08).**
+  Three things: (1) **Audio fix** — no sound was playing because the AudioContext
+  starts *suspended* (the game's is created right after `await getUserMedia`, which
+  leaves it paused); added `audioCtx.resume()` in `start()` and a resume-then-play in
+  `previewStartNote()`. (2) **Sing during the count-in** — the loop now detects the
+  singer's pitch EVERY frame (not just when scoring starts), so the dot shows during
+  the count-in and **turns green when you're already on the start note** → pre-tune
+  before beat 1. (3) **Hit-based scoring (Guitar-Hero style)** — replaced held-time
+  accuracy with `hitScore`: a note is "hit" if sung in tune for even a brief moment
+  (`noteHit` = `hitBeats ≥ min(0.25·dur, 0.2 beats)`), score = **notes hit ÷ total**
+  (e.g. 11/14 = 79%). HUD shows the running `hits/done` fraction; results show
+  "X / Y notes hit". The old held-time metric is kept as `heldAccuracy` for a future
+  **pro/master mode** (the user explicitly wants holding-accuracy as an advanced tier
+  later). Verified: brief 0.2-beat touches → 14/14=100% (held-accuracy would be 18%),
+  11 hit → 79% → ★★☆, half-note touch counts, 0.05b glance doesn't; no console errors.
+- **M2 · Levels & juice.** Difficulty tiers (tolerance/tempo; the held-accuracy
+  "pro mode" lives here; maybe an octave-free easy tier), combo/streak multiplier,
+  hit sparkles, bigger celebration, count-in polish, optional guide-melody toggle.
 - **M3 · Guided range check → auto-transpose (DONE 2026-06-08, pulled forward).**
   Warren couldn't tell where "Auto-fit" put his key — because the old `autoOctave`
   is **song-centred, not singer-aware** (just centres the song near G4 by whole

@@ -6,7 +6,7 @@
 import { detectPitch, freqToMidi } from './pitch.js';
 import {
     DEFAULT_SONG, parseSong, transposeNotes, autoOctave, nameToMidi, midiToName,
-    noteAtBeat, inTune, accuracy, rangeOf, suggestOctaveShift,
+    noteAtBeat, inTune, noteHit, hitScore, rangeOf, suggestOctaveShift,
 } from './song.js';
 
 const els = {
@@ -128,17 +128,6 @@ function scoreStep(songBeat, dBeat, liveMidi) {
     return { active, tuned };
 }
 
-// Running accuracy over the notes that have started.
-function runningAccuracy(songBeat) {
-    let hit = 0, total = 0;
-    for (const n of playNotes) {
-        if (n.start >= songBeat) continue;
-        hit += Math.min(n.hitBeats, n.durBeats);
-        total += Math.min(n.durBeats, songBeat - n.start);
-    }
-    return total > 0 ? hit / total : 1;
-}
-
 // --- Play loop ------------------------------------------------------------
 async function start() {
     try {
@@ -148,6 +137,8 @@ async function start() {
         return;
     }
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // Created after an await → may start suspended; resume so the count-in sounds.
+    await audioCtx.resume().catch(() => {});
     const src = audioCtx.createMediaStreamSource(stream);
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 2048;
@@ -155,6 +146,7 @@ async function start() {
     src.connect(analyser);
 
     resetScores();
+    els.scoreHud.textContent = '0/0';
     els.results.hidden = true;
     playing = true;
     playStart = performance.now();
@@ -181,43 +173,55 @@ function loop() {
     const bps = song.bpm / 60;
     const songBeat = ((performance.now() - playStart) / 1000) * bps - COUNTIN_BEATS;
 
+    // Detect the singer's pitch EVERY frame — including the count-in — so they can
+    // pre-tune to the starting note before the song begins.
+    let liveMidi = null;
+    if (analyser) {
+        analyser.getFloatTimeDomainData(buf);
+        const res = detectPitch(buf, audioCtx.sampleRate);
+        if (res) liveMidi = freqToMidi(res.freq);
+    }
+
+    let active = null, tuned = false;
     if (songBeat < 0) {
-        // count-in: show 4..1 and sing the STARTING PITCH each beat so the singer
-        // hears exactly where to come in (no more guessing the key).
+        // count-in: show 4..1 and sing the STARTING PITCH each beat. The dot shows
+        // live, turning green when you're already sitting on the start note.
         const n = Math.ceil(-songBeat);
         els.countIn.hidden = false;
         els.countIn.textContent = n;
         if (lastCountBeep !== n) { tone(audioCtx, midiToFreq(startMidiOf()), 0.3, 0.22); lastCountBeep = n; }
+        tuned = liveMidi != null && inTune(liveMidi, startMidiOf(), TOL);
     } else {
         els.countIn.hidden = true;
         if (lastCountBeep !== 'go') { tone(audioCtx, midiToFreq(startMidiOf()), 0.18, 0.18); lastCountBeep = 'go'; }
-    }
-
-    let liveMidi = null;
-    if (songBeat >= 0) {
-        analyser.getFloatTimeDomainData(buf);
-        const res = detectPitch(buf, audioCtx.sampleRate);
-        if (res) liveMidi = freqToMidi(res.freq);
         const dBeat = Math.max(0, songBeat - Math.max(0, prevBeat));
-        var { active, tuned } = scoreStep(songBeat, dBeat, liveMidi);
-        els.scoreHud.textContent = `${Math.round(runningAccuracy(songBeat) * 100)}%`;
+        ({ active, tuned } = scoreStep(songBeat, dBeat, liveMidi));
+        els.scoreHud.textContent = runningLabel(songBeat);
     }
     prevBeat = songBeat;
 
-    drawFrame(songBeat, liveMidi, songBeat >= 0 ? active : null, songBeat >= 0 ? tuned : false);
+    drawFrame(songBeat, liveMidi, active, tuned);
 
     if (songBeat >= songEnd + 0.6) { endGame(); return; }
     rafId = requestAnimationFrame(loop);
 }
 
+// Running "notes hit so far / notes finished" for the HUD.
+function runningLabel(songBeat) {
+    const done = playNotes.filter((n) => songBeat >= n.start + n.durBeats);
+    const hits = done.filter(noteHit).length;
+    return done.length ? `${hits}/${done.length}` : '0/0';
+}
+
 function endGame() {
-    const pct = Math.round(accuracy(playNotes) * 100);
+    const { hits, total, pct: frac } = hitScore(playNotes);
+    const pct = Math.round(frac * 100);
     let stars = 0;
     if (pct >= 85) stars = 3; else if (pct >= 65) stars = 2; else if (pct >= 40) stars = 1;
     const msgs = ['Nice try — sing it again and watch your score climb! 🌱', 'Good going! You found lots of the notes. 🎵', 'Great singing! Really close to the tune. 🌟', 'Amazing! You nailed the melody! 🏆'];
     els.resultStars.textContent = '★★★'.slice(0, stars) + '☆☆☆'.slice(0, 3 - stars);
     els.resultPct.textContent = `${pct}%`;
-    els.resultMsg.textContent = msgs[stars];
+    els.resultMsg.textContent = `${hits} / ${total} notes hit — ${msgs[stars]}`;
     els.results.hidden = false;
     stop();
 }
@@ -237,8 +241,8 @@ function tone(ctx, freq, dur = 0.28, vol = 0.22) {
 // Preview the starting pitch any time (spins up a short-lived AudioContext).
 function previewStartNote() {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    tone(ctx, midiToFreq(startMidiOf()), 0.75, 0.22);
-    setTimeout(() => ctx.close(), 1000);
+    const play = () => { tone(ctx, midiToFreq(startMidiOf()), 0.75, 0.22); setTimeout(() => ctx.close(), 1100); };
+    ctx.resume().then(play).catch(play);   // resume first — contexts can start suspended
 }
 
 // --- Rendering ------------------------------------------------------------

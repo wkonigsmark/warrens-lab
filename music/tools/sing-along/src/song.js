@@ -124,8 +124,24 @@ export function noteAtBeat(notes, beat) {
 // "In tune?" — honest (exact octave) within a semitone tolerance.
 export const inTune = (liveMidi, targetMidi, tol) => Math.abs(liveMidi - targetMidi) <= tol;
 
-// Final accuracy 0..1 from each note's accumulated in-tune beats.
-export function accuracy(playNotes) {
+// --- Hit-based scoring (Guitar-Hero style) ---------------------------------
+// You "hit" a note by landing on it in tune even briefly — no need to hold it for
+// the full duration. The bar is a small slice of the note (or a short floor), so a
+// quick, intentional landing counts but a passing glide doesn't.
+export const HIT_FRACTION = 0.25;   // 25% of the note…
+export const HIT_FLOOR = 0.2;       // …but never need more than 0.2 beats in tune
+
+export const noteHit = (n) => n.hitBeats >= Math.min(HIT_FRACTION * n.durBeats, HIT_FLOOR);
+
+// Score = notes hit ÷ total notes (e.g. 20/25 = 80%).
+export function hitScore(notes) {
+    if (!notes.length) return { hits: 0, total: 0, pct: 1 };
+    const hits = notes.filter(noteHit).length;
+    return { hits, total: notes.length, pct: hits / notes.length };
+}
+
+// (Kept for a future "pro" mode: accuracy by how long each note was held in tune.)
+export function heldAccuracy(playNotes) {
     let hit = 0, total = 0;
     for (const n of playNotes) { hit += Math.min(n.hitBeats, n.durBeats); total += n.durBeats; }
     return total ? hit / total : 0;
