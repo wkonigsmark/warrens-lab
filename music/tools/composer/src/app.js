@@ -38,6 +38,7 @@ const els = {
     save: document.getElementById('save'),
     print: document.getElementById('print'),
     generateLesson: document.getElementById('generate-lesson'),
+    singAlong: document.getElementById('sing-along'),
     clear: document.getElementById('clear'),
     title: document.getElementById('piece-title'),
     composer: document.getElementById('piece-composer'),
@@ -741,6 +742,22 @@ function printPracticeSheet(id) {
 }
 
 // Generate a lesson from the current song by analyzing phrase structure.
+// Hand the current melody to Sing-Along to practice. Same-origin localStorage is
+// the drop box; Sing-Along picks it up on load. Great for tiny "easy win" tunes.
+function sendToSingAlong() {
+    if (state.notes.length === 0) {
+        window.alert('Compose or load a melody first, then send it to Sing-Along.');
+        return;
+    }
+    const payload = {
+        title: (state.title || '').trim() || 'My melody',
+        bpm: state.tempo,
+        notes: state.notes.map((n) => ({ start: n.start, pitch: n.pitch, durBeats: n.durBeats })),
+    };
+    try { localStorage.setItem('studio.singalong.incoming.v1', JSON.stringify(payload)); } catch (_) { /* ignore */ }
+    window.location.href = '../sing-along/index.html';
+}
+
 function generateLessonFromCurrentSong() {
     if (state.notes.length === 0) {
         window.alert('Load or compose a song first.');
@@ -968,6 +985,7 @@ function init() {
     });
     els.print.addEventListener('click', () => { renderManuscript(); window.print(); });
     els.generateLesson.addEventListener('click', generateLessonFromCurrentSong);
+    els.singAlong.addEventListener('click', sendToSingAlong);
     els.clear.addEventListener('click', () => {
         if (state.notes.length === 0) return;
         stopPlayback();

@@ -438,5 +438,23 @@ els.play.addEventListener('click', () => (playing ? stop() : start()));
 els.hearStart.addEventListener('click', previewStartNote);
 els.again.addEventListener('click', () => { els.results.hidden = true; start(); });
 
+// A melody handed over from Composer ("Practice in Sing-Along") lands in shared
+// localStorage; pick it up once, then fall back to the default song.
+function loadIncomingOrDefault() {
+    try {
+        const raw = localStorage.getItem('studio.singalong.incoming.v1');
+        if (raw) {
+            localStorage.removeItem('studio.singalong.incoming.v1');
+            const s = JSON.parse(raw);
+            if (s && Array.isArray(s.notes) && s.notes.length) {
+                loadSong({ title: s.title || 'My melody', bpm: s.bpm || 96, notes: s.notes });
+                els.pasteStatus.textContent = `✓ Loaded "${s.title || 'My melody'}" from Composer.`;
+                return;
+            }
+        }
+    } catch (_) { /* ignore */ }
+    loadSong(DEFAULT_SONG);
+}
+
 // init
-loadSong(DEFAULT_SONG);
+loadIncomingOrDefault();

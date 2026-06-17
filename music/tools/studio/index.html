@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Composer Studio · Music</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#1f2430; --muted:#6b7280; --line:#e3e7f1; --accent:#ff8a3d; --accent-2:#5b8cff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Outfit', system-ui, sans-serif; color: var(--ink);
+      background: linear-gradient(160deg, #fbfcff 0%, #eef2ff 55%, #fdf0e8 100%); min-height: 100vh; }
+    .wrap { max-width: 1000px; margin: 0 auto; padding: 40px 24px 60px; }
+    .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; flex-wrap: wrap; gap: 12px; }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .logo { font-size: 38px; background: #fff; padding: 8px 12px; border-radius: 16px; box-shadow: 0 4px 14px rgba(31,36,48,0.08); }
+    h1 { margin: 0; font-size: 30px; font-weight: 800; }
+    .tagline { margin: 3px 0 0; color: var(--muted); font-size: 15px; }
+    .back { font-size: 14px; font-weight: 700; color: var(--accent-2); text-decoration: none; }
+    .back:hover { text-decoration: underline; }
+
+    .flow { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; align-items: stretch; }
+    @media (max-width: 760px) { .flow { grid-template-columns: 1fr; } }
+    .card { display: flex; flex-direction: column; gap: 8px; background: #fff; border: 1px solid var(--line);
+      border-radius: 20px; padding: 24px; text-decoration: none; color: inherit; box-shadow: 0 6px 22px rgba(31,36,48,0.07);
+      transition: transform 0.12s ease, box-shadow 0.12s ease; position: relative; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(31,36,48,0.13); border-color: var(--accent-2); }
+    .step { font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); }
+    .card-icon { font-size: 44px; }
+    .card-name { font-size: 22px; font-weight: 800; }
+    .card-tag { color: var(--muted); font-size: 14px; line-height: 1.5; }
+    .go { margin-top: auto; font-weight: 800; color: var(--accent-2); font-size: 14px; }
+
+    .flowline { text-align: center; color: #c2c8d6; font-size: 22px; margin: 18px 0 8px; font-weight: 700; }
+    .note { margin-top: 28px; text-align: center; color: var(--muted); font-size: 14px; }
+    .note strong { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <span class="logo">🎹</span>
+        <div>
+          <h1>Composer Studio</h1>
+          <p class="tagline">Compose it · capture it · sing it. Three tools, one creative loop.</p>
+        </div>
+      </div>
+      <a class="back" href="../../index.html">← Back to Music</a>
+    </div>
+
+    <div class="flowline">Compose&nbsp;&nbsp;→&nbsp;&nbsp;Capture&nbsp;&nbsp;→&nbsp;&nbsp;Sing</div>
+    <div class="flow" id="flow"></div>
+
+    <p class="note">New idea? <strong>Compose</strong> a melody, or <strong>hum</strong> one into Composer Live — then send it to <strong>Sing-Along</strong> and practice it. 🎶</p>
+  </div>
+
+  <script type="module">
+    import { ZONE_TOOLS } from '../_shared/zone.js';
+    const flow = document.getElementById('flow');
+    flow.innerHTML = ZONE_TOOLS.map((t) => `
+      <a class="card" href="${t.path}">
+        <span class="step">${t.step}</span>
+        <span class="card-icon">${t.icon}</span>
+        <span class="card-name">${t.name}</span>
+        <span class="card-tag">${t.tagline}</span>
+        <span class="go">Open ${t.short} →</span>
+      </a>
+    `).join('');
+  </script>
+</body>
+</html>
