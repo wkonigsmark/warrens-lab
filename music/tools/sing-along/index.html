@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sing-Along · Music</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🎤</span>
+      <div>
+        <h1>Sing-Along <span class="beta-badge">SANDBOX</span></h1>
+        <p class="tagline">Pick a tune, follow the notes, and sing to score! (M1: core game)</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="song-bar">
+        <div class="song-id">
+          <span class="song-label">Now playing</span>
+          <span id="song-title" class="song-name">—</span>
+          <span id="fit-readout" class="fit-readout">—</span>
+        </div>
+
+        <div class="transpose">
+          <span class="t-label">Key</span>
+          <button id="oct-down" class="t-btn" title="Down an octave">−8va</button>
+          <button id="semi-down" class="t-btn" title="Down a semitone">−</button>
+          <span id="transpose-readout" class="t-readout">0</span>
+          <button id="semi-up" class="t-btn" title="Up a semitone">+</button>
+          <button id="oct-up" class="t-btn" title="Up an octave">+8va</button>
+          <button id="auto-fit" class="t-btn t-auto" title="Fit the song to your range (or a comfy default)">Auto-fit</button>
+        </div>
+
+        <button id="find-range" class="btn btn-ghost">🎯 Find my range</button>
+        <button id="paste-toggle" class="btn btn-ghost">📋 Paste song</button>
+      </div>
+
+      <div id="paste-area" class="paste-area" hidden>
+        <textarea id="paste-input" placeholder="Paste HookTheory clipboard JSON (or a Composer song) here…" rows="5"></textarea>
+        <div class="paste-row">
+          <button id="load-song" class="btn btn-ghost">Load song</button>
+          <span id="paste-status" class="paste-status"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel game-panel">
+      <div class="game-head">
+        <button id="play" class="btn btn-play">▶ Play</button>
+        <button id="hear-start" class="btn btn-ghost" title="Hear the note you start on">🔊 Start note</button>
+        <div class="hud"><span class="hud-label">Score</span><span id="score-hud" class="hud-score">—</span></div>
+      </div>
+      <div class="stage">
+        <canvas id="highway" width="900" height="380"></canvas>
+        <div id="count-in" class="count-in" hidden>4</div>
+        <div id="results" class="results" hidden>
+          <div id="result-stars" class="result-stars">☆☆☆</div>
+          <div id="result-pct" class="result-pct">0%</div>
+          <p id="result-msg" class="result-msg"></p>
+          <button id="again" class="btn btn-play">🔁 Sing again</button>
+        </div>
+      </div>
+      <p class="hint">Keep the <strong>dot</strong> on each note as it reaches the orange line. The bar fills green while you’re in tune. 🎶</p>
+    </section>
+  </main>
+
+  <!-- Guided range check: sing lowest + highest, get an octave suggestion -->
+  <div id="range-modal" class="modal" hidden>
+    <div class="modal-overlay" id="range-overlay"></div>
+    <div class="modal-card">
+      <button id="range-close" class="modal-x" aria-label="Close">✕</button>
+      <h2 id="range-title">Find your range 🎤</h2>
+      <p id="range-instr">Sing your <strong>lowest</strong> comfortable note and hold it…</p>
+
+      <div class="range-live">
+        <span class="range-live-label">hearing</span>
+        <span id="range-live-note" class="range-live-note">—</span>
+      </div>
+      <p id="range-captured" class="range-captured"></p>
+      <div id="range-suggest" class="range-suggest" hidden></div>
+
+      <div class="range-actions">
+        <button id="range-capture" class="btn btn-play">Set my lowest ✓</button>
+        <button id="range-confirm" class="btn btn-play" hidden>Use this ✓</button>
+        <button id="range-redo" class="btn btn-ghost" hidden>↺ Start over</button>
+      </div>
+      <p id="range-status" class="range-status">Allow the microphone, then sing.</p>
+    </div>
+  </div>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
