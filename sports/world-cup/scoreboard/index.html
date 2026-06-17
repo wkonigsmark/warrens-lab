@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scoreboard & Standings Sandbox | Warren's World Cup Pool</title>
+  <title>Scoreboard & Match Center | Warren's World Cup Pool</title>
   <link rel="stylesheet" href="../shared/world-cup.css">
   
   <style>
@@ -639,6 +639,59 @@
       margin-bottom: 20px;
     }
 
+    /* Commissioner control bar (Match Center score entry) */
+    .commish-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      border: 1px solid var(--wc-line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .commish-bar.is-on {
+      border-color: rgba(36, 180, 126, 0.5);
+      background: rgba(36, 180, 126, 0.08);
+    }
+    .commish-bar-text { display: flex; flex-direction: column; gap: 2px; }
+    .commish-bar-text strong { font-size: 0.92rem; font-weight: 900; }
+    .commish-bar-text span { font-size: 0.78rem; color: var(--wc-muted); }
+
+    /* Per-match score editor (only shown in commissioner mode) */
+    .sc-match-edit {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sc-edit-row { display: flex; align-items: center; gap: 8px; }
+    .sc-edit-row label {
+      flex: 1; font-size: 0.74rem; font-weight: 800; color: var(--wc-muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sc-edit-row input.sc-score-input {
+      width: 56px; text-align: center; font-weight: 900; font-size: 1rem;
+      background: rgba(0,0,0,0.25); color: var(--wc-ink);
+      border: 1px solid var(--wc-line); border-radius: 8px; padding: 6px 4px;
+    }
+    .sc-edit-row select.sc-shootout-select {
+      flex: 1; background: rgba(0,0,0,0.25); color: var(--wc-ink);
+      border: 1px solid var(--wc-line); border-radius: 8px; padding: 6px 8px; font-size: 0.78rem;
+    }
+    .sc-edit-save {
+      width: 100%; background: var(--wc-gold); color: #07130f;
+      border: none; border-radius: 9px; padding: 9px; font-weight: 950; font-size: 0.84rem; cursor: pointer;
+    }
+    .sc-edit-save:hover { filter: brightness(1.05); }
+    .sc-edit-save:disabled { opacity: 0.6; cursor: default; }
+    .sc-edit-note { font-size: 0.7rem; color: var(--wc-muted); text-align: center; }
+    .sc-edit-tbd { font-size: 0.74rem; color: var(--wc-muted); font-style: italic; text-align: center; padding: 4px 0; }
+
     .match-filter-btn {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--wc-line);
@@ -900,13 +953,7 @@
     <!-- Navigation Tabs -->
     <nav class="tab-selectors" id="scoreboard-tabs-nav">
       <button class="sim-tab-btn active" data-tab="standings">🏆 Projected Standings</button>
-      <div class="tab-dropdown">
-        <button class="tab-dropdown-btn" id="tools-dropdown-toggle">⚙️ Tools <span style="font-size: 0.7rem;">▼</span></button>
-        <div class="tab-dropdown-menu" id="tools-dropdown-menu">
-          <button class="tab-dropdown-item" data-tab="matches">📅 Match Center</button>
-          <button class="tab-dropdown-item" data-tab="sandbox">🎛️ Commissioner Sandbox</button>
-        </div>
-      </div>
+      <button class="sim-tab-btn" data-tab="matches">📅 Match Center</button>
     </nav>
 
     <!-- Tab Panels Container -->
@@ -953,6 +1000,15 @@
 
       <!-- Tab 2: Match Center -->
       <div class="sim-view-panel" id="panel-matches">
+        <!-- Commissioner controls: enter & save official scores per match -->
+        <div class="commish-bar">
+          <div class="commish-bar-text">
+            <strong id="commish-status">🔒 Scores are read-only</strong>
+            <span id="commish-hint">Enter commissioner mode to record official final scores.</span>
+          </div>
+          <button class="wc-button" id="commish-toggle" style="width: auto;">🔑 Commissioner Mode</button>
+        </div>
+
         <div class="match-center-filters">
           <button class="match-filter-btn active" data-filter="all">All Matches</button>
           <button class="match-filter-btn" data-filter="group">Group Stage (1-72)</button>
@@ -960,79 +1016,9 @@
           <button class="match-filter-btn" data-filter="completed">Completed</button>
           <button class="match-filter-btn" data-filter="upcoming">Upcoming</button>
         </div>
-        
+
         <div class="scoreboard-matches-grid" id="match-center-grid">
           <!-- Rendered via JS -->
-        </div>
-      </div>
-
-      <!-- Tab 3: Commissioner Sandbox -->
-      <div class="sim-view-panel" id="panel-sandbox">
-        <div class="sandbox-container">
-          
-          <!-- Sandbox Controls Card -->
-          <div class="sandbox-card">
-            <h3 style="margin-top: 0; color: var(--wc-gold); text-transform: uppercase; font-size: 0.95rem; letter-spacing: 0.05em; font-weight:950;">⚡ Sandbox Controls</h3>
-            <p style="font-size: 0.8rem; color: var(--wc-muted); margin-bottom: 20px;">
-              Simulate matches using stochastic algorithms or clear the board to see how projected points and ranks adapt instantly.
-            </p>
-            
-            <!-- Chaos level slider -->
-            <div style="margin-bottom: 24px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <span class="sandbox-label" style="margin-bottom: 0;">Simulation Chaos Level</span>
-                <span style="font-weight: 850; font-size: 0.88rem; color: var(--wc-gold);" id="sandbox-chaos-label">50%</span>
-              </div>
-              <input type="range" id="sandbox-chaos-slider" min="0" max="1" step="0.05" value="0.5" style="width: 100%; accent-color: var(--wc-gold); cursor: pointer;">
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-              <button class="wc-button" id="sandbox-btn-next5">Simulate Next 5 Matches</button>
-              <button class="wc-button" id="sandbox-btn-group">Complete Group Stage (Matches 1-72)</button>
-              <button class="wc-button" id="sandbox-btn-all">Complete Full Tournament (104 Matches)</button>
-              <button class="wc-button secondary" id="sandbox-btn-reset" style="border-color: rgba(255, 93, 93, 0.4); color: var(--wc-red);">Reset Sandbox (Clear Scores)</button>
-            </div>
-          </div>
-
-          <!-- Manual Results Card -->
-          <div class="sandbox-card">
-            <h3 style="margin-top: 0; color: var(--wc-blue); text-transform: uppercase; font-size: 0.95rem; letter-spacing: 0.05em; font-weight:950;">📝 Manual Match Result</h3>
-            <p style="font-size: 0.8rem; color: var(--wc-muted); margin-bottom: 20px;">
-              Test a score locally, or save a final score as the official public result. Official results override sandbox simulations everywhere.
-            </p>
-
-            <form id="override-form" onsubmit="return false;">
-              <label class="sandbox-label" for="override-match-select">Select Match</label>
-              <select class="sandbox-select" id="override-match-select">
-                <!-- Loaded dynamically -->
-              </select>
-
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-                <div>
-                  <label class="sandbox-label" id="override-home-label">Home Score</label>
-                  <input type="number" class="sandbox-input" id="override-home-score" min="0" max="20" value="0">
-                </div>
-                <div>
-                  <label class="sandbox-label" id="override-away-label">Away Score</label>
-                  <input type="number" class="sandbox-input" id="override-away-score" min="0" max="20" value="0">
-                </div>
-              </div>
-
-              <!-- Shootout option (hidden by default unless KO) -->
-              <div id="override-shootout-container" style="display: none; margin-bottom: 16px;">
-                <label class="sandbox-label" for="override-shootout-select">Penalty Shootout Winner</label>
-                <select class="sandbox-select" id="override-shootout-select">
-                  <!-- Loaded dynamically based on teams -->
-                </select>
-              </div>
-
-              <div style="display: grid; gap: 10px;">
-                <button class="wc-button secondary" id="override-btn-apply" style="width: 100%;">Apply Sandbox Score</button>
-                <button class="wc-button" id="override-btn-official" style="width: 100%;">Save Official Final Result</button>
-              </div>
-            </form>
-          </div>
-
         </div>
       </div>
 
@@ -1077,21 +1063,10 @@
       matchGrid: document.getElementById("match-center-grid"),
       scoreboardSearch: document.getElementById("scoreboard-search"),
       matchFilters: document.querySelectorAll(".match-filter-btn"),
-      sandboxChaosSlider: document.getElementById("sandbox-chaos-slider"),
-      sandboxChaosLabel: document.getElementById("sandbox-chaos-label"),
-      btnNext5: document.getElementById("sandbox-btn-next5"),
-      btnGroup: document.getElementById("sandbox-btn-group"),
-      btnAll: document.getElementById("sandbox-btn-all"),
-      btnReset: document.getElementById("sandbox-btn-reset"),
-      overrideMatchSelect: document.getElementById("override-match-select"),
-      overrideHomeScore: document.getElementById("override-home-score"),
-      overrideAwayScore: document.getElementById("override-away-score"),
-      overrideHomeLabel: document.getElementById("override-home-label"),
-      overrideAwayLabel: document.getElementById("override-away-label"),
-      overrideShootoutContainer: document.getElementById("override-shootout-container"),
-      overrideShootoutSelect: document.getElementById("override-shootout-select"),
-      btnApplyOverride: document.getElementById("override-btn-apply"),
-      btnSaveOfficial: document.getElementById("override-btn-official"),
+      commishBar: document.querySelector(".commish-bar"),
+      commishToggle: document.getElementById("commish-toggle"),
+      commishStatus: document.getElementById("commish-status"),
+      commishHint: document.getElementById("commish-hint"),
       toastRegion: document.getElementById("sandbox-toast-region")
     };
 
@@ -1422,7 +1397,6 @@
       updateKnockoutPairings();
       renderStandings();
       renderMatches(getActiveMatchFilter());
-      loadOverrideMatchSelector();
       return rows.length;
     }
 
@@ -1488,30 +1462,6 @@
     }
 
     // Stochastic game simulation (getWeightedScore formula)
-    function simulateGameScores(homeId, awayId, stochasticity = 0.5) {
-      const w1 = wIndexMap.get(homeId) || 0.50;
-      const w2 = wIndexMap.get(awayId) || 0.50;
-
-      // Base random factor
-      const stochBase = Math.random() * 3.2;
-      const fixedBase = 1.3;
-
-      const base1 = Math.floor(fixedBase * (1 - stochasticity) + stochBase * stochasticity);
-      const base2 = Math.floor(fixedBase * (1 - stochasticity) + stochBase * stochasticity);
-
-      // Advantage scaling based on W-Index differences
-      const diff = w1 - w2;
-      const advantageScale = 2.5;
-
-      const extra1 = (diff > 0) ? Math.floor(advantageScale * diff * (1 - stochasticity) + Math.random() * (advantageScale * diff) * stochasticity) : 0;
-      const extra2 = (diff < 0) ? Math.floor(advantageScale * Math.abs(diff) * (1 - stochasticity) + Math.random() * (advantageScale * Math.abs(diff)) * stochasticity) : 0;
-
-      return {
-        homeScore: base1 + extra1,
-        awayScore: base2 + extra2
-      };
-    }
-
     // Resolves live knockout pairings sequentially based on actual scores
     function updateKnockoutPairings() {
       const groupStageDone = actualMatches.slice(0, 72).every(m => m.status === 'completed');
@@ -1785,37 +1735,22 @@
 
     // Render Tab Panel Views
     function switchTab(tabId) {
-      if (tabId === "sandbox" && !requestSandboxAccess()) {
-        return;
-      }
-
-      // Update main tab
-      if (elements.mainTab) {
-        elements.mainTab.classList.toggle("active", tabId === "standings");
-      }
-
-      // Update dropdown items
-      elements.dropdownItems.forEach(btn => {
-        if (btn.dataset.tab === tabId) btn.classList.add("active");
-        else btn.classList.remove("active");
+      // Highlight the active tab button
+      document.querySelectorAll(".sim-tab-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === tabId);
       });
 
       // Update panels
       elements.panels.forEach(p => {
-        if (p.id === `panel-${tabId}`) p.classList.add("active");
-        else p.classList.remove("active");
+        p.classList.toggle("active", p.id === `panel-${tabId}`);
       });
-
-      // Close dropdown after selection
-      if (elements.dropdownMenu) {
-        elements.dropdownMenu.classList.remove("active");
-      }
     }
 
-    function requestSandboxAccess() {
+    // Commissioner mode unlock (gates official score entry in Match Center).
+    function requestCommissionerAccess() {
       if (sandboxUnlocked) return true;
 
-      const pin = window.prompt("Enter commissioner PIN to access the sandbox.");
+      const pin = window.prompt("Enter commissioner PIN to record official scores.");
       if (pin === ADMIN_PIN) {
         sandboxUnlocked = true;
         sessionStorage.setItem("world_cup_sandbox_unlocked", "true");
@@ -1826,6 +1761,21 @@
         window.alert("Incorrect PIN.");
       }
       return false;
+    }
+
+    // Reflect commissioner lock state in the Match Center control bar.
+    function updateCommishBar() {
+      if (!elements.commishBar) return;
+      elements.commishBar.classList.toggle("is-on", sandboxUnlocked);
+      if (sandboxUnlocked) {
+        elements.commishStatus.textContent = "🔓 Commissioner mode — scores editable";
+        elements.commishHint.textContent = "Type each final score and click Save to publish it as the official result.";
+        elements.commishToggle.textContent = "🔒 Lock";
+      } else {
+        elements.commishStatus.textContent = "🔒 Scores are read-only";
+        elements.commishHint.textContent = "Enter commissioner mode to record official final scores.";
+        elements.commishToggle.textContent = "🔑 Commissioner Mode";
+      }
     }
 
     function renderStandings() {
@@ -2063,6 +2013,40 @@
 
         let pBadge = (m.resultNote === "(p)" && m.status === 'completed') ? `<span class="p-shootout-badge">PK</span>` : '';
 
+        // Commissioner score editor (only when unlocked)
+        let editHtml = "";
+        if (sandboxUnlocked) {
+          if (m.home && m.away) {
+            const hVal = m.status === 'completed' ? m.homeScore : "";
+            const aVal = m.status === 'completed' ? m.awayScore : "";
+            const isKO = m.matchNumber >= 73;
+            const shootoutHtml = isKO ? `
+              <div class="sc-edit-row">
+                <label>If draw, PK winner</label>
+                <select class="sc-shootout-select">
+                  <option value="${m.home}" ${m.shootoutWinnerId === m.home ? "selected" : ""}>${teamName(m.home)}</option>
+                  <option value="${m.away}" ${m.shootoutWinnerId === m.away ? "selected" : ""}>${teamName(m.away)}</option>
+                </select>
+              </div>` : "";
+            editHtml = `
+              <div class="sc-match-edit">
+                <div class="sc-edit-row">
+                  <label>${teamName(m.home)}</label>
+                  <input type="number" class="sc-score-input sc-home" min="0" max="30" value="${hVal}" placeholder="–">
+                </div>
+                <div class="sc-edit-row">
+                  <label>${teamName(m.away)}</label>
+                  <input type="number" class="sc-score-input sc-away" min="0" max="30" value="${aVal}" placeholder="–">
+                </div>
+                ${shootoutHtml}
+                <button class="sc-edit-save">${m.status === 'completed' ? '✓ Update Official Score' : '💾 Save Final Score'}</button>
+                <div class="sc-edit-note">Publishes as the official public result.</div>
+              </div>`;
+          } else {
+            editHtml = `<div class="sc-match-edit"><div class="sc-edit-tbd">Teams are set once earlier rounds finish.</div></div>`;
+          }
+        }
+
         card.innerHTML = `
           <div class="sc-match-header">
             <span>${headerText}</span>
@@ -2083,27 +2067,88 @@
             <span>🏟️ ${m.venue?.city || 'TBD'}</span>
             <span>📅 ${m.localDate || 'July 2026'}</span>
           </div>
+          ${editHtml}
         `;
+
+        // Wire the per-card save button
+        if (sandboxUnlocked && m.home && m.away) {
+          const saveBtn = card.querySelector(".sc-edit-save");
+          if (saveBtn) {
+            saveBtn.addEventListener("click", () => {
+              const homeInput = card.querySelector(".sc-home");
+              const awayInput = card.querySelector(".sc-away");
+              const shootoutSel = card.querySelector(".sc-shootout-select");
+              if (homeInput.value === "" || awayInput.value === "") {
+                showSandboxToast("Enter both scores", "Type a number for each team before saving.", "!");
+                return;
+              }
+              saveOfficialResult(
+                m,
+                parseInt(homeInput.value, 10) || 0,
+                parseInt(awayInput.value, 10) || 0,
+                shootoutSel ? shootoutSel.value : null,
+                saveBtn
+              );
+            });
+          }
+        }
 
         elements.matchGrid.appendChild(card);
       });
     }
 
     // Populate the dropdown overrides selector
-    function loadOverrideMatchSelector() {
-      elements.overrideMatchSelect.innerHTML = "";
-      
-      actualMatches.forEach(m => {
-        const option = document.createElement("option");
-        option.value = m.matchNumber;
-        
-        let label = `Match ${m.matchNumber} (${teamName(m.home)} v ${teamName(m.away)})`;
-        if (m.matchNumber >= 73) {
-          label = `[${m.stage}] Match ${m.matchNumber} (${teamName(m.home)} v ${teamName(m.away)})`;
-        }
-        option.textContent = label;
-        elements.overrideMatchSelect.appendChild(option);
-      });
+    // Save one match's final score as the official public result (Supabase
+    // match_results via the local admin server). Per-match upsert — never
+    // touches any other match's result.
+    async function saveOfficialResult(m, hScore, aScore, shootoutWinnerId, btn) {
+      if (!m || !m.home || !m.away) return;
+
+      let winnerId = null;
+      let shootoutId = null;
+      let resultNote = "";
+      if (hScore > aScore) winnerId = m.home;
+      else if (aScore > hScore) winnerId = m.away;
+      else if (m.matchNumber >= 73) {
+        winnerId = shootoutWinnerId || m.home;
+        shootoutId = winnerId;
+        resultNote = "(p)";
+      }
+
+      const originalLabel = btn ? btn.textContent : "";
+      if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
+      try {
+        const response = await fetchWithTimeout(`${ADMIN_API_BASE}/results/${m.matchNumber}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Admin-Pin": ADMIN_PIN },
+          body: JSON.stringify({
+            home_team_id: m.home,
+            away_team_id: m.away,
+            home_score: hScore,
+            away_score: aScore,
+            status: "completed",
+            winner_id: winnerId,
+            shootout_winner_id: shootoutId,
+            result_note: resultNote,
+            source: "manual",
+          }),
+        }, 8000);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || `${response.status} ${response.statusText}`);
+
+        applyOfficialResults([data.result]);
+        updateKnockoutPairings();
+        renderStandings();
+        renderMatches(getActiveMatchFilter());
+        showSandboxToast(
+          `Match ${m.matchNumber} saved`,
+          `${teamName(m.home)} ${hScore}–${aScore} ${teamName(m.away)} is now the official result.`,
+          "✓"
+        );
+      } catch (error) {
+        showSandboxToast("Result was not saved", `${error.message}. Is the local admin server running?`, "!");
+        if (btn) { btn.disabled = false; btn.textContent = originalLabel; }
+      }
     }
 
     function showSandboxToast(title, message, icon = "✓") {
@@ -2123,83 +2168,6 @@
         toast.classList.add("is-leaving");
         toast.addEventListener("animationend", () => toast.remove(), { once: true });
       }, 2600);
-    }
-
-    // Sandbox step-by-step game simulator
-    function runSandboxSimulation(count) {
-      const chaos = parseFloat(elements.sandboxChaosSlider.value);
-      
-      let simulatedCount = 0;
-      for (const m of actualMatches) {
-        if (m.status === 'completed' || m.source === "official") continue;
-        
-        // Ensure team slots are populated (run knockout calculations dynamically!)
-        updateKnockoutPairings();
-        
-        if (!m.home || !m.away || m.home === "???" || m.away === "???") {
-          // Can't simulate because bracket slots are not resolved yet!
-          break;
-        }
-
-        const { homeScore, awayScore } = simulateGameScores(m.home, m.away, chaos);
-        m.homeScore = homeScore;
-        m.awayScore = awayScore;
-        m.status = 'completed';
-
-        if (homeScore > awayScore) {
-          m.winnerId = m.home;
-          m.resultNote = "";
-        } else if (awayScore > homeScore) {
-          m.winnerId = m.away;
-          m.resultNote = "";
-        } else {
-          // Draw
-          if (m.matchNumber >= 73) {
-            // Shootout required in knockouts!
-            const w1 = wIndexMap.get(m.home) || 0.50;
-            const w2 = wIndexMap.get(m.away) || 0.50;
-            const prob = w1 / (w1 + w2);
-            m.winnerId = Math.random() < prob ? m.home : m.away;
-            m.resultNote = "(p)";
-          } else {
-            m.winnerId = null;
-            m.resultNote = "";
-          }
-        }
-
-        simulatedCount++;
-        if (count > 0 && simulatedCount >= count) {
-          break;
-        }
-      }
-
-      // Propagate bracket slots & save state
-      updateKnockoutPairings();
-      saveSandboxState();
-
-      // Recalculate and re-render
-      renderStandings();
-      renderMatches(getActiveMatchFilter());
-      loadOverrideMatchSelector();
-
-      if (simulatedCount > 0) {
-        const completedTotal = actualMatches.filter(m => m.status === "completed").length;
-        showSandboxToast(
-          `${simulatedCount} match${simulatedCount === 1 ? "" : "es"} simulated`,
-          `${completedTotal}/104 matches are now complete. Projected standings and match center refreshed.`,
-          "✓"
-        );
-      } else {
-        showSandboxToast(
-          "No playable matches found",
-          "The next bracket slot may still be waiting on prior results, or the sandbox is already complete.",
-          "!"
-        );
-      }
-    }
-
-    function saveSandboxState() {
-      localStorage.setItem("world_cup_sandbox_matches", JSON.stringify(actualMatches));
     }
 
     function getActiveMatchFilter() {
@@ -2256,15 +2224,12 @@
           wIndexMap.set(t.id, defaultVal / 100);
         });
       } finally {
-        // Initialize entries & load cached sandbox matches
+        // Initialize entries, then build the schedule fresh from the fixture
+        // list and overlay official results (Supabase match_results) as the
+        // single source of truth. No simulation state is loaded.
         poolEntries = await loadPoolEntries();
-        
-        const cachedMatches = localStorage.getItem("world_cup_sandbox_matches");
-        if (cachedMatches) {
-          actualMatches = JSON.parse(cachedMatches);
-        } else {
-          initMatches();
-        }
+
+        initMatches();
         await refreshOfficialResults();
 
         const cachedRanks = localStorage.getItem("world_cup_pool_previous_ranks");
@@ -2276,7 +2241,7 @@
         updateKnockoutPairings();
         renderStandings();
         renderMatches();
-        loadOverrideMatchSelector();
+        updateCommishBar();
       }
     }
 
@@ -2460,28 +2425,8 @@
       }
 
       // Tab selector clicks
-      if (elements.mainTab) {
-        elements.mainTab.addEventListener("click", () => switchTab("standings"));
-      }
-
-      // Dropdown toggle
-      if (elements.dropdownToggle) {
-        elements.dropdownToggle.addEventListener("click", (e) => {
-          e.stopPropagation();
-          elements.dropdownMenu.classList.toggle("active");
-        });
-      }
-
-      // Dropdown item clicks
-      elements.dropdownItems.forEach(btn => {
+      document.querySelectorAll(".sim-tab-btn").forEach(btn => {
         btn.addEventListener("click", () => switchTab(btn.dataset.tab));
-      });
-
-      // Close dropdown when clicking outside
-      document.addEventListener("click", () => {
-        if (elements.dropdownMenu) {
-          elements.dropdownMenu.classList.remove("active");
-        }
       });
 
       if (elements.scoreboardSearch) {
@@ -2497,161 +2442,20 @@
         });
       });
 
-      // Chaos level slider
-      elements.sandboxChaosSlider.addEventListener("input", () => {
-        elements.sandboxChaosLabel.textContent = `${Math.round(elements.sandboxChaosSlider.value * 100)}%`;
-      });
-
-      // Sandbox Action buttons
-      elements.btnNext5.addEventListener("click", () => runSandboxSimulation(5));
-      elements.btnGroup.addEventListener("click", () => runSandboxSimulation(72));
-      elements.btnAll.addEventListener("click", () => runSandboxSimulation(104));
-      
-      elements.btnReset.addEventListener("click", async () => {
-        localStorage.removeItem("world_cup_sandbox_matches");
-        localStorage.removeItem("world_cup_pool_previous_ranks");
-        previousRanks = {};
-        initMatches();
-        await refreshOfficialResults();
-        saveSandboxState();
-        renderStandings();
-        renderMatches(getActiveMatchFilter());
-        loadOverrideMatchSelector();
-      });
-
-      // Manual Override selector change updates labels dynamically
-      elements.overrideMatchSelect.addEventListener("change", () => {
-        const mId = parseInt(elements.overrideMatchSelect.value);
-        const m = actualMatches.find(x => x.matchNumber === mId);
-        if (m) {
-          elements.overrideHomeLabel.textContent = m.home ? `${teamName(m.home)} Score` : "Home Score";
-          elements.overrideAwayLabel.textContent = m.away ? `${teamName(m.away)} Score` : "Away Score";
-
-          // If knockout stage and scores are draw, show shootout selector
-          const isKO = mId >= 73;
-          if (isKO) {
-            elements.overrideShootoutContainer.style.display = "block";
-            elements.overrideShootoutSelect.innerHTML = "";
-            
-            const opt1 = document.createElement("option");
-            opt1.value = m.home;
-            opt1.textContent = teamName(m.home);
-            
-            const opt2 = document.createElement("option");
-            opt2.value = m.away;
-            opt2.textContent = teamName(m.away);
-            
-            elements.overrideShootoutSelect.appendChild(opt1);
-            elements.overrideShootoutSelect.appendChild(opt2);
-          } else {
-            elements.overrideShootoutContainer.style.display = "none";
+      // Commissioner mode toggle — reveals per-match score entry in Match Center
+      if (elements.commishToggle) {
+        elements.commishToggle.addEventListener("click", () => {
+          if (sandboxUnlocked) {
+            // Lock again
+            sandboxUnlocked = false;
+            sessionStorage.removeItem("world_cup_sandbox_unlocked");
+          } else if (!requestCommissionerAccess()) {
+            return;
           }
-        }
-      });
-
-      // Apply Override click
-      elements.btnApplyOverride.addEventListener("click", () => {
-        const mId = parseInt(elements.overrideMatchSelect.value);
-        const m = actualMatches.find(x => x.matchNumber === mId);
-        if (!m) return;
-        if (m.source === "official") {
-          showSandboxToast("Official result protected", "Use Save Official Final Result to revise this match.", "!");
-          return;
-        }
-
-        const hScore = parseInt(elements.overrideHomeScore.value) || 0;
-        const aScore = parseInt(elements.overrideAwayScore.value) || 0;
-
-        m.homeScore = hScore;
-        m.awayScore = aScore;
-        m.status = "completed";
-
-        if (hScore > aScore) {
-          m.winnerId = m.home;
-          m.resultNote = "";
-        } else if (aScore > hScore) {
-          m.winnerId = m.away;
-          m.resultNote = "";
-        } else {
-          // Draw
-          if (mId >= 73) {
-            // Shootout winner
-            m.winnerId = elements.overrideShootoutSelect.value;
-            m.resultNote = "(p)";
-          } else {
-            m.winnerId = null;
-            m.resultNote = "";
-          }
-        }
-
-        updateKnockoutPairings();
-        saveSandboxState();
-
-        renderStandings();
-        renderMatches(getActiveMatchFilter());
-        loadOverrideMatchSelector();
-      });
-
-      elements.btnSaveOfficial.addEventListener("click", async () => {
-        const mId = parseInt(elements.overrideMatchSelect.value);
-        const m = actualMatches.find(x => x.matchNumber === mId);
-        if (!m || !m.home || !m.away) return;
-
-        const hScore = parseInt(elements.overrideHomeScore.value) || 0;
-        const aScore = parseInt(elements.overrideAwayScore.value) || 0;
-        let winnerId = null;
-        let shootoutWinnerId = null;
-        let resultNote = "";
-
-        if (hScore > aScore) winnerId = m.home;
-        else if (aScore > hScore) winnerId = m.away;
-        else if (mId >= 73) {
-          winnerId = elements.overrideShootoutSelect.value;
-          shootoutWinnerId = winnerId;
-          resultNote = "(p)";
-        }
-
-        elements.btnSaveOfficial.disabled = true;
-        elements.btnSaveOfficial.textContent = "Saving Official Result...";
-        try {
-          const response = await fetchWithTimeout(`${ADMIN_API_BASE}/results/${mId}`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Admin-Pin": ADMIN_PIN,
-            },
-            body: JSON.stringify({
-              home_team_id: m.home,
-              away_team_id: m.away,
-              home_score: hScore,
-              away_score: aScore,
-              status: "completed",
-              winner_id: winnerId,
-              shootout_winner_id: shootoutWinnerId,
-              result_note: resultNote,
-              source: "manual",
-            }),
-          }, 8000);
-          const data = await response.json();
-          if (!response.ok) throw new Error(data.error || `${response.status} ${response.statusText}`);
-
-          applyOfficialResults([data.result]);
-          updateKnockoutPairings();
-          renderStandings();
+          updateCommishBar();
           renderMatches(getActiveMatchFilter());
-          loadOverrideMatchSelector();
-          showSandboxToast(
-            `Match ${mId} saved officially`,
-            `${teamName(m.home)} ${hScore}-${aScore} ${teamName(m.away)} is now the public source of truth.`,
-            "✓"
-          );
-        } catch (error) {
-          showSandboxToast("Official result was not saved", error.message, "!");
-        } finally {
-          elements.btnSaveOfficial.disabled = false;
-          elements.btnSaveOfficial.textContent = "Save Official Final Result";
-        }
-      });
+        });
+      }
 
       // Initialize
       loadWIndexFeed();
