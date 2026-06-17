@@ -1049,6 +1049,8 @@
     let poolEntries = [];
     let previousRanks = {}; // For computing standing position changes (↑/↓)
     let officialResultCount = 0;
+    const expandedKeys = new Set(); // entries whose pick details are open (kept across re-renders)
+    let lastResultsSignature = null; // skip redundant re-renders when nothing changed
     let sandboxUnlocked = sessionStorage.getItem("world_cup_sandbox_unlocked") === "true";
     
     // UI Selectors
@@ -1395,8 +1397,17 @@
         elements.syncStatus.textContent = `🏆 ${poolEntries.length} submitted entries • ${rows.length} official result${rows.length === 1 ? "" : "s"}`;
       }
       updateKnockoutPairings();
-      renderStandings();
-      renderMatches(getActiveMatchFilter());
+
+      // Only re-render when the official results actually changed. This avoids
+      // wiping the leaderboard (and any open pick-details) on every 30s poll.
+      const signature = JSON.stringify(
+        rows.map(r => [r.match_number, r.home_score, r.away_score, r.status, r.winner_id, r.shootout_winner_id])
+      );
+      if (signature !== lastResultsSignature) {
+        lastResultsSignature = signature;
+        renderStandings();
+        renderMatches(getActiveMatchFilter());
+      }
       return rows.length;
     }
 
@@ -1845,14 +1856,14 @@
           let detailsRow = document.getElementById(detailRowId);
 
           if (detailsRow) {
-            // Toggle this row if already expanded
-            detailsRow.classList.toggle("active");
+            // Collapse this row, and remember it's closed
+            detailsRow.remove();
+            expandedKeys.delete(key);
           } else {
-            // Close any other expanded rows first
-            const allExpandedRows = elements.leaderboardBody.querySelectorAll(".expanded-predictions.active");
-            allExpandedRows.forEach(expanded => {
-              expanded.classList.remove("active");
-            });
+            // Single-open: close any other expanded rows first
+            elements.leaderboardBody.querySelectorAll(".expanded-predictions").forEach(r => r.remove());
+            expandedKeys.clear();
+            expandedKeys.add(key);
 
             const exp = document.createElement("tr");
             exp.id = detailRowId;
@@ -1956,6 +1967,17 @@
             row.parentNode.insertBefore(exp, row.nextSibling);
           }
         });
+      });
+
+      // Re-open any entry whose pick details were expanded before this
+      // re-render (e.g. the 30s auto-refresh) so the view doesn't collapse.
+      [...expandedKeys].forEach(openKey => {
+        const detailRowId = `details-${openKey.replace(/[^a-z0-9_-]/gi, '-')}`;
+        if (document.getElementById(detailRowId)) return;
+        const openRow = elements.leaderboardBody.querySelector(
+          `tr[data-player="${(window.CSS && CSS.escape) ? CSS.escape(openKey) : openKey}"]`
+        );
+        if (openRow) openRow.click();
       });
     }
 
