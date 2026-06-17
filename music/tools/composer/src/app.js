@@ -19,6 +19,7 @@ import {
 import { PRESETS } from './presets.js';
 import { LESSONS, lessonById, buildLessonFromAnalysis } from './lessons.js';
 import { analyzeForPhrases } from './analyze.js';
+import { openRangeModal, getStoredRange } from '../../_shared/range.js';
 
 const els = {
     rangeSelect: document.getElementById('range-select'),
@@ -39,6 +40,7 @@ const els = {
     print: document.getElementById('print'),
     generateLesson: document.getElementById('generate-lesson'),
     singAlong: document.getElementById('sing-along'),
+    findRange: document.getElementById('find-range'),
     clear: document.getElementById('clear'),
     title: document.getElementById('piece-title'),
     composer: document.getElementById('piece-composer'),
@@ -89,6 +91,7 @@ const state = {
     currentId: null,    // id of the library song being edited (null = unsaved)
     notes: [],          // { start (beats from 0), pitch, durBeats }
     playing: false,
+    singRange: getStoredRange(),  // { lo, hi } MIDI — the "sing zone" guide (shared)
 };
 
 // The instrument's pitch rows — chromatic (white + black keys) for piano-style
@@ -150,12 +153,24 @@ function render(playheadBeat = null) {
     renderGrid(els.grid, {
         scale, bars: state.bars, notes: state.notes,
         onCellClick: placeNote, onNoteClick: removeNote,
-        beatsPerBar: bpb,
+        beatsPerBar: bpb, singRange: state.singRange,
     });
     if (tall) centerGridOnMusic(scale);
     renderStaff(playheadBeat);
     renderManuscript();
     saveState();
+}
+
+// Reflect the stored sing-zone on the Find-my-range button.
+function updateFindRangeLabel() {
+    if (!els.findRange) return;
+    if (state.singRange) {
+        els.findRange.textContent = `🎯 ${midiToNoteName(state.singRange.lo)}–${midiToNoteName(state.singRange.hi)}`;
+        els.findRange.classList.add('active');
+    } else {
+        els.findRange.textContent = '🎯 Find my range';
+        els.findRange.classList.remove('active');
+    }
 }
 
 // On a tall (piano) grid, scroll the viewport so the actual notes — or a sensible
@@ -986,6 +1001,12 @@ function init() {
     els.print.addEventListener('click', () => { renderManuscript(); window.print(); });
     els.generateLesson.addEventListener('click', generateLessonFromCurrentSong);
     els.singAlong.addEventListener('click', sendToSingAlong);
+    els.findRange.addEventListener('click', () => openRangeModal((range) => {
+        state.singRange = range;
+        updateFindRangeLabel();
+        render();
+    }));
+    if (state.singRange) updateFindRangeLabel();
     els.clear.addEventListener('click', () => {
         if (state.notes.length === 0) return;
         stopPlayback();

@@ -8,6 +8,7 @@ import {
 } from './pitch.js';
 import { segmentNotes, notesToBeats } from './transcribe.js';
 import { renderScore } from '../../composer/src/notation.js';
+import { openRangeModal, getStoredRange } from '../../_shared/range.js';
 
 const els = {
     listen: document.getElementById('listen'),
@@ -29,6 +30,7 @@ const els = {
     score: document.getElementById('score'),
     sendComposer: document.getElementById('send-composer'),
     sendStatus: document.getElementById('send-status'),
+    findRange: document.getElementById('find-range'),
     paintingWrap: document.getElementById('painting-wrap'),
     eraseRect: document.getElementById('erase-rect'),
     eraserBtn: document.getElementById('eraser-btn'),
@@ -67,6 +69,7 @@ let trimStart = 0, trimEnd = Infinity;    // time window (seconds)
 let erased = [];                          // [{ t0, t1, m0, m1 }] erased boxes
 let captureDur = 0;
 let paintLayout = null;                   // last painting geometry (for eraser hit-testing)
+let singRange = getStoredRange();         // { lo, hi } MIDI — the shared "sing zone" guide
 
 // Undo/redo: snapshots of the edit state. `committed` is the last recorded move;
 // a move = a finished slider drag, an eraser box, or a Reset. Reset (full clear)
@@ -243,6 +246,14 @@ const midiToY = (m) => PAD_Y + (MIDI_HI - m) / (MIDI_HI - MIDI_LO) * (H - 2 * PA
 function drawContour() {
     ctx2d.clearRect(0, 0, W, H);
 
+    // "sing zone" band — your comfy range, so you can see if your hum sits in it
+    if (singRange) {
+        const yHi = midiToY(Math.min(MIDI_HI, singRange.hi));
+        const yLo = midiToY(Math.max(MIDI_LO, singRange.lo));
+        ctx2d.fillStyle = 'rgba(46,158,91,0.10)';
+        ctx2d.fillRect(GUTTER, yHi, W - GUTTER, yLo - yHi);
+    }
+
     // horizontal guide lines + note labels (label every C, line every note)
     ctx2d.font = '11px Outfit, sans-serif';
     ctx2d.textBaseline = 'middle';
@@ -398,6 +409,15 @@ function renderPainting(data, lo, hi, tStart, tEnd) {
         const plotTop = top + 8, plotBot = top + ROW_H - 18;
         const rt0 = tStart + r * ROW_SECS, rt1 = rt0 + ROW_SECS;
         const yOf = (m) => plotTop + (hi - m) / span * (plotBot - plotTop);
+
+        // "sing zone" band for this row
+        if (singRange) {
+            const bHi = Math.min(hi, singRange.hi), bLo = Math.max(lo, singRange.lo);
+            if (bHi >= bLo) {
+                g.fillStyle = 'rgba(46,158,91,0.10)';
+                g.fillRect(PAD_L, yOf(bHi), W - PAD_L - PAD_R, yOf(bLo) - yOf(bHi));
+            }
+        }
 
         for (let m = lo; m <= hi; m++) {
             const y = yOf(m), label = (m % 12 === 0) || m === lo || m === hi;
@@ -603,6 +623,20 @@ function drawEraseRect(a, b) {
     els.eraseRect.style.width = Math.abs(x2 - x1) + 'px';
     els.eraseRect.style.height = Math.abs(y2 - y1) + 'px';
 }
+
+// Find my range → store the sing zone and show its band on the contour + painting.
+function updateFindRangeLabel() {
+    els.findRange.textContent = singRange
+        ? `🎯 ${midiToName(singRange.lo)}–${midiToName(singRange.hi)}`
+        : '🎯 Find my range';
+}
+els.findRange.addEventListener('click', () => openRangeModal((range) => {
+    singRange = range;
+    updateFindRangeLabel();
+    drawContour();
+    if (!els.paintingPanel.hidden) applyEdits();   // re-render the painting band
+}));
+if (singRange) updateFindRangeLabel();
 
 // Draw the empty staff-grid once on load so the panel isn't blank.
 drawContour();

@@ -276,6 +276,12 @@ input[type="range"] { width: 150px; accent-color: var(--accent); }
 .cell.black-key.bar-alt { background: #e9ebf2; }
 .row-label.black-key { color: #3a3f4b; }
 
+/* "sing zone": rows inside the singer's comfy range get a soft green wash */
+.cell.sing-zone { background: #eafaf0; }
+.cell.sing-zone.bar-alt { background: #e2f6ea; }
+.cell.sing-zone.black-key { background: #e0f1e7; }
+.row-label.sing-zone { box-shadow: inset 3px 0 0 #57c98a; }
+
 .note-block {
   border: none;
   border-radius: 7px;

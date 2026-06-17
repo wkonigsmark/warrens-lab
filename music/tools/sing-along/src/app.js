@@ -8,6 +8,7 @@ import {
     DEFAULT_SONG, parseSong, transposeNotes, autoOctave, nameToMidi, midiToName,
     noteAtBeat, inTune, noteHit, hitScore, rangeOf, suggestOctaveShift,
 } from './song.js';
+import { getStoredRange, setStoredRange } from '../../_shared/range.js';
 
 const els = {
     songTitle: document.getElementById('song-title'),
@@ -69,7 +70,7 @@ let song = DEFAULT_SONG;
 let transpose = 0;
 let playNotes = [];      // [{ start, durBeats, midi, name, hitBeats }]
 let loMidi = 48, hiMidi = 84, songEnd = 0;
-let singerRange = null;  // { lo, hi } in MIDI — set by the guided range check
+let singerRange = getStoredRange();  // { lo, hi } MIDI — shared across the Studio tools
 
 let audioCtx = null, analyser = null, stream = null, buf = null;
 let rafId = null, playStart = 0, prevBeat = -Infinity, playing = false, lastCountBeep = null;
@@ -412,6 +413,7 @@ const medianMidi = () => {
 
 function confirmRange() {
     singerRange = { lo: capLow, hi: capHigh };
+    setStoredRange(singerRange);   // share it with Composer + Composer-Live
     transpose = suggestedShift;
     rebuild();
     closeRange();
