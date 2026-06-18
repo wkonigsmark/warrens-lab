@@ -195,11 +195,11 @@ function loop() {
         const n = Math.ceil(-songBeat);
         els.countIn.hidden = false;
         els.countIn.textContent = n;
-        if (lastCountBeep !== n) { tone(audioCtx, midiToFreq(startMidiOf()), 0.3, 0.22); lastCountBeep = n; }
+        if (lastCountBeep !== n) { tone(audioCtx, midiToFreq(startMidiOf()), 0.5, 0.32); lastCountBeep = n; }
         tuned = liveMidi != null && inTune(liveMidi, startMidiOf(), TOL);
     } else {
         els.countIn.hidden = true;
-        if (lastCountBeep !== 'go') { tone(audioCtx, midiToFreq(startMidiOf()), 0.18, 0.18); lastCountBeep = 'go'; }
+        if (lastCountBeep !== 'go') { tone(audioCtx, midiToFreq(startMidiOf()), 0.35, 0.3); lastCountBeep = 'go'; }
         const dBeat = Math.max(0, songBeat - Math.max(0, prevBeat));
         ({ active, tuned } = scoreStep(songBeat, dBeat, liveMidi));
         els.scoreHud.textContent = runningLabel(songBeat);
@@ -279,22 +279,52 @@ function loadPathSong(i) {
     renderPath();
 }
 
-// A soft sine tone on a given AudioContext (count-in pitch + start-note preview).
-function tone(ctx, freq, dur = 0.28, vol = 0.22) {
+// A warm, voice/organ-like reference tone (count-in pitch + start-note preview).
+// A pure sine is the hardest thing to pitch-match — so this stacks a few harmonic
+// partials, adds gentle vibrato + a lowpass, and a soft attack/long sustain, which
+// gives the ear a clear, singable pitch instead of a thin digital beep.
+function tone(ctx, freq, dur = 0.5, vol = 0.3) {
     if (!ctx) return;
-    const o = ctx.createOscillator(), gain = ctx.createGain();
-    o.frequency.value = freq; o.type = 'sine';
-    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(vol, ctx.currentTime + 0.015);
-    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
-    o.connect(gain).connect(ctx.destination);
-    o.start(); o.stop(ctx.currentTime + dur + 0.02);
+    const now = ctx.currentTime;
+    const attack = Math.min(0.04, dur * 0.25);
+    const release = Math.min(0.18, dur * 0.45);
+    const susEnd = Math.max(now + attack + 0.01, now + dur - release);
+
+    const master = ctx.createGain();
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = Math.min(8000, freq * 6 + 800);   // warm, not buzzy
+    lp.connect(master); master.connect(ctx.destination);
+
+    // soft attack → sustain → gentle release (so there's something to hold onto)
+    master.gain.setValueAtTime(0.0001, now);
+    master.gain.exponentialRampToValueAtTime(vol, now + attack);
+    master.gain.setValueAtTime(vol, susEnd);
+    master.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+    // gentle vibrato (±~12 cents) → vocal feel, easier to sing toward
+    const lfo = ctx.createOscillator(), lfoGain = ctx.createGain();
+    lfo.type = 'sine'; lfo.frequency.value = 5.2; lfoGain.gain.value = 12;
+    lfo.connect(lfoGain);
+
+    // harmonic partials (fundamental + overtones), normalized so they don't clip
+    const partials = [[1, 0.5], [2, 0.26], [3, 0.14], [4, 0.07], [5, 0.03]];
+    const oscs = [lfo];
+    for (const [mult, gain] of partials) {
+        const o = ctx.createOscillator(), pg = ctx.createGain();
+        o.type = 'sine'; o.frequency.value = freq * mult;
+        lfoGain.connect(o.detune);                  // cents → keeps harmonics aligned
+        pg.gain.value = gain; o.connect(pg).connect(lp);
+        oscs.push(o);
+    }
+    const stopAt = now + dur + 0.05;
+    oscs.forEach((o) => { o.start(now); o.stop(stopAt); });
 }
 
 // Preview the starting pitch any time (spins up a short-lived AudioContext).
 function previewStartNote() {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const play = () => { tone(ctx, midiToFreq(startMidiOf()), 0.75, 0.22); setTimeout(() => ctx.close(), 1100); };
+    const play = () => { tone(ctx, midiToFreq(startMidiOf()), 1.3, 0.32); setTimeout(() => ctx.close(), 1700); };
     ctx.resume().then(play).catch(play);   // resume first — contexts can start suspended
 }
 
