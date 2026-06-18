@@ -9,6 +9,7 @@ import {
     noteAtBeat, inTune, noteHit, hitScore, rangeOf, suggestOctaveShift,
 } from './song.js';
 import { getStoredRange, setStoredRange } from '../../_shared/range.js';
+import { PATH_SONGS, getProgress, isUnlocked, recordResult, firstUnclearedIndex, PASS_PCT } from './library.js';
 
 const els = {
     songTitle: document.getElementById('song-title'),
@@ -44,6 +45,8 @@ const els = {
     resultPct: document.getElementById('result-pct'),
     resultMsg: document.getElementById('result-msg'),
     again: document.getElementById('again'),
+    nextSong: document.getElementById('next-song'),
+    songPath: document.getElementById('song-path'),
 };
 const g = els.canvas.getContext('2d');
 
@@ -71,6 +74,7 @@ let transpose = 0;
 let playNotes = [];      // [{ start, durBeats, midi, name, hitBeats }]
 let loMidi = 48, hiMidi = 84, songEnd = 0;
 let singerRange = getStoredRange();  // { lo, hi } MIDI — shared across the Studio tools
+let currentPathIndex = -1;           // index into PATH_SONGS, or -1 for a custom/pasted song
 
 let audioCtx = null, analyser = null, stream = null, buf = null;
 let rafId = null, playStart = 0, prevBeat = -Infinity, playing = false, lastCountBeep = null;
@@ -91,7 +95,8 @@ function loadSong(s, { autofit = true } = {}) {
 
 function rebuild() {
     playNotes = transposeNotes(song.notes, transpose).map((n) => ({
-        start: n.start, durBeats: n.durBeats, midi: nameToMidi(n.pitch), name: n.pitch, hitBeats: 0,
+        start: n.start, durBeats: n.durBeats, midi: nameToMidi(n.pitch), name: n.pitch,
+        lyric: n.lyric || '', hitBeats: 0,
     }));
     const midis = playNotes.map((n) => n.midi);
     loMidi = Math.min(...midis) - 3;
@@ -222,9 +227,56 @@ function endGame() {
     const msgs = ['Nice try — sing it again and watch your score climb! 🌱', 'Good going! You found lots of the notes. 🎵', 'Great singing! Really close to the tune. 🌟', 'Amazing! You nailed the melody! 🏆'];
     els.resultStars.textContent = '★★★'.slice(0, stars) + '☆☆☆'.slice(0, 3 - stars);
     els.resultPct.textContent = `${pct}%`;
-    els.resultMsg.textContent = `${hits} / ${total} notes hit — ${msgs[stars]}`;
+
+    let msg = `${hits} / ${total} notes hit — ${msgs[stars]}`;
+    els.nextSong.hidden = true;
+
+    // Path progression: clear the song (≥ PASS_PCT) and unlock the next.
+    if (currentPathIndex >= 0) {
+        const passed = pct >= PASS_PCT;
+        recordResult(PATH_SONGS[currentPathIndex].id, pct);
+        renderPath();
+        const hasNext = currentPathIndex < PATH_SONGS.length - 1;
+        if (passed) {
+            msg = hasNext
+                ? `🎉 Cleared with ${pct}%! You unlocked the next song!`
+                : `🏆 ${pct}%! You finished the whole path — amazing!`;
+            els.nextSong.hidden = !hasNext;
+        } else {
+            msg = `${pct}% — get to ${PASS_PCT}% to clear it. So close, try again! 💪`;
+        }
+    }
+    els.resultMsg.textContent = msg;
     els.results.hidden = false;
     stop();
+}
+
+// --- Song path (curated ladder) -------------------------------------------
+function renderPath() {
+    const progress = getProgress();
+    els.songPath.innerHTML = '';
+    PATH_SONGS.forEach((s, i) => {
+        const unlocked = isUnlocked(i, progress);
+        const cleared = progress.cleared.includes(s.id);
+        const best = progress.best[s.id];
+        const stop = document.createElement('div');
+        stop.className = 'path-stop' + (cleared ? ' cleared' : '') + (i === currentPathIndex ? ' current' : '') + (unlocked ? '' : ' locked');
+        const icon = cleared ? '⭐' : (unlocked ? '🎤' : '🔒');
+        const state = cleared ? `cleared · ${best}%` : (unlocked ? (best ? `best ${best}%` : 'tap to sing') : 'locked');
+        stop.innerHTML = `<div class="stop-icon">${icon}</div><div class="stop-title">${s.title}</div>`
+            + `<div class="stop-state${cleared ? ' pass' : ''}">${state}</div>`;
+        if (unlocked) stop.addEventListener('click', () => loadPathSong(i));
+        els.songPath.appendChild(stop);
+    });
+}
+
+function loadPathSong(i) {
+    if (playing) stop();
+    currentPathIndex = i;
+    loadSong(PATH_SONGS[i]);
+    els.scoreHud.textContent = '—';
+    els.results.hidden = true;
+    renderPath();
 }
 
 // A soft sine tone on a given AudioContext (count-in pitch + start-note preview).
@@ -285,6 +337,15 @@ function drawFrame(songBeat, liveMidi, active, tuned) {
         }
         g.globalAlpha = 1;
         if (n === active) { g.strokeStyle = '#1f2430'; g.lineWidth = 2; roundRect(x, y, w, laneH, 6); g.stroke(); }
+        // lyric syllable above the bar (white halo so it reads over guide lines)
+        if (n.lyric) {
+            const lx = x + w / 2, ly = y - 7;
+            g.font = `bold ${n === active ? 16 : 13}px Outfit, sans-serif`;
+            g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+            g.lineWidth = 3; g.strokeStyle = '#fff'; g.strokeText(n.lyric, lx, ly);
+            g.fillStyle = n === active ? '#ff8a3d' : '#1f2430'; g.fillText(n.lyric, lx, ly);
+            g.textAlign = 'left';
+        }
     }
 
     // now-line
@@ -433,12 +494,17 @@ els.loadSong.addEventListener('click', () => {
     if (!parsed) { els.pasteStatus.textContent = '❌ Could not read that JSON (HookTheory or Composer format).'; return; }
     els.pasteStatus.textContent = `✓ Loaded "${parsed.title}" — ${parsed.notes.length} notes.`;
     els.pasteArea.hidden = true;
+    currentPathIndex = -1;     // a custom song isn't part of the path
     loadSong(parsed);
+    renderPath();
 });
 
 els.play.addEventListener('click', () => (playing ? stop() : start()));
 els.hearStart.addEventListener('click', previewStartNote);
 els.again.addEventListener('click', () => { els.results.hidden = true; start(); });
+els.nextSong.addEventListener('click', () => {
+    if (currentPathIndex >= 0 && currentPathIndex < PATH_SONGS.length - 1) loadPathSong(currentPathIndex + 1);
+});
 
 // A melody handed over from Composer ("Practice in Sing-Along") lands in shared
 // localStorage; pick it up once, then fall back to the default song.
@@ -449,14 +515,17 @@ function loadIncomingOrDefault() {
             localStorage.removeItem('studio.singalong.incoming.v1');
             const s = JSON.parse(raw);
             if (s && Array.isArray(s.notes) && s.notes.length) {
+                currentPathIndex = -1;
                 loadSong({ title: s.title || 'My melody', bpm: s.bpm || 96, notes: s.notes });
                 els.pasteStatus.textContent = `✓ Loaded "${s.title || 'My melody'}" from Composer.`;
                 return;
             }
         }
     } catch (_) { /* ignore */ }
-    loadSong(DEFAULT_SONG);
+    // No handoff → start the student where they left off on the path.
+    loadPathSong(firstUnclearedIndex());
 }
 
 // init
 loadIncomingOrDefault();
+renderPath();

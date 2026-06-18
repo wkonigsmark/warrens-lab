@@ -80,9 +80,27 @@ Fully client-side, no backend. Pitch DSP is a self-contained copy of composer-li
   range set auto-fits; readout + modal states correct; no console errors. **Live-mic
   range capture is Warren's to test.** Future: a tiny "hold to confirm" auto-capture,
   and persist the range across sessions.
-- **M4 · Curated library + kid picker.** Parent pastes/saves songs (reuse the shared
-  `composer.library.v1`?), child picks from a friendly menu; repeat-play favourites.
-- **M5 · Polish.** Mobile/touch, accessibility, latency calibration if needed.
+- **M4 · Lyrics + curated song path (DONE 2026-06-08).** Gamification: lyrics on the
+  notes + a progressive ladder. `src/library.js` = `PATH_SONGS`, a hand-authored,
+  difficulty-ordered list of 5 simple songs, each note carrying a `lyric` syllable
+  (First Steps "do do re mi" → Up and Down → Hot Cross Buns → Mary Had a Little Lamb
+  → Twinkle). **Lyrics on the highway**: `drawFrame` draws each note's syllable above
+  its bar (white halo for legibility; the active note's lyric grows + turns orange).
+  **Song Path UI**: a row of "stops" with states — 🔒 locked / 🎤 unlocked ("tap to
+  sing") / ⭐ cleared ("cleared · N%"); the current one is ring-highlighted; tapping an
+  unlocked stop loads it. **Progression** (score-threshold, Warren's pick): clearing a
+  song at **≥ PASS_PCT (70%)** via the hit-score marks it cleared and unlocks the next;
+  a **"Next song →"** button appears on a win; progress (cleared ids + best %) persists
+  in `localStorage 'singalong.progress.v1'`; on load the student resumes at the first
+  uncleared song (`firstUnclearedIndex`). Custom/handed-over songs set
+  `currentPathIndex=-1` (not part of the path). Verified: lyrics render, fail (50% →
+  not cleared, "best 50%") vs pass (100% → cleared + unlock + Next), Next loads the
+  next, progress survives reload + resumes; no console errors. **Live singing is
+  Warren's to test.**
+- **M5 · Polish + path growth.** More curated songs (verse 2s, more tunes); lyric
+  authoring from Composer/paste (carry `lyric` through the handoff); a karaoke line
+  option; star-based progression variant; mobile/touch; latency calibration. Possible:
+  a "held-accuracy pro mode" tier (the parked `heldAccuracy`).
 
 ## Files
 - `index.html` — song bar (title, transpose, paste), play button, game stage

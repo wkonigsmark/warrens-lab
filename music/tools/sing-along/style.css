@@ -60,6 +60,26 @@ main { padding: 18px 24px 48px; max-width: 1000px; }
 .paste-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
 .paste-status { font-size: 13px; color: var(--muted); }
 
+/* song path */
+.path-head { margin-bottom: 12px; }
+.path-title { margin: 0; font-size: 18px; font-weight: 800; }
+.path-sub { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
+.song-path { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 8px; }
+.path-stop {
+  flex: 0 0 auto; min-width: 138px; border: 1px solid var(--line); border-radius: 14px;
+  padding: 12px 14px; background: #fff; cursor: pointer; text-align: center; transition: all 0.12s ease;
+}
+.path-stop:hover:not(.locked) { transform: translateY(-2px); border-color: var(--accent-2); }
+.path-stop.locked { opacity: 0.5; cursor: default; }
+.path-stop.current { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(255,138,61,0.25); }
+.path-stop.cleared { border-color: var(--good); background: #f0faf4; }
+.stop-icon { font-size: 22px; }
+.stop-title { font-weight: 800; font-size: 14px; margin-top: 2px; }
+.stop-state { font-size: 12px; color: var(--muted); margin-top: 4px; min-height: 16px; }
+.stop-state.pass { color: var(--good); font-weight: 700; }
+
+.result-actions { display: flex; gap: 10px; justify-content: center; }
+
 /* game */
 .game-head { display: flex; align-items: center; gap: 18px; margin-bottom: 14px; }
 .hud { margin-left: auto; display: flex; align-items: baseline; gap: 8px; }

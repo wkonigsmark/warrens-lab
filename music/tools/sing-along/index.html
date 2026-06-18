@@ -52,6 +52,14 @@
       </div>
     </section>
 
+    <section class="panel">
+      <div class="path-head">
+        <h2 class="path-title">🎶 Song Path</h2>
+        <p class="path-sub">Clear a song (70%+) to unlock the next. Sing your way up the ladder!</p>
+      </div>
+      <div id="song-path" class="song-path"></div>
+    </section>
+
     <section class="panel game-panel">
       <div class="game-head">
         <button id="play" class="btn btn-play">▶ Play</button>
@@ -65,7 +73,10 @@
           <div id="result-stars" class="result-stars">☆☆☆</div>
           <div id="result-pct" class="result-pct">0%</div>
           <p id="result-msg" class="result-msg"></p>
-          <button id="again" class="btn btn-play">🔁 Sing again</button>
+          <div class="result-actions">
+            <button id="again" class="btn btn-ghost">🔁 Sing again</button>
+            <button id="next-song" class="btn btn-play" hidden>Next song →</button>
+          </div>
         </div>
       </div>
       <p class="hint">Keep the <strong>dot</strong> on each note as it reaches the orange line. The bar fills green while you’re in tune. 🎶</p>
