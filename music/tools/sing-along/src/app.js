@@ -80,15 +80,21 @@ let audioCtx = null, analyser = null, stream = null, buf = null;
 let rafId = null, playStart = 0, prevBeat = -Infinity, playing = false, lastCountBeep = null;
 
 // --- Song setup -----------------------------------------------------------
-// Best transpose for this song: fit to the singer's measured range if we have it,
-// else fall back to the generic G4-centred default.
+// The singer's manual octave/key nudge, kept as an offset FROM the auto-fit so it
+// carries to the next song (and across reloads) — set it once, sing the whole path.
+const OKEY = 'singalong.octaveOffset.v1';
+let manualShift = (() => { const v = parseInt(localStorage.getItem(OKEY), 10); return Number.isFinite(v) ? v : 0; })();
+const saveManualShift = () => { try { localStorage.setItem(OKEY, String(manualShift)); } catch (_) { /* ignore */ } };
+
+// Best transpose for this song: fit to the singer's measured range (or the generic
+// G4-centred default), then apply the singer's remembered manual nudge on top.
 function fitForSinger(notes) {
     return singerRange ? suggestOctaveShift(notes, singerRange.lo, singerRange.hi).shift : autoOctave(notes);
 }
 
 function loadSong(s, { autofit = true } = {}) {
     song = s;
-    transpose = autofit ? fitForSinger(s.notes) : 0;
+    transpose = autofit ? fitForSinger(s.notes) + manualShift : 0;
     rebuild();
     els.songTitle.textContent = s.title;
 }
@@ -397,12 +403,23 @@ function roundRect(x, y, w, h, r) {
 }
 
 // --- Controls -------------------------------------------------------------
-const setTranspose = (delta) => { transpose += delta; rebuild(); };
+// Nudging the key updates the remembered offset-from-auto-fit, so it sticks to the
+// next song too (and persists across reloads).
+const setTranspose = (delta) => {
+    transpose += delta;
+    manualShift = transpose - fitForSinger(song.notes);
+    saveManualShift();
+    rebuild();
+};
 els.octDown.addEventListener('click', () => setTranspose(-12));
 els.octUp.addEventListener('click', () => setTranspose(12));
 els.semiDown.addEventListener('click', () => setTranspose(-1));
 els.semiUp.addEventListener('click', () => setTranspose(1));
-els.autoFit.addEventListener('click', () => { transpose = fitForSinger(song.notes); rebuild(); });
+els.autoFit.addEventListener('click', () => {   // Auto-fit clears the manual nudge
+    manualShift = 0; saveManualShift();
+    transpose = fitForSinger(song.notes);
+    rebuild();
+});
 
 // --- Guided range check ---------------------------------------------------
 // Sing lowest + highest, then suggest a whole-octave shift to fit each song to

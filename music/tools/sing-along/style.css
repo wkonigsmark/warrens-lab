@@ -27,6 +27,7 @@ main { padding: 18px 24px 48px; max-width: 1000px; }
 
 /* song bar */
 .song-bar { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.game-panel .song-bar { margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
 .song-id { display: flex; flex-direction: column; }
 .song-label { font-size: 11px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); }
 .song-name { font-size: 20px; font-weight: 800; }
