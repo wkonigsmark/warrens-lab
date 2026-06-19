@@ -1,7 +1,9 @@
-// presets.js — the built-in "Starter Songs" shelf: a handful of well-known
-// PUBLIC-DOMAIN melodies, kept deliberately simple (natural notes only, within
-// one octave, quarter/half/whole, 4/4) so they fit the default C5–A6 xylophone
-// and a beginner's first reading. Traditional tunes — not modern arrangements.
+// presets.js — the built-in "Starter Songs" shelf: well-known PUBLIC-DOMAIN
+// melodies. Two tiers: (1) simple traditional tunes (natural notes, ~one octave)
+// on the default C5–A6 xylophone for a beginner's first reading; (2) "great
+// themes" — short, recognizable classical motifs (Beethoven, Mozart, Bach,
+// Tchaikovsky, Brahms) that need accidentals / a wider register, so they load on
+// the 88-key PIANO. All melodies, not full arrangements.
 //
 // Encoding: a compact string of beat tokens. "C5" = quarter, "C5:0.5" = eighth,
 // "C5:2" = half, "C5:4" = whole, "_" / "_:0.5" = a rest (advances beats with no
@@ -21,15 +23,20 @@ function parse(notation) {
     return { notes, beats: beat };
 }
 
-function song(id, title, composer, notation, timeSignature = '4/4') {
+// opts: { timeSignature='4/4', rangeId='c5-a6', tempo=96 }. Classical pieces with
+// accidentals / a wider range use rangeId 'piano-88' (88-key piano, write-as-sounds);
+// the simple traditional tunes stay on the xylophone (c5-a6, written an octave down).
+function song(id, title, composer, notation, opts = {}) {
+    const { timeSignature = '4/4', rangeId = 'c5-a6', tempo = 96 } = opts;
+    const staffShift = opts.staffShift != null ? opts.staffShift : (rangeId === 'c5-a6' ? -1 : 0);
     const { notes, beats } = parse(notation);
     const beatsPerBar = timeSignature === '3/4' ? 3 : 4;
     return {
         id, title, composer,
-        rangeId: 'c5-a6', clef: 'treble', staffShift: -1, // default xylophone, written an octave down
+        rangeId, clef: 'treble', staffShift,
         bars: Math.max(4, Math.ceil(beats / beatsPerBar)),
         timeSignature,
-        durationId: 'quarter', tempo: 96, showLetters: false,
+        durationId: 'quarter', tempo, showLetters: false,
         notes, builtin: true,
     };
 }
@@ -79,9 +86,47 @@ export const PRESETS = [
     // 3/4 time signatures
     song('preset-happybirthday', 'Happy Birthday', 'Traditional',
         'G5 G5 A5 | G5 C6 B5 | G5 G5 A5 | G5 C6 B5 | G5 G5:2',
-        '3/4'),
+        { timeSignature: '3/4' }),
 
     song('preset-rockabye', 'Rock-a-bye Baby', 'Traditional',
         'C5 D5 E5 | F5 G5:2 | C5 D5 E5 | F5 G5:2 | G5 A5 B5 | C6 A5 G5',
-        '3/4'),
+        { timeSignature: '3/4' }),
+
+    // --- Classical "great themes" — short, recognizable motifs of the masters.
+    // These use accidentals / a wider register, so they load on the 88-key PIANO
+    // (not the xylophone). Public-domain melodies. Accidentals are sharp-spelled to
+    // match the piano grid's note rows.
+    song('preset-furelise', 'Für Elise (theme)', 'L. van Beethoven',
+        'E5:0.5 D#5:0.5 E5:0.5 D#5:0.5 E5:0.5 B4:0.5 D5:0.5 C5:0.5 A4 | ' +
+        'C4:0.5 E4:0.5 A4:0.5 B4 | E4:0.5 G#4:0.5 B4:0.5 C5',
+        { rangeId: 'piano-88', tempo: 80 }),
+
+    song('preset-beethoven5', 'Symphony No. 5 (motif)', 'L. van Beethoven',
+        'G4:0.5 G4:0.5 G4:0.5 D#4:2 | F4:0.5 F4:0.5 F4:0.5 D4:2',
+        { rangeId: 'piano-88', tempo: 100 }),
+
+    song('preset-nachtmusik', 'Eine kleine Nachtmusik (theme)', 'W. A. Mozart',
+        'G5:0.5 D5:0.5 G5:0.5 D5:0.5 G5:0.5 B5:0.5 D6:0.5 G6:0.5 | ' +
+        'D5:0.5 A5:0.5 D5:0.5 A5:0.5 D5:0.5 F#5:0.5 A5:0.5 D6:0.5 | ' +
+        'G5:0.5 B5:0.5 A5:0.5 C6:0.5 B5:0.5 D6:0.5 C6:0.5 E6:0.5 | D6:2',
+        { rangeId: 'piano-88' }),
+
+    song('preset-turkishmarch', 'Rondo alla Turca (theme)', 'W. A. Mozart',
+        'B4:0.5 A4:0.5 G#4:0.5 A4:0.5 C5 | B4:0.5 A4:0.5 G#4:0.5 A4:0.5 D5 | ' +
+        'C5:0.5 B4:0.5 A4:0.5 B4:0.5 E5 | A5:2',
+        { rangeId: 'piano-88', tempo: 108 }),
+
+    song('preset-minuetg', 'Minuet in G (theme)', 'J. S. Bach',
+        'D5 | G5:0.5 A5:0.5 B5:0.5 C6:0.5 D6 | G5 G5 | ' +
+        'E6:0.5 C6:0.5 D6:0.5 E6:0.5 F#6 | G6 G6',
+        { rangeId: 'piano-88', timeSignature: '3/4', tempo: 120 }),
+
+    song('preset-swanlake', 'Swan Lake (theme)', 'P. I. Tchaikovsky',
+        'B4:2 C#5:0.5 D5:0.5 E5:0.5 F#5:0.5 | F#5:2 E5:0.5 D5:0.5 C#5:0.5 B4:0.5 | A#4:2 B4:2',
+        { rangeId: 'piano-88', tempo: 84 }),
+
+    song('preset-brahmslullaby', 'Lullaby (Wiegenlied)', 'J. Brahms',
+        'E5:0.5 E5:0.5 G5:2 | E5:0.5 E5:0.5 G5:2 | ' +
+        'E5:0.5 G5:0.5 B5:0.5 A5:0.5 A5:0.5 G5:0.5 | D5 E5 F5',
+        { rangeId: 'piano-88', timeSignature: '3/4', tempo: 90 }),
 ];
