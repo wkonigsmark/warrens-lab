@@ -87,6 +87,7 @@
         <button id="save" class="btn btn-ghost">💾 Save</button>
         <button id="print" class="btn btn-ghost">🖨 Print</button>
         <button id="generate-lesson" class="btn btn-ghost" title="Auto-generate practice steps from this song">🎓 Generate Lesson</button>
+        <button id="lyrics-toggle" class="btn btn-ghost" title="Add a word/syllable to each note">🎤 Lyrics</button>
         <button id="sing-along" class="btn btn-ghost" title="Send this melody to Sing-Along to practice">🎤 Practice in Sing-Along</button>
         <button id="clear" class="btn btn-ghost">✕ Clear</button>
       </div>
@@ -104,6 +105,20 @@
         <div class="staff-wrap" id="staff"></div>
       </div>
     </div>
+
+    <section class="lyrics-panel" id="lyrics-panel" hidden>
+      <div class="lyrics-head">
+        <h3 class="lyrics-title">🎤 Lyrics</h3>
+        <span class="lyrics-sub">One word/syllable per note, in order — these carry into Sing-Along.</span>
+      </div>
+      <div class="lyrics-quickfill">
+        <input id="lyrics-quick" type="text" placeholder="Quick fill: type syllables separated by spaces — e.g. La Ti Do La Ti Do">
+        <button id="lyrics-fill" class="btn btn-ghost">Fill</button>
+        <button id="lyrics-clear" class="btn btn-ghost">Clear all</button>
+      </div>
+      <div id="lyrics-strip" class="lyrics-strip"></div>
+      <p id="lyrics-empty" class="lyrics-empty">Place some notes first, then give each one a word here.</p>
+    </section>
 
     <p class="hint">Tip: pick a <em>note length</em>, then click an empty square to drop a note. Click a coloured note to remove it. Press <strong>Play</strong> to hear your melody, <strong>Save</strong> to keep it, or <strong>Print</strong> for a manuscript.</p>
 

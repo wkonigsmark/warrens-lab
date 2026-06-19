@@ -5,6 +5,7 @@ import {
     RANGES, DEFAULT_RANGE, buildScale, buildChromaticScale, DURATIONS, durationById,
     BAR_OPTIONS, MAX_BARS, BEATS_PER_BAR, TIME_SIGNATURES, DEFAULT_TIME_SIG, timeSignatureById,
     CLEFS, DEFAULT_CLEF, SHIFT_MIN, SHIFT_MAX, noteToMidi, midiToNoteName,
+    NOTE_COLORS, BLACK_KEY_COLOR, letterOf, isSharp,
 } from './model.js';
 import { renderGrid } from './grid.js';
 import { renderScore } from './notation.js';
@@ -41,6 +42,13 @@ const els = {
     generateLesson: document.getElementById('generate-lesson'),
     singAlong: document.getElementById('sing-along'),
     findRange: document.getElementById('find-range'),
+    lyricsToggle: document.getElementById('lyrics-toggle'),
+    lyricsPanel: document.getElementById('lyrics-panel'),
+    lyricsStrip: document.getElementById('lyrics-strip'),
+    lyricsEmpty: document.getElementById('lyrics-empty'),
+    lyricsQuick: document.getElementById('lyrics-quick'),
+    lyricsFill: document.getElementById('lyrics-fill'),
+    lyricsClear: document.getElementById('lyrics-clear'),
     clear: document.getElementById('clear'),
     title: document.getElementById('piece-title'),
     composer: document.getElementById('piece-composer'),
@@ -158,7 +166,61 @@ function render(playheadBeat = null) {
     if (tall) centerGridOnMusic(scale);
     renderStaff(playheadBeat);
     renderManuscript();
+    renderLyrics();
     saveState();
+}
+
+// --- Lyrics editor: one syllable per note (carries into Sing-Along) --------
+const colorForPitch = (pitch) => (isSharp(pitch) ? BLACK_KEY_COLOR : NOTE_COLORS[letterOf(pitch)]);
+
+function renderLyrics() {
+    if (els.lyricsPanel.hidden) return;   // only build the strip when it's open
+    const notes = state.notes;            // kept sorted by start = singing order
+    els.lyricsEmpty.style.display = notes.length ? 'none' : '';
+    els.lyricsStrip.innerHTML = '';
+    notes.forEach((n, i) => {
+        const chip = document.createElement('div');
+        chip.className = 'lyric-chip';
+        const pitch = document.createElement('span');
+        pitch.className = 'lyric-pitch';
+        pitch.textContent = n.pitch;
+        pitch.style.color = colorForPitch(n.pitch);
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'lyric-input' + (n.lyric ? '' : ' empty');
+        input.value = n.lyric || '';
+        input.maxLength = 12;
+        input.setAttribute('aria-label', `Lyric for note ${i + 1} (${n.pitch})`);
+        input.addEventListener('input', () => {
+            n.lyric = input.value;
+            input.classList.toggle('empty', !input.value);
+            saveState();   // persist; no re-render so focus stays put
+        });
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const next = els.lyricsStrip.querySelectorAll('.lyric-input')[i + 1];
+                if (next) next.focus();
+            }
+        });
+        chip.append(pitch, input);
+        els.lyricsStrip.appendChild(chip);
+    });
+}
+
+// Bulk-assign space-separated syllables to notes in order ("La Ti Do La Ti Do …").
+function applyLyricsQuickFill() {
+    const tokens = els.lyricsQuick.value.trim().split(/\s+/).filter(Boolean);
+    state.notes.forEach((n, i) => { n.lyric = tokens[i] || ''; });
+    saveState();
+    renderLyrics();
+}
+
+function clearLyrics() {
+    state.notes.forEach((n) => { n.lyric = ''; });
+    els.lyricsQuick.value = '';
+    saveState();
+    renderLyrics();
 }
 
 // Reflect the stored sing-zone on the Find-my-range button.
@@ -767,7 +829,7 @@ function sendToSingAlong() {
     const payload = {
         title: (state.title || '').trim() || 'My melody',
         bpm: state.tempo,
-        notes: state.notes.map((n) => ({ start: n.start, pitch: n.pitch, durBeats: n.durBeats })),
+        notes: state.notes.map((n) => ({ start: n.start, pitch: n.pitch, durBeats: n.durBeats, lyric: n.lyric || '' })),
     };
     try { localStorage.setItem('studio.singalong.incoming.v1', JSON.stringify(payload)); } catch (_) { /* ignore */ }
     window.location.href = '../sing-along/index.html';
@@ -1001,6 +1063,16 @@ function init() {
     els.print.addEventListener('click', () => { renderManuscript(); window.print(); });
     els.generateLesson.addEventListener('click', generateLessonFromCurrentSong);
     els.singAlong.addEventListener('click', sendToSingAlong);
+    els.lyricsToggle.addEventListener('click', () => {
+        const opening = els.lyricsPanel.hidden;
+        els.lyricsPanel.hidden = !opening;
+        els.lyricsToggle.classList.toggle('active', opening);
+        if (opening) els.lyricsQuick.value = state.notes.map((n) => n.lyric || '').join(' ').trim();
+        renderLyrics();
+    });
+    els.lyricsFill.addEventListener('click', applyLyricsQuickFill);
+    els.lyricsQuick.addEventListener('keydown', (e) => { if (e.key === 'Enter') applyLyricsQuickFill(); });
+    els.lyricsClear.addEventListener('click', clearLyrics);
     els.findRange.addEventListener('click', () => openRangeModal((range) => {
         state.singRange = range;
         updateFindRangeLabel();
