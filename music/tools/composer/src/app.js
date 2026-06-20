@@ -5,7 +5,7 @@ import {
     RANGES, DEFAULT_RANGE, buildScale, buildChromaticScale, DURATIONS, durationById,
     BAR_OPTIONS, MAX_BARS, BEATS_PER_BAR, TIME_SIGNATURES, DEFAULT_TIME_SIG, timeSignatureById,
     CLEFS, DEFAULT_CLEF, SHIFT_MIN, SHIFT_MAX, noteToMidi, midiToNoteName,
-    NOTE_COLORS, BLACK_KEY_COLOR, letterOf, isSharp,
+    NOTE_COLORS, BLACK_KEY_COLOR, letterOf, isSharp, BEAT_W, SLOTS_PER_BEAT,
 } from './model.js';
 import { renderGrid } from './grid.js';
 import { renderScore } from './notation.js';
@@ -49,6 +49,7 @@ const els = {
     lyricsQuick: document.getElementById('lyrics-quick'),
     lyricsFill: document.getElementById('lyrics-fill'),
     lyricsClear: document.getElementById('lyrics-clear'),
+    lyricsExport: document.getElementById('lyrics-export'),
     clear: document.getElementById('clear'),
     title: document.getElementById('piece-title'),
     composer: document.getElementById('piece-composer'),
@@ -99,8 +100,15 @@ const state = {
     currentId: null,    // id of the library song being edited (null = unsaved)
     notes: [],          // { start (beats from 0), pitch, durBeats }
     playing: false,
+    seekBeat: null,     // beat to start playback from (set by clicking the staff; null = start of piece)
     singRange: getStoredRange(),  // { lo, hi } MIDI — the "sing zone" guide (shared)
 };
+
+// --- Undo / redo -----------------------------------------------------------
+// Tracks note history so ⌘Z / ⇧⌘Z step back and forward through edits.
+let undoStack = [], redoStack = [];
+const snapshot = () => JSON.parse(JSON.stringify(state.notes));
+let committed = null;  // set in init() after loadState() so restores are included
 
 // The instrument's pitch rows — chromatic (white + black keys) for piano-style
 // ranges, naturals-only otherwise.
@@ -126,17 +134,41 @@ function fits(beat, durBeats) {
 function placeNote(pitch, beat) {
     const durBeats = durationById(state.durationId).beats;
     if (!fits(beat, durBeats)) { flashInvalid(); return; }
+    undoStack.push(committed);
+    if (undoStack.length > 60) undoStack.shift();
+    redoStack = [];
     // monophonic: clear anything overlapping this note's time span
     const end = beat + durBeats;
     state.notes = state.notes.filter((n) => n.start + n.durBeats <= beat || n.start >= end);
     state.notes.push({ start: beat, pitch, durBeats });
     state.notes.sort((a, b) => a.start - b.start);
+    committed = snapshot();
     playNote(pitch);
     render();
 }
 
 function removeNote(target) {
+    undoStack.push(committed);
+    if (undoStack.length > 60) undoStack.shift();
+    redoStack = [];
     state.notes = state.notes.filter((n) => n !== target);
+    committed = snapshot();
+    render();
+}
+
+function undo() {
+    if (!undoStack.length) return;
+    redoStack.push(committed);
+    committed = undoStack.pop();
+    state.notes = JSON.parse(JSON.stringify(committed));
+    render();
+}
+
+function redo() {
+    if (!redoStack.length) return;
+    undoStack.push(committed);
+    committed = redoStack.pop();
+    state.notes = JSON.parse(JSON.stringify(committed));
     render();
 }
 
@@ -164,10 +196,21 @@ function render(playheadBeat = null) {
         beatsPerBar: bpb, singRange: state.singRange,
     });
     if (tall) centerGridOnMusic(scale);
-    renderStaff(playheadBeat);
+    // show seek marker when idle; playheadBeat overrides during active playback
+    renderStaff(playheadBeat !== null ? playheadBeat : state.seekBeat);
     renderManuscript();
     renderLyrics();
     saveState();
+}
+
+// Scroll the piano grid to the given note (by pitch+beat) and flash it orange.
+// Called when the user clicks a note head on the staff.
+function highlightGridNote(pitch, startBeat) {
+    els.grid.querySelectorAll('.note-block.highlighted').forEach((b) => b.classList.remove('highlighted'));
+    const target = els.grid.querySelector(`.note-block[data-pitch="${pitch}"][data-start="${startBeat}"]`);
+    if (!target) return;
+    target.classList.add('highlighted');
+    target.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
 }
 
 // --- Lyrics editor: one syllable per note (carries into Sing-Along) --------
@@ -221,6 +264,20 @@ function clearLyrics() {
     els.lyricsQuick.value = '';
     saveState();
     renderLyrics();
+}
+
+// Export the melody + lyrics as JSON in the Sing-Along Song-Path shape, ready to
+// be pasted into the curated PATH_SONGS list (the "repertoire").
+function exportForSingAlong() {
+    if (state.notes.length === 0) { window.alert('Compose a melody first, then export it.'); return; }
+    const title = (state.title || 'Untitled').trim() || 'Untitled';
+    const songObj = {
+        id: slug(title),
+        title,
+        bpm: state.tempo,
+        notes: state.notes.map((n) => ({ start: n.start, pitch: n.pitch, durBeats: n.durBeats, lyric: n.lyric || '' })),
+    };
+    downloadJSON(`${slug(title)}.singalong.json`, songObj);
 }
 
 // Reflect the stored sing-zone on the Find-my-range button.
@@ -292,18 +349,24 @@ function stopPlayback() {
     state.playing = false;
     els.play.textContent = '▶ Play';
     els.play.classList.remove('playing');
-    renderStaff(null);
+    renderStaff(state.seekBeat);  // keep seek marker visible after stopping
 }
 
 function play() {
     if (state.playing || state.notes.length === 0) return;
     state.playing = true;
-    els.play.textContent = '■ Stop';   // same button becomes Stop
+    els.play.textContent = '■ Stop';
     els.play.classList.add('playing');
-    const { schedule, totalMs } = playScore(state.notes, state.tempo);
-    // Sweep the playhead by lighting up each note as it sounds.
+    const startBeat = state.seekBeat ?? 0;
+    // Filter to notes at/after the seek point; shift their start times to beat 0.
+    const toPlay = state.notes
+        .filter((n) => n.start >= startBeat)
+        .map((n) => ({ ...n, start: n.start - startBeat }));
+    if (!toPlay.length) { stopPlayback(); return; }
+    const { schedule, totalMs } = playScore(toPlay, state.tempo);
+    // Sweep the playhead — undo the beat shift so the marker stays in sync with the SVG.
     schedule.forEach(({ note, offsetMs }) => {
-        playTimers.push(setTimeout(() => renderStaff(note.start), offsetMs));
+        playTimers.push(setTimeout(() => renderStaff(note.start + startBeat), offsetMs));
     });
     playTimers.push(setTimeout(stopPlayback, totalMs + 250));
 }
@@ -505,6 +568,7 @@ function loadFromLibrary(id) {
     stopPlayback();
     applyPiece(p);
     state.currentId = id;
+    state.seekBeat = null;
     syncControlsToState();
     refreshControls();
     render();
@@ -529,6 +593,7 @@ function loadPreset(id) {
     stopPlayback();
     applyPiece(p);
     state.currentId = null;
+    state.seekBeat = null;
     syncControlsToState();
     refreshControls();
     render();
@@ -543,6 +608,7 @@ function newPiece() {
     state.title = '';
     state.composer = '';
     state.currentId = null;
+    state.seekBeat = null;
     els.title.value = '';
     els.composer.value = '';
     render();
@@ -994,8 +1060,12 @@ function renderLibrary() {
     }
 }
 
+// x offset (px) where beat 0 starts in the staff SVG — matches notation.js layout constants.
+const STAFF_BEATS_LEFT = 98;  // STAFF_LEFT(64) + TS_PAD(34)
+
 function init() {
     loadState();
+    committed = snapshot();  // baseline for undo (includes restored notes from localStorage)
 
     // range options (shows how easily the register expands)
     els.rangeSelect.innerHTML = Object.entries(RANGES)
@@ -1049,9 +1119,14 @@ function init() {
     els.play.addEventListener('click', togglePlay);
     els.save.addEventListener('click', saveToLibrary);
 
-    // Spacebar starts/stops playback — unless you're typing in a field or a
-    // button is focused (let the focused control handle its own space).
+    // Keyboard shortcuts: ⌘Z / ⌃Z = undo, ⇧⌘Z / ⇧⌃Z = redo; Space = play/stop.
     document.addEventListener('keydown', (e) => {
+        const meta = e.metaKey || e.ctrlKey;
+        if (meta && e.key === 'z') {
+            e.preventDefault();
+            if (e.shiftKey) redo(); else undo();
+            return;
+        }
         if (e.code !== 'Space' && e.key !== ' ') return;
         const t = e.target;
         const tag = t && t.tagName;
@@ -1060,6 +1135,25 @@ function init() {
         e.preventDefault();
         togglePlay();
     });
+    // Staff click: clicking a note head highlights it in the grid; clicking elsewhere
+    // sets the playback seek position (shown as an orange line on the staff).
+    els.staff.addEventListener('click', (e) => {
+        const noteEl = e.target.closest('[data-note-pitch]');
+        if (noteEl) {
+            highlightGridNote(noteEl.dataset.notePitch, parseFloat(noteEl.dataset.noteStart));
+            return;
+        }
+        if (state.playing) stopPlayback();
+        const rect = els.staff.getBoundingClientRect();
+        const svgX = e.clientX - rect.left + els.staff.scrollLeft;
+        const totalBeats = state.bars * beatsPerBar();
+        // Snap to half-beat resolution (eighth-note grid).
+        const rawBeat = (svgX - STAFF_BEATS_LEFT) / BEAT_W;
+        const beat = Math.max(0, Math.min(totalBeats, Math.round(rawBeat * 2) / 2));
+        state.seekBeat = beat;
+        renderStaff(state.seekBeat);
+    });
+
     els.print.addEventListener('click', () => { renderManuscript(); window.print(); });
     els.generateLesson.addEventListener('click', generateLessonFromCurrentSong);
     els.singAlong.addEventListener('click', sendToSingAlong);
@@ -1073,6 +1167,7 @@ function init() {
     els.lyricsFill.addEventListener('click', applyLyricsQuickFill);
     els.lyricsQuick.addEventListener('keydown', (e) => { if (e.key === 'Enter') applyLyricsQuickFill(); });
     els.lyricsClear.addEventListener('click', clearLyrics);
+    els.lyricsExport.addEventListener('click', exportForSingAlong);
     els.findRange.addEventListener('click', () => openRangeModal((range) => {
         state.singRange = range;
         updateFindRangeLabel();

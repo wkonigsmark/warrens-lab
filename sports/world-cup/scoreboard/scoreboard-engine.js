@@ -18,14 +18,72 @@ export const SCORING_RULES = {
   }
 };
 
-// Helper to sort standings mathematically
-export function sortGroupStandings(groupTeams) {
-  return [...groupTeams].sort((a, b) => {
-    if (b.pts !== a.pts) return b.pts - a.pts;
-    if (b.gd !== a.gd) return b.gd - a.gd;
-    if (b.gf !== a.gf) return b.gf - a.gf;
-    return b.wIndex - a.wIndex; // Default tie-breaker based on W-Index strength
+// Overall comparator, used as the fallback once head-to-head is exhausted.
+function compareOverall(a, b) {
+  if (b.pts !== a.pts) return b.pts - a.pts;
+  if (b.gd !== a.gd) return b.gd - a.gd;
+  if (b.gf !== a.gf) return b.gf - a.gf;
+  return (b.wIndex || 0) - (a.wIndex || 0);
+}
+
+// Build a head-to-head mini-table among a set of tied teams, using only the
+// matches played BETWEEN those teams.
+function headToHeadTable(ids, matches) {
+  const table = {};
+  ids.forEach(id => { table[id] = { pts: 0, gf: 0, ga: 0 }; });
+  (matches || []).forEach(m => {
+    if (m.status !== "completed") return;
+    if (!table[m.home] || !table[m.away]) return; // only matches among the tied set
+    const hs = Number(m.homeScore || 0);
+    const as = Number(m.awayScore || 0);
+    table[m.home].gf += hs; table[m.home].ga += as;
+    table[m.away].gf += as; table[m.away].ga += hs;
+    if (hs > as) table[m.home].pts += 3;
+    else if (as > hs) table[m.away].pts += 3;
+    else { table[m.home].pts += 1; table[m.away].pts += 1; }
   });
+  return table;
+}
+
+/**
+ * Rank ONE group's teams using HEAD-TO-HEAD as the first tiebreaker:
+ *   Points → H2H points → H2H goal diff → H2H goals
+ *          → overall goal diff → overall goals → (finalCompare | W-Index).
+ * Head-to-head is computed only among teams that are level on points.
+ * `matches` are that group's matches (only completed ones are counted).
+ */
+export function rankGroup(teams, matches, finalCompare) {
+  const ordered = [...teams].sort(compareOverall); // stable starting order by points
+  const out = [];
+  let i = 0;
+  while (i < ordered.length) {
+    let j = i;
+    while (j + 1 < ordered.length && ordered[j + 1].pts === ordered[i].pts) j++;
+    const cluster = ordered.slice(i, j + 1);
+
+    if (cluster.length > 1) {
+      const h2h = headToHeadTable(cluster.map(t => t.id), matches);
+      cluster.sort((a, b) => {
+        const ha = h2h[a.id], hb = h2h[b.id];
+        const hgdA = ha.gf - ha.ga, hgdB = hb.gf - hb.ga;
+        if (hb.pts !== ha.pts) return hb.pts - ha.pts;   // head-to-head points
+        if (hgdB !== hgdA) return hgdB - hgdA;            // head-to-head goal diff
+        if (hb.gf !== ha.gf) return hb.gf - ha.gf;        // head-to-head goals
+        if (b.gd !== a.gd) return b.gd - a.gd;            // overall goal diff
+        if (b.gf !== a.gf) return b.gf - a.gf;            // overall goals
+        if (finalCompare) return finalCompare(a, b);
+        return (b.wIndex || 0) - (a.wIndex || 0);
+      });
+    }
+    out.push(...cluster);
+    i = j + 1;
+  }
+  return out;
+}
+
+// Backwards-compatible export (overall-only). Prefer rankGroup() with matches.
+export function sortGroupStandings(groupTeams) {
+  return [...groupTeams].sort(compareOverall);
 }
 
 /**
@@ -92,13 +150,18 @@ export function calculateGroupTables(matches, teams) {
     }
   });
 
-  // Calculate GD and sort each group
+  // Calculate GD and rank each group (head-to-head first)
   Object.keys(standings).forEach(gLetter => {
     standings[gLetter].forEach(t => {
       t.gd = t.gf - t.ga;
     });
-    standings[gLetter] = sortGroupStandings(standings[gLetter]);
-    
+    const groupTeamIds = new Set(standings[gLetter].map(t => t.id));
+    const groupMatches = matches.filter(m =>
+      m.matchNumber <= 72 && m.status === "completed" &&
+      groupTeamIds.has(m.home) && groupTeamIds.has(m.away)
+    );
+    standings[gLetter] = rankGroup(standings[gLetter], groupMatches);
+
     // Top 2 advance
     if (standings[gLetter].length >= 1) standings[gLetter][0].status = 'Q';
     if (standings[gLetter].length >= 2) standings[gLetter][1].status = 'Q';

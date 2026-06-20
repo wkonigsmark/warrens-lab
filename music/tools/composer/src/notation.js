@@ -64,9 +64,10 @@ function renderNote(n, localBeat, { colored, showLetters, staffShift, topStep, b
     }
     // head — open (hollow) for half & whole, filled for quarter/eighth. Hollow in
     // both colour and B&W modes so quarter vs half is always visually distinct.
+    const noteAttrs = `data-note-pitch="${n.pitch}" data-note-start="${n.start}" style="cursor:pointer"`;
     svg += open
-        ? `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#fff" stroke="${fill}" stroke-width="2.4"/>`
-        : `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}"/>`;
+        ? `<ellipse ${noteAttrs} cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#fff" stroke="${fill}" stroke-width="2.4"/>`
+        : `<ellipse ${noteAttrs} cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}"/>`;
     if (hasStem) {
         const up = cy >= midY;
         const sx = up ? cx + rx - 0.5 : cx - rx + 0.5;

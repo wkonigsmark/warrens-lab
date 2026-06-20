@@ -66,6 +66,8 @@ export function renderGrid(container, { scale, bars, notes, onCellClick, onNoteC
         block.style.gridColumn = `${startSlot + 2} / span ${spanSlots}`;
         block.style.background = color;
         block.title = `${n.pitch} — remove`;
+        block.dataset.pitch = n.pitch;
+        block.dataset.start = n.start;
         block.addEventListener('click', () => onNoteClick(n));
         grid.appendChild(block);
     });

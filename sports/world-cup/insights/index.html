@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insights | Warren's World Cup Pool</title>
+  <link rel="stylesheet" href="../shared/world-cup.css">
+  <style>
+    .status-bar { display:flex; align-items:center; gap:10px; margin-top:18px; font-size:0.82rem; color:var(--wc-muted); }
+    .status-dot { width:9px; height:9px; border-radius:50%; background:var(--wc-gold); box-shadow:0 0 10px var(--wc-gold); }
+
+    /* Tabs */
+    .ins-tabs { display:flex; gap:10px; flex-wrap:wrap; margin:26px 0 6px; }
+    .ins-tab { background:var(--wc-panel); border:1px solid var(--wc-line); color:var(--wc-muted);
+      font-weight:850; font-size:0.85rem; padding:9px 16px; border-radius:999px; cursor:pointer; transition:all .15s ease; }
+    .ins-tab:hover { color:var(--wc-ink); border-color:var(--wc-gold); }
+    .ins-tab.active { background:var(--wc-ink); color:#07130f; border-color:var(--wc-ink); }
+    .ins-panel { display:none; margin-top:22px; }
+    .ins-panel.active { display:block; }
+
+    .section-hint { color:var(--wc-muted); font-size:0.85rem; margin:0 0 18px; }
+
+    /* Picks distribution */
+    .picks-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px; }
+    @media (max-width:760px){ .picks-grid { grid-template-columns:1fr; } }
+    .pick-card { border:1px solid var(--wc-line); border-radius:var(--wc-radius); background:var(--wc-panel); padding:14px 16px; }
+    .pick-card h3 { margin:0 0 12px; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--wc-gold); font-weight:950; }
+    .pick-team { margin-bottom:12px; }
+    .pick-team-top { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+    .pick-team-top img { width:24px; aspect-ratio:3/2; object-fit:cover; border-radius:3px; border:1px solid var(--wc-line); }
+    .pick-team-top .nm { font-weight:800; font-size:0.9rem; }
+    .pick-team-top .pct { margin-left:auto; font-size:0.74rem; color:var(--wc-muted); font-weight:700; }
+    .pick-bar { display:flex; height:22px; border-radius:6px; overflow:hidden; background:rgba(255,255,255,0.05); }
+    .pick-seg { display:flex; align-items:center; justify-content:center; font-size:0.66rem; font-weight:900; color:#07130f; min-width:0; }
+    .pick-seg.p1 { background:var(--wc-gold); }
+    .pick-seg.p2 { background:var(--wc-blue); }
+    .pick-seg.p3 { background:var(--wc-green); }
+    .pick-seg.p4 { background:rgba(255,93,93,0.85); }
+    .pick-legend { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:18px; font-size:0.76rem; color:var(--wc-muted); font-weight:700; }
+    .pick-legend span { display:inline-flex; align-items:center; gap:6px; }
+    .legend-chip { width:12px; height:12px; border-radius:3px; display:inline-block; }
+
+    /* Match trends stat cards */
+    .stat-grid { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px; margin-bottom:24px; }
+    @media (max-width:760px){ .stat-grid { grid-template-columns:repeat(2,1fr); } }
+    .stat-card { border:1px solid var(--wc-line); border-radius:var(--wc-radius); background:var(--wc-panel); padding:16px; text-align:center; }
+    .stat-num { font-size:1.8rem; font-weight:950; color:var(--wc-gold); line-height:1; }
+    .stat-label { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--wc-muted); font-weight:800; margin-top:6px; }
+    .stat-sub { font-size:0.72rem; color:var(--wc-faint); margin-top:4px; }
+    .trend-note { border:1px solid var(--wc-line); border-radius:var(--wc-radius); background:var(--wc-panel); padding:14px 16px; margin-bottom:12px; }
+    .trend-note strong { color:var(--wc-gold); }
+
+    /* Round of 32 bracket */
+    .r32-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px; }
+    @media (max-width:760px){ .r32-grid { grid-template-columns:1fr; } }
+    .r32-match { border:1px solid var(--wc-line); border-radius:var(--wc-radius); background:var(--wc-panel); overflow:hidden; }
+    .r32-head { font-size:0.66rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--wc-muted); font-weight:800;
+      padding:7px 12px; border-bottom:1px solid var(--wc-line); background:rgba(255,255,255,0.04); }
+    .r32-side { display:flex; align-items:center; gap:9px; padding:9px 12px; }
+    .r32-side + .r32-side { border-top:1px dashed rgba(255,255,255,0.1); }
+    .r32-side img { width:26px; aspect-ratio:3/2; object-fit:cover; border-radius:3px; border:1px solid var(--wc-line); }
+    .r32-seed { font-size:0.62rem; font-weight:900; color:var(--wc-faint); width:34px; }
+    .r32-name { font-weight:800; font-size:0.92rem; }
+    .r32-name.tbd { color:var(--wc-faint); font-style:italic; font-weight:600; }
+  </style>
+</head>
+<body>
+  <div class="wc-shell">
+    <header class="wc-topbar">
+      <a href="../" class="wc-brand">Warren's World Cup Pool</a>
+      <nav class="wc-nav">
+        <a href="../">Home</a>
+        <a href="../scoreboard/">Scoreboard</a>
+        <a href="../standings/">Standings</a>
+        <a href="../insights/" aria-current="page">Insights</a>
+        <a href="../fixtures/">Fixtures</a>
+        <a href="../quiz/">Quiz</a>
+      </nav>
+    </header>
+
+    <section class="wc-hero">
+      <div>
+        <div class="wc-eyebrow">Pool Analysis</div>
+        <h1 class="wc-title">Insights</h1>
+      </div>
+    </section>
+
+    <div class="status-bar">
+      <div class="status-dot" id="status-dot"></div>
+      <span id="status-text">Loading…</span>
+    </div>
+
+    <div class="ins-tabs">
+      <button class="ins-tab active" data-tab="picks">📊 Pick Distribution</button>
+      <button class="ins-tab" data-tab="trends">⚽ Match Trends</button>
+      <button class="ins-tab" data-tab="r32">🗺️ Round of 32 (Now)</button>
+    </div>
+
+    <!-- PICKS -->
+    <div class="ins-panel active" id="panel-picks">
+      <p class="section-hint" id="picks-hint">How all entrants ranked each team within its group.</p>
+      <div class="pick-legend">
+        <span><i class="legend-chip" style="background:var(--wc-gold)"></i> Picked 1st</span>
+        <span><i class="legend-chip" style="background:var(--wc-blue)"></i> 2nd</span>
+        <span><i class="legend-chip" style="background:var(--wc-green)"></i> 3rd</span>
+        <span><i class="legend-chip" style="background:rgba(255,93,93,0.85)"></i> 4th / last</span>
+      </div>
+      <div class="picks-grid" id="picks-grid"></div>
+    </div>
+
+    <!-- TRENDS -->
+    <div class="ins-panel" id="panel-trends">
+      <p class="section-hint" id="trends-hint">Scoring patterns across matches played so far.</p>
+      <div class="stat-grid" id="stat-grid"></div>
+      <div id="trend-notes"></div>
+    </div>
+
+    <!-- ROUND OF 32 -->
+    <div class="ins-panel" id="panel-r32">
+      <p class="section-hint" id="r32-hint">The Round of 32 as it would look if the groups finished as they stand now. Updates when results change.</p>
+      <div class="r32-grid" id="r32-grid"></div>
+    </div>
+
+    <footer class="wc-footer" style="margin-top:40px;">
+      <span>Read-only analysis · refreshes every 30s</span>
+    </footer>
+  </div>
+
+  <!-- Third-place → bracket-slot lookup (sets window.BRACKET_LOOKUP) -->
+  <script src="../archive/world-cup-1/bracket_lookup.js"></script>
+
+  <script type="module">
+    import { teams, teamsById, groups, groupStageMatches } from "../data/world-cup-2026.js";
+    import { calculateGroupTables, calculateThirdPlaceStandings } from "../scoreboard/scoreboard-engine.js";
+    import { supabaseConfig } from "../data/supabase-config.js";
+
+    const SUPA = supabaseConfig.url.replace(/\/$/, "");
+    const el = (id) => document.getElementById(id);
+
+    function flagUrl(teamId) {
+      const t = teamsById[teamId];
+      if (!t) return "https://flagcdn.com/w80/un.png";
+      const code = t.id === "ENG" ? "gb-eng" : t.id === "SCO" ? "gb-sct" : t.countryCode.toLowerCase();
+      return `https://flagcdn.com/w80/${code}.png`;
+    }
+    const teamName = (id) => teamsById[id]?.name || (id || "TBD");
+
+    async function rpc(fn) {
+      const res = await fetch(`${SUPA}/rest/v1/rpc/${fn}`, {
+        method: "POST",
+        headers: { apikey: supabaseConfig.anonKey, Authorization: `Bearer ${supabaseConfig.anonKey}`, "Content-Type": "application/json" },
+        body: "{}",
+      });
+      if (!res.ok) throw new Error(`${fn}: ${res.status}`);
+      return res.json();
+    }
+
+    function parsePayload(p) {
+      if (!p) return {};
+      if (typeof p === "string") { try { return JSON.parse(p); } catch (e) { return {}; } }
+      return p;
+    }
+
+    // ---- Load entries -> [{ groupPredictions, thirdPicks }] ----
+    async function loadEntries() {
+      const rows = await rpc("get_public_scoreboard_entries");
+      const entries = [];
+      (rows || []).forEach(row => {
+        if (row.voided) return;
+        const payload = parsePayload(row.payload);
+        const groupPredictions = {};
+        if (payload.groupPicks && typeof payload.groupPicks === "object") {
+          Object.entries(payload.groupPicks).forEach(([g, picks]) => {
+            if (Array.isArray(picks)) groupPredictions[g] = picks.filter(Boolean);
+          });
+        }
+        const thirdPicks = Array.isArray(payload.thirdPicks) ? payload.thirdPicks.filter(Boolean) : [];
+        if (Object.keys(groupPredictions).length) entries.push({ groupPredictions, thirdPicks });
+      });
+      return entries;
+    }
+
+    // ---- Load official results -> Map(matchNumber -> {homeScore, awayScore, status}) ----
+    async function loadResults() {
+      const rows = await rpc("get_public_match_results");
+      const map = new Map();
+      (rows || []).forEach(r => {
+        map.set(Number(r.match_number), {
+          homeScore: Number(r.home_score || 0),
+          awayScore: Number(r.away_score || 0),
+          status: r.status || "completed",
+          winnerId: r.winner_id || null,
+        });
+      });
+      return map;
+    }
+
+    // ===================== PICK DISTRIBUTION =====================
+    function renderPicks(entries) {
+      const grid = el("picks-grid");
+      grid.innerHTML = "";
+      const N = entries.length;
+      el("picks-hint").textContent = `How all ${N} entrants ranked each team within its group (1st = picked to win).`;
+
+      Object.keys(groups).sort().forEach(g => {
+        const teamIds = groups[g];
+        // counts[teamId] = [p1, p2, p3, p4]
+        const counts = {};
+        teamIds.forEach(id => counts[id] = [0, 0, 0, 0]);
+        entries.forEach(e => {
+          const order = e.groupPredictions[g];
+          if (!Array.isArray(order)) return;
+          order.forEach((id, idx) => {
+            if (idx < 4 && counts[id]) counts[id][idx]++;
+          });
+        });
+
+        // sort teams by most "picked to win"
+        const sorted = [...teamIds].sort((a, b) => counts[b][0] - counts[a][0]);
+        const card = document.createElement("div");
+        card.className = "pick-card";
+        let html = `<h3>Group ${g}</h3>`;
+        sorted.forEach(id => {
+          const c = counts[id];
+          const total = c[0] + c[1] + c[2] + c[3];
+          const winPct = N ? Math.round((c[0] / N) * 100) : 0;
+          const seg = (n, cls, label) => n > 0
+            ? `<div class="pick-seg ${cls}" style="width:${(n / Math.max(total,1)) * 100}%" title="${label}: ${n}">${n >= 6 ? n : ""}</div>`
+            : "";
+          html += `
+            <div class="pick-team">
+              <div class="pick-team-top">
+                <img src="${flagUrl(id)}" alt="">
+                <span class="nm">${teamName(id)}</span>
+                <span class="pct">${winPct}% to win</span>
+              </div>
+              <div class="pick-bar">
+                ${seg(c[0],"p1","1st")}${seg(c[1],"p2","2nd")}${seg(c[2],"p3","3rd")}${seg(c[3],"p4","4th")}
+              </div>
+            </div>`;
+        });
+        card.innerHTML = html;
+        grid.appendChild(card);
+      });
+    }
+
+    // ===================== MATCH TRENDS =====================
+    function renderTrends(resultsMap) {
+      const played = [];
+      groupStageMatches.forEach(m => {
+        const r = resultsMap.get(m.matchNumber);
+        if (r && r.status === "completed") {
+          played.push({ ...m, homeScore: r.homeScore, awayScore: r.awayScore });
+        }
+      });
+
+      const grid = el("stat-grid");
+      const notes = el("trend-notes");
+      if (!played.length) {
+        grid.innerHTML = "";
+        notes.innerHTML = `<div class="trend-note">No completed matches yet.</div>`;
+        el("trends-hint").textContent = "Scoring patterns will appear once matches are played.";
+        return;
+      }
+
+      const games = played.length;
+      const totalGoals = played.reduce((s, m) => s + m.homeScore + m.awayScore, 0);
+      const draws = played.filter(m => m.homeScore === m.awayScore).length;
+      const homeWins = played.filter(m => m.homeScore > m.awayScore).length;
+      const awayWins = played.filter(m => m.awayScore > m.homeScore).length;
+      const totalMargin = played.reduce((s, m) => s + Math.abs(m.homeScore - m.awayScore), 0);
+      const cleanSheets = played.reduce((s, m) => s + (m.homeScore === 0 ? 1 : 0) + (m.awayScore === 0 ? 1 : 0), 0);
+      const over2_5 = played.filter(m => (m.homeScore + m.awayScore) > 2.5).length;
+
+      // biggest win + highest scoring
+      let biggest = played[0], highest = played[0];
+      played.forEach(m => {
+        if (Math.abs(m.homeScore - m.awayScore) > Math.abs(biggest.homeScore - biggest.awayScore)) biggest = m;
+        if ((m.homeScore + m.awayScore) > (highest.homeScore + highest.awayScore)) highest = m;
+      });
+
+      el("trends-hint").textContent = `Based on ${games} completed group-stage match${games === 1 ? "" : "es"}.`;
+      const card = (num, label, sub) => `<div class="stat-card"><div class="stat-num">${num}</div><div class="stat-label">${label}</div>${sub ? `<div class="stat-sub">${sub}</div>` : ""}</div>`;
+      grid.innerHTML =
+        card(games, "Games Played", `of 72 group games`) +
+        card(totalGoals, "Total Goals", "") +
+        card((totalGoals / games).toFixed(2), "Goals / Game", "") +
+        card((totalMargin / games).toFixed(2), "Avg Margin", "winning margin") +
+        card(`${draws}`, "Draws", `${Math.round(draws / games * 100)}% of games`) +
+        card(`${homeWins}–${awayWins}`, "Home–Away Wins", "decisive results") +
+        card(`${Math.round(over2_5 / games * 100)}%`, "Over 2.5 Goals", `${over2_5} of ${games}`) +
+        card(cleanSheets, "Clean Sheets", "");
+
+      const mScore = (m) => `${teamName(m.home)} ${m.homeScore}–${m.awayScore} ${teamName(m.away)}`;
+      notes.innerHTML =
+        `<div class="trend-note">🥅 <strong>Biggest win:</strong> ${mScore(biggest)} (Match ${biggest.matchNumber}, margin of ${Math.abs(biggest.homeScore - biggest.awayScore)}).</div>` +
+        `<div class="trend-note">🎆 <strong>Highest scoring:</strong> ${mScore(highest)} (Match ${highest.matchNumber}, ${highest.homeScore + highest.awayScore} goals).</div>` +
+        `<div class="trend-note">📊 <strong>Scoring rate:</strong> ${(totalGoals / games).toFixed(2)} goals/game over ${games} games — ${draws} draw${draws === 1 ? "" : "s"}, ${homeWins + awayWins} decisive.</div>`;
+    }
+
+    // ===================== ROUND OF 32 (current projection) =====================
+    function renderR32(resultsMap) {
+      // Build matches for the engine (group stage with current results overlaid)
+      const matches = groupStageMatches.map(m => {
+        const r = resultsMap.get(m.matchNumber);
+        return {
+          matchNumber: m.matchNumber, group: m.group, home: m.home, away: m.away,
+          homeScore: r ? r.homeScore : 0, awayScore: r ? r.awayScore : 0,
+          status: r && r.status === "completed" ? "completed" : "upcoming",
+        };
+      });
+      const tables = calculateGroupTables(matches, teams);
+      const thirds = calculateThirdPlaceStandings(tables);
+
+      const completed = matches.filter(m => m.status === "completed").length;
+      el("r32-hint").textContent = completed === 72
+        ? "Final Round of 32 matchups from the completed group stage."
+        : `Projected from current standings (${completed}/72 group games played). Updates as results are saved.`;
+
+      const getT = (rank, g) => tables[g] ? tables[g][rank - 1]?.id : null;
+      const advancingThirds = thirds.filter(t => t.status === "Q").map(t => t.group).sort();
+      const lookup = window.BRACKET_LOOKUP || {};
+      const mapping = lookup[advancingThirds.join("")] || {
+        "A": "3E", "B": "3G", "D": "3I", "E": "3D", "G": "3H", "I": "3F", "K": "3L", "L": "3K"
+      };
+      const get3rd = (g) => thirds.find(x => x.group === g)?.id || null;
+
+      // [matchNumber, homeSlotLabel, homeId, awaySlotLabel, awayId]
+      const slotWinner = (g) => [`${g}1`, getT(1, g)];
+      const slotRunner = (g) => [`${g}2`, getT(2, g)];
+      const slotThird = (g) => [`3rd ${mapping[g] ? mapping[g][1] : "?"}`, get3rd(mapping[g] ? mapping[g][1] : null)];
+
+      const pairs = [
+        [73, slotWinner("E"), slotThird("E")],
+        [74, slotWinner("I"), slotThird("I")],
+        [75, slotRunner("A"), slotRunner("B")],
+        [76, slotWinner("F"), slotRunner("C")],
+        [77, slotWinner("C"), slotRunner("F")],
+        [78, slotRunner("E"), slotRunner("I")],
+        [79, slotWinner("A"), slotThird("A")],
+        [80, slotWinner("L"), slotThird("L")],
+        [81, slotRunner("K"), slotRunner("L")],
+        [82, slotWinner("H"), slotRunner("J")],
+        [83, slotWinner("D"), slotThird("D")],
+        [84, slotWinner("G"), slotThird("G")],
+        [85, slotWinner("B"), slotThird("B")],
+        [86, slotWinner("K"), slotThird("K")],
+        [87, slotWinner("J"), slotRunner("H")],
+        [88, slotRunner("D"), slotRunner("G")],
+      ];
+
+      const grid = el("r32-grid");
+      grid.innerHTML = "";
+      pairs.forEach(([num, a, b]) => {
+        const side = ([seed, id]) => `
+          <div class="r32-side">
+            <span class="r32-seed">${seed}</span>
+            ${id ? `<img src="${flagUrl(id)}" alt="">` : ""}
+            <span class="r32-name ${id ? "" : "tbd"}">${id ? teamName(id) : "TBD"}</span>
+          </div>`;
+        const card = document.createElement("div");
+        card.className = "r32-match";
+        card.innerHTML = `<div class="r32-head">Match ${num}</div>${side(a)}${side(b)}`;
+        grid.appendChild(card);
+      });
+    }
+
+    // ===================== BOOT + REFRESH =====================
+    function setStatus(text, ok = true) {
+      el("status-text").textContent = text;
+      el("status-dot").style.background = ok ? "var(--wc-gold)" : "var(--wc-red)";
+    }
+
+    // Tabs
+    document.querySelectorAll(".ins-tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".ins-tab").forEach(b => b.classList.toggle("active", b === btn));
+        document.querySelectorAll(".ins-panel").forEach(p => p.classList.toggle("active", p.id === `panel-${btn.dataset.tab}`));
+      });
+    });
+
+    let entriesLoaded = false;
+    async function refreshResults() {
+      try {
+        const resultsMap = await loadResults();
+        renderTrends(resultsMap);
+        renderR32(resultsMap);
+        setStatus(`${[...resultsMap.values()].filter(r => r.status === "completed").length} results · updated ${new Date().toLocaleTimeString()}`);
+      } catch (e) {
+        setStatus("Could not load results", false);
+        console.warn(e);
+      }
+    }
+
+    async function init() {
+      try {
+        const entries = await loadEntries();
+        renderPicks(entries);
+        entriesLoaded = true;
+      } catch (e) {
+        el("picks-hint").textContent = "Could not load entries.";
+        console.warn(e);
+      }
+      await refreshResults();
+      setInterval(refreshResults, 30000);
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -204,6 +204,7 @@
         <a href="../fixtures/">Fixtures</a>
         <a href="../scoreboard/">Scoreboard</a>
         <a href="../standings/" aria-current="page">Standings</a>
+        <a href="../insights/">Insights</a>
         <a href="../quiz/">Quiz</a>
         <a href="../rankings-odds/">W-Index</a>
       </nav>
@@ -273,6 +274,7 @@
   <script type="module">
     import { teams, teamsById, groupStageMatches, groups } from '../data/world-cup-2026.js';
     import { supabaseConfig } from '../data/supabase-config.js';
+    import { rankGroup } from '../scoreboard/scoreboard-engine.js';
 
     const groupsGrid = document.getElementById('groups-grid');
     const statusText = document.getElementById('status-text');
@@ -318,24 +320,22 @@
         }
       }
 
-      const teamList = Object.values(stats);
+      let teamList = Object.values(stats);
 
-      // Sort: if no games played, alphabetical. Otherwise standard football tiebreakers.
+      // Sort: if no games played, alphabetical. Otherwise head-to-head first.
+      const alpha = (a, b) =>
+        (teamsById[a.id]?.name || '').localeCompare(teamsById[b.id]?.name || '');
       if (gamesPlayed === 0) {
-        teamList.sort((a, b) => {
-          const nameA = teamsById[a.id]?.name || '';
-          const nameB = teamsById[b.id]?.name || '';
-          return nameA.localeCompare(nameB);
-        });
+        teamList.sort(alpha);
       } else {
-        teamList.sort((a, b) => {
-          if (b.pts !== a.pts) return b.pts - a.pts;
-          if (b.gd !== a.gd) return b.gd - a.gd;
-          if (b.gf !== a.gf) return b.gf - a.gf;
-          const nameA = teamsById[a.id]?.name || '';
-          const nameB = teamsById[b.id]?.name || '';
-          return nameA.localeCompare(nameB);
-        });
+        // Build the completed-match list (with scores) for head-to-head.
+        const playedMatches = groupMatches
+          .filter(m => resultsByMatchNumber.get(m.matchNumber))
+          .map(m => {
+            const r = resultsByMatchNumber.get(m.matchNumber);
+            return { home: m.home, away: m.away, homeScore: r.homeScore, awayScore: r.awayScore, status: "completed" };
+          });
+        teamList = rankGroup(teamList, playedMatches, alpha);
       }
 
       return { teamList, gamesPlayed, totalGames: groupMatches.length };

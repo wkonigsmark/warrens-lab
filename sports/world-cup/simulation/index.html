@@ -1288,6 +1288,7 @@
         <a href="../rankings-odds/">W-Index</a>
         <a href="../groups/">Groups</a>
         <a href="../standings/">Standings</a>
+        <a href="../insights/">Insights</a>
         <a href="../quiz/">Quiz</a>
         <a href="../scoreboard/">Scoreboard</a>
         <a href="../news/">News</a>
@@ -1566,6 +1567,7 @@
   <script type="module">
     import { groupStageMatches, teams, groups, teamsById } from "../data/world-cup-2026.js";
     import { W_INDEX_URL, wIndexBaselineRows } from "../data/w-index-baseline.js";
+    import { rankGroup } from "../scoreboard/scoreboard-engine.js";
 
     // Application state
     let wIndexMap = new Map(); // Canonical teamId -> decimal rating (0.0 to 1.0)
@@ -1979,15 +1981,15 @@
 
         // Group Standings
         const groupLetters = "ABCDEFGHIJKL".split("");
+        // Adapt simulated matches (score1/score2) to the rankGroup match shape.
+        const h2hMatches = simulatedMatches.map(m => ({
+          home: m.home, away: m.away,
+          homeScore: m.score1, awayScore: m.score2, status: "completed",
+        }));
+        const byName = (a, b) => a.name.localeCompare(b.name);
         groupLetters.forEach(groupLetter => {
-          const groupTeams = Object.values(teamsMap).filter(t => t.group === groupLetter);
-          
-          groupTeams.sort((a, b) => {
-            if (b.pts !== a.pts) return b.pts - a.pts;
-            if (b.gd !== a.gd) return b.gd - a.gd;
-            if (b.gf !== a.gf) return b.gf - a.gf;
-            return a.name.localeCompare(b.name);
-          });
+          let groupTeams = Object.values(teamsMap).filter(t => t.group === groupLetter);
+          groupTeams = rankGroup(groupTeams, h2hMatches, byName); // head-to-head first
 
           if (groupTeams[0]) groupTeams[0].status = 'Advance';
           if (groupTeams[1]) groupTeams[1].status = 'Advance';
