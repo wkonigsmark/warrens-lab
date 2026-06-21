@@ -1,0 +1,200 @@
+{
+  "regions": [
+    {
+      "id": "northeast",
+      "name": "Northeast",
+      "icon": "🗽",
+      "description": "Tri-state area and surrounding states",
+      "states": [
+        {
+          "id": "ny",
+          "name": "New York",
+          "capital": "Albany",
+          "emoji": "🗽",
+          "abbr": "NY",
+          "lat": 43.0,
+          "lng": -75.5
+        },
+        {
+          "id": "nj",
+          "name": "New Jersey",
+          "capital": "Trenton",
+          "emoji": "🌳",
+          "abbr": "NJ",
+          "lat": 40.2,
+          "lng": -74.5
+        },
+        {
+          "id": "ct",
+          "name": "Connecticut",
+          "capital": "Hartford",
+          "emoji": "🦅",
+          "abbr": "CT",
+          "lat": 41.6,
+          "lng": -72.7
+        },
+        {
+          "id": "pa",
+          "name": "Pennsylvania",
+          "capital": "Harrisburg",
+          "emoji": "🔔",
+          "abbr": "PA",
+          "lat": 40.8,
+          "lng": -77.2
+        },
+        {
+          "id": "ma",
+          "name": "Massachusetts",
+          "capital": "Boston",
+          "emoji": "🦞",
+          "abbr": "MA",
+          "lat": 42.2,
+          "lng": -71.8
+        },
+        {
+          "id": "vt",
+          "name": "Vermont",
+          "capital": "Montpelier",
+          "emoji": "🍂",
+          "abbr": "VT",
+          "lat": 44.0,
+          "lng": -72.7
+        },
+        {
+          "id": "nh",
+          "name": "New Hampshire",
+          "capital": "Concord",
+          "emoji": "⛰️",
+          "abbr": "NH",
+          "lat": 43.4,
+          "lng": -71.5
+        },
+        {
+          "id": "ri",
+          "name": "Rhode Island",
+          "capital": "Providence",
+          "emoji": "⛵",
+          "abbr": "RI",
+          "lat": 41.7,
+          "lng": -71.5
+        }
+      ]
+    },
+    {
+      "id": "southeast",
+      "name": "Southeast",
+      "icon": "🌴",
+      "description": "Southern states from Virginia to Florida",
+      "states": [
+        {
+          "id": "va",
+          "name": "Virginia",
+          "capital": "Richmond",
+          "emoji": "🦅",
+          "abbr": "VA",
+          "lat": 37.8,
+          "lng": -77.5
+        },
+        {
+          "id": "wv",
+          "name": "West Virginia",
+          "capital": "Charleston",
+          "emoji": "⛰️",
+          "abbr": "WV",
+          "lat": 38.8,
+          "lng": -81.6
+        },
+        {
+          "id": "nc",
+          "name": "North Carolina",
+          "capital": "Raleigh",
+          "emoji": "🏔️",
+          "abbr": "NC",
+          "lat": 35.8,
+          "lng": -79.0
+        },
+        {
+          "id": "sc",
+          "name": "South Carolina",
+          "capital": "Columbia",
+          "emoji": "🌳",
+          "abbr": "SC",
+          "lat": 34.0,
+          "lng": -81.0
+        },
+        {
+          "id": "ga",
+          "name": "Georgia",
+          "capital": "Atlanta",
+          "emoji": "🍑",
+          "abbr": "GA",
+          "lat": 33.8,
+          "lng": -83.6
+        },
+        {
+          "id": "fl",
+          "name": "Florida",
+          "capital": "Tallahassee",
+          "emoji": "🌴",
+          "abbr": "FL",
+          "lat": 27.0,
+          "lng": -81.0
+        },
+        {
+          "id": "al",
+          "name": "Alabama",
+          "capital": "Montgomery",
+          "emoji": "🌳",
+          "abbr": "AL",
+          "lat": 32.8,
+          "lng": -86.8
+        },
+        {
+          "id": "ms",
+          "name": "Mississippi",
+          "capital": "Jackson",
+          "emoji": "🌊",
+          "abbr": "MS",
+          "lat": 32.7,
+          "lng": -89.3
+        },
+        {
+          "id": "la",
+          "name": "Louisiana",
+          "capital": "Baton Rouge",
+          "emoji": "🎷",
+          "abbr": "LA",
+          "lat": 30.5,
+          "lng": -91.9
+        },
+        {
+          "id": "ar",
+          "name": "Arkansas",
+          "capital": "Little Rock",
+          "emoji": "💎",
+          "abbr": "AR",
+          "lat": 34.9,
+          "lng": -92.3
+        },
+        {
+          "id": "ky",
+          "name": "Kentucky",
+          "capital": "Frankfort",
+          "emoji": "🐴",
+          "abbr": "KY",
+          "lat": 38.2,
+          "lng": -84.9
+        },
+        {
+          "id": "tn",
+          "name": "Tennessee",
+          "capital": "Nashville",
+          "emoji": "🎸",
+          "abbr": "TN",
+          "lat": 35.7,
+          "lng": -86.6
+        }
+      ]
+    }
+  ]
+}
