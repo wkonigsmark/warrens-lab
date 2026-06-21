@@ -50,18 +50,32 @@
     .trend-note { border:1px solid var(--wc-line); border-radius:var(--wc-radius); background:var(--wc-panel); padding:14px 16px; margin-bottom:12px; }
     .trend-note strong { color:var(--wc-gold); }
 
-    /* Round of 32 bracket */
-    .r32-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px; }
-    @media (max-width:760px){ .r32-grid { grid-template-columns:1fr; } }
-    .r32-match { border:1px solid var(--wc-line); border-radius:var(--wc-radius); background:var(--wc-panel); overflow:hidden; }
-    .r32-head { font-size:0.66rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--wc-muted); font-weight:800;
-      padding:7px 12px; border-bottom:1px solid var(--wc-line); background:rgba(255,255,255,0.04); }
-    .r32-side { display:flex; align-items:center; gap:9px; padding:9px 12px; }
-    .r32-side + .r32-side { border-top:1px dashed rgba(255,255,255,0.1); }
-    .r32-side img { width:26px; aspect-ratio:3/2; object-fit:cover; border-radius:3px; border:1px solid var(--wc-line); }
-    .r32-seed { font-size:0.62rem; font-weight:900; color:var(--wc-faint); width:34px; }
-    .r32-name { font-weight:800; font-size:0.92rem; }
-    .r32-name.tbd { color:var(--wc-faint); font-style:italic; font-weight:600; }
+    /* Knockout bracket (Round of 32 → Final) */
+    .bracket-wrap { overflow-x:auto; padding:4px 2px 16px; }
+    .bk-head { display:flex; min-width:900px; margin-bottom:10px; }
+    .bk-rh { flex:0 0 150px; margin-right:34px; font-size:0.64rem; font-weight:900; text-transform:uppercase;
+      letter-spacing:0.08em; color:var(--wc-gold); text-align:center; }
+    .bk-rh:last-child { margin-right:0; }
+    .bracket { display:flex; height:1152px; min-width:900px; }
+    .bk-round { display:flex; flex-direction:column; justify-content:space-around; flex:0 0 150px; margin-right:34px; }
+    .bk-round:last-child { margin-right:0; }
+    .bk-r32 { --h:36px; } .bk-r16 { --h:72px; } .bk-qf { --h:144px; } .bk-sf { --h:288px; }
+    .bk-match { position:relative; height:56px; box-sizing:border-box;
+      border:1px solid var(--wc-line); border-radius:7px; background:var(--wc-panel); }
+    .bk-side { display:flex; align-items:center; gap:6px; height:50%; padding:0 8px; font-size:0.78rem; overflow:hidden; }
+    .bk-side + .bk-side { border-top:1px solid rgba(255,255,255,0.08); }
+    .bk-side img { width:20px; aspect-ratio:3/2; object-fit:cover; border-radius:2px; border:1px solid var(--wc-line); flex:0 0 auto; }
+    .bk-seed { font-size:0.54rem; font-weight:900; color:var(--wc-faint); flex:0 0 auto; min-width:18px; }
+    .bk-code { font-weight:850; letter-spacing:0.02em; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .bk-code.tbd { color:var(--wc-faint); font-weight:700; font-style:italic; }
+    /* connector elbows: horizontal stub at card centre + vertical to the pair midpoint */
+    .bk-round:not(.bk-final) .bk-match::after {
+      content:""; position:absolute; left:100%; width:34px; box-sizing:border-box;
+      border-right:2px solid var(--wc-line); height:var(--h);
+    }
+    .bk-round:not(.bk-final) .bk-match:nth-child(odd)::after { top:50%; border-top:2px solid var(--wc-line); }
+    .bk-round:not(.bk-final) .bk-match:nth-child(even)::after { bottom:50%; border-bottom:2px solid var(--wc-line); }
+    .bk-champion { align-self:center; margin-top:10px; font-size:0.74rem; color:var(--wc-muted); }
   </style>
 </head>
 <body>
@@ -118,7 +132,16 @@
     <!-- ROUND OF 32 -->
     <div class="ins-panel" id="panel-r32">
       <p class="section-hint" id="r32-hint">The Round of 32 as it would look if the groups finished as they stand now. Updates when results change.</p>
-      <div class="r32-grid" id="r32-grid"></div>
+      <div class="bracket-wrap">
+        <div class="bk-head">
+          <div class="bk-rh">Round of 32</div>
+          <div class="bk-rh">Round of 16</div>
+          <div class="bk-rh">Quarterfinal</div>
+          <div class="bk-rh">Semifinal</div>
+          <div class="bk-rh">🏆 Final</div>
+        </div>
+        <div class="bracket" id="r32-bracket"></div>
+      </div>
     </div>
 
     <footer class="wc-footer" style="margin-top:40px;">
@@ -287,7 +310,7 @@
         card((totalGoals / games).toFixed(2), "Goals / Game", "") +
         card((totalMargin / games).toFixed(2), "Avg Margin", "winning margin") +
         card(`${draws}`, "Draws", `${Math.round(draws / games * 100)}% of games`) +
-        card(`${homeWins}–${awayWins}`, "Home–Away Wins", "decisive results") +
+        card(games - draws, "Decisive Games", "ended in a winner") +
         card(`${Math.round(over2_5 / games * 100)}%`, "Over 2.5 Goals", `${over2_5} of ${games}`) +
         card(cleanSheets, "Clean Sheets", "");
 
@@ -295,12 +318,11 @@
       notes.innerHTML =
         `<div class="trend-note">🥅 <strong>Biggest win:</strong> ${mScore(biggest)} (Match ${biggest.matchNumber}, margin of ${Math.abs(biggest.homeScore - biggest.awayScore)}).</div>` +
         `<div class="trend-note">🎆 <strong>Highest scoring:</strong> ${mScore(highest)} (Match ${highest.matchNumber}, ${highest.homeScore + highest.awayScore} goals).</div>` +
-        `<div class="trend-note">📊 <strong>Scoring rate:</strong> ${(totalGoals / games).toFixed(2)} goals/game over ${games} games — ${draws} draw${draws === 1 ? "" : "s"}, ${homeWins + awayWins} decisive.</div>`;
+        `<div class="trend-note">📊 <strong>Scoring rate:</strong> ${(totalGoals / games).toFixed(2)} goals/game over ${games} games — ${draws} draw${draws === 1 ? "" : "s"}, ${games - draws} decisive.</div>`;
     }
 
-    // ===================== ROUND OF 32 (current projection) =====================
+    // ===================== ROUND OF 32 → FINAL BRACKET =====================
     function renderR32(resultsMap) {
-      // Build matches for the engine (group stage with current results overlaid)
       const matches = groupStageMatches.map(m => {
         const r = resultsMap.get(m.matchNumber);
         return {
@@ -325,44 +347,74 @@
       };
       const get3rd = (g) => thirds.find(x => x.group === g)?.id || null;
 
-      // [matchNumber, homeSlotLabel, homeId, awaySlotLabel, awayId]
-      const slotWinner = (g) => [`${g}1`, getT(1, g)];
-      const slotRunner = (g) => [`${g}2`, getT(2, g)];
-      const slotThird = (g) => [`3rd ${mapping[g] ? mapping[g][1] : "?"}`, get3rd(mapping[g] ? mapping[g][1] : null)];
+      // Returns {id, seed} for a bracket slot
+      const slot = (type, g) => {
+        if (type === 1) return { id: getT(1, g), seed: `${g}1` };
+        if (type === 2) return { id: getT(2, g), seed: `${g}2` };
+        // third-place slot: look up which group's 3rd fills this match
+        const src = mapping[g];
+        return { id: get3rd(src ? src[1] : null), seed: src ? `3${src[1]}` : "3?" };
+      };
 
-      const pairs = [
-        [73, slotWinner("E"), slotThird("E")],
-        [74, slotWinner("I"), slotThird("I")],
-        [75, slotRunner("A"), slotRunner("B")],
-        [76, slotWinner("F"), slotRunner("C")],
-        [77, slotWinner("C"), slotRunner("F")],
-        [78, slotRunner("E"), slotRunner("I")],
-        [79, slotWinner("A"), slotThird("A")],
-        [80, slotWinner("L"), slotThird("L")],
-        [81, slotRunner("K"), slotRunner("L")],
-        [82, slotWinner("H"), slotRunner("J")],
-        [83, slotWinner("D"), slotThird("D")],
-        [84, slotWinner("G"), slotThird("G")],
-        [85, slotWinner("B"), slotThird("B")],
-        [86, slotWinner("K"), slotThird("K")],
-        [87, slotWinner("J"), slotRunner("H")],
-        [88, slotRunner("D"), slotRunner("G")],
+      // 16 R32 matches in bracket order — adjacent pairs (73+74, 75+76 …) feed the same R16 slot
+      const r32 = [
+        { num: 73, top: slot(1,"E"), bot: slot(3,"E") },
+        { num: 74, top: slot(1,"I"), bot: slot(3,"I") },
+        { num: 75, top: slot(2,"A"), bot: slot(2,"B") },
+        { num: 76, top: slot(1,"F"), bot: slot(2,"C") },
+        { num: 77, top: slot(1,"C"), bot: slot(2,"F") },
+        { num: 78, top: slot(2,"E"), bot: slot(2,"I") },
+        { num: 79, top: slot(1,"A"), bot: slot(3,"A") },
+        { num: 80, top: slot(1,"L"), bot: slot(3,"L") },
+        { num: 81, top: slot(2,"K"), bot: slot(2,"L") },
+        { num: 82, top: slot(1,"H"), bot: slot(2,"J") },
+        { num: 83, top: slot(1,"D"), bot: slot(3,"D") },
+        { num: 84, top: slot(1,"G"), bot: slot(3,"G") },
+        { num: 85, top: slot(1,"B"), bot: slot(3,"B") },
+        { num: 86, top: slot(1,"K"), bot: slot(3,"K") },
+        { num: 87, top: slot(1,"J"), bot: slot(2,"H") },
+        { num: 88, top: slot(2,"D"), bot: slot(2,"G") },
       ];
 
-      const grid = el("r32-grid");
-      grid.innerHTML = "";
-      pairs.forEach(([num, a, b]) => {
-        const side = ([seed, id]) => `
-          <div class="r32-side">
-            <span class="r32-seed">${seed}</span>
-            ${id ? `<img src="${flagUrl(id)}" alt="">` : ""}
-            <span class="r32-name ${id ? "" : "tbd"}">${id ? teamName(id) : "TBD"}</span>
-          </div>`;
-        const card = document.createElement("div");
-        card.className = "r32-match";
-        card.innerHTML = `<div class="r32-head">Match ${num}</div>${side(a)}${side(b)}`;
-        grid.appendChild(card);
-      });
+      function bkSide({ id, seed }) {
+        if (!id) return `<div class="bk-side"><span class="bk-seed">${seed}</span><span class="bk-code tbd">TBD</span></div>`;
+        return `<div class="bk-side">
+          <img src="${flagUrl(id)}" alt="${teamName(id)}">
+          <span class="bk-seed">${seed}</span>
+          <span class="bk-code" title="${teamName(id)}">${id}</span>
+        </div>`;
+      }
+      function bkTbdSide() { return `<div class="bk-side"><span class="bk-seed"></span><span class="bk-code tbd">TBD</span></div>`; }
+      function bkMatch(top, bot, label) { return `<div class="bk-match" title="Match ${label}">${bkSide(top)}${bkSide(bot)}</div>`; }
+      function bkTbd() { return `<div class="bk-match">${bkTbdSide()}${bkTbdSide()}</div>`; }
+
+      const bracket = el("r32-bracket");
+      bracket.innerHTML = "";
+
+      const colR32 = document.createElement("div");
+      colR32.className = "bk-round bk-r32";
+      r32.forEach(m => { colR32.innerHTML += bkMatch(m.top, m.bot, m.num); });
+      bracket.appendChild(colR32);
+
+      const colR16 = document.createElement("div");
+      colR16.className = "bk-round bk-r16";
+      for (let i = 0; i < 8; i++) colR16.innerHTML += bkTbd();
+      bracket.appendChild(colR16);
+
+      const colQF = document.createElement("div");
+      colQF.className = "bk-round bk-qf";
+      for (let i = 0; i < 4; i++) colQF.innerHTML += bkTbd();
+      bracket.appendChild(colQF);
+
+      const colSF = document.createElement("div");
+      colSF.className = "bk-round bk-sf";
+      for (let i = 0; i < 2; i++) colSF.innerHTML += bkTbd();
+      bracket.appendChild(colSF);
+
+      const colFinal = document.createElement("div");
+      colFinal.className = "bk-round bk-final";
+      colFinal.innerHTML = bkTbd();
+      bracket.appendChild(colFinal);
     }
 
     // ===================== BOOT + REFRESH =====================
