@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strava Trends</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <div class="container">
+      <header class="header">
+        <h1>📊 Strava Trends</h1>
+        <div class="status-indicator">
+          <span v-if="loading" class="loading">Loading data...</span>
+          <span v-else-if="error" class="error">{{ error }}</span>
+          <span v-else class="success">{{ activities.length }} activities loaded</span>
+        </div>
+      </header>
+
+      <main v-if="!loading && activities.length" class="main">
+        <!-- Summary Stats -->
+        <section class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Activities</div>
+            <div class="stat-value">{{ activities.length }}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total Distance</div>
+            <div class="stat-value">{{ (totalDistance / 1000).toFixed(1) }} km</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total Moving Time</div>
+            <div class="stat-value">{{ formatHours(totalMovingTime) }}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Activity Types</div>
+            <div class="stat-value">{{ activityTypes.size }}</div>
+          </div>
+        </section>
+
+        <!-- Tabs -->
+        <nav class="tabs">
+          <button
+            v-for="tab in ['recent', 'trends', 'goals']"
+            :key="tab"
+            :class="['tab-button', { active: activeTab === tab }]"
+            @click="activeTab = tab"
+          >
+            {{ formatTabName(tab) }}
+          </button>
+        </nav>
+
+        <!-- Recent Activities Tab -->
+        <section v-show="activeTab === 'recent'" class="tab-content">
+          <h2>Recent Activities</h2>
+          <div class="filters">
+            <select v-model="filters.type" class="filter-select">
+              <option value="">All Types</option>
+              <option v-for="type in Array.from(activityTypes)" :key="type" :value="type">
+                {{ type }}
+              </option>
+            </select>
+            <input
+              v-model.number="filters.limit"
+              type="number"
+              min="5"
+              max="100"
+              class="filter-input"
+              placeholder="Limit"
+            >
+          </div>
+          <div class="activities-list">
+            <div v-for="activity in filteredActivities" :key="activity.id" class="activity-card">
+              <div class="activity-header">
+                <h3>{{ activity.name }}</h3>
+                <span class="activity-type">{{ activity.type }}</span>
+              </div>
+              <div class="activity-details">
+                <div class="detail">
+                  <span class="label">Distance:</span>
+                  <span class="value">{{ (activity.distance / 1000).toFixed(2) }} km</span>
+                </div>
+                <div class="detail">
+                  <span class="label">Time:</span>
+                  <span class="value">{{ formatSeconds(activity.movingTime) }}</span>
+                </div>
+                <div class="detail">
+                  <span class="label">Pace:</span>
+                  <span class="value">{{ calculatePace(activity.distance, activity.movingTime) }}</span>
+                </div>
+                <div class="detail">
+                  <span class="label">Date:</span>
+                  <span class="value">{{ formatDate(activity.startDate) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Trends Tab -->
+        <section v-show="activeTab === 'trends'" class="tab-content">
+          <h2>Activity Trends</h2>
+          <div class="trends-container">
+            <div class="trend-card">
+              <h3>By Type</h3>
+              <div class="trend-list">
+                <div v-for="[type, stats] in typeStats" :key="type" class="trend-item">
+                  <span class="trend-label">{{ type }}</span>
+                  <div class="trend-bar">
+                    <div class="trend-fill" :style="{ width: (stats.count / activities.length * 100) + '%' }"></div>
+                  </div>
+                  <span class="trend-value">{{ stats.count }} ({{ (stats.totalDistance / 1000).toFixed(0) }} km)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="trend-card">
+              <h3>Time Period Breakdown</h3>
+              <div class="trend-list">
+                <div class="trend-item">
+                  <span class="trend-label">Last 30 days</span>
+                  <span class="trend-value">{{ last30Days.count }} activities · {{ (last30Days.distance / 1000).toFixed(1) }} km</span>
+                </div>
+                <div class="trend-item">
+                  <span class="trend-label">Last 90 days</span>
+                  <span class="trend-value">{{ last90Days.count }} activities · {{ (last90Days.distance / 1000).toFixed(1) }} km</span>
+                </div>
+                <div class="trend-item">
+                  <span class="trend-label">Last year</span>
+                  <span class="trend-value">{{ lastYear.count }} activities · {{ (lastYear.distance / 1000).toFixed(1) }} km</span>
+                </div>
+                <div class="trend-item">
+                  <span class="trend-label">All time</span>
+                  <span class="trend-value">{{ activities.length }} activities · {{ (totalDistance / 1000).toFixed(1) }} km</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Goals Tab (Phase 2) -->
+        <section v-show="activeTab === 'goals'" class="tab-content">
+          <h2>Goals (Coming Soon)</h2>
+          <p class="placeholder-text">Goal tracking will be available in Phase 2. Set and track progress on distance, frequency, or speed targets.</p>
+          <div class="coming-soon">
+            <p>📝 Plan your goals here...</p>
+          </div>
+        </section>
+      </main>
+
+      <div v-else-if="!loading && !activities.length" class="empty-state">
+        <p>No data loaded yet. Check the connection or refresh the page.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

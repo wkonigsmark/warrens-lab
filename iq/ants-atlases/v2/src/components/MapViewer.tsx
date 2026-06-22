@@ -13,6 +13,9 @@ interface SelectedState {
   name: string
   capital: string
   regionId: string
+  population?: string
+  fun_facts?: string[]
+  landmarks?: string[]
 }
 
 const MapViewer: React.FC<MapViewerProps> = ({ onSelectRegion, onBack }) => {
@@ -141,20 +144,23 @@ const MapViewer: React.FC<MapViewerProps> = ({ onSelectRegion, onBack }) => {
             const regionId = stateToRegion.get(stateAbbr)
             const stateName = stateAbbrToName.get(stateAbbr)
             if (regionId && stateName) {
-              // Find the capital from the states data
-              let capital = ''
+              // Find all state details from the states data
+              let stateDetails: any = {
+                abbr: stateAbbr,
+                name: stateName,
+                capital: '',
+                regionId: regionId,
+              }
               statesData.regions.forEach((region: any) => {
                 const state = region.states.find((s: any) => s.abbr === stateAbbr)
                 if (state) {
-                  capital = state.capital
+                  stateDetails.capital = state.capital
+                  stateDetails.population = state.population
+                  stateDetails.fun_facts = state.fun_facts
+                  stateDetails.landmarks = state.landmarks
                 }
               })
-              setSelectedState({
-                abbr: stateAbbr,
-                name: stateName,
-                capital: capital,
-                regionId: regionId,
-              })
+              setSelectedState(stateDetails)
             }
           }
         })
@@ -332,13 +338,55 @@ const MapViewer: React.FC<MapViewerProps> = ({ onSelectRegion, onBack }) => {
 
             {/* State Info Panel */}
             {selectedState && (
-              <div className="w-64 bg-blue-50 rounded-lg p-4 border-2 border-blue-200">
-                <h2 className="text-xl font-bold text-gray-900 mb-1">{selectedState.name}</h2>
-                <p className="text-sm text-gray-600 mb-4">{selectedState.abbr}</p>
-                <div className="bg-white rounded p-3 mb-4">
+              <div className="w-80 bg-blue-50 rounded-lg p-4 border-2 border-blue-200 max-h-96 overflow-y-auto">
+                <h2 className="text-xl font-bold text-gray-900">{selectedState.name}</h2>
+                <p className="text-sm text-gray-600 mb-3">{selectedState.abbr}</p>
+
+                {/* Capital */}
+                <div className="bg-white rounded p-3 mb-3">
                   <p className="text-xs text-gray-600 mb-1">Capital</p>
                   <p className="text-lg font-semibold text-gray-900">{selectedState.capital}</p>
                 </div>
+
+                {/* Population */}
+                {selectedState.population && (
+                  <div className="bg-white rounded p-3 mb-3">
+                    <p className="text-xs text-gray-600 mb-1">Population (2020 Census)</p>
+                    <p className="text-base font-semibold text-gray-900">{selectedState.population}</p>
+                  </div>
+                )}
+
+                {/* Fun Facts */}
+                {selectedState.fun_facts && selectedState.fun_facts.length > 0 && (
+                  <div className="bg-white rounded p-3 mb-3">
+                    <p className="text-xs font-semibold text-gray-700 mb-2">Fun Facts</p>
+                    <ul className="text-xs text-gray-700 space-y-1">
+                      {selectedState.fun_facts.map((fact: string, idx: number) => (
+                        <li key={idx} className="flex gap-2">
+                          <span>💡</span>
+                          <span>{fact}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Landmarks */}
+                {selectedState.landmarks && selectedState.landmarks.length > 0 && (
+                  <div className="bg-white rounded p-3 mb-3">
+                    <p className="text-xs font-semibold text-gray-700 mb-2">Landmarks</p>
+                    <ul className="text-xs text-gray-700 space-y-1">
+                      {selectedState.landmarks.map((landmark: string, idx: number) => (
+                        <li key={idx} className="flex gap-2">
+                          <span>🏛️</span>
+                          <span>{landmark}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Buttons */}
                 <div className="space-y-2">
                   <button
                     onClick={handleZoomFromInfo}
