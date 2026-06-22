@@ -23,10 +23,14 @@ const App: React.FC = () => {
     setView('regions')
   }
 
+  const handleGoToMap = () => {
+    setView('map')
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100">
       {view === 'quiz' && selectedRegion ? (
-        <Quiz regionId={selectedRegion} onBack={handleBack} />
+        <Quiz regionId={selectedRegion} onBack={handleBack} onGoToMap={handleGoToMap} />
       ) : view === 'map' ? (
         <MapViewer onSelectRegion={handleSelectRegion} onBack={handleBack} />
       ) : (

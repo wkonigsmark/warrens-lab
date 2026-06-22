@@ -297,16 +297,73 @@ const MapViewer: React.FC<MapViewerProps> = ({ onSelectRegion, onBack }) => {
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-6">
-          <svg
-            ref={svgRef}
-            className="w-full border border-gray-200 rounded"
-            style={{ maxHeight: '500px' }}
-          />
-          <p className="text-sm text-gray-600 mt-4 text-center">
-            Click on any state to zoom to that region
-          </p>
+          <div className="flex gap-6">
+            {/* Map */}
+            <div className="flex-1">
+              <svg
+                ref={svgRef}
+                className="w-full border border-gray-200 rounded"
+                style={{ maxHeight: '500px' }}
+              />
+              <p className="text-sm text-gray-600 mt-4 text-center">
+                Click on any state to view details
+              </p>
 
-          {selectedRegion && (
+              {/* Legend */}
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 className="text-sm font-bold text-gray-900 mb-3">Region Colors</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {Array.from(regionInfo.entries()).map(([regionId, region]) => (
+                    <button
+                      key={regionId}
+                      onClick={() => zoomToRegion(regionId)}
+                      className="flex items-center gap-2 p-2 rounded hover:bg-white transition cursor-pointer"
+                    >
+                      <div
+                        className="w-4 h-4 rounded flex-shrink-0"
+                        style={{ backgroundColor: region.color }}
+                      ></div>
+                      <span className="text-xs text-gray-700 hover:text-gray-900 font-medium">{region.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* State Info Panel */}
+            {selectedState && (
+              <div className="w-64 bg-blue-50 rounded-lg p-4 border-2 border-blue-200">
+                <h2 className="text-xl font-bold text-gray-900 mb-1">{selectedState.name}</h2>
+                <p className="text-sm text-gray-600 mb-4">{selectedState.abbr}</p>
+                <div className="bg-white rounded p-3 mb-4">
+                  <p className="text-xs text-gray-600 mb-1">Capital</p>
+                  <p className="text-lg font-semibold text-gray-900">{selectedState.capital}</p>
+                </div>
+                <div className="space-y-2">
+                  <button
+                    onClick={handleZoomFromInfo}
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-3 rounded transition text-sm"
+                  >
+                    Zoom to Region
+                  </button>
+                  <button
+                    onClick={handleStartQuiz}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded transition text-sm"
+                  >
+                    Start Quiz
+                  </button>
+                  <button
+                    onClick={() => setSelectedState(null)}
+                    className="w-full bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-3 rounded transition text-sm"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {selectedRegion && !selectedState && (
             <div className="mt-6 flex gap-4 justify-center">
               <button
                 onClick={handleStartQuiz}

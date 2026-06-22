@@ -21,9 +21,10 @@ interface Question {
 interface QuizProps {
   regionId: string
   onBack: () => void
+  onGoToMap: () => void
 }
 
-const Quiz: React.FC<QuizProps> = ({ regionId, onBack }) => {
+const Quiz: React.FC<QuizProps> = ({ regionId, onBack, onGoToMap }) => {
   const [questions, setQuestions] = useState<Question[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [score, setScore] = useState(0)
@@ -169,12 +170,20 @@ const Quiz: React.FC<QuizProps> = ({ regionId, onBack }) => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <button
-              onClick={onBack}
-              className="text-sm font-semibold text-gray-600 hover:text-gray-900 hover:bg-gray-100 px-3 py-1 rounded transition"
-            >
-              ← Menu
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={onBack}
+                className="text-sm font-semibold text-gray-600 hover:text-gray-900 hover:bg-gray-100 px-3 py-1 rounded transition"
+              >
+                ← Menu
+              </button>
+              <button
+                onClick={onGoToMap}
+                className="text-sm font-semibold text-gray-600 hover:text-gray-900 hover:bg-gray-100 px-3 py-1 rounded transition"
+              >
+                🗺️ Map
+              </button>
+            </div>
             <span className="text-sm font-semibold text-gray-600">
               Question {currentIndex + 1} of {questions.length}
             </span>

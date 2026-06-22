@@ -89,59 +89,11 @@
           <p class="item-subtext">Theory & Composition</p>
         </div>
       </a>
-      <!-- Beta Labs (Collapsible) -->
-      <button id="beta-labs-toggle" class="nav-item pulse-link" style="border: none; background: none; cursor: pointer; padding: 0; font-family: inherit;">
+      <a href="lab-ideas/index.html" class="nav-item pulse-link">
         <div class="item-icon">🛰️</div>
         <div class="item-info">
           <h3 class="item-title">Beta Labs</h3>
           <p class="item-subtext">Works in Progress & Experiments</p>
-        </div>
-        <span class="beta-labs-caret">▾</span>
-      </button>
-      <div id="beta-labs-menu" class="beta-labs-container" hidden>
-        <a href="iq/ants-atlases/index.html" class="beta-labs-item">
-          <div class="item-icon">🗺️</div>
-          <div class="item-info">
-            <h3>Ants & Atlases</h3>
-            <p>Map visualization & geography</p>
-          </div>
-        </a>
-        <a href="iq/ants-atlases/v2/index.html" class="beta-labs-item">
-          <div class="item-icon">🗺️</div>
-          <div class="item-info">
-            <h3>Ants & Atlases v2</h3>
-            <p>Enhanced map experience</p>
-          </div>
-        </a>
-        <a href="iq/chemistry/index.html" class="beta-labs-item">
-          <div class="item-icon">⚗️</div>
-          <div class="item-info">
-            <h3>Chemistry</h3>
-            <p>Periodic table & elements</p>
-          </div>
-        </a>
-        <a href="iq/anatomy/index.html" class="beta-labs-item">
-          <div class="item-icon">🫀</div>
-          <div class="item-info">
-            <h3>Anatomy</h3>
-            <p>Human body systems</p>
-          </div>
-        </a>
-        <a href="lifestyle/janes-list/index.html" class="beta-labs-item">
-          <div class="item-icon">📋</div>
-          <div class="item-info">
-            <h3>Jane's List</h3>
-            <p>Curated resources & links</p>
-          </div>
-        </a>
-      </div>
-
-      <!-- Original Lab Ideas (for reference) -->
-      <a href="lab-ideas/index.html" class="nav-item" style="opacity: 0.5; font-size: 0.85rem;">
-        <div class="item-icon">🔐</div>
-        <div class="item-info">
-          <h3 class="item-title">Lab Ideas</h3>
-          <p class="item-subtext">Secure Roadmap & Agenda</p>
         </div>
       </a>
     </nav>
@@ -183,18 +135,6 @@
         showMenu();
       }
 
-      function setupBetaLabsToggle() {
-        const toggleBtn = document.getElementById("beta-labs-toggle");
-        const betaMenu = document.getElementById("beta-labs-menu");
-        if (!toggleBtn || !betaMenu) return;
-
-        toggleBtn.addEventListener("click", () => {
-          const isOpen = betaMenu.classList.contains("visible");
-          betaMenu.classList.toggle("visible", !isOpen);
-          toggleBtn.classList.toggle("open", !isOpen);
-        });
-      }
-
       function showMenu() {
         navEl.classList.add("visible");
 
@@ -205,11 +145,6 @@
             item.classList.add("revealed");
           }, index * 120); // Sequence delay
         });
-
-        // Setup Beta Labs toggle after menu is visible
-        setTimeout(() => {
-          setupBetaLabsToggle();
-        }, items.length * 120 + 100);
 
         hintEl.style.opacity = "0";
         setTimeout(() => hintEl.remove(), 400);
