@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anatomy Learning System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --primary-light: #dbeafe;
+      --secondary: #7c3aed;
+      --success: #10b981;
+      --danger: #ef4444;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 2rem;
+      box-shadow: var(--shadow-lg);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      opacity: 0.95;
+      font-size: 0.95rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .stat-card {
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--primary);
+    }
+
+    .stat-card h3 {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-card p {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--border);
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    select {
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--border);
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      background: var(--card);
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      background: var(--primary);
+      color: white;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    button.secondary {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+
+    button.secondary:hover {
+      background: var(--primary-light);
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 0.5rem;
+      border: 2px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.25rem;
+      background: var(--card);
+    }
+
+    .view-toggle button {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: transparent;
+      color: var(--text-light);
+      cursor: pointer;
+    }
+
+    .view-toggle button.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .results-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.5rem 0 1rem 0;
+      font-size: 0.95rem;
+      color: var(--text-light);
+    }
+
+    .grid-view {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 1rem 0 3rem 0;
+    }
+
+    .component-card {
+      background: var(--card);
+      border-radius: 0.5rem;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .component-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .component-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 1rem;
+    }
+
+    .component-header h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .component-meta {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    .badge {
+      background: rgba(255, 255, 255, 0.3);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+    }
+
+    .component-body {
+      padding: 1rem;
+    }
+
+    .component-body p {
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .location-label {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .function-label {
+      font-weight: 600;
+      color: var(--secondary);
+      margin-top: 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .details-text {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .connections {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .connections-label {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .connection-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+    }
+
+    .table-view {
+      overflow-x: auto;
+      margin: 1rem 0 3rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    thead {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+    }
+
+    th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid var(--border);
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:hover {
+      background: var(--primary-light);
+      cursor: pointer;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--card);
+      border-radius: 0.5rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 1.5rem;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+      width: auto;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .detail-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .detail-value {
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .detail-value li {
+      margin-left: 1.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-light);
+    }
+
+    .empty-state svg {
+      width: 100px;
+      height: 100px;
+      opacity: 0.3;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    @media (max-width: 768px) {
+      .controls {
+        flex-direction: column;
+      }
+
+      .search-box {
+        min-width: auto;
+      }
+
+      .filter-group {
+        width: 100%;
+      }
+
+      .grid-view {
+        grid-template-columns: 1fr;
+      }
+
+      table {
+        font-size: 0.9rem;
+      }
+
+      th, td {
+        padding: 0.75rem 0.5rem;
+      }
+
+      header h1 {
+        font-size: 1.5rem;
+      }
+    }
+
+    .system-pill {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .system-pill.circulatory { background: #fee2e2; color: #991b1b; }
+    .system-pill.respiratory { background: #fef3c7; color: #92400e; }
+    .system-pill.digestive { background: #dbeafe; color: #0c4a6e; }
+    .system-pill.nervous { background: #f3e8ff; color: #6b21a8; }
+    .system-pill.endocrine { background: #ecfdf5; color: #065f46; }
+    .system-pill.skeletal { background: #fce7f3; color: #831843; }
+    .system-pill.muscular { background: #fce7f3; color: #831843; }
+    .system-pill.lymphatic { background: #f0fdf4; color: #15803d; }
+    .system-pill.urinary { background: #e0e7ff; color: #312e81; }
+    .system-pill.reproductive { background: #fae8ff; color: #6b21a8; }
+
+    .roadmap-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+      z-index: 999;
+    }
+
+    .roadmap-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .roadmap-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .roadmap-modal.active {
+      display: flex;
+    }
+
+    .roadmap-content {
+      background: var(--card);
+      border-radius: 1rem;
+      max-width: 700px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .roadmap-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 1rem 1rem 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .roadmap-header h2 {
+      font-size: 1.75rem;
+      margin: 0;
+    }
+
+    .roadmap-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      padding: 0;
+      width: auto;
+      margin: 0;
+      line-height: 1;
+    }
+
+    .roadmap-body {
+      padding: 2rem;
+    }
+
+    .phase {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .phase:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .phase-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .phase-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      font-weight: bold;
+      font-size: 1.25rem;
+    }
+
+    .phase-badge.completed {
+      background: var(--success);
+    }
+
+    .phase-badge.current {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+    }
+
+    .phase-info h3 {
+      font-size: 1.25rem;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .phase-info p {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    .phase-items {
+      margin-top: 1rem;
+      margin-left: 3.5rem;
+      list-style: none;
+    }
+
+    .phase-items li {
+      padding: 0.5rem 0;
+      color: var(--text-light);
+      position: relative;
+      padding-left: 1.5rem;
+    }
+
+    .phase-items li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .phase-items li.pending:before {
+      content: "○";
+      color: var(--text-light);
+    }
+
+    @media (max-width: 768px) {
+      .roadmap-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+        bottom: 1rem;
+        right: 1rem;
+      }
+
+      .roadmap-content {
+        max-height: 90vh;
+      }
+
+      .roadmap-header h2 {
+        font-size: 1.5rem;
+      }
+
+      .roadmap-body {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>🧬 Anatomy Learning System</h1>
+      <p>Explore the human body's anatomical structures and systems</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="stats-bar" id="statsBar"></div>
+
+    <div class="controls">
+      <div class="search-box">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search organs, systems, locations..."
+        >
+      </div>
+      <select id="categoryFilter">
+        <option value="">All Categories</option>
+      </select>
+      <select id="systemFilter">
+        <option value="">All Systems</option>
+      </select>
+      <div class="view-toggle">
+        <button class="active" data-view="grid">📋 Grid</button>
+        <button data-view="table">📊 Table</button>
+      </div>
+    </div>
+
+    <div class="results-info">
+      <span id="resultsCount"></span>
+      <button class="secondary" id="resetBtn">Reset Filters</button>
+    </div>
+
+    <div id="gridView" class="grid-view"></div>
+    <div id="tableView" class="table-view" style="display: none;">
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>System</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalTitle"></h2>
+          <button class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+      </div>
+    </div>
+
+    <button id="roadmapBtn" class="roadmap-btn" title="View Development Roadmap">🗺️</button>
+
+    <div id="roadmapModal" class="roadmap-modal">
+      <div class="roadmap-content">
+        <div class="roadmap-header">
+          <h2>🗺️ Roadmap for Development</h2>
+          <button class="roadmap-close">&times;</button>
+        </div>
+        <div class="roadmap-body">
+          <div class="phase">
+            <div class="phase-title">
+              <div class="phase-badge completed">✓</div>
+              <div class="phase-info">
+                <h3>Phase I: Database</h3>
+                <p>Comprehensive anatomical components</p>
+              </div>
+            </div>
+            <ul class="phase-items">
+              <li>✓ Organs (15 major organs)</li>
+              <li class="pending">Bones (skeletal system)</li>
+              <li class="pending">Muscles (skeletal muscles)</li>
+              <li class="pending">Ligaments & Tendons</li>
+              <li class="pending">Nerves & Vessels</li>
+            </ul>
+          </div>
+
+          <div class="phase">
+            <div class="phase-title">
+              <div class="phase-badge current">II</div>
+              <div class="phase-info">
+                <h3>Phase II: Interactive Visual</h3>
+                <p>Dynamic body diagram interface</p>
+              </div>
+            </div>
+            <ul class="phase-items">
+              <li class="pending">Human anatomical diagram viewer</li>
+              <li class="pending">Skeletal diagram viewer</li>
+              <li class="pending">Interactive highlighting & labeling</li>
+              <li class="pending">Matching game: identify body parts</li>
+              <li class="pending">Quiz mode with scoring</li>
+            </ul>
+          </div>
+
+          <div class="phase">
+            <div class="phase-title">
+              <div class="phase-badge">III</div>
+              <div class="phase-info">
+                <h3>Phase III: Workout Integration</h3>
+                <p>Connect anatomy to fitness</p>
+              </div>
+            </div>
+            <ul class="phase-items">
+              <li class="pending">Workout planner</li>
+              <li class="pending">Exercise tracker</li>
+              <li class="pending">Muscle/body part targeting</li>
+              <li class="pending">Anatomy-exercise mapping</li>
+            </ul>
+          </div>
+
+          <div class="phase">
+            <div class="phase-title">
+              <div class="phase-badge">IV</div>
+              <div class="phase-info">
+                <h3>Phase IV: Pre-Med Study</h3>
+                <p>Comprehensive medical preparation</p>
+              </div>
+            </div>
+            <ul class="phase-items">
+              <li class="pending">Advanced anatomy content</li>
+              <li class="pending">Medical terminology</li>
+              <li class="pending">Comprehensive study materials</li>
+              <li class="pending">Practice exams & assessments</li>
+              <li class="pending">Learning analytics</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let allComponents = [];
+    let filteredComponents = [];
+    let currentView = 'grid';
+
+    // Load data
+    async function loadData() {
+      try {
+        const response = await fetch('../data/anatomy.json');
+        const data = await response.json();
+
+        // Flatten all components
+        allComponents = [];
+        for (const category in data.components) {
+          if (Array.isArray(data.components[category])) {
+            allComponents.push(...data.components[category]);
+          }
+        }
+
+        filteredComponents = [...allComponents];
+
+        initializeFilters();
+        renderStats(data);
+        render();
+      } catch (error) {
+        console.error('Error loading data:', error);
+        document.querySelector('.container').innerHTML =
+          '<div class="empty-state"><h3>Error loading data</h3><p>Could not load anatomy.json</p></div>';
+      }
+    }
+
+    function initializeFilters() {
+      const categories = [...new Set(allComponents.map(c => c.category))].sort();
+      const systems = [...new Set(allComponents.flatMap(c =>
+        Array.isArray(c.system) ? c.system : [c.system]
+      ))].sort();
+
+      const categorySelect = document.getElementById('categoryFilter');
+      categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+        categorySelect.appendChild(option);
+      });
+
+      const systemSelect = document.getElementById('systemFilter');
+      systems.forEach(sys => {
+        const option = document.createElement('option');
+        option.value = sys;
+        option.textContent = sys.charAt(0).toUpperCase() + sys.slice(1);
+        systemSelect.appendChild(option);
+      });
+    }
+
+    function renderStats(data) {
+      const statsBar = document.getElementById('statsBar');
+      const stats = {
+        'Total Components': allComponents.length,
+        'Categories': [...new Set(allComponents.map(c => c.category))].length,
+        'Body Systems': [...new Set(allComponents.flatMap(c =>
+          Array.isArray(c.system) ? c.system : [c.system]
+        ))].length,
+        'Phase': 'Phase I: Organs'
+      };
+
+      statsBar.innerHTML = Object.entries(stats).map(([label, value]) => `
+        <div class="stat-card">
+          <h3>${value}</h3>
+          <p>${label}</p>
+        </div>
+      `).join('');
+    }
+
+    function filterComponents() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const category = document.getElementById('categoryFilter').value;
+      const system = document.getElementById('systemFilter').value;
+
+      filteredComponents = allComponents.filter(comp => {
+        const matchesSearch =
+          comp.name.toLowerCase().includes(search) ||
+          comp.location.toLowerCase().includes(search) ||
+          comp.function.toLowerCase().includes(search) ||
+          (comp.details && comp.details.toLowerCase().includes(search));
+
+        const matchesCategory = !category || comp.category === category;
+
+        const systems = Array.isArray(comp.system) ? comp.system : [comp.system];
+        const matchesSystem = !system || systems.includes(system);
+
+        return matchesSearch && matchesCategory && matchesSystem;
+      });
+
+      render();
+    }
+
+    function render() {
+      updateResultsCount();
+
+      if (currentView === 'grid') {
+        renderGrid();
+      } else {
+        renderTable();
+      }
+    }
+
+    function renderGrid() {
+      const gridView = document.getElementById('gridView');
+      const tableView = document.getElementById('tableView');
+
+      tableView.style.display = 'none';
+      gridView.style.display = 'grid';
+
+      if (filteredComponents.length === 0) {
+        gridView.innerHTML = `
+          <div class="empty-state" style="grid-column: 1/-1;">
+            <h3>No components found</h3>
+            <p>Try adjusting your filters or search terms</p>
+          </div>
+        `;
+        return;
+      }
+
+      gridView.innerHTML = filteredComponents.map(comp => `
+        <div class="component-card" onclick="openModal('${comp.id}')">
+          <div class="component-header">
+            <h3>${comp.name}</h3>
+            <div class="component-meta">
+              <span class="badge">${comp.category}</span>
+              ${(Array.isArray(comp.system) ? comp.system : [comp.system])
+                .map(s => `<span class="badge">${s}</span>`).join('')}
+            </div>
+          </div>
+          <div class="component-body">
+            <p><span class="location-label">📍 Location</span><br>${comp.location}</p>
+            <p><span class="function-label">⚙️ Function</span><br>${comp.function}</p>
+            ${comp.connections ? `
+              <div class="connections">
+                <div class="connections-label">🔗 Connections</div>
+                <div class="connection-tags">
+                  ${comp.connections.slice(0, 3).map(c => `<span class="tag">${c}</span>`).join('')}
+                  ${comp.connections.length > 3 ? `<span class="tag">+${comp.connections.length - 3} more</span>` : ''}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderTable() {
+      const gridView = document.getElementById('gridView');
+      const tableView = document.getElementById('tableView');
+
+      gridView.style.display = 'none';
+      tableView.style.display = 'block';
+
+      const tableBody = document.getElementById('tableBody');
+
+      if (filteredComponents.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="4" style="text-align: center; color: var(--text-light);">
+              No components found
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tableBody.innerHTML = filteredComponents.map(comp => `
+        <tr onclick="openModal('${comp.id}')">
+          <td><strong>${comp.name}</strong></td>
+          <td>${comp.category}</td>
+          <td>
+            ${(Array.isArray(comp.system) ? comp.system : [comp.system])
+              .map(s => `<span class="system-pill ${s}">${s}</span>`).join('')}
+          </td>
+          <td>${comp.location.substring(0, 50)}...</td>
+        </tr>
+      `).join('');
+    }
+
+    function updateResultsCount() {
+      document.getElementById('resultsCount').textContent =
+        `Showing ${filteredComponents.length} of ${allComponents.length} components`;
+    }
+
+    function openModal(componentId) {
+      const component = allComponents.find(c => c.id === componentId);
+      if (!component) return;
+
+      const modal = document.getElementById('modal');
+      document.getElementById('modalTitle').textContent = component.name;
+
+      const systems = Array.isArray(component.system) ? component.system : [component.system];
+
+      let modalBody = `
+        <div class="detail-section">
+          <div class="detail-label">Category</div>
+          <div class="detail-value">${component.category}</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Body System(s)</div>
+          <div class="detail-value">
+            ${systems.map(s => `<span class="system-pill ${s}">${s}</span>`).join('')}
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">📍 Location</div>
+          <div class="detail-value">${component.location}</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">⚙️ Function</div>
+          <div class="detail-value">${component.function}</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">📖 Details</div>
+          <div class="detail-value">${component.details}</div>
+        </div>
+      `;
+
+      if (component.connections && component.connections.length > 0) {
+        modalBody += `
+          <div class="detail-section">
+            <div class="detail-label">🔗 Connections</div>
+            <div class="detail-value">
+              <ul>
+                ${component.connections.map(c => `<li>${c}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        `;
+      }
+
+      // Add additional properties
+      const standardKeys = ['id', 'name', 'category', 'system', 'location', 'function', 'details', 'connections'];
+      const additionalKeys = Object.keys(component).filter(k => !standardKeys.includes(k));
+
+      if (additionalKeys.length > 0) {
+        modalBody += '<div class="detail-section"><div class="detail-label">ℹ️ Additional Information</div><div class="detail-value"><ul>';
+        additionalKeys.forEach(key => {
+          const value = component[key];
+          let displayValue = value;
+          if (Array.isArray(value)) {
+            displayValue = value.join(', ');
+          } else if (typeof value === 'object') {
+            displayValue = JSON.stringify(value, null, 2);
+          }
+          modalBody += `<li><strong>${key}:</strong> ${displayValue}</li>`;
+        });
+        modalBody += '</ul></div></div>';
+      }
+
+      document.getElementById('modalBody').innerHTML = modalBody;
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+    // Event listeners
+    document.getElementById('searchInput').addEventListener('input', filterComponents);
+    document.getElementById('categoryFilter').addEventListener('change', filterComponents);
+    document.getElementById('systemFilter').addEventListener('change', filterComponents);
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('categoryFilter').value = '';
+      document.getElementById('systemFilter').value = '';
+      filterComponents();
+    });
+
+    document.querySelectorAll('[data-view]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        currentView = e.target.dataset.view;
+        document.querySelectorAll('[data-view]').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        render();
+      });
+    });
+
+    document.querySelector('.close-btn').addEventListener('click', closeModal);
+    document.getElementById('modal').addEventListener('click', (e) => {
+      if (e.target.id === 'modal') closeModal();
+    });
+
+    // Roadmap modal handlers
+    const roadmapBtn = document.getElementById('roadmapBtn');
+    const roadmapModal = document.getElementById('roadmapModal');
+    const roadmapClose = document.querySelector('.roadmap-close');
+
+    roadmapBtn.addEventListener('click', () => {
+      roadmapModal.classList.add('active');
+    });
+
+    roadmapClose.addEventListener('click', () => {
+      roadmapModal.classList.remove('active');
+    });
+
+    roadmapModal.addEventListener('click', (e) => {
+      if (e.target.id === 'roadmapModal') {
+        roadmapModal.classList.remove('active');
+      }
+    });
+
+    // Initialize
+    loadData();
+  </script>
+</body>
+</html>
