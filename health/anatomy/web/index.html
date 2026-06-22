@@ -234,6 +234,14 @@
       font-size: 0.8rem;
     }
 
+    .component-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: var(--primary-light);
+      display: block;
+    }
+
     .component-body {
       padding: 1rem;
     }
@@ -242,6 +250,13 @@
       margin-bottom: 0.75rem;
       font-size: 0.95rem;
       line-height: 1.5;
+    }
+
+    .image-credit {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-top: 0.5rem;
+      font-style: italic;
     }
 
     .location-label {
@@ -804,6 +819,9 @@
     let allComponents = [];
     let filteredComponents = [];
     let currentView = 'grid';
+    let itemsPerPage = 12;
+    let currentPage = 1;
+    let isLoadingMore = false;
 
     // Load data
     async function loadData() {
@@ -893,6 +911,8 @@
         return matchesSearch && matchesCategory && matchesSystem;
       });
 
+      currentPage = 1;
+      isLoadingMore = false;
       render();
     }
 
@@ -923,8 +943,23 @@
         return;
       }
 
-      gridView.innerHTML = filteredComponents.map(comp => `
+      currentPage = 1;
+      renderGridPage();
+    }
+
+    function renderGridPage() {
+      const gridView = document.getElementById('gridView');
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const pageItems = filteredComponents.slice(startIndex, endIndex);
+
+      if (currentPage === 1) {
+        gridView.innerHTML = '';
+      }
+
+      const html = pageItems.map(comp => `
         <div class="component-card" onclick="openModal('${comp.id}')">
+          ${comp.imageUrl ? `<img src="${comp.imageUrl}" alt="${comp.name}" class="component-image" onerror="this.style.display='none'">` : ''}
           <div class="component-header">
             <h3>${comp.name}</h3>
             <div class="component-meta">
@@ -948,6 +983,41 @@
           </div>
         </div>
       `).join('');
+
+      gridView.innerHTML += html;
+
+      // Add loading indicator if there are more items
+      if (endIndex < filteredComponents.length) {
+        gridView.innerHTML += `
+          <div id="loadMoreIndicator" style="grid-column: 1/-1; padding: 2rem; text-align: center;">
+            <div style="display: inline-block; width: 30px; height: 30px; border: 3px solid var(--primary-light); border-top: 3px solid var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+            <p style="margin-top: 1rem; color: var(--text-light);">Loading more...</p>
+          </div>
+          <style>
+            @keyframes spin {
+              to { transform: rotate(360deg); }
+            }
+          </style>
+        `;
+
+        // Setup intersection observer for the loading indicator
+        setTimeout(() => {
+          const indicator = document.getElementById('loadMoreIndicator');
+          if (indicator) {
+            const observer = new IntersectionObserver((entries) => {
+              if (entries[0].isIntersecting && !isLoadingMore) {
+                isLoadingMore = true;
+                currentPage++;
+                setTimeout(() => {
+                  renderGridPage();
+                  isLoadingMore = false;
+                }, 300);
+              }
+            });
+            observer.observe(indicator);
+          }
+        }, 0);
+      }
     }
 
     function renderTable() {
@@ -970,7 +1040,21 @@
         return;
       }
 
-      tableBody.innerHTML = filteredComponents.map(comp => `
+      currentPage = 1;
+      renderTablePage();
+    }
+
+    function renderTablePage() {
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const pageItems = filteredComponents.slice(startIndex, endIndex);
+      const tableBody = document.getElementById('tableBody');
+
+      if (currentPage === 1) {
+        tableBody.innerHTML = '';
+      }
+
+      const html = pageItems.map(comp => `
         <tr onclick="openModal('${comp.id}')">
           <td><strong>${comp.name}</strong></td>
           <td>${comp.category}</td>
@@ -981,6 +1065,36 @@
           <td>${comp.location.substring(0, 50)}...</td>
         </tr>
       `).join('');
+
+      tableBody.innerHTML += html;
+
+      // Add load more trigger row if there are more items
+      if (endIndex < filteredComponents.length) {
+        tableBody.innerHTML += `
+          <tr id="tableLoadMore" style="background: transparent; cursor: default;">
+            <td colspan="4" style="text-align: center; padding: 2rem; color: var(--text-light);">
+              <div style="display: inline-block; width: 20px; height: 20px; border: 2px solid var(--primary-light); border-top: 2px solid var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+            </td>
+          </tr>
+        `;
+
+        setTimeout(() => {
+          const loadMore = document.getElementById('tableLoadMore');
+          if (loadMore) {
+            const observer = new IntersectionObserver((entries) => {
+              if (entries[0].isIntersecting && !isLoadingMore) {
+                isLoadingMore = true;
+                currentPage++;
+                setTimeout(() => {
+                  renderTablePage();
+                  isLoadingMore = false;
+                }, 300);
+              }
+            });
+            observer.observe(loadMore);
+          }
+        }, 0);
+      }
     }
 
     function updateResultsCount() {
@@ -997,7 +1111,18 @@
 
       const systems = Array.isArray(component.system) ? component.system : [component.system];
 
-      let modalBody = `
+      let modalBody = ``;
+
+      if (component.imageUrl) {
+        modalBody += `
+          <div class="detail-section">
+            <img src="${component.imageUrl}" alt="${component.name}" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 0.5rem; margin-bottom: 1rem;" onerror="this.style.display='none'">
+            <div class="image-credit">${component.imageCredit || 'Image source available'}</div>
+          </div>
+        `;
+      }
+
+      modalBody += `
         <div class="detail-section">
           <div class="detail-label">Category</div>
           <div class="detail-value">${component.category}</div>

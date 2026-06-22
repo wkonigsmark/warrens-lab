@@ -2,8 +2,27 @@
   "version": "1.1",
   "lastUpdated": "2026-06-21",
   "metadata": {
-    "categories": ["organ", "bone", "muscle", "ligament", "tendon", "nerve", "vessel"],
-    "systems": ["circulatory", "respiratory", "digestive", "nervous", "endocrine", "skeletal", "muscular", "lymphatic", "reproductive", "urinary"],
+    "categories": [
+      "organ",
+      "bone",
+      "muscle",
+      "ligament",
+      "tendon",
+      "nerve",
+      "vessel"
+    ],
+    "systems": [
+      "circulatory",
+      "respiratory",
+      "digestive",
+      "nervous",
+      "endocrine",
+      "skeletal",
+      "muscular",
+      "lymphatic",
+      "reproductive",
+      "urinary"
+    ],
     "imageSources": {
       "openstax": {
         "name": "OpenStax Anatomy & Physiology",
@@ -25,13 +44,27 @@
         "type": "Skeletal muscle",
         "origin": "Sternum, clavicle, costal cartilages of ribs 1-7",
         "insertion": "Intertubercular groove of humerus",
-        "primaryActions": ["arm adduction", "arm internal rotation", "shoulder flexion", "shoulder horizontal adduction"],
-        "exercises": ["bench press", "push-ups", "cable flyes", "dumbbell press", "pec deck"],
+        "primaryActions": [
+          "arm adduction",
+          "arm internal rotation",
+          "shoulder flexion",
+          "shoulder horizontal adduction"
+        ],
+        "exercises": [
+          "bench press",
+          "push-ups",
+          "cable flyes",
+          "dumbbell press",
+          "pec deck"
+        ],
         "region": "chest",
         "details": "Large, fan-shaped muscle that is the primary mover for pressing movements. Critical for upper body strength and power.",
         "innervation": "Lateral and medial pectoral nerves (C5-T1)",
         "bloodSupply": "Pectoral branch of thoracoacromial artery",
-        "synergists": ["anterior deltoid", "triceps brachii"],
+        "synergists": [
+          "anterior deltoid",
+          "triceps brachii"
+        ],
         "imageSource": "openstax",
         "imageCredit": "OpenStax Anatomy & Physiology (CC-BY)"
       },
@@ -45,13 +78,23 @@
         "type": "Skeletal muscle",
         "origin": "Ribs 2-4",
         "insertion": "Coracoid process of scapula",
-        "primaryActions": ["scapular depression", "scapular protraction", "scapular downward rotation"],
-        "exercises": ["push-ups", "chest press", "cable crossovers"],
+        "primaryActions": [
+          "scapular depression",
+          "scapular protraction",
+          "scapular downward rotation"
+        ],
+        "exercises": [
+          "push-ups",
+          "chest press",
+          "cable crossovers"
+        ],
         "region": "chest",
         "details": "Smaller accessory muscle that helps stabilize the shoulder blade during chest movements.",
         "innervation": "Medial pectoral nerve (C6-C8, T1)",
         "bloodSupply": "Pectoral branch of thoracoacromial artery",
-        "synergists": ["serratus anterior"]
+        "synergists": [
+          "serratus anterior"
+        ]
       },
       {
         "id": "muscle_latissimus_dorsi",
@@ -63,13 +106,27 @@
         "type": "Skeletal muscle",
         "origin": "Spinous processes of T6-T12, iliac crest, ribs 9-12",
         "insertion": "Intertubercular groove of humerus",
-        "primaryActions": ["arm extension", "arm adduction", "arm internal rotation", "shoulder extension"],
-        "exercises": ["pull-ups", "lat pulldowns", "rows", "machine pullover", "assisted pull-ups"],
+        "primaryActions": [
+          "arm extension",
+          "arm adduction",
+          "arm internal rotation",
+          "shoulder extension"
+        ],
+        "exercises": [
+          "pull-ups",
+          "lat pulldowns",
+          "rows",
+          "machine pullover",
+          "assisted pull-ups"
+        ],
         "region": "back",
         "details": "Largest back muscle; essential for pulling movements and provides width to the back.",
         "innervation": "Thoracodorsal nerve (C6-C8)",
         "bloodSupply": "Thoracodorsal artery",
-        "synergists": ["teres major", "posterior deltoid"],
+        "synergists": [
+          "teres major",
+          "posterior deltoid"
+        ],
         "imageSource": "openstax",
         "imageCredit": "OpenStax Anatomy & Physiology (CC-BY)"
       },
@@ -83,10 +140,25 @@
         "type": "Skeletal muscle",
         "origin": "Occipital bone, ligamentum nuchae, spinous processes of C7-T12",
         "insertion": "Clavicle, acromion process, spine of scapula",
-        "primaryActions": ["scapular elevation", "scapular retraction", "scapular upward rotation", "neck extension"],
-        "exercises": ["shrugs", "upright rows", "face pulls", "rear delt flyes", "reverse pec deck"],
+        "primaryActions": [
+          "scapular elevation",
+          "scapular retraction",
+          "scapular upward rotation",
+          "neck extension"
+        ],
+        "exercises": [
+          "shrugs",
+          "upright rows",
+          "face pulls",
+          "rear delt flyes",
+          "reverse pec deck"
+        ],
         "region": "back",
-        "subRegions": ["upper trapezius", "middle trapezius", "lower trapezius"],
+        "subRegions": [
+          "upper trapezius",
+          "middle trapezius",
+          "lower trapezius"
+        ],
         "details": "Large muscle divided into three parts (upper, middle, lower) each with different functions. Critical for shoulder stability and posture.",
         "innervation": "Accessory nerve (CN XI)",
         "bloodSupply": "Transverse cervical and dorsal scapular arteries"
@@ -101,13 +173,25 @@
         "type": "Skeletal muscle",
         "origin": "Spinous processes of C7-T5",
         "insertion": "Medial border of scapula",
-        "primaryActions": ["scapular retraction", "scapular elevation", "scapular downward rotation"],
-        "exercises": ["face pulls", "reverse flyes", "band pull-aparts", "seal rows", "machine rows"],
+        "primaryActions": [
+          "scapular retraction",
+          "scapular elevation",
+          "scapular downward rotation"
+        ],
+        "exercises": [
+          "face pulls",
+          "reverse flyes",
+          "band pull-aparts",
+          "seal rows",
+          "machine rows"
+        ],
         "region": "back",
         "details": "Small but important postural muscle; helps pull shoulder blades back for better posture.",
         "innervation": "Dorsal scapular nerve (C5)",
         "bloodSupply": "Dorsal scapular artery",
-        "synergists": ["middle trapezius"]
+        "synergists": [
+          "middle trapezius"
+        ]
       },
       {
         "id": "muscle_deltoid",
@@ -119,14 +203,32 @@
         "type": "Skeletal muscle",
         "origin": "Clavicle, acromion, spine of scapula",
         "insertion": "Deltoid tuberosity of humerus",
-        "primaryActions": ["arm abduction (anterior)", "arm flexion (anterior)", "arm extension (posterior)", "arm internal rotation (anterior)"],
-        "exercises": ["overhead press", "lateral raises", "front raises", "reverse flyes", "machine shoulder press", "cable raises"],
+        "primaryActions": [
+          "arm abduction (anterior)",
+          "arm flexion (anterior)",
+          "arm extension (posterior)",
+          "arm internal rotation (anterior)"
+        ],
+        "exercises": [
+          "overhead press",
+          "lateral raises",
+          "front raises",
+          "reverse flyes",
+          "machine shoulder press",
+          "cable raises"
+        ],
         "region": "shoulder",
-        "subRegions": ["anterior deltoid", "middle deltoid", "posterior deltoid"],
+        "subRegions": [
+          "anterior deltoid",
+          "middle deltoid",
+          "posterior deltoid"
+        ],
         "details": "Divided into three sections (front, middle, back) each responsible for different shoulder movements. Essential for shoulder stability and size.",
         "innervation": "Axillary nerve (C5-C6)",
         "bloodSupply": "Posterior circumflex humeral artery",
-        "synergists": ["rotator cuff muscles"],
+        "synergists": [
+          "rotator cuff muscles"
+        ],
         "imageSource": "openstax",
         "imageCredit": "OpenStax Anatomy & Physiology (CC-BY)"
       },
@@ -140,14 +242,30 @@
         "type": "Skeletal muscle",
         "origin": "Long head: supraglenoid tubercle; Short head: coracoid process",
         "insertion": "Radial tuberosity and bicipital aponeurosis",
-        "primaryActions": ["elbow flexion", "forearm supination", "shoulder flexion"],
-        "exercises": ["barbell curls", "dumbbell curls", "cable curls", "hammer curls", "machine curls", "preacher curls"],
+        "primaryActions": [
+          "elbow flexion",
+          "forearm supination",
+          "shoulder flexion"
+        ],
+        "exercises": [
+          "barbell curls",
+          "dumbbell curls",
+          "cable curls",
+          "hammer curls",
+          "machine curls",
+          "preacher curls"
+        ],
         "region": "arm",
-        "subRegions": ["long head", "short head"],
+        "subRegions": [
+          "long head",
+          "short head"
+        ],
         "details": "Most visible arm muscle; consists of two heads that work together for elbow flexion. Critical for arm pulling and flexing movements.",
         "innervation": "Musculocutaneous nerve (C5-C6)",
         "bloodSupply": "Brachial artery",
-        "antagonists": ["triceps brachii"],
+        "antagonists": [
+          "triceps brachii"
+        ],
         "imageSource": "openstax",
         "imageCredit": "OpenStax Anatomy & Physiology (CC-BY)"
       },
@@ -161,14 +279,31 @@
         "type": "Skeletal muscle",
         "origin": "Long head: infraglenoid tubercle; Lateral and medial heads: posterior humerus",
         "insertion": "Olecranon process of ulna",
-        "primaryActions": ["elbow extension", "shoulder extension (long head)", "shoulder adduction (long head)"],
-        "exercises": ["tricep pushdowns", "close-grip bench press", "dips", "overhead extensions", "skull crushers", "kickbacks"],
+        "primaryActions": [
+          "elbow extension",
+          "shoulder extension (long head)",
+          "shoulder adduction (long head)"
+        ],
+        "exercises": [
+          "tricep pushdowns",
+          "close-grip bench press",
+          "dips",
+          "overhead extensions",
+          "skull crushers",
+          "kickbacks"
+        ],
         "region": "arm",
-        "subRegions": ["long head", "lateral head", "medial head"],
+        "subRegions": [
+          "long head",
+          "lateral head",
+          "medial head"
+        ],
         "details": "Three-headed muscle on back of arm; makes up 2/3 of arm mass. Critical for pressing movements and arm extension.",
         "innervation": "Radial nerve (C6-C8)",
         "bloodSupply": "Brachial artery",
-        "antagonists": ["biceps brachii"],
+        "antagonists": [
+          "biceps brachii"
+        ],
         "imageSource": "openstax",
         "imageCredit": "OpenStax Anatomy & Physiology (CC-BY)"
       },
@@ -182,13 +317,26 @@
         "type": "Skeletal muscle",
         "origin": "Anterior inferior iliac spine and rim of acetabulum",
         "insertion": "Base of patella and tuberosity of tibia",
-        "primaryActions": ["knee extension", "hip flexion"],
-        "exercises": ["barbell squats", "leg press", "leg extensions", "lunges", "hack squats"],
+        "primaryActions": [
+          "knee extension",
+          "hip flexion"
+        ],
+        "exercises": [
+          "barbell squats",
+          "leg press",
+          "leg extensions",
+          "lunges",
+          "hack squats"
+        ],
         "region": "leg",
         "details": "Central thigh muscle; most visible part of the quadriceps. Works with other quads for powerful leg extension.",
         "innervation": "Femoral nerve (L2-L4)",
         "bloodSupply": "Lateral circumflex femoral artery",
-        "synergists": ["vastus medialis", "vastus lateralis", "vastus intermedius"],
+        "synergists": [
+          "vastus medialis",
+          "vastus lateralis",
+          "vastus intermedius"
+        ],
         "imageSource": "openstax",
         "imageCredit": "OpenStax Anatomy & Physiology (CC-BY)"
       },
@@ -202,13 +350,25 @@
         "type": "Skeletal muscle",
         "origin": "Greater trochanter, linea aspera, lateral supracondylar line of femur",
         "insertion": "Base of patella and tuberosity of tibia",
-        "primaryActions": ["knee extension"],
-        "exercises": ["leg press", "squats", "leg extensions", "hack squats", "smith machine squats"],
+        "primaryActions": [
+          "knee extension"
+        ],
+        "exercises": [
+          "leg press",
+          "squats",
+          "leg extensions",
+          "hack squats",
+          "smith machine squats"
+        ],
         "region": "leg",
         "details": "Largest of the quadriceps; provides most of the leg extension strength. Visible on outer thigh.",
         "innervation": "Femoral nerve (L3-L4)",
         "bloodSupply": "Lateral circumflex femoral artery",
-        "synergists": ["rectus femoris", "vastus medialis", "vastus intermedius"]
+        "synergists": [
+          "rectus femoris",
+          "vastus medialis",
+          "vastus intermedius"
+        ]
       },
       {
         "id": "muscle_vastus_medialis",
@@ -220,10 +380,21 @@
         "type": "Skeletal muscle",
         "origin": "Linea aspera, medial supracondylar line, intertrochanteric line of femur",
         "insertion": "Base of patella, medial tibial plateau",
-        "primaryActions": ["knee extension", "patellar stabilization"],
-        "exercises": ["leg press", "squats", "leg extensions", "sissy squats"],
+        "primaryActions": [
+          "knee extension",
+          "patellar stabilization"
+        ],
+        "exercises": [
+          "leg press",
+          "squats",
+          "leg extensions",
+          "sissy squats"
+        ],
         "region": "leg",
-        "subRegions": ["vastus medialis longus", "vastus medialis obliquus (VMO)"],
+        "subRegions": [
+          "vastus medialis longus",
+          "vastus medialis obliquus (VMO)"
+        ],
         "details": "Important for knee stability and patellar tracking. The VMO is especially important for knee health.",
         "innervation": "Femoral nerve (L3-L4)",
         "bloodSupply": "Femoral artery"
@@ -238,14 +409,30 @@
         "type": "Skeletal muscle",
         "origin": "Long head: ischial tuberosity; Short head: linea aspera",
         "insertion": "Head of fibula",
-        "primaryActions": ["knee flexion", "hip extension", "external hip rotation"],
-        "exercises": ["Romanian deadlifts", "leg curls", "nordic curls", "good mornings", "deadlifts"],
+        "primaryActions": [
+          "knee flexion",
+          "hip extension",
+          "external hip rotation"
+        ],
+        "exercises": [
+          "Romanian deadlifts",
+          "leg curls",
+          "nordic curls",
+          "good mornings",
+          "deadlifts"
+        ],
         "region": "leg",
-        "subRegions": ["long head", "short head"],
+        "subRegions": [
+          "long head",
+          "short head"
+        ],
         "details": "Outer hamstring; responsible for knee flexion and hip extension. Critical for posterior chain strength.",
         "innervation": "Tibial and peroneal nerves (S1-S3)",
         "bloodSupply": "Perforating arteries",
-        "synergists": ["semitendinosus", "semimembranosus"]
+        "synergists": [
+          "semitendinosus",
+          "semimembranosus"
+        ]
       },
       {
         "id": "muscle_semitendinosus",
@@ -257,13 +444,26 @@
         "type": "Skeletal muscle",
         "origin": "Ischial tuberosity",
         "insertion": "Medial tibia (pes anserinus)",
-        "primaryActions": ["knee flexion", "hip extension", "internal hip rotation"],
-        "exercises": ["leg curls", "deadlifts", "good mornings", "glute-ham raises", "nordic curls"],
+        "primaryActions": [
+          "knee flexion",
+          "hip extension",
+          "internal hip rotation"
+        ],
+        "exercises": [
+          "leg curls",
+          "deadlifts",
+          "good mornings",
+          "glute-ham raises",
+          "nordic curls"
+        ],
         "region": "leg",
         "details": "Inner hamstring; works synergistically with other hamstrings for knee flexion and hip extension.",
         "innervation": "Tibial nerve (S1-S3)",
         "bloodSupply": "Perforating arteries",
-        "synergists": ["biceps femoris", "semimembranosus"]
+        "synergists": [
+          "biceps femoris",
+          "semimembranosus"
+        ]
       },
       {
         "id": "muscle_semimembranosus",
@@ -275,8 +475,17 @@
         "type": "Skeletal muscle",
         "origin": "Ischial tuberosity",
         "insertion": "Medial tibia, medial femoral condyle",
-        "primaryActions": ["knee flexion", "hip extension", "internal hip rotation"],
-        "exercises": ["leg curls", "deadlifts", "good mornings", "glute-ham raises"],
+        "primaryActions": [
+          "knee flexion",
+          "hip extension",
+          "internal hip rotation"
+        ],
+        "exercises": [
+          "leg curls",
+          "deadlifts",
+          "good mornings",
+          "glute-ham raises"
+        ],
         "region": "leg",
         "details": "Inner hamstring; larger than semitendinosus. Important for knee and hip movements.",
         "innervation": "Tibial nerve (S1-S3)",
@@ -292,8 +501,19 @@
         "type": "Skeletal muscle",
         "origin": "Posterior surface of ilium, sacrum, coccyx, sacrotuberous ligament",
         "insertion": "Iliotibial band, gluteal tuberosity of femur",
-        "primaryActions": ["hip extension", "external hip rotation", "hip abduction"],
-        "exercises": ["squats", "deadlifts", "hip thrusts", "lunges", "glute bridges", "leg press"],
+        "primaryActions": [
+          "hip extension",
+          "external hip rotation",
+          "hip abduction"
+        ],
+        "exercises": [
+          "squats",
+          "deadlifts",
+          "hip thrusts",
+          "lunges",
+          "glute bridges",
+          "leg press"
+        ],
         "region": "glutes",
         "details": "Largest and strongest muscle in the body; responsible for hip extension in running, jumping, and climbing.",
         "innervation": "Inferior gluteal nerve (L5-S2)",
@@ -311,8 +531,17 @@
         "type": "Skeletal muscle",
         "origin": "Outer surface of ilium",
         "insertion": "Greater trochanter of femur",
-        "primaryActions": ["hip abduction", "hip internal rotation (anterior fibers)", "hip external rotation (posterior fibers)"],
-        "exercises": ["side-lying leg raises", "lateral walks", "cable abductions", "sled pushes"],
+        "primaryActions": [
+          "hip abduction",
+          "hip internal rotation (anterior fibers)",
+          "hip external rotation (posterior fibers)"
+        ],
+        "exercises": [
+          "side-lying leg raises",
+          "lateral walks",
+          "cable abductions",
+          "sled pushes"
+        ],
         "region": "glutes",
         "details": "Important stabilizer for hip and pelvis during single-leg activities. Often weak and needs targeted work.",
         "innervation": "Superior gluteal nerve (L5-S1)",
@@ -328,8 +557,18 @@
         "type": "Skeletal muscle",
         "origin": "Pubic crest and symphysis",
         "insertion": "Xiphoid process and costal cartilages of ribs 5-7",
-        "primaryActions": ["spinal flexion", "core stability", "anterior pelvic tilt"],
-        "exercises": ["crunches", "cable crunches", "ab wheel rollouts", "hanging leg raises", "decline sit-ups"],
+        "primaryActions": [
+          "spinal flexion",
+          "core stability",
+          "anterior pelvic tilt"
+        ],
+        "exercises": [
+          "crunches",
+          "cable crunches",
+          "ab wheel rollouts",
+          "hanging leg raises",
+          "decline sit-ups"
+        ],
         "region": "core",
         "details": "The '6-pack' muscle; creates the aesthetic abdominal appearance. Important for spinal stability and posture.",
         "innervation": "Intercostal nerves (T7-T12)",
@@ -347,8 +586,17 @@
         "type": "Skeletal muscle",
         "origin": "Inguinal ligament, iliac crest, thoracolumbar fascia",
         "insertion": "Linea alba, pubic crest",
-        "primaryActions": ["core stability", "spinal stabilization", "intra-abdominal pressure"],
-        "exercises": ["planks", "dead bugs", "pallof press", "cable woodchops"],
+        "primaryActions": [
+          "core stability",
+          "spinal stabilization",
+          "intra-abdominal pressure"
+        ],
+        "exercises": [
+          "planks",
+          "dead bugs",
+          "pallof press",
+          "cable woodchops"
+        ],
         "region": "core",
         "details": "Deepest core muscle; acts like a corset around the torso. Essential for spinal stability and proper breathing.",
         "innervation": "Lower intercostal nerves (T7-T12), iliohypogastric, ilioinguinal nerves",
@@ -364,8 +612,18 @@
         "type": "Skeletal muscle",
         "origin": "Ribs 5-12",
         "insertion": "Iliac crest, linea alba",
-        "primaryActions": ["spinal rotation", "lateral spinal flexion", "trunk flexion"],
-        "exercises": ["cable woodchops", "Russian twists", "suitcase carries", "landmine rotations", "side planks"],
+        "primaryActions": [
+          "spinal rotation",
+          "lateral spinal flexion",
+          "trunk flexion"
+        ],
+        "exercises": [
+          "cable woodchops",
+          "Russian twists",
+          "suitcase carries",
+          "landmine rotations",
+          "side planks"
+        ],
         "region": "core",
         "details": "Visible side abdominal muscle; important for rotational movements and lateral stability.",
         "innervation": "Lower intercostal nerves (T7-T12), iliohypogastric, ilioinguinal nerves",
@@ -381,12 +639,776 @@
         "type": "Skeletal muscle",
         "origin": "Sacrum, iliac crest, lower ribs",
         "insertion": "Ribs, thoracic and cervical vertebrae",
-        "primaryActions": ["spinal extension", "spinal lateral flexion", "posture maintenance"],
-        "exercises": ["deadlifts", "back extensions", "good mornings", "hyperextensions", "rows"],
+        "primaryActions": [
+          "spinal extension",
+          "spinal lateral flexion",
+          "posture maintenance"
+        ],
+        "exercises": [
+          "deadlifts",
+          "back extensions",
+          "good mornings",
+          "hyperextensions",
+          "rows"
+        ],
         "region": "back",
+        "bodyLocation": "Back",
         "details": "Large muscle group on both sides of the spine; essential for maintaining upright posture and spinal extension.",
         "innervation": "Posterior rami of spinal nerves",
         "bloodSupply": "Posterior spinal arteries"
+      },
+      {
+        "id": "muscle_supraspinatus",
+        "name": "Supraspinatus",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Top of scapula, above the spine",
+        "function": "Initiates arm abduction; rotator cuff muscle",
+        "type": "Skeletal muscle",
+        "origin": "Supraspinous fossa of scapula",
+        "insertion": "Superior facet of greater tubercle of humerus",
+        "primaryActions": [
+          "arm abduction (first 15 degrees)",
+          "shoulder stability"
+        ],
+        "exercises": [
+          "overhead press",
+          "lateral raises",
+          "rotator cuff exercises"
+        ],
+        "region": "shoulder",
+        "bodyLocation": "Shoulder",
+        "details": "Smallest rotator cuff muscle; often irritated in overhead athletes. Critical for shoulder stability.",
+        "innervation": "Suprascapular nerve (C5-C6)",
+        "bloodSupply": "Suprascapular artery"
+      },
+      {
+        "id": "muscle_infraspinatus",
+        "name": "Infraspinatus",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Below the spine of scapula",
+        "function": "Externally rotates arm; rotator cuff muscle",
+        "type": "Skeletal muscle",
+        "origin": "Infraspinous fossa of scapula",
+        "insertion": "Middle facet of greater tubercle of humerus",
+        "primaryActions": [
+          "arm external rotation",
+          "shoulder stability"
+        ],
+        "exercises": [
+          "face pulls",
+          "band pull-aparts",
+          "external rotation exercises",
+          "reverse flyes"
+        ],
+        "region": "shoulder",
+        "bodyLocation": "Shoulder",
+        "details": "Important for preventing shoulder impingement; often underdeveloped in bench-focused lifters.",
+        "innervation": "Suprascapular nerve (C5-C6)",
+        "bloodSupply": "Circumflex scapular artery"
+      },
+      {
+        "id": "muscle_subscapularis",
+        "name": "Subscapularis",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Front of scapula (between scapula and ribs)",
+        "function": "Internally rotates arm; largest rotator cuff muscle",
+        "type": "Skeletal muscle",
+        "origin": "Subscapular fossa of scapula",
+        "insertion": "Lesser tubercle of humerus",
+        "primaryActions": [
+          "arm internal rotation",
+          "shoulder stability",
+          "arm adduction"
+        ],
+        "exercises": [
+          "internal rotation exercises",
+          "bench press"
+        ],
+        "region": "shoulder",
+        "bodyLocation": "Shoulder",
+        "details": "Largest rotator cuff muscle; works with other rotators to stabilize shoulder joint.",
+        "innervation": "Upper and lower subscapular nerves (C5-C6)",
+        "bloodSupply": "Subscapular artery"
+      },
+      {
+        "id": "muscle_teres_minor",
+        "name": "Teres Minor",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Lower part of scapula",
+        "function": "Externally rotates arm; rotator cuff muscle",
+        "type": "Skeletal muscle",
+        "origin": "Lateral border of scapula",
+        "insertion": "Inferior facet of greater tubercle of humerus",
+        "primaryActions": [
+          "arm external rotation",
+          "shoulder stability"
+        ],
+        "exercises": [
+          "face pulls",
+          "band pull-aparts",
+          "external rotation exercises"
+        ],
+        "region": "shoulder",
+        "bodyLocation": "Shoulder",
+        "details": "Works with infraspinatus for external rotation; helps prevent anterior shoulder instability.",
+        "innervation": "Axillary nerve (C5-C6)",
+        "bloodSupply": "Circumflex scapular artery"
+      },
+      {
+        "id": "muscle_teres_major",
+        "name": "Teres Major",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Lower outer scapula",
+        "function": "Extends, adducts, and internally rotates arm",
+        "type": "Skeletal muscle",
+        "origin": "Inferior angle of scapula",
+        "insertion": "Intertubercular groove of humerus",
+        "primaryActions": [
+          "arm extension",
+          "arm adduction",
+          "arm internal rotation"
+        ],
+        "exercises": [
+          "pull-ups",
+          "rows",
+          "lat pulldowns",
+          "cable pullover"
+        ],
+        "region": "back",
+        "bodyLocation": "Back",
+        "details": "Often called the 'lat's little helper'; assists latissimus dorsi in pulling movements.",
+        "innervation": "Lower subscapular nerve (C6-C7)",
+        "bloodSupply": "Subscapular artery",
+        "synergists": [
+          "latissimus dorsi"
+        ]
+      },
+      {
+        "id": "muscle_anterior_deltoid",
+        "name": "Anterior Deltoid",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Front of shoulder",
+        "function": "Flexes and internally rotates arm",
+        "type": "Skeletal muscle",
+        "origin": "Lateral third of clavicle",
+        "insertion": "Deltoid tuberosity of humerus",
+        "primaryActions": [
+          "arm flexion",
+          "arm internal rotation",
+          "shoulder abduction"
+        ],
+        "exercises": [
+          "overhead press",
+          "front raises",
+          "bench press",
+          "incline press"
+        ],
+        "region": "shoulder",
+        "bodyLocation": "Shoulder",
+        "details": "Front portion of deltoid; primary mover in pressing movements.",
+        "innervation": "Axillary nerve (C5-C6)",
+        "bloodSupply": "Posterior circumflex humeral artery"
+      },
+      {
+        "id": "muscle_posterior_deltoid",
+        "name": "Posterior Deltoid",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Back of shoulder",
+        "function": "Extends and externally rotates arm",
+        "type": "Skeletal muscle",
+        "origin": "Spine of scapula",
+        "insertion": "Deltoid tuberosity of humerus",
+        "primaryActions": [
+          "arm extension",
+          "arm external rotation",
+          "horizontal abduction"
+        ],
+        "exercises": [
+          "reverse flyes",
+          "face pulls",
+          "rear delt machine",
+          "bent-over raises"
+        ],
+        "region": "shoulder",
+        "bodyLocation": "Shoulder",
+        "details": "Back portion of deltoid; often underdeveloped but crucial for shoulder health and balance.",
+        "innervation": "Axillary nerve (C5-C6)",
+        "bloodSupply": "Posterior circumflex humeral artery"
+      },
+      {
+        "id": "muscle_flexor_carpi_radialis",
+        "name": "Flexor Carpi Radialis",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Inner forearm",
+        "function": "Flexes wrist and elbow",
+        "type": "Skeletal muscle",
+        "origin": "Medial epicondyle of humerus",
+        "insertion": "Base of 2nd metacarpal",
+        "primaryActions": [
+          "wrist flexion",
+          "elbow flexion",
+          "wrist radial deviation"
+        ],
+        "exercises": [
+          "barbell curls",
+          "wrist curls",
+          "hammer curls"
+        ],
+        "region": "arm",
+        "bodyLocation": "Forearm",
+        "details": "Primary wrist flexor; important for grip strength and wrist mobility.",
+        "innervation": "Median nerve (C6-C7)",
+        "bloodSupply": "Radial artery"
+      },
+      {
+        "id": "muscle_flexor_carpi_ulnaris",
+        "name": "Flexor Carpi Ulnaris",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Inner forearm (ulnar side)",
+        "function": "Flexes wrist and elbow",
+        "type": "Skeletal muscle",
+        "origin": "Medial epicondyle of humerus, olecranon process",
+        "insertion": "Pisiform and base of 5th metacarpal",
+        "primaryActions": [
+          "wrist flexion",
+          "wrist ulnar deviation",
+          "elbow flexion"
+        ],
+        "exercises": [
+          "wrist curls",
+          "reverse grip curls"
+        ],
+        "region": "arm",
+        "bodyLocation": "Forearm",
+        "details": "Assists with wrist flexion; important for grip and wrist stabilization.",
+        "innervation": "Ulnar nerve (C7-T1)",
+        "bloodSupply": "Ulnar artery"
+      },
+      {
+        "id": "muscle_extensor_carpi_radialis",
+        "name": "Extensor Carpi Radialis",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Outer forearm (above wrist)",
+        "function": "Extends wrist and deviates radially",
+        "type": "Skeletal muscle",
+        "origin": "Lateral epicondyle of humerus",
+        "insertion": "Base of 2nd and 3rd metacarpals",
+        "primaryActions": [
+          "wrist extension",
+          "wrist radial deviation",
+          "elbow flexion"
+        ],
+        "exercises": [
+          "reverse wrist curls",
+          "overhead press",
+          "barbell curls"
+        ],
+        "region": "arm",
+        "bodyLocation": "Forearm",
+        "details": "Primary wrist extensor; helps stabilize wrist during lifting.",
+        "innervation": "Radial nerve (C7-C8)",
+        "bloodSupply": "Radial artery"
+      },
+      {
+        "id": "muscle_extensor_carpi_ulnaris",
+        "name": "Extensor Carpi Ulnaris",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Outer forearm (ulnar side)",
+        "function": "Extends wrist and deviates ulnarly",
+        "type": "Skeletal muscle",
+        "origin": "Lateral epicondyle of humerus, ulna",
+        "insertion": "Base of 5th metacarpal",
+        "primaryActions": [
+          "wrist extension",
+          "wrist ulnar deviation"
+        ],
+        "exercises": [
+          "reverse wrist curls",
+          "overhead press"
+        ],
+        "region": "arm",
+        "bodyLocation": "Forearm",
+        "details": "Assists with wrist extension and stabilization.",
+        "innervation": "Radial nerve (C7-C8)",
+        "bloodSupply": "Posterior interosseous artery"
+      },
+      {
+        "id": "muscle_brachioradialis",
+        "name": "Brachioradialis",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Outer forearm",
+        "function": "Flexes elbow; helps lift forearm",
+        "type": "Skeletal muscle",
+        "origin": "Lateral supracondylar ridge of humerus",
+        "insertion": "Base of styloid process of radius",
+        "primaryActions": [
+          "elbow flexion"
+        ],
+        "exercises": [
+          "hammer curls",
+          "reverse curls",
+          "barbell curls"
+        ],
+        "region": "arm",
+        "bodyLocation": "Forearm",
+        "details": "Strong forearm flexor; prominent when flexing elbow with neutral grip.",
+        "innervation": "Radial nerve (C5-C6)",
+        "bloodSupply": "Radial artery"
+      },
+      {
+        "id": "muscle_gastrocnemius",
+        "name": "Gastrocnemius",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Back of calf (upper portion)",
+        "function": "Flexes knee and plantarflexes ankle",
+        "type": "Skeletal muscle",
+        "origin": "Medial and lateral femoral condyles",
+        "insertion": "Calcaneus via Achilles tendon",
+        "primaryActions": [
+          "ankle plantarflexion",
+          "knee flexion"
+        ],
+        "exercises": [
+          "calf raises",
+          "seated leg curls",
+          "standing calf raises"
+        ],
+        "region": "leg",
+        "bodyLocation": "Lower Leg",
+        "details": "Superficial calf muscle; responsible for the visible calf bulge. Works on both ankle and knee.",
+        "innervation": "Tibial nerve (S1-S2)",
+        "bloodSupply": "Sural arteries"
+      },
+      {
+        "id": "muscle_soleus",
+        "name": "Soleus",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Back of calf (lower portion, under gastrocnemius)",
+        "function": "Plantarflexes ankle (primary)",
+        "type": "Skeletal muscle",
+        "origin": "Tibia and fibula",
+        "insertion": "Calcaneus via Achilles tendon",
+        "primaryActions": [
+          "ankle plantarflexion"
+        ],
+        "exercises": [
+          "seated calf raises",
+          "calf press",
+          "leg press calf raises"
+        ],
+        "region": "leg",
+        "bodyLocation": "Lower Leg",
+        "details": "Deep calf muscle; often neglected but important for overall calf development and ankle stability.",
+        "innervation": "Tibial nerve (S1-S2)",
+        "bloodSupply": "Peroneal arteries"
+      },
+      {
+        "id": "muscle_tibialis_anterior",
+        "name": "Tibialis Anterior",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Front of shin",
+        "function": "Dorsiflexes ankle; inverts foot",
+        "type": "Skeletal muscle",
+        "origin": "Lateral tibia and interosseous membrane",
+        "insertion": "Medial cuneiform and base of 1st metatarsal",
+        "primaryActions": [
+          "ankle dorsiflexion",
+          "foot inversion"
+        ],
+        "exercises": [
+          "seated leg raises",
+          "resistance band dorsiflexion"
+        ],
+        "region": "leg",
+        "bodyLocation": "Lower Leg",
+        "details": "Lifts the toe during walking; important for gait and ankle health.",
+        "innervation": "Deep peroneal nerve (L4-L5)",
+        "bloodSupply": "Anterior tibial artery"
+      },
+      {
+        "id": "muscle_tensor_fasciae_latae",
+        "name": "Tensor Fasciae Latae (TFL)",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Outer hip, upper thigh",
+        "function": "Abducts and internally rotates hip; stabilizes knee",
+        "type": "Skeletal muscle",
+        "origin": "Anterior superior iliac spine",
+        "insertion": "Iliotibial band",
+        "primaryActions": [
+          "hip abduction",
+          "hip flexion",
+          "hip internal rotation"
+        ],
+        "exercises": [
+          "sled pushes",
+          "leg press",
+          "lateral walks",
+          "side-lying leg raises"
+        ],
+        "region": "leg",
+        "bodyLocation": "Upper Leg",
+        "details": "Works with IT band to stabilize knee during movement. Often tight and needs mobility work.",
+        "innervation": "Superior gluteal nerve (L5-S1)",
+        "bloodSupply": "Lateral circumflex femoral artery"
+      },
+      {
+        "id": "muscle_piriformis",
+        "name": "Piriformis",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Deep in glutes, near sciatic nerve",
+        "function": "Externally rotates hip",
+        "type": "Skeletal muscle",
+        "origin": "Anterior sacrum and sacrotuberous ligament",
+        "insertion": "Greater trochanter of femur",
+        "primaryActions": [
+          "hip external rotation"
+        ],
+        "exercises": [
+          "clam shells",
+          "fire hydrants",
+          "hip stretches"
+        ],
+        "region": "glutes",
+        "bodyLocation": "Upper Leg",
+        "details": "Deep hip rotator; can compress sciatic nerve if tight, causing pain.",
+        "innervation": "Sacral plexus (L5-S2)",
+        "bloodSupply": "Superior gluteal artery"
+      },
+      {
+        "id": "muscle_adductor_longus",
+        "name": "Adductor Longus",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Inner thigh",
+        "function": "Adducts hip; assists in hip flexion",
+        "type": "Skeletal muscle",
+        "origin": "Pubic crest",
+        "insertion": "Middle third of linea aspera of femur",
+        "primaryActions": [
+          "hip adduction",
+          "hip flexion"
+        ],
+        "exercises": [
+          "machine adductor",
+          "side-lying adduction",
+          "Copenhagen holds"
+        ],
+        "region": "leg",
+        "bodyLocation": "Upper Leg",
+        "details": "Part of adductor group; pulls legs together and stabilizes pelvis.",
+        "innervation": "Obturator nerve (L3-L4)",
+        "bloodSupply": "Obturator artery"
+      },
+      {
+        "id": "muscle_adductor_magnus",
+        "name": "Adductor Magnus",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Inner thigh (deep)",
+        "function": "Adducts hip; assists in hip extension and abduction",
+        "type": "Skeletal muscle",
+        "origin": "Pubis, ischium, ischial tuberosity",
+        "insertion": "Linea aspera and adductor tubercle of femur",
+        "primaryActions": [
+          "hip adduction",
+          "hip extension (posterior fibers)"
+        ],
+        "exercises": [
+          "deadlifts",
+          "squats",
+          "machine adductor"
+        ],
+        "region": "leg",
+        "bodyLocation": "Upper Leg",
+        "details": "Largest adductor muscle; works with glutes and hamstrings in hip extension.",
+        "innervation": "Obturator and tibial nerves (L3-L5)",
+        "bloodSupply": "Obturator artery"
+      },
+      {
+        "id": "muscle_gracilis",
+        "name": "Gracilis",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Inner thigh",
+        "function": "Adducts hip; assists in knee flexion",
+        "type": "Skeletal muscle",
+        "origin": "Pubic symphysis and pubic crest",
+        "insertion": "Medial tibia (pes anserinus)",
+        "primaryActions": [
+          "hip adduction",
+          "knee flexion"
+        ],
+        "exercises": [
+          "machine adductor",
+          "side-lying adduction",
+          "leg curls"
+        ],
+        "region": "leg",
+        "bodyLocation": "Upper Leg",
+        "details": "Long, thin muscle; the only adductor that crosses the knee joint.",
+        "innervation": "Obturator nerve (L3-L4)",
+        "bloodSupply": "Obturator artery"
+      },
+      {
+        "id": "muscle_serratus_anterior",
+        "name": "Serratus Anterior",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Side of chest, under armpit",
+        "function": "Protracts scapula; stabilizes shoulder blade",
+        "type": "Skeletal muscle",
+        "origin": "Ribs 1-8",
+        "insertion": "Medial border of scapula",
+        "primaryActions": [
+          "scapular protraction",
+          "scapular upward rotation"
+        ],
+        "exercises": [
+          "push-ups",
+          "dumbbell bench press",
+          "machine chest press",
+          "landmine press"
+        ],
+        "region": "chest",
+        "bodyLocation": "Chest",
+        "details": "Creates the 'wing' look on the side of the torso; important for shoulder stability in pressing movements.",
+        "innervation": "Long thoracic nerve (C5-C7)",
+        "bloodSupply": "Lateral thoracic artery"
+      },
+      {
+        "id": "muscle_levator_scapulae",
+        "name": "Levator Scapulae",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Back of neck, between neck and shoulder",
+        "function": "Elevates scapula; extends neck",
+        "type": "Skeletal muscle",
+        "origin": "Transverse processes of C1-C4 vertebrae",
+        "insertion": "Medial border of scapula",
+        "primaryActions": [
+          "scapular elevation",
+          "neck extension"
+        ],
+        "exercises": [
+          "shrugs",
+          "upright rows",
+          "neck extensions"
+        ],
+        "region": "neck",
+        "bodyLocation": "Shoulder",
+        "details": "Small muscle that elevates shoulder blade; often tight from poor posture.",
+        "innervation": "Dorsal scapular and cervical nerves (C3-C5)",
+        "bloodSupply": "Ascending cervical artery"
+      },
+      {
+        "id": "muscle_sternocleidomastoid",
+        "name": "Sternocleidomastoid",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Front and side of neck",
+        "function": "Flexes and rotates neck; assists in breathing",
+        "type": "Skeletal muscle",
+        "origin": "Sternum and clavicle",
+        "insertion": "Mastoid process of temporal bone",
+        "primaryActions": [
+          "neck flexion",
+          "neck rotation",
+          "head tilting"
+        ],
+        "exercises": [
+          "neck flexion/extension",
+          "weighted neck exercises"
+        ],
+        "region": "neck",
+        "bodyLocation": "Neck",
+        "details": "Large visible neck muscle; important for neck stability and posture.",
+        "innervation": "Accessory nerve (CN XI), cervical plexus (C2-C3)",
+        "bloodSupply": "Superior thyroid and occipital arteries"
+      },
+      {
+        "id": "muscle_diaphragm",
+        "name": "Diaphragm",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Below the lungs, separating thorax from abdomen",
+        "function": "Primary breathing muscle; contracts to inhale",
+        "type": "Skeletal muscle",
+        "origin": "Xiphoid process, ribs 7-12, lumbar vertebrae",
+        "insertion": "Central tendon of diaphragm",
+        "primaryActions": [
+          "inhalation",
+          "core stability"
+        ],
+        "exercises": [
+          "breathing exercises",
+          "deadlifts",
+          "squats"
+        ],
+        "region": "core",
+        "bodyLocation": "Core",
+        "details": "Critical for breathing and core stability during heavy lifts. Proper breathing technique enhances strength.",
+        "innervation": "Phrenic nerve (C3-C5)",
+        "bloodSupply": "Pericardiophrenic artery"
+      },
+      {
+        "id": "muscle_palpalis_longus",
+        "name": "Palmaris Longus",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Inner forearm",
+        "function": "Flexes wrist; minor player",
+        "type": "Skeletal muscle",
+        "origin": "Medial epicondyle of humerus",
+        "insertion": "Palmar aponeurosis",
+        "primaryActions": [
+          "wrist flexion"
+        ],
+        "exercises": [
+          "wrist curls"
+        ],
+        "region": "arm",
+        "bodyLocation": "Forearm",
+        "details": "Weak wrist flexor; absent in ~13% of people without affecting function.",
+        "innervation": "Median nerve (C7-T1)",
+        "bloodSupply": "Radial and ulnar arteries"
+      },
+      {
+        "id": "muscle_pronator_teres",
+        "name": "Pronator Teres",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Inner forearm (upper)",
+        "function": "Pronates forearm; assists elbow flexion",
+        "type": "Skeletal muscle",
+        "origin": "Medial epicondyle of humerus, coronoid process",
+        "insertion": "Middle radius",
+        "primaryActions": [
+          "forearm pronation",
+          "elbow flexion"
+        ],
+        "exercises": [
+          "barbell curls with pronation",
+          "hammer curls"
+        ],
+        "region": "arm",
+        "bodyLocation": "Forearm",
+        "details": "Turns palm downward; assists in grip strength.",
+        "innervation": "Median nerve (C6-C7)",
+        "bloodSupply": "Radial and ulnar arteries"
+      },
+      {
+        "id": "muscle_extensor_digitorum",
+        "name": "Extensor Digitorum",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Back of forearm",
+        "function": "Extends fingers and wrist",
+        "type": "Skeletal muscle",
+        "origin": "Lateral epicondyle of humerus",
+        "insertion": "Dorsal surface of phalanges 2-5",
+        "primaryActions": [
+          "finger extension",
+          "wrist extension"
+        ],
+        "exercises": [
+          "reverse wrist curls",
+          "pulling exercises"
+        ],
+        "region": "arm",
+        "bodyLocation": "Forearm",
+        "details": "Extends all fingers; works with wrist extensors.",
+        "innervation": "Posterior interosseous nerve (C7-C8)",
+        "bloodSupply": "Posterior interosseous artery"
+      },
+      {
+        "id": "muscle_vastus_intermedius",
+        "name": "Vastus Intermedius",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Middle thigh (between other quads)",
+        "function": "Knee extension",
+        "type": "Skeletal muscle",
+        "origin": "Anterior and lateral femur",
+        "insertion": "Base of patella",
+        "primaryActions": [
+          "knee extension"
+        ],
+        "exercises": [
+          "squats",
+          "leg press",
+          "leg extensions"
+        ],
+        "region": "leg",
+        "bodyLocation": "Upper Leg",
+        "details": "Deep quad muscle beneath rectus femoris; difficult to isolate but important for knee strength.",
+        "innervation": "Femoral nerve (L3-L4)",
+        "bloodSupply": "Lateral circumflex femoral artery"
+      },
+      {
+        "id": "muscle_iliacus",
+        "name": "Iliacus",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Deep hip, inside pelvis",
+        "function": "Flexes hip; primary hip flexor",
+        "type": "Skeletal muscle",
+        "origin": "Inner ilium and sacral ala",
+        "insertion": "Lesser trochanter of femur",
+        "primaryActions": [
+          "hip flexion"
+        ],
+        "exercises": [
+          "leg raises",
+          "hanging knee raises",
+          "seated leg raises"
+        ],
+        "region": "hip",
+        "bodyLocation": "Core",
+        "details": "Often called psoas major when combined; critical for hip flexion in running and jumping.",
+        "innervation": "Femoral nerve (L2-L3)",
+        "bloodSupply": "Iliolumbar artery"
+      },
+      {
+        "id": "muscle_psoas_major",
+        "name": "Psoas Major",
+        "category": "muscle",
+        "system": "muscular",
+        "location": "Deep in abdomen, along spine",
+        "function": "Flexes hip; assists in core stability",
+        "type": "Skeletal muscle",
+        "origin": "Transverse processes of L1-L5 and intervertebral discs",
+        "insertion": "Lesser trochanter of femur (with iliacus)",
+        "primaryActions": [
+          "hip flexion",
+          "lumbar flexion"
+        ],
+        "exercises": [
+          "leg raises",
+          "hanging knee raises",
+          "seated leg raises"
+        ],
+        "region": "core",
+        "bodyLocation": "Core",
+        "details": "Deep core muscle; when combined with iliacus forms iliopsoas. Important for hip and core.",
+        "innervation": "Lumbar plexus (L2-L3)",
+        "bloodSupply": "Lumbar arteries"
       }
     ],
     "organs": [
@@ -395,13 +1417,30 @@
         "name": "Heart",
         "category": "organ",
         "system": "circulatory",
+        "bodyLocation": "Chest",
         "location": "Chest, slightly left of center, between the lungs",
         "function": "Pumps blood throughout the body",
         "weight": "250-350g",
         "size": "About the size of a closed fist",
-        "chambers": ["right atrium", "right ventricle", "left atrium", "left ventricle"],
-        "valves": ["tricuspid valve", "pulmonary valve", "mitral valve", "aortic valve"],
-        "connections": ["aorta", "pulmonary artery", "superior vena cava", "inferior vena cava", "pulmonary veins"],
+        "chambers": [
+          "right atrium",
+          "right ventricle",
+          "left atrium",
+          "left ventricle"
+        ],
+        "valves": [
+          "tricuspid valve",
+          "pulmonary valve",
+          "mitral valve",
+          "aortic valve"
+        ],
+        "connections": [
+          "aorta",
+          "pulmonary artery",
+          "superior vena cava",
+          "inferior vena cava",
+          "pulmonary veins"
+        ],
         "details": "A muscular four-chambered organ that continuously pumps oxygen-poor blood to the lungs and oxygen-rich blood to the body. Beats approximately 60-100 times per minute at rest.",
         "bloodSupply": "coronary arteries",
         "innervation": "vagus nerve, sympathetic nervous system",
@@ -414,12 +1453,27 @@
         "name": "Lungs",
         "category": "organ",
         "system": "respiratory",
+        "bodyLocation": "Chest",
         "location": "Chest cavity, on either side of the heart",
         "function": "Facilitates gas exchange between air and blood",
         "weight": "600-900g (both)",
-        "structure": ["left lung (2 lobes)", "right lung (3 lobes)"],
-        "substructure": ["trachea", "bronchi", "bronchioles", "alveoli"],
-        "connections": ["trachea", "diaphragm", "heart", "pulmonary arteries", "pulmonary veins"],
+        "structure": [
+          "left lung (2 lobes)",
+          "right lung (3 lobes)"
+        ],
+        "substructure": [
+          "trachea",
+          "bronchi",
+          "bronchioles",
+          "alveoli"
+        ],
+        "connections": [
+          "trachea",
+          "diaphragm",
+          "heart",
+          "pulmonary arteries",
+          "pulmonary veins"
+        ],
         "details": "Two spongy organs where oxygen is taken in and carbon dioxide is expelled. The right lung is larger than the left to accommodate the heart.",
         "capacity": "Total lung capacity ~6 liters in adults",
         "innervation": "vagus nerve, sympathetic nervous system",
@@ -432,11 +1486,21 @@
         "name": "Brain",
         "category": "organ",
         "system": "nervous",
+        "bodyLocation": "Head",
         "location": "Inside the skull",
         "function": "Controls all body functions, processes information, and enables consciousness",
         "weight": "1400g (average adult)",
-        "regions": ["cerebrum", "cerebellum", "brainstem"],
-        "lobes": ["frontal lobe", "parietal lobe", "temporal lobe", "occipital lobe"],
+        "regions": [
+          "cerebrum",
+          "cerebellum",
+          "brainstem"
+        ],
+        "lobes": [
+          "frontal lobe",
+          "parietal lobe",
+          "temporal lobe",
+          "occipital lobe"
+        ],
         "details": "The command center of the nervous system, containing approximately 86 billion neurons. Divided into two hemispheres connected by the corpus callosum.",
         "protection": "Cerebral spinal fluid, meninges, skull",
         "bloodSupply": "carotid arteries, vertebral arteries, Circle of Willis",
@@ -449,13 +1513,19 @@
         "name": "Liver",
         "category": "organ",
         "system": "digestive",
+        "bodyLocation": "Abdomen",
         "location": "Upper right abdominal cavity, beneath the right rib cage",
         "function": "Filters blood, produces bile, metabolizes nutrients, detoxifies substances",
         "weight": "1500-2000g",
         "lobes": 4,
         "details": "The largest internal organ. Performs over 500 vital functions including protein synthesis, glucose metabolism, and blood detoxification.",
         "bloodSupply": "hepatic artery, hepatic portal vein",
-        "connections": ["gallbladder", "stomach", "small intestine", "right kidney"],
+        "connections": [
+          "gallbladder",
+          "stomach",
+          "small intestine",
+          "right kidney"
+        ],
         "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Liver_and_biliary_system_diagram.svg/400px-Liver_and_biliary_system_diagram.svg.png",
         "imageSource": "openstax",
         "imageCredit": "OpenStax Anatomy & Physiology (CC-BY)"
@@ -465,13 +1535,28 @@
         "name": "Stomach",
         "category": "organ",
         "system": "digestive",
+        "bodyLocation": "Abdomen",
         "location": "Upper central abdomen, below the left rib cage",
         "function": "Stores and breaks down food using acid and enzymes",
         "capacity": "1-4 liters",
-        "regions": ["cardia", "fundus", "body", "pylorus"],
+        "regions": [
+          "cardia",
+          "fundus",
+          "body",
+          "pylorus"
+        ],
         "details": "A muscular J-shaped organ that churns food and mixes it with gastric juices. Secretes gastric acid and pepsin.",
-        "connections": ["esophagus", "small intestine (duodenum)", "pyloric sphincter"],
-        "wallLayers": ["mucosa", "submucosa", "muscularis", "serosa"],
+        "connections": [
+          "esophagus",
+          "small intestine (duodenum)",
+          "pyloric sphincter"
+        ],
+        "wallLayers": [
+          "mucosa",
+          "submucosa",
+          "muscularis",
+          "serosa"
+        ],
         "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Digestive_system_diagram_en.svg/400px-Digestive_system_diagram_en.svg.png",
         "imageSource": "openstax",
         "imageCredit": "OpenStax Anatomy & Physiology (CC-BY)"
@@ -484,10 +1569,21 @@
         "location": "Lower abdomen, coiled beneath the stomach",
         "function": "Primary site of nutrient absorption",
         "length": "6-7 meters (20-23 feet)",
-        "sections": ["duodenum", "jejunum", "ileum"],
+        "sections": [
+          "duodenum",
+          "jejunum",
+          "ileum"
+        ],
         "details": "A long, narrow tube where most digestion and nutrient absorption occurs. Lined with villi and microvilli to increase surface area.",
-        "connections": ["stomach", "large intestine", "pancreas", "liver", "bile duct"],
-        "secretions": "intestinal juice, hormones (cholecystokinin, secretin)"
+        "connections": [
+          "stomach",
+          "large intestine",
+          "pancreas",
+          "liver",
+          "bile duct"
+        ],
+        "secretions": "intestinal juice, hormones (cholecystokinin, secretin)",
+        "bodyLocation": "Abdomen"
       },
       {
         "id": "organ_large_intestine",
@@ -497,23 +1593,52 @@
         "location": "Lower abdomen, frames the small intestine",
         "function": "Absorbs water and electrolytes, forms and stores feces",
         "length": "1.5 meters (5 feet)",
-        "sections": ["cecum", "ascending colon", "transverse colon", "descending colon", "sigmoid colon", "rectum"],
+        "sections": [
+          "cecum",
+          "ascending colon",
+          "transverse colon",
+          "descending colon",
+          "sigmoid colon",
+          "rectum"
+        ],
         "details": "Wider and shorter than the small intestine. Houses beneficial bacteria and completes digestion.",
-        "connections": ["small intestine (through ileocecal valve)", "rectum", "anus"],
-        "bacteria": "Contains trillions of microorganisms aiding digestion and vitamin synthesis"
+        "connections": [
+          "small intestine (through ileocecal valve)",
+          "rectum",
+          "anus"
+        ],
+        "bacteria": "Contains trillions of microorganisms aiding digestion and vitamin synthesis",
+        "bodyLocation": "Abdomen"
       },
       {
         "id": "organ_pancreas",
         "name": "Pancreas",
         "category": "organ",
-        "system": ["digestive", "endocrine"],
+        "system": [
+          "digestive",
+          "endocrine"
+        ],
         "location": "Behind the stomach, in the upper abdomen",
         "function": "Produces digestive enzymes and regulates blood glucose via insulin and glucagon",
         "weight": "75-100g",
-        "structure": ["head", "body", "tail"],
+        "structure": [
+          "head",
+          "body",
+          "tail"
+        ],
         "details": "A dual-function organ with exocrine cells producing digestive enzymes and endocrine cells (islets of Langerhans) producing hormones.",
-        "connections": ["stomach", "small intestine (duodenum)", "bile duct", "blood vessels"],
-        "hormones": ["insulin", "glucagon", "somatostatin"]
+        "connections": [
+          "stomach",
+          "small intestine (duodenum)",
+          "bile duct",
+          "blood vessels"
+        ],
+        "hormones": [
+          "insulin",
+          "glucagon",
+          "somatostatin"
+        ],
+        "bodyLocation": "Abdomen"
       },
       {
         "id": "organ_kidney",
@@ -524,14 +1649,28 @@
         "function": "Filters blood to produce urine and regulate electrolytes and fluid balance",
         "weight": "150g each",
         "count": 2,
-        "structure": ["cortex", "medulla", "pelvis"],
+        "structure": [
+          "cortex",
+          "medulla",
+          "pelvis"
+        ],
         "filtration": "Filters approximately 120-150 liters of blood daily to produce 1-2 liters of urine",
         "details": "Bean-shaped organs containing about 1 million nephrons (functional units) each.",
-        "connections": ["renal artery", "renal vein", "ureter", "adrenal gland"],
-        "functions": ["filtration", "reabsorption", "secretion"],
+        "connections": [
+          "renal artery",
+          "renal vein",
+          "ureter",
+          "adrenal gland"
+        ],
+        "functions": [
+          "filtration",
+          "reabsorption",
+          "secretion"
+        ],
         "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Kidney_and_urinary_system_diagram.svg/400px-Kidney_and_urinary_system_diagram.svg.png",
         "imageSource": "openstax",
-        "imageCredit": "OpenStax Anatomy & Physiology (CC-BY)"
+        "imageCredit": "OpenStax Anatomy & Physiology (CC-BY)",
+        "bodyLocation": "Abdomen"
       },
       {
         "id": "organ_bladder",
@@ -542,9 +1681,18 @@
         "function": "Stores urine until urination",
         "capacity": "500-800ml",
         "details": "A muscular, hollow organ lined with transitional epithelium that can stretch to accommodate varying volumes of urine.",
-        "wallLayers": ["mucosa", "submucosa", "detrusor muscle", "serosal layer"],
-        "connections": ["ureters (from kidneys)", "urethra"],
-        "innervation": "Parasympathetic and sympathetic nervous system"
+        "wallLayers": [
+          "mucosa",
+          "submucosa",
+          "detrusor muscle",
+          "serosal layer"
+        ],
+        "connections": [
+          "ureters (from kidneys)",
+          "urethra"
+        ],
+        "innervation": "Parasympathetic and sympathetic nervous system",
+        "bodyLocation": "Pelvis"
       },
       {
         "id": "organ_spleen",
@@ -555,9 +1703,21 @@
         "function": "Filters blood, removes old blood cells, produces white blood cells",
         "weight": "150-200g",
         "details": "Largest lymphoid organ. Contains specialized immune cells and stores blood that can be released during emergencies.",
-        "structure": ["red pulp", "white pulp"],
-        "connections": ["splenic artery", "splenic vein", "lymphatic vessels"],
-        "functions": ["immune response", "blood filtration", "cell storage"]
+        "structure": [
+          "red pulp",
+          "white pulp"
+        ],
+        "connections": [
+          "splenic artery",
+          "splenic vein",
+          "lymphatic vessels"
+        ],
+        "functions": [
+          "immune response",
+          "blood filtration",
+          "cell storage"
+        ],
+        "bodyLocation": "Abdomen"
       },
       {
         "id": "organ_thyroid",
@@ -567,11 +1727,24 @@
         "location": "Neck, just below the larynx",
         "function": "Produces thyroid hormones that regulate metabolism and growth",
         "weight": "25-35g",
-        "structure": ["left lobe", "right lobe", "isthmus"],
+        "structure": [
+          "left lobe",
+          "right lobe",
+          "isthmus"
+        ],
         "details": "Butterfly-shaped gland that produces T3 and T4 hormones. Contains iodine and regulates metabolic rate.",
-        "connections": ["trachea", "esophagus", "carotid arteries"],
-        "hormones": ["T3 (triiodothyronine)", "T4 (thyroxine)", "calcitonin"],
-        "control": "TSH from pituitary gland"
+        "connections": [
+          "trachea",
+          "esophagus",
+          "carotid arteries"
+        ],
+        "hormones": [
+          "T3 (triiodothyronine)",
+          "T4 (thyroxine)",
+          "calcitonin"
+        ],
+        "control": "TSH from pituitary gland",
+        "bodyLocation": "Neck"
       },
       {
         "id": "organ_pituitary_gland",
@@ -581,10 +1754,23 @@
         "location": "Base of brain, in the sella turcica of the sphenoid bone",
         "function": "Master endocrine gland regulating hormone production throughout the body",
         "weight": "0.5-1g",
-        "structure": ["anterior pituitary", "posterior pituitary"],
+        "structure": [
+          "anterior pituitary",
+          "posterior pituitary"
+        ],
         "details": "Tiny but crucial gland connected to the hypothalamus. Controls growth, reproduction, metabolism, and stress response.",
-        "hormones": ["growth hormone", "prolactin", "ACTH", "TSH", "FSH", "LH", "ADH", "oxytocin"],
-        "control": "Hypothalamus"
+        "hormones": [
+          "growth hormone",
+          "prolactin",
+          "ACTH",
+          "TSH",
+          "FSH",
+          "LH",
+          "ADH",
+          "oxytocin"
+        ],
+        "control": "Hypothalamus",
+        "bodyLocation": "Head"
       },
       {
         "id": "organ_adrenal_gland",
@@ -595,10 +1781,24 @@
         "function": "Produces hormones that regulate stress response, metabolism, and sexual function",
         "weight": "4-6g each",
         "count": 2,
-        "structure": ["adrenal cortex", "adrenal medulla"],
+        "structure": [
+          "adrenal cortex",
+          "adrenal medulla"
+        ],
         "details": "Small cap-shaped glands with two distinct regions producing different hormones.",
-        "hormones": ["cortisol", "aldosterone", "DHEA", "epinephrine", "norepinephrine"],
-        "connections": ["sympathetic nervous system", "pituitary gland", "blood vessels"]
+        "hormones": [
+          "cortisol",
+          "aldosterone",
+          "DHEA",
+          "epinephrine",
+          "norepinephrine"
+        ],
+        "connections": [
+          "sympathetic nervous system",
+          "pituitary gland",
+          "blood vessels"
+        ],
+        "bodyLocation": "Abdomen"
       },
       {
         "id": "organ_esophagus",
@@ -609,9 +1809,21 @@
         "function": "Transports food from throat to stomach",
         "length": "25-30cm",
         "details": "A muscular tube that propels food downward using peristalsis (wave-like contractions).",
-        "connections": ["pharynx", "stomach"],
-        "wallLayers": ["mucosa", "submucosa", "muscularis", "adventitia"],
-        "sphincters": ["upper esophageal sphincter", "lower esophageal sphincter"]
+        "connections": [
+          "pharynx",
+          "stomach"
+        ],
+        "wallLayers": [
+          "mucosa",
+          "submucosa",
+          "muscularis",
+          "adventitia"
+        ],
+        "sphincters": [
+          "upper esophageal sphincter",
+          "lower esophageal sphincter"
+        ],
+        "bodyLocation": "Chest"
       }
     ]
   }
