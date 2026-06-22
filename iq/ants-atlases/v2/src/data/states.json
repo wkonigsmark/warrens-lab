@@ -77,6 +77,15 @@
           "abbr": "RI",
           "lat": 41.7,
           "lng": -71.5
+        },
+        {
+          "id": "me",
+          "name": "Maine",
+          "capital": "Augusta",
+          "emoji": "🌲",
+          "abbr": "ME",
+          "lat": 45.2,
+          "lng": -69.4
         }
       ]
     },
@@ -84,8 +93,26 @@
       "id": "southeast",
       "name": "Southeast",
       "icon": "🌴",
-      "description": "Southern states from Virginia to Florida",
+      "description": "Southern states from Maryland to Arkansas",
       "states": [
+        {
+          "id": "md",
+          "name": "Maryland",
+          "capital": "Annapolis",
+          "emoji": "🦀",
+          "abbr": "MD",
+          "lat": 39.0,
+          "lng": -76.8
+        },
+        {
+          "id": "de",
+          "name": "Delaware",
+          "capital": "Dover",
+          "emoji": "🌊",
+          "abbr": "DE",
+          "lat": 39.0,
+          "lng": -75.5
+        },
         {
           "id": "va",
           "name": "Virginia",
@@ -193,6 +220,289 @@
           "abbr": "TN",
           "lat": 35.7,
           "lng": -86.6
+        }
+      ]
+    },
+    {
+      "id": "midwest",
+      "name": "Midwest",
+      "icon": "🌽",
+      "description": "America's heartland",
+      "states": [
+        {
+          "id": "oh",
+          "name": "Ohio",
+          "capital": "Columbus",
+          "emoji": "🏭",
+          "abbr": "OH",
+          "lat": 40.4,
+          "lng": -82.9
+        },
+        {
+          "id": "in",
+          "name": "Indiana",
+          "capital": "Indianapolis",
+          "emoji": "🏁",
+          "abbr": "IN",
+          "lat": 39.8,
+          "lng": -86.2
+        },
+        {
+          "id": "il",
+          "name": "Illinois",
+          "capital": "Springfield",
+          "emoji": "🌆",
+          "abbr": "IL",
+          "lat": 40.0,
+          "lng": -89.0
+        },
+        {
+          "id": "mi",
+          "name": "Michigan",
+          "capital": "Lansing",
+          "emoji": "🚗",
+          "abbr": "MI",
+          "lat": 44.3,
+          "lng": -85.4
+        },
+        {
+          "id": "wi",
+          "name": "Wisconsin",
+          "capital": "Madison",
+          "emoji": "🧀",
+          "abbr": "WI",
+          "lat": 44.2,
+          "lng": -89.6
+        },
+        {
+          "id": "mn",
+          "name": "Minnesota",
+          "capital": "St. Paul",
+          "emoji": "❄️",
+          "abbr": "MN",
+          "lat": 45.7,
+          "lng": -93.9
+        },
+        {
+          "id": "ia",
+          "name": "Iowa",
+          "capital": "Des Moines",
+          "emoji": "🌾",
+          "abbr": "IA",
+          "lat": 42.0,
+          "lng": -93.2
+        },
+        {
+          "id": "mo",
+          "name": "Missouri",
+          "capital": "Jefferson City",
+          "emoji": "🦁",
+          "abbr": "MO",
+          "lat": 38.5,
+          "lng": -92.3
+        },
+        {
+          "id": "nd",
+          "name": "North Dakota",
+          "capital": "Bismarck",
+          "emoji": "🌊",
+          "abbr": "ND",
+          "lat": 47.5,
+          "lng": -100.4
+        },
+        {
+          "id": "sd",
+          "name": "South Dakota",
+          "capital": "Pierre",
+          "emoji": "🗻",
+          "abbr": "SD",
+          "lat": 44.3,
+          "lng": -99.4
+        },
+        {
+          "id": "ne",
+          "name": "Nebraska",
+          "capital": "Lincoln",
+          "emoji": "🌾",
+          "abbr": "NE",
+          "lat": 41.1,
+          "lng": -99.7
+        },
+        {
+          "id": "ks",
+          "name": "Kansas",
+          "capital": "Topeka",
+          "emoji": "🌻",
+          "abbr": "KS",
+          "lat": 38.5,
+          "lng": -97.5
+        }
+      ]
+    },
+    {
+      "id": "southwest",
+      "name": "Southwest",
+      "icon": "🌵",
+      "description": "Deserts and oil country",
+      "states": [
+        {
+          "id": "tx",
+          "name": "Texas",
+          "capital": "Austin",
+          "emoji": "⭐",
+          "abbr": "TX",
+          "lat": 31.9,
+          "lng": -99.9
+        },
+        {
+          "id": "ok",
+          "name": "Oklahoma",
+          "capital": "Oklahoma City",
+          "emoji": "🤠",
+          "abbr": "OK",
+          "lat": 35.5,
+          "lng": -97.5
+        },
+        {
+          "id": "nm",
+          "name": "New Mexico",
+          "capital": "Santa Fe",
+          "emoji": "🎨",
+          "abbr": "NM",
+          "lat": 34.8,
+          "lng": -106.2
+        },
+        {
+          "id": "az",
+          "name": "Arizona",
+          "capital": "Phoenix",
+          "emoji": "🏜️",
+          "abbr": "AZ",
+          "lat": 33.7,
+          "lng": -111.4
+        }
+      ]
+    },
+    {
+      "id": "mountain",
+      "name": "Mountain West",
+      "icon": "⛰️",
+      "description": "Rocky Mountains and high deserts",
+      "states": [
+        {
+          "id": "co",
+          "name": "Colorado",
+          "capital": "Denver",
+          "emoji": "🏔️",
+          "abbr": "CO",
+          "lat": 39.0,
+          "lng": -105.3
+        },
+        {
+          "id": "wy",
+          "name": "Wyoming",
+          "capital": "Cheyenne",
+          "emoji": "🐴",
+          "abbr": "WY",
+          "lat": 42.7,
+          "lng": -107.3
+        },
+        {
+          "id": "mt",
+          "name": "Montana",
+          "capital": "Helena",
+          "emoji": "🦌",
+          "abbr": "MT",
+          "lat": 47.0,
+          "lng": -109.6
+        },
+        {
+          "id": "id",
+          "name": "Idaho",
+          "capital": "Boise",
+          "emoji": "🥔",
+          "abbr": "ID",
+          "lat": 44.2,
+          "lng": -114.7
+        },
+        {
+          "id": "ut",
+          "name": "Utah",
+          "capital": "Salt Lake City",
+          "emoji": "⛷️",
+          "abbr": "UT",
+          "lat": 39.3,
+          "lng": -111.1
+        },
+        {
+          "id": "nv",
+          "name": "Nevada",
+          "capital": "Carson City",
+          "emoji": "🎰",
+          "abbr": "NV",
+          "lat": 38.7,
+          "lng": -117.1
+        }
+      ]
+    },
+    {
+      "id": "pacific",
+      "name": "Pacific",
+      "icon": "🌊",
+      "description": "West Coast",
+      "states": [
+        {
+          "id": "ca",
+          "name": "California",
+          "capital": "Sacramento",
+          "emoji": "☀️",
+          "abbr": "CA",
+          "lat": 36.7,
+          "lng": -120.0
+        },
+        {
+          "id": "or",
+          "name": "Oregon",
+          "capital": "Salem",
+          "emoji": "🌲",
+          "abbr": "OR",
+          "lat": 43.8,
+          "lng": -120.5
+        },
+        {
+          "id": "wa",
+          "name": "Washington",
+          "capital": "Olympia",
+          "emoji": "☔",
+          "abbr": "WA",
+          "lat": 47.4,
+          "lng": -121.4
+        }
+      ]
+    },
+    {
+      "id": "islands",
+      "name": "Alaska & Hawaii",
+      "icon": "🏝️",
+      "description": "The last frontier and island paradise",
+      "states": [
+        {
+          "id": "ak",
+          "name": "Alaska",
+          "capital": "Juneau",
+          "emoji": "🐻",
+          "abbr": "AK",
+          "lat": 64.2,
+          "lng": -152.3
+        },
+        {
+          "id": "hi",
+          "name": "Hawaii",
+          "capital": "Honolulu",
+          "emoji": "🌺",
+          "abbr": "HI",
+          "lat": 21.3,
+          "lng": -157.8
         }
       ]
     }

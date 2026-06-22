@@ -169,6 +169,12 @@ const Quiz: React.FC<QuizProps> = ({ regionId, onBack }) => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
+            <button
+              onClick={onBack}
+              className="text-sm font-semibold text-gray-600 hover:text-gray-900 hover:bg-gray-100 px-3 py-1 rounded transition"
+            >
+              ← Menu
+            </button>
             <span className="text-sm font-semibold text-gray-600">
               Question {currentIndex + 1} of {questions.length}
             </span>

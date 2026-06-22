@@ -50,6 +50,18 @@
     .trend-note { border:1px solid var(--wc-line); border-radius:var(--wc-radius); background:var(--wc-panel); padding:14px 16px; margin-bottom:12px; }
     .trend-note strong { color:var(--wc-gold); }
 
+    /* Goals histogram */
+    .goals-chart { border:1px solid var(--wc-line); border-radius:var(--wc-radius); background:var(--wc-panel); padding:18px; margin-top:20px; }
+    .goals-chart h3 { margin:0 0 16px; font-size:0.9rem; font-weight:850; color:var(--wc-gold); }
+    .goals-bars { display:flex; align-items:flex-end; justify-content:space-around; height:160px; gap:8px; margin-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:14px; }
+    .goal-bar { display:flex; flex-direction:column; align-items:center; flex:1; max-width:48px; }
+    .goal-bar-fill { width:100%; background:linear-gradient(to top, var(--wc-blue), var(--wc-blue)); border-radius:4px 4px 0 0; min-height:2px; margin-bottom:6px; }
+    .goal-bar-label { font-size:0.7rem; color:var(--wc-muted); font-weight:700; text-align:center; }
+    .goal-bar-count { font-size:0.75rem; color:var(--wc-gold); font-weight:800; margin-top:4px; }
+    .goals-summary { display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:0.8rem; }
+    .goals-item { padding:10px; background:rgba(255,255,255,0.04); border-radius:6px; }
+    .goals-item strong { color:var(--wc-gold); display:block; font-size:1.1rem; margin-bottom:2px; }
+
     /* Knockout bracket (Round of 32 → Final) */
     .bracket-wrap { overflow-x:auto; padding:4px 2px 16px; }
     .bk-head { display:flex; min-width:900px; margin-bottom:10px; }
@@ -127,6 +139,7 @@
       <p class="section-hint" id="trends-hint">Scoring patterns across matches played so far.</p>
       <div class="stat-grid" id="stat-grid"></div>
       <div id="trend-notes"></div>
+      <div class="goals-chart" id="goals-chart" style="display:none;"></div>
     </div>
 
     <!-- ROUND OF 32 -->
@@ -268,7 +281,7 @@
     }
 
     // ===================== MATCH TRENDS =====================
-    function renderTrends(resultsMap) {
+    function renderTrends(resultsMap, entries = []) {
       const played = [];
       groupStageMatches.forEach(m => {
         const r = resultsMap.get(m.matchNumber);
@@ -279,9 +292,11 @@
 
       const grid = el("stat-grid");
       const notes = el("trend-notes");
+      const chartEl = el("goals-chart");
       if (!played.length) {
         grid.innerHTML = "";
         notes.innerHTML = `<div class="trend-note">No completed matches yet.</div>`;
+        chartEl.style.display = "none";
         el("trends-hint").textContent = "Scoring patterns will appear once matches are played.";
         return;
       }
@@ -319,6 +334,66 @@
         `<div class="trend-note">🥅 <strong>Biggest win:</strong> ${mScore(biggest)} (Match ${biggest.matchNumber}, margin of ${Math.abs(biggest.homeScore - biggest.awayScore)}).</div>` +
         `<div class="trend-note">🎆 <strong>Highest scoring:</strong> ${mScore(highest)} (Match ${highest.matchNumber}, ${highest.homeScore + highest.awayScore} goals).</div>` +
         `<div class="trend-note">📊 <strong>Scoring rate:</strong> ${(totalGoals / games).toFixed(2)} goals/game over ${games} games — ${draws} draw${draws === 1 ? "" : "s"}, ${games - draws} decisive.</div>`;
+
+      // ---- GOALS HISTOGRAM ----
+      const projectedTotal = Math.round((totalGoals / games) * 72);
+      const predictions = entries
+        .map(e => {
+          const p = parsePayload(e.payload);
+          // Look for totalGroupGoals field in entry payload
+          return p.totalGroupGoals ? Number(p.totalGroupGoals) : null;
+        })
+        .filter(x => x !== null && x > 50 && x < 350);
+
+      if (predictions.length > 1) {
+        const minGoals = Math.floor(Math.min(...predictions) / 10) * 10;
+        const maxGoals = Math.ceil(Math.max(...predictions) / 10) * 10;
+        const buckets = {};
+        for (let i = minGoals; i <= maxGoals; i += 10) buckets[i] = 0;
+        predictions.forEach(g => {
+          const bucket = Math.floor(g / 10) * 10;
+          if (buckets.hasOwnProperty(bucket)) buckets[bucket]++;
+        });
+
+        const maxCount = Math.max(...Object.values(buckets));
+        let barsHtml = "";
+        Object.entries(buckets).forEach(([bucket, count]) => {
+          const h = (count / maxCount) * 100;
+          barsHtml += `<div class="goal-bar">
+            <div class="goal-bar-fill" style="height:${h}%"></div>
+            <div class="goal-bar-label">${bucket}–${Number(bucket) + 9}</div>
+            <div class="goal-bar-count">${count}</div>
+          </div>`;
+        });
+
+        const avgPred = Math.round(predictions.reduce((a, b) => a + b, 0) / predictions.length);
+        chartEl.innerHTML = `
+          <h3>Group Stage Goals Predictions vs Actual</h3>
+          <div class="goals-bars">${barsHtml}</div>
+          <div class="goals-summary">
+            <div class="goals-item">
+              <strong>${totalGoals}</strong>
+              Actual goals so far (${games} games)
+            </div>
+            <div class="goals-item">
+              <strong>${projectedTotal}</strong>
+              Projected total (at ${(totalGoals / games).toFixed(2)} goals/game)
+            </div>
+            <div class="goals-item">
+              <strong>${avgPred}</strong>
+              Median entry prediction
+            </div>
+            <div class="goals-item">
+              <strong>${predictions.length}</strong>
+              Predictions submitted
+            </div>
+          </div>
+        `;
+        chartEl.style.display = "block";
+      } else {
+        chartEl.innerHTML = `<div style="color:var(--wc-muted); padding:20px; text-align:center; font-size:0.85rem;">Goals predictions will appear once entries include totalGroupGoals data.</div>`;
+        chartEl.style.display = "block";
+      }
     }
 
     // ===================== ROUND OF 32 → FINAL BRACKET =====================
@@ -432,10 +507,11 @@
     });
 
     let entriesLoaded = false;
+    let entriesCache = [];
     async function refreshResults() {
       try {
         const resultsMap = await loadResults();
-        renderTrends(resultsMap);
+        renderTrends(resultsMap, entriesCache);
         renderR32(resultsMap);
         setStatus(`${[...resultsMap.values()].filter(r => r.status === "completed").length} results · updated ${new Date().toLocaleTimeString()}`);
       } catch (e) {
@@ -447,6 +523,7 @@
     async function init() {
       try {
         const entries = await loadEntries();
+        entriesCache = entries;
         renderPicks(entries);
         entriesLoaded = true;
       } catch (e) {
