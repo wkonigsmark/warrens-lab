@@ -1,0 +1,27 @@
+{
+  "name": "@warrens-lab/anatomy",
+  "version": "0.1.0",
+  "description": "Interactive anatomy learning system for understanding human body structure and function",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "echo \"Tests coming in Phase II\"",
+    "cli": "node dist/cli.js"
+  },
+  "keywords": [
+    "anatomy",
+    "learning",
+    "education",
+    "human-body",
+    "interactive"
+  ],
+  "author": "Warren",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {}
+}
