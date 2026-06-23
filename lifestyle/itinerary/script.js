@@ -210,18 +210,6 @@ function scrollToToday() {
   }
 }
 
-// Toggle view
-document.getElementById('toggleView').addEventListener('click', () => {
-  const cardView = document.getElementById('cardView');
-  const tableView = document.getElementById('tableView');
-  const btn = document.getElementById('toggleView');
-
-  cardView.classList.toggle('active');
-  tableView.classList.toggle('active');
-
-  btn.textContent = cardView.classList.contains('active') ? 'Switch to Table' : 'Switch to Cards';
-});
-
 // Activities Guide
 const activitiesGuide = {
   summary: `The Hudson Valley around Rhinebeck and Staatsburg is a treasure trove of family-friendly activities perfect for a multi-generational vacation. From outdoor adventures like fly fishing lessons and scenic parks to charming local eateries and farmers markets, this region offers something for everyone. Kids will love the playgrounds, ice cream shops, and farm visits, while the famous local restaurants, cultural venues, and July 4th celebrations create memorable experiences for the whole family. Whether you're exploring hiking trails, attending outdoor festivals, or simply enjoying local farm-to-table dining, the Hudson Valley provides an ideal backdrop for a relaxing yet enriching family getaway.`,
