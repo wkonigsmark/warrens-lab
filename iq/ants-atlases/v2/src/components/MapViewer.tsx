@@ -22,6 +22,7 @@ const MapViewer: React.FC<MapViewerProps> = ({ onSelectRegion, onBack }) => {
   const svgRef = useRef<SVGSVGElement>(null)
   const [selectedRegion, setSelectedRegion] = React.useState<string | null>(null)
   const [selectedState, setSelectedState] = React.useState<SelectedState | null>(null)
+  const [showTooltips, setShowTooltips] = React.useState(true)
 
   // Build state to region map and state abbreviation map
   const stateToRegion = new Map<string, string>()
@@ -124,14 +125,27 @@ const MapViewer: React.FC<MapViewerProps> = ({ onSelectRegion, onBack }) => {
 
           d3.select(this).attr('stroke-width', 2.5).attr('opacity', 0.8)
 
-          tooltip
-            .style('opacity', 1)
-            .html(stateName)
-            .style('left', e.pageX + 10 + 'px')
-            .style('top', e.pageY - 10 + 'px')
+          if (showTooltips) {
+            // Find capital from state data
+            let capital = ''
+            statesData.regions.forEach((region: any) => {
+              const state = region.states.find((s: any) => s.abbr === stateAbbr)
+              if (state) {
+                capital = state.capital
+              }
+            })
+
+            tooltip
+              .style('opacity', 1)
+              .html(`<strong>${stateName}</strong><br/>${capital}`)
+              .style('left', e.pageX + 10 + 'px')
+              .style('top', e.pageY - 10 + 'px')
+          }
         })
         .on('mousemove', function (e: any) {
-          tooltip.style('left', e.pageX + 10 + 'px').style('top', e.pageY - 10 + 'px')
+          if (showTooltips) {
+            tooltip.style('left', e.pageX + 10 + 'px').style('top', e.pageY - 10 + 'px')
+          }
         })
         .on('mouseleave', function (e: any) {
           d3.select(this).attr('stroke-width', 1.5).attr('opacity', 1)
@@ -294,12 +308,24 @@ const MapViewer: React.FC<MapViewerProps> = ({ onSelectRegion, onBack }) => {
       <div className="w-full max-w-4xl">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900">🗺️ Explore by Map</h1>
-          <button
-            onClick={onBack}
-            className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition"
-          >
-            Back
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowTooltips(!showTooltips)}
+              className={`font-semibold py-2 px-4 rounded-lg transition ${
+                showTooltips
+                  ? 'bg-green-600 hover:bg-green-700 text-white'
+                  : 'bg-gray-600 hover:bg-gray-700 text-white'
+              }`}
+            >
+              {showTooltips ? '👁️ Hints: ON' : '🙈 Hints: OFF'}
+            </button>
+            <button
+              onClick={onBack}
+              className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+            >
+              Back
+            </button>
+          </div>
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-6">

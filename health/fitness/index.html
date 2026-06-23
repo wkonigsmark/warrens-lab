@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fitness | Workout Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111;
+      --card: #181818;
+      --card-hover: #1e1e1e;
+      --border: #272727;
+      --accent: #f97316;
+      --accent-dim: rgba(249,115,22,0.12);
+      --gold: #fbbf24;
+      --green: #4ade80;
+      --green-dim: rgba(74,222,128,0.12);
+      --red: #f87171;
+      --text: #f0f0f0;
+      --muted: #555;
+      --muted-light: #888;
+      --CIRC: 471.24; /* 2π×75 */
+    }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:'Outfit',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px}
+
+    /* ── HEADER ─────────────────────────────────────────── */
+    .app-header{
+      background:var(--surface);border-bottom:1px solid var(--border);
+      padding:12px 20px;display:flex;align-items:center;justify-content:space-between;
+      position:sticky;top:0;z-index:100;
+    }
+    .brand-super{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted-light);font-weight:800}
+    .brand-title{font-size:1.05rem;font-weight:900}
+    .brand-title span{color:var(--accent)}
+    .header-btns{display:flex;gap:8px}
+    .btn{
+      background:var(--card);border:1px solid var(--border);color:var(--muted-light);
+      padding:6px 13px;border-radius:8px;font-family:inherit;font-size:.78rem;
+      font-weight:700;cursor:pointer;transition:all .2s;
+    }
+    .btn:hover{background:var(--card-hover);border-color:var(--accent);color:var(--accent)}
+    .btn-danger:hover{border-color:var(--red);color:var(--red)}
+
+    /* ── HERO ───────────────────────────────────────────── */
+    .hero{padding:32px 20px 20px;display:flex;flex-direction:column;align-items:center;gap:18px}
+    .workout-meta{text-align:center}
+    .workout-title{font-size:1.45rem;font-weight:900}
+    .workout-sub{font-size:.82rem;color:var(--muted-light);margin-top:4px}
+
+    .ring-wrapper{position:relative;width:190px;height:190px}
+    .progress-svg{width:190px;height:190px;transform:rotate(-90deg)}
+    .ring-track{fill:none;stroke:#1e1e1e;stroke-width:14}
+    .ring-bg-glow{fill:none;stroke:#1a1a1a;stroke-width:20;filter:blur(4px)}
+    .ring-fill{
+      fill:none;stroke:var(--accent);stroke-width:14;stroke-linecap:round;
+      stroke-dasharray:471.24;stroke-dashoffset:471.24;
+      transition:stroke-dashoffset .65s cubic-bezier(.34,1.56,.64,1),stroke .4s ease;
+    }
+    .ring-center{
+      position:absolute;inset:0;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+    }
+    .ring-pct{font-size:2.6rem;font-weight:900;line-height:1;color:var(--text)}
+    .ring-done-label{font-size:.65rem;color:var(--muted-light);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-top:3px}
+    .ring-glow{
+      position:absolute;inset:0;border-radius:50%;
+      box-shadow:0 0 50px rgba(74,222,128,0);
+      transition:box-shadow .6s ease;
+      pointer-events:none;
+    }
+    .ring-glow.on{box-shadow:0 0 60px rgba(74,222,128,.35)}
+
+    .stats-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    .stat-pill{
+      background:var(--card);border:1px solid var(--border);border-radius:20px;
+      padding:6px 14px;font-size:.78rem;font-weight:600;color:var(--muted-light);
+      display:flex;align-items:center;gap:6px;
+    }
+    .stat-pill strong{color:var(--text)}
+
+    /* ── CONTENT ────────────────────────────────────────── */
+    .content{max-width:660px;margin:0 auto;padding:0 14px}
+
+    /* ── COMPLETION BANNER ──────────────────────────────── */
+    .completion-banner{
+      background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(34,197,94,.04));
+      border:1px solid var(--green);border-radius:16px;
+      padding:24px;text-align:center;margin-bottom:14px;
+      display:none;
+    }
+    .completion-banner.visible{display:block}
+    .completion-title{font-size:2rem;font-weight:900;color:var(--green)}
+    .completion-sub{color:var(--muted-light);margin-top:8px;font-size:.88rem}
+    .completion-time{font-size:1.1rem;font-weight:800;color:var(--text);margin-top:6px}
+
+    /* ── SECTION ────────────────────────────────────────── */
+    .section{
+      margin-bottom:12px;background:var(--card);
+      border:1px solid var(--border);border-radius:16px;overflow:hidden;
+      transition:border-color .3s;
+    }
+    .section.section-done{border-color:rgba(74,222,128,.35)}
+    .section-header{
+      padding:14px 16px;display:flex;align-items:center;gap:10px;
+      border-bottom:1px solid var(--border);cursor:pointer;user-select:none;
+    }
+    .section-emoji{font-size:1.1rem;flex-shrink:0}
+    .section-info{flex:1;min-width:0}
+    .section-name{font-size:.85rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em}
+    .section-meta{font-size:.68rem;color:var(--muted-light);margin-top:2px}
+    .section-prog{font-size:.72rem;font-weight:800;color:var(--muted);text-align:right;white-space:nowrap}
+    .section-prog.done-label{color:var(--green)}
+    .chevron{color:var(--muted);font-size:.75rem;transition:transform .25s;flex-shrink:0}
+    .section.collapsed .chevron{transform:rotate(-90deg)}
+    .section-body{overflow:hidden;max-height:2000px;transition:max-height .3s ease}
+    .section.collapsed .section-body{max-height:0}
+
+    /* ── EXERCISE ROW ───────────────────────────────────── */
+    .exercise-row{
+      padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.04);
+      display:flex;align-items:flex-start;gap:12px;transition:background .2s;
+    }
+    .exercise-row:last-child{border-bottom:none}
+    .exercise-row:hover{background:rgba(255,255,255,.015)}
+    .exercise-row.row-done .ex-name{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--muted)}
+    .exercise-info{flex:1;min-width:0}
+    .ex-name{font-size:.88rem;font-weight:700;transition:color .3s}
+    .ex-detail{font-size:.72rem;color:var(--muted-light);margin-top:2px}
+    .ex-tip{font-size:.68rem;color:rgba(249,115,22,.5);margin-top:4px;font-style:italic;line-height:1.4}
+    .muscles{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+    .tag{font-size:.58rem;font-weight:800;padding:2px 7px;border-radius:8px;text-transform:uppercase;letter-spacing:.04em}
+    .tag-core{background:rgba(167,139,250,.14);color:#a78bfa}
+    .tag-upper{background:rgba(96,165,250,.14);color:#60a5fa}
+    .tag-lower{background:rgba(248,113,113,.14);color:#f87171}
+    .tag-back{background:rgba(52,211,153,.14);color:#34d399}
+    .tag-full{background:rgba(251,146,60,.14);color:#fb923c}
+    .tag-other{background:rgba(156,163,175,.1);color:#9ca3af}
+
+    /* ── SET DOTS ───────────────────────────────────────── */
+    .set-dots{display:flex;gap:6px;align-items:center;flex-shrink:0;padding-top:1px}
+    .dot{
+      width:28px;height:28px;border-radius:50%;border:2px solid var(--border);
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      background:transparent;font-size:.65rem;font-weight:900;color:transparent;
+      transition:all .18s cubic-bezier(.34,1.56,.64,1);user-select:none;
+    }
+    .dot:hover{border-color:var(--accent);transform:scale(1.12);background:var(--accent-dim)}
+    .dot.done{background:var(--green);border-color:var(--green);color:#0a0a0a;transform:scale(1.05)}
+    @keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.45)}75%{transform:scale(.92)}100%{transform:scale(1.05)}}
+    .dot.popping{animation:pop .32s cubic-bezier(.34,1.56,.64,1) forwards}
+    @keyframes unpop{0%{transform:scale(1.05)}40%{transform:scale(.85)}100%{transform:scale(1)}}
+    .dot.unpopping{animation:unpop .25s ease forwards}
+
+    /* ── NUTRITION PANEL ────────────────────────────────── */
+    .panel{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:16px;padding:18px 16px;margin-bottom:12px;
+    }
+    .panel-hd{
+      font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;
+      font-weight:900;color:var(--muted-light);margin-bottom:14px;
+      display:flex;align-items:center;gap:8px;
+    }
+    .panel-hd span{flex:1}
+    .panel-link{
+      font-size:.72rem;font-weight:800;color:var(--accent);text-decoration:none;
+      border:1px solid rgba(249,115,22,.35);border-radius:7px;padding:4px 10px;
+      transition:all .2s;
+    }
+    .panel-link:hover{background:var(--accent-dim)}
+    .food-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+    .food-card{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:10px;padding:10px 8px;text-align:center;
+    }
+    .food-icon{font-size:1.5rem}
+    .food-name{font-size:.68rem;font-weight:800;margin-top:5px;line-height:1.3}
+    .food-macro{font-size:.6rem;color:var(--muted-light);margin-top:3px}
+
+    /* ── QUICK LINKS ────────────────────────────────────── */
+    .quick-links{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+    .ql{
+      background:var(--card);border:1px solid var(--border);border-radius:12px;
+      padding:14px 8px;text-align:center;text-decoration:none;color:var(--text);
+      transition:all .2s;display:flex;flex-direction:column;align-items:center;
+    }
+    .ql:hover{border-color:var(--accent);transform:translateY(-2px);background:var(--card-hover)}
+    .ql-icon{font-size:1.4rem}
+    .ql-name{font-size:.72rem;font-weight:800;margin-top:5px}
+    .ql-sub{font-size:.6rem;color:var(--muted-light);margin-top:2px}
+
+    /* ── CONFETTI CANVAS ────────────────────────────────── */
+    #confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:998}
+  </style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div>
+    <div class="brand-super">Warren's Lab</div>
+    <div class="brand-title">⚡ <span>Fitness</span></div>
+  </div>
+  <div class="header-btns">
+    <button class="btn" onclick="toggleAll()">Expand All</button>
+    <button class="btn btn-danger" onclick="resetWorkout()">Reset</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="workout-meta">
+    <div class="workout-title">Full-Body Core Focus</div>
+    <div class="workout-sub" id="workoutDate">Dumbbells · ~35-40 min</div>
+  </div>
+
+  <div class="ring-wrapper">
+    <div class="ring-glow" id="ringGlow"></div>
+    <svg class="progress-svg" viewBox="0 0 190 190">
+      <circle class="ring-track" cx="95" cy="95" r="75"/>
+      <circle class="ring-fill" id="ringFill" cx="95" cy="95" r="75"/>
+    </svg>
+    <div class="ring-center">
+      <div class="ring-pct" id="ringPct">0%</div>
+      <div class="ring-done-label" id="ringLabel">Get started</div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-pill">Sets done: <strong id="statSets">0 / 31</strong></div>
+    <div class="stat-pill">Elapsed: <strong id="statTimer">—</strong></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+
+  <!-- COMPLETION BANNER (hidden until done) -->
+  <div class="completion-banner" id="completionBanner">
+    <div class="completion-title">Workout Complete!</div>
+    <div class="completion-sub">You crushed every set. Time to fuel up and let the gains begin.</div>
+    <div class="completion-time" id="completionTime"></div>
+  </div>
+
+  <!-- SECTIONS rendered by JS -->
+  <div id="workout-sections"></div>
+
+  <!-- NUTRITION -->
+  <div class="panel">
+    <div class="panel-hd">
+      <span>Post-Workout Fuel</span>
+      <a class="panel-link" href="../chef/index.html">Open Chef →</a>
+    </div>
+    <div class="food-grid">
+      <div class="food-card"><div class="food-icon">🍗</div><div class="food-name">Chicken Breast</div><div class="food-macro">~31g protein / 165 cal</div></div>
+      <div class="food-card"><div class="food-icon">🥚</div><div class="food-name">Eggs (3)</div><div class="food-macro">~18g protein / 210 cal</div></div>
+      <div class="food-card"><div class="food-icon">🍠</div><div class="food-name">Sweet Potato</div><div class="food-macro">Complex carbs · fiber</div></div>
+      <div class="food-card"><div class="food-icon">🍌</div><div class="food-name">Banana</div><div class="food-macro">Fast carbs · potassium</div></div>
+      <div class="food-card"><div class="food-icon">🧀</div><div class="food-name">Cottage Cheese</div><div class="food-macro">~25g protein · casein</div></div>
+      <div class="food-card"><div class="food-icon">🌾</div><div class="food-name">Oatmeal</div><div class="food-macro">Slow carbs · fiber</div></div>
+    </div>
+    <div style="font-size:.72rem;color:var(--muted-light);line-height:1.5">
+      Aim for <strong style="color:var(--text)">20-40g protein</strong> within 1-2 hours post-workout. Pair with complex carbs to replenish glycogen. Use Chef to build a full day plan around today's session.
+    </div>
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div class="quick-links">
+    <a class="ql" href="../chef/index.html">
+      <div class="ql-icon">👨‍🍳</div>
+      <div class="ql-name">Chef</div>
+      <div class="ql-sub">Meal planner</div>
+    </a>
+    <a class="ql" href="../strava/index.html">
+      <div class="ql-icon">📊</div>
+      <div class="ql-name">Strava</div>
+      <div class="ql-sub">Activity trends</div>
+    </a>
+    <a class="ql" href="../anatomy/">
+      <div class="ql-icon">🧬</div>
+      <div class="ql-name">Anatomy</div>
+      <div class="ql-sub">Muscle targeting</div>
+    </a>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  WORKOUT DATA
+// ═══════════════════════════════════════════════════════
+const WORKOUT = {
+  title: "Full-Body Core Focus",
+  totalSets: 31,
+  sections: [
+    {
+      id: 'warmup', name: 'Warm-Up', emoji: '🔥', meta: '5 min · no equipment',
+      exercises: [
+        { id: 'w1', name: 'Bodyweight Squats', detail: '15 reps', sets: 1, muscles: [['lower','Quads'],['lower','Glutes']], tip: null },
+        { id: 'w2', name: 'Arm Circles + Torso Twists', detail: '10 each direction', sets: 1, muscles: [['upper','Shoulders'],['core','Core']], tip: null },
+        { id: 'w3', name: 'Cat-Cow / Back Extensions', detail: '10 reps', sets: 1, muscles: [['back','Spine'],['core','Core']], tip: 'Slow and controlled — warm up the posterior chain' },
+      ]
+    },
+    {
+      id: 'strength', name: 'Main Strength Block', emoji: '💪', meta: '3 rounds · 60-90s rest between exercises',
+      exercises: [
+        { id: 's1', name: 'Goblet Squats', detail: '12 reps (dumbbell at chest)', sets: 3, muscles: [['lower','Quads'],['lower','Glutes'],['core','Core']], tip: 'Chest tall, knees track over toes' },
+        { id: 's2', name: 'Dumbbell Row', detail: '10-12 reps each side', sets: 3, muscles: [['back','Back'],['upper','Biceps']], tip: 'Drive elbow to ceiling, not the weight' },
+        { id: 's3', name: 'Floor Press / Overhead Press', detail: '10-12 reps', sets: 3, muscles: [['upper','Chest'],['upper','Shoulders'],['upper','Triceps']], tip: null },
+        { id: 's4', name: 'Romanian Deadlift', detail: '12 reps', sets: 3, muscles: [['lower','Hamstrings'],['lower','Glutes'],['back','Lower Back']], tip: 'Hinge at hips, soft bend in knees, bar stays close' },
+        { id: 's5', name: 'Walking Lunges', detail: '10 reps each leg', sets: 3, muscles: [['lower','Quads'],['lower','Glutes']], tip: null },
+      ]
+    },
+    {
+      id: 'core', name: 'Core Finisher', emoji: '🎯', meta: '2 rounds · your focus today',
+      exercises: [
+        { id: 'c1', name: 'Weighted Russian Twists', detail: '15 each side', sets: 2, muscles: [['core','Obliques'],['core','Core']], tip: 'Feet can be on the floor — focus on rotation, not speed' },
+        { id: 'c2', name: 'Dumbbell Deadbug', detail: '10 each side', sets: 2, muscles: [['core','Core'],['core','Stability']], tip: 'Lower back STAYS pressed to the floor throughout' },
+        { id: 'c3', name: 'Plank Hold', detail: '30-45 sec', sets: 2, muscles: [['core','Core'],['upper','Shoulders']], tip: null },
+        { id: 'c4', name: 'Standing Side Bends', detail: '12 each side (light weight)', sets: 2, muscles: [['core','Obliques']], tip: 'Keep it light — this is control work, not bulk' },
+        { id: 'c5', name: 'Bicycle Crunches', detail: '20 total', sets: 2, muscles: [['core','Core'],['core','Obliques']], tip: null },
+      ]
+    },
+    {
+      id: 'cooldown', name: 'Cool-Down', emoji: '🧘', meta: '5 min · breathe deep',
+      exercises: [
+        { id: 'd1', name: "Child's Pose / Cat-Cow", detail: 'Hold & breathe', sets: 1, muscles: [['other','Spine'],['other','Hips']], tip: null },
+        { id: 'd2', name: 'Seated Spinal Twist', detail: 'Both sides', sets: 1, muscles: [['back','Back'],['other','Spine']], tip: null },
+        { id: 'd3', name: 'Standing Forward Fold', detail: 'Hold 30 sec', sets: 1, muscles: [['lower','Hamstrings'],['other','Calves']], tip: null },
+      ]
+    }
+  ]
+};
+
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+const STORE_KEY = 'fitness_v1';
+let state = { checks: {}, startMs: null, endMs: null };
+
+function loadState() {
+  try { const s = localStorage.getItem(STORE_KEY); if (s) state = JSON.parse(s); } catch(e) {}
+}
+
+function saveState() {
+  localStorage.setItem(STORE_KEY, JSON.stringify(state));
+}
+
+function getDone() {
+  return Object.values(state.checks).reduce((a, b) => a + b, 0);
+}
+
+function getTotal() { return WORKOUT.totalSets; }
+
+// ═══════════════════════════════════════════════════════
+//  TIMER
+// ═══════════════════════════════════════════════════════
+let timerInterval = null;
+
+function formatDuration(ms) {
+  const s = Math.floor(ms / 1000);
+  const m = Math.floor(s / 60);
+  const h = Math.floor(m / 60);
+  if (h) return `${h}h ${m % 60}m`;
+  if (m) return `${m}m ${s % 60}s`;
+  return `${s}s`;
+}
+
+function startTimer() {
+  if (timerInterval) return;
+  timerInterval = setInterval(() => {
+    if (state.startMs && !state.endMs) {
+      document.getElementById('statTimer').textContent = formatDuration(Date.now() - state.startMs);
+    }
+  }, 1000);
+}
+
+// ═══════════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════════
+function tagClass(type) {
+  return { core:'tag-core', upper:'tag-upper', lower:'tag-lower', back:'tag-back', full:'tag-full', other:'tag-other' }[type] || 'tag-other';
+}
+
+function buildSections() {
+  const container = document.getElementById('workout-sections');
+  container.innerHTML = '';
+
+  WORKOUT.sections.forEach(sec => {
+    const totalSets = sec.exercises.reduce((a, e) => a + e.sets, 0);
+
+    const el = document.createElement('div');
+    el.className = 'section';
+    el.id = 'sec-' + sec.id;
+
+    const exRows = sec.exercises.map(ex => {
+      const done = state.checks[ex.id] || 0;
+      const dots = Array.from({length: ex.sets}, (_, i) => {
+        const isDone = i < done;
+        return `<div class="dot${isDone?' done':''}" data-ex="${ex.id}" data-i="${i}" onclick="toggleDot(this)">${isDone?'✓':''}</div>`;
+      }).join('');
+
+      const muscleHtml = ex.muscles.map(([t, n]) =>
+        `<span class="tag ${tagClass(t)}">${n}</span>`
+      ).join('');
+
+      const tipHtml = ex.tip ? `<div class="ex-tip">${ex.tip}</div>` : '';
+
+      const rowDone = done >= ex.sets;
+      return `
+        <div class="exercise-row${rowDone?' row-done':''}" id="row-${ex.id}">
+          <div class="exercise-info">
+            <div class="ex-name">${ex.name}</div>
+            <div class="ex-detail">${ex.detail}</div>
+            ${tipHtml}
+            <div class="muscles">${muscleHtml}</div>
+          </div>
+          <div class="set-dots">${dots}</div>
+        </div>`;
+    }).join('');
+
+    el.innerHTML = `
+      <div class="section-header" onclick="toggleSection('${sec.id}')">
+        <span class="section-emoji">${sec.emoji}</span>
+        <div class="section-info">
+          <div class="section-name">${sec.name}</div>
+          <div class="section-meta">${sec.meta}</div>
+        </div>
+        <div class="section-prog" id="sprog-${sec.id}">0 / ${totalSets}</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="section-body">${exRows}</div>`;
+
+    container.appendChild(el);
+    updateSectionProgress(sec.id);
+  });
+}
+
+function updateSectionProgress(secId) {
+  const sec = WORKOUT.sections.find(s => s.id === secId);
+  if (!sec) return;
+  const totalSets = sec.exercises.reduce((a, e) => a + e.sets, 0);
+  const doneSets = sec.exercises.reduce((a, e) => a + (state.checks[e.id] || 0), 0);
+  const progEl = document.getElementById('sprog-' + secId);
+  const secEl = document.getElementById('sec-' + secId);
+  if (doneSets >= totalSets) {
+    progEl.textContent = '✓ Done';
+    progEl.classList.add('done-label');
+    secEl.classList.add('section-done');
+  } else {
+    progEl.textContent = `${doneSets} / ${totalSets}`;
+    progEl.classList.remove('done-label');
+    secEl.classList.remove('section-done');
+  }
+}
+
+function updateProgress() {
+  const done = getDone();
+  const total = getTotal();
+  const pct = Math.round((done / total) * 100);
+
+  // Ring
+  const circ = 471.24;
+  const offset = circ - (circ * pct / 100);
+  const ring = document.getElementById('ringFill');
+  ring.style.strokeDashoffset = offset;
+
+  // Color transitions
+  let color;
+  if (pct === 0) color = '#f97316';
+  else if (pct < 35) color = '#f97316';
+  else if (pct < 65) color = '#fbbf24';
+  else if (pct < 100) color = '#4ade80';
+  else color = '#22c55e';
+  ring.style.stroke = color;
+
+  // Percentage text
+  document.getElementById('ringPct').textContent = pct + '%';
+  document.getElementById('ringLabel').textContent = pct === 0 ? 'Get started' : pct === 100 ? 'Crushed it!' : 'In progress';
+  document.getElementById('statSets').textContent = `${done} / ${total}`;
+
+  // Glow on complete
+  document.getElementById('ringGlow').classList.toggle('on', pct === 100);
+
+  // Completion
+  if (pct === 100 && !state.endMs) {
+    state.endMs = Date.now();
+    saveState();
+    showCompletion();
+    launchConfetti();
+  }
+}
+
+function showCompletion() {
+  const banner = document.getElementById('completionBanner');
+  banner.classList.add('visible');
+  banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  const elapsed = state.endMs - state.startMs;
+  document.getElementById('completionTime').textContent = `Total time: ${formatDuration(elapsed)}`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  INTERACTIONS
+// ═══════════════════════════════════════════════════════
+function toggleDot(el) {
+  const exId = el.dataset.ex;
+  const idx = parseInt(el.dataset.i);
+  const ex = WORKOUT.sections.flatMap(s => s.exercises).find(e => e.id === exId);
+  if (!ex) return;
+
+  // Start timer on first interaction
+  if (!state.startMs) {
+    state.startMs = Date.now();
+    startTimer();
+  }
+
+  const current = state.checks[exId] || 0;
+  const newVal = idx < current ? idx : Math.min(idx + 1, ex.sets);
+  state.checks[exId] = newVal;
+  saveState();
+
+  // Animate the touched dot
+  const isDoneNow = idx < newVal;
+  el.classList.remove('popping', 'unpopping');
+  void el.offsetWidth; // reflow
+  el.classList.add(isDoneNow ? 'popping' : 'unpopping');
+
+  // Rebuild just the dots for this exercise
+  const allDots = document.querySelectorAll(`[data-ex="${exId}"]`);
+  allDots.forEach((d, i) => {
+    const filled = i < newVal;
+    d.classList.toggle('done', filled);
+    d.textContent = filled ? '✓' : '';
+  });
+
+  // Row strikethrough
+  const row = document.getElementById('row-' + exId);
+  row.classList.toggle('row-done', newVal >= ex.sets);
+
+  // Section + overall progress
+  const sec = WORKOUT.sections.find(s => s.exercises.some(e => e.id === exId));
+  if (sec) updateSectionProgress(sec.id);
+  updateProgress();
+}
+
+function toggleSection(id) {
+  const el = document.getElementById('sec-' + id);
+  el.classList.toggle('collapsed');
+}
+
+let allExpanded = true;
+function toggleAll() {
+  const sections = document.querySelectorAll('.section');
+  allExpanded = !allExpanded;
+  sections.forEach(s => s.classList.toggle('collapsed', !allExpanded));
+  event.target.textContent = allExpanded ? 'Collapse All' : 'Expand All';
+}
+
+function resetWorkout() {
+  if (!confirm('Reset all progress?')) return;
+  state = { checks: {}, startMs: null, endMs: null };
+  saveState();
+  document.getElementById('completionBanner').classList.remove('visible');
+  document.getElementById('statTimer').textContent = '—';
+  document.getElementById('ringGlow').classList.remove('on');
+  buildSections();
+  updateProgress();
+}
+
+// ═══════════════════════════════════════════════════════
+//  CONFETTI
+// ═══════════════════════════════════════════════════════
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#f97316','#fbbf24','#4ade80','#60a5fa','#a78bfa','#f472b6','#fff'];
+  const particles = Array.from({length: 140}, () => ({
+    x: Math.random() * canvas.width,
+    y: -20,
+    r: 4 + Math.random() * 7,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    vx: (Math.random() - 0.5) * 6,
+    vy: 2 + Math.random() * 5,
+    spin: (Math.random() - 0.5) * 0.3,
+    angle: Math.random() * Math.PI * 2,
+    alpha: 1,
+    shape: Math.random() > 0.5 ? 'rect' : 'circle',
+    w: 6 + Math.random() * 8,
+    h: 4 + Math.random() * 6,
+  }));
+
+  let frame;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.12;
+      p.angle += p.spin;
+      if (p.y > canvas.height * 0.8) p.alpha -= 0.02;
+      if (p.alpha <= 0) return;
+      alive = true;
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.alpha);
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle);
+      ctx.fillStyle = p.color;
+      if (p.shape === 'circle') {
+        ctx.beginPath();
+        ctx.arc(0, 0, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      }
+      ctx.restore();
+    });
+    if (alive) frame = requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+function init() {
+  loadState();
+  const dateEl = document.getElementById('workoutDate');
+  dateEl.textContent = `Dumbbells · ~35-40 min · ${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}`;
+
+  buildSections();
+  updateProgress();
+
+  if (state.startMs && !state.endMs) {
+    startTimer();
+  }
+
+  if (state.endMs) {
+    document.getElementById('completionBanner').classList.add('visible');
+    document.getElementById('completionTime').textContent = `Total time: ${formatDuration(state.endMs - state.startMs)}`;
+    document.getElementById('ringGlow').classList.add('on');
+    document.getElementById('statTimer').textContent = formatDuration(state.endMs - state.startMs);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
