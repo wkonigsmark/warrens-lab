@@ -19,30 +19,59 @@
       </header>
 
       <main v-if="!loading && activities.length" class="main">
-        <!-- Summary Stats -->
+        <!-- Discipline Selector -->
+        <section class="discipline-selector">
+          <button
+            v-for="discipline in disciplines"
+            :key="discipline"
+            :class="['discipline-btn', { active: selectedDiscipline === discipline }]"
+            @click="selectedDiscipline = discipline"
+          >
+            <span class="discipline-emoji">{{ getDisciplineEmoji(discipline) }}</span>
+            {{ discipline }}
+          </button>
+        </section>
+
+        <!-- Summary Stats (Dynamic based on selected discipline) -->
         <section class="stats-grid">
           <div class="stat-card">
             <div class="stat-label">Total Activities</div>
-            <div class="stat-value">{{ activities.length }}</div>
+            <div class="stat-value">{{ selectedStats.count }}</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Total Distance</div>
-            <div class="stat-value">{{ (totalDistance / 1000).toFixed(1) }} km</div>
+            <div class="stat-value">{{ selectedStats.miles.toFixed(1) }} mi</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Total Moving Time</div>
-            <div class="stat-value">{{ formatHours(totalMovingTime) }}</div>
+            <div class="stat-value">{{ formatHours(selectedStats.hours * 3600) }}</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Activity Types</div>
-            <div class="stat-value">{{ activityTypes.size }}</div>
+            <div class="stat-label">Avg Distance</div>
+            <div class="stat-value">{{ (selectedStats.miles / (selectedStats.count || 1)).toFixed(1) }} mi</div>
+          </div>
+        </section>
+
+        <!-- Milestones -->
+        <section class="milestones-section">
+          <div v-for="milestone in milestones" :key="milestone.type" class="milestone-card" :class="{ secondary: milestone.secondary }">
+            <div class="milestone-header">
+              <h3>{{ milestone.title }}</h3>
+            </div>
+            <div class="milestone-message">{{ milestone.description }}</div>
+            <div class="milestone-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" :style="{ width: (milestone.miles / milestone.target * 100) + '%' }"></div>
+              </div>
+              <div class="progress-text">{{ milestone.miles.toFixed(1) }} / {{ milestone.target }} mi</div>
+            </div>
           </div>
         </section>
 
         <!-- Tabs -->
         <nav class="tabs">
           <button
-            v-for="tab in ['recent', 'trends', 'goals']"
+            v-for="tab in ['recent', 'ytd', 'trends', 'goals']"
             :key="tab"
             :class="['tab-button', { active: activeTab === tab }]"
             @click="activeTab = tab"
@@ -79,7 +108,7 @@
               <div class="activity-details">
                 <div class="detail">
                   <span class="label">Distance:</span>
-                  <span class="value">{{ (activity.distance / 1000).toFixed(2) }} km</span>
+                  <span class="value">{{ (activity.distance / 1609.34).toFixed(2) }} mi</span>
                 </div>
                 <div class="detail">
                   <span class="label">Time:</span>
@@ -98,6 +127,57 @@
           </div>
         </section>
 
+        <!-- YTD Progress Tab -->
+        <section v-show="activeTab === 'ytd'" class="tab-content">
+          <h2>📈 Year-to-Date Progress</h2>
+          <div class="ytd-charts">
+            <div class="chart-container">
+              <h3>Distance by Discipline</h3>
+              <canvas id="ytd-distance-chart"></canvas>
+              <div class="ytd-stats">
+                <div v-for="(stat, discipline) in ytdStats" :key="discipline" class="ytd-stat">
+                  <span class="discipline-name">{{ discipline }}</span>
+                  <div class="stat-values">
+                    <div>
+                      <span class="label">YTD</span>
+                      <span class="value">{{ stat.ytdMiles.toFixed(1) }} mi</span>
+                    </div>
+                    <div>
+                      <span class="label">Projected</span>
+                      <span class="value projection">{{ stat.projectedMiles.toFixed(1) }} mi</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="chart-container">
+              <h3>Cumulative Distance Over Time</h3>
+              <canvas id="ytd-cumulative-chart"></canvas>
+            </div>
+
+            <div class="chart-container">
+              <h3>Activities by Discipline</h3>
+              <canvas id="ytd-activities-chart"></canvas>
+              <div class="ytd-stats">
+                <div v-for="(stat, discipline) in ytdStats" :key="'count-' + discipline" class="ytd-stat">
+                  <span class="discipline-name">{{ discipline }}</span>
+                  <div class="stat-values">
+                    <div>
+                      <span class="label">Count</span>
+                      <span class="value">{{ stat.count }}</span>
+                    </div>
+                    <div>
+                      <span class="label">Avg Distance</span>
+                      <span class="value">{{ stat.avgMiles.toFixed(1) }} mi</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- Trends Tab -->
         <section v-show="activeTab === 'trends'" class="tab-content">
           <h2>Activity Trends</h2>
@@ -108,9 +188,9 @@
                 <div v-for="[type, stats] in typeStats" :key="type" class="trend-item">
                   <span class="trend-label">{{ type }}</span>
                   <div class="trend-bar">
-                    <div class="trend-fill" :style="{ width: (stats.count / activities.length * 100) + '%' }"></div>
+                    <div class="trend-fill" :style="{ width: (stats.count / triathlonActivities.length * 100) + '%' }"></div>
                   </div>
-                  <span class="trend-value">{{ stats.count }} ({{ (stats.totalDistance / 1000).toFixed(0) }} km)</span>
+                  <span class="trend-value">{{ stats.count }} ({{ (stats.totalDistance / 1609.34).toFixed(0) }} mi)</span>
                 </div>
               </div>
             </div>
@@ -120,19 +200,19 @@
               <div class="trend-list">
                 <div class="trend-item">
                   <span class="trend-label">Last 30 days</span>
-                  <span class="trend-value">{{ last30Days.count }} activities · {{ (last30Days.distance / 1000).toFixed(1) }} km</span>
+                  <span class="trend-value">{{ last30Days.count }} activities · {{ (last30Days.distance / 1609.34).toFixed(1) }} mi</span>
                 </div>
                 <div class="trend-item">
                   <span class="trend-label">Last 90 days</span>
-                  <span class="trend-value">{{ last90Days.count }} activities · {{ (last90Days.distance / 1000).toFixed(1) }} km</span>
+                  <span class="trend-value">{{ last90Days.count }} activities · {{ (last90Days.distance / 1609.34).toFixed(1) }} mi</span>
                 </div>
                 <div class="trend-item">
                   <span class="trend-label">Last year</span>
-                  <span class="trend-value">{{ lastYear.count }} activities · {{ (lastYear.distance / 1000).toFixed(1) }} km</span>
+                  <span class="trend-value">{{ lastYear.count }} activities · {{ (lastYear.distance / 1609.34).toFixed(1) }} mi</span>
                 </div>
                 <div class="trend-item">
                   <span class="trend-label">All time</span>
-                  <span class="trend-value">{{ activities.length }} activities · {{ (totalDistance / 1000).toFixed(1) }} km</span>
+                  <span class="trend-value">{{ triathlonActivities.length }} activities · {{ (totalDistance / 1609.34).toFixed(1) }} mi</span>
                 </div>
               </div>
             </div>
@@ -156,6 +236,7 @@
   </div>
 
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

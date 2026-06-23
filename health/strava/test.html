@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Strava Data Fetch Test</title>
+  <style>
+    body { font-family: monospace; padding: 20px; background: #f5f5f5; }
+    .result { background: white; padding: 15px; margin: 10px 0; border-radius: 4px; border-left: 4px solid #fc5200; }
+    .success { border-left-color: #4caf50; }
+    .error { border-left-color: #f44336; }
+    pre { overflow-x: auto; background: #333; color: #0f0; padding: 10px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>🧪 Strava Data Fetch Test</h1>
+  <p>Testing if the app can fetch and parse your Google Sheet...</p>
+
+  <div id="results"></div>
+
+  <script>
+    const sheetsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRQeJ7KYeuApFOqd5MhVQoIVqQaE5Nc9RmJuLzLAhpCEKEWKPCX2MzyLE-jzrpF41y7sDRKHLwmXxaP/pubhtml?gid=766949107&single=true';
+
+    async function testDataFetch() {
+      const results = document.getElementById('results');
+
+      // Test 1: Fetch the sheet
+      results.innerHTML += '<div class="result"><strong>Test 1: Fetching Google Sheet...</strong>';
+      try {
+        const response = await fetch(sheetsUrl);
+        if (response.ok) {
+          results.innerHTML += `<p class="success">✅ Successfully fetched sheet (${response.headers.get('content-type')})</p>`;
+
+          // Test 2: Parse the HTML
+          const htmlText = await response.text();
+          results.innerHTML += `<p>HTML Size: ${(htmlText.length / 1024).toFixed(2)} KB</p>`;
+
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(htmlText, 'text/html');
+
+          // Test 3: Find table
+          const table = doc.querySelector('table');
+          if (table) {
+            results.innerHTML += '<p class="success">✅ Found table element</p>';
+
+            const rows = table.querySelectorAll('tr');
+            results.innerHTML += `<p>Found ${rows.length} rows</p>`;
+
+            if (rows.length > 1) {
+              const headerCells = rows[0].querySelectorAll('th, td');
+              const headers = Array.from(headerCells).map(cell => cell.textContent.trim());
+              results.innerHTML += '<p class="success">✅ Headers parsed:</p>';
+              results.innerHTML += `<pre>${JSON.stringify(headers, null, 2)}</pre>`;
+
+              // Show first data row
+              if (rows.length > 1) {
+                const firstDataRow = rows[1].querySelectorAll('td');
+                const firstData = Array.from(firstDataRow).map(cell => cell.textContent.trim());
+                results.innerHTML += '<p class="success">✅ First activity row:</p>';
+                results.innerHTML += `<pre>${JSON.stringify(firstData, null, 2)}</pre>`;
+              }
+            }
+          } else {
+            results.innerHTML += '<p class="error">❌ No table found in HTML</p>';
+            results.innerHTML += '<p>Checking for alternative structures...</p>';
+            // Check what elements exist
+            const divs = doc.querySelectorAll('div[role="grid"], div[role="table"]');
+            results.innerHTML += `<p>Found ${divs.length} grid/table divs</p>`;
+          }
+        } else {
+          results.innerHTML += `<p class="error">❌ HTTP ${response.status}: ${response.statusText}</p>`;
+        }
+      } catch (err) {
+        results.innerHTML += `<p class="error">❌ Error: ${err.message}</p>`;
+      }
+
+      results.innerHTML += '</div>';
+    }
+
+    // Run test when page loads
+    window.addEventListener('load', testDataFetch);
+  </script>
+</body>
+</html>
