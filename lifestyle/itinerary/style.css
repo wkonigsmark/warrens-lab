@@ -130,6 +130,18 @@ h1 {
   font-style: italic;
 }
 
+.activity-entry {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f7f3ee;
+}
+
+.activity-entry:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
 /* Table View */
 table {
   width: 100%;

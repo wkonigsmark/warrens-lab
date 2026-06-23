@@ -149,10 +149,31 @@ function renderCardView() {
   const upcomingContainer = document.getElementById('upcomingDates');
   upcomingContainer.innerHTML = '';
 
-  const futureDays = allDays.filter(day => !isPast(day.date));
+  // Group days by date and aggregate
+  const groupedDays = {};
+  allDays.forEach(day => {
+    if (!groupedDays[day.date]) {
+      groupedDays[day.date] = [];
+    }
+    groupedDays[day.date].push(day);
+  });
 
-  futureDays.forEach(day => {
-    upcomingContainer.appendChild(createDayCard(day, false));
+  // Filter future dates and sort by date
+  const futureDateKeys = Object.keys(groupedDays)
+    .filter(dateStr => !isPast(dateStr))
+    .sort((a, b) => new Date(a + ', ' + new Date().getFullYear()) - new Date(b + ', ' + new Date().getFullYear()));
+
+  // Render aggregated cards
+  futureDateKeys.forEach(dateStr => {
+    const activities = groupedDays[dateStr];
+    // Sort activities by time
+    activities.sort((a, b) => {
+      if (!a.time && !b.time) return 0;
+      if (!a.time) return 1;
+      if (!b.time) return -1;
+      return parseTime(a.time) - parseTime(b.time);
+    });
+    upcomingContainer.appendChild(createAggregatedDayCard(dateStr, activities));
   });
 }
 
@@ -179,25 +200,49 @@ function renderTableView() {
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
 
-  const futureDays = allDays.filter(day => !isPast(day.date));
-
-  futureDays.forEach(day => {
-    const row = document.createElement('tr');
-    if (isToday(day.date)) {
-      row.classList.add('today');
-      row.id = 'today-row';
+  // Group days by date and aggregate
+  const groupedDays = {};
+  allDays.forEach(day => {
+    if (!groupedDays[day.date]) {
+      groupedDays[day.date] = [];
     }
+    groupedDays[day.date].push(day);
+  });
 
-    row.innerHTML = `
-      <td>${day.date}</td>
-      <td>${day.time || ''}</td>
-      <td>${day.activities || ''}</td>
-      <td>${day.breakfast || ''}</td>
-      <td>${day.lunch || ''}</td>
-      <td>${day.dinner || ''}</td>
-    `;
+  // Filter future dates and sort by date
+  const futureDateKeys = Object.keys(groupedDays)
+    .filter(dateStr => !isPast(dateStr))
+    .sort((a, b) => new Date(a + ', ' + new Date().getFullYear()) - new Date(b + ', ' + new Date().getFullYear()));
 
-    tbody.appendChild(row);
+  // Render aggregated rows
+  futureDateKeys.forEach(dateStr => {
+    const activities = groupedDays[dateStr];
+    // Sort activities by time
+    activities.sort((a, b) => {
+      if (!a.time && !b.time) return 0;
+      if (!a.time) return 1;
+      if (!b.time) return -1;
+      return parseTime(a.time) - parseTime(b.time);
+    });
+
+    activities.forEach((activity, idx) => {
+      const row = document.createElement('tr');
+      if (isToday(dateStr)) {
+        row.classList.add('today');
+        if (idx === 0) row.id = 'today-row';
+      }
+
+      row.innerHTML = `
+        <td>${idx === 0 ? dateStr : ''}</td>
+        <td>${activity.time || ''}</td>
+        <td>${activity.activities || ''}</td>
+        <td>${activity.breakfast || ''}</td>
+        <td>${activity.lunch || ''}</td>
+        <td>${activity.dinner || ''}</td>
+      `;
+
+      tbody.appendChild(row);
+    });
   });
 }
 
@@ -208,6 +253,44 @@ function scrollToToday() {
       todayCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
   }
+}
+
+function parseTime(timeStr) {
+  if (!timeStr) return Infinity;
+  const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM|am|pm)?/);
+  if (!match) return Infinity;
+  let hours = parseInt(match[1]);
+  const minutes = parseInt(match[2]);
+  const period = match[3];
+  if (period && period.toUpperCase() === 'PM' && hours !== 12) hours += 12;
+  if (period && period.toUpperCase() === 'AM' && hours === 12) hours = 0;
+  return hours * 60 + minutes;
+}
+
+function createAggregatedDayCard(dateStr, activities) {
+  const card = document.createElement('div');
+  card.className = 'day-card';
+  if (isToday(dateStr)) {
+    card.classList.add('today');
+    card.id = 'today-card';
+  }
+
+  const dateHeader = `<div class="card-date">${dateStr}</div>`;
+
+  const activitiesHTML = activities.map(activity => {
+    const timeStr = activity.time ? `<div class="card-section-content" style="font-weight: 600;">${activity.time}</div>` : '';
+
+    let content = timeStr;
+    if (activity.activities) content += `<div class="card-section"><div class="card-section-label">Activities</div><div class="card-section-content">${activity.activities}</div></div>`;
+    if (activity.breakfast) content += `<div class="card-section"><div class="card-section-label">Breakfast</div><div class="card-section-content">${activity.breakfast}</div></div>`;
+    if (activity.lunch) content += `<div class="card-section"><div class="card-section-label">Lunch</div><div class="card-section-content">${activity.lunch}</div></div>`;
+    if (activity.dinner) content += `<div class="card-section"><div class="card-section-label">Dinner</div><div class="card-section-content">${activity.dinner}</div></div>`;
+
+    return `<div class="activity-entry">${content}</div>`;
+  }).join('');
+
+  card.innerHTML = dateHeader + activitiesHTML;
+  return card;
 }
 
 // Activities Guide
