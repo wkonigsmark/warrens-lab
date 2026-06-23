@@ -490,6 +490,133 @@
     .system-pill.urinary { background: #e0e7ff; color: #312e81; }
     .system-pill.reproductive { background: #fae8ff; color: #6b21a8; }
 
+    .body-diagram-section {
+      background: var(--card);
+      border-radius: 0.5rem;
+      padding: 2rem;
+      margin: 2rem 0;
+      box-shadow: var(--shadow);
+    }
+
+    .body-diagram-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .diagram-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .body-svg {
+      width: 100%;
+      max-width: 250px;
+      height: auto;
+      cursor: pointer;
+    }
+
+    .body-region {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .body-region:hover {
+      stroke: var(--secondary) !important;
+      stroke-width: 3 !important;
+      filter: drop-shadow(0 0 5px var(--secondary));
+    }
+
+    .body-region.active {
+      stroke: var(--secondary) !important;
+      stroke-width: 3 !important;
+      fill: var(--primary-light) !important;
+      filter: drop-shadow(0 0 8px var(--secondary));
+    }
+
+    .region-info {
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      border-radius: 0.25rem;
+      padding: 1.5rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .region-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .region-components {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .component-item {
+      padding: 1rem;
+      background: white;
+      border-radius: 0.25rem;
+      border-left: 3px solid var(--primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .component-item:hover {
+      box-shadow: var(--shadow);
+      transform: translateX(4px);
+    }
+
+    .component-item-name {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+    .component-item-category {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .component-item-function {
+      font-size: 0.85rem;
+      color: var(--text);
+      margin-top: 0.5rem;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 1024px) {
+      .diagram-container {
+        grid-template-columns: 1fr;
+      }
+
+      .body-svg {
+        max-width: 300px;
+        margin: 0 auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .body-diagram-section {
+        padding: 1rem;
+      }
+
+      .diagram-container {
+        gap: 1rem;
+      }
+
+      .region-info {
+        max-height: 300px;
+      }
+    }
+
     .roadmap-btn {
       position: fixed;
       bottom: 2rem;
@@ -685,6 +812,87 @@
   <main class="container">
     <div class="stats-bar" id="statsBar"></div>
 
+    <!-- Body Location Diagram Section -->
+    <div class="body-diagram-section">
+      <h2>🫀 Explore by Body Region</h2>
+      <div class="diagram-container">
+        <svg id="bodyDiagram" viewBox="0 0 200 500" xmlns="http://www.w3.org/2000/svg" class="body-svg">
+          <!-- Head -->
+          <circle id="region-head" cx="100" cy="40" r="25" class="body-region" data-region="Head" fill="none" stroke="var(--primary)" stroke-width="2"/>
+          <text x="100" y="75" text-anchor="middle" font-size="12" fill="var(--text-light)">Head</text>
+
+          <!-- Neck -->
+          <rect id="region-neck" x="85" y="65" width="30" height="25" class="body-region" data-region="Neck" fill="none" stroke="var(--primary)" stroke-width="2"/>
+          <text x="100" y="105" text-anchor="middle" font-size="12" fill="var(--text-light)">Neck</text>
+
+          <!-- Chest -->
+          <ellipse id="region-chest" cx="100" cy="130" rx="35" ry="40" class="body-region" data-region="Chest" fill="none" stroke="var(--primary)" stroke-width="2"/>
+          <text x="100" y="175" text-anchor="middle" font-size="12" fill="var(--text-light)">Chest</text>
+
+          <!-- Shoulders -->
+          <g id="region-shoulder-left" class="body-region" data-region="Shoulder">
+            <circle cx="65" cy="110" r="15" fill="none" stroke="var(--primary)" stroke-width="2"/>
+          </g>
+          <g id="region-shoulder-right" class="body-region" data-region="Shoulder">
+            <circle cx="135" cy="110" r="15" fill="none" stroke="var(--primary)" stroke-width="2"/>
+          </g>
+          <text x="100" y="145" text-anchor="middle" font-size="10" fill="var(--text-light)">Shoulders</text>
+
+          <!-- Upper Arms -->
+          <g id="region-upper-arm-left" class="body-region" data-region="Upper Arm">
+            <rect x="40" y="125" width="20" height="50" fill="none" stroke="var(--primary)" stroke-width="2" rx="10"/>
+          </g>
+          <g id="region-upper-arm-right" class="body-region" data-region="Upper Arm">
+            <rect x="140" y="125" width="20" height="50" fill="none" stroke="var(--primary)" stroke-width="2" rx="10"/>
+          </g>
+
+          <!-- Forearms -->
+          <g id="region-forearm-left" class="body-region" data-region="Forearm">
+            <rect x="40" y="175" width="20" height="50" fill="none" stroke="var(--primary)" stroke-width="2" rx="10"/>
+          </g>
+          <g id="region-forearm-right" class="body-region" data-region="Forearm">
+            <rect x="140" y="175" width="20" height="50" fill="none" stroke="var(--primary)" stroke-width="2" rx="10"/>
+          </g>
+
+          <!-- Back (visible from front, but indicated) -->
+          <text x="100" y="230" text-anchor="middle" font-size="10" fill="var(--text-light)" opacity="0.7">(Back visible when flipped)</text>
+
+          <!-- Core/Abdomen -->
+          <rect id="region-core" x="75" y="170" width="50" height="40" class="body-region" data-region="Core" fill="none" stroke="var(--primary)" stroke-width="2" stroke-dasharray="5,5"/>
+          <rect id="region-abdomen" x="75" y="210" width="50" height="35" class="body-region" data-region="Abdomen" fill="none" stroke="var(--primary)" stroke-width="2"/>
+          <text x="100" y="280" text-anchor="middle" font-size="12" fill="var(--text-light)">Core/Abdomen</text>
+
+          <!-- Pelvis -->
+          <ellipse id="region-pelvis" cx="100" cy="280" rx="40" ry="25" class="body-region" data-region="Pelvis" fill="none" stroke="var(--primary)" stroke-width="2"/>
+          <text x="100" y="315" text-anchor="middle" font-size="12" fill="var(--text-light)">Pelvis</text>
+
+          <!-- Upper Legs -->
+          <g id="region-upper-leg-left" class="body-region" data-region="Upper Leg">
+            <rect x="60" y="305" width="25" height="60" fill="none" stroke="var(--primary)" stroke-width="2" rx="12"/>
+          </g>
+          <g id="region-upper-leg-right" class="body-region" data-region="Upper Leg">
+            <rect x="115" y="305" width="25" height="60" fill="none" stroke="var(--primary)" stroke-width="2" rx="12"/>
+          </g>
+
+          <!-- Lower Legs -->
+          <g id="region-lower-leg-left" class="body-region" data-region="Lower Leg">
+            <rect x="60" y="365" width="25" height="60" fill="none" stroke="var(--primary)" stroke-width="2" rx="12"/>
+          </g>
+          <g id="region-lower-leg-right" class="body-region" data-region="Lower Leg">
+            <rect x="115" y="365" width="25" height="60" fill="none" stroke="var(--primary)" stroke-width="2" rx="12"/>
+          </g>
+
+          <!-- Center label -->
+          <text x="100" y="420" text-anchor="middle" font-size="14" font-weight="bold" fill="var(--primary)">Click a region to explore</text>
+        </svg>
+        <div class="region-info" id="regionInfo">
+          <div style="text-align: center; color: var(--text-light); padding: 2rem;">
+            <p>👆 Select a body region to see all muscles, bones, and organs in that area</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="controls">
       <div class="search-box">
         <input
@@ -698,6 +906,9 @@
       </select>
       <select id="systemFilter">
         <option value="">All Systems</option>
+      </select>
+      <select id="bodyLocationFilter">
+        <option value="">All Body Locations</option>
       </select>
       <div class="view-toggle">
         <button class="active" data-view="grid">📋 Grid</button>
@@ -854,6 +1065,10 @@
       const systems = [...new Set(allComponents.flatMap(c =>
         Array.isArray(c.system) ? c.system : [c.system]
       ))].sort();
+      const bodyLocations = [...new Set(allComponents
+        .filter(c => c.bodyLocation)
+        .map(c => c.bodyLocation)
+      )].sort();
 
       const categorySelect = document.getElementById('categoryFilter');
       categories.forEach(cat => {
@@ -869,6 +1084,14 @@
         option.value = sys;
         option.textContent = sys.charAt(0).toUpperCase() + sys.slice(1);
         systemSelect.appendChild(option);
+      });
+
+      const bodyLocationSelect = document.getElementById('bodyLocationFilter');
+      bodyLocations.forEach(loc => {
+        const option = document.createElement('option');
+        option.value = loc;
+        option.textContent = loc;
+        bodyLocationSelect.appendChild(option);
       });
     }
 
@@ -895,6 +1118,7 @@
       const search = document.getElementById('searchInput').value.toLowerCase();
       const category = document.getElementById('categoryFilter').value;
       const system = document.getElementById('systemFilter').value;
+      const bodyLocation = document.getElementById('bodyLocationFilter').value;
 
       filteredComponents = allComponents.filter(comp => {
         const matchesSearch =
@@ -908,12 +1132,60 @@
         const systems = Array.isArray(comp.system) ? comp.system : [comp.system];
         const matchesSystem = !system || systems.includes(system);
 
-        return matchesSearch && matchesCategory && matchesSystem;
+        const matchesBodyLocation = !bodyLocation || comp.bodyLocation === bodyLocation;
+
+        return matchesSearch && matchesCategory && matchesSystem && matchesBodyLocation;
       });
 
       currentPage = 1;
       isLoadingMore = false;
       render();
+    }
+
+    function showRegionInfo(regionName) {
+      const regionComponents = allComponents.filter(c => c.bodyLocation === regionName);
+      const regionInfo = document.getElementById('regionInfo');
+
+      if (regionComponents.length === 0) {
+        regionInfo.innerHTML = `
+          <div style="padding: 2rem; text-align: center; color: var(--text-light);">
+            <p>No components found for this region.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <div class="region-title">${regionName}</div>
+        <div style="margin-bottom: 1rem; font-size: 0.9rem; color: var(--text-light);">
+          ${regionComponents.length} component(s) in this region
+        </div>
+        <div class="region-components">
+      `;
+
+      const grouped = {};
+      regionComponents.forEach(comp => {
+        if (!grouped[comp.category]) {
+          grouped[comp.category] = [];
+        }
+        grouped[comp.category].push(comp);
+      });
+
+      Object.keys(grouped).forEach(category => {
+        html += `<div style="margin-bottom: 0.5rem; font-weight: 600; color: var(--primary); font-size: 0.9rem; text-transform: uppercase;">${category}s</div>`;
+        grouped[category].forEach(comp => {
+          html += `
+            <div class="component-item" onclick="openModal('${comp.id}')">
+              <div class="component-item-name">${comp.name}</div>
+              <div class="component-item-category">${comp.category}</div>
+              <div class="component-item-function">${comp.function}</div>
+            </div>
+          `;
+        });
+      });
+
+      html += `</div>`;
+      regionInfo.innerHTML = html;
     }
 
     function render() {
@@ -1195,6 +1467,51 @@
     document.getElementById('searchInput').addEventListener('input', filterComponents);
     document.getElementById('categoryFilter').addEventListener('change', filterComponents);
     document.getElementById('systemFilter').addEventListener('change', filterComponents);
+    document.getElementById('bodyLocationFilter').addEventListener('change', (e) => {
+      if (e.target.value) {
+        showRegionInfo(e.target.value);
+      } else {
+        document.getElementById('regionInfo').innerHTML = `
+          <div style="text-align: center; color: var(--text-light); padding: 2rem;">
+            <p>👆 Select a body region to see all muscles, bones, and organs in that area</p>
+          </div>
+        `;
+      }
+      filterComponents();
+    });
+
+    // Setup body region click handlers
+    document.querySelectorAll('.body-region').forEach(region => {
+      region.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const regionName = region.getAttribute('data-region');
+
+        // Update active state on diagram
+        document.querySelectorAll('.body-region').forEach(r => r.classList.remove('active'));
+        document.getElementById('region-' + regionName.toLowerCase().replace(' ', '-')).classList.add('active');
+
+        // Update filter dropdown
+        document.getElementById('bodyLocationFilter').value = regionName;
+
+        // Show region info and filter
+        showRegionInfo(regionName);
+        filterComponents();
+      });
+    });
+
+    // Click anywhere to deselect
+    document.getElementById('bodyDiagram').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('bodyDiagram')) {
+        document.querySelectorAll('.body-region').forEach(r => r.classList.remove('active'));
+        document.getElementById('bodyLocationFilter').value = '';
+        document.getElementById('regionInfo').innerHTML = `
+          <div style="text-align: center; color: var(--text-light); padding: 2rem;">
+            <p>👆 Select a body region to see all muscles, bones, and organs in that area</p>
+          </div>
+        `;
+        filterComponents();
+      }
+    });
     document.getElementById('resetBtn').addEventListener('click', () => {
       document.getElementById('searchInput').value = '';
       document.getElementById('categoryFilter').value = '';
