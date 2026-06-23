@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Family Vacation Itinerary</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Family Vacation Itinerary</h1>
+      <div style="display: flex; gap: 12px;">
+        <button id="toggleView" class="toggle-btn">Switch to Table</button>
+        <button id="jumpToActivities" class="toggle-btn">Activities Guide</button>
+      </div>
+    </header>
+
+    <div id="content">
+      <div id="cardView" class="view active">
+        <div id="upcomingDates" class="upcoming-dates-section"></div>
+      </div>
+
+      <div id="tableView" class="view">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Activities</th>
+              <th>Breakfast</th>
+              <th>Lunch</th>
+              <th>Dinner</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="activitiesGuide">
+      <div class="guide-header">
+        <h2>Activities & Dining Guide</h2>
+      </div>
+
+      <div class="guide-summary" id="guideSummary">
+        Loading activities guide...
+      </div>
+
+      <div class="guide-categories" id="guideCategories">
+        <!-- Categories will be populated by JS -->
+      </div>
+    </div>
+
+    <div class="loading" id="loading" style="display: none;">Loading...</div>
+    <div class="error" id="error" style="display: none;"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
