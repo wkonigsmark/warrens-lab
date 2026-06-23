@@ -490,6 +490,60 @@
     .system-pill.urinary { background: #e0e7ff; color: #312e81; }
     .system-pill.reproductive { background: #fae8ff; color: #6b21a8; }
 
+    .quiz-difficulty-btn {
+      padding: 0.5rem 1rem;
+      border: 2px solid var(--border);
+      background: white;
+      color: var(--text);
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .quiz-difficulty-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .quiz-difficulty-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .quiz-option {
+      padding: 1rem;
+      border: 2px solid var(--border);
+      border-radius: 0.5rem;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+
+    .quiz-option:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .quiz-option.correct {
+      background: #d1fae5;
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .quiz-option.incorrect {
+      background: #fee2e2;
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .quiz-option.disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
     .body-diagram-section {
       background: var(--card);
       border-radius: 0.5rem;
@@ -501,6 +555,35 @@
     .body-diagram-section h2 {
       font-size: 1.5rem;
       margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .system-selector {
+      display: flex;
+      gap: 0.5rem;
+      border: 2px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.25rem;
+      background: var(--bg);
+    }
+
+    .system-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: transparent;
+      color: var(--text-light);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      border-radius: 0.25rem;
+    }
+
+    .system-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .system-btn:hover:not(.active) {
       color: var(--text);
     }
 
@@ -880,7 +963,21 @@
 
     <!-- Body Location Diagram Section -->
     <div class="body-diagram-section">
-      <h2>🫀 Explore by Body Region</h2>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <h2>🫀 Explore by Body Region</h2>
+
+        <div class="system-selector">
+          <button class="system-btn active" data-system="muscular">
+            💪 Muscular
+          </button>
+          <button class="system-btn" data-system="skeletal">
+            🦴 Skeletal
+          </button>
+          <button class="system-btn" data-system="organs">
+            🫁 Organs
+          </button>
+        </div>
+      </div>
 
       <div class="diagram-view-toggle">
         <button class="diagram-view-btn active" data-view="front">Front View</button>
@@ -889,8 +986,9 @@
 
       <div class="diagram-container">
         <div class="diagram-wrapper">
-          <!-- Front View -->
-          <div id="diagram-front" class="diagram-view active">
+          <!-- MUSCULAR SYSTEM -->
+          <!-- Front View - Muscular -->
+          <div id="diagram-front-muscular" class="diagram-view active" data-system="muscular">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Anterior_muscles_of_human_body.jpg/440px-Anterior_muscles_of_human_body.jpg" alt="Front anatomy" class="anatomy-image" onerror="this.style.display='none'"/>
             <svg viewBox="0 0 300 800" xmlns="http://www.w3.org/2000/svg" class="body-overlay">
               <!-- Head -->
@@ -931,8 +1029,8 @@
             </svg>
           </div>
 
-          <!-- Back View -->
-          <div id="diagram-back" class="diagram-view">
+          <!-- Back View - Muscular -->
+          <div id="diagram-back-muscular" class="diagram-view" data-system="muscular">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Posterior_muscles_of_human_body.jpg/440px-Posterior_muscles_of_human_body.jpg" alt="Back anatomy" class="anatomy-image" onerror="this.style.display='none'"/>
             <svg viewBox="0 0 300 800" xmlns="http://www.w3.org/2000/svg" class="body-overlay">
               <!-- Head -->
@@ -966,6 +1064,93 @@
               <!-- Lower Legs -->
               <rect x="85" y="540" width="40" height="100" class="body-region" data-region="Lower Leg" fill="none" stroke="transparent" stroke-width="0"/>
               <rect x="175" y="540" width="40" height="100" class="body-region" data-region="Lower Leg" fill="none" stroke="transparent" stroke-width="0"/>
+            </svg>
+          </div>
+
+          <!-- SKELETAL SYSTEM -->
+          <!-- Front View - Skeletal -->
+          <div id="diagram-front-skeletal" class="diagram-view" data-system="skeletal">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Human_skeleton_front_en.svg/440px-Human_skeleton_front_en.svg.png" alt="Front skeleton" class="anatomy-image" onerror="this.style.display='none'"/>
+            <svg viewBox="0 0 300 800" xmlns="http://www.w3.org/2000/svg" class="body-overlay">
+              <!-- Head -->
+              <circle cx="150" cy="60" r="35" class="body-region" data-region="Head" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Neck/Vertebrae -->
+              <rect x="130" y="95" width="40" height="30" class="body-region" data-region="Neck" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Shoulders/Clavicle -->
+              <ellipse cx="100" cy="140" rx="25" ry="35" class="body-region" data-region="Shoulder" fill="none" stroke="transparent" stroke-width="0"/>
+              <ellipse cx="200" cy="140" rx="25" ry="35" class="body-region" data-region="Shoulder" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Chest/Ribs -->
+              <rect x="90" y="160" width="120" height="100" class="body-region" data-region="Chest" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Upper Arms/Humerus -->
+              <rect x="50" y="140" width="35" height="85" class="body-region" data-region="Upper Arm" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="215" y="140" width="35" height="85" class="body-region" data-region="Upper Arm" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Forearms -->
+              <rect x="50" y="225" width="35" height="80" class="body-region" data-region="Forearm" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="215" y="225" width="35" height="80" class="body-region" data-region="Forearm" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Spine/Vertebrae -->
+              <rect x="135" y="165" width="30" height="150" class="body-region" data-region="Back" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Pelvis -->
+              <ellipse cx="150" cy="390" rx="60" ry="40" class="body-region" data-region="Pelvis" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Upper Legs/Femur -->
+              <rect x="85" y="430" width="40" height="110" class="body-region" data-region="Upper Leg" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="175" y="430" width="40" height="110" class="body-region" data-region="Upper Leg" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Lower Legs/Tibia+Fibula -->
+              <rect x="85" y="540" width="40" height="100" class="body-region" data-region="Lower Leg" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="175" y="540" width="40" height="100" class="body-region" data-region="Lower Leg" fill="none" stroke="transparent" stroke-width="0"/>
+            </svg>
+          </div>
+
+          <!-- Back View - Skeletal -->
+          <div id="diagram-back-skeletal" class="diagram-view" data-system="skeletal">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Human_skeleton_back_en.svg/440px-Human_skeleton_back_en.svg.png" alt="Back skeleton" class="anatomy-image" onerror="this.style.display='none'"/>
+            <svg viewBox="0 0 300 800" xmlns="http://www.w3.org/2000/svg" class="body-overlay">
+              <!-- Same regions as front skeletal -->
+              <circle cx="150" cy="60" r="35" class="body-region" data-region="Head" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="130" y="95" width="40" height="30" class="body-region" data-region="Neck" fill="none" stroke="transparent" stroke-width="0"/>
+              <ellipse cx="100" cy="140" rx="25" ry="35" class="body-region" data-region="Shoulder" fill="none" stroke="transparent" stroke-width="0"/>
+              <ellipse cx="200" cy="140" rx="25" ry="35" class="body-region" data-region="Shoulder" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="90" y="160" width="120" height="100" class="body-region" data-region="Back" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="50" y="140" width="35" height="85" class="body-region" data-region="Upper Arm" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="215" y="140" width="35" height="85" class="body-region" data-region="Upper Arm" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="50" y="225" width="35" height="80" class="body-region" data-region="Forearm" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="215" y="225" width="35" height="80" class="body-region" data-region="Forearm" fill="none" stroke="transparent" stroke-width="0"/>
+              <ellipse cx="150" cy="390" rx="60" ry="40" class="body-region" data-region="Pelvis" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="85" y="430" width="40" height="110" class="body-region" data-region="Upper Leg" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="175" y="430" width="40" height="110" class="body-region" data-region="Upper Leg" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="85" y="540" width="40" height="100" class="body-region" data-region="Lower Leg" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="175" y="540" width="40" height="100" class="body-region" data-region="Lower Leg" fill="none" stroke="transparent" stroke-width="0"/>
+            </svg>
+          </div>
+
+          <!-- ORGAN SYSTEM -->
+          <!-- Front View - Organs -->
+          <div id="diagram-front-organs" class="diagram-view" data-system="organs">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Organ_diagram_human_body.svg/440px-Organ_diagram_human_body.svg.png" alt="Organs" class="anatomy-image" onerror="this.style.display='none'"/>
+            <svg viewBox="0 0 300 800" xmlns="http://www.w3.org/2000/svg" class="body-overlay">
+              <!-- Head -->
+              <circle cx="150" cy="60" r="35" class="body-region" data-region="Head" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Chest/Heart+Lungs -->
+              <ellipse cx="150" cy="180" rx="50" ry="60" class="body-region" data-region="Chest" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Core/Abdomen -->
+              <rect x="110" y="240" width="80" height="100" class="body-region" data-region="Core" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="110" y="340" width="80" height="50" class="body-region" data-region="Abdomen" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Pelvis -->
+              <ellipse cx="150" cy="390" rx="60" ry="40" class="body-region" data-region="Pelvis" fill="none" stroke="transparent" stroke-width="0"/>
+            </svg>
+          </div>
+
+          <!-- Back View - Organs -->
+          <div id="diagram-back-organs" class="diagram-view" data-system="organs">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Organ_diagram_human_body.svg/440px-Organ_diagram_human_body.svg.png" alt="Organs back" class="anatomy-image" onerror="this.style.display='none'"/>
+            <svg viewBox="0 0 300 800" xmlns="http://www.w3.org/2000/svg" class="body-overlay">
+              <!-- Head -->
+              <circle cx="150" cy="60" r="35" class="body-region" data-region="Head" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Back/Organs -->
+              <rect x="90" y="160" width="120" height="100" class="body-region" data-region="Back" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Abdomen -->
+              <rect x="110" y="240" width="80" height="150" class="body-region" data-region="Abdomen" fill="none" stroke="transparent" stroke-width="0"/>
+              <!-- Pelvis -->
+              <ellipse cx="150" cy="390" rx="60" ry="40" class="body-region" data-region="Pelvis" fill="none" stroke="transparent" stroke-width="0"/>
             </svg>
           </div>
         </div>
@@ -1032,6 +1217,7 @@
     </div>
 
     <button id="roadmapBtn" class="roadmap-btn" title="View Development Roadmap">🗺️</button>
+    <button id="quizBtn" class="roadmap-btn" style="bottom: 80px;" title="Start Anatomy Quiz">🎮</button>
 
     <div id="roadmapModal" class="roadmap-modal">
       <div class="roadmap-content">
@@ -1105,6 +1291,61 @@
               <li class="pending">Practice exams & assessments</li>
               <li class="pending">Learning analytics</li>
             </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="quizModal" class="modal">
+      <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-header">
+          <h2>🎮 Anatomy Quiz</h2>
+          <button class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="quizContent">
+            <div style="text-align: center; padding: 2rem;">
+              <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">Test your anatomy knowledge!</p>
+              <p style="color: var(--text-light); margin-bottom: 1.5rem;">A body region will be highlighted and you'll need to identify it.</p>
+
+              <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-light);">Select difficulty:</label>
+                <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                  <button class="quiz-difficulty-btn active" data-difficulty="easy">Easy (Major regions)</button>
+                  <button class="quiz-difficulty-btn" data-difficulty="medium">Medium (All regions)</button>
+                  <button class="quiz-difficulty-btn" data-difficulty="hard">Hard (Timed)</button>
+                </div>
+              </div>
+
+              <button id="startQuizBtn" style="font-size: 1.1rem; padding: 1rem 2rem; width: 100%; max-width: 300px;">Start Quiz</button>
+            </div>
+          </div>
+
+          <div id="quizGameContent" style="display: none;">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+              <div style="font-size: 0.9rem; color: var(--text-light);">
+                Question <span id="quizQNum">1</span> of <span id="quizTotal">10</span>
+              </div>
+              <div id="quizTimer" style="font-size: 1.2rem; color: var(--primary); font-weight: bold; margin-top: 0.5rem;"></div>
+            </div>
+
+            <div style="margin: 2rem 0;">
+              <p id="quizQuestion" style="font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem;">What is this body region?</p>
+
+              <div id="quizOptions" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;"></div>
+            </div>
+
+            <div style="margin-top: 2rem; text-align: center;">
+              <button id="skipBtn" class="secondary" style="width: 100%; max-width: 150px;">Skip</button>
+            </div>
+          </div>
+
+          <div id="quizResultsContent" style="display: none;">
+            <div style="text-align: center; padding: 2rem;">
+              <h3 id="quizFinalScore" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;">0 / 10</h3>
+              <p id="quizResultMessage" style="font-size: 1.1rem; margin-bottom: 2rem;"></p>
+              <button id="retakeQuizBtn" style="padding: 1rem 2rem; font-size: 1rem;">Try Again</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1565,6 +1806,38 @@
       filterComponents();
     });
 
+    let currentSystem = 'muscular';
+
+    // Setup system selector
+    document.querySelectorAll('.system-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const system = e.target.getAttribute('data-system');
+        currentSystem = system;
+
+        // Update button active state
+        document.querySelectorAll('.system-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+
+        // Reset view to front when switching systems
+        document.querySelectorAll('.diagram-view-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('[data-view="front"]').classList.add('active');
+
+        // Update diagram view
+        document.querySelectorAll('.diagram-view').forEach(view => view.classList.remove('active'));
+        document.getElementById('diagram-front-' + system).classList.add('active');
+
+        // Clear selection
+        document.querySelectorAll('.body-region').forEach(r => r.classList.remove('active'));
+        document.getElementById('bodyLocationFilter').value = '';
+        document.getElementById('regionInfo').innerHTML = `
+          <div style="text-align: center; color: var(--text-light); padding: 2rem;">
+            <p>👆 Click a body region to see all components</p>
+          </div>
+        `;
+        filterComponents();
+      });
+    });
+
     // Setup diagram view toggle
     document.querySelectorAll('.diagram-view-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -1574,9 +1847,9 @@
         document.querySelectorAll('.diagram-view-btn').forEach(b => b.classList.remove('active'));
         e.target.classList.add('active');
 
-        // Update diagram view
+        // Update diagram view based on current system
         document.querySelectorAll('.diagram-view').forEach(view => view.classList.remove('active'));
-        document.getElementById('diagram-' + viewType).classList.add('active');
+        document.getElementById('diagram-' + viewType + '-' + currentSystem).classList.add('active');
 
         // Clear selection when switching views
         document.querySelectorAll('.body-region').forEach(r => r.classList.remove('active'));
@@ -1667,6 +1940,136 @@
       if (e.target.id === 'roadmapModal') {
         roadmapModal.classList.remove('active');
       }
+    });
+
+    // Quiz system
+    let quizActive = false;
+    let quizScore = 0;
+    let quizTotal = 10;
+    let quizCurrent = 0;
+    let quizDifficulty = 'easy';
+    let quizQuestion = {};
+    let quizAnswered = false;
+    const majorRegions = ['Head', 'Neck', 'Chest', 'Shoulder', 'Upper Arm', 'Forearm', 'Core', 'Abdomen', 'Pelvis', 'Upper Leg', 'Lower Leg'];
+
+    const quizModal = document.getElementById('quizModal');
+    const quizCloseBtn = quizModal.querySelector('.close-btn');
+
+    document.getElementById('quizBtn').addEventListener('click', () => {
+      quizModal.classList.add('active');
+    });
+
+    quizCloseBtn.addEventListener('click', () => {
+      quizModal.classList.remove('active');
+    });
+
+    quizModal.addEventListener('click', (e) => {
+      if (e.target.id === 'quizModal') quizModal.classList.remove('active');
+    });
+
+    document.querySelectorAll('.quiz-difficulty-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.quiz-difficulty-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        quizDifficulty = e.target.getAttribute('data-difficulty');
+      });
+    });
+
+    document.getElementById('startQuizBtn').addEventListener('click', startQuiz);
+
+    function startQuiz() {
+      quizActive = true;
+      quizScore = 0;
+      quizCurrent = 0;
+      quizAnswered = false;
+
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('quizGameContent').style.display = 'block';
+      document.getElementById('quizResultsContent').style.display = 'none';
+
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      quizCurrent++;
+      if (quizCurrent > quizTotal) {
+        endQuiz();
+        return;
+      }
+
+      const regions = quizDifficulty === 'easy' ? majorRegions : majorRegions.concat(['Back']);
+      const correct = regions[Math.floor(Math.random() * regions.length)];
+      const options = [correct];
+
+      while (options.length < 4) {
+        const option = regions[Math.floor(Math.random() * regions.length)];
+        if (!options.includes(option)) options.push(option);
+      }
+
+      quizQuestion = {
+        correct: correct,
+        options: options.sort(() => Math.random() - 0.5)
+      };
+
+      quizAnswered = false;
+
+      document.getElementById('quizQNum').textContent = quizCurrent;
+      document.getElementById('quizQuestion').textContent = `What body region is highlighted?`;
+
+      const optionsDiv = document.getElementById('quizOptions');
+      optionsDiv.innerHTML = quizQuestion.options.map(option => `
+        <button class="quiz-option" onclick="selectQuizAnswer('${option}')">${option}</button>
+      `).join('');
+    }
+
+    function selectQuizAnswer(answer) {
+      if (quizAnswered) return;
+      quizAnswered = true;
+
+      const isCorrect = answer === quizQuestion.correct;
+      if (isCorrect) quizScore++;
+
+      document.querySelectorAll('.quiz-option').forEach(btn => {
+        btn.classList.add('disabled');
+        if (btn.textContent === quizQuestion.correct) {
+          btn.classList.add('correct');
+        } else if (btn.textContent === answer && !isCorrect) {
+          btn.classList.add('incorrect');
+        }
+      });
+
+      setTimeout(() => {
+        nextQuestion();
+      }, 1500);
+    }
+
+    document.getElementById('skipBtn').addEventListener('click', () => {
+      quizAnswered = true;
+      nextQuestion();
+    });
+
+    function endQuiz() {
+      quizActive = false;
+      document.getElementById('quizGameContent').style.display = 'none';
+      document.getElementById('quizResultsContent').style.display = 'block';
+
+      const percentage = Math.round((quizScore / quizTotal) * 100);
+      document.getElementById('quizFinalScore').textContent = `${quizScore} / ${quizTotal}`;
+
+      let message = '';
+      if (percentage === 100) message = 'Perfect! You\'re an anatomy expert! 🏆';
+      else if (percentage >= 80) message = 'Excellent work! Great anatomy knowledge! ⭐';
+      else if (percentage >= 60) message = 'Good job! Keep practicing to improve! 📚';
+      else if (percentage >= 40) message = 'Nice effort! Review the anatomy to improve. 💪';
+      else message = 'Keep learning! Practice makes perfect. 🎯';
+
+      document.getElementById('quizResultMessage').textContent = `${percentage}% Correct - ${message}`;
+    }
+
+    document.getElementById('retakeQuizBtn').addEventListener('click', () => {
+      document.getElementById('quizContent').style.display = 'block';
+      document.getElementById('quizGameContent').style.display = 'none';
+      document.getElementById('quizResultsContent').style.display = 'none';
     });
 
     // Initialize
