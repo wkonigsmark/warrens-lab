@@ -8,108 +8,151 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
     :root {
-      --bg: #0a0a0a;
-      --surface: #111;
-      --card: #181818;
-      --card-hover: #1e1e1e;
-      --border: #272727;
-      --accent: #f97316;
-      --accent-dim: rgba(249,115,22,0.12);
-      --gold: #fbbf24;
-      --green: #4ade80;
-      --green-dim: rgba(74,222,128,0.12);
-      --red: #f87171;
-      --text: #f0f0f0;
-      --muted: #555;
-      --muted-light: #888;
+      --bg:#0a0a0a;--surface:#111;--card:#181818;--card-hover:#1e1e1e;
+      --border:#272727;--accent:#f97316;--accent-dim:rgba(249,115,22,.12);
+      --gold:#fbbf24;--green:#4ade80;--green-dim:rgba(74,222,128,.12);
+      --red:#f87171;--blue:#60a5fa;--teal:#2dd4bf;--teal-dim:rgba(45,212,191,.12);--text:#f0f0f0;--muted:#555;--muted-light:#888;
     }
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
     body{font-family:'Outfit',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px}
 
     /* ── HEADER ── */
-    .app-header{
-      background:var(--surface);border-bottom:1px solid var(--border);
-      padding:10px 16px;display:flex;align-items:center;gap:12px;
-      position:sticky;top:0;z-index:100;
-    }
+    .app-header{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
     .brand{flex-shrink:0}
     .brand-super{font-size:.56rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted-light);font-weight:800}
     .brand-title{font-size:1rem;font-weight:900}
     .brand-title span{color:var(--accent)}
-
-    /* mini ring */
-    .mini-ring-wrap{
-      display:flex;align-items:center;gap:6px;
-      opacity:0;transform:scale(.75) translateY(-4px);
-      transition:opacity .3s ease,transform .3s ease;
-      pointer-events:none;flex-shrink:0;
-    }
-    .mini-ring-wrap.visible{opacity:1;transform:scale(1) translateY(0)}
-    .mini-svg{width:30px;height:30px;transform:rotate(-90deg);flex-shrink:0}
-    .mini-track{fill:none;stroke:#222;stroke-width:3.5}
-    .mini-fill{
-      fill:none;stroke:var(--accent);stroke-width:3.5;stroke-linecap:round;
-      stroke-dasharray:69.12;stroke-dashoffset:69.12;
-      transition:stroke-dashoffset .5s ease,stroke .3s ease;
-    }
-    .mini-pct{font-size:.72rem;font-weight:900;color:var(--text);white-space:nowrap}
-
-    /* sync dot */
-    .sync-status{
-      width:7px;height:7px;border-radius:50%;background:var(--muted);
-      transition:background .4s;flex-shrink:0;margin-left:2px;
-    }
+    .sync-status{width:7px;height:7px;border-radius:50%;background:var(--muted);transition:background .4s;flex-shrink:0;margin-left:2px}
     .sync-status.syncing{background:var(--gold);box-shadow:0 0 6px rgba(251,191,36,.5)}
     .sync-status.synced{background:var(--green)}
     .sync-status.error{background:var(--red)}
-
+    .mini-ring-wrap{display:flex;align-items:center;gap:6px;opacity:0;transform:scale(.75) translateY(-4px);transition:opacity .3s,transform .3s;pointer-events:none;flex-shrink:0}
+    .mini-ring-wrap.visible{opacity:1;transform:scale(1) translateY(0)}
+    .mini-svg{width:30px;height:30px;transform:rotate(-90deg);flex-shrink:0}
+    .mini-track{fill:none;stroke:#222;stroke-width:3.5}
+    .mini-fill{fill:none;stroke:var(--accent);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:69.12;stroke-dashoffset:69.12;transition:stroke-dashoffset .5s ease,stroke .3s ease}
+    .mini-pct{font-size:.72rem;font-weight:900;color:var(--text);white-space:nowrap}
     .spacer{flex:1}
     .header-btns{display:flex;gap:8px;flex-shrink:0}
-    .btn{
-      background:var(--card);border:1px solid var(--border);color:var(--muted-light);
-      padding:6px 12px;border-radius:8px;font-family:inherit;font-size:.75rem;
-      font-weight:700;cursor:pointer;transition:all .2s;
-    }
+    .btn{background:var(--card);border:1px solid var(--border);color:var(--muted-light);padding:6px 12px;border-radius:8px;font-family:inherit;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s}
     .btn:hover{background:var(--card-hover);border-color:var(--accent);color:var(--accent)}
     .btn-danger:hover{border-color:var(--red);color:var(--red)}
 
-    /* ── HERO ── */
-    .hero{padding:28px 16px 18px;display:flex;flex-direction:column;align-items:center;gap:16px}
-    .workout-meta{text-align:center}
-    .workout-title{font-size:1.4rem;font-weight:900}
-    .workout-sub{font-size:.8rem;color:var(--muted-light);margin-top:4px}
+    /* ── MODE TOGGLE ── */
+    .mode-selector-wrap{margin-bottom:12px}
+    .mode-group-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
+    .mode-group-label{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);white-space:nowrap;min-width:52px}
+    .mode-group-btns{display:flex;gap:5px;flex:1}
+    .mode-btn{flex:1;padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--muted-light);font-family:inherit;font-size:.75rem;font-weight:800;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px}
+    .mode-btn:hover:not(.active){border-color:#444;background:var(--card-hover);color:var(--text)}
+    .mode-btn.active.dumbbell{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+    .mode-btn.active.calisthenics{border-color:var(--blue);background:rgba(96,165,250,.1);color:var(--blue)}
+    .mode-btn.active.triathlon{border-color:var(--teal);background:var(--teal-dim);color:var(--teal)}
+    .mode-divider{border:none;border-top:1px solid var(--border);margin:4px 0 8px}
 
-    .ring-wrapper{position:relative;width:190px;height:190px}
-    .progress-svg{width:190px;height:190px;transform:rotate(-90deg)}
-    .ring-track{fill:none;stroke:#1c1c1c;stroke-width:14}
-    .ring-fill{
-      fill:none;stroke:var(--accent);stroke-width:14;stroke-linecap:round;
-      stroke-dasharray:471.24;stroke-dashoffset:471.24;
-      transition:stroke-dashoffset .65s cubic-bezier(.34,1.56,.64,1),stroke .4s ease;
+    /* ── CARDIO SESSION ── */
+    .cardio-card{background:var(--card);border:1px solid var(--teal);border-radius:16px;padding:22px 18px;margin-bottom:10px}
+    .cardio-hero{text-align:center;margin-bottom:18px}
+    .cardio-icon{font-size:2.8rem}
+    .cardio-sport-label{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--teal);margin-top:6px}
+    .cardio-title-main{font-size:1.35rem;font-weight:900;margin-top:4px}
+    .cardio-target-str{font-size:.82rem;color:var(--muted-light);margin-top:3px}
+    .zone-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;justify-content:center}
+    .zone-badge{background:var(--teal-dim);border:1px solid rgba(45,212,191,.3);color:var(--teal);font-size:.68rem;font-weight:800;padding:4px 10px;border-radius:8px;text-transform:uppercase;letter-spacing:.05em}
+    .zone-stat{background:var(--surface);border:1px solid var(--border);color:var(--muted-light);font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:8px}
+    .cardio-desc{font-size:.78rem;color:var(--muted-light);line-height:1.6;margin-bottom:16px;padding:12px 14px;background:var(--surface);border-radius:10px;border-left:3px solid var(--teal)}
+    .focus-list{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+    .focus-item{display:flex;align-items:flex-start;gap:9px;font-size:.76rem;color:var(--muted-light);line-height:1.4}
+    .focus-item .fi-icon{font-size:.95rem;flex-shrink:0;margin-top:1px}
+    .cardio-log{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
+    .cardio-log-hd{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted-light);margin-bottom:10px}
+    .log-inputs{display:flex;gap:10px;margin-bottom:12px}
+    .log-field{flex:1;display:flex;flex-direction:column;gap:4px}
+    .log-field label{font-size:.62rem;font-weight:800;color:var(--muted-light);text-transform:uppercase;letter-spacing:.06em}
+    .log-field-row{display:flex;align-items:center;gap:5px}
+    .log-input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.88rem;font-weight:700;padding:7px 8px;text-align:center;-moz-appearance:textfield;width:100%}
+    .log-input::-webkit-inner-spin-button,.log-input::-webkit-outer-spin-button{-webkit-appearance:none}
+    .log-input:focus{outline:none;border-color:var(--teal)}
+    .log-unit{font-size:.62rem;color:var(--muted);font-weight:700}
+    .effort-label{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted-light);margin-bottom:6px}
+    .effort-btns{display:flex;gap:6px}
+    .effort-btn{flex:1;padding:7px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted-light);font-family:inherit;font-size:.72rem;font-weight:800;cursor:pointer;transition:all .2s}
+    .effort-btn:hover{border-color:#444;color:var(--text)}
+    .effort-btn.active-easy{border-color:var(--green);background:var(--green-dim);color:var(--green)}
+    .effort-btn.active-moderate{border-color:var(--gold);background:rgba(251,191,36,.1);color:var(--gold)}
+    .effort-btn.active-hard{border-color:var(--red);background:rgba(248,113,113,.1);color:var(--red)}
+    .cardio-complete-btn{width:100%;padding:14px;border-radius:11px;border:1px solid var(--teal);background:var(--teal-dim);color:var(--teal);font-family:inherit;font-size:.92rem;font-weight:900;cursor:pointer;transition:all .2s;letter-spacing:.02em;margin-bottom:10px}
+    .cardio-complete-btn:hover{background:var(--teal);color:#0a0a0a}
+    .cardio-complete-btn.done{background:var(--teal);color:#0a0a0a;border-color:var(--teal)}
+    .strava-open{display:flex;align-items:center;justify-content:center;gap:6px;font-size:.72rem;font-weight:800;color:var(--muted-light);text-decoration:none;padding:8px;border:1px solid var(--border);border-radius:9px;transition:all .2s}
+    .strava-open:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+    .training-note{font-size:.68rem;color:var(--muted);line-height:1.5;margin-top:14px;padding:10px 12px;background:var(--surface);border-radius:8px;font-style:italic}
+    .dc-cardio .dc-day{color:rgba(45,212,191,.6)}
+    .day-card.active.dc-cardio{border-color:var(--teal);background:var(--teal-dim)}
+    .day-card.active.dc-cardio .dc-label{color:var(--teal)}
+    .day-card:not(.rest-day) .dc-type{font-size:.5rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;margin-top:3px;opacity:.7}
+    .dc-cardio .dc-type{color:var(--teal)}
+    .dc-strength .dc-type{color:var(--accent)}
+
+    /* ── WEEK PICKER ── */
+    .week-picker{padding:14px 12px 0;max-width:660px;margin:0 auto}
+    .week-scroll{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;-ms-overflow-style:none;scrollbar-width:none}
+    .week-scroll::-webkit-scrollbar{display:none}
+    .day-card{
+      flex-shrink:0;background:var(--card);border:1px solid var(--border);
+      border-radius:12px;padding:10px 10px 9px;text-align:center;cursor:pointer;
+      transition:all .2s;min-width:70px;user-select:none;
     }
+    .day-card:hover{border-color:#444;background:var(--card-hover)}
+    .day-card.active{border-color:var(--accent);background:var(--accent-dim)}
+    .day-card.rest-day{opacity:.5;cursor:default}
+    .day-card.rest-day:hover{border-color:var(--border);background:var(--card)}
+    .day-card.today-marker{position:relative}
+    .day-card.today-marker::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--accent)}
+    .dc-emoji{font-size:1.1rem}
+    .dc-label{font-size:.62rem;font-weight:800;margin-top:4px;color:var(--text);line-height:1.2}
+    .dc-day{font-size:.58rem;color:var(--muted-light);margin-top:2px;font-weight:600}
+    .day-card.active .dc-label{color:var(--accent)}
+    .day-card.active .dc-day{color:rgba(249,115,22,.7)}
+    .rest-label{font-size:.6rem;color:var(--muted);margin-top:2px}
+
+    /* ── HERO ── */
+    .hero{padding:20px 16px 16px;display:flex;flex-direction:column;align-items:center;gap:14px}
+    .workout-meta{text-align:center}
+    .workout-title{font-size:1.35rem;font-weight:900}
+    .workout-sub{font-size:.78rem;color:var(--muted-light);margin-top:4px}
+    .workout-mode-badge{display:inline-flex;align-items:center;gap:4px;font-size:.58rem;font-weight:800;padding:2px 8px;border-radius:10px;margin-top:6px;text-transform:uppercase;letter-spacing:.06em}
+    .mode-calisthenics{background:rgba(96,165,250,.12);color:var(--blue)}
+    .mode-dumbbell{background:rgba(249,115,22,.12);color:var(--accent)}
+
+    .ring-wrapper{position:relative;width:180px;height:180px}
+    .progress-svg{width:180px;height:180px;transform:rotate(-90deg)}
+    .ring-track{fill:none;stroke:#1c1c1c;stroke-width:14}
+    .ring-fill{fill:none;stroke:var(--accent);stroke-width:14;stroke-linecap:round;stroke-dasharray:471.24;stroke-dashoffset:471.24;transition:stroke-dashoffset .65s cubic-bezier(.34,1.56,.64,1),stroke .4s ease}
     .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-    .ring-pct{font-size:2.5rem;font-weight:900;line-height:1}
+    .ring-pct{font-size:2.4rem;font-weight:900;line-height:1}
     .ring-label{font-size:.62rem;color:var(--muted-light);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-top:3px}
     .ring-glow{position:absolute;inset:0;border-radius:50%;box-shadow:0 0 60px rgba(74,222,128,0);transition:box-shadow .6s ease;pointer-events:none}
     .ring-glow.on{box-shadow:0 0 70px rgba(74,222,128,.4)}
 
     .stats-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-    .stat-pill{
-      background:var(--card);border:1px solid var(--border);border-radius:20px;
-      padding:5px 13px;font-size:.76rem;font-weight:600;color:var(--muted-light);
-      display:flex;align-items:center;gap:5px;
-    }
+    .stat-pill{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-size:.76rem;font-weight:600;color:var(--muted-light);display:flex;align-items:center;gap:5px}
     .stat-pill strong{color:var(--text)}
+
+    /* ── REST DAY SCREEN ── */
+    .rest-screen{text-align:center;padding:32px 20px;display:none}
+    .rest-screen.visible{display:block}
+    .rest-emoji{font-size:3rem}
+    .rest-title{font-size:1.4rem;font-weight:900;margin-top:12px}
+    .rest-sub{color:var(--muted-light);font-size:.85rem;margin-top:8px;line-height:1.5}
 
     /* ── CONTENT ── */
     .content{max-width:660px;margin:0 auto;padding:0 12px}
+    .workout-content{display:block}
+    .workout-content.hidden{display:none}
 
     /* ── COMPLETION ── */
-    .completion-banner{
-      background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(34,197,94,.04));
-      border:1px solid var(--green);border-radius:16px;
-      padding:22px;text-align:center;margin-bottom:12px;display:none;
-    }
+    .completion-banner{background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(34,197,94,.04));border:1px solid var(--green);border-radius:16px;padding:22px;text-align:center;margin-bottom:12px;display:none}
     .completion-banner.visible{display:block}
     .completion-title{font-size:1.9rem;font-weight:900;color:var(--green)}
     .completion-sub{color:var(--muted-light);margin-top:6px;font-size:.85rem}
@@ -131,10 +174,7 @@
     .section.collapsed .section-body{max-height:0}
 
     /* ── EXERCISE ROW ── */
-    .exercise-row{
-      padding:12px 15px;border-bottom:1px solid rgba(255,255,255,.04);
-      display:flex;align-items:flex-start;gap:10px;transition:background .2s;
-    }
+    .exercise-row{padding:12px 15px;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:10px;transition:background .2s}
     .exercise-row:last-child{border-bottom:none}
     .exercise-row:hover{background:rgba(255,255,255,.015)}
     .exercise-row.row-done .ex-name{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--muted)}
@@ -150,40 +190,56 @@
     .tag-back{background:rgba(52,211,153,.14);color:#34d399}
     .tag-full{background:rgba(251,146,60,.14);color:#fb923c}
     .tag-other{background:rgba(156,163,175,.1);color:#9ca3af}
+    .ex-video-btn{display:inline-flex;align-items:center;gap:3px;font-size:.58rem;font-weight:800;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:2px 7px;cursor:pointer;text-decoration:none;transition:all .18s;vertical-align:middle;margin-left:7px;white-space:nowrap}
+    .ex-video-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
 
-    /* ── EXERCISE RIGHT (dots + weight) ── */
+    /* ── EXERCISE RIGHT ── */
     .exercise-right{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0}
-
-    /* ── SET DOTS ── */
     .set-dots{display:flex;gap:5px;align-items:center}
-    .dot{
-      width:27px;height:27px;border-radius:50%;border:2px solid var(--border);
-      cursor:pointer;display:flex;align-items:center;justify-content:center;
-      background:transparent;font-size:.62rem;font-weight:900;color:transparent;
-      transition:all .18s cubic-bezier(.34,1.56,.64,1);user-select:none;
-    }
+    .dot{width:27px;height:27px;border-radius:50%;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;background:transparent;font-size:.62rem;font-weight:900;color:transparent;transition:all .18s cubic-bezier(.34,1.56,.64,1);user-select:none}
     .dot:hover{border-color:var(--accent);transform:scale(1.12);background:var(--accent-dim)}
     .dot.done{background:var(--green);border-color:var(--green);color:#0a0a0a;transform:scale(1.05)}
     @keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.45)}75%{transform:scale(.92)}100%{transform:scale(1.05)}}
     .dot.popping{animation:pop .32s cubic-bezier(.34,1.56,.64,1) forwards}
     @keyframes unpop{0%{transform:scale(1.05)}40%{transform:scale(.85)}100%{transform:scale(1)}}
     .dot.unpopping{animation:unpop .25s ease forwards}
-
-    /* ── WEIGHT INPUT ── */
     .weight-wrap{display:flex;flex-direction:column;align-items:center;gap:2px}
-    .weight-input{
-      width:62px;background:var(--surface);border:1px solid var(--border);
-      border-radius:7px;color:var(--text);font-family:inherit;font-size:.72rem;
-      font-weight:700;padding:4px 6px;text-align:center;
-      transition:border-color .2s,background .2s;
-      -moz-appearance:textfield;
-    }
+    .weight-input{width:62px;background:var(--surface);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:inherit;font-size:.72rem;font-weight:700;padding:4px 6px;text-align:center;transition:border-color .2s,background .2s;-moz-appearance:textfield}
     .weight-input::-webkit-inner-spin-button,.weight-input::-webkit-outer-spin-button{-webkit-appearance:none}
     .weight-input:focus{outline:none;border-color:var(--accent);background:rgba(249,115,22,.06)}
     .weight-input::placeholder{color:var(--muted);font-weight:600}
     .weight-unit{font-size:.54rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
 
-    /* ── NUTRITION PANEL ── */
+    /* ── SUBMIT ── */
+    .submit-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px 16px;margin-bottom:10px}
+    .submit-panel.submitted{border-color:rgba(74,222,128,.4);background:rgba(74,222,128,.04)}
+    .submit-summary{display:flex;gap:0;margin-bottom:16px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+    .submit-stat{flex:1;text-align:center;padding:10px 6px;border-right:1px solid var(--border)}
+    .submit-stat:last-child{border-right:none}
+    .submit-stat-val{font-size:1rem;font-weight:900;color:var(--text)}
+    .submit-stat-lbl{font-size:.58rem;color:var(--muted-light);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;font-weight:700}
+    .submit-btn{width:100%;padding:14px;border-radius:11px;border:none;background:var(--accent);color:#fff;font-family:inherit;font-size:.92rem;font-weight:900;cursor:pointer;transition:all .2s;letter-spacing:.02em}
+    .submit-btn:hover{background:#ea6a08;transform:translateY(-1px);box-shadow:0 6px 20px rgba(249,115,22,.3)}
+    .submit-btn:disabled{background:var(--muted);cursor:not-allowed;transform:none;box-shadow:none}
+    .submit-btn.done{background:var(--green);color:#0a0a0a}
+    .submit-hint{font-size:.66rem;color:var(--muted);text-align:center;margin-top:8px;line-height:1.4}
+    .submit-muscles{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px}
+
+    /* ── HISTORY ── */
+    .history-empty{font-size:.78rem;color:var(--muted);text-align:center;padding:20px 0}
+    .hist-item{padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:12px}
+    .hist-item:last-child{border-bottom:none}
+    .hist-ring{position:relative;width:36px;height:36px;flex-shrink:0}
+    .hist-svg{width:36px;height:36px;transform:rotate(-90deg)}
+    .hist-track{fill:none;stroke:#222;stroke-width:3.5}
+    .hist-fill{fill:none;stroke:var(--accent);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:75.4;transition:stroke-dashoffset .4s ease}
+    .hist-pct-txt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.52rem;font-weight:900;color:var(--text)}
+    .hist-info{flex:1;min-width:0}
+    .hist-name{font-size:.82rem;font-weight:700}
+    .hist-meta{font-size:.66rem;color:var(--muted-light);margin-top:2px}
+    .hist-date{font-size:.68rem;font-weight:700;color:var(--muted-light);text-align:right;white-space:nowrap}
+
+    /* ── NUTRITION / PANEL ── */
     .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:17px 15px;margin-bottom:10px}
     .panel-hd{font-size:.67rem;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:var(--muted-light);margin-bottom:13px;display:flex;align-items:center;gap:8px}
     .panel-hd span{flex:1}
@@ -203,130 +259,38 @@
     .ql-name{font-size:.7rem;font-weight:800;margin-top:4px}
     .ql-sub{font-size:.58rem;color:var(--muted-light);margin-top:2px}
 
-    /* ── VIDEO LINK ── */
-    .ex-video-btn{
-      display:inline-flex;align-items:center;gap:3px;
-      font-size:.58rem;font-weight:800;color:var(--muted);
-      background:var(--surface);border:1px solid var(--border);
-      border-radius:5px;padding:2px 7px;cursor:pointer;
-      text-decoration:none;transition:all .18s;vertical-align:middle;
-      margin-left:7px;white-space:nowrap;
-    }
-    .ex-video-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
-
-    /* ── SUBMIT SECTION ── */
-    .submit-panel{
-      background:var(--card);border:1px solid var(--border);
-      border-radius:16px;padding:18px 16px;margin-bottom:10px;
-    }
-    .submit-panel.submitted{border-color:rgba(74,222,128,.4);background:rgba(74,222,128,.04)}
-    .submit-summary{display:flex;gap:0;margin-bottom:16px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
-    .submit-stat{flex:1;text-align:center;padding:10px 6px;border-right:1px solid var(--border)}
-    .submit-stat:last-child{border-right:none}
-    .submit-stat-val{font-size:1rem;font-weight:900;color:var(--text)}
-    .submit-stat-lbl{font-size:.58rem;color:var(--muted-light);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;font-weight:700}
-    .submit-btn{
-      width:100%;padding:14px;border-radius:11px;border:none;
-      background:var(--accent);color:#fff;font-family:inherit;
-      font-size:.92rem;font-weight:900;cursor:pointer;
-      transition:all .2s;letter-spacing:.02em;
-    }
-    .submit-btn:hover{background:#ea6a08;transform:translateY(-1px);box-shadow:0 6px 20px rgba(249,115,22,.3)}
-    .submit-btn:disabled{background:var(--muted);cursor:not-allowed;transform:none;box-shadow:none}
-    .submit-btn.done{background:var(--green);color:#0a0a0a}
-    .submit-hint{font-size:.66rem;color:var(--muted);text-align:center;margin-top:8px;line-height:1.4}
-    .submit-muscles{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px}
-
-    /* ── HISTORY ── */
-    .history-empty{font-size:.78rem;color:var(--muted);text-align:center;padding:20px 0}
-    .hist-item{
-      padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04);
-      display:flex;align-items:center;gap:12px;
-    }
-    .hist-item:last-child{border-bottom:none}
-    .hist-ring{position:relative;width:36px;height:36px;flex-shrink:0}
-    .hist-svg{width:36px;height:36px;transform:rotate(-90deg)}
-    .hist-track{fill:none;stroke:#222;stroke-width:3.5}
-    .hist-fill{fill:none;stroke:var(--accent);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:75.4;transition:stroke-dashoffset .4s ease}
-    .hist-pct-txt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.52rem;font-weight:900;color:var(--text)}
-    .hist-info{flex:1;min-width:0}
-    .hist-name{font-size:.82rem;font-weight:700}
-    .hist-meta{font-size:.66rem;color:var(--muted-light);margin-top:2px}
-    .hist-date{font-size:.68rem;font-weight:700;color:var(--muted-light);text-align:right;white-space:nowrap}
-
-    /* ── FOOTER ── */
-    .app-footer{
-      max-width:660px;margin:24px auto 0;padding:0 12px 48px;
-      display:flex;align-items:center;justify-content:space-between;
-    }
+    /* ── FOOTER / ROADMAP ── */
+    .app-footer{max-width:660px;margin:24px auto 0;padding:0 12px 48px;display:flex;align-items:center;justify-content:space-between}
     .footer-copy{font-size:.62rem;color:var(--muted);font-weight:600}
-    .roadmap-btn{
-      background:transparent;border:1px solid var(--border);color:var(--muted-light);
-      padding:7px 14px;border-radius:9px;font-family:inherit;font-size:.74rem;
-      font-weight:700;cursor:pointer;transition:all .2s;
-      display:flex;align-items:center;gap:7px;
-    }
+    .roadmap-btn{background:transparent;border:1px solid var(--border);color:var(--muted-light);padding:7px 14px;border-radius:9px;font-family:inherit;font-size:.74rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:7px}
     .roadmap-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
     .roadmap-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
 
     /* ── ROADMAP MODAL ── */
-    .modal-backdrop{
-      position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;
-      display:flex;align-items:flex-end;justify-content:center;
-      opacity:0;pointer-events:none;transition:opacity .25s ease;
-    }
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease}
     .modal-backdrop.open{opacity:1;pointer-events:all}
-    .modal-sheet{
-      background:var(--surface);border:1px solid var(--border);
-      border-radius:20px 20px 0 0;width:100%;max-width:700px;
-      max-height:88vh;display:flex;flex-direction:column;
-      transform:translateY(40px);transition:transform .3s cubic-bezier(.34,1.56,.64,1);
-    }
+    .modal-sheet{background:var(--surface);border:1px solid var(--border);border-radius:20px 20px 0 0;width:100%;max-width:700px;max-height:88vh;display:flex;flex-direction:column;transform:translateY(40px);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
     .modal-backdrop.open .modal-sheet{transform:translateY(0)}
     .modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
-    .modal-head{
-      padding:16px 20px 12px;border-bottom:1px solid var(--border);
-      display:flex;align-items:center;gap:12px;flex-shrink:0;
-    }
+    .modal-head{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
     .modal-title{font-size:1.05rem;font-weight:900;flex:1}
-    .modal-close{
-      background:var(--card);border:1px solid var(--border);color:var(--muted-light);
-      width:30px;height:30px;border-radius:50%;cursor:pointer;font-family:inherit;
-      font-size:.85rem;display:flex;align-items:center;justify-content:center;
-      transition:all .2s;
-    }
+    .modal-close{background:var(--card);border:1px solid var(--border);color:var(--muted-light);width:30px;height:30px;border-radius:50%;cursor:pointer;font-family:inherit;font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
     .modal-close:hover{background:var(--card-hover);color:var(--text)}
     .modal-body{overflow-y:auto;padding:16px 20px 32px;flex:1}
-    .modal-body::-webkit-scrollbar{width:4px}
-    .modal-body::-webkit-scrollbar-track{background:transparent}
-    .modal-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-
-    /* roadmap phases */
     .rm-phase{margin-bottom:24px}
-    .rm-phase-hd{
-      font-size:.62rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em;
-      color:var(--muted-light);margin-bottom:10px;display:flex;align-items:center;gap:8px;
-    }
+    .rm-phase-hd{font-size:.62rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--muted-light);margin-bottom:10px;display:flex;align-items:center;gap:8px}
     .rm-phase-hd::after{content:'';flex:1;height:1px;background:var(--border)}
     .rm-items{display:flex;flex-direction:column;gap:6px}
-    .rm-item{
-      background:var(--card);border:1px solid var(--border);border-radius:11px;
-      padding:11px 14px;display:flex;align-items:flex-start;gap:11px;
-      transition:border-color .2s;
-    }
-    .rm-item:hover{border-color:#333}
+    .rm-item{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:11px 14px;display:flex;align-items:flex-start;gap:11px;transition:border-color .2s}
     .rm-status{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
     .rm-status.done{background:var(--green);box-shadow:0 0 6px rgba(74,222,128,.4)}
     .rm-status.active{background:var(--accent);box-shadow:0 0 6px rgba(249,115,22,.4)}
     .rm-status.planned{background:var(--muted)}
-    .rm-status.idea{background:#a78bfa;box-shadow:0 0 6px rgba(167,139,250,.3)}
+    .rm-status.idea{background:#a78bfa}
     .rm-text{flex:1;min-width:0}
     .rm-name{font-size:.84rem;font-weight:700;line-height:1.3}
     .rm-desc{font-size:.7rem;color:var(--muted-light);margin-top:2px;line-height:1.4}
-    .rm-badge{
-      font-size:.55rem;font-weight:800;padding:2px 7px;border-radius:6px;
-      text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;flex-shrink:0;
-    }
+    .rm-badge{font-size:.55rem;font-weight:800;padding:2px 7px;border-radius:6px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;flex-shrink:0}
     .badge-done{background:rgba(74,222,128,.12);color:var(--green)}
     .badge-active{background:rgba(249,115,22,.12);color:var(--accent)}
     .badge-planned{background:rgba(255,255,255,.05);color:var(--muted-light)}
@@ -337,7 +301,6 @@
   </style>
 </head>
 <body>
-
 <canvas id="confetti-canvas"></canvas>
 
 <!-- HEADER -->
@@ -346,9 +309,7 @@
     <div class="brand-super">Warren's Lab</div>
     <div class="brand-title">⚡ <span>Fitness</span></div>
   </div>
-  <div class="sync-status" id="syncDot" title="Sync status"></div>
-
-  <!-- MINI RING (fades in on scroll) -->
+  <div class="sync-status" id="syncDot"></div>
   <div class="mini-ring-wrap" id="miniRingWrap">
     <svg class="mini-svg" viewBox="0 0 32 32">
       <circle class="mini-track" cx="16" cy="16" r="11"/>
@@ -356,7 +317,6 @@
     </svg>
     <span class="mini-pct" id="miniPct">0%</span>
   </div>
-
   <div class="spacer"></div>
   <div class="header-btns">
     <button class="btn" id="expandBtn" onclick="toggleAll(event)">Expand All</button>
@@ -364,13 +324,33 @@
   </div>
 </header>
 
+<!-- WEEK PICKER -->
+<div class="week-picker">
+  <div class="mode-selector-wrap">
+    <div class="mode-group-row">
+      <span class="mode-group-label">Weights</span>
+      <div class="mode-group-btns">
+        <button class="mode-btn dumbbell active" id="btnDumbbell" onclick="setMode('dumbbell')">🏋️ Dumbbells</button>
+        <button class="mode-btn calisthenics" id="btnCalisthenics" onclick="setMode('calisthenics')">🤸 Bodyweight</button>
+      </div>
+    </div>
+    <div class="mode-group-row">
+      <span class="mode-group-label">Cardio</span>
+      <div class="mode-group-btns">
+        <button class="mode-btn triathlon" id="btnTriathlon" onclick="setMode('triathlon')">🏊 Triathlon Plan</button>
+      </div>
+    </div>
+  </div>
+  <div class="week-scroll" id="weekScroll"></div>
+</div>
+
 <!-- HERO -->
 <div class="hero">
   <div class="workout-meta">
-    <div class="workout-title">Full-Body Core Focus</div>
-    <div class="workout-sub" id="workoutDate">Dumbbells · ~35-40 min</div>
+    <div class="workout-title" id="heroTitle">—</div>
+    <div class="workout-sub" id="workoutDate">—</div>
+    <div class="workout-mode-badge" id="modeBadge"></div>
   </div>
-
   <div class="ring-wrapper" id="mainRingAnchor">
     <div class="ring-glow" id="ringGlow"></div>
     <svg class="progress-svg" viewBox="0 0 190 190">
@@ -382,74 +362,79 @@
       <div class="ring-label" id="ringLabel">Get started</div>
     </div>
   </div>
-
   <div class="stats-row">
-    <div class="stat-pill">Sets: <strong id="statSets">0 / 31</strong></div>
+    <div class="stat-pill">Sets: <strong id="statSets">—</strong></div>
     <div class="stat-pill">Elapsed: <strong id="statTimer">—</strong></div>
   </div>
 </div>
 
+<!-- REST DAY SCREEN -->
+<div class="rest-screen" id="restScreen">
+  <div class="rest-emoji">😴</div>
+  <div class="rest-title">Rest Day</div>
+  <div class="rest-sub">Your muscles are rebuilding today.<br>Light walk, swim, or stretch — then come back stronger tomorrow.</div>
+</div>
+
 <!-- MAIN CONTENT -->
 <div class="content">
-  <div class="completion-banner" id="completionBanner">
-    <div class="completion-title">Workout Complete!</div>
-    <div class="completion-sub">Every set crushed. Time to fuel up and let the gains happen.</div>
-    <div class="completion-time" id="completionTime"></div>
-  </div>
-
-  <div id="workout-sections"></div>
-
-  <!-- SUBMIT -->
-  <div class="submit-panel" id="submitPanel">
-    <div class="submit-summary">
-      <div class="submit-stat"><div class="submit-stat-val" id="subSets">0/31</div><div class="submit-stat-lbl">Sets Done</div></div>
-      <div class="submit-stat"><div class="submit-stat-val" id="subTime">—</div><div class="submit-stat-lbl">Elapsed</div></div>
-      <div class="submit-stat"><div class="submit-stat-val" id="subMuscles">—</div><div class="submit-stat-lbl">Muscles</div></div>
+  <div class="workout-content" id="workoutContent">
+    <div class="completion-banner" id="completionBanner">
+      <div class="completion-title">Workout Complete!</div>
+      <div class="completion-sub">Every set crushed. Time to fuel up and let the gains happen.</div>
+      <div class="completion-time" id="completionTime"></div>
     </div>
-    <div class="submit-muscles" id="subMuscleTags"></div>
-    <button class="submit-btn" id="submitBtn" onclick="submitWorkout()">Log Workout to History</button>
-    <div class="submit-hint" id="submitHint">Records your progress, weights, and muscle data to your personal history</div>
-  </div>
+    <div id="workout-sections"></div>
 
-  <!-- HISTORY -->
-  <div class="panel" id="historyPanel">
-    <div class="panel-hd"><span>Session History</span></div>
-    <div id="historyList"><div class="history-empty">Loading history…</div></div>
-  </div>
+    <!-- SUBMIT -->
+    <div class="submit-panel" id="submitPanel">
+      <div class="submit-summary">
+        <div class="submit-stat"><div class="submit-stat-val" id="subSets">0/31</div><div class="submit-stat-lbl">Sets Done</div></div>
+        <div class="submit-stat"><div class="submit-stat-val" id="subTime">—</div><div class="submit-stat-lbl">Elapsed</div></div>
+        <div class="submit-stat"><div class="submit-stat-val" id="subMuscles">—</div><div class="submit-stat-lbl">Muscles</div></div>
+      </div>
+      <div class="submit-muscles" id="subMuscleTags"></div>
+      <button class="submit-btn" id="submitBtn" onclick="submitWorkout()">Log Workout to History</button>
+      <div class="submit-hint" id="submitHint">Records your progress, weights, and muscle data to your personal history</div>
+    </div>
 
-  <!-- NUTRITION -->
-  <div class="panel">
-    <div class="panel-hd">
-      <span>Post-Workout Fuel</span>
-      <a class="panel-link" href="../chef/index.html">Open Chef →</a>
+    <!-- HISTORY -->
+    <div class="panel" id="historyPanel">
+      <div class="panel-hd"><span>Session History</span></div>
+      <div id="historyList"><div class="history-empty">Loading…</div></div>
     </div>
-    <div class="food-grid">
-      <div class="food-card"><div class="food-icon">🍗</div><div class="food-name">Chicken Breast</div><div class="food-macro">~31g protein · 165 cal</div></div>
-      <div class="food-card"><div class="food-icon">🥚</div><div class="food-name">Eggs (3)</div><div class="food-macro">~18g protein · 210 cal</div></div>
-      <div class="food-card"><div class="food-icon">🍠</div><div class="food-name">Sweet Potato</div><div class="food-macro">Complex carbs · fiber</div></div>
-      <div class="food-card"><div class="food-icon">🍌</div><div class="food-name">Banana</div><div class="food-macro">Fast carbs · potassium</div></div>
-      <div class="food-card"><div class="food-icon">🧀</div><div class="food-name">Cottage Cheese</div><div class="food-macro">~25g protein · casein</div></div>
-      <div class="food-card"><div class="food-icon">🌾</div><div class="food-name">Oatmeal</div><div class="food-macro">Slow carbs · fiber</div></div>
-    </div>
-    <div style="font-size:.7rem;color:var(--muted-light);line-height:1.5">
-      Aim for <strong style="color:var(--text)">20-40g protein</strong> within 1-2 hours. Pair with complex carbs to replenish glycogen.
-    </div>
-  </div>
 
-  <!-- QUICK LINKS -->
-  <div class="quick-links">
-    <a class="ql" href="../chef/index.html"><div class="ql-icon">👨‍🍳</div><div class="ql-name">Chef</div><div class="ql-sub">Meal planner</div></a>
-    <a class="ql" href="../strava/index.html"><div class="ql-icon">📊</div><div class="ql-name">Strava</div><div class="ql-sub">Activity trends</div></a>
-    <a class="ql" href="../anatomy/"><div class="ql-icon">🧬</div><div class="ql-name">Anatomy</div><div class="ql-sub">Muscle targeting</div></a>
+    <!-- NUTRITION -->
+    <div class="panel">
+      <div class="panel-hd">
+        <span>Post-Workout Fuel</span>
+        <a class="panel-link" href="../chef/index.html">Open Chef →</a>
+      </div>
+      <div class="food-grid">
+        <div class="food-card"><div class="food-icon">🍗</div><div class="food-name">Chicken Breast</div><div class="food-macro">~31g protein · 165 cal</div></div>
+        <div class="food-card"><div class="food-icon">🥚</div><div class="food-name">Eggs (3)</div><div class="food-macro">~18g protein · 210 cal</div></div>
+        <div class="food-card"><div class="food-icon">🍠</div><div class="food-name">Sweet Potato</div><div class="food-macro">Complex carbs · fiber</div></div>
+        <div class="food-card"><div class="food-icon">🍌</div><div class="food-name">Banana</div><div class="food-macro">Fast carbs · potassium</div></div>
+        <div class="food-card"><div class="food-icon">🧀</div><div class="food-name">Cottage Cheese</div><div class="food-macro">~25g protein · casein</div></div>
+        <div class="food-card"><div class="food-icon">🌾</div><div class="food-name">Oatmeal</div><div class="food-macro">Slow carbs · fiber</div></div>
+      </div>
+      <div style="font-size:.7rem;color:var(--muted-light);line-height:1.5">
+        Aim for <strong style="color:var(--text)">20-40g protein</strong> within 1-2 hours. Pair with complex carbs to replenish glycogen.
+      </div>
+    </div>
+
+    <div class="quick-links">
+      <a class="ql" href="../chef/index.html"><div class="ql-icon">👨‍🍳</div><div class="ql-name">Chef</div><div class="ql-sub">Meal planner</div></a>
+      <a class="ql" href="../strava/index.html"><div class="ql-icon">📊</div><div class="ql-name">Strava</div><div class="ql-sub">Activity trends</div></a>
+      <a class="ql" href="../anatomy/"><div class="ql-icon">🧬</div><div class="ql-name">Anatomy</div><div class="ql-sub">Muscle targeting</div></a>
+    </div>
   </div>
 </div>
 
 <!-- FOOTER -->
 <div class="app-footer">
-  <div class="footer-copy">Warren's Lab · Fitness v0.2</div>
+  <div class="footer-copy">Warren's Lab · Fitness v0.3</div>
   <button class="roadmap-btn" onclick="openRoadmap()">
-    <div class="roadmap-dot"></div>
-    View Roadmap
+    <div class="roadmap-dot"></div>View Roadmap
   </button>
 </div>
 
@@ -472,796 +457,1091 @@
 const SB_URL = 'https://xmcvgikzblgiehfjpncu.supabase.co';
 const SB_KEY = 'sb_publishable_oGz8JW7fQ0n5GJ2WYBansg_AxPcBbgT';
 const sb = window.supabase.createClient(SB_URL, SB_KEY);
-
-function setSyncStatus(s) {
-  document.getElementById('syncDot').className = 'sync-status ' + s;
-}
+function setSyncStatus(s){document.getElementById('syncDot').className='sync-status '+s}
 
 // ═══════════════════════════════════════════════════════
-//  WORKOUT DATA
+//  WEEK PLANS
 // ═══════════════════════════════════════════════════════
-const WORKOUT = {
-  title: 'Full-Body Core Focus',
-  totalSets: 31,
-  sections: [
-    {
-      id: 'warmup', name: 'Warm-Up', emoji: '🔥', meta: '5 min · no equipment', weighted: false,
-      exercises: [
-        { id: 'w1', name: 'Bodyweight Squats', detail: '15 reps', sets: 1, muscles: [['lower','Quads'],['lower','Glutes']], tip: null, video_url: 'https://www.youtube.com/watch?v=aclHkVaku9U' },
-        { id: 'w2', name: 'Arm Circles + Torso Twists', detail: '10 each direction', sets: 1, muscles: [['upper','Shoulders'],['core','Core']], tip: null, video_url: 'https://www.youtube.com/results?search_query=arm+circles+torso+twists+warmup+mobility' },
-        { id: 'w3', name: 'Cat-Cow / Back Extensions', detail: '10 reps', sets: 1, muscles: [['back','Spine'],['core','Core']], tip: 'Slow and controlled — warm up the posterior chain', video_url: 'https://www.youtube.com/results?search_query=cat+cow+stretch+back+extension+warmup' },
-      ]
-    },
-    {
-      id: 'strength', name: 'Main Strength Block', emoji: '💪', meta: '3 rounds · 60-90s rest between exercises', weighted: true,
-      exercises: [
-        { id: 's1', name: 'Goblet Squats', detail: '12 reps (dumbbell at chest)', sets: 3, muscles: [['lower','Quads'],['lower','Glutes'],['core','Core']], tip: 'Chest tall, knees track over toes', video_url: 'https://www.youtube.com/watch?v=MeIiIdhvXT4' },
-        { id: 's2', name: 'Dumbbell Row', detail: '10-12 reps each side', sets: 3, muscles: [['back','Back'],['upper','Biceps']], tip: 'Drive elbow to ceiling, not the weight', video_url: 'https://www.youtube.com/watch?v=pYcpY20QaE8' },
-        { id: 's3', name: 'Floor Press / Overhead Press', detail: '10-12 reps', sets: 3, muscles: [['upper','Chest'],['upper','Shoulders'],['upper','Triceps']], tip: null, video_url: 'https://www.youtube.com/watch?v=uUGDRwge4F8' },
-        { id: 's4', name: 'Romanian Deadlift', detail: '12 reps', sets: 3, muscles: [['lower','Hamstrings'],['lower','Glutes'],['back','Lower Back']], tip: 'Hinge at hips, soft bend in knees, bar stays close', video_url: 'https://www.youtube.com/watch?v=jEy_czb3RKA' },
-        { id: 's5', name: 'Walking Lunges', detail: '10 reps each leg', sets: 3, muscles: [['lower','Quads'],['lower','Glutes']], tip: null, video_url: 'https://www.youtube.com/watch?v=L8fvypPrzzs' },
-      ]
-    },
-    {
-      id: 'core', name: 'Core Finisher', emoji: '🎯', meta: '2 rounds · your focus today', weighted: true,
-      exercises: [
-        { id: 'c1', name: 'Weighted Russian Twists', detail: '15 each side', sets: 2, muscles: [['core','Obliques'],['core','Core']], tip: 'Focus on rotation, not speed', video_url: 'https://www.youtube.com/watch?v=wkD8rjkodUI' },
-        { id: 'c2', name: 'Dumbbell Deadbug', detail: '10 each side', sets: 2, muscles: [['core','Core'],['core','Stability']], tip: 'Lower back STAYS pressed to the floor', video_url: 'https://www.youtube.com/watch?v=4XLEnwUr1d8' },
-        { id: 'c3', name: 'Plank Hold', detail: '30-45 sec', sets: 2, muscles: [['core','Core'],['upper','Shoulders']], tip: null, video_url: 'https://www.youtube.com/watch?v=pvIjcsm_8dU' },
-        { id: 'c4', name: 'Standing Side Bends', detail: '12 each side (light weight)', sets: 2, muscles: [['core','Obliques']], tip: 'Control work, not bulk — keep it light', video_url: 'https://www.youtube.com/watch?v=ojbxGQHjCE8' },
-        { id: 'c5', name: 'Bicycle Crunches', detail: '20 total', sets: 2, muscles: [['core','Core'],['core','Obliques']], tip: null, video_url: 'https://www.youtube.com/watch?v=9FGilxCbdz8' },
-      ]
-    },
-    {
-      id: 'cooldown', name: 'Cool-Down', emoji: '🧘', meta: '5 min · breathe deep', weighted: false,
-      exercises: [
-        { id: 'd1', name: "Child's Pose / Cat-Cow", detail: 'Hold & breathe', sets: 1, muscles: [['other','Spine'],['other','Hips']], tip: null, video_url: 'https://www.youtube.com/results?search_query=child+pose+cat+cow+cool+down+stretch' },
-        { id: 'd2', name: 'Seated Spinal Twist', detail: 'Both sides', sets: 1, muscles: [['back','Back'],['other','Spine']], tip: null, video_url: 'https://www.youtube.com/results?search_query=seated+spinal+twist+stretch+cool+down' },
-        { id: 'd3', name: 'Standing Forward Fold', detail: 'Hold 30 sec', sets: 1, muscles: [['lower','Hamstrings'],['other','Calves']], tip: null, video_url: 'https://www.youtube.com/results?search_query=standing+forward+fold+hamstring+stretch' },
-      ]
-    }
-  ]
+const DUMBBELL_PLAN = [
+  { dayIndex:1, day:'Mon', label:'DB Push',       workoutId:'db-push',       emoji:'💪', date:'Jun 22' },
+  { dayIndex:2, day:'Tue', label:'DB Lower',      workoutId:'db-lower',      emoji:'🦵', date:'Jun 23' },
+  { dayIndex:3, day:'Wed', label:'Rest Day',       workoutId:null,            emoji:'😴', date:'Jun 24' },
+  { dayIndex:4, day:'Thu', label:'DB Pull',        workoutId:'db-pull',       emoji:'🔙', date:'Jun 25' },
+  { dayIndex:5, day:'Fri', label:'Full Body',      workoutId:'full-body-core',emoji:'⚡', date:'Jun 26' },
+  { dayIndex:6, day:'Sat', label:'DB Upper',       workoutId:'db-upper',      emoji:'🏋️', date:'Jun 27' },
+  { dayIndex:0, day:'Sun', label:'Rest Day',       workoutId:null,            emoji:'☀️', date:'Jun 28' },
+];
+
+const CALISTHENICS_PLAN = [
+  { dayIndex:1, day:'Mon', label:'Push Power',    workoutId:'push',           emoji:'💪', date:'Jun 29' },
+  { dayIndex:2, day:'Tue', label:'Legs & Glutes', workoutId:'legs',           emoji:'🦵', date:'Jun 30' },
+  { dayIndex:3, day:'Wed', label:'Rest Day',       workoutId:null,             emoji:'😴', date:'Jul 1'  },
+  { dayIndex:4, day:'Thu', label:'Pull & Back',    workoutId:'pull',           emoji:'🔙', date:'Jul 2'  },
+  { dayIndex:5, day:'Fri', label:'Full Circuit',   workoutId:'circuit',        emoji:'⚡', date:'Jul 3'  },
+  { dayIndex:6, day:'Sat', label:'Upper Burn',     workoutId:'upper',          emoji:'🏋️', date:'Jul 4'  },
+  { dayIndex:0, day:'Sun', label:'Rest Day',       workoutId:null,             emoji:'☀️', date:'Jul 5'  },
+];
+
+const TRIATHLON_PLAN = [
+  { dayIndex:1, day:'Mon', label:'DB Lower',    workoutId:'db-lower',       emoji:'🦵', date:'Jun 22', cardio:false },
+  { dayIndex:2, day:'Tue', label:'Easy Run',    workoutId:'run-easy',       emoji:'🏃', date:'Jun 23', cardio:true  },
+  { dayIndex:3, day:'Wed', label:'DB Push',     workoutId:'db-push',        emoji:'💪', date:'Jun 24', cardio:false },
+  { dayIndex:4, day:'Thu', label:'Swim / Bike', workoutId:'swim-easy',      emoji:'🏊', date:'Jun 25', cardio:true  },
+  { dayIndex:5, day:'Fri', label:'Full Body',   workoutId:'full-body-core', emoji:'⚡', date:'Jun 26', cardio:false },
+  { dayIndex:6, day:'Sat', label:'Long Ride',   workoutId:'bike-long',      emoji:'🚴', date:'Jun 27', cardio:true  },
+  { dayIndex:0, day:'Sun', label:'Rest Day',    workoutId:null,             emoji:'☀️', date:'Jun 28', cardio:false },
+];
+
+const WORKOUTS = {
+  // ── EXISTING DUMBBELL WORKOUT ───────────────────────
+  'full-body-core': {
+    title:'Full-Body Core Focus', mode:'dumbbell', totalSets:31,
+    sections:[
+      { id:'warmup', name:'Warm-Up', emoji:'🔥', meta:'5 min · no equipment', weighted:false, exercises:[
+        { id:'w1', name:'Bodyweight Squats',        detail:'15 reps',             sets:1, muscles:[['lower','Quads'],['lower','Glutes']],       tip:null, video_url:'https://www.youtube.com/watch?v=aclHkVaku9U' },
+        { id:'w2', name:'Arm Circles + Torso Twists', detail:'10 each direction', sets:1, muscles:[['upper','Shoulders'],['core','Core']],       tip:null, video_url:'https://www.youtube.com/results?search_query=arm+circles+torso+twists+warmup' },
+        { id:'w3', name:'Cat-Cow / Back Extensions', detail:'10 reps',            sets:1, muscles:[['back','Spine'],['core','Core']],             tip:'Slow and controlled — warm up the posterior chain', video_url:'https://www.youtube.com/results?search_query=cat+cow+stretch+warmup' },
+      ]},
+      { id:'strength', name:'Main Strength Block', emoji:'💪', meta:'3 rounds · 60-90s rest', weighted:true, exercises:[
+        { id:'s1', name:'Goblet Squats',             detail:'12 reps (dumbbell at chest)', sets:3, muscles:[['lower','Quads'],['lower','Glutes'],['core','Core']], tip:'Chest tall, knees track over toes', video_url:'https://www.youtube.com/watch?v=MeIiIdhvXT4' },
+        { id:'s2', name:'Dumbbell Row',              detail:'10-12 reps each side',        sets:3, muscles:[['back','Back'],['upper','Biceps']],                  tip:'Drive elbow to ceiling, not the weight', video_url:'https://www.youtube.com/watch?v=pYcpY20QaE8' },
+        { id:'s3', name:'Floor Press / Overhead Press', detail:'10-12 reps',              sets:3, muscles:[['upper','Chest'],['upper','Shoulders'],['upper','Triceps']], tip:null, video_url:'https://www.youtube.com/watch?v=uUGDRwge4F8' },
+        { id:'s4', name:'Romanian Deadlift',         detail:'12 reps',                    sets:3, muscles:[['lower','Hamstrings'],['lower','Glutes'],['back','Lower Back']], tip:'Hinge at hips, soft bend in knees, bar stays close', video_url:'https://www.youtube.com/watch?v=jEy_czb3RKA' },
+        { id:'s5', name:'Walking Lunges',            detail:'10 reps each leg',           sets:3, muscles:[['lower','Quads'],['lower','Glutes']],                 tip:null, video_url:'https://www.youtube.com/watch?v=L8fvypPrzzs' },
+      ]},
+      { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds · your focus today', weighted:true, exercises:[
+        { id:'c1', name:'Weighted Russian Twists',   detail:'15 each side',  sets:2, muscles:[['core','Obliques'],['core','Core']],     tip:'Focus on rotation, not speed', video_url:'https://www.youtube.com/watch?v=wkD8rjkodUI' },
+        { id:'c2', name:'Dumbbell Deadbug',          detail:'10 each side',  sets:2, muscles:[['core','Core'],['core','Stability']],    tip:'Lower back STAYS pressed to the floor', video_url:'https://www.youtube.com/watch?v=4XLEnwUr1d8' },
+        { id:'c3', name:'Plank Hold',                detail:'30-45 sec',     sets:2, muscles:[['core','Core'],['upper','Shoulders']],   tip:null, video_url:'https://www.youtube.com/watch?v=pvIjcsm_8dU' },
+        { id:'c4', name:'Standing Side Bends',       detail:'12 each side (light)', sets:2, muscles:[['core','Obliques']],             tip:'Control work, not bulk — keep it light', video_url:'https://www.youtube.com/watch?v=ojbxGQHjCE8' },
+        { id:'c5', name:'Bicycle Crunches',          detail:'20 total',      sets:2, muscles:[['core','Core'],['core','Obliques']],     tip:null, video_url:'https://www.youtube.com/watch?v=9FGilxCbdz8' },
+      ]},
+      { id:'cooldown', name:'Cool-Down', emoji:'🧘', meta:'5 min · breathe deep', weighted:false, exercises:[
+        { id:'d1', name:"Child's Pose / Cat-Cow",    detail:'Hold & breathe',  sets:1, muscles:[['other','Spine'],['other','Hips']],     tip:null, video_url:'https://www.youtube.com/results?search_query=child+pose+cool+down+stretch' },
+        { id:'d2', name:'Seated Spinal Twist',       detail:'Both sides',      sets:1, muscles:[['back','Back'],['other','Spine']],       tip:null, video_url:'https://www.youtube.com/results?search_query=seated+spinal+twist+stretch' },
+        { id:'d3', name:'Standing Forward Fold',     detail:'Hold 30 sec',     sets:1, muscles:[['lower','Hamstrings'],['other','Calves']], tip:null, video_url:'https://www.youtube.com/results?search_query=standing+forward+fold+hamstring+stretch' },
+      ]},
+    ]
+  },
+
+  // ── DB PUSH (Mon) ───────────────────────────────────
+  'db-push': {
+    title:'DB Push Power', mode:'dumbbell', totalSets:31,
+    sections:[
+      { id:'warmup', name:'Warm-Up', emoji:'🔥', meta:'5 min', weighted:false, exercises:[
+        { id:'w1', name:'Arm Circles',            detail:'10 each direction',    sets:1, muscles:[['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/results?search_query=arm+circles+shoulder+warmup' },
+        { id:'w2', name:'Push-Up (activation)',   detail:'10 easy reps',         sets:1, muscles:[['upper','Chest'],['upper','Triceps']], tip:'Light activation — get blood into the chest', video_url:'https://www.youtube.com/watch?v=IODxDxX7oi4' },
+        { id:'w3', name:'Shoulder Rolls',         detail:'10 each direction',    sets:1, muscles:[['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/results?search_query=shoulder+rolls+warmup+mobility' },
+      ]},
+      { id:'strength', name:'Push Block', emoji:'💪', meta:'3 rounds · 60-90s rest', weighted:true, exercises:[
+        { id:'s1', name:'DB Floor Press',         detail:'12 reps',              sets:3, muscles:[['upper','Chest'],['upper','Triceps'],['upper','Shoulders']], tip:'Elbows at 45°, full range — touch floor, lockout at top', video_url:'https://www.youtube.com/watch?v=uUGDRwge4F8' },
+        { id:'s2', name:'DB Overhead Press',      detail:'10-12 reps',           sets:3, muscles:[['upper','Shoulders'],['upper','Triceps']], tip:'Core braced — press straight overhead, don\'t flare ribs', video_url:'https://www.youtube.com/watch?v=qEwKCR5JCog' },
+        { id:'s3', name:'DB Lateral Raise',       detail:'12-15 reps',           sets:3, muscles:[['upper','Shoulders'],['upper','Lateral Delts']], tip:'Slight forward lean, lead with elbows — go lighter than you think', video_url:'https://www.youtube.com/watch?v=3VcKaXpzqRo' },
+        { id:'s4', name:'DB Arnold Press',        detail:'10-12 reps',           sets:3, muscles:[['upper','Shoulders'],['upper','Triceps']], tip:'Start palms facing you, rotate out as you press — hits all three delt heads', video_url:'https://www.youtube.com/watch?v=vj2w851ZHRM' },
+        { id:'s5', name:'DB Tricep Kickback',     detail:'12 reps each arm',     sets:3, muscles:[['upper','Triceps']], tip:'Upper arm parallel to floor, extend fully — squeeze at lockout', video_url:'https://www.youtube.com/watch?v=6SS6K3lAwZ8' },
+      ]},
+      { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds', weighted:true, exercises:[
+        { id:'c1', name:'DB Russian Twist',       detail:'15 each side',         sets:2, muscles:[['core','Obliques'],['core','Core']], tip:null, video_url:'https://www.youtube.com/watch?v=wkD8rjkodUI' },
+        { id:'c2', name:'Plank Hold',             detail:'45 sec',               sets:2, muscles:[['core','Core'],['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/watch?v=pvIjcsm_8dU' },
+        { id:'c3', name:'Mountain Climbers',      detail:'20 total',             sets:2, muscles:[['core','Core'],['core','Hip Flexors']], tip:null, video_url:'https://www.youtube.com/watch?v=nmwgirgXLYM' },
+        { id:'c4', name:'Bicycle Crunches',       detail:'20 total',             sets:2, muscles:[['core','Core'],['core','Obliques']], tip:null, video_url:'https://www.youtube.com/watch?v=9FGilxCbdz8' },
+        { id:'c5', name:'Side Plank',             detail:'30 sec each side',     sets:2, muscles:[['core','Obliques']], tip:null, video_url:'https://www.youtube.com/watch?v=K2J1cqe5mNY' },
+      ]},
+      { id:'cooldown', name:'Cool-Down', emoji:'🧘', meta:'5 min', weighted:false, exercises:[
+        { id:'d1', name:"Child's Pose",           detail:'Hold 45 sec',          sets:1, muscles:[['other','Spine'],['other','Hips']], tip:null, video_url:'https://www.youtube.com/results?search_query=child+pose+cool+down' },
+        { id:'d2', name:'Chest Doorframe Stretch',detail:'30 sec each side',     sets:1, muscles:[['upper','Chest'],['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/results?search_query=chest+doorframe+pec+stretch+cool+down' },
+        { id:'d3', name:'Tricep Overhead Stretch',detail:'30 sec each arm',      sets:1, muscles:[['upper','Triceps']], tip:null, video_url:'https://www.youtube.com/results?search_query=tricep+overhead+stretch' },
+      ]},
+    ]
+  },
+
+  // ── DB LOWER (Tue) ──────────────────────────────────
+  'db-lower': {
+    title:'DB Lower Body', mode:'dumbbell', totalSets:31,
+    sections:[
+      { id:'warmup', name:'Warm-Up', emoji:'🔥', meta:'5 min', weighted:false, exercises:[
+        { id:'w1', name:'Leg Swings',             detail:'10 each leg fwd/back', sets:1, muscles:[['lower','Hamstrings'],['lower','Hip Flexors']], tip:'Hold a wall for balance', video_url:'https://www.youtube.com/results?search_query=leg+swings+warmup+hip+mobility' },
+        { id:'w2', name:'Hip Circles',            detail:'10 each direction',    sets:1, muscles:[['other','Hips'],['lower','Glutes']], tip:null, video_url:'https://www.youtube.com/results?search_query=hip+circles+warmup+mobility' },
+        { id:'w3', name:'Bodyweight Squats',      detail:'15 slow reps',         sets:1, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Wake up the legs before loading them', video_url:'https://www.youtube.com/watch?v=aclHkVaku9U' },
+      ]},
+      { id:'strength', name:'Lower Body Block', emoji:'🦵', meta:'3 rounds · 60-90s rest', weighted:true, exercises:[
+        { id:'s1', name:'Goblet Squat',           detail:'12 reps',              sets:3, muscles:[['lower','Quads'],['lower','Glutes'],['core','Core']], tip:'Chest tall, DB at sternum — squat deep, drive through heels', video_url:'https://www.youtube.com/watch?v=MeIiIdhvXT4' },
+        { id:'s2', name:'Romanian Deadlift',      detail:'12 reps',              sets:3, muscles:[['lower','Hamstrings'],['lower','Glutes'],['back','Lower Back']], tip:'Hinge at hips, soft knee bend — feel the stretch in hamstrings', video_url:'https://www.youtube.com/watch?v=jEy_czb3RKA' },
+        { id:'s3', name:'Walking Lunges',         detail:'10 each leg',          sets:3, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Front shin stays vertical — rear knee drops toward floor', video_url:'https://www.youtube.com/watch?v=L8fvypPrzzs' },
+        { id:'s4', name:'DB Step-Up (chair/step)',detail:'10 each leg',          sets:3, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Drive through the heel of the working leg — don\'t push off the floor', video_url:'https://www.youtube.com/watch?v=dQqApCGd5Ss' },
+        { id:'s5', name:'DB Hip Thrust',          detail:'15 reps',              sets:3, muscles:[['lower','Glutes'],['lower','Hamstrings']], tip:'Shoulders on a surface, DB on hips — drive through heels, squeeze at top', video_url:'https://www.youtube.com/watch?v=wPM8icPu6H8' },
+      ]},
+      { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds', weighted:true, exercises:[
+        { id:'c1', name:'Dead Bug',               detail:'10 each side',         sets:2, muscles:[['core','Core']], tip:'Lower back glued to floor — no exceptions', video_url:'https://www.youtube.com/watch?v=4XLEnwUr1d8' },
+        { id:'c2', name:'Bird Dog',               detail:'10 each side',         sets:2, muscles:[['core','Core'],['back','Lower Back']], tip:'Opposite arm and leg — hips perfectly level', video_url:'https://www.youtube.com/watch?v=wiFNA3sqjCA' },
+        { id:'c3', name:'V-Up',                   detail:'15 reps',              sets:2, muscles:[['core','Core'],['core','Hip Flexors']], tip:null, video_url:'https://www.youtube.com/watch?v=7UVgs18Y1P4' },
+        { id:'c4', name:'DB Russian Twist',       detail:'15 each side',         sets:2, muscles:[['core','Obliques']], tip:null, video_url:'https://www.youtube.com/watch?v=wkD8rjkodUI' },
+        { id:'c5', name:'Side Plank',             detail:'30 sec each side',     sets:2, muscles:[['core','Obliques']], tip:null, video_url:'https://www.youtube.com/watch?v=K2J1cqe5mNY' },
+      ]},
+      { id:'cooldown', name:'Cool-Down', emoji:'🧘', meta:'5 min', weighted:false, exercises:[
+        { id:'d1', name:'Seated Forward Fold',    detail:'Hold 45 sec',          sets:1, muscles:[['lower','Hamstrings'],['other','Spine']], tip:null, video_url:'https://www.youtube.com/results?search_query=seated+forward+fold+hamstring+stretch' },
+        { id:'d2', name:'Pigeon Pose',            detail:'45 sec each side',     sets:1, muscles:[['other','Hips'],['lower','Glutes']], tip:'Modify with figure-4 lying on back if needed', video_url:'https://www.youtube.com/results?search_query=pigeon+pose+hip+flexor+stretch' },
+        { id:'d3', name:'Standing Quad Stretch',  detail:'30 sec each leg',      sets:1, muscles:[['lower','Quads'],['lower','Hip Flexors']], tip:null, video_url:'https://www.youtube.com/results?search_query=standing+quad+stretch+cool+down' },
+      ]},
+    ]
+  },
+
+  // ── DB PULL (Thu) ────────────────────────────────────
+  'db-pull': {
+    title:'DB Pull & Back', mode:'dumbbell', totalSets:31,
+    sections:[
+      { id:'warmup', name:'Warm-Up', emoji:'🔥', meta:'5 min', weighted:false, exercises:[
+        { id:'w1', name:'Cat-Cow',                detail:'10 slow reps',         sets:1, muscles:[['back','Spine'],['core','Core']], tip:'Breathe into each position', video_url:'https://www.youtube.com/results?search_query=cat+cow+stretch+warmup' },
+        { id:'w2', name:'Arm Circles',            detail:'10 each direction',    sets:1, muscles:[['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/results?search_query=arm+circles+shoulder+warmup' },
+        { id:'w3', name:'Thoracic Rotation',      detail:'10 each side',         sets:1, muscles:[['back','Upper Back'],['other','Spine']], tip:'Rotate just the upper back, not the hips', video_url:'https://www.youtube.com/results?search_query=thoracic+rotation+mobility+warmup' },
+      ]},
+      { id:'strength', name:'Pull Block', emoji:'🔙', meta:'3 rounds · 60-90s rest', weighted:true, exercises:[
+        { id:'s1', name:'DB Single-Arm Row',      detail:'12 reps each side',    sets:3, muscles:[['back','Back'],['back','Lats'],['upper','Biceps']], tip:'Brace on a surface, drive elbow to ceiling — not the weight', video_url:'https://www.youtube.com/watch?v=pYcpY20QaE8' },
+        { id:'s2', name:'DB Rear Delt Fly',       detail:'15 reps',              sets:3, muscles:[['upper','Rear Delts'],['back','Upper Back']], tip:'Hinge at hips, arms out to sides — lead with elbows, not hands', video_url:'https://www.youtube.com/watch?v=EA7u4Q_8HQ0' },
+        { id:'s3', name:'DB Bicep Curl',          detail:'12 reps',              sets:3, muscles:[['upper','Biceps']], tip:'Full extension at bottom, supinate at top — control the negative', video_url:'https://www.youtube.com/watch?v=in7PaeYlhrM' },
+        { id:'s4', name:'DB Hammer Curl',         detail:'12 reps',              sets:3, muscles:[['upper','Biceps'],['upper','Brachialis']], tip:'Neutral grip (thumbs up) — hits the outer bicep and brachialis', video_url:'https://www.youtube.com/watch?v=zC3nLlEvin4' },
+        { id:'s5', name:'DB Bent-Over Row',       detail:'12 reps',              sets:3, muscles:[['back','Back'],['back','Lats'],['upper','Biceps']], tip:'Hip hinge, flat back — row both DBs to lower ribcage', video_url:'https://www.youtube.com/watch?v=FWJR5Ve8bnQ' },
+      ]},
+      { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds', weighted:true, exercises:[
+        { id:'c1', name:'Dead Bug',               detail:'10 each side',         sets:2, muscles:[['core','Core']], tip:null, video_url:'https://www.youtube.com/watch?v=4XLEnwUr1d8' },
+        { id:'c2', name:'Hollow Body Hold',       detail:'30 sec',               sets:2, muscles:[['core','Core']], tip:'Ribs tucked, lower back flat, arms and legs long and low', video_url:'https://www.youtube.com/watch?v=LlDNef_Ztsc' },
+        { id:'c3', name:'Plank Hold',             detail:'45 sec',               sets:2, muscles:[['core','Core'],['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/watch?v=pvIjcsm_8dU' },
+        { id:'c4', name:'Bicycle Crunches',       detail:'20 total',             sets:2, muscles:[['core','Core'],['core','Obliques']], tip:null, video_url:'https://www.youtube.com/watch?v=9FGilxCbdz8' },
+        { id:'c5', name:'Side Plank',             detail:'30 sec each side',     sets:2, muscles:[['core','Obliques']], tip:null, video_url:'https://www.youtube.com/watch?v=K2J1cqe5mNY' },
+      ]},
+      { id:'cooldown', name:'Cool-Down', emoji:'🧘', meta:'5 min', weighted:false, exercises:[
+        { id:'d1', name:"Child's Pose",           detail:'Hold 45 sec',          sets:1, muscles:[['other','Hips'],['back','Spine']], tip:null, video_url:'https://www.youtube.com/results?search_query=child+pose+cool+down' },
+        { id:'d2', name:'Cat-Cow Flow',           detail:'10 slow reps',         sets:1, muscles:[['back','Spine']], tip:null, video_url:'https://www.youtube.com/results?search_query=cat+cow+flow+cool+down' },
+        { id:'d3', name:'Lying Spinal Twist',     detail:'45 sec each side',     sets:1, muscles:[['other','Spine'],['back','Back']], tip:null, video_url:'https://www.youtube.com/results?search_query=lying+spinal+twist+cool+down' },
+      ]},
+    ]
+  },
+
+  // ── DB UPPER BURN (Sat) ──────────────────────────────
+  'db-upper': {
+    title:'DB Upper Burn', mode:'dumbbell', totalSets:31,
+    sections:[
+      { id:'warmup', name:'Warm-Up', emoji:'🔥', meta:'5 min', weighted:false, exercises:[
+        { id:'w1', name:'Arm Circles',            detail:'10 each direction',    sets:1, muscles:[['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/results?search_query=arm+circles+shoulder+warmup' },
+        { id:'w2', name:'Shoulder Pass-Throughs', detail:'10 slow reps',         sets:1, muscles:[['upper','Shoulders'],['upper','Chest']], tip:'Use a towel or resistance band — full range of motion', video_url:'https://www.youtube.com/results?search_query=shoulder+pass+through+mobility+warmup' },
+        { id:'w3', name:'Cat-Cow',                detail:'10 reps',              sets:1, muscles:[['back','Spine'],['core','Core']], tip:null, video_url:'https://www.youtube.com/results?search_query=cat+cow+warmup' },
+      ]},
+      { id:'strength', name:'Upper Body Block', emoji:'🏋️', meta:'3 rounds · lighter / higher rep', weighted:true, exercises:[
+        { id:'s1', name:'DB Lateral Raise',       detail:'15-20 reps (light)',   sets:3, muscles:[['upper','Lateral Delts'],['upper','Shoulders']], tip:'Slightly lighter than usual — focus on the squeeze at the top', video_url:'https://www.youtube.com/watch?v=3VcKaXpzqRo' },
+        { id:'s2', name:'DB Front Raise',         detail:'12-15 reps',           sets:3, muscles:[['upper','Front Delts'],['upper','Shoulders']], tip:'Arms parallel to floor at top — controlled descent', video_url:'https://www.youtube.com/results?search_query=dumbbell+front+raise+form+tutorial' },
+        { id:'s3', name:'DB Arnold Press',        detail:'12 reps',              sets:3, muscles:[['upper','Shoulders'],['upper','Triceps']], tip:'Palms face you at the bottom, rotate out as you press', video_url:'https://www.youtube.com/watch?v=vj2w851ZHRM' },
+        { id:'s4', name:'DB Upright Row',         detail:'12 reps',              sets:3, muscles:[['upper','Shoulders'],['upper','Traps'],['upper','Biceps']], tip:'Lead with elbows — pull to chin level, not higher', video_url:'https://www.youtube.com/watch?v=amCU-ziHITM' },
+        { id:'s5', name:'DB Floor Fly',           detail:'12-15 reps',           sets:3, muscles:[['upper','Chest'],['upper','Shoulders']], tip:'Wide arc — slight bend in elbows, lower until arms near floor', video_url:'https://www.youtube.com/watch?v=eozdVDA78K0' },
+      ]},
+      { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds', weighted:true, exercises:[
+        { id:'c1', name:'DB Russian Twist',       detail:'15 each side',         sets:2, muscles:[['core','Obliques']], tip:null, video_url:'https://www.youtube.com/watch?v=wkD8rjkodUI' },
+        { id:'c2', name:'Plank Hold',             detail:'45 sec',               sets:2, muscles:[['core','Core']], tip:null, video_url:'https://www.youtube.com/watch?v=pvIjcsm_8dU' },
+        { id:'c3', name:'Dead Bug',               detail:'10 each side',         sets:2, muscles:[['core','Core']], tip:null, video_url:'https://www.youtube.com/watch?v=4XLEnwUr1d8' },
+        { id:'c4', name:'V-Up',                   detail:'15 reps',              sets:2, muscles:[['core','Core'],['core','Hip Flexors']], tip:null, video_url:'https://www.youtube.com/watch?v=7UVgs18Y1P4' },
+        { id:'c5', name:'Mountain Climbers',      detail:'20 total',             sets:2, muscles:[['core','Core'],['core','Hip Flexors']], tip:null, video_url:'https://www.youtube.com/watch?v=nmwgirgXLYM' },
+      ]},
+      { id:'cooldown', name:'Cool-Down', emoji:'🧘', meta:'5 min', weighted:false, exercises:[
+        { id:'d1', name:"Child's Pose",           detail:'Hold 45 sec',          sets:1, muscles:[['other','Hips'],['back','Spine']], tip:null, video_url:'https://www.youtube.com/results?search_query=child+pose+cool+down' },
+        { id:'d2', name:'Chest / Pec Stretch',    detail:'30 sec each side',     sets:1, muscles:[['upper','Chest'],['upper','Shoulders']], tip:'Arm at 90° on doorframe, rotate body away', video_url:'https://www.youtube.com/results?search_query=chest+pec+doorframe+stretch' },
+        { id:'d3', name:'Tricep Overhead Stretch',detail:'30 sec each arm',      sets:1, muscles:[['upper','Triceps']], tip:null, video_url:'https://www.youtube.com/results?search_query=tricep+overhead+stretch' },
+      ]},
+    ]
+  },
+
+  // ── PUSH DAY (Mon) ──────────────────────────────────
+  'push': {
+    title:'Push Power', mode:'calisthenics', totalSets:31,
+    sections:[
+      { id:'warmup', name:'Warm-Up', emoji:'🔥', meta:'5 min · no equipment', weighted:false, exercises:[
+        { id:'w1', name:'Arm Circles',           detail:'10 forward, 10 back',  sets:1, muscles:[['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/results?search_query=arm+circles+warmup+shoulder+mobility' },
+        { id:'w2', name:'Shoulder Rolls + Neck Rolls', detail:'10 each direction', sets:1, muscles:[['upper','Shoulders'],['other','Neck']], tip:null, video_url:'https://www.youtube.com/results?search_query=shoulder+rolls+neck+rolls+warmup' },
+        { id:'w3', name:'Cat-Cow',               detail:'10 slow reps',         sets:1, muscles:[['back','Spine'],['core','Core']], tip:'Breathe in on cow, out on cat', video_url:'https://www.youtube.com/results?search_query=cat+cow+stretch+warmup+spine' },
+      ]},
+      { id:'strength', name:'Push Block', emoji:'💪', meta:'3 rounds · 60s rest between exercises', weighted:false, exercises:[
+        { id:'s1', name:'Push-Up',               detail:'15 reps',              sets:3, muscles:[['upper','Chest'],['upper','Triceps'],['upper','Shoulders']], tip:'Elbows at 45°, rigid plank — lower chest to floor', video_url:'https://www.youtube.com/watch?v=IODxDxX7oi4' },
+        { id:'s2', name:'Pike Push-Up',          detail:'10-12 reps',           sets:3, muscles:[['upper','Shoulders'],['upper','Triceps']], tip:'Hips high in an inverted V, lower head between hands', video_url:'https://www.youtube.com/watch?v=sposDXWEB0A' },
+        { id:'s3', name:'Wide Push-Up',          detail:'12 reps',              sets:3, muscles:[['upper','Chest'],['upper','Shoulders']], tip:'Hands wider than shoulder-width — emphasizes chest', video_url:'https://www.youtube.com/watch?v=Unxpc-iMuF0' },
+        { id:'s4', name:'Diamond Push-Up',       detail:'8-10 reps',            sets:3, muscles:[['upper','Triceps'],['upper','Chest']], tip:'Hands form a diamond under chest, elbows track close', video_url:'https://www.youtube.com/watch?v=J0DnG1_S92I' },
+        { id:'s5', name:'Bench / Chair Dip',     detail:'12-15 reps',           sets:3, muscles:[['upper','Triceps'],['upper','Chest'],['upper','Shoulders']], tip:'Lower until elbows hit 90°, keep back close to surface', video_url:'https://www.youtube.com/watch?v=c3ZGl4pAwZ4' },
+      ]},
+      { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds', weighted:false, exercises:[
+        { id:'c1', name:'Plank Hold',            detail:'45 sec',               sets:2, muscles:[['core','Core'],['upper','Shoulders']], tip:'Squeeze everything — straight line head to heel', video_url:'https://www.youtube.com/watch?v=pvIjcsm_8dU' },
+        { id:'c2', name:'Hollow Body Hold',      detail:'30 sec',               sets:2, muscles:[['core','Core']], tip:'Lower back glued to floor, arms and legs extended low', video_url:'https://www.youtube.com/watch?v=LlDNef_Ztsc' },
+        { id:'c3', name:'Mountain Climbers',     detail:'20 total (10 each)',   sets:2, muscles:[['core','Core'],['core','Hip Flexors']], tip:'Hips stay flat, drive knees to chest alternately', video_url:'https://www.youtube.com/watch?v=nmwgirgXLYM' },
+        { id:'c4', name:'Bicycle Crunches',      detail:'20 total',             sets:2, muscles:[['core','Obliques'],['core','Core']], tip:'Full rotation elbow to opposite knee — slow it down', video_url:'https://www.youtube.com/watch?v=9FGilxCbdz8' },
+        { id:'c5', name:'Side Plank',            detail:'30 sec each side',     sets:2, muscles:[['core','Obliques'],['upper','Shoulders']], tip:'Straight line from head to feet, hips don\'t sag', video_url:'https://www.youtube.com/watch?v=K2J1cqe5mNY' },
+      ]},
+      { id:'cooldown', name:'Cool-Down', emoji:'🧘', meta:'5 min', weighted:false, exercises:[
+        { id:'d1', name:"Child's Pose",          detail:'Hold 30 sec',          sets:1, muscles:[['other','Spine'],['other','Hips']], tip:null, video_url:'https://www.youtube.com/results?search_query=child+pose+stretch+cool+down' },
+        { id:'d2', name:'Chest Doorframe Stretch', detail:'30 sec each side',  sets:1, muscles:[['upper','Chest'],['upper','Shoulders']], tip:'Find a doorframe, arm at 90°, rotate body away', video_url:'https://www.youtube.com/results?search_query=chest+doorframe+stretch+pec+stretch' },
+        { id:'d3', name:'Tricep Overhead Stretch', detail:'30 sec each arm',   sets:1, muscles:[['upper','Triceps']], tip:null, video_url:'https://www.youtube.com/results?search_query=tricep+overhead+stretch+cool+down' },
+      ]},
+    ]
+  },
+
+  // ── LEGS DAY (Tue) ──────────────────────────────────
+  'legs': {
+    title:'Legs & Glutes', mode:'calisthenics', totalSets:31,
+    sections:[
+      { id:'warmup', name:'Warm-Up', emoji:'🔥', meta:'5 min · no equipment', weighted:false, exercises:[
+        { id:'w1', name:'Leg Swings',            detail:'10 forward/back each leg', sets:1, muscles:[['lower','Hamstrings'],['lower','Hip Flexors']], tip:'Hold a wall for balance', video_url:'https://www.youtube.com/results?search_query=leg+swings+warmup+hip+mobility' },
+        { id:'w2', name:'Hip Circles',           detail:'10 each direction',    sets:1, muscles:[['other','Hips'],['lower','Glutes']], tip:null, video_url:'https://www.youtube.com/results?search_query=hip+circles+warmup+mobility' },
+        { id:'w3', name:'Bodyweight Squats',     detail:'15 slow reps',         sets:1, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Slow and controlled — wake up the legs', video_url:'https://www.youtube.com/watch?v=aclHkVaku9U' },
+      ]},
+      { id:'strength', name:'Legs Block', emoji:'🦵', meta:'3 rounds · 60-90s rest', weighted:false, exercises:[
+        { id:'s1', name:'Bodyweight Squat',      detail:'20 reps',              sets:3, muscles:[['lower','Quads'],['lower','Glutes'],['lower','Hamstrings']], tip:'Feet shoulder-width, toes slightly out, chest tall', video_url:'https://www.youtube.com/watch?v=aclHkVaku9U' },
+        { id:'s2', name:'Reverse Lunge',         detail:'12 reps each leg',     sets:3, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Step back, lower rear knee toward floor, front shin vertical', video_url:'https://www.youtube.com/watch?v=xrjMX7L7Co4' },
+        { id:'s3', name:'Jump Squat',            detail:'10 reps',              sets:3, muscles:[['lower','Quads'],['lower','Glutes'],['other','Power']], tip:'Squat to parallel, explode up, land softly on balls of feet', video_url:'https://www.youtube.com/watch?v=CVaEhXotL7M' },
+        { id:'s4', name:'Glute Bridge',          detail:'20 reps',              sets:3, muscles:[['lower','Glutes'],['lower','Hamstrings']], tip:'Drive hips up through heels, squeeze glutes hard at top', video_url:'https://www.youtube.com/watch?v=wPM8icPu6H8' },
+        { id:'s5', name:'Lateral Lunge',         detail:'12 each side',         sets:3, muscles:[['lower','Quads'],['lower','Glutes'],['lower','Adductors']], tip:'Step wide, sit into that hip — keep other leg straight', video_url:'https://www.youtube.com/watch?v=P4sdBBVxQu4' },
+      ]},
+      { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds', weighted:false, exercises:[
+        { id:'c1', name:'Dead Bug',              detail:'10 each side',         sets:2, muscles:[['core','Core']], tip:'Lower back GLUED to floor — if it lifts, reset', video_url:'https://www.youtube.com/watch?v=4XLEnwUr1d8' },
+        { id:'c2', name:'Bird Dog',              detail:'10 each side',         sets:2, muscles:[['core','Core'],['back','Lower Back']], tip:'Hips stay perfectly level — extend opposite arm and leg', video_url:'https://www.youtube.com/watch?v=wiFNA3sqjCA' },
+        { id:'c3', name:'Russian Twist',         detail:'15 each side',         sets:2, muscles:[['core','Obliques'],['core','Core']], tip:'Lean back 45°, rotate from the torso, feet can stay on floor', video_url:'https://www.youtube.com/watch?v=wkD8rjkodUI' },
+        { id:'c4', name:'V-Up',                  detail:'15 reps',              sets:2, muscles:[['core','Core'],['core','Hip Flexors']], tip:'Simultaneously raise legs and torso, touch hands to feet at top', video_url:'https://www.youtube.com/watch?v=7UVgs18Y1P4' },
+        { id:'c5', name:'Side Plank',            detail:'30 sec each side',     sets:2, muscles:[['core','Obliques'],['upper','Shoulders']], tip:'Straight line from head to feet, breathe steadily', video_url:'https://www.youtube.com/watch?v=K2J1cqe5mNY' },
+      ]},
+      { id:'cooldown', name:'Cool-Down', emoji:'🧘', meta:'5 min', weighted:false, exercises:[
+        { id:'d1', name:'Seated Forward Fold',   detail:'Hold 45 sec',          sets:1, muscles:[['lower','Hamstrings'],['other','Spine']], tip:null, video_url:'https://www.youtube.com/results?search_query=seated+forward+fold+hamstring+stretch' },
+        { id:'d2', name:'Pigeon Pose',           detail:'45 sec each side',     sets:1, muscles:[['other','Hips'],['lower','Glutes']], tip:'Modify with figure-4 stretch lying on back if needed', video_url:'https://www.youtube.com/results?search_query=pigeon+pose+hip+flexor+stretch+cool+down' },
+        { id:'d3', name:'Standing Quad Stretch', detail:'30 sec each leg',      sets:1, muscles:[['lower','Quads'],['lower','Hip Flexors']], tip:'Pull heel to glutes, stand tall — hold a wall if needed', video_url:'https://www.youtube.com/results?search_query=standing+quad+stretch+cool+down' },
+      ]},
+    ]
+  },
+
+  // ── PULL DAY (Thu) ──────────────────────────────────
+  'pull': {
+    title:'Pull & Back', mode:'calisthenics', totalSets:31,
+    sections:[
+      { id:'warmup', name:'Warm-Up', emoji:'🔥', meta:'5 min · no equipment', weighted:false, exercises:[
+        { id:'w1', name:'Cat-Cow',               detail:'10 slow reps',         sets:1, muscles:[['back','Spine'],['core','Core']], tip:'Start every pull day here — lubricates the spine', video_url:'https://www.youtube.com/results?search_query=cat+cow+stretch+spine+warmup' },
+        { id:'w2', name:'Arm Circles',           detail:'10 each direction',    sets:1, muscles:[['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/results?search_query=arm+circles+shoulder+warmup' },
+        { id:'w3', name:'Thoracic Rotation',     detail:'10 each side',         sets:1, muscles:[['back','Upper Back'],['other','Spine']], tip:'Seated or kneeling — rotate just your upper back, not hips', video_url:'https://www.youtube.com/results?search_query=thoracic+rotation+stretch+warmup' },
+      ]},
+      { id:'strength', name:'Pull Block', emoji:'🔙', meta:'3 rounds · 60-90s rest', weighted:false, exercises:[
+        { id:'s1', name:'Inverted Row (table/bar)', detail:'10-12 reps',         sets:3, muscles:[['back','Back'],['back','Lats'],['upper','Biceps']], tip:'Body rigid, pull chest to bar — bend knees to decrease difficulty', video_url:'https://www.youtube.com/watch?v=PGcTxvw6TYE' },
+        { id:'s2', name:'Superman Hold',         detail:'15 reps (2 sec hold)',  sets:3, muscles:[['back','Lower Back'],['lower','Glutes'],['back','Upper Back']], tip:'Lift arms and legs simultaneously — squeeze glutes at top', video_url:'https://www.youtube.com/watch?v=z6PJMT2y8GQ' },
+        { id:'s3', name:'Bird Dog',              detail:'12 each side',         sets:3, muscles:[['back','Lower Back'],['core','Core']], tip:'Opposite arm and leg, hips level — slow and deliberate', video_url:'https://www.youtube.com/watch?v=wiFNA3sqjCA' },
+        { id:'s4', name:'Good Morning (bodyweight)', detail:'15 reps',          sets:3, muscles:[['lower','Hamstrings'],['back','Lower Back'],['lower','Glutes']], tip:'Hands behind head, hinge at hips with neutral spine', video_url:'https://www.youtube.com/watch?v=YA-h3n9L4YU' },
+        { id:'s5', name:'Bear Crawl',            detail:'20 steps (10 fwd/10 back)', sets:3, muscles:[['core','Core'],['upper','Shoulders'],['lower','Quads']], tip:'Knees hover 1 inch off floor — stay low and controlled', video_url:'https://www.youtube.com/watch?v=UhAR91_4oNM' },
+      ]},
+      { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds', weighted:false, exercises:[
+        { id:'c1', name:'Dead Bug',              detail:'10 each side',         sets:2, muscles:[['core','Core']], tip:'Lower back pressed to floor — non-negotiable', video_url:'https://www.youtube.com/watch?v=4XLEnwUr1d8' },
+        { id:'c2', name:'Hollow Body Hold',      detail:'30 sec',               sets:2, muscles:[['core','Core']], tip:'Think: ribs tucked, lower back flat, everything long', video_url:'https://www.youtube.com/watch?v=LlDNef_Ztsc' },
+        { id:'c3', name:'Plank Hold',            detail:'45 sec',               sets:2, muscles:[['core','Core'],['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/watch?v=pvIjcsm_8dU' },
+        { id:'c4', name:'Bicycle Crunches',      detail:'20 total',             sets:2, muscles:[['core','Core'],['core','Obliques']], tip:null, video_url:'https://www.youtube.com/watch?v=9FGilxCbdz8' },
+        { id:'c5', name:'Side Plank',            detail:'30 sec each side',     sets:2, muscles:[['core','Obliques']], tip:null, video_url:'https://www.youtube.com/watch?v=K2J1cqe5mNY' },
+      ]},
+      { id:'cooldown', name:'Cool-Down', emoji:'🧘', meta:'5 min', weighted:false, exercises:[
+        { id:'d1', name:"Child's Pose",          detail:'Hold 45 sec',          sets:1, muscles:[['other','Hips'],['back','Spine']], tip:null, video_url:'https://www.youtube.com/results?search_query=child+pose+back+stretch' },
+        { id:'d2', name:'Cat-Cow Flow',          detail:'10 slow reps',         sets:1, muscles:[['back','Spine'],['core','Core']], tip:null, video_url:'https://www.youtube.com/results?search_query=cat+cow+flow+cool+down' },
+        { id:'d3', name:'Lying Spinal Twist',    detail:'45 sec each side',     sets:1, muscles:[['other','Spine'],['back','Back']], tip:null, video_url:'https://www.youtube.com/results?search_query=lying+spinal+twist+stretch+cool+down' },
+      ]},
+    ]
+  },
+
+  // ── CIRCUIT (Fri) ────────────────────────────────────
+  'circuit': {
+    title:'Full Body Circuit', mode:'calisthenics', totalSets:31,
+    sections:[
+      { id:'warmup', name:'Warm-Up', emoji:'🔥', meta:'5 min · get the heart rate up', weighted:false, exercises:[
+        { id:'w1', name:'Jumping Jacks',         detail:'30 reps',              sets:1, muscles:[['full','Full Body']], tip:'Get the blood moving', video_url:'https://www.youtube.com/results?search_query=jumping+jacks+warmup+cardio' },
+        { id:'w2', name:'Arm Circles + Leg Swings', detail:'10 each',          sets:1, muscles:[['upper','Shoulders'],['lower','Hips']], tip:null, video_url:'https://www.youtube.com/results?search_query=arm+circles+leg+swings+dynamic+warmup' },
+        { id:'w3', name:'Bodyweight Squats',     detail:'15 reps',              sets:1, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Wake up the legs before the circuit', video_url:'https://www.youtube.com/watch?v=aclHkVaku9U' },
+      ]},
+      { id:'strength', name:'Full Body Circuit', emoji:'⚡', meta:'3 rounds · 30-45s rest between rounds', weighted:false, exercises:[
+        { id:'s1', name:'Burpees',               detail:'10 reps',              sets:3, muscles:[['full','Full Body']], tip:'Squat → kick back → push-up → jump up — each rep flows', video_url:'https://www.youtube.com/watch?v=TU8QYVW0gDU' },
+        { id:'s2', name:'Push-Up',               detail:'15 reps',              sets:3, muscles:[['upper','Chest'],['upper','Triceps'],['upper','Shoulders']], tip:'Keep the form sharp even when tired', video_url:'https://www.youtube.com/watch?v=IODxDxX7oi4' },
+        { id:'s3', name:'Jump Squat',            detail:'12 reps',              sets:3, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Land softly — knees slightly bent on landing', video_url:'https://www.youtube.com/watch?v=CVaEhXotL7M' },
+        { id:'s4', name:'Mountain Climbers',     detail:'20 total (10 each)',   sets:3, muscles:[['core','Core'],['core','Hip Flexors']], tip:'Fast but controlled — hips stay flat', video_url:'https://www.youtube.com/watch?v=nmwgirgXLYM' },
+        { id:'s5', name:'Reverse Lunge',         detail:'12 each leg',          sets:3, muscles:[['lower','Quads'],['lower','Glutes']], tip:null, video_url:'https://www.youtube.com/watch?v=xrjMX7L7Co4' },
+      ]},
+      { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds', weighted:false, exercises:[
+        { id:'c1', name:'Plank Hold',            detail:'45 sec',               sets:2, muscles:[['core','Core']], tip:null, video_url:'https://www.youtube.com/watch?v=pvIjcsm_8dU' },
+        { id:'c2', name:'Russian Twist',         detail:'15 each side',         sets:2, muscles:[['core','Obliques']], tip:null, video_url:'https://www.youtube.com/watch?v=wkD8rjkodUI' },
+        { id:'c3', name:'Bicycle Crunches',      detail:'20 total',             sets:2, muscles:[['core','Core'],['core','Obliques']], tip:null, video_url:'https://www.youtube.com/watch?v=9FGilxCbdz8' },
+        { id:'c4', name:'Hollow Body Hold',      detail:'30 sec',               sets:2, muscles:[['core','Core']], tip:null, video_url:'https://www.youtube.com/watch?v=LlDNef_Ztsc' },
+        { id:'c5', name:'Side Plank',            detail:'30 sec each side',     sets:2, muscles:[['core','Obliques']], tip:null, video_url:'https://www.youtube.com/watch?v=K2J1cqe5mNY' },
+      ]},
+      { id:'cooldown', name:'Cool-Down', emoji:'🧘', meta:'5 min · you earned it', weighted:false, exercises:[
+        { id:'d1', name:"Child's Pose",          detail:'Hold 45 sec',          sets:1, muscles:[['other','Hips'],['back','Spine']], tip:null, video_url:'https://www.youtube.com/results?search_query=child+pose+cool+down' },
+        { id:'d2', name:'Seated Forward Fold',   detail:'Hold 45 sec',          sets:1, muscles:[['lower','Hamstrings']], tip:null, video_url:'https://www.youtube.com/results?search_query=seated+forward+fold+hamstring+stretch' },
+        { id:'d3', name:'Hip Flexor Stretch',    detail:'45 sec each side',     sets:1, muscles:[['lower','Hip Flexors']], tip:'Low lunge — sink hips forward and down', video_url:'https://www.youtube.com/results?search_query=low+lunge+hip+flexor+stretch+cool+down' },
+      ]},
+    ]
+  },
+
+  // ── UPPER BURN (Sat) ────────────────────────────────
+  'upper': {
+    title:'Upper Body Burn', mode:'calisthenics', totalSets:31,
+    sections:[
+      { id:'warmup', name:'Warm-Up', emoji:'🔥', meta:'5 min · no equipment', weighted:false, exercises:[
+        { id:'w1', name:'Arm Circles',           detail:'10 each direction',    sets:1, muscles:[['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/results?search_query=arm+circles+shoulder+warmup' },
+        { id:'w2', name:'Shoulder Pass-Throughs', detail:'10 slow reps',        sets:1, muscles:[['upper','Shoulders'],['upper','Chest']], tip:'Use a towel or band — full range of motion', video_url:'https://www.youtube.com/results?search_query=shoulder+pass+through+warmup+mobility' },
+        { id:'w3', name:'Cat-Cow',               detail:'10 reps',              sets:1, muscles:[['back','Spine'],['core','Core']], tip:null, video_url:'https://www.youtube.com/results?search_query=cat+cow+warmup+spine' },
+      ]},
+      { id:'strength', name:'Upper Body Block', emoji:'🏋️', meta:'3 rounds · 60s rest', weighted:false, exercises:[
+        { id:'s1', name:'Push-Up',               detail:'15 reps',              sets:3, muscles:[['upper','Chest'],['upper','Triceps'],['upper','Shoulders']], tip:'Full range — nose to floor, full lockout', video_url:'https://www.youtube.com/watch?v=IODxDxX7oi4' },
+        { id:'s2', name:'Wide Push-Up',          detail:'12 reps',              sets:3, muscles:[['upper','Chest'],['upper','Shoulders']], tip:'Wider hand placement shifts load to chest', video_url:'https://www.youtube.com/watch?v=Unxpc-iMuF0' },
+        { id:'s3', name:'Diamond Push-Up',       detail:'8-10 reps',            sets:3, muscles:[['upper','Triceps'],['upper','Chest']], tip:'If too hard, do hands slightly closer than shoulder-width', video_url:'https://www.youtube.com/watch?v=J0DnG1_S92I' },
+        { id:'s4', name:'Pike Push-Up',          detail:'12 reps',              sets:3, muscles:[['upper','Shoulders'],['upper','Triceps']], tip:'Inverted V shape, lower head between hands — shoulder builder', video_url:'https://www.youtube.com/watch?v=sposDXWEB0A' },
+        { id:'s5', name:'Bench / Chair Dip',     detail:'15 reps',              sets:3, muscles:[['upper','Triceps'],['upper','Chest']], tip:'Keep back close to surface, lower to 90° at elbows', video_url:'https://www.youtube.com/watch?v=c3ZGl4pAwZ4' },
+      ]},
+      { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds', weighted:false, exercises:[
+        { id:'c1', name:'Plank Hold',            detail:'45 sec',               sets:2, muscles:[['core','Core'],['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/watch?v=pvIjcsm_8dU' },
+        { id:'c2', name:'Dead Bug',              detail:'10 each side',         sets:2, muscles:[['core','Core']], tip:'Lower back stays flat — no exceptions', video_url:'https://www.youtube.com/watch?v=4XLEnwUr1d8' },
+        { id:'c3', name:'V-Up',                  detail:'15 reps',              sets:2, muscles:[['core','Core'],['core','Hip Flexors']], tip:null, video_url:'https://www.youtube.com/watch?v=7UVgs18Y1P4' },
+        { id:'c4', name:'Russian Twist',         detail:'15 each side',         sets:2, muscles:[['core','Obliques']], tip:null, video_url:'https://www.youtube.com/watch?v=wkD8rjkodUI' },
+        { id:'c5', name:'Mountain Climbers',     detail:'20 total',             sets:2, muscles:[['core','Core'],['core','Hip Flexors']], tip:null, video_url:'https://www.youtube.com/watch?v=nmwgirgXLYM' },
+      ]},
+      { id:'cooldown', name:'Cool-Down', emoji:'🧘', meta:'5 min', weighted:false, exercises:[
+        { id:'d1', name:"Child's Pose",          detail:'Hold 45 sec',          sets:1, muscles:[['other','Hips'],['back','Spine']], tip:null, video_url:'https://www.youtube.com/results?search_query=child+pose+cool+down' },
+        { id:'d2', name:'Chest / Pec Stretch',   detail:'30 sec each side',     sets:1, muscles:[['upper','Chest'],['upper','Shoulders']], tip:'Arm at 90° on a wall or doorframe, rotate body away', video_url:'https://www.youtube.com/results?search_query=chest+pec+stretch+doorframe+cool+down' },
+        { id:'d3', name:'Tricep Overhead Stretch', detail:'30 sec each arm',    sets:1, muscles:[['upper','Triceps']], tip:null, video_url:'https://www.youtube.com/results?search_query=tricep+overhead+stretch' },
+      ]},
+    ]
+  },
+
+  // ── CARDIO: EASY RUN ────────────────────────────────
+  'run-easy': {
+    title:'Zone 2 Easy Run', mode:'cardio', sport:'run', icon:'🏃',
+    totalSets:1, target:'30–40 min', zone:2, zoneName:'Easy Aerobic',
+    hrRange:'120–145 bpm', rpe:'4–5 / 10',
+    description:'The aerobic foundation of every triathlon plan. At this pace your body learns to burn fat efficiently and builds the mitochondrial density needed for race-day endurance.',
+    focuses:[
+      { icon:'👃', text:'Nose breathing preferred — if you\'re forced to mouth breathe, slow down' },
+      { icon:'💬', text:'Conversational pace — you should be able to say full sentences' },
+      { icon:'🛣️', text:'Flat to gently rolling terrain works best for Zone 2' },
+      { icon:'🚶', text:'Run/walk intervals are totally fine at this stage — no ego' },
+      { icon:'📱', text:'Log on Strava for GPS, pace, and HR data' },
+    ],
+    trainingNote:'Zone 2 = 60–70% of max HR. These easy runs build the aerobic engine that makes everything else faster. Resist the urge to push harder.',
+    sections:[],
+  },
+
+  // ── CARDIO: SWIM ─────────────────────────────────────
+  'swim-easy': {
+    title:'Swim Technique Session', mode:'cardio', sport:'swim', icon:'🏊',
+    totalSets:1, target:'20–30 min', zone:2, zoneName:'Technique Focus',
+    hrRange:'Low intensity', rpe:'3–5 / 10',
+    description:'Swim technique is the highest-leverage improvement in triathlon. Poor form in the water costs exponentially more energy than poor form on the bike or run.',
+    focuses:[
+      { icon:'🔄', text:'Body rotation on each stroke — you swim on your side, not flat' },
+      { icon:'👋', text:'High elbow catch — reach long, elbow stays high as you pull through' },
+      { icon:'🌬️', text:'Bilateral breathing every 3 strokes — builds balance and redundancy' },
+      { icon:'🦵', text:'Relaxed kick from the hip — ankles loose, not splashing huge' },
+      { icon:'⏸️', text:'Rest 20s between lengths — quality over quantity' },
+    ],
+    trainingNote:'If you\'re a beginner, 20 min of focused drill work beats 30 min of sloppy laps. Focus on one technical cue per length.',
+    sections:[],
+  },
+
+  // ── CARDIO: LONG RIDE ────────────────────────────────
+  'bike-long': {
+    title:'Long Zone 2 Ride', mode:'cardio', sport:'bike', icon:'🚴',
+    totalSets:1, target:'45–75 min', zone:2, zoneName:'Aerobic Base',
+    hrRange:'120–145 bpm', rpe:'4–5 / 10',
+    description:'Your weekly long ride builds the cycling-specific endurance that\'s the backbone of triathlon performance. The bike leg is where most race time is spent.',
+    focuses:[
+      { icon:'⚙️', text:'Cadence 80–90 rpm — spin, don\'t grind big gears' },
+      { icon:'💬', text:'Conversational effort — you should be able to hold a conversation' },
+      { icon:'🛣️', text:'Flat to rolling terrain; save big climbs for build phase' },
+      { icon:'💧', text:'Drink 500ml per hour — sip every 15 min, don\'t wait until thirsty' },
+      { icon:'🏃', text:'Optional brick: 10 min easy run off the bike to train the jelly-legs transition' },
+    ],
+    trainingNote:'Brick workouts (bike → run) are the most race-specific training you can do. Even 10 min of running after the ride teaches your legs the transition.',
+    sections:[],
+  },
 };
 
 // ═══════════════════════════════════════════════════════
-//  STATE
+//  MODE & ACTIVE WORKOUT
 // ═══════════════════════════════════════════════════════
-const STORE_KEY = 'fitness_v2';
-let state = { checks: {}, startMs: null, endMs: null, weights: {}, supabaseSessionId: null, logIds: {} };
+function getAutoMode() {
+  const today = new Date();
+  const vacStart = new Date('2026-06-29');
+  const vacEnd   = new Date('2026-07-06');
+  return (today >= vacStart && today < vacEnd) ? 'calisthenics' : 'dumbbell';
+}
+function getCurrentPlan() {
+  if (currentMode === 'dumbbell') return DUMBBELL_PLAN;
+  if (currentMode === 'calisthenics') return CALISTHENICS_PLAN;
+  return TRIATHLON_PLAN;
+}
 
-function loadState() {
+let currentMode = getAutoMode();
+let currentWorkoutId = 'full-body-core';
+let WORKOUT = WORKOUTS[currentWorkoutId];
+
+function setMode(mode) {
+  currentMode = mode;
+  const btnDB = document.getElementById('btnDumbbell');
+  const btnCal = document.getElementById('btnCalisthenics');
+  const btnTri = document.getElementById('btnTriathlon');
+  btnDB.classList.toggle('active', mode === 'dumbbell');
+  btnCal.classList.toggle('active', mode === 'calisthenics');
+  btnTri.classList.toggle('active', mode === 'triathlon');
+  buildWeekPicker();
+  const todayDow = new Date().getDay();
+  const todayPlan = getCurrentPlan().find(p => p.dayIndex === todayDow);
+  if (todayPlan && todayPlan.workoutId) {
+    // Update active card then load
+    setTimeout(() => {
+      document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
+      const cards = document.querySelectorAll('.day-card');
+      const planIdx = getCurrentPlan().findIndex(p => p.dayIndex === todayDow);
+      if (cards[planIdx]) cards[planIdx].classList.add('active');
+    }, 0);
+    loadWorkout(todayPlan.workoutId);
+  } else {
+    showRestDay();
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function loadWorkout(id) {
+  if (!id) { showRestDay(); return; }
+  if (id === currentWorkoutId && state.checks && Object.keys(state.checks).length) return;
+  currentWorkoutId = id;
+  WORKOUT = WORKOUTS[id];
+  state = loadStateForWorkout(id);
+  document.getElementById('restScreen').classList.remove('visible');
+  document.getElementById('workoutContent').classList.remove('hidden');
+  document.getElementById('mainRingAnchor').parentElement.style.display = '';
+  renderHeroMeta();
+  if (WORKOUT.mode === 'cardio') { buildCardioSession(); } else { buildSections(); }
+  updateProgress();
+  populateLastWeights();
+  clearInterval(timerInterval); timerInterval = null;
+  if (state.startMs && !state.endMs) startTimer();
+  if (state.endMs) {
+    document.getElementById('completionBanner').classList.add('visible');
+    document.getElementById('completionTime').textContent = `Total time: ${formatDuration(state.endMs - state.startMs)}`;
+    document.getElementById('ringGlow').classList.add('on');
+    document.getElementById('statTimer').textContent = formatDuration(state.endMs - state.startMs);
+  } else {
+    document.getElementById('completionBanner').classList.remove('visible');
+    document.getElementById('ringGlow').classList.remove('on');
+    document.getElementById('statTimer').textContent = state.startMs ? formatDuration(Date.now()-state.startMs) : '—';
+  }
+  updateSubmitPanel();
+}
+
+function showRestDay() {
+  document.getElementById('restScreen').classList.add('visible');
+  document.getElementById('workoutContent').classList.add('hidden');
+}
+
+function renderHeroMeta() {
+  document.getElementById('heroTitle').textContent = WORKOUT.title;
+  const d = new Date();
+  const modeWord = WORKOUT.mode === 'calisthenics' ? 'Bodyweight' : WORKOUT.mode === 'cardio' ? `${WORKOUT.target} target` : 'Dumbbells';
+  const durationStr = WORKOUT.mode === 'cardio' ? '' : ' · ~35-40 min';
+  document.getElementById('workoutDate').textContent =
+    `${modeWord}${durationStr} · ${d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}`;
+  const badge = document.getElementById('modeBadge');
+  if (WORKOUT.mode === 'cardio') {
+    badge.textContent = `${WORKOUT.icon} ${WORKOUT.sport.charAt(0).toUpperCase()+WORKOUT.sport.slice(1)}`;
+    badge.className = 'workout-mode-badge mode-calisthenics';
+    badge.style.background = 'var(--teal-dim)'; badge.style.color = 'var(--teal)';
+  } else if (WORKOUT.mode === 'calisthenics') {
+    badge.textContent = '🤸 Calisthenics';
+    badge.className = 'workout-mode-badge mode-calisthenics';
+    badge.style.background = badge.style.color = '';
+  } else {
+    badge.textContent = '🏋️ Dumbbells';
+    badge.className = 'workout-mode-badge mode-dumbbell';
+    badge.style.background = badge.style.color = '';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  STATE  (per-workout, per-day)
+// ═══════════════════════════════════════════════════════
+function storeKey(id) {
+  return `fitness_${id}_${new Date().toISOString().slice(0,10)}`;
+}
+
+const STATE_DEFAULTS = { checks:{}, startMs:null, endMs:null, weights:{}, supabaseSessionId:null, logIds:{}, cardioDuration:null, cardioDistance:null, cardioEffort:null };
+let state = { ...STATE_DEFAULTS };
+
+function loadStateForWorkout(id) {
   try {
-    const s = localStorage.getItem(STORE_KEY);
-    if (s) state = { ...state, ...JSON.parse(s) };
-    // Reset if from a different calendar day
-    if (state.startMs) {
-      const d = new Date(state.startMs);
-      const today = new Date();
-      if (d.toDateString() !== today.toDateString()) {
-        const savedWeights = state.weights || {};
-        state = { checks: {}, startMs: null, endMs: null, weights: savedWeights, supabaseSessionId: null, logIds: {} };
-      }
-    }
+    const s = localStorage.getItem(storeKey(id));
+    if (s) return { ...STATE_DEFAULTS, ...JSON.parse(s) };
   } catch(e) {}
+  return { ...STATE_DEFAULTS };
 }
 
-function saveState() {
-  localStorage.setItem(STORE_KEY, JSON.stringify(state));
-}
-
-function getDone() {
-  return Object.values(state.checks).reduce((a, b) => a + b, 0);
-}
-
+function saveState() { localStorage.setItem(storeKey(currentWorkoutId), JSON.stringify(state)); }
+function getDone() { return Object.values(state.checks).reduce((a,b)=>a+b,0); }
 function getTotal() { return WORKOUT.totalSets; }
+function getExercise(id) { for(const s of WORKOUT.sections) for(const e of s.exercises) if(e.id===id) return e; }
+function getExSection(exId) { for(const s of WORKOUT.sections) for(const e of s.exercises) if(e.id===exId) return s; }
 
-function getExercise(id) {
-  for (const sec of WORKOUT.sections)
-    for (const ex of sec.exercises)
-      if (ex.id === id) return ex;
+// ═══════════════════════════════════════════════════════
+//  WEEK PICKER
+// ═══════════════════════════════════════════════════════
+function buildWeekPicker() {
+  const todayDow = new Date().getDay();
+  const scroll = document.getElementById('weekScroll');
+  scroll.innerHTML = getCurrentPlan().map(p => {
+    const isToday = p.dayIndex === todayDow;
+    const isRest = !p.workoutId;
+    const isActive = p.workoutId === currentWorkoutId;
+    const isCardio = p.cardio;
+    const showTypes = currentMode === 'triathlon';
+    const typeClass = showTypes && !isRest ? (isCardio ? 'dc-cardio' : 'dc-strength') : '';
+    const classes = ['day-card',
+      isRest ? 'rest-day' : '',
+      isActive ? 'active' : '',
+      isToday ? 'today-marker' : '',
+      typeClass,
+    ].filter(Boolean).join(' ');
+    const typeChip = showTypes && !isRest ? `<div class="dc-type">${isCardio ? 'cardio' : 'strength'}</div>` : '';
+    return `<div class="${classes}" onclick="onDayClick('${p.workoutId||''}','${p.day}')">
+      <div class="dc-emoji">${p.emoji}</div>
+      <div class="dc-label">${p.label}</div>
+      <div class="dc-day">${p.day} · ${p.date}</div>
+      ${typeChip}
+    </div>`;
+  }).join('');
 }
 
-function getExSection(exId) {
-  for (const sec of WORKOUT.sections)
-    for (const ex of sec.exercises)
-      if (ex.id === exId) return sec;
+function onDayClick(workoutId, day) {
+  if (!workoutId) return;
+  // Update active card
+  document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  loadWorkout(workoutId);
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
 // ═══════════════════════════════════════════════════════
 //  TIMER
 // ═══════════════════════════════════════════════════════
 let timerInterval = null;
-
 function formatDuration(ms) {
-  const s = Math.floor(ms / 1000);
-  const m = Math.floor(s / 60);
-  const h = Math.floor(m / 60);
-  if (h) return `${h}h ${m % 60}m`;
-  if (m) return `${m}m ${s % 60}s`;
+  const s=Math.floor(ms/1000),m=Math.floor(s/60),h=Math.floor(m/60);
+  if(h) return `${h}h ${m%60}m`;
+  if(m) return `${m}m ${s%60}s`;
   return `${s}s`;
 }
-
 function startTimer() {
-  if (timerInterval) return;
-  timerInterval = setInterval(() => {
-    if (state.startMs && !state.endMs) {
-      document.getElementById('statTimer').textContent = formatDuration(Date.now() - state.startMs);
-    }
-  }, 1000);
+  if(timerInterval) return;
+  timerInterval = setInterval(()=>{
+    if(state.startMs && !state.endMs)
+      document.getElementById('statTimer').textContent = formatDuration(Date.now()-state.startMs);
+  },1000);
 }
 
 // ═══════════════════════════════════════════════════════
 //  SUPABASE SYNC
 // ═══════════════════════════════════════════════════════
 async function ensureSession() {
-  if (state.supabaseSessionId) return state.supabaseSessionId;
+  if(state.supabaseSessionId) return state.supabaseSessionId;
   setSyncStatus('syncing');
   try {
-    const { data, error } = await sb.from('workout_sessions').insert({
-      user_id: 'warren',
-      workout_name: WORKOUT.title,
-      workout_type: 'dumbbell',
-      started_at: new Date(state.startMs).toISOString(),
-      total_sets: getTotal(),
-      sets_completed: 0,
-      completion_pct: 0,
+    const {data,error} = await sb.from('workout_sessions').insert({
+      user_id:'warren', workout_name:WORKOUT.title,
+      workout_type:WORKOUT.mode, started_at:new Date(state.startMs).toISOString(),
+      total_sets:getTotal(), sets_completed:0, completion_pct:0,
     }).select().single();
-    if (data) {
-      state.supabaseSessionId = data.id;
-      saveState();
-      setSyncStatus('synced');
-      return data.id;
-    }
-  } catch(e) { setSyncStatus('error'); }
+    if(data){ state.supabaseSessionId=data.id; saveState(); setSyncStatus('synced'); return data.id; }
+    if(error) console.error('Session insert error:',error);
+  } catch(e){ console.error(e); setSyncStatus('error'); }
   return null;
 }
 
 async function syncExerciseLog(exId) {
   const sessionId = await ensureSession();
-  if (!sessionId) return;
-  const ex = getExercise(exId);
-  const sec = getExSection(exId);
-  const done = state.checks[exId] || 0;
-  const weight = state.weights[exId] || null;
-  const muscles = ex.muscles.map(([, n]) => n.toLowerCase());
-
+  if(!sessionId) return;
+  const ex=getExercise(exId), sec=getExSection(exId);
+  const done=state.checks[exId]||0, weight=state.weights[exId]||null;
   setSyncStatus('syncing');
   try {
-    if (state.logIds[exId]) {
-      await sb.from('exercise_logs').update({ sets_completed: done, weight_lbs: weight }).eq('id', state.logIds[exId]);
+    if(state.logIds[exId]) {
+      await sb.from('exercise_logs').update({sets_completed:done,weight_lbs:weight}).eq('id',state.logIds[exId]);
     } else {
-      const { data } = await sb.from('exercise_logs').insert({
-        session_id: sessionId,
-        exercise_id: exId,
-        exercise_name: ex.name,
-        section: sec.id,
-        sets_completed: done,
-        total_sets: ex.sets,
-        muscle_groups: muscles,
-        weight_lbs: weight,
+      const {data}=await sb.from('exercise_logs').insert({
+        session_id:sessionId, exercise_id:exId, exercise_name:ex.name, section:sec.id,
+        sets_completed:done, total_sets:ex.sets,
+        muscle_groups:ex.muscles.map(([,n])=>n.toLowerCase()), weight_lbs:weight,
       }).select().single();
-      if (data) {
-        state.logIds[exId] = data.id;
-        saveState();
-      }
+      if(data){ state.logIds[exId]=data.id; saveState(); }
     }
     await syncSession();
     setSyncStatus('synced');
-  } catch(e) { setSyncStatus('error'); }
+  } catch(e){ setSyncStatus('error'); }
 }
 
 async function syncSession() {
-  if (!state.supabaseSessionId) return;
-  const done = getDone();
-  const total = getTotal();
+  if(!state.supabaseSessionId) return;
+  const done=getDone(),total=getTotal();
   await sb.from('workout_sessions').update({
-    sets_completed: done,
-    completion_pct: Math.round(done / total * 100),
-    completed_at: state.endMs ? new Date(state.endMs).toISOString() : null,
-    duration_seconds: state.endMs ? Math.round((state.endMs - state.startMs) / 1000) : null,
-  }).eq('id', state.supabaseSessionId);
+    sets_completed:done, completion_pct:Math.round(done/total*100),
+    completed_at:state.endMs?new Date(state.endMs).toISOString():null,
+    duration_seconds:state.endMs?Math.round((state.endMs-state.startMs)/1000):null,
+  }).eq('id',state.supabaseSessionId);
 }
 
 async function populateLastWeights() {
+  if(WORKOUT.mode !== 'dumbbell') return;
   try {
-    const { data } = await sb.from('weight_logs')
-      .select('exercise_id, weight_lbs')
-      .eq('user_id', 'warren')
-      .order('logged_at', { ascending: false });
-    if (!data) return;
-    const seen = new Set();
-    data.forEach(row => {
-      if (!seen.has(row.exercise_id)) {
-        seen.add(row.exercise_id);
-        // Update placeholder with last known weight
-        const input = document.querySelector(`.weight-input[data-ex="${row.exercise_id}"]`);
-        if (input && !input.value) {
-          input.placeholder = `${row.weight_lbs} lbs`;
-        }
-        // Also populate current state if not already set from today
-        if (!state.weights[row.exercise_id]) {
-          state.weights[row.exercise_id] = row.weight_lbs;
-          if (input && !input.value) input.value = row.weight_lbs;
-        }
+    const {data}=await sb.from('weight_logs').select('exercise_id,weight_lbs').eq('user_id','warren').order('logged_at',{ascending:false});
+    if(!data) return;
+    const seen=new Set();
+    data.forEach(row=>{
+      if(!seen.has(row.exercise_id)){ seen.add(row.exercise_id);
+        const input=document.querySelector(`.weight-input[data-ex="${row.exercise_id}"]`);
+        if(input && !input.value){ input.placeholder=`${row.weight_lbs} lbs`; }
+        if(!state.weights[row.exercise_id]){ state.weights[row.exercise_id]=row.weight_lbs; if(input&&!input.value) input.value=row.weight_lbs; }
       }
     });
-  } catch(e) {}
+  } catch(e){}
 }
 
-const weightDebounce = {};
-
+const weightDebounce={};
 function onWeightChange(input) {
-  const exId = input.dataset.ex;
-  const val = parseFloat(input.value);
-  if (isNaN(val) || val <= 0) return;
-
-  state.weights[exId] = val;
-  saveState();
-
+  const exId=input.dataset.ex, val=parseFloat(input.value);
+  if(isNaN(val)||val<=0) return;
+  state.weights[exId]=val; saveState();
   clearTimeout(weightDebounce[exId]);
-  weightDebounce[exId] = setTimeout(async () => {
-    const ex = getExercise(exId);
-    setSyncStatus('syncing');
+  weightDebounce[exId]=setTimeout(async()=>{
+    const ex=getExercise(exId);
     try {
-      await sb.from('weight_logs').insert({
-        user_id: 'warren', exercise_id: exId, exercise_name: ex.name, weight_lbs: val,
-      });
-      if (state.logIds[exId]) {
-        await sb.from('exercise_logs').update({ weight_lbs: val }).eq('id', state.logIds[exId]);
-      }
+      await sb.from('weight_logs').insert({user_id:'warren',exercise_id:exId,exercise_name:ex.name,weight_lbs:val});
+      if(state.logIds[exId]) await sb.from('exercise_logs').update({weight_lbs:val}).eq('id',state.logIds[exId]);
       setSyncStatus('synced');
-    } catch(e) { setSyncStatus('error'); }
-  }, 900);
+    } catch(e){ setSyncStatus('error'); }
+  },900);
+}
+
+// ═══════════════════════════════════════════════════════
+//  CARDIO RENDERER
+// ═══════════════════════════════════════════════════════
+function buildCardioSession() {
+  const w = WORKOUT;
+  const done = state.checks['session'] || 0;
+  const dur = state.cardioDuration || '';
+  const dist = state.cardioDistance || '';
+  const eff = state.cardioEffort || '';
+  const focusHTML = w.focuses.map(f =>
+    `<div class="focus-item"><span class="fi-icon">${f.icon}</span><span>${f.text}</span></div>`
+  ).join('');
+  const effortClass = (e) => eff === e ? `effort-btn active-${e}` : 'effort-btn';
+  document.getElementById('workout-sections').innerHTML = `
+    <div class="cardio-card">
+      <div class="cardio-hero">
+        <div class="cardio-icon">${w.icon}</div>
+        <div class="cardio-sport-label">${w.sport.toUpperCase()}</div>
+        <div class="cardio-title-main">${w.title}</div>
+        <div class="cardio-target-str">Target: ${w.target}</div>
+      </div>
+      <div class="zone-row">
+        <div class="zone-badge">Zone ${w.zone} — ${w.zoneName}</div>
+        <div class="zone-stat">${w.hrRange}</div>
+        <div class="zone-stat">RPE ${w.rpe}</div>
+      </div>
+      <div class="cardio-desc">${w.description}</div>
+      <div class="focus-list">${focusHTML}</div>
+      <div class="cardio-log">
+        <div class="cardio-log-hd">Log Your Session</div>
+        <div class="log-inputs">
+          <div class="log-field">
+            <label>Duration</label>
+            <div class="log-field-row">
+              <input class="log-input" id="cardioDuration" type="number" placeholder="30" min="1" max="360" value="${dur}" oninput="state.cardioDuration=this.value;saveState()">
+              <span class="log-unit">min</span>
+            </div>
+          </div>
+          <div class="log-field">
+            <label>Distance</label>
+            <div class="log-field-row">
+              <input class="log-input" id="cardioDistance" type="number" placeholder="4.0" min="0" max="500" step="0.1" value="${dist}" oninput="state.cardioDistance=this.value;saveState()">
+              <span class="log-unit">km</span>
+            </div>
+          </div>
+        </div>
+        <div class="effort-label">Effort Level</div>
+        <div class="effort-btns">
+          <button class="${effortClass('easy')}" onclick="setEffort('easy')">😌 Easy</button>
+          <button class="${effortClass('moderate')}" onclick="setEffort('moderate')">💪 Moderate</button>
+          <button class="${effortClass('hard')}" onclick="setEffort('hard')">🔥 Hard</button>
+        </div>
+      </div>
+      <button class="cardio-complete-btn${done ? ' done' : ''}" id="cardioCompleteBtn" onclick="completeCardioSession()">
+        ${done ? '✓ Session Complete!' : '✓ Mark Session Complete'}
+      </button>
+      <a class="strava-open" href="https://www.strava.com/dashboard" target="_blank" rel="noopener noreferrer">
+        📊 Open Strava to log this activity →
+      </a>
+      <div class="training-note">${w.trainingNote}</div>
+    </div>`;
+}
+
+function setEffort(e) {
+  state.cardioEffort = e;
+  saveState();
+  document.querySelectorAll('.effort-btn').forEach(b => b.className = 'effort-btn');
+  event.currentTarget.className = `effort-btn active-${e}`;
+}
+
+function completeCardioSession() {
+  if (!state.startMs) state.startMs = Date.now();
+  state.checks['session'] = 1;
+  if (!state.endMs) state.endMs = Date.now();
+  saveState();
+  const btn = document.getElementById('cardioCompleteBtn');
+  if (btn) { btn.textContent = '✓ Session Complete!'; btn.classList.add('done'); }
+  updateProgress();
+  launchConfetti();
+  syncSession();
 }
 
 // ═══════════════════════════════════════════════════════
 //  RENDER
 // ═══════════════════════════════════════════════════════
-function tagClass(type) {
-  return { core:'tag-core', upper:'tag-upper', lower:'tag-lower', back:'tag-back', full:'tag-full', other:'tag-other' }[type] || 'tag-other';
-}
+function tagClass(t){ return {core:'tag-core',upper:'tag-upper',lower:'tag-lower',back:'tag-back',full:'tag-full',other:'tag-other'}[t]||'tag-other'; }
 
 function buildSections() {
-  const container = document.getElementById('workout-sections');
-  container.innerHTML = '';
+  const container=document.getElementById('workout-sections');
+  container.innerHTML='';
+  WORKOUT.sections.forEach(sec=>{
+    const totalSets=sec.exercises.reduce((a,e)=>a+e.sets,0);
+    const el=document.createElement('div');
+    el.className='section'; el.id='sec-'+sec.id;
 
-  WORKOUT.sections.forEach(sec => {
-    const totalSets = sec.exercises.reduce((a, e) => a + e.sets, 0);
-    const el = document.createElement('div');
-    el.className = 'section';
-    el.id = 'sec-' + sec.id;
-
-    const exRows = sec.exercises.map(ex => {
-      const done = state.checks[ex.id] || 0;
-      const dots = Array.from({ length: ex.sets }, (_, i) => {
-        const isDone = i < done;
-        return `<div class="dot${isDone ? ' done' : ''}" data-ex="${ex.id}" data-i="${i}" onclick="toggleDot(this)">${isDone ? '✓' : ''}</div>`;
+    const exRows=sec.exercises.map(ex=>{
+      const done=state.checks[ex.id]||0;
+      const dots=Array.from({length:ex.sets},(_,i)=>{
+        const isDone=i<done;
+        return `<div class="dot${isDone?' done':''}" data-ex="${ex.id}" data-i="${i}" onclick="toggleDot(this)">${isDone?'✓':''}</div>`;
       }).join('');
-
-      const muscles = ex.muscles.map(([t, n]) => `<span class="tag ${tagClass(t)}">${n}</span>`).join('');
-      const tip = ex.tip ? `<div class="ex-tip">${ex.tip}</div>` : '';
-      const videoBtn = ex.video_url ? `<a class="ex-video-btn" href="${ex.video_url}" target="_blank" rel="noopener noreferrer">▶ Form</a>` : '';
-
-      // Weight input for weighted sections only
-      const currentWeight = state.weights[ex.id] || '';
-      const weightBlock = sec.weighted ? `
-        <div class="weight-wrap">
-          <input type="number" class="weight-input" data-ex="${ex.id}"
-            value="${currentWeight}" placeholder="lbs"
-            min="1" max="300" step="2.5"
-            onchange="onWeightChange(this)">
-          <div class="weight-unit">lbs</div>
-        </div>` : '';
-
-      const rowDone = done >= ex.sets;
-      return `
-        <div class="exercise-row${rowDone ? ' row-done' : ''}" id="row-${ex.id}">
-          <div class="exercise-info">
-            <div class="ex-name">${ex.name}${videoBtn}</div>
-            <div class="ex-detail">${ex.detail}</div>
-            ${tip}
-            <div class="muscles">${muscles}</div>
-          </div>
-          <div class="exercise-right">
-            <div class="set-dots">${dots}</div>
-            ${weightBlock}
-          </div>
-        </div>`;
+      const muscles=ex.muscles.map(([t,n])=>`<span class="tag ${tagClass(t)}">${n}</span>`).join('');
+      const tip=ex.tip?`<div class="ex-tip">${ex.tip}</div>`:'';
+      const videoBtn=ex.video_url?`<a class="ex-video-btn" href="${ex.video_url}" target="_blank" rel="noopener noreferrer">▶ Form</a>`:'';
+      const currentWeight=state.weights[ex.id]||'';
+      const weightBlock=sec.weighted?`<div class="weight-wrap"><input type="number" class="weight-input" data-ex="${ex.id}" value="${currentWeight}" placeholder="lbs" min="1" max="300" step="2.5" onchange="onWeightChange(this)"><div class="weight-unit">lbs</div></div>`:'';
+      const rowDone=done>=ex.sets;
+      return `<div class="exercise-row${rowDone?' row-done':''}" id="row-${ex.id}">
+        <div class="exercise-info">
+          <div class="ex-name">${ex.name}${videoBtn}</div>
+          <div class="ex-detail">${ex.detail}</div>${tip}
+          <div class="muscles">${muscles}</div>
+        </div>
+        <div class="exercise-right">
+          <div class="set-dots">${dots}</div>
+          ${weightBlock}
+        </div>
+      </div>`;
     }).join('');
 
-    el.innerHTML = `
-      <div class="section-header" onclick="toggleSection('${sec.id}')">
-        <span class="section-emoji">${sec.emoji}</span>
-        <div class="section-info">
-          <div class="section-name">${sec.name}</div>
-          <div class="section-meta">${sec.meta}</div>
-        </div>
-        <div class="section-prog" id="sprog-${sec.id}">0 / ${totalSets}</div>
-        <div class="chevron">▼</div>
-      </div>
-      <div class="section-body">${exRows}</div>`;
-
+    el.innerHTML=`<div class="section-header" onclick="toggleSection('${sec.id}')">
+      <span class="section-emoji">${sec.emoji}</span>
+      <div class="section-info"><div class="section-name">${sec.name}</div><div class="section-meta">${sec.meta}</div></div>
+      <div class="section-prog" id="sprog-${sec.id}">0 / ${totalSets}</div>
+      <div class="chevron">▼</div>
+    </div>
+    <div class="section-body">${exRows}</div>`;
     container.appendChild(el);
     updateSectionProgress(sec.id);
   });
 }
 
 function updateSectionProgress(secId) {
-  const sec = WORKOUT.sections.find(s => s.id === secId);
-  if (!sec) return;
-  const total = sec.exercises.reduce((a, e) => a + e.sets, 0);
-  const done = sec.exercises.reduce((a, e) => a + (state.checks[e.id] || 0), 0);
-  const progEl = document.getElementById('sprog-' + secId);
-  const secEl = document.getElementById('sec-' + secId);
-  if (done >= total) {
-    progEl.textContent = '✓ Done';
-    progEl.classList.add('done-label');
-    secEl.classList.add('section-done');
-  } else {
-    progEl.textContent = `${done} / ${total}`;
-    progEl.classList.remove('done-label');
-    secEl.classList.remove('section-done');
-  }
+  const sec=WORKOUT.sections.find(s=>s.id===secId); if(!sec) return;
+  const total=sec.exercises.reduce((a,e)=>a+e.sets,0);
+  const done=sec.exercises.reduce((a,e)=>a+(state.checks[e.id]||0),0);
+  const progEl=document.getElementById('sprog-'+secId);
+  const secEl=document.getElementById('sec-'+secId);
+  if(done>=total){ progEl.textContent='✓ Done'; progEl.classList.add('done-label'); secEl.classList.add('section-done'); }
+  else { progEl.textContent=`${done} / ${total}`; progEl.classList.remove('done-label'); secEl.classList.remove('section-done'); }
 }
 
 function updateProgress() {
-  const done = getDone();
-  const total = getTotal();
-  const pct = Math.round((done / total) * 100);
-
-  const circ = 471.24;
-  const offset = circ - (circ * pct / 100);
-  const ring = document.getElementById('ringFill');
-  ring.style.strokeDashoffset = offset;
-
-  let color = pct < 35 ? '#f97316' : pct < 65 ? '#fbbf24' : pct < 100 ? '#4ade80' : '#22c55e';
-  ring.style.stroke = color;
-
-  document.getElementById('ringPct').textContent = pct + '%';
-  document.getElementById('ringLabel').textContent = pct === 0 ? 'Get started' : pct === 100 ? 'Crushed it!' : 'In progress';
-  document.getElementById('statSets').textContent = `${done} / ${total}`;
-  document.getElementById('ringGlow').classList.toggle('on', pct === 100);
-
-  // Mini ring sync
-  const miniCirc = 69.12;
-  const miniFill = document.getElementById('miniRingFill');
-  miniFill.style.strokeDashoffset = miniCirc - (miniCirc * pct / 100);
-  miniFill.style.stroke = color;
-  document.getElementById('miniPct').textContent = pct + '%';
-
-  if (pct === 100 && !state.endMs) {
-    state.endMs = Date.now();
-    saveState();
-    showCompletion();
-    launchConfetti();
-    syncSession();
-  }
-
+  const done=getDone(), total=getTotal(), pct=Math.round(done/total*100);
+  const circ=471.24, offset=circ-(circ*pct/100);
+  const ring=document.getElementById('ringFill');
+  ring.style.strokeDashoffset=offset;
+  const color=pct<35?'#f97316':pct<65?'#fbbf24':pct<100?'#4ade80':'#22c55e';
+  ring.style.stroke=color;
+  document.getElementById('ringPct').textContent=pct+'%';
+  document.getElementById('ringLabel').textContent=pct===0?'Get started':pct===100?'Crushed it!':'In progress';
+  document.getElementById('statSets').textContent=`${done} / ${total}`;
+  document.getElementById('ringGlow').classList.toggle('on',pct===100);
+  const miniCirc=69.12, miniFill=document.getElementById('miniRingFill');
+  miniFill.style.strokeDashoffset=miniCirc-(miniCirc*pct/100);
+  miniFill.style.stroke=color;
+  document.getElementById('miniPct').textContent=pct+'%';
+  if(pct===100 && !state.endMs){ state.endMs=Date.now(); saveState(); showCompletion(); launchConfetti(); syncSession(); }
   updateSubmitPanel();
 }
 
 function showCompletion() {
-  const banner = document.getElementById('completionBanner');
+  const banner=document.getElementById('completionBanner');
   banner.classList.add('visible');
-  banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  document.getElementById('completionTime').textContent =
-    `Total time: ${formatDuration(state.endMs - state.startMs)}`;
+  banner.scrollIntoView({behavior:'smooth',block:'center'});
+  document.getElementById('completionTime').textContent=`Total time: ${formatDuration(state.endMs-state.startMs)}`;
 }
 
 // ═══════════════════════════════════════════════════════
 //  INTERACTIONS
 // ═══════════════════════════════════════════════════════
 function toggleDot(el) {
-  const exId = el.dataset.ex;
-  const idx = parseInt(el.dataset.i);
-  const ex = getExercise(exId);
-
-  if (!state.startMs) {
-    state.startMs = Date.now();
-    startTimer();
-  }
-
-  const current = state.checks[exId] || 0;
-  const newVal = idx < current ? idx : Math.min(idx + 1, ex.sets);
-  state.checks[exId] = newVal;
-  saveState();
-
-  el.classList.remove('popping', 'unpopping');
-  void el.offsetWidth;
-  el.classList.add(idx < newVal ? 'popping' : 'unpopping');
-
-  document.querySelectorAll(`[data-ex="${exId}"]`).forEach((d, i) => {
-    const filled = i < newVal;
-    d.classList.toggle('done', filled);
-    d.textContent = filled ? '✓' : '';
-  });
-
-  const row = document.getElementById('row-' + exId);
-  row.classList.toggle('row-done', newVal >= ex.sets);
-
-  const sec = getExSection(exId);
-  if (sec) updateSectionProgress(sec.id);
+  const exId=el.dataset.ex, idx=parseInt(el.dataset.i);
+  const ex=getExercise(exId);
+  if(!state.startMs){ state.startMs=Date.now(); startTimer(); }
+  const current=state.checks[exId]||0;
+  const newVal=idx<current?idx:Math.min(idx+1,ex.sets);
+  state.checks[exId]=newVal; saveState();
+  el.classList.remove('popping','unpopping'); void el.offsetWidth;
+  el.classList.add(idx<newVal?'popping':'unpopping');
+  document.querySelectorAll(`[data-ex="${exId}"]`).forEach((d,i)=>{ const f=i<newVal; d.classList.toggle('done',f); d.textContent=f?'✓':''; });
+  document.getElementById('row-'+exId).classList.toggle('row-done',newVal>=ex.sets);
+  const sec=getExSection(exId); if(sec) updateSectionProgress(sec.id);
   updateProgress();
-
-  // Sync to Supabase (debounced per exercise)
-  clearTimeout(toggleDot._debounce = toggleDot._debounce || {});
-  if (!toggleDot._debounce) toggleDot._debounce = {};
   clearTimeout(toggleDot._debounce[exId]);
-  toggleDot._debounce[exId] = setTimeout(() => syncExerciseLog(exId), 1200);
+  toggleDot._debounce[exId]=setTimeout(()=>syncExerciseLog(exId),1200);
 }
-toggleDot._debounce = {};
+toggleDot._debounce={};
 
-function toggleSection(id) {
-  document.getElementById('sec-' + id).classList.toggle('collapsed');
-}
+function toggleSection(id){ document.getElementById('sec-'+id).classList.toggle('collapsed'); }
 
-let allExpanded = true;
+let allExpanded=true;
 function toggleAll(event) {
-  allExpanded = !allExpanded;
-  document.querySelectorAll('.section').forEach(s => s.classList.toggle('collapsed', !allExpanded));
-  document.getElementById('expandBtn').textContent = allExpanded ? 'Collapse All' : 'Expand All';
+  allExpanded=!allExpanded;
+  document.querySelectorAll('.section').forEach(s=>s.classList.toggle('collapsed',!allExpanded));
+  document.getElementById('expandBtn').textContent=allExpanded?'Collapse All':'Expand All';
 }
 
 function resetWorkout() {
-  if (!confirm('Reset all progress? Your weight history is saved.')) return;
-  const savedWeights = state.weights || {};
-  state = { checks: {}, startMs: null, endMs: null, weights: savedWeights, supabaseSessionId: null, logIds: {} };
+  if(!confirm('Reset today\'s progress? Weight history is preserved.')) return;
+  const savedWeights=state.weights||{};
+  state={checks:{},startMs:null,endMs:null,weights:savedWeights,supabaseSessionId:null,logIds:{}};
   saveState();
-  clearInterval(timerInterval);
-  timerInterval = null;
+  clearInterval(timerInterval); timerInterval=null;
   document.getElementById('completionBanner').classList.remove('visible');
-  document.getElementById('statTimer').textContent = '—';
+  document.getElementById('statTimer').textContent='—';
   document.getElementById('ringGlow').classList.remove('on');
-  document.getElementById('expandBtn').textContent = 'Expand All';
-  allExpanded = true;
-  buildSections();
-  updateProgress();
-  populateLastWeights();
-}
-
-// ═══════════════════════════════════════════════════════
-//  FLOATING MINI RING (IntersectionObserver)
-// ═══════════════════════════════════════════════════════
-function initMiniRing() {
-  const anchor = document.getElementById('mainRingAnchor');
-  const miniWrap = document.getElementById('miniRingWrap');
-  const observer = new IntersectionObserver(
-    ([entry]) => miniWrap.classList.toggle('visible', !entry.isIntersecting),
-    { threshold: 0.1 }
-  );
-  observer.observe(anchor);
-}
-
-// ═══════════════════════════════════════════════════════
-//  CONFETTI
-// ═══════════════════════════════════════════════════════
-function launchConfetti() {
-  const canvas = document.getElementById('confetti-canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  const colors = ['#f97316','#fbbf24','#4ade80','#60a5fa','#a78bfa','#f472b6','#fff'];
-  const particles = Array.from({ length: 150 }, () => ({
-    x: Math.random() * canvas.width, y: -20,
-    r: 4 + Math.random() * 7,
-    color: colors[Math.floor(Math.random() * colors.length)],
-    vx: (Math.random() - 0.5) * 6, vy: 2 + Math.random() * 5,
-    spin: (Math.random() - 0.5) * 0.3,
-    angle: Math.random() * Math.PI * 2, alpha: 1,
-    shape: Math.random() > 0.5 ? 'rect' : 'circle',
-    w: 6 + Math.random() * 8, h: 4 + Math.random() * 6,
-  }));
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let alive = false;
-    particles.forEach(p => {
-      p.x += p.vx; p.y += p.vy; p.vy += 0.12; p.angle += p.spin;
-      if (p.y > canvas.height * 0.8) p.alpha -= 0.02;
-      if (p.alpha <= 0) return;
-      alive = true;
-      ctx.save();
-      ctx.globalAlpha = Math.max(0, p.alpha);
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.angle);
-      ctx.fillStyle = p.color;
-      if (p.shape === 'circle') { ctx.beginPath(); ctx.arc(0, 0, p.r, 0, Math.PI * 2); ctx.fill(); }
-      else ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-      ctx.restore();
-    });
-    if (alive) requestAnimationFrame(draw);
-    else ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-  draw();
+  document.getElementById('submitPanel').classList.remove('submitted');
+  document.getElementById('submitBtn').classList.remove('done');
+  document.getElementById('expandBtn').textContent='Expand All'; allExpanded=true;
+  buildSections(); updateProgress();
 }
 
 // ═══════════════════════════════════════════════════════
 //  SUBMIT & HISTORY
 // ═══════════════════════════════════════════════════════
 function getWorkedMuscles() {
-  const muscles = new Set();
-  WORKOUT.sections.forEach(sec =>
-    sec.exercises.forEach(ex => {
-      if ((state.checks[ex.id] || 0) > 0)
-        ex.muscles.forEach(([, n]) => muscles.add(n));
-    })
-  );
+  const muscles=new Set();
+  WORKOUT.sections.forEach(sec=>sec.exercises.forEach(ex=>{
+    if((state.checks[ex.id]||0)>0) ex.muscles.forEach(([,n])=>muscles.add(n));
+  }));
   return [...muscles];
 }
 
 function updateSubmitPanel() {
-  const done = getDone(), total = getTotal();
-  document.getElementById('subSets').textContent = `${done}/${total}`;
-  document.getElementById('subTime').textContent =
-    state.startMs ? formatDuration((state.endMs || Date.now()) - state.startMs) : '—';
-
-  const worked = getWorkedMuscles();
-  document.getElementById('subMuscles').textContent = worked.length || '—';
-
-  const tagsEl = document.getElementById('subMuscleTags');
-  if (worked.length) {
-    tagsEl.innerHTML = worked.map(m => `<span class="tag tag-core" style="font-size:.6rem">${m}</span>`).join('');
+  const done=getDone(), total=getTotal();
+  const isCardio = WORKOUT && WORKOUT.mode === 'cardio';
+  document.getElementById('subSets').textContent = isCardio ? (done ? 'Done' : '—') : `${done}/${total}`;
+  document.getElementById('subTime').textContent=state.startMs?formatDuration((state.endMs||Date.now())-state.startMs):'—';
+  if (isCardio) {
+    document.getElementById('subMuscles').textContent = state.cardioDistance ? `${state.cardioDistance} km` : '—';
+    document.getElementById('subMuscleTags').innerHTML = state.cardioEffort ? `<span class="tag tag-core" style="font-size:.6rem">${state.cardioEffort} effort</span>` : '';
   } else {
-    tagsEl.innerHTML = '';
+    const worked=getWorkedMuscles();
+    document.getElementById('subMuscles').textContent=worked.length||'—';
+    document.getElementById('subMuscleTags').innerHTML=worked.length?worked.map(m=>`<span class="tag tag-core" style="font-size:.6rem">${m}</span>`).join(''):'';
   }
-
-  const btn = document.getElementById('submitBtn');
-  if (done === 0) { btn.disabled = true; btn.textContent = 'Start your workout to log it'; }
-  else { btn.disabled = false; btn.textContent = done >= total ? '🏆 Log Completed Workout' : 'Log Partial Workout'; }
+  const btn=document.getElementById('submitBtn');
+  if(done===0){ btn.disabled=true; btn.textContent=isCardio?'Complete your session first':'Start your workout to log it'; }
+  else { btn.disabled=false; btn.textContent=isCardio?'📊 Log Session to History':'🏆 Log Completed Workout'; }
 }
 
 async function submitWorkout() {
-  const done = getDone();
-  if (done === 0) return;
-
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = 'Saving…';
-
-  if (!state.endMs && state.startMs) {
-    state.endMs = Date.now();
-    saveState();
-  }
-
+  const done=getDone(); if(done===0) return;
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true; btn.textContent='Saving…';
+  if(!state.endMs && state.startMs){ state.endMs=Date.now(); saveState(); }
   setSyncStatus('syncing');
   try {
-    // Ensure session exists
-    const sessionId = await ensureSession();
-
-    // Sync all exercises that have any progress
-    const promises = WORKOUT.sections.flatMap(sec =>
-      sec.exercises
-        .filter(ex => (state.checks[ex.id] || 0) > 0)
-        .map(ex => syncExerciseLog(ex.id))
-    );
-    await Promise.all(promises);
+    await ensureSession();
+    await Promise.all(WORKOUT.sections.flatMap(sec=>sec.exercises.filter(ex=>(state.checks[ex.id]||0)>0).map(ex=>syncExerciseLog(ex.id))));
     await syncSession();
     setSyncStatus('synced');
-
-    // Success state
-    const panel = document.getElementById('submitPanel');
-    panel.classList.add('submitted');
-    btn.classList.add('done');
-    btn.disabled = false;
-    btn.textContent = `✓ Logged — ${done}/${getTotal()} sets · ${formatDuration(state.endMs - state.startMs)}`;
-    document.getElementById('submitHint').textContent = 'Workout saved to your history below.';
-
-    // Refresh history
+    document.getElementById('submitPanel').classList.add('submitted');
+    btn.classList.add('done'); btn.disabled=false;
+    btn.textContent=`✓ Logged — ${done}/${getTotal()} sets · ${formatDuration(state.endMs-state.startMs)}`;
+    document.getElementById('submitHint').textContent='Workout saved to your history below.';
     loadHistory();
-  } catch(e) {
-    setSyncStatus('error');
-    btn.disabled = false;
-    btn.textContent = 'Retry — Save Failed';
-  }
+  } catch(e){ setSyncStatus('error'); btn.disabled=false; btn.textContent='Retry — Save Failed'; }
 }
 
 function relativeDate(iso) {
-  const d = new Date(iso), now = new Date();
-  const diffDays = Math.floor((now - d) / 86400000);
-  if (diffDays === 0) return 'Today';
-  if (diffDays === 1) return 'Yesterday';
-  if (diffDays < 7) return `${diffDays} days ago`;
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const d=new Date(iso),now=new Date(),diff=Math.floor((now-d)/86400000);
+  if(diff===0) return 'Today'; if(diff===1) return 'Yesterday';
+  if(diff<7) return `${diff}d ago`;
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
 }
 
 async function loadHistory() {
-  const listEl = document.getElementById('historyList');
+  const listEl=document.getElementById('historyList');
   try {
-    const { data, error } = await sb
-      .from('workout_sessions')
-      .select('id, workout_name, started_at, completed_at, duration_seconds, completion_pct, sets_completed, total_sets')
-      .eq('user_id', 'warren')
-      .gt('sets_completed', 0)
-      .order('started_at', { ascending: false })
-      .limit(10);
-
-    if (error || !data || data.length === 0) {
-      listEl.innerHTML = '<div class="history-empty">No sessions logged yet — this will be your first!</div>';
-      return;
-    }
-
-    // Fetch muscle groups for each session
-    const sessionIds = data.map(s => s.id);
-    const { data: logs } = await sb
-      .from('exercise_logs')
-      .select('session_id, muscle_groups')
-      .in('session_id', sessionIds)
-      .gt('sets_completed', 0);
-
-    const musclesBySession = {};
-    (logs || []).forEach(log => {
-      if (!musclesBySession[log.session_id]) musclesBySession[log.session_id] = new Set();
-      (log.muscle_groups || []).forEach(m => musclesBySession[log.session_id].add(m));
-    });
-
-    listEl.innerHTML = data.map(s => {
-      const pct = s.completion_pct || 0;
-      const circ = 75.4;
-      const offset = circ - (circ * pct / 100);
-      const color = pct >= 100 ? '#22c55e' : pct >= 50 ? '#fbbf24' : '#f97316';
-      const dur = s.duration_seconds ? formatDuration(s.duration_seconds * 1000) : '—';
-      const muscles = [...(musclesBySession[s.id] || [])].slice(0, 3).join(', ') || '—';
-      const extra = (musclesBySession[s.id]?.size || 0) > 3
-        ? ` +${musclesBySession[s.id].size - 3}` : '';
-
-      return `
-        <div class="hist-item">
-          <div class="hist-ring">
-            <svg class="hist-svg" viewBox="0 0 36 36">
-              <circle class="hist-track" cx="18" cy="18" r="12"/>
-              <circle class="hist-fill" cx="18" cy="18" r="12"
-                style="stroke:${color};stroke-dashoffset:${offset}"/>
-            </svg>
-            <div class="hist-pct-txt">${pct}%</div>
-          </div>
-          <div class="hist-info">
-            <div class="hist-name">${s.workout_name}</div>
-            <div class="hist-meta">${s.sets_completed}/${s.total_sets} sets · ${dur} · ${muscles}${extra}</div>
-          </div>
-          <div class="hist-date">${relativeDate(s.started_at)}</div>
-        </div>`;
+    const {data,error}=await sb.from('workout_sessions').select('id,workout_name,workout_type,started_at,completed_at,duration_seconds,completion_pct,sets_completed,total_sets').eq('user_id','warren').gt('sets_completed',0).order('started_at',{ascending:false}).limit(10);
+    if(error||!data||data.length===0){ listEl.innerHTML='<div class="history-empty">No sessions yet — this will be your first!</div>'; return; }
+    const {data:logs}=await sb.from('exercise_logs').select('session_id,muscle_groups').in('session_id',data.map(s=>s.id)).gt('sets_completed',0);
+    const musclesBySession={};
+    (logs||[]).forEach(log=>{ if(!musclesBySession[log.session_id]) musclesBySession[log.session_id]=new Set(); (log.muscle_groups||[]).forEach(m=>musclesBySession[log.session_id].add(m)); });
+    listEl.innerHTML=data.map(s=>{
+      const pct=s.completion_pct||0, circ=75.4, offset=circ-(circ*pct/100);
+      const color=pct>=100?'#22c55e':pct>=50?'#fbbf24':'#f97316';
+      const dur=s.duration_seconds?formatDuration(s.duration_seconds*1000):'—';
+      const mset=musclesBySession[s.id]||new Set();
+      const muscles=[...mset].slice(0,3).join(', ')||'—';
+      const extra=mset.size>3?` +${mset.size-3}`:'';
+      const modeBadge=s.workout_type==='calisthenics'?'🤸':'🏋️';
+      return `<div class="hist-item">
+        <div class="hist-ring">
+          <svg class="hist-svg" viewBox="0 0 36 36"><circle class="hist-track" cx="18" cy="18" r="12"/><circle class="hist-fill" cx="18" cy="18" r="12" style="stroke:${color};stroke-dashoffset:${offset}"/></svg>
+          <div class="hist-pct-txt">${pct}%</div>
+        </div>
+        <div class="hist-info">
+          <div class="hist-name">${modeBadge} ${s.workout_name}</div>
+          <div class="hist-meta">${s.sets_completed}/${s.total_sets} sets · ${dur} · ${muscles}${extra}</div>
+        </div>
+        <div class="hist-date">${relativeDate(s.started_at)}</div>
+      </div>`;
     }).join('');
-  } catch(e) {
-    listEl.innerHTML = '<div class="history-empty">Could not load history.</div>';
-  }
+  } catch(e){ listEl.innerHTML='<div class="history-empty">Could not load history.</div>'; }
+}
+
+// ═══════════════════════════════════════════════════════
+//  MINI RING
+// ═══════════════════════════════════════════════════════
+function initMiniRing() {
+  const anchor=document.getElementById('mainRingAnchor');
+  const miniWrap=document.getElementById('miniRingWrap');
+  new IntersectionObserver(([e])=>miniWrap.classList.toggle('visible',!e.isIntersecting),{threshold:0.1}).observe(anchor);
+}
+
+// ═══════════════════════════════════════════════════════
+//  CONFETTI
+// ═══════════════════════════════════════════════════════
+function launchConfetti() {
+  const canvas=document.getElementById('confetti-canvas'),ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  const colors=['#f97316','#fbbf24','#4ade80','#60a5fa','#a78bfa','#f472b6','#fff'];
+  const particles=Array.from({length:150},()=>({x:Math.random()*canvas.width,y:-20,r:4+Math.random()*7,color:colors[Math.floor(Math.random()*colors.length)],vx:(Math.random()-.5)*6,vy:2+Math.random()*5,spin:(Math.random()-.5)*.3,angle:Math.random()*Math.PI*2,alpha:1,shape:Math.random()>.5?'rect':'circle',w:6+Math.random()*8,h:4+Math.random()*6}));
+  function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);let alive=false;particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.12;p.angle+=p.spin;if(p.y>canvas.height*.8)p.alpha-=.02;if(p.alpha<=0)return;alive=true;ctx.save();ctx.globalAlpha=Math.max(0,p.alpha);ctx.translate(p.x,p.y);ctx.rotate(p.angle);ctx.fillStyle=p.color;if(p.shape==='circle'){ctx.beginPath();ctx.arc(0,0,p.r,0,Math.PI*2);ctx.fill();}else ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();});if(alive)requestAnimationFrame(draw);else ctx.clearRect(0,0,canvas.width,canvas.height);}
+  draw();
 }
 
 // ═══════════════════════════════════════════════════════
 //  ROADMAP
 // ═══════════════════════════════════════════════════════
-const ROADMAP = [
-  {
-    phase: 'Phase 1 — Foundation',
-    items: [
-      { name: 'Animated progress ring', desc: 'SVG ring tracks set completion 0–100% with color transitions', status: 'done' },
-      { name: 'Set-by-set dot checkboxes', desc: 'Per-set tap targets with pop animations and strikethrough on completion', status: 'done' },
-      { name: 'Section-level progress', desc: 'Each block (Warm-Up, Strength, Core, Cool-Down) tracks its own completion', status: 'done' },
-      { name: 'LocalStorage persistence', desc: 'Progress survives page refresh; auto-resets at the start of a new day', status: 'done' },
-      { name: 'Confetti on completion', desc: 'Canvas particle celebration when you hit 100%', status: 'done' },
-      { name: 'Floating mini ring', desc: 'Progress ring shrinks into the sticky header as you scroll down', status: 'done' },
-    ]
-  },
-  {
-    phase: 'Phase 2 — Data Layer',
-    items: [
-      { name: 'Supabase integration', desc: 'Workout sessions, exercise logs, weight history, and goals sync to cloud database', status: 'done' },
-      { name: 'Dumbbell weight logger', desc: 'Per-exercise lbs input with last-used weight pre-filled from history', status: 'done' },
-      { name: 'Sync status indicator', desc: 'Live dot in header showing syncing / synced / error state', status: 'done' },
-      { name: 'Session auto-save', desc: 'First tap starts a session; workout is saved even if you don\'t finish', status: 'done' },
-    ]
-  },
-  {
-    phase: 'Phase 3 — Exercise Intelligence',
-    items: [
-      { name: 'Exercise database (exercises.json)', desc: '50 exercises with muscles targeted, difficulty, coaching cues, and form video links', status: 'done' },
-      { name: 'Interactive roadmap', desc: 'This modal — living in the footer, showing full feature progress', status: 'done' },
-      { name: 'Calisthenics / bodyweight mode', desc: 'Full bodyweight workout alternative — same tracker, no equipment required', status: 'active' },
-      { name: 'Workout type toggle', desc: 'Switch between Dumbbells and Calisthenics from the header', status: 'active' },
-      { name: 'Form video links on exercises', desc: 'Tap exercise name to open curated form tutorial video', status: 'planned' },
-    ]
-  },
-  {
-    phase: 'Phase 4 — Progress Dashboard',
-    items: [
-      { name: 'Workout streak calendar', desc: 'Heatmap-style calendar showing consistency over time', status: 'planned' },
-      { name: 'Muscle group frequency map', desc: 'Visual breakdown of which muscles you\'ve hit and how recently', status: 'planned' },
-      { name: 'Per-exercise weight progression', desc: 'Chart showing your weight increases over time per movement', status: 'planned' },
-      { name: 'Volume tracker', desc: 'Total weekly sets × reps × weight — the key driver of long-term progress', status: 'planned' },
-    ]
-  },
-  {
-    phase: 'Phase 5 — Recommendation Engine',
-    items: [
-      { name: 'Muscle gap analysis', desc: 'Surfaces which muscle groups are overdue based on your history and goals', status: 'planned' },
-      { name: 'Smart workout suggestions', desc: '"You haven\'t hit lower body in 4 days and it\'s a priority — here\'s today\'s plan"', status: 'planned' },
-      { name: 'Progressive overload nudges', desc: 'Suggests when to increase weight based on your logged history', status: 'planned' },
-      { name: 'Adaptive difficulty', desc: 'Workout intensity scales based on recent recovery and consistency', status: 'planned' },
-    ]
-  },
-  {
-    phase: 'Phase 6 — Ecosystem Integration',
-    items: [
-      { name: 'Strava auto-log', desc: 'Push completed strength sessions directly to Strava as an activity', status: 'planned' },
-      { name: 'Chef meal sync', desc: 'Auto-recommend a meal plan from Chef based on today\'s workout and macros needed', status: 'planned' },
-      { name: 'Anatomy muscle map', desc: 'Link exercises directly to the Anatomy app\'s interactive 3D muscle regions', status: 'planned' },
-      { name: 'Weekly split planner', desc: 'Build and save a Push/Pull/Legs or Full-Body 3×/week schedule', status: 'planned' },
-    ]
-  },
-  {
-    phase: 'Ideas & Backlog',
-    items: [
-      { name: 'Body measurement tracker', desc: 'Log weight, measurements, and photos to track body composition', status: 'idea' },
-      { name: 'Rest day planner', desc: 'Active recovery suggestions on off days — mobility, walks, stretching', status: 'idea' },
-      { name: 'Workout export / PDF', desc: 'Share or print today\'s workout with your weights logged', status: 'idea' },
-      { name: 'Form check reminders', desc: 'Video link auto-surfaces when you start an exercise you haven\'t done recently', status: 'idea' },
-    ]
-  },
+const ROADMAP=[
+  { phase:'Phase 1 — Foundation', items:[
+    {name:'Animated progress ring',desc:'SVG ring tracks set completion 0–100% with color transitions',status:'done'},
+    {name:'Set-by-set dot checkboxes',desc:'Per-set tap targets with pop animations and strikethrough on completion',status:'done'},
+    {name:'Section-level progress',desc:'Each block tracks its own completion',status:'done'},
+    {name:'LocalStorage persistence',desc:'Progress survives refresh; auto-resets at the start of a new day',status:'done'},
+    {name:'Confetti on completion',desc:'Canvas particle celebration at 100%',status:'done'},
+    {name:'Floating mini ring',desc:'Progress ring shrinks into the sticky header on scroll',status:'done'},
+  ]},
+  { phase:'Phase 2 — Data Layer', items:[
+    {name:'Supabase integration',desc:'Workout sessions, exercise logs, weight history, goals — all synced to cloud',status:'done'},
+    {name:'Dumbbell weight logger',desc:'Per-exercise lbs input with last-used weight pre-filled',status:'done'},
+    {name:'Sync status indicator',desc:'Live dot showing syncing / synced / error',status:'done'},
+    {name:'Submit & Log button',desc:'Final session sync with summary and history panel',status:'done'},
+    {name:'Session history panel',desc:'Past sessions with mini rings, duration, and muscle groups',status:'done'},
+  ]},
+  { phase:'Phase 3 — Exercise Intelligence', items:[
+    {name:'Exercise video database (exercises.json)',desc:'50 exercises with muscles, difficulty, coaching cues, and form video links',status:'done'},
+    {name:'▶ Form video links on every exercise',desc:'Tap to open a curated YouTube form tutorial in a new tab',status:'done'},
+    {name:'Interactive roadmap modal',desc:'This sheet — showing full feature progress and backlog',status:'done'},
+    {name:'Calisthenics / bodyweight workouts',desc:'5 vacation-week workouts — Push, Legs, Pull, Circuit, Upper — all bodyweight',status:'done'},
+    {name:'Week picker & multi-workout support',desc:'Day-by-day schedule with active workout selector and mode badge',status:'done'},
+    {name:'Form video links on exercises',desc:'Already live — ▶ Form on every exercise',status:'done'},
+  ]},
+  { phase:'Phase 4 — Progress Dashboard', items:[
+    {name:'Workout streak calendar',desc:'Heatmap calendar showing consistency over time',status:'planned'},
+    {name:'Muscle group frequency map',desc:'Visual breakdown of which muscles you\'ve hit and how recently',status:'planned'},
+    {name:'Per-exercise weight progression',desc:'Chart showing weight increases over time per movement',status:'planned'},
+    {name:'Volume tracker',desc:'Total weekly sets × reps × weight — the key long-term driver',status:'planned'},
+  ]},
+  { phase:'Phase 5 — Recommendation Engine', items:[
+    {name:'Muscle gap analysis',desc:'Surfaces which muscle groups are overdue based on history and goals',status:'planned'},
+    {name:'Smart workout suggestions',desc:'"You haven\'t hit lower body in 4 days" — next-up recommendations',status:'planned'},
+    {name:'Progressive overload nudges',desc:'Suggests when to increase weight based on logged history',status:'planned'},
+  ]},
+  { phase:'Phase 6 — Ecosystem', items:[
+    {name:'Strava auto-log',desc:'Push completed sessions directly to Strava as an activity',status:'planned'},
+    {name:'Chef meal sync',desc:'Auto-recommend meals from Chef based on today\'s workout and macros',status:'planned'},
+    {name:'Anatomy muscle map',desc:'Link exercises to the Anatomy app\'s interactive 3D muscle regions',status:'planned'},
+    {name:'Weekly split planner',desc:'Build and save a Push/Pull/Legs or Full-Body 3×/week schedule',status:'planned'},
+  ]},
+  { phase:'Ideas & Backlog', items:[
+    {name:'Body measurement tracker',desc:'Log weight, measurements, and photos to track body composition',status:'idea'},
+    {name:'Rest day recovery suggestions',desc:'Active recovery — mobility, walks, stretching on off days',status:'idea'},
+    {name:'Workout export / PDF',desc:'Share or print today\'s workout with your weights logged',status:'idea'},
+  ]},
 ];
 
 function buildRoadmap() {
-  const body = document.getElementById('roadmapBody');
-  const statusLabel = { done: 'Done', active: 'In Progress', planned: 'Planned', idea: 'Idea' };
-  body.innerHTML = ROADMAP.map(phase => `
-    <div class="rm-phase">
-      <div class="rm-phase-hd">${phase.phase}</div>
-      <div class="rm-items">
-        ${phase.items.map(item => `
-          <div class="rm-item">
-            <div class="rm-status ${item.status}"></div>
-            <div class="rm-text">
-              <div class="rm-name">${item.name}</div>
-              <div class="rm-desc">${item.desc}</div>
-            </div>
-            <div class="rm-badge badge-${item.status}">${statusLabel[item.status]}</div>
-          </div>`).join('')}
-      </div>
-    </div>`).join('');
+  const body=document.getElementById('roadmapBody');
+  const sl={done:'Done',active:'In Progress',planned:'Planned',idea:'Idea'};
+  body.innerHTML=ROADMAP.map(phase=>`<div class="rm-phase"><div class="rm-phase-hd">${phase.phase}</div><div class="rm-items">${phase.items.map(item=>`<div class="rm-item"><div class="rm-status ${item.status}"></div><div class="rm-text"><div class="rm-name">${item.name}</div><div class="rm-desc">${item.desc}</div></div><div class="rm-badge badge-${item.status}">${sl[item.status]}</div></div>`).join('')}</div></div>`).join('');
 }
-
-function openRoadmap() {
-  buildRoadmap();
-  document.getElementById('roadmapModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeRoadmap() {
-  document.getElementById('roadmapModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function handleBackdropClick(e) {
-  if (e.target === document.getElementById('roadmapModal')) closeRoadmap();
-}
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRoadmap(); });
+function openRoadmap(){ buildRoadmap(); document.getElementById('roadmapModal').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeRoadmap(){ document.getElementById('roadmapModal').classList.remove('open'); document.body.style.overflow=''; }
+function handleBackdropClick(e){ if(e.target===document.getElementById('roadmapModal')) closeRoadmap(); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeRoadmap(); });
 
 // ═══════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════
 function init() {
-  loadState();
+  // Sync mode buttons to auto-detected mode
+  document.getElementById('btnDumbbell').classList.toggle('active', currentMode === 'dumbbell');
+  document.getElementById('btnCalisthenics').classList.toggle('active', currentMode === 'calisthenics');
+  document.getElementById('btnTriathlon').classList.toggle('active', currentMode === 'triathlon');
 
-  const d = new Date();
-  document.getElementById('workoutDate').textContent =
-    `Dumbbells · ~35-40 min · ${d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
+  // Auto-select today's workout by day of week
+  const todayDow = new Date().getDay();
+  const todayPlan = getCurrentPlan().find(p => p.dayIndex === todayDow);
 
-  buildSections();
-  updateProgress();
-  initMiniRing();
-
-  // Restore running state
-  if (state.startMs && !state.endMs) startTimer();
-  if (state.endMs) {
-    document.getElementById('completionBanner').classList.add('visible');
-    document.getElementById('completionTime').textContent =
-      `Total time: ${formatDuration(state.endMs - state.startMs)}`;
-    document.getElementById('ringGlow').classList.add('on');
-    document.getElementById('statTimer').textContent = formatDuration(state.endMs - state.startMs);
+  // Default: if today matches a vacation day use it, else fall back to full-body-core
+  if (todayPlan && todayPlan.workoutId) {
+    currentWorkoutId = todayPlan.workoutId;
+  } else if (todayPlan && !todayPlan.workoutId) {
+    currentWorkoutId = null; // rest day
   }
 
-  // Fetch last weights + session history from Supabase after render
-  populateLastWeights();
+  WORKOUT = currentWorkoutId ? WORKOUTS[currentWorkoutId] : null;
+  state = currentWorkoutId ? loadStateForWorkout(currentWorkoutId) : state;
+
+  buildWeekPicker();
+  initMiniRing();
+
+  if (!currentWorkoutId) {
+    showRestDay();
+  } else {
+    renderHeroMeta();
+    if (WORKOUT && WORKOUT.mode === 'cardio') { buildCardioSession(); } else { buildSections(); }
+    updateProgress();
+    if (state.startMs && !state.endMs) startTimer();
+    if (state.endMs) {
+      document.getElementById('completionBanner').classList.add('visible');
+      document.getElementById('completionTime').textContent = `Total time: ${formatDuration(state.endMs - state.startMs)}`;
+      document.getElementById('ringGlow').classList.add('on');
+      document.getElementById('statTimer').textContent = formatDuration(state.endMs - state.startMs);
+    }
+    populateLastWeights();
+    updateSubmitPanel();
+  }
   loadHistory();
-  updateSubmitPanel();
 }
 
 init();
