@@ -203,6 +203,135 @@
     .ql-name{font-size:.7rem;font-weight:800;margin-top:4px}
     .ql-sub{font-size:.58rem;color:var(--muted-light);margin-top:2px}
 
+    /* ── VIDEO LINK ── */
+    .ex-video-btn{
+      display:inline-flex;align-items:center;gap:3px;
+      font-size:.58rem;font-weight:800;color:var(--muted);
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:5px;padding:2px 7px;cursor:pointer;
+      text-decoration:none;transition:all .18s;vertical-align:middle;
+      margin-left:7px;white-space:nowrap;
+    }
+    .ex-video-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
+
+    /* ── SUBMIT SECTION ── */
+    .submit-panel{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:16px;padding:18px 16px;margin-bottom:10px;
+    }
+    .submit-panel.submitted{border-color:rgba(74,222,128,.4);background:rgba(74,222,128,.04)}
+    .submit-summary{display:flex;gap:0;margin-bottom:16px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+    .submit-stat{flex:1;text-align:center;padding:10px 6px;border-right:1px solid var(--border)}
+    .submit-stat:last-child{border-right:none}
+    .submit-stat-val{font-size:1rem;font-weight:900;color:var(--text)}
+    .submit-stat-lbl{font-size:.58rem;color:var(--muted-light);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;font-weight:700}
+    .submit-btn{
+      width:100%;padding:14px;border-radius:11px;border:none;
+      background:var(--accent);color:#fff;font-family:inherit;
+      font-size:.92rem;font-weight:900;cursor:pointer;
+      transition:all .2s;letter-spacing:.02em;
+    }
+    .submit-btn:hover{background:#ea6a08;transform:translateY(-1px);box-shadow:0 6px 20px rgba(249,115,22,.3)}
+    .submit-btn:disabled{background:var(--muted);cursor:not-allowed;transform:none;box-shadow:none}
+    .submit-btn.done{background:var(--green);color:#0a0a0a}
+    .submit-hint{font-size:.66rem;color:var(--muted);text-align:center;margin-top:8px;line-height:1.4}
+    .submit-muscles{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px}
+
+    /* ── HISTORY ── */
+    .history-empty{font-size:.78rem;color:var(--muted);text-align:center;padding:20px 0}
+    .hist-item{
+      padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04);
+      display:flex;align-items:center;gap:12px;
+    }
+    .hist-item:last-child{border-bottom:none}
+    .hist-ring{position:relative;width:36px;height:36px;flex-shrink:0}
+    .hist-svg{width:36px;height:36px;transform:rotate(-90deg)}
+    .hist-track{fill:none;stroke:#222;stroke-width:3.5}
+    .hist-fill{fill:none;stroke:var(--accent);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:75.4;transition:stroke-dashoffset .4s ease}
+    .hist-pct-txt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.52rem;font-weight:900;color:var(--text)}
+    .hist-info{flex:1;min-width:0}
+    .hist-name{font-size:.82rem;font-weight:700}
+    .hist-meta{font-size:.66rem;color:var(--muted-light);margin-top:2px}
+    .hist-date{font-size:.68rem;font-weight:700;color:var(--muted-light);text-align:right;white-space:nowrap}
+
+    /* ── FOOTER ── */
+    .app-footer{
+      max-width:660px;margin:24px auto 0;padding:0 12px 48px;
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .footer-copy{font-size:.62rem;color:var(--muted);font-weight:600}
+    .roadmap-btn{
+      background:transparent;border:1px solid var(--border);color:var(--muted-light);
+      padding:7px 14px;border-radius:9px;font-family:inherit;font-size:.74rem;
+      font-weight:700;cursor:pointer;transition:all .2s;
+      display:flex;align-items:center;gap:7px;
+    }
+    .roadmap-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+    .roadmap-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+
+    /* ── ROADMAP MODAL ── */
+    .modal-backdrop{
+      position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;
+      display:flex;align-items:flex-end;justify-content:center;
+      opacity:0;pointer-events:none;transition:opacity .25s ease;
+    }
+    .modal-backdrop.open{opacity:1;pointer-events:all}
+    .modal-sheet{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:20px 20px 0 0;width:100%;max-width:700px;
+      max-height:88vh;display:flex;flex-direction:column;
+      transform:translateY(40px);transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+    }
+    .modal-backdrop.open .modal-sheet{transform:translateY(0)}
+    .modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+    .modal-head{
+      padding:16px 20px 12px;border-bottom:1px solid var(--border);
+      display:flex;align-items:center;gap:12px;flex-shrink:0;
+    }
+    .modal-title{font-size:1.05rem;font-weight:900;flex:1}
+    .modal-close{
+      background:var(--card);border:1px solid var(--border);color:var(--muted-light);
+      width:30px;height:30px;border-radius:50%;cursor:pointer;font-family:inherit;
+      font-size:.85rem;display:flex;align-items:center;justify-content:center;
+      transition:all .2s;
+    }
+    .modal-close:hover{background:var(--card-hover);color:var(--text)}
+    .modal-body{overflow-y:auto;padding:16px 20px 32px;flex:1}
+    .modal-body::-webkit-scrollbar{width:4px}
+    .modal-body::-webkit-scrollbar-track{background:transparent}
+    .modal-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+    /* roadmap phases */
+    .rm-phase{margin-bottom:24px}
+    .rm-phase-hd{
+      font-size:.62rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em;
+      color:var(--muted-light);margin-bottom:10px;display:flex;align-items:center;gap:8px;
+    }
+    .rm-phase-hd::after{content:'';flex:1;height:1px;background:var(--border)}
+    .rm-items{display:flex;flex-direction:column;gap:6px}
+    .rm-item{
+      background:var(--card);border:1px solid var(--border);border-radius:11px;
+      padding:11px 14px;display:flex;align-items:flex-start;gap:11px;
+      transition:border-color .2s;
+    }
+    .rm-item:hover{border-color:#333}
+    .rm-status{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+    .rm-status.done{background:var(--green);box-shadow:0 0 6px rgba(74,222,128,.4)}
+    .rm-status.active{background:var(--accent);box-shadow:0 0 6px rgba(249,115,22,.4)}
+    .rm-status.planned{background:var(--muted)}
+    .rm-status.idea{background:#a78bfa;box-shadow:0 0 6px rgba(167,139,250,.3)}
+    .rm-text{flex:1;min-width:0}
+    .rm-name{font-size:.84rem;font-weight:700;line-height:1.3}
+    .rm-desc{font-size:.7rem;color:var(--muted-light);margin-top:2px;line-height:1.4}
+    .rm-badge{
+      font-size:.55rem;font-weight:800;padding:2px 7px;border-radius:6px;
+      text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;flex-shrink:0;
+    }
+    .badge-done{background:rgba(74,222,128,.12);color:var(--green)}
+    .badge-active{background:rgba(249,115,22,.12);color:var(--accent)}
+    .badge-planned{background:rgba(255,255,255,.05);color:var(--muted-light)}
+    .badge-idea{background:rgba(167,139,250,.1);color:#a78bfa}
+
     /* ── CONFETTI ── */
     #confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:998}
   </style>
@@ -270,6 +399,24 @@
 
   <div id="workout-sections"></div>
 
+  <!-- SUBMIT -->
+  <div class="submit-panel" id="submitPanel">
+    <div class="submit-summary">
+      <div class="submit-stat"><div class="submit-stat-val" id="subSets">0/31</div><div class="submit-stat-lbl">Sets Done</div></div>
+      <div class="submit-stat"><div class="submit-stat-val" id="subTime">—</div><div class="submit-stat-lbl">Elapsed</div></div>
+      <div class="submit-stat"><div class="submit-stat-val" id="subMuscles">—</div><div class="submit-stat-lbl">Muscles</div></div>
+    </div>
+    <div class="submit-muscles" id="subMuscleTags"></div>
+    <button class="submit-btn" id="submitBtn" onclick="submitWorkout()">Log Workout to History</button>
+    <div class="submit-hint" id="submitHint">Records your progress, weights, and muscle data to your personal history</div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="panel" id="historyPanel">
+    <div class="panel-hd"><span>Session History</span></div>
+    <div id="historyList"><div class="history-empty">Loading history…</div></div>
+  </div>
+
   <!-- NUTRITION -->
   <div class="panel">
     <div class="panel-hd">
@@ -297,6 +444,27 @@
   </div>
 </div>
 
+<!-- FOOTER -->
+<div class="app-footer">
+  <div class="footer-copy">Warren's Lab · Fitness v0.2</div>
+  <button class="roadmap-btn" onclick="openRoadmap()">
+    <div class="roadmap-dot"></div>
+    View Roadmap
+  </button>
+</div>
+
+<!-- ROADMAP MODAL -->
+<div class="modal-backdrop" id="roadmapModal" onclick="handleBackdropClick(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-head">
+      <div class="modal-title">⚡ Fitness App Roadmap</div>
+      <button class="modal-close" onclick="closeRoadmap()">✕</button>
+    </div>
+    <div class="modal-body" id="roadmapBody"></div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════════════════
 //  SUPABASE
@@ -319,37 +487,37 @@ const WORKOUT = {
     {
       id: 'warmup', name: 'Warm-Up', emoji: '🔥', meta: '5 min · no equipment', weighted: false,
       exercises: [
-        { id: 'w1', name: 'Bodyweight Squats', detail: '15 reps', sets: 1, muscles: [['lower','Quads'],['lower','Glutes']], tip: null },
-        { id: 'w2', name: 'Arm Circles + Torso Twists', detail: '10 each direction', sets: 1, muscles: [['upper','Shoulders'],['core','Core']], tip: null },
-        { id: 'w3', name: 'Cat-Cow / Back Extensions', detail: '10 reps', sets: 1, muscles: [['back','Spine'],['core','Core']], tip: 'Slow and controlled — warm up the posterior chain' },
+        { id: 'w1', name: 'Bodyweight Squats', detail: '15 reps', sets: 1, muscles: [['lower','Quads'],['lower','Glutes']], tip: null, video_url: 'https://www.youtube.com/watch?v=aclHkVaku9U' },
+        { id: 'w2', name: 'Arm Circles + Torso Twists', detail: '10 each direction', sets: 1, muscles: [['upper','Shoulders'],['core','Core']], tip: null, video_url: 'https://www.youtube.com/results?search_query=arm+circles+torso+twists+warmup+mobility' },
+        { id: 'w3', name: 'Cat-Cow / Back Extensions', detail: '10 reps', sets: 1, muscles: [['back','Spine'],['core','Core']], tip: 'Slow and controlled — warm up the posterior chain', video_url: 'https://www.youtube.com/results?search_query=cat+cow+stretch+back+extension+warmup' },
       ]
     },
     {
       id: 'strength', name: 'Main Strength Block', emoji: '💪', meta: '3 rounds · 60-90s rest between exercises', weighted: true,
       exercises: [
-        { id: 's1', name: 'Goblet Squats', detail: '12 reps (dumbbell at chest)', sets: 3, muscles: [['lower','Quads'],['lower','Glutes'],['core','Core']], tip: 'Chest tall, knees track over toes' },
-        { id: 's2', name: 'Dumbbell Row', detail: '10-12 reps each side', sets: 3, muscles: [['back','Back'],['upper','Biceps']], tip: 'Drive elbow to ceiling, not the weight' },
-        { id: 's3', name: 'Floor Press / Overhead Press', detail: '10-12 reps', sets: 3, muscles: [['upper','Chest'],['upper','Shoulders'],['upper','Triceps']], tip: null },
-        { id: 's4', name: 'Romanian Deadlift', detail: '12 reps', sets: 3, muscles: [['lower','Hamstrings'],['lower','Glutes'],['back','Lower Back']], tip: 'Hinge at hips, soft bend in knees, bar stays close' },
-        { id: 's5', name: 'Walking Lunges', detail: '10 reps each leg', sets: 3, muscles: [['lower','Quads'],['lower','Glutes']], tip: null },
+        { id: 's1', name: 'Goblet Squats', detail: '12 reps (dumbbell at chest)', sets: 3, muscles: [['lower','Quads'],['lower','Glutes'],['core','Core']], tip: 'Chest tall, knees track over toes', video_url: 'https://www.youtube.com/watch?v=MeIiIdhvXT4' },
+        { id: 's2', name: 'Dumbbell Row', detail: '10-12 reps each side', sets: 3, muscles: [['back','Back'],['upper','Biceps']], tip: 'Drive elbow to ceiling, not the weight', video_url: 'https://www.youtube.com/watch?v=pYcpY20QaE8' },
+        { id: 's3', name: 'Floor Press / Overhead Press', detail: '10-12 reps', sets: 3, muscles: [['upper','Chest'],['upper','Shoulders'],['upper','Triceps']], tip: null, video_url: 'https://www.youtube.com/watch?v=uUGDRwge4F8' },
+        { id: 's4', name: 'Romanian Deadlift', detail: '12 reps', sets: 3, muscles: [['lower','Hamstrings'],['lower','Glutes'],['back','Lower Back']], tip: 'Hinge at hips, soft bend in knees, bar stays close', video_url: 'https://www.youtube.com/watch?v=jEy_czb3RKA' },
+        { id: 's5', name: 'Walking Lunges', detail: '10 reps each leg', sets: 3, muscles: [['lower','Quads'],['lower','Glutes']], tip: null, video_url: 'https://www.youtube.com/watch?v=L8fvypPrzzs' },
       ]
     },
     {
       id: 'core', name: 'Core Finisher', emoji: '🎯', meta: '2 rounds · your focus today', weighted: true,
       exercises: [
-        { id: 'c1', name: 'Weighted Russian Twists', detail: '15 each side', sets: 2, muscles: [['core','Obliques'],['core','Core']], tip: 'Focus on rotation, not speed' },
-        { id: 'c2', name: 'Dumbbell Deadbug', detail: '10 each side', sets: 2, muscles: [['core','Core'],['core','Stability']], tip: 'Lower back STAYS pressed to the floor' },
-        { id: 'c3', name: 'Plank Hold', detail: '30-45 sec', sets: 2, muscles: [['core','Core'],['upper','Shoulders']], tip: null },
-        { id: 'c4', name: 'Standing Side Bends', detail: '12 each side (light weight)', sets: 2, muscles: [['core','Obliques']], tip: 'Control work, not bulk — keep it light' },
-        { id: 'c5', name: 'Bicycle Crunches', detail: '20 total', sets: 2, muscles: [['core','Core'],['core','Obliques']], tip: null },
+        { id: 'c1', name: 'Weighted Russian Twists', detail: '15 each side', sets: 2, muscles: [['core','Obliques'],['core','Core']], tip: 'Focus on rotation, not speed', video_url: 'https://www.youtube.com/watch?v=wkD8rjkodUI' },
+        { id: 'c2', name: 'Dumbbell Deadbug', detail: '10 each side', sets: 2, muscles: [['core','Core'],['core','Stability']], tip: 'Lower back STAYS pressed to the floor', video_url: 'https://www.youtube.com/watch?v=4XLEnwUr1d8' },
+        { id: 'c3', name: 'Plank Hold', detail: '30-45 sec', sets: 2, muscles: [['core','Core'],['upper','Shoulders']], tip: null, video_url: 'https://www.youtube.com/watch?v=pvIjcsm_8dU' },
+        { id: 'c4', name: 'Standing Side Bends', detail: '12 each side (light weight)', sets: 2, muscles: [['core','Obliques']], tip: 'Control work, not bulk — keep it light', video_url: 'https://www.youtube.com/watch?v=ojbxGQHjCE8' },
+        { id: 'c5', name: 'Bicycle Crunches', detail: '20 total', sets: 2, muscles: [['core','Core'],['core','Obliques']], tip: null, video_url: 'https://www.youtube.com/watch?v=9FGilxCbdz8' },
       ]
     },
     {
       id: 'cooldown', name: 'Cool-Down', emoji: '🧘', meta: '5 min · breathe deep', weighted: false,
       exercises: [
-        { id: 'd1', name: "Child's Pose / Cat-Cow", detail: 'Hold & breathe', sets: 1, muscles: [['other','Spine'],['other','Hips']], tip: null },
-        { id: 'd2', name: 'Seated Spinal Twist', detail: 'Both sides', sets: 1, muscles: [['back','Back'],['other','Spine']], tip: null },
-        { id: 'd3', name: 'Standing Forward Fold', detail: 'Hold 30 sec', sets: 1, muscles: [['lower','Hamstrings'],['other','Calves']], tip: null },
+        { id: 'd1', name: "Child's Pose / Cat-Cow", detail: 'Hold & breathe', sets: 1, muscles: [['other','Spine'],['other','Hips']], tip: null, video_url: 'https://www.youtube.com/results?search_query=child+pose+cat+cow+cool+down+stretch' },
+        { id: 'd2', name: 'Seated Spinal Twist', detail: 'Both sides', sets: 1, muscles: [['back','Back'],['other','Spine']], tip: null, video_url: 'https://www.youtube.com/results?search_query=seated+spinal+twist+stretch+cool+down' },
+        { id: 'd3', name: 'Standing Forward Fold', detail: 'Hold 30 sec', sets: 1, muscles: [['lower','Hamstrings'],['other','Calves']], tip: null, video_url: 'https://www.youtube.com/results?search_query=standing+forward+fold+hamstring+stretch' },
       ]
     }
   ]
@@ -572,6 +740,7 @@ function buildSections() {
 
       const muscles = ex.muscles.map(([t, n]) => `<span class="tag ${tagClass(t)}">${n}</span>`).join('');
       const tip = ex.tip ? `<div class="ex-tip">${ex.tip}</div>` : '';
+      const videoBtn = ex.video_url ? `<a class="ex-video-btn" href="${ex.video_url}" target="_blank" rel="noopener noreferrer">▶ Form</a>` : '';
 
       // Weight input for weighted sections only
       const currentWeight = state.weights[ex.id] || '';
@@ -588,7 +757,7 @@ function buildSections() {
       return `
         <div class="exercise-row${rowDone ? ' row-done' : ''}" id="row-${ex.id}">
           <div class="exercise-info">
-            <div class="ex-name">${ex.name}</div>
+            <div class="ex-name">${ex.name}${videoBtn}</div>
             <div class="ex-detail">${ex.detail}</div>
             ${tip}
             <div class="muscles">${muscles}</div>
@@ -667,6 +836,8 @@ function updateProgress() {
     launchConfetti();
     syncSession();
   }
+
+  updateSubmitPanel();
 }
 
 function showCompletion() {
@@ -804,6 +975,266 @@ function launchConfetti() {
 }
 
 // ═══════════════════════════════════════════════════════
+//  SUBMIT & HISTORY
+// ═══════════════════════════════════════════════════════
+function getWorkedMuscles() {
+  const muscles = new Set();
+  WORKOUT.sections.forEach(sec =>
+    sec.exercises.forEach(ex => {
+      if ((state.checks[ex.id] || 0) > 0)
+        ex.muscles.forEach(([, n]) => muscles.add(n));
+    })
+  );
+  return [...muscles];
+}
+
+function updateSubmitPanel() {
+  const done = getDone(), total = getTotal();
+  document.getElementById('subSets').textContent = `${done}/${total}`;
+  document.getElementById('subTime').textContent =
+    state.startMs ? formatDuration((state.endMs || Date.now()) - state.startMs) : '—';
+
+  const worked = getWorkedMuscles();
+  document.getElementById('subMuscles').textContent = worked.length || '—';
+
+  const tagsEl = document.getElementById('subMuscleTags');
+  if (worked.length) {
+    tagsEl.innerHTML = worked.map(m => `<span class="tag tag-core" style="font-size:.6rem">${m}</span>`).join('');
+  } else {
+    tagsEl.innerHTML = '';
+  }
+
+  const btn = document.getElementById('submitBtn');
+  if (done === 0) { btn.disabled = true; btn.textContent = 'Start your workout to log it'; }
+  else { btn.disabled = false; btn.textContent = done >= total ? '🏆 Log Completed Workout' : 'Log Partial Workout'; }
+}
+
+async function submitWorkout() {
+  const done = getDone();
+  if (done === 0) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  if (!state.endMs && state.startMs) {
+    state.endMs = Date.now();
+    saveState();
+  }
+
+  setSyncStatus('syncing');
+  try {
+    // Ensure session exists
+    const sessionId = await ensureSession();
+
+    // Sync all exercises that have any progress
+    const promises = WORKOUT.sections.flatMap(sec =>
+      sec.exercises
+        .filter(ex => (state.checks[ex.id] || 0) > 0)
+        .map(ex => syncExerciseLog(ex.id))
+    );
+    await Promise.all(promises);
+    await syncSession();
+    setSyncStatus('synced');
+
+    // Success state
+    const panel = document.getElementById('submitPanel');
+    panel.classList.add('submitted');
+    btn.classList.add('done');
+    btn.disabled = false;
+    btn.textContent = `✓ Logged — ${done}/${getTotal()} sets · ${formatDuration(state.endMs - state.startMs)}`;
+    document.getElementById('submitHint').textContent = 'Workout saved to your history below.';
+
+    // Refresh history
+    loadHistory();
+  } catch(e) {
+    setSyncStatus('error');
+    btn.disabled = false;
+    btn.textContent = 'Retry — Save Failed';
+  }
+}
+
+function relativeDate(iso) {
+  const d = new Date(iso), now = new Date();
+  const diffDays = Math.floor((now - d) / 86400000);
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7) return `${diffDays} days ago`;
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+async function loadHistory() {
+  const listEl = document.getElementById('historyList');
+  try {
+    const { data, error } = await sb
+      .from('workout_sessions')
+      .select('id, workout_name, started_at, completed_at, duration_seconds, completion_pct, sets_completed, total_sets')
+      .eq('user_id', 'warren')
+      .gt('sets_completed', 0)
+      .order('started_at', { ascending: false })
+      .limit(10);
+
+    if (error || !data || data.length === 0) {
+      listEl.innerHTML = '<div class="history-empty">No sessions logged yet — this will be your first!</div>';
+      return;
+    }
+
+    // Fetch muscle groups for each session
+    const sessionIds = data.map(s => s.id);
+    const { data: logs } = await sb
+      .from('exercise_logs')
+      .select('session_id, muscle_groups')
+      .in('session_id', sessionIds)
+      .gt('sets_completed', 0);
+
+    const musclesBySession = {};
+    (logs || []).forEach(log => {
+      if (!musclesBySession[log.session_id]) musclesBySession[log.session_id] = new Set();
+      (log.muscle_groups || []).forEach(m => musclesBySession[log.session_id].add(m));
+    });
+
+    listEl.innerHTML = data.map(s => {
+      const pct = s.completion_pct || 0;
+      const circ = 75.4;
+      const offset = circ - (circ * pct / 100);
+      const color = pct >= 100 ? '#22c55e' : pct >= 50 ? '#fbbf24' : '#f97316';
+      const dur = s.duration_seconds ? formatDuration(s.duration_seconds * 1000) : '—';
+      const muscles = [...(musclesBySession[s.id] || [])].slice(0, 3).join(', ') || '—';
+      const extra = (musclesBySession[s.id]?.size || 0) > 3
+        ? ` +${musclesBySession[s.id].size - 3}` : '';
+
+      return `
+        <div class="hist-item">
+          <div class="hist-ring">
+            <svg class="hist-svg" viewBox="0 0 36 36">
+              <circle class="hist-track" cx="18" cy="18" r="12"/>
+              <circle class="hist-fill" cx="18" cy="18" r="12"
+                style="stroke:${color};stroke-dashoffset:${offset}"/>
+            </svg>
+            <div class="hist-pct-txt">${pct}%</div>
+          </div>
+          <div class="hist-info">
+            <div class="hist-name">${s.workout_name}</div>
+            <div class="hist-meta">${s.sets_completed}/${s.total_sets} sets · ${dur} · ${muscles}${extra}</div>
+          </div>
+          <div class="hist-date">${relativeDate(s.started_at)}</div>
+        </div>`;
+    }).join('');
+  } catch(e) {
+    listEl.innerHTML = '<div class="history-empty">Could not load history.</div>';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  ROADMAP
+// ═══════════════════════════════════════════════════════
+const ROADMAP = [
+  {
+    phase: 'Phase 1 — Foundation',
+    items: [
+      { name: 'Animated progress ring', desc: 'SVG ring tracks set completion 0–100% with color transitions', status: 'done' },
+      { name: 'Set-by-set dot checkboxes', desc: 'Per-set tap targets with pop animations and strikethrough on completion', status: 'done' },
+      { name: 'Section-level progress', desc: 'Each block (Warm-Up, Strength, Core, Cool-Down) tracks its own completion', status: 'done' },
+      { name: 'LocalStorage persistence', desc: 'Progress survives page refresh; auto-resets at the start of a new day', status: 'done' },
+      { name: 'Confetti on completion', desc: 'Canvas particle celebration when you hit 100%', status: 'done' },
+      { name: 'Floating mini ring', desc: 'Progress ring shrinks into the sticky header as you scroll down', status: 'done' },
+    ]
+  },
+  {
+    phase: 'Phase 2 — Data Layer',
+    items: [
+      { name: 'Supabase integration', desc: 'Workout sessions, exercise logs, weight history, and goals sync to cloud database', status: 'done' },
+      { name: 'Dumbbell weight logger', desc: 'Per-exercise lbs input with last-used weight pre-filled from history', status: 'done' },
+      { name: 'Sync status indicator', desc: 'Live dot in header showing syncing / synced / error state', status: 'done' },
+      { name: 'Session auto-save', desc: 'First tap starts a session; workout is saved even if you don\'t finish', status: 'done' },
+    ]
+  },
+  {
+    phase: 'Phase 3 — Exercise Intelligence',
+    items: [
+      { name: 'Exercise database (exercises.json)', desc: '50 exercises with muscles targeted, difficulty, coaching cues, and form video links', status: 'done' },
+      { name: 'Interactive roadmap', desc: 'This modal — living in the footer, showing full feature progress', status: 'done' },
+      { name: 'Calisthenics / bodyweight mode', desc: 'Full bodyweight workout alternative — same tracker, no equipment required', status: 'active' },
+      { name: 'Workout type toggle', desc: 'Switch between Dumbbells and Calisthenics from the header', status: 'active' },
+      { name: 'Form video links on exercises', desc: 'Tap exercise name to open curated form tutorial video', status: 'planned' },
+    ]
+  },
+  {
+    phase: 'Phase 4 — Progress Dashboard',
+    items: [
+      { name: 'Workout streak calendar', desc: 'Heatmap-style calendar showing consistency over time', status: 'planned' },
+      { name: 'Muscle group frequency map', desc: 'Visual breakdown of which muscles you\'ve hit and how recently', status: 'planned' },
+      { name: 'Per-exercise weight progression', desc: 'Chart showing your weight increases over time per movement', status: 'planned' },
+      { name: 'Volume tracker', desc: 'Total weekly sets × reps × weight — the key driver of long-term progress', status: 'planned' },
+    ]
+  },
+  {
+    phase: 'Phase 5 — Recommendation Engine',
+    items: [
+      { name: 'Muscle gap analysis', desc: 'Surfaces which muscle groups are overdue based on your history and goals', status: 'planned' },
+      { name: 'Smart workout suggestions', desc: '"You haven\'t hit lower body in 4 days and it\'s a priority — here\'s today\'s plan"', status: 'planned' },
+      { name: 'Progressive overload nudges', desc: 'Suggests when to increase weight based on your logged history', status: 'planned' },
+      { name: 'Adaptive difficulty', desc: 'Workout intensity scales based on recent recovery and consistency', status: 'planned' },
+    ]
+  },
+  {
+    phase: 'Phase 6 — Ecosystem Integration',
+    items: [
+      { name: 'Strava auto-log', desc: 'Push completed strength sessions directly to Strava as an activity', status: 'planned' },
+      { name: 'Chef meal sync', desc: 'Auto-recommend a meal plan from Chef based on today\'s workout and macros needed', status: 'planned' },
+      { name: 'Anatomy muscle map', desc: 'Link exercises directly to the Anatomy app\'s interactive 3D muscle regions', status: 'planned' },
+      { name: 'Weekly split planner', desc: 'Build and save a Push/Pull/Legs or Full-Body 3×/week schedule', status: 'planned' },
+    ]
+  },
+  {
+    phase: 'Ideas & Backlog',
+    items: [
+      { name: 'Body measurement tracker', desc: 'Log weight, measurements, and photos to track body composition', status: 'idea' },
+      { name: 'Rest day planner', desc: 'Active recovery suggestions on off days — mobility, walks, stretching', status: 'idea' },
+      { name: 'Workout export / PDF', desc: 'Share or print today\'s workout with your weights logged', status: 'idea' },
+      { name: 'Form check reminders', desc: 'Video link auto-surfaces when you start an exercise you haven\'t done recently', status: 'idea' },
+    ]
+  },
+];
+
+function buildRoadmap() {
+  const body = document.getElementById('roadmapBody');
+  const statusLabel = { done: 'Done', active: 'In Progress', planned: 'Planned', idea: 'Idea' };
+  body.innerHTML = ROADMAP.map(phase => `
+    <div class="rm-phase">
+      <div class="rm-phase-hd">${phase.phase}</div>
+      <div class="rm-items">
+        ${phase.items.map(item => `
+          <div class="rm-item">
+            <div class="rm-status ${item.status}"></div>
+            <div class="rm-text">
+              <div class="rm-name">${item.name}</div>
+              <div class="rm-desc">${item.desc}</div>
+            </div>
+            <div class="rm-badge badge-${item.status}">${statusLabel[item.status]}</div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function openRoadmap() {
+  buildRoadmap();
+  document.getElementById('roadmapModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeRoadmap() {
+  document.getElementById('roadmapModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleBackdropClick(e) {
+  if (e.target === document.getElementById('roadmapModal')) closeRoadmap();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRoadmap(); });
+
+// ═══════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════
 function init() {
@@ -827,8 +1258,10 @@ function init() {
     document.getElementById('statTimer').textContent = formatDuration(state.endMs - state.startMs);
   }
 
-  // Fetch last weights from Supabase after render
+  // Fetch last weights + session history from Supabase after render
   populateLastWeights();
+  loadHistory();
+  updateSubmitPanel();
 }
 
 init();
