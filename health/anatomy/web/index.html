@@ -500,7 +500,38 @@
 
     .body-diagram-section h2 {
       font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .diagram-view-toggle {
+      display: flex;
+      gap: 0.5rem;
       margin-bottom: 1.5rem;
+      border: 2px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.25rem;
+      background: var(--bg);
+      width: fit-content;
+    }
+
+    .diagram-view-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: transparent;
+      color: var(--text-light);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    .diagram-view-btn.active {
+      background: var(--primary);
+      color: white;
+      border-radius: 0.25rem;
+    }
+
+    .diagram-view-btn:hover:not(.active) {
       color: var(--text);
     }
 
@@ -511,28 +542,54 @@
       align-items: start;
     }
 
-    .body-svg {
+    .diagram-wrapper {
+      position: relative;
       width: 100%;
-      max-width: 250px;
+    }
+
+    .diagram-view {
+      display: none;
+      position: relative;
+    }
+
+    .diagram-view.active {
+      display: block;
+    }
+
+    .anatomy-image {
+      width: 100%;
       height: auto;
+      display: block;
+      border-radius: 0.25rem;
+      background: var(--bg);
+    }
+
+    .body-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       cursor: pointer;
     }
 
     .body-region {
       transition: all 0.3s ease;
       cursor: pointer;
+      stroke-width: 0;
     }
 
     .body-region:hover {
       stroke: var(--secondary) !important;
-      stroke-width: 3 !important;
+      stroke-width: 2 !important;
+      fill: rgba(124, 58, 237, 0.2) !important;
       filter: drop-shadow(0 0 5px var(--secondary));
     }
 
     .body-region.active {
       stroke: var(--secondary) !important;
       stroke-width: 3 !important;
-      fill: var(--primary-light) !important;
+      fill: rgba(124, 58, 237, 0.3) !important;
       filter: drop-shadow(0 0 8px var(--secondary));
     }
 
@@ -597,8 +654,8 @@
         grid-template-columns: 1fr;
       }
 
-      .body-svg {
-        max-width: 300px;
+      .diagram-wrapper {
+        max-width: 400px;
         margin: 0 auto;
       }
     }
@@ -610,10 +667,19 @@
 
       .diagram-container {
         gap: 1rem;
+        grid-template-columns: 1fr;
+      }
+
+      .diagram-wrapper {
+        max-width: 100%;
       }
 
       .region-info {
         max-height: 300px;
+      }
+
+      .diagram-view-toggle {
+        width: 100%;
       }
     }
 
@@ -815,79 +881,98 @@
     <!-- Body Location Diagram Section -->
     <div class="body-diagram-section">
       <h2>🫀 Explore by Body Region</h2>
+
+      <div class="diagram-view-toggle">
+        <button class="diagram-view-btn active" data-view="front">Front View</button>
+        <button class="diagram-view-btn" data-view="back">Back View</button>
+      </div>
+
       <div class="diagram-container">
-        <svg id="bodyDiagram" viewBox="0 0 200 500" xmlns="http://www.w3.org/2000/svg" class="body-svg">
-          <!-- Head -->
-          <circle id="region-head" cx="100" cy="40" r="25" class="body-region" data-region="Head" fill="none" stroke="var(--primary)" stroke-width="2"/>
-          <text x="100" y="75" text-anchor="middle" font-size="12" fill="var(--text-light)">Head</text>
+        <div class="diagram-wrapper">
+          <!-- Front View -->
+          <div id="diagram-front" class="diagram-view active">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Anterior_muscles_of_human_body.jpg/440px-Anterior_muscles_of_human_body.jpg" alt="Front anatomy" class="anatomy-image" onerror="this.style.display='none'"/>
+            <svg viewBox="0 0 300 800" xmlns="http://www.w3.org/2000/svg" class="body-overlay">
+              <!-- Head -->
+              <circle cx="150" cy="60" r="35" class="body-region" data-region="Head" fill="none" stroke="transparent" stroke-width="0"/>
 
-          <!-- Neck -->
-          <rect id="region-neck" x="85" y="65" width="30" height="25" class="body-region" data-region="Neck" fill="none" stroke="var(--primary)" stroke-width="2"/>
-          <text x="100" y="105" text-anchor="middle" font-size="12" fill="var(--text-light)">Neck</text>
+              <!-- Neck -->
+              <rect x="130" y="95" width="40" height="30" class="body-region" data-region="Neck" fill="none" stroke="transparent" stroke-width="0"/>
 
-          <!-- Chest -->
-          <ellipse id="region-chest" cx="100" cy="130" rx="35" ry="40" class="body-region" data-region="Chest" fill="none" stroke="var(--primary)" stroke-width="2"/>
-          <text x="100" y="175" text-anchor="middle" font-size="12" fill="var(--text-light)">Chest</text>
+              <!-- Shoulders -->
+              <ellipse cx="100" cy="140" rx="25" ry="35" class="body-region" data-region="Shoulder" fill="none" stroke="transparent" stroke-width="0"/>
+              <ellipse cx="200" cy="140" rx="25" ry="35" class="body-region" data-region="Shoulder" fill="none" stroke="transparent" stroke-width="0"/>
 
-          <!-- Shoulders -->
-          <g id="region-shoulder-left" class="body-region" data-region="Shoulder">
-            <circle cx="65" cy="110" r="15" fill="none" stroke="var(--primary)" stroke-width="2"/>
-          </g>
-          <g id="region-shoulder-right" class="body-region" data-region="Shoulder">
-            <circle cx="135" cy="110" r="15" fill="none" stroke="var(--primary)" stroke-width="2"/>
-          </g>
-          <text x="100" y="145" text-anchor="middle" font-size="10" fill="var(--text-light)">Shoulders</text>
+              <!-- Chest -->
+              <ellipse cx="150" cy="180" rx="50" ry="60" class="body-region" data-region="Chest" fill="none" stroke="transparent" stroke-width="0"/>
 
-          <!-- Upper Arms -->
-          <g id="region-upper-arm-left" class="body-region" data-region="Upper Arm">
-            <rect x="40" y="125" width="20" height="50" fill="none" stroke="var(--primary)" stroke-width="2" rx="10"/>
-          </g>
-          <g id="region-upper-arm-right" class="body-region" data-region="Upper Arm">
-            <rect x="140" y="125" width="20" height="50" fill="none" stroke="var(--primary)" stroke-width="2" rx="10"/>
-          </g>
+              <!-- Upper Arms -->
+              <rect x="50" y="140" width="35" height="85" class="body-region" data-region="Upper Arm" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="215" y="140" width="35" height="85" class="body-region" data-region="Upper Arm" fill="none" stroke="transparent" stroke-width="0"/>
 
-          <!-- Forearms -->
-          <g id="region-forearm-left" class="body-region" data-region="Forearm">
-            <rect x="40" y="175" width="20" height="50" fill="none" stroke="var(--primary)" stroke-width="2" rx="10"/>
-          </g>
-          <g id="region-forearm-right" class="body-region" data-region="Forearm">
-            <rect x="140" y="175" width="20" height="50" fill="none" stroke="var(--primary)" stroke-width="2" rx="10"/>
-          </g>
+              <!-- Forearms -->
+              <rect x="50" y="225" width="35" height="80" class="body-region" data-region="Forearm" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="215" y="225" width="35" height="80" class="body-region" data-region="Forearm" fill="none" stroke="transparent" stroke-width="0"/>
 
-          <!-- Back (visible from front, but indicated) -->
-          <text x="100" y="230" text-anchor="middle" font-size="10" fill="var(--text-light)" opacity="0.7">(Back visible when flipped)</text>
+              <!-- Core/Abdomen -->
+              <rect x="110" y="240" width="80" height="100" class="body-region" data-region="Core" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="110" y="340" width="80" height="50" class="body-region" data-region="Abdomen" fill="none" stroke="transparent" stroke-width="0"/>
 
-          <!-- Core/Abdomen -->
-          <rect id="region-core" x="75" y="170" width="50" height="40" class="body-region" data-region="Core" fill="none" stroke="var(--primary)" stroke-width="2" stroke-dasharray="5,5"/>
-          <rect id="region-abdomen" x="75" y="210" width="50" height="35" class="body-region" data-region="Abdomen" fill="none" stroke="var(--primary)" stroke-width="2"/>
-          <text x="100" y="280" text-anchor="middle" font-size="12" fill="var(--text-light)">Core/Abdomen</text>
+              <!-- Pelvis -->
+              <ellipse cx="150" cy="390" rx="60" ry="40" class="body-region" data-region="Pelvis" fill="none" stroke="transparent" stroke-width="0"/>
 
-          <!-- Pelvis -->
-          <ellipse id="region-pelvis" cx="100" cy="280" rx="40" ry="25" class="body-region" data-region="Pelvis" fill="none" stroke="var(--primary)" stroke-width="2"/>
-          <text x="100" y="315" text-anchor="middle" font-size="12" fill="var(--text-light)">Pelvis</text>
+              <!-- Upper Legs -->
+              <rect x="85" y="430" width="40" height="110" class="body-region" data-region="Upper Leg" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="175" y="430" width="40" height="110" class="body-region" data-region="Upper Leg" fill="none" stroke="transparent" stroke-width="0"/>
 
-          <!-- Upper Legs -->
-          <g id="region-upper-leg-left" class="body-region" data-region="Upper Leg">
-            <rect x="60" y="305" width="25" height="60" fill="none" stroke="var(--primary)" stroke-width="2" rx="12"/>
-          </g>
-          <g id="region-upper-leg-right" class="body-region" data-region="Upper Leg">
-            <rect x="115" y="305" width="25" height="60" fill="none" stroke="var(--primary)" stroke-width="2" rx="12"/>
-          </g>
+              <!-- Lower Legs -->
+              <rect x="85" y="540" width="40" height="100" class="body-region" data-region="Lower Leg" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="175" y="540" width="40" height="100" class="body-region" data-region="Lower Leg" fill="none" stroke="transparent" stroke-width="0"/>
+            </svg>
+          </div>
 
-          <!-- Lower Legs -->
-          <g id="region-lower-leg-left" class="body-region" data-region="Lower Leg">
-            <rect x="60" y="365" width="25" height="60" fill="none" stroke="var(--primary)" stroke-width="2" rx="12"/>
-          </g>
-          <g id="region-lower-leg-right" class="body-region" data-region="Lower Leg">
-            <rect x="115" y="365" width="25" height="60" fill="none" stroke="var(--primary)" stroke-width="2" rx="12"/>
-          </g>
+          <!-- Back View -->
+          <div id="diagram-back" class="diagram-view">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Posterior_muscles_of_human_body.jpg/440px-Posterior_muscles_of_human_body.jpg" alt="Back anatomy" class="anatomy-image" onerror="this.style.display='none'"/>
+            <svg viewBox="0 0 300 800" xmlns="http://www.w3.org/2000/svg" class="body-overlay">
+              <!-- Head -->
+              <circle cx="150" cy="60" r="35" class="body-region" data-region="Head" fill="none" stroke="transparent" stroke-width="0"/>
 
-          <!-- Center label -->
-          <text x="100" y="420" text-anchor="middle" font-size="14" font-weight="bold" fill="var(--primary)">Click a region to explore</text>
-        </svg>
+              <!-- Neck -->
+              <rect x="130" y="95" width="40" height="30" class="body-region" data-region="Neck" fill="none" stroke="transparent" stroke-width="0"/>
+
+              <!-- Shoulders -->
+              <ellipse cx="100" cy="140" rx="25" ry="35" class="body-region" data-region="Shoulder" fill="none" stroke="transparent" stroke-width="0"/>
+              <ellipse cx="200" cy="140" rx="25" ry="35" class="body-region" data-region="Shoulder" fill="none" stroke="transparent" stroke-width="0"/>
+
+              <!-- Back -->
+              <rect x="90" y="160" width="120" height="130" class="body-region" data-region="Back" fill="none" stroke="transparent" stroke-width="0"/>
+
+              <!-- Upper Arms -->
+              <rect x="50" y="140" width="35" height="85" class="body-region" data-region="Upper Arm" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="215" y="140" width="35" height="85" class="body-region" data-region="Upper Arm" fill="none" stroke="transparent" stroke-width="0"/>
+
+              <!-- Forearms -->
+              <rect x="50" y="225" width="35" height="80" class="body-region" data-region="Forearm" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="215" y="225" width="35" height="80" class="body-region" data-region="Forearm" fill="none" stroke="transparent" stroke-width="0"/>
+
+              <!-- Pelvis -->
+              <ellipse cx="150" cy="390" rx="60" ry="40" class="body-region" data-region="Pelvis" fill="none" stroke="transparent" stroke-width="0"/>
+
+              <!-- Upper Legs -->
+              <rect x="85" y="430" width="40" height="110" class="body-region" data-region="Upper Leg" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="175" y="430" width="40" height="110" class="body-region" data-region="Upper Leg" fill="none" stroke="transparent" stroke-width="0"/>
+
+              <!-- Lower Legs -->
+              <rect x="85" y="540" width="40" height="100" class="body-region" data-region="Lower Leg" fill="none" stroke="transparent" stroke-width="0"/>
+              <rect x="175" y="540" width="40" height="100" class="body-region" data-region="Lower Leg" fill="none" stroke="transparent" stroke-width="0"/>
+            </svg>
+          </div>
+        </div>
+
         <div class="region-info" id="regionInfo">
           <div style="text-align: center; color: var(--text-light); padding: 2rem;">
-            <p>👆 Select a body region to see all muscles, bones, and organs in that area</p>
+            <p>👆 Click a body region to see all components</p>
           </div>
         </div>
       </div>
@@ -1480,15 +1565,45 @@
       filterComponents();
     });
 
+    // Setup diagram view toggle
+    document.querySelectorAll('.diagram-view-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const viewType = e.target.getAttribute('data-view');
+
+        // Update button active state
+        document.querySelectorAll('.diagram-view-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+
+        // Update diagram view
+        document.querySelectorAll('.diagram-view').forEach(view => view.classList.remove('active'));
+        document.getElementById('diagram-' + viewType).classList.add('active');
+
+        // Clear selection when switching views
+        document.querySelectorAll('.body-region').forEach(r => r.classList.remove('active'));
+        document.getElementById('bodyLocationFilter').value = '';
+        document.getElementById('regionInfo').innerHTML = `
+          <div style="text-align: center; color: var(--text-light); padding: 2rem;">
+            <p>👆 Click a body region to see all components</p>
+          </div>
+        `;
+        filterComponents();
+      });
+    });
+
     // Setup body region click handlers
     document.querySelectorAll('.body-region').forEach(region => {
       region.addEventListener('click', (e) => {
         e.stopPropagation();
         const regionName = region.getAttribute('data-region');
 
-        // Update active state on diagram
-        document.querySelectorAll('.body-region').forEach(r => r.classList.remove('active'));
-        document.getElementById('region-' + regionName.toLowerCase().replace(' ', '-')).classList.add('active');
+        // Update active state on all regions
+        document.querySelectorAll('.body-region').forEach(r => {
+          if (r.getAttribute('data-region') === regionName) {
+            r.classList.add('active');
+          } else {
+            r.classList.remove('active');
+          }
+        });
 
         // Update filter dropdown
         document.getElementById('bodyLocationFilter').value = regionName;
@@ -1499,18 +1614,20 @@
       });
     });
 
-    // Click anywhere to deselect
-    document.getElementById('bodyDiagram').addEventListener('click', (e) => {
-      if (e.target === document.getElementById('bodyDiagram')) {
-        document.querySelectorAll('.body-region').forEach(r => r.classList.remove('active'));
-        document.getElementById('bodyLocationFilter').value = '';
-        document.getElementById('regionInfo').innerHTML = `
-          <div style="text-align: center; color: var(--text-light); padding: 2rem;">
-            <p>👆 Select a body region to see all muscles, bones, and organs in that area</p>
-          </div>
-        `;
-        filterComponents();
-      }
+    // Click SVG background to deselect
+    document.querySelectorAll('.body-overlay').forEach(svg => {
+      svg.addEventListener('click', (e) => {
+        if (e.target.tagName === 'svg') {
+          document.querySelectorAll('.body-region').forEach(r => r.classList.remove('active'));
+          document.getElementById('bodyLocationFilter').value = '';
+          document.getElementById('regionInfo').innerHTML = `
+            <div style="text-align: center; color: var(--text-light); padding: 2rem;">
+              <p>👆 Click a body region to see all components</p>
+            </div>
+          `;
+          filterComponents();
+        }
+      });
     });
     document.getElementById('resetBtn').addEventListener('click', () => {
       document.getElementById('searchInput').value = '';
