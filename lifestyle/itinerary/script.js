@@ -462,6 +462,23 @@ document.getElementById('jumpToActivities').addEventListener('click', () => {
   document.getElementById('activitiesGuide').scrollIntoView({ behavior: 'smooth' });
 });
 
+// Copy address
+document.getElementById('copyAddress').addEventListener('click', async () => {
+  const addressText = document.getElementById('addressText').textContent;
+  try {
+    await navigator.clipboard.writeText(addressText);
+    const btn = document.getElementById('copyAddress');
+    btn.classList.add('copied');
+    btn.textContent = '✓';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = '📋';
+    }, 2000);
+  } catch (err) {
+    console.error('Failed to copy:', err);
+  }
+});
+
 // Initial load and refresh
 fetchAndParse();
 renderActivitiesGuide();
