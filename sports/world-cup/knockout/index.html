@@ -76,7 +76,7 @@
     .bk-col-head:last-child { margin-right:0; }
     .bk-col-head .bk-pts { color:var(--wc-faint); font-weight:700; }
     .bk-body {
-      display:flex; gap:0; height:1440px; min-width:994px;
+      display:flex; gap:0; height:1440px; min-width:994px; position:relative;
     }
     .bk-col {
       flex:0 0 170px; margin-right:36px; display:flex; flex-direction:column;
@@ -127,28 +127,121 @@
     /* Desktop column headers visible; mobile round headers hidden */
     .bk-mobile-rh { display:none; }
 
-    /* Mobile: stack bracket columns vertically */
-    @media(max-width:899px) {
-      .bk-col-strip { display:none; }
-      .bk-body { display:block; height:auto; min-width:0; }
-      .bk-col { flex:none; display:block; margin-right:0; margin-bottom:28px; overflow:hidden; }
-      .bk-col > div[id] { display:block; }
-      .bk-mobile-rh { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
-      /* Restore mobile grid per round */
-      #matchups-r32 { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; }
-      #matchups-r16 { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:10px; }
-      #matchups-qf  { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:10px; }
-      #matchups-sf  { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
-      #matchups-final { max-width:480px; }
-      .bk-col .matchup-label { padding:8px 12px 5px; font-size:0.62rem; }
-      .bk-col .team-btn { padding:11px 12px; gap:10px; }
-      .bk-col .team-btn img { width:26px; }
-      .bk-col .team-btn-seed { flex:0 0 22px; font-size:0.58rem; }
-      .bk-col .team-btn-name { font-size:0.88rem; }
-      .bk-col .matchup-locked { padding:28px 16px; font-size:0.8rem; }
+    /* Desktop quadrant labels & separators */
+    .bk-qdecor { position:absolute; inset:0; pointer-events:none; z-index:2; }
+    .bk-qlabel {
+      position:absolute; left:3px;
+      font-size:0.4rem; font-weight:900; text-transform:uppercase;
+      letter-spacing:0.14em; color:rgba(244,201,93,0.4); white-space:nowrap;
     }
-    @media(max-width:560px){
-      #matchups-sf { grid-template-columns:1fr; }
+    .bk-qsep {
+      position:absolute; left:-8px; right:-8px;
+      border-top:1px dashed rgba(255,255,255,0.09);
+    }
+
+    /* ── Mobile bracket (scroll-snap pane layout) ───────────────── */
+    #bk-mobile { display:none; }
+
+    @media(max-width:899px) {
+      /* Hide desktop bracket */
+      .bk-wrap { display:none; }
+      /* Show mobile bracket */
+      #bk-mobile { display:block; margin:0 -16px; }
+
+      /* Sticky nav bar */
+      .bk-mnav {
+        display:flex; align-items:center; gap:8px; padding:10px 16px 9px;
+        position:sticky; top:0; z-index:20; background:var(--wc-bg);
+        border-bottom:1px solid rgba(255,255,255,0.07);
+      }
+      .bk-mnavbtn {
+        background:rgba(255,255,255,0.07); border:1px solid var(--wc-line);
+        border-radius:8px; color:var(--wc-cream); width:38px; height:38px;
+        font-size:1.4rem; cursor:pointer; display:flex; align-items:center;
+        justify-content:center; flex:0 0 auto; padding:0; line-height:1;
+      }
+      .bk-mnavbtn:disabled { opacity:0.22; cursor:default; }
+      .bk-mpills { display:flex; gap:5px; flex:1; justify-content:center; flex-wrap:wrap; }
+      .bk-mpill {
+        font-size:0.57rem; font-weight:900; letter-spacing:0.07em; text-transform:uppercase;
+        padding:5px 9px; border-radius:999px; border:1px solid var(--wc-line);
+        color:var(--wc-faint); cursor:pointer; transition:all .15s;
+      }
+      .bk-mpill.active {
+        background:rgba(244,201,93,0.15); border-color:rgba(244,201,93,0.5); color:var(--wc-gold);
+      }
+
+      /* Horizontal scroll panes */
+      .bk-mpanes {
+        display:flex; overflow-x:scroll; scroll-snap-type:x mandatory;
+        -webkit-overflow-scrolling:touch; width:100%;
+      }
+      .bk-mpanes::-webkit-scrollbar { display:none; }
+      .bk-mpane {
+        flex:0 0 100%; scroll-snap-align:start;
+        padding:14px 16px 32px; box-sizing:border-box; overflow-x:hidden;
+        min-width:0;
+      }
+
+      /* Quadrant header within a pane */
+      .mb-qhd {
+        font-size:0.55rem; font-weight:900; text-transform:uppercase;
+        letter-spacing:0.15em; color:rgba(244,201,93,0.6); padding:3px 0 8px;
+      }
+      /* Dotted separator between quadrant groups */
+      .mb-qsep { border-top:1px dashed rgba(255,255,255,0.1); margin:14px 0 16px; }
+
+      /* A pair group: 2 interactive cards (left) + connector + 1 preview slot (right) */
+      .mb-group { display:grid; grid-template-columns:1fr 18px 88px; gap:0 4px; margin-bottom:10px; }
+      .mb-left  { display:flex; flex-direction:column; gap:3px; }
+
+      /* Elbow connector column */
+      .mb-conn { position:relative; }
+      .mb-conn::before, .mb-conn::after {
+        content:""; position:absolute; left:0; right:0;
+        border-right:1.5px solid rgba(255,255,255,0.18);
+      }
+      .mb-conn::before { top:0; bottom:50%; border-bottom:1.5px solid rgba(255,255,255,0.18); }
+      .mb-conn::after  { top:50%; bottom:0;  border-top:1.5px solid rgba(255,255,255,0.18); }
+
+      /* Preview slot (right column) */
+      .mb-right { display:flex; align-items:center; }
+      .mb-preview { flex:1; border:1px solid var(--wc-line); border-radius:7px; background:var(--wc-panel); overflow:hidden; }
+      .mb-prev-row { display:flex; align-items:center; gap:5px; padding:7px 7px; border-bottom:1px solid rgba(255,255,255,0.05); }
+      .mb-prev-row:last-child { border-bottom:none; }
+      .mb-prev-row img { width:15px; aspect-ratio:3/2; object-fit:cover; border-radius:2px; border:1px solid var(--wc-line); flex:0 0 auto; }
+      .mb-prev-code { font-size:0.7rem; font-weight:900; color:var(--wc-cream); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
+      .mb-prev-code.tbd { color:var(--wc-faint); font-style:italic; font-weight:600; font-size:0.6rem; }
+
+      /* Compact interactive matchup card */
+      .mb-card { border:1px solid var(--wc-line); border-radius:8px; background:var(--wc-panel); overflow:hidden; }
+      .mb-locked { padding:14px 8px; font-size:0.65rem; color:var(--wc-faint); font-style:italic; text-align:center; }
+      .mb-btn {
+        display:flex; align-items:center; gap:5px; padding:8px 8px;
+        background:none; border:none; border-bottom:1px solid rgba(255,255,255,0.05);
+        width:100%; text-align:left; cursor:pointer; color:var(--wc-cream);
+      }
+      .mb-btn:last-child { border-bottom:none; }
+      .mb-btn:hover:not(:disabled) { background:rgba(255,255,255,0.05); }
+      .mb-btn.selected { background:rgba(244,201,93,0.12); }
+      .mb-btn.selected .mb-name { color:var(--wc-gold); font-weight:900; }
+      .mb-btn:disabled { opacity:0.35; cursor:default; }
+      .mb-flag { width:17px; aspect-ratio:3/2; object-fit:cover; border-radius:2px; border:1px solid var(--wc-line); flex:0 0 auto; }
+      .mb-flag-ph { width:17px; height:11px; background:rgba(255,255,255,0.06); border-radius:2px; flex:0 0 auto; display:inline-block; }
+      .mb-seed { font-size:0.46rem; font-weight:900; color:var(--wc-faint); flex:0 0 16px; text-align:right; line-height:1; }
+      .mb-name { font-size:0.73rem; font-weight:800; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+      .mb-name.tbd { color:var(--wc-faint); font-style:italic; font-weight:600; }
+      .mb-chk { font-size:0.6rem; color:var(--wc-gold); margin-left:auto; flex:0 0 auto; }
+
+      /* Section label used in pane 3 */
+      .mb-sec-lbl { font-size:0.57rem; font-weight:900; text-transform:uppercase; letter-spacing:0.1em; color:var(--wc-faint); padding:14px 0 8px; }
+
+      /* Full-width cards in pane 3 reuse existing .matchup-card + .team-btn */
+      .mb-pane .matchup-card { margin-bottom:8px; }
+      .mb-pane .matchup-card .team-btn { padding:11px 12px; gap:10px; }
+      .mb-pane .matchup-card .team-btn img { width:26px; }
+      .mb-pane .matchup-card .team-btn-seed { flex:0 0 22px; font-size:0.58rem; }
+      .mb-pane .matchup-card .team-btn-name { font-size:0.88rem; }
     }
 
     /* Matchup card */
@@ -227,6 +320,7 @@
     /* Loading state */
     .loading-teams { font-size:0.8rem; color:var(--wc-faint); padding:6px 0; font-style:italic; }
   </style>
+  <script src="../archive/world-cup-1/bracket_lookup.js"></script>
 </head>
 <body>
   <div class="wc-shell">
@@ -309,6 +403,21 @@
           <span class="progress-label" id="progress-label">0 / 32 picks</span>
         </div>
 
+        <!-- ── Mobile bracket (scroll-snap panes, hidden on desktop) ── -->
+        <div id="bk-mobile">
+          <div class="bk-mnav">
+            <button id="bk-mprev" class="bk-mnavbtn" aria-label="Previous round">‹</button>
+            <div id="bk-mpills" class="bk-mpills">
+              <span class="bk-mpill active" data-pane="0">R32</span>
+              <span class="bk-mpill" data-pane="1">R16</span>
+              <span class="bk-mpill" data-pane="2">QF</span>
+              <span class="bk-mpill" data-pane="3">SF · Final</span>
+            </div>
+            <button id="bk-mnext" class="bk-mnavbtn" aria-label="Next round">›</button>
+          </div>
+          <div id="bk-mpanes" class="bk-mpanes"></div>
+        </div>
+
         <!-- ── Bracket ───────────────────────────────────── -->
         <div class="bk-wrap">
 
@@ -323,6 +432,17 @@
 
           <!-- Bracket body: 5 columns -->
           <div class="bk-body">
+
+            <!-- Quadrant labels + dotted separators (desktop only) -->
+            <div class="bk-qdecor">
+              <div class="bk-qlabel" style="top:5px">Zidane</div>
+              <div class="bk-qsep"   style="top:360px"></div>
+              <div class="bk-qlabel" style="top:366px">Pelé</div>
+              <div class="bk-qsep"   style="top:720px"></div>
+              <div class="bk-qlabel" style="top:726px">Maradona</div>
+              <div class="bk-qsep"   style="top:1080px"></div>
+              <div class="bk-qlabel" style="top:1086px">Klose</div>
+            </div>
 
             <div class="bk-col bk-r32">
               <div class="bk-mobile-rh">
@@ -402,60 +522,60 @@
               <span class="tb-hint">Ties broken by earliest bracket exit · write-in accepted</span>
               <select id="tb-golden-boot">
                 <option value="">— Select a player —</option>
-                <option value="Julián Álvarez">Julián Álvarez (Argentina)</option>
-                <option value="Folarin Balogun">Folarin Balogun (USA)</option>
-                <option value="Jude Bellingham">Jude Bellingham (England)</option>
-                <option value="Kevin De Bruyne">Kevin De Bruyne (Belgium)</option>
-                <option value="Jonathan David">Jonathan David (Canada)</option>
-                <option value="Paulo Dybala">Paulo Dybala (Argentina)</option>
-                <option value="Endrick">Endrick (Brazil)</option>
-                <option value="Youssef En-Nesyri">Youssef En-Nesyri (Morocco)</option>
-                <option value="Bruno Fernandes">Bruno Fernandes (Portugal)</option>
-                <option value="Phil Foden">Phil Foden (England)</option>
-                <option value="Cody Gakpo">Cody Gakpo (Netherlands)</option>
-                <option value="Santiago Giménez">Santiago Giménez (Mexico)</option>
-                <option value="Erling Haaland">Erling Haaland (Norway)</option>
-                <option value="Kai Havertz">Kai Havertz (Germany)</option>
-                <option value="Cucho Hernández">Cucho Hernández (Colombia)</option>
-                <option value="Diogo Jota">Diogo Jota (Portugal)</option>
-                <option value="Daichi Kamada">Daichi Kamada (Japan)</option>
-                <option value="Harry Kane">Harry Kane (England)</option>
-                <option value="Cyle Larin">Cyle Larin (Canada)</option>
-                <option value="Rafael Leão">Rafael Leão (Portugal)</option>
-                <option value="Luis Díaz">Luis Díaz (Colombia)</option>
-                <option value="Hirving Lozano">Hirving Lozano (Mexico)</option>
-                <option value="Romelu Lukaku">Romelu Lukaku (Belgium)</option>
-                <option value="Donyell Malen">Donyell Malen (Netherlands)</option>
-                <option value="Sadio Mané">Sadio Mané (Senegal)</option>
-                <option value="Lautaro Martínez">Lautaro Martínez (Argentina)</option>
-                <option value="Lamine Yamal">Lamine Yamal (Spain)</option>
-                <option value="Kylian Mbappé">Kylian Mbappé (France)</option>
                 <option value="Lionel Messi">Lionel Messi (Argentina)</option>
-                <option value="Takumi Minamino">Takumi Minamino (Japan)</option>
-                <option value="Álvaro Morata">Álvaro Morata (Spain)</option>
-                <option value="Jamal Musiala">Jamal Musiala (Germany)</option>
-                <option value="Darwin Núñez">Darwin Núñez (Uruguay)</option>
-                <option value="Ricardo Pepi">Ricardo Pepi (USA)</option>
-                <option value="Christian Pulisic">Christian Pulisic (USA)</option>
-                <option value="Gonçalo Ramos">Gonçalo Ramos (Portugal)</option>
-                <option value="Marcus Rashford">Marcus Rashford (England)</option>
-                <option value="Richarlison">Richarlison (Brazil)</option>
-                <option value="Rodrygo">Rodrygo (Brazil)</option>
-                <option value="James Rodríguez">James Rodríguez (Colombia)</option>
-                <option value="Bukayo Saka">Bukayo Saka (England)</option>
+                <option value="Kylian Mbappé">Kylian Mbappé (France)</option>
+                <option value="Erling Haaland">Erling Haaland (Norway)</option>
+                <option value="Vinicius Jr.">Vinicius Junior (Brazil)</option>
+                <option value="Harry Kane">Harry Kane (England)</option>
+                <option value="Cristiano Ronaldo">Cristiano Ronaldo (Portugal)</option>
+                <option value="Mikel Oyarzabal">Mikel Oyarzabal (Spain)</option>
+                <option value="Deniz Undav">Deniz Undav (Germany)</option>
+                <option value="Lamine Yamal">Lamine Yamal (Spain)</option>
+                <option value="Ayase Ueda">Ayase Ueda (Japan)</option>
+                <option value="Kai Havertz">Kai Havertz (Germany)</option>
+                <option value="Matheus Cunha">Matheus Cunha (Brazil)</option>
+                <option value="Ismael Saibari">Ismael Saibari (Morocco)</option>
+                <option value="Folarin Balogun">Folarin Balogun (USA)</option>
+                <option value="Cody Gakpo">Cody Gakpo (Netherlands)</option>
+                <option value="Ousmane Dembélé">Ousmane Dembele (France)</option>
                 <option value="Mohamed Salah">Mohamed Salah (Egypt)</option>
-                <option value="Leroy Sané">Leroy Sané (Germany)</option>
-                <option value="Xavi Simons">Xavi Simons (Netherlands)</option>
-                <option value="Son Heung-min">Son Heung-min (South Korea)</option>
-                <option value="Mehdi Taremi">Mehdi Taremi (Iran)</option>
-                <option value="Facundo Torres">Facundo Torres (Uruguay)</option>
-                <option value="Ferran Torres">Ferran Torres (Spain)</option>
-                <option value="Leandro Trossard">Leandro Trossard (Belgium)</option>
-                <option value="Federico Valverde">Federico Valverde (Uruguay)</option>
-                <option value="Vinicius Jr.">Vinicius Jr. (Brazil)</option>
-                <option value="Nico Williams">Nico Williams (Spain)</option>
+                <option value="Brian Brobbey">Brian Brobbey (Netherlands)</option>
+                <option value="Crysencio Summerville">Crysencio Summerville (Netherlands)</option>
+                <option value="Jude Bellingham">Jude Bellingham (England)</option>
+                <option value="Ismaila Sarr">Ismaila Sarr (Senegal)</option>
+                <option value="Marcus Rashford">Marcus Rashford (England)</option>
+                <option value="Michael Olise">Michael Olise (France)</option>
+                <option value="Daichi Kamada">Daichi Kamada (Japan)</option>
+                <option value="Viktor Gyökeres">Viktor Gyokeres (Sweden)</option>
+                <option value="Alexander Isak">Alexander Isak (Sweden)</option>
+                <option value="Marko Arnautovic">Marko Arnautovic (Austria)</option>
+                <option value="Julián Álvarez">Julian Alvarez (Argentina)</option>
+                <option value="Jamal Musiala">Jamal Musiala (Germany)</option>
+                <option value="Bradley Barcola">Bradley Barcola (France)</option>
+                <option value="Bruno Fernandes">Bruno Fernandes (Portugal)</option>
+                <option value="Darwin Núñez">Darwin Nunez (Uruguay)</option>
+                <option value="Rafael Leão">Rafael Leao (Portugal)</option>
+                <option value="Luis Díaz">Luis Diaz (Colombia)</option>
+                <option value="Lautaro Martínez">Lautaro Martinez (Argentina)</option>
                 <option value="Florian Wirtz">Florian Wirtz (Germany)</option>
-                <option value="Hakim Ziyech">Hakim Ziyech (Morocco)</option>
+                <option value="Romelu Lukaku">Romelu Lukaku (Belgium)</option>
+                <option value="Ferran Torres">Ferran Torres (Spain)</option>
+                <option value="Enner Valencia">Enner Valencia (Ecuador)</option>
+                <option value="Sadio Mané">Sadio Mane (Senegal)</option>
+                <option value="Anthony Gordon">Anthony Gordon (England)</option>
+                <option value="Désiré Doué">Desire Doue (France)</option>
+                <option value="Donyell Malen">Donyell Malen (Netherlands)</option>
+                <option value="Giovanni Reyna">Giovanni Reyna (USA)</option>
+                <option value="Leroy Sané">Leroy Sane (Germany)</option>
+                <option value="Morgan Rogers">Morgan Rogers (England)</option>
+                <option value="Nico Williams">Nico Williams (Spain)</option>
+                <option value="Nicolas Jackson">Nicolas Jackson (Senegal)</option>
+                <option value="Raúl Jiménez">Raul Jimenez (Mexico)</option>
+                <option value="Antoine Semenyo">Antoine Semenyo (Ghana)</option>
+                <option value="Patrik Schick">Patrik Schick (Czechia)</option>
+                <option value="Amad Diallo">Amad Diallo (Ivory Coast)</option>
+                <option value="Rayan Cherki">Rayan Cherki (France)</option>
+                <option value="Julián Quiñones">Julian Quinones (Mexico)</option>
                 <option value="__other__">Other (write in below)</option>
               </select>
               <div class="tb-writein" id="tb-writein-wrap">
@@ -469,7 +589,7 @@
             <div class="tb-row">
               <label>How many penalty shootouts will there be in the entire knockout stage?</label>
               <span class="tb-hint">Closest guess wins. Ties broken by Tiebreaker 3.</span>
-              <input type="number" id="tb-penalties" min="0" max="20" placeholder="e.g. 3">
+              <input type="number" id="tb-penalties" min="0" max="20" placeholder="e.g. 10">
             </div>
           </div>
 
@@ -579,6 +699,18 @@
 
     // r32Data: Array of 16 {num, top:{id,seed}, bot:{id,seed}}
     let r32Data = [];
+
+    // ── Quadrant definitions (4 groups of 4 R32 matches) ────────────
+    const QUADS = [
+      { name:"Zidane",   r32:[0,1,2,3],    r16:[0,1], qf:0 },
+      { name:"Pelé",     r32:[4,5,6,7],    r16:[2,3], qf:1 },
+      { name:"Maradona", r32:[8,9,10,11],  r16:[4,5], qf:2 },
+      { name:"Klose",    r32:[12,13,14,15],r16:[6,7], qf:3 },
+    ];
+
+    // ── Mobile bracket state ─────────────────────────────────────────
+    let mobilePane = 0;
+    let autoAdvanceTimer = null;
 
     // ── Bracket cascade ─────────────────────────────────────────────
     function clearDownstream(round, idx) {
@@ -753,6 +885,173 @@
       setBadge("badge-sf",    sfdone,  2);
       setBadge("badge-final", picks.final ? 1 : 0, 1);
       setBadge("badge-end",   picks.third ? 1 : 0, 1);
+
+      // Mobile bracket
+      if (window.innerWidth <= 899) {
+        renderMobileBracket();
+        checkMobileAutoAdvance();
+      }
+    }
+
+    // ── Mobile bracket renderer ──────────────────────────────────────
+
+    function mbBtn(teamId, seed, round, idx, picked) {
+      const isSelected = !!teamId && picked === teamId;
+      const isTbd = !teamId;
+      return `<button class="mb-btn${isSelected ? ' selected' : ''}"
+        ${isTbd ? 'disabled' : ''}
+        data-round="${round}" data-idx="${idx}" data-team="${teamId || ''}">
+        ${teamId ? `<img src="${flagUrl(teamId)}" alt="" class="mb-flag">` : '<span class="mb-flag-ph"></span>'}
+        ${seed ? `<span class="mb-seed">${seed}</span>` : ''}
+        <span class="mb-name${isTbd ? ' tbd' : ''}">${isTbd ? 'TBD' : teamId}</span>
+        ${isSelected ? '<span class="mb-chk">✓</span>' : ''}
+      </button>`;
+    }
+
+    function mbCard(idx, round) {
+      let topId, topSeed = '', botId, botSeed = '';
+      const picked = picks[round]?.[idx];
+      if (round === 'r32') {
+        const s = r32Slot(idx);
+        topId = s.top.id; topSeed = s.top.seed;
+        botId = s.bot.id; botSeed = s.bot.seed;
+      } else if (round === 'r16') {
+        const s = r16Slot(idx); topId = s.top; botId = s.bot;
+      } else if (round === 'qf') {
+        const s = qfSlot(idx); topId = s.top; botId = s.bot;
+      } else if (round === 'sf') {
+        const s = sfSlot(idx); topId = s.top; botId = s.bot;
+      }
+      if (!topId && !botId) return `<div class="mb-card"><div class="mb-locked">Complete earlier rounds</div></div>`;
+      return `<div class="mb-card">${mbBtn(topId, topSeed, round, idx, picked)}${mbBtn(botId, botSeed, round, idx, picked)}</div>`;
+    }
+
+    function mbPreview(topId, botId) {
+      const row = id => id
+        ? `<div class="mb-prev-row"><img src="${flagUrl(id)}" alt=""><span class="mb-prev-code">${id}</span></div>`
+        : `<div class="mb-prev-row"><span class="mb-prev-code tbd">TBD</span></div>`;
+      return `<div class="mb-preview">${row(topId)}${row(botId)}</div>`;
+    }
+
+    function mbGroup(leftHtml, previewHtml) {
+      return `<div class="mb-group">
+        <div class="mb-left">${leftHtml}</div>
+        <div class="mb-conn"></div>
+        <div class="mb-right">${previewHtml}</div>
+      </div>`;
+    }
+
+    function buildPane0() { // R32 (interactive) → R16 (preview)
+      const html = QUADS.map((q, qi) => {
+        const groups = [0,1].map(gi => {
+          const i0 = q.r32[gi*2], i1 = q.r32[gi*2+1];
+          const r16i = q.r16[gi];
+          const s = r16Slot(r16i);
+          return mbGroup(mbCard(i0,'r32') + mbCard(i1,'r32'), mbPreview(s.top, s.bot));
+        }).join('');
+        return `<div class="mb-quad-hd">${q.name}</div>${groups}${qi < QUADS.length-1 ? '<div class="mb-qsep"></div>' : ''}`;
+      }).join('');
+      return `<div class="bk-mpane" data-pane="0">${html}</div>`;
+    }
+
+    function buildPane1() { // R16 (interactive) → QF (preview)
+      const html = QUADS.map((q, qi) => {
+        const i0 = q.r16[0], i1 = q.r16[1];
+        const s = qfSlot(q.qf);
+        const group = mbGroup(mbCard(i0,'r16') + mbCard(i1,'r16'), mbPreview(s.top, s.bot));
+        return `<div class="mb-quad-hd">${q.name}</div>${group}${qi < QUADS.length-1 ? '<div class="mb-qsep"></div>' : ''}`;
+      }).join('');
+      return `<div class="bk-mpane" data-pane="1">${html}</div>`;
+    }
+
+    function buildPane2() { // QF (interactive) → SF (preview)
+      const halves = [
+        { label:`${QUADS[0].name} · ${QUADS[1].name}`, qf:[0,1], sf:0 },
+        { label:`${QUADS[2].name} · ${QUADS[3].name}`, qf:[2,3], sf:1 },
+      ];
+      const html = halves.map((h, hi) => {
+        const s = sfSlot(h.sf);
+        const group = mbGroup(mbCard(h.qf[0],'qf') + mbCard(h.qf[1],'qf'), mbPreview(s.top, s.bot));
+        return `<div class="mb-quad-hd">${h.label}</div>${group}${hi < halves.length-1 ? '<div class="mb-qsep"></div>' : ''}`;
+      }).join('');
+      return `<div class="bk-mpane" data-pane="2">${html}</div>`;
+    }
+
+    function buildPane3() { // SF (interactive) → Final preview, then Final + 3rd picks
+      const fs = finalSlot(), ts = thirdSlot();
+      const sfGroup = mbGroup(mbCard(0,'sf') + mbCard(1,'sf'), mbPreview(fs.top, fs.bot));
+      const finalCard = makeEndCard('🏆 Final', fs.top, fs.bot, 'final', '16 pts', true);
+      const thirdCard = makeEndCard('🥉 3rd Place', ts.top, ts.bot, 'third', '12 pts');
+      return `<div class="bk-mpane" data-pane="3">
+        <div class="mb-quad-hd">Semifinals</div>
+        ${sfGroup}
+        <div class="mb-qsep"></div>
+        <div class="mb-sec-lbl">Final &amp; 3rd Place</div>
+        ${finalCard}${thirdCard}
+      </div>`;
+    }
+
+    function renderMobileBracket() {
+      const wrap = el("bk-mpanes");
+      if (!wrap) return;
+      const w = wrap.offsetWidth || window.innerWidth;
+      wrap.innerHTML = buildPane0() + buildPane1() + buildPane2() + buildPane3();
+      wrap.scrollLeft = mobilePane * w;
+
+      // Update pills + nav buttons
+      document.querySelectorAll(".bk-mpill").forEach(p =>
+        p.classList.toggle("active", parseInt(p.dataset.pane) === mobilePane)
+      );
+      const prev = el("bk-mprev"), next = el("bk-mnext");
+      if (prev) prev.disabled = mobilePane === 0;
+      if (next) next.disabled = mobilePane === 3;
+
+      // Click handlers for compact mb-btn cards (panes 0-2)
+      wrap.querySelectorAll(".mb-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const { round, idx, team } = btn.dataset;
+          if (!team) return;
+          setPick(round, parseInt(idx), team);
+        });
+      });
+
+      // Click handlers for full-width .team-btn cards in pane 3 (SF/Final/3rd)
+      wrap.querySelectorAll(".team-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const { round, idx, team } = btn.dataset;
+          if (!team) return;
+          if (round === "final") { picks.final = team; renderAllRounds(); updateProgress(); updateSubmitBtn(); return; }
+          if (round === "third") { picks.third = team; renderAllRounds(); updateProgress(); updateSubmitBtn(); return; }
+          setPick(round, parseInt(idx), team);
+        });
+      });
+    }
+
+    function scrollMobileToPane(n) {
+      mobilePane = Math.max(0, Math.min(3, n));
+      const wrap = el("bk-mpanes");
+      if (!wrap) return;
+      // Rebuild to update content, then smooth-scroll
+      renderMobileBracket();
+      requestAnimationFrame(() => {
+        wrap.style.scrollBehavior = 'smooth';
+        wrap.scrollLeft = mobilePane * wrap.offsetWidth;
+        setTimeout(() => { wrap.style.scrollBehavior = ''; }, 600);
+      });
+    }
+
+    function checkMobileAutoAdvance() {
+      if (window.innerWidth > 899 || autoAdvanceTimer) return;
+      const totals = [16, 8, 4, 2];
+      const rounds = ['r32','r16','qf','sf'];
+      if (mobilePane >= totals.length) return;
+      const done = picks[rounds[mobilePane]].filter(Boolean).length;
+      if (done >= totals[mobilePane]) {
+        autoAdvanceTimer = setTimeout(() => {
+          autoAdvanceTimer = null;
+          scrollMobileToPane(mobilePane + 1);
+        }, 500);
+      }
     }
 
     // ── Progress ─────────────────────────────────────────────────────
@@ -831,11 +1130,12 @@
           });
         });
 
-        // Build group tables
-        const matchesWithResults = groupStageMatches.map(m => ({
-          ...m,
-          result: resultsMap.get(m.matchNumber) || null,
-        }));
+        // Build group tables — flatten results onto each match so scoreboard-engine
+        // can read m.status, m.homeScore, m.awayScore at the top level.
+        const matchesWithResults = groupStageMatches.map(m => {
+          const r = resultsMap.get(m.matchNumber);
+          return { ...m, homeScore: r ? r.homeScore : 0, awayScore: r ? r.awayScore : 0, status: r ? r.status : "scheduled" };
+        });
         const tables = calculateGroupTables(matchesWithResults, teams);
         const thirds = calculateThirdPlaceStandings(tables);
 
@@ -880,6 +1180,36 @@
       renderAllRounds();
       updateProgress();
       updateSubmitBtn();
+
+      // Mobile bracket initial render + nav setup
+      if (window.innerWidth <= 899) {
+        renderMobileBracket();
+      }
+
+      // Mobile nav: prev/next buttons
+      el("bk-mprev")?.addEventListener("click", () => scrollMobileToPane(mobilePane - 1));
+      el("bk-mnext")?.addEventListener("click", () => scrollMobileToPane(mobilePane + 1));
+
+      // Mobile nav: pill clicks
+      document.querySelectorAll(".bk-mpill").forEach(p => {
+        p.addEventListener("click", () => scrollMobileToPane(parseInt(p.dataset.pane)));
+      });
+
+      // Sync mobilePane state when user manually swipes
+      el("bk-mpanes")?.addEventListener("scroll", () => {
+        const wrap = el("bk-mpanes");
+        if (!wrap || !wrap.offsetWidth) return;
+        const newPane = Math.round(wrap.scrollLeft / wrap.offsetWidth);
+        if (newPane !== mobilePane) {
+          mobilePane = newPane;
+          document.querySelectorAll(".bk-mpill").forEach(p =>
+            p.classList.toggle("active", parseInt(p.dataset.pane) === mobilePane)
+          );
+          const prev = el("bk-mprev"), next = el("bk-mnext");
+          if (prev) prev.disabled = mobilePane === 0;
+          if (next) next.disabled = mobilePane === 3;
+        }
+      }, { passive: true });
 
       // Submit handler
       el("submit-btn").addEventListener("click", handleSubmit);

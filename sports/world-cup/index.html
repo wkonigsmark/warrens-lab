@@ -681,6 +681,19 @@
       animation: pulse-border 2s ease-in-out infinite;
     }
 
+    @keyframes ko-halo-pulse {
+      0%, 100% { box-shadow: 0 0 18px rgba(244,201,93,0.18), 0 0 56px rgba(244,201,93,0.07); border-color: rgba(244,201,93,0.45); }
+      50%       { box-shadow: 0 0 48px rgba(244,201,93,0.55), 0 0 110px rgba(244,201,93,0.22); border-color: rgba(244,201,93,0.85); }
+    }
+    .ko-halo {
+      animation: ko-halo-pulse 2.6s ease-in-out infinite;
+    }
+    .ko-halo:hover {
+      animation: none;
+      box-shadow: 0 0 64px rgba(244,201,93,0.65), 0 0 130px rgba(244,201,93,0.28);
+      border-color: rgba(244,201,93,0.9) !important;
+    }
+
     @keyframes pulse-border {
       0%, 100% {
         opacity: 0;
@@ -809,6 +822,23 @@
       </div>
 
 
+      <!-- Knockout Pool teaser card -->
+      <a href="knockout/" class="ko-halo" style="
+        display:block; width:min(100%,580px); margin:32px auto 0; text-decoration:none;
+        border:1px solid rgba(244,201,93,0.45); border-radius:14px;
+        background: radial-gradient(circle at 50% 0%, rgba(244,201,93,0.13), transparent 65%),
+                    rgba(255,255,255,0.04);
+        backdrop-filter:blur(12px);
+        transition: box-shadow .15s;
+      ">
+        <div style="padding:26px 24px 22px; text-align:center;">
+          <div style="font-size:0.65rem;font-weight:900;letter-spacing:0.16em;text-transform:uppercase;color:rgba(244,201,93,0.75);margin-bottom:8px;">🔒 Round 2 · Knockout Stage</div>
+          <div style="font-size:clamp(1.4rem,4vw,1.9rem);font-weight:950;color:#f7f4eb;line-height:1.05;margin-bottom:8px;">Knockout Pool</div>
+          <div style="font-size:0.82rem;color:rgba(247,244,235,0.6);font-weight:750;margin-bottom:14px;">Full bracket picks R32 → Final · $50 entry</div>
+          <div style="display:inline-block;padding:8px 22px;border-radius:999px;background:rgba(244,201,93,0.15);border:1px solid rgba(244,201,93,0.4);font-size:0.75rem;font-weight:900;letter-spacing:0.08em;color:rgba(244,201,93,0.9);">Opens After Midnight Saturday →</div>
+        </div>
+      </a>
+
       <div class="purse-tally" id="purse-tally" aria-label="Pool purse tally">
         <div class="purse-card">
           <strong id="total-purse">--</strong>
@@ -855,29 +885,6 @@
         </div>
       </section>
 
-      <!-- Knockout Pool teaser card -->
-      <a href="knockout/" style="display:block; width:min(100%,760px); margin:16px auto 0; text-decoration:none;">
-        <div style="
-          padding:20px 24px;
-          border:1px solid rgba(244,201,93,0.45);
-          border-radius:12px;
-          background: radial-gradient(circle at 10% 50%, rgba(244,201,93,0.1), transparent 60%),
-                      rgba(255,255,255,0.05);
-          backdrop-filter:blur(12px);
-          box-shadow: 0 0 36px rgba(244,201,93,0.1);
-          transition: border-color .15s, box-shadow .15s;
-        " onmouseover="this.style.borderColor='rgba(244,201,93,0.75)';this.style.boxShadow='0 0 52px rgba(244,201,93,0.2)'"
-           onmouseout="this.style.borderColor='rgba(244,201,93,0.45)';this.style.boxShadow='0 0 36px rgba(244,201,93,0.1)'">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-            <div>
-              <div style="font-size:0.68rem;font-weight:900;letter-spacing:0.14em;text-transform:uppercase;color:rgba(244,201,93,0.8);margin-bottom:5px;">🔒 Coming Soon · Round 2</div>
-              <div style="font-size:clamp(1.15rem,3.5vw,1.5rem);font-weight:950;color:#f7f4eb;line-height:1.1;">Knockout Pool</div>
-              <div style="font-size:0.8rem;color:rgba(247,244,235,0.58);margin-top:5px;font-weight:750;">Full bracket picks R32 → Final · $50 entry · Opens Sat June 27</div>
-            </div>
-            <div style="font-size:1.3rem;color:rgba(244,201,93,0.6);flex-shrink:0;">→</div>
-          </div>
-        </div>
-      </a>
 
       <div id="next-fixtures" style="width: min(100%, 800px); margin: 28px auto 0;">
         <h3 style="color: var(--gold); font-size: 0.75rem; font-weight: 950; letter-spacing: 0.14em; text-transform: uppercase; margin: 0 0 16px;">Coming Up</h3>
