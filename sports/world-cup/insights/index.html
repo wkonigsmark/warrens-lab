@@ -99,6 +99,7 @@
         <a href="../scoreboard/">Scoreboard</a>
         <a href="../standings/">Standings</a>
         <a href="../insights/" aria-current="page">Insights</a>
+        <a href="#r32">Bracket</a>
         <a href="../fixtures/">Fixtures</a>
         <a href="../quiz/">Quiz</a>
         <a href="../knockout/">🔒 Knockout Pool</a>
@@ -500,12 +501,20 @@
     }
 
     // Tabs
+    function activateTab(tabId) {
+      document.querySelectorAll(".ins-tab").forEach(b => b.classList.toggle("active", b.dataset.tab === tabId));
+      document.querySelectorAll(".ins-panel").forEach(p => p.classList.toggle("active", p.id === `panel-${tabId}`));
+    }
     document.querySelectorAll(".ins-tab").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".ins-tab").forEach(b => b.classList.toggle("active", b === btn));
-        document.querySelectorAll(".ins-panel").forEach(p => p.classList.toggle("active", p.id === `panel-${btn.dataset.tab}`));
-      });
+      btn.addEventListener("click", () => activateTab(btn.dataset.tab));
     });
+    // Deep-link via hash: insights/#r32 (on load or hash change)
+    function applyHash() {
+      const t = location.hash.replace("#", "");
+      if (t && document.querySelector(`[data-tab="${t}"]`)) activateTab(t);
+    }
+    applyHash();
+    window.addEventListener("hashchange", applyHash);
 
     let entriesLoaded = false;
     let entriesCache = [];

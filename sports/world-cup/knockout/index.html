@@ -37,7 +37,7 @@
     .ko-back:hover { color:var(--wc-ink); }
 
     /* ── Entry form layout ─────────────────────────────────────── */
-    .ko-form-wrap { max-width:900px; margin:0 auto; padding:24px 18px 60px; }
+    .ko-form-wrap { max-width:1060px; margin:0 auto; padding:24px 18px 60px; }
     .ko-form-header { text-align:center; padding:32px 0 28px; }
     .ko-form-header .eyebrow { font-size:0.7rem; font-weight:900; letter-spacing:0.14em; text-transform:uppercase; color:var(--wc-gold); margin-bottom:8px; }
     .ko-form-header h1 { font-size:clamp(1.8rem,6vw,2.6rem); font-weight:950; color:var(--wc-ink); margin:0 0 8px; line-height:1; }
@@ -62,13 +62,93 @@
 
     /* Matchup grid */
     .matchups-grid { display:grid; gap:10px; }
-    .matchups-r32 { grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); }
-    .matchups-r16 { grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); }
-    .matchups-qf  { grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); }
-    .matchups-sf  { grid-template-columns:repeat(2,1fr); }
-    .matchups-end { grid-template-columns:repeat(2,1fr); }
+    /* ── Bracket layout (desktop) ───────────────────────────────── */
+    .bk-wrap { overflow-x:auto; }
+    .bk-col-strip {
+      display:flex; gap:0; margin-bottom:10px;
+      min-width:994px;
+    }
+    .bk-col-head {
+      flex:0 0 170px; margin-right:36px; text-align:center;
+      font-size:0.6rem; font-weight:900; text-transform:uppercase; letter-spacing:0.1em;
+      color:var(--wc-gold); line-height:1.5;
+    }
+    .bk-col-head:last-child { margin-right:0; }
+    .bk-col-head .bk-pts { color:var(--wc-faint); font-weight:700; }
+    .bk-body {
+      display:flex; gap:0; height:1440px; min-width:994px;
+    }
+    .bk-col {
+      flex:0 0 170px; margin-right:36px; display:flex; flex-direction:column;
+      justify-content:space-around; overflow:visible;
+    }
+    .bk-col:last-child { margin-right:0; }
+    .bk-col > div[id] { display:contents; } /* inner matchup container transparent to flex */
+
+    /* Connector heights (half of center-to-center for each round) */
+    .bk-r32 { --bk-h:45px; }
+    .bk-r16 { --bk-h:90px; }
+    .bk-qf  { --bk-h:180px; }
+    .bk-sf  { --bk-h:360px; }
+
+    /* Elbow connectors via ::after */
+    .bk-r32 .matchup-card, .bk-r16 .matchup-card,
+    .bk-qf  .matchup-card, .bk-sf  .matchup-card {
+      position:relative; overflow:visible;
+    }
+    .bk-r32 .matchup-card::after, .bk-r16 .matchup-card::after,
+    .bk-qf  .matchup-card::after, .bk-sf  .matchup-card::after {
+      content:""; position:absolute; left:calc(100% + 1px);
+      width:35px; box-sizing:border-box; height:var(--bk-h);
+      border-right:2px solid rgba(255,255,255,0.13); pointer-events:none;
+    }
+    .bk-r32 .matchup-card:nth-child(odd)::after,
+    .bk-r16 .matchup-card:nth-child(odd)::after,
+    .bk-qf  .matchup-card:nth-child(odd)::after,
+    .bk-sf  .matchup-card:nth-child(odd)::after {
+      top:50%; border-top:2px solid rgba(255,255,255,0.13);
+    }
+    .bk-r32 .matchup-card:nth-child(even)::after,
+    .bk-r16 .matchup-card:nth-child(even)::after,
+    .bk-qf  .matchup-card:nth-child(even)::after,
+    .bk-sf  .matchup-card:nth-child(even)::after {
+      bottom:50%; border-bottom:2px solid rgba(255,255,255,0.13);
+    }
+
+    /* Compact card sizing for bracket columns */
+    .bk-col .matchup-label { padding:5px 8px 4px; font-size:0.58rem; }
+    .bk-col .team-btn { padding:7px 8px; gap:7px; }
+    .bk-col .team-btn img { width:20px; }
+    .bk-col .team-btn-seed { flex:0 0 14px; font-size:0.5rem; }
+    .bk-col .team-btn-name { font-size:0.78rem; }
+    .bk-col .team-btn .check { font-size:0.75rem; }
+    .bk-col .matchup-locked { padding:14px 8px; font-size:0.7rem; }
+
+    /* Desktop column headers visible; mobile round headers hidden */
+    .bk-mobile-rh { display:none; }
+
+    /* Mobile: stack bracket columns vertically */
+    @media(max-width:899px) {
+      .bk-col-strip { display:none; }
+      .bk-body { display:block; height:auto; min-width:0; }
+      .bk-col { flex:none; display:block; margin-right:0; margin-bottom:28px; overflow:hidden; }
+      .bk-col > div[id] { display:block; }
+      .bk-mobile-rh { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+      /* Restore mobile grid per round */
+      #matchups-r32 { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; }
+      #matchups-r16 { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:10px; }
+      #matchups-qf  { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:10px; }
+      #matchups-sf  { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+      #matchups-final { max-width:480px; }
+      .bk-col .matchup-label { padding:8px 12px 5px; font-size:0.62rem; }
+      .bk-col .team-btn { padding:11px 12px; gap:10px; }
+      .bk-col .team-btn img { width:26px; }
+      .bk-col .team-btn-seed { flex:0 0 22px; font-size:0.58rem; }
+      .bk-col .team-btn-name { font-size:0.88rem; }
+      .bk-col .matchup-locked { padding:28px 16px; font-size:0.8rem; }
+    }
     @media(max-width:560px){
-      .matchups-sf, .matchups-end { grid-template-columns:1fr; }
+      #matchups-sf { grid-template-columns:1fr; }
     }
 
     /* Matchup card */
@@ -157,6 +237,7 @@
         <a href="../scoreboard/">Scoreboard</a>
         <a href="../standings/">Standings</a>
         <a href="../insights/">Insights</a>
+        <a href="../insights/#r32">Bracket</a>
         <a href="../fixtures/">Fixtures</a>
         <a href="../quiz/">Quiz</a>
         <a href="./" aria-current="page">🔒 Knockout Pool</a>
@@ -228,59 +309,83 @@
           <span class="progress-label" id="progress-label">0 / 32 picks</span>
         </div>
 
-        <!-- ── Round of 32 ───────────────────────────────── -->
-        <div class="round-section">
-          <div class="round-header">
-            <span class="round-title">Round of 32</span>
-            <span class="round-badge" id="badge-r32">0 / 16</span>
-            <div class="round-divider"></div>
-            <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">1 pt each</span>
-          </div>
-          <div class="matchups-grid matchups-r32" id="matchups-r32"></div>
-        </div>
+        <!-- ── Bracket ───────────────────────────────────── -->
+        <div class="bk-wrap">
 
-        <!-- ── Round of 16 ───────────────────────────────── -->
-        <div class="round-section">
-          <div class="round-header">
-            <span class="round-title">Round of 16</span>
-            <span class="round-badge" id="badge-r16">0 / 8</span>
-            <div class="round-divider"></div>
-            <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">2 pts each</span>
+          <!-- Desktop column headers -->
+          <div class="bk-col-strip">
+            <div class="bk-col-head">Round of 32<br><span class="bk-pts">1 pt</span></div>
+            <div class="bk-col-head">Round of 16<br><span class="bk-pts">2 pts</span></div>
+            <div class="bk-col-head">Quarterfinals<br><span class="bk-pts">4 pts</span></div>
+            <div class="bk-col-head">Semifinals<br><span class="bk-pts">8 pts</span></div>
+            <div class="bk-col-head">🏆 Final<br><span class="bk-pts">16 pts</span></div>
           </div>
-          <div class="matchups-grid matchups-r16" id="matchups-r16"></div>
-        </div>
 
-        <!-- ── Quarterfinals ─────────────────────────────── -->
-        <div class="round-section">
-          <div class="round-header">
-            <span class="round-title">Quarterfinals</span>
-            <span class="round-badge" id="badge-qf">0 / 4</span>
-            <div class="round-divider"></div>
-            <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">4 pts each</span>
-          </div>
-          <div class="matchups-grid matchups-qf" id="matchups-qf"></div>
-        </div>
+          <!-- Bracket body: 5 columns -->
+          <div class="bk-body">
 
-        <!-- ── Semifinals ────────────────────────────────── -->
-        <div class="round-section">
-          <div class="round-header">
-            <span class="round-title">Semifinals</span>
-            <span class="round-badge" id="badge-sf">0 / 2</span>
-            <div class="round-divider"></div>
-            <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">8 pts each</span>
-          </div>
-          <div class="matchups-grid matchups-sf" id="matchups-sf"></div>
-        </div>
+            <div class="bk-col bk-r32">
+              <div class="bk-mobile-rh">
+                <span class="round-title">Round of 32</span>
+                <span class="round-badge" id="badge-r32">0 / 16</span>
+                <div class="round-divider"></div>
+                <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">1 pt each</span>
+              </div>
+              <div id="matchups-r32"></div>
+            </div>
 
-        <!-- ── Final & 3rd Place ─────────────────────────── -->
+            <div class="bk-col bk-r16">
+              <div class="bk-mobile-rh">
+                <span class="round-title">Round of 16</span>
+                <span class="round-badge" id="badge-r16">0 / 8</span>
+                <div class="round-divider"></div>
+                <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">2 pts each</span>
+              </div>
+              <div id="matchups-r16"></div>
+            </div>
+
+            <div class="bk-col bk-qf">
+              <div class="bk-mobile-rh">
+                <span class="round-title">Quarterfinals</span>
+                <span class="round-badge" id="badge-qf">0 / 4</span>
+                <div class="round-divider"></div>
+                <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">4 pts each</span>
+              </div>
+              <div id="matchups-qf"></div>
+            </div>
+
+            <div class="bk-col bk-sf">
+              <div class="bk-mobile-rh">
+                <span class="round-title">Semifinals</span>
+                <span class="round-badge" id="badge-sf">0 / 2</span>
+                <div class="round-divider"></div>
+                <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">8 pts each</span>
+              </div>
+              <div id="matchups-sf"></div>
+            </div>
+
+            <div class="bk-col bk-final">
+              <div class="bk-mobile-rh">
+                <span class="round-title">🏆 Final</span>
+                <span class="round-badge" id="badge-final">0 / 1</span>
+                <div class="round-divider"></div>
+                <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">16 pts</span>
+              </div>
+              <div id="matchups-final"></div>
+            </div>
+
+          </div><!-- /.bk-body -->
+        </div><!-- /.bk-wrap -->
+
+        <!-- ── 3rd Place (below bracket) ─────────────────── -->
         <div class="round-section">
           <div class="round-header">
-            <span class="round-title">Final &amp; 3rd Place</span>
-            <span class="round-badge" id="badge-end">0 / 2</span>
+            <span class="round-title">🥉 3rd Place Match</span>
+            <span class="round-badge" id="badge-end">0 / 1</span>
             <div class="round-divider"></div>
-            <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">16 pts Final · 12 pts 3rd</span>
+            <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">12 pts</span>
           </div>
-          <div class="matchups-grid matchups-end" id="matchups-end"></div>
+          <div id="matchups-end" style="max-width:320px;"></div>
         </div>
 
         <!-- ── Tiebreakers ───────────────────────────────── -->
@@ -612,12 +717,13 @@
       }).join("");
       el("matchups-sf").innerHTML = sfhtml;
 
-      // Final + 3rd
-      const fs = finalSlot(), ts = thirdSlot();
-      const endhtml =
-        makeEndCard("🏆 Final · Champion", fs.top, fs.bot, "final", "16 pts", true) +
-        makeEndCard("🥉 3rd Place Match", ts.top, ts.bot, "third", "12 pts");
-      el("matchups-end").innerHTML = endhtml;
+      // Final (bracket column)
+      const fs = finalSlot();
+      el("matchups-final").innerHTML = makeEndCard("🏆 Final", fs.top, fs.bot, "final", "16 pts", true);
+
+      // 3rd Place (below bracket)
+      const ts = thirdSlot();
+      el("matchups-end").innerHTML = makeEndCard("🥉 3rd Place", ts.top, ts.bot, "third", "12 pts");
 
       // Attach click handlers
       document.querySelectorAll(".team-btn").forEach(btn => {
@@ -635,17 +741,18 @@
       const r16done = picks.r16.filter(Boolean).length;
       const qfdone  = picks.qf.filter(Boolean).length;
       const sfdone  = picks.sf.filter(Boolean).length;
-      const enddone = (picks.final ? 1 : 0) + (picks.third ? 1 : 0);
       const setBadge = (id, done, total) => {
         const el2 = el(id);
+        if (!el2) return;
         el2.textContent = `${done} / ${total}`;
         el2.className = "round-badge" + (done === total ? " done" : "");
       };
-      setBadge("badge-r32", r32done, 16);
-      setBadge("badge-r16", r16done, 8);
-      setBadge("badge-qf",  qfdone,  4);
-      setBadge("badge-sf",  sfdone,  2);
-      setBadge("badge-end", enddone, 2);
+      setBadge("badge-r32",   r32done, 16);
+      setBadge("badge-r16",   r16done, 8);
+      setBadge("badge-qf",    qfdone,  4);
+      setBadge("badge-sf",    sfdone,  2);
+      setBadge("badge-final", picks.final ? 1 : 0, 1);
+      setBadge("badge-end",   picks.third ? 1 : 0, 1);
     }
 
     // ── Progress ─────────────────────────────────────────────────────
