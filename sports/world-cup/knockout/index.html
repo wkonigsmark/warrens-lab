@@ -6,107 +6,146 @@
   <title>Knockout Pool | Warren's World Cup</title>
   <link rel="stylesheet" href="../shared/world-cup.css">
   <style>
+    /* ── Coming soon ───────────────────────────────────────────── */
     .ko-coming-soon {
-      display: grid;
-      place-items: center;
-      min-height: calc(100vh - 160px);
-      padding: 40px 18px;
+      display:grid; place-items:center;
+      min-height:calc(100vh - 160px); padding:40px 18px;
     }
     .ko-card {
-      width: min(100%, 520px);
-      padding: 40px 32px;
-      border: 1px solid var(--wc-line);
-      border-radius: 16px;
+      width:min(100%,520px); padding:40px 32px;
+      border:1px solid var(--wc-line); border-radius:16px;
       background:
         radial-gradient(circle at 20% 10%, rgba(244,201,93,0.12), transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(74,163,255,0.1), transparent 50%),
         var(--wc-panel);
-      text-align: center;
+      text-align:center;
     }
-    .ko-lock {
-      font-size: 3.5rem;
-      line-height: 1;
-      margin-bottom: 20px;
-      filter: drop-shadow(0 0 24px rgba(244,201,93,0.5));
-    }
-    .ko-eyebrow {
-      font-size: 0.72rem;
-      font-weight: 900;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--wc-gold);
-      margin-bottom: 10px;
-    }
-    .ko-title {
-      font-size: clamp(2rem, 8vw, 3rem);
-      font-weight: 950;
-      color: var(--wc-ink);
-      line-height: 0.95;
-      margin: 0 0 18px;
-    }
-    .ko-subtitle {
-      font-size: 1rem;
-      color: var(--wc-muted);
-      line-height: 1.5;
-      margin: 0 0 28px;
-      text-wrap: balance;
-    }
-    .ko-timing {
-      display: inline-block;
-      padding: 12px 22px;
-      border: 1px solid rgba(244,201,93,0.45);
-      border-radius: 999px;
-      background: rgba(244,201,93,0.1);
-      color: var(--wc-gold);
-      font-size: 0.88rem;
-      font-weight: 850;
-      margin-bottom: 28px;
-    }
-    .ko-teaser {
-      display: grid;
-      gap: 10px;
-      margin-bottom: 28px;
-    }
-    .ko-teaser-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 11px 14px;
-      border: 1px solid var(--wc-line);
-      border-radius: 8px;
-      background: rgba(255,255,255,0.04);
-      font-size: 0.85rem;
-      font-weight: 750;
-      color: var(--wc-muted);
-      text-align: left;
-    }
-    .ko-teaser-icon { font-size: 1.1rem; flex:0 0 auto; }
-    .ko-teaser-row strong { color: var(--wc-ink); font-weight: 900; }
-    .ko-back {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--wc-muted);
-      font-size: 0.82rem;
-      font-weight: 800;
-      text-decoration: none;
-    }
-    .ko-back:hover { color: var(--wc-ink); }
-    .ko-scoring {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 28px;
-    }
-    .ko-pts {
-      padding: 10px 6px;
-      border: 1px solid var(--wc-line);
-      border-radius: 8px;
-      background: rgba(255,255,255,0.04);
-      text-align: center;
-    }
+    .ko-lock { font-size:3.5rem; line-height:1; margin-bottom:20px; filter:drop-shadow(0 0 24px rgba(244,201,93,0.5)); }
+    .ko-eyebrow { font-size:0.72rem; font-weight:900; letter-spacing:0.14em; text-transform:uppercase; color:var(--wc-gold); margin-bottom:10px; }
+    .ko-title { font-size:clamp(2rem,8vw,3rem); font-weight:950; color:var(--wc-ink); line-height:0.95; margin:0 0 18px; }
+    .ko-subtitle { font-size:1rem; color:var(--wc-muted); line-height:1.5; margin:0 0 28px; text-wrap:balance; }
+    .ko-timing { display:inline-block; padding:12px 22px; border:1px solid rgba(244,201,93,0.45); border-radius:999px; background:rgba(244,201,93,0.1); color:var(--wc-gold); font-size:0.88rem; font-weight:850; margin-bottom:28px; }
+    .ko-teaser { display:grid; gap:10px; margin-bottom:28px; }
+    .ko-teaser-row { display:flex; align-items:center; gap:12px; padding:11px 14px; border:1px solid var(--wc-line); border-radius:8px; background:rgba(255,255,255,0.04); font-size:0.85rem; font-weight:750; color:var(--wc-muted); text-align:left; }
+    .ko-teaser-icon { font-size:1.1rem; flex:0 0 auto; }
+    .ko-teaser-row strong { color:var(--wc-ink); font-weight:900; }
+    .ko-scoring { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:28px; }
+    .ko-pts { padding:10px 6px; border:1px solid var(--wc-line); border-radius:8px; background:rgba(255,255,255,0.04); text-align:center; }
     .ko-pts strong { display:block; color:var(--wc-gold); font-size:1.2rem; font-weight:950; }
     .ko-pts span { font-size:0.62rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--wc-muted); font-weight:900; }
+    .ko-back { display:inline-flex; align-items:center; gap:6px; color:var(--wc-muted); font-size:0.82rem; font-weight:800; text-decoration:none; }
+    .ko-back:hover { color:var(--wc-ink); }
+
+    /* ── Entry form layout ─────────────────────────────────────── */
+    .ko-form-wrap { max-width:900px; margin:0 auto; padding:24px 18px 60px; }
+    .ko-form-header { text-align:center; padding:32px 0 28px; }
+    .ko-form-header .eyebrow { font-size:0.7rem; font-weight:900; letter-spacing:0.14em; text-transform:uppercase; color:var(--wc-gold); margin-bottom:8px; }
+    .ko-form-header h1 { font-size:clamp(1.8rem,6vw,2.6rem); font-weight:950; color:var(--wc-ink); margin:0 0 8px; line-height:1; }
+    .ko-form-header p { font-size:0.88rem; color:var(--wc-muted); margin:0; }
+
+    /* Info fields */
+    .ko-info-section { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:32px; }
+    @media(max-width:600px){ .ko-info-section { grid-template-columns:1fr; } }
+    .ko-field label { display:block; font-size:0.7rem; font-weight:900; letter-spacing:0.1em; text-transform:uppercase; color:var(--wc-gold); margin-bottom:7px; }
+    .ko-field input { width:100%; box-sizing:border-box; padding:12px 14px; border:1px solid var(--wc-line); border-radius:8px; background:var(--wc-panel); color:var(--wc-ink); font-size:0.95rem; font-weight:750; outline:none; transition:border-color .15s; }
+    .ko-field input:focus { border-color:rgba(244,201,93,0.6); }
+    .ko-field input.error { border-color:rgba(255,80,80,0.7); }
+    .ko-field .hint { font-size:0.72rem; color:var(--wc-faint); margin-top:5px; }
+
+    /* Round sections */
+    .round-section { margin-bottom:36px; }
+    .round-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+    .round-title { font-size:0.8rem; font-weight:900; letter-spacing:0.12em; text-transform:uppercase; color:var(--wc-gold); }
+    .round-badge { font-size:0.72rem; font-weight:800; padding:3px 10px; border-radius:999px; border:1px solid var(--wc-line); color:var(--wc-muted); background:rgba(255,255,255,0.04); }
+    .round-badge.done { color:var(--wc-gold); border-color:rgba(244,201,93,0.4); }
+    .round-divider { flex:1; height:1px; background:var(--wc-line); }
+
+    /* Matchup grid */
+    .matchups-grid { display:grid; gap:10px; }
+    .matchups-r32 { grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); }
+    .matchups-r16 { grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); }
+    .matchups-qf  { grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); }
+    .matchups-sf  { grid-template-columns:repeat(2,1fr); }
+    .matchups-end { grid-template-columns:repeat(2,1fr); }
+    @media(max-width:560px){
+      .matchups-sf, .matchups-end { grid-template-columns:1fr; }
+    }
+
+    /* Matchup card */
+    .matchup-card { border:1px solid var(--wc-line); border-radius:10px; background:var(--wc-panel); overflow:hidden; }
+    .matchup-label { font-size:0.62rem; font-weight:900; letter-spacing:0.1em; text-transform:uppercase; color:var(--wc-faint); padding:8px 12px 5px; border-bottom:1px solid rgba(255,255,255,0.04); }
+    .matchup-locked { padding:28px 16px; text-align:center; font-size:0.8rem; color:var(--wc-faint); font-style:italic; }
+
+    /* Team button */
+    .team-btn {
+      width:100%; display:flex; align-items:center; gap:10px;
+      padding:11px 12px; background:none; border:none; border-bottom:1px solid rgba(255,255,255,0.06);
+      color:var(--wc-ink); cursor:pointer; text-align:left; transition:background .12s;
+    }
+    .team-btn:last-child { border-bottom:none; }
+    .team-btn:hover:not(:disabled) { background:rgba(255,255,255,0.05); }
+    .team-btn.selected { background:rgba(244,201,93,0.12); }
+    .team-btn.selected .team-btn-name { color:var(--wc-gold); font-weight:900; }
+    .team-btn:disabled { cursor:default; opacity:0.45; }
+    .team-btn img { width:26px; aspect-ratio:3/2; object-fit:cover; border-radius:3px; border:1px solid var(--wc-line); flex:0 0 auto; }
+    .team-btn-seed { font-size:0.58rem; font-weight:900; color:var(--wc-faint); flex:0 0 22px; text-align:right; }
+    .team-btn-name { font-size:0.88rem; font-weight:800; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .team-btn-name.tbd { color:var(--wc-faint); font-style:italic; font-weight:600; }
+    .team-btn .check { margin-left:auto; font-size:0.9rem; opacity:0; transition:opacity .12s; flex:0 0 auto; }
+    .team-btn.selected .check { opacity:1; }
+
+    /* Champion highlight */
+    .champion-card { border-color:rgba(244,201,93,0.5); box-shadow:0 0 24px rgba(244,201,93,0.12); }
+
+    /* Tiebreakers */
+    .tb-section { border:1px solid var(--wc-line); border-radius:12px; background:var(--wc-panel); padding:22px; margin-bottom:24px; }
+    .tb-section h3 { margin:0 0 18px; font-size:0.8rem; font-weight:900; letter-spacing:0.1em; text-transform:uppercase; color:var(--wc-gold); }
+    .tb-row { margin-bottom:18px; }
+    .tb-row:last-child { margin-bottom:0; }
+    .tb-row label { display:block; font-size:0.8rem; font-weight:800; color:var(--wc-ink); margin-bottom:8px; }
+    .tb-row .tb-hint { font-size:0.72rem; color:var(--wc-muted); margin-bottom:8px; display:block; }
+    .tb-row select, .tb-row input[type="number"], .tb-row input[type="text"] {
+      width:100%; box-sizing:border-box; padding:11px 14px; border:1px solid var(--wc-line); border-radius:8px;
+      background:var(--wc-panel); color:var(--wc-ink); font-size:0.92rem; font-weight:750; outline:none; transition:border-color .15s;
+    }
+    .tb-row select:focus, .tb-row input:focus { border-color:rgba(244,201,93,0.6); }
+    .tb-row select.error, .tb-row input.error { border-color:rgba(255,80,80,0.7); }
+    .tb-row select option { background:#0f1f18; }
+    .tb-writein { margin-top:8px; display:none; }
+    .tb-writein.visible { display:block; }
+
+    /* Progress */
+    .picks-progress { display:flex; align-items:center; gap:12px; padding:14px 18px; border:1px solid var(--wc-line); border-radius:10px; background:var(--wc-panel); margin-bottom:28px; }
+    .progress-track { flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:999px; overflow:hidden; }
+    .progress-fill { height:100%; background:var(--wc-gold); border-radius:999px; transition:width .3s ease; }
+    .progress-label { font-size:0.78rem; font-weight:800; color:var(--wc-muted); white-space:nowrap; }
+    .progress-label.done { color:var(--wc-gold); }
+
+    /* Submit area */
+    .ko-submit-area { border:1px solid var(--wc-line); border-radius:12px; background:var(--wc-panel); padding:22px; }
+    .ko-submit-area h3 { margin:0 0 10px; font-size:0.9rem; font-weight:900; color:var(--wc-ink); }
+    .ko-submit-area p { font-size:0.82rem; color:var(--wc-muted); margin:0 0 18px; line-height:1.5; }
+    .ko-submit-btn {
+      width:100%; padding:16px; border:none; border-radius:10px;
+      background:var(--wc-gold); color:#07130f; font-size:1rem; font-weight:950;
+      letter-spacing:0.04em; cursor:pointer; transition:opacity .15s, transform .1s;
+    }
+    .ko-submit-btn:hover:not(:disabled) { opacity:0.9; }
+    .ko-submit-btn:active:not(:disabled) { transform:scale(0.99); }
+    .ko-submit-btn:disabled { opacity:0.35; cursor:not-allowed; }
+    .ko-error-msg { margin-top:12px; font-size:0.82rem; color:rgba(255,100,100,0.9); font-weight:750; display:none; }
+    .ko-error-msg.visible { display:block; }
+
+    /* Success */
+    .ko-success { display:none; text-align:center; padding:48px 24px; }
+    .ko-success.visible { display:block; }
+    .ko-success .trophy { font-size:3.5rem; margin-bottom:16px; }
+    .ko-success h2 { font-size:1.8rem; font-weight:950; color:var(--wc-gold); margin:0 0 10px; }
+    .ko-success p { font-size:0.9rem; color:var(--wc-muted); line-height:1.6; margin:0 0 18px; }
+    .ko-success .entry-code { font-size:1.1rem; font-weight:950; font-family:monospace; color:var(--wc-gold); letter-spacing:0.08em; }
+
+    /* Loading state */
+    .loading-teams { font-size:0.8rem; color:var(--wc-faint); padding:6px 0; font-style:italic; }
   </style>
 </head>
 <body>
@@ -120,38 +159,24 @@
         <a href="../insights/">Insights</a>
         <a href="../fixtures/">Fixtures</a>
         <a href="../quiz/">Quiz</a>
-        <a href="./" aria-current="page">Knockout Pool</a>
+        <a href="./" aria-current="page">🔒 Knockout Pool</a>
       </nav>
     </header>
 
-    <div class="ko-coming-soon">
+    <!-- ── COMING SOON (shown when POOL_OPEN = false) ───────── -->
+    <div class="ko-coming-soon" id="view-coming-soon" style="display:none;">
       <div class="ko-card">
-        <div class="ko-lock">🔒</div>
+        <div class="ko-lock" id="ko-lock-icon">🔒</div>
         <div class="ko-eyebrow">Round 2 — Knockout Stage</div>
         <h1 class="ko-title">Knockout<br>Pool</h1>
         <p class="ko-subtitle">Pick every match from the Round of 32 all the way to the Final. A second chance to compete — and a whole new pot.</p>
-
         <div class="ko-timing">⏰ Expected live Saturday night, June 27 · Exact timing TBD</div>
-
         <div class="ko-teaser">
-          <div class="ko-teaser-row">
-            <span class="ko-teaser-icon">🗺️</span>
-            <div><strong>Full bracket pick</strong> — R32 through Final + 3rd place match</div>
-          </div>
-          <div class="ko-teaser-row">
-            <span class="ko-teaser-icon">⚽</span>
-            <div><strong>Golden Boot tiebreaker</strong> — predict the tournament's top scorer</div>
-          </div>
-          <div class="ko-teaser-row">
-            <span class="ko-teaser-icon">🎯</span>
-            <div><strong>Penalty & goals tiebreakers</strong> — closest to actual wins</div>
-          </div>
-          <div class="ko-teaser-row">
-            <span class="ko-teaser-icon">💸</span>
-            <div><strong>$50 entry</strong> · 70 / 20 / 10 payout · Venmo to @WarrenK</div>
-          </div>
+          <div class="ko-teaser-row"><span class="ko-teaser-icon">🗺️</span><div><strong>Full bracket pick</strong> — R32 through Final + 3rd place match</div></div>
+          <div class="ko-teaser-row"><span class="ko-teaser-icon">⚽</span><div><strong>Golden Boot tiebreaker</strong> — predict the tournament's top scorer</div></div>
+          <div class="ko-teaser-row"><span class="ko-teaser-icon">🎯</span><div><strong>Penalty & goals tiebreakers</strong> — closest to actual wins</div></div>
+          <div class="ko-teaser-row"><span class="ko-teaser-icon">💸</span><div><strong>$50 entry</strong> · 70 / 20 / 10 payout · Venmo to @Warren-Konigsmark</div></div>
         </div>
-
         <div style="margin-bottom:16px;">
           <div style="font-size:0.72rem;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;color:var(--wc-gold);margin-bottom:10px;">Scoring</div>
           <div class="ko-scoring">
@@ -163,14 +188,689 @@
             <div class="ko-pts"><strong>16 pts</strong><span>Final / Champ</span></div>
           </div>
         </div>
-
         <a href="../" class="ko-back">← Back to home</a>
       </div>
     </div>
 
+    <!-- ── ENTRY FORM (shown when POOL_OPEN = true) ─────────── -->
+    <div id="view-form" style="display:none;">
+      <div class="ko-form-wrap">
+
+        <!-- Header -->
+        <div class="ko-form-header">
+          <div class="eyebrow">Round 2 — Knockout Stage</div>
+          <h1>Knockout Pool</h1>
+          <p>Pick every match R32 → Final · Golden Boot tiebreaker · $50 entry</p>
+        </div>
+
+        <!-- Entrant info -->
+        <div class="ko-info-section">
+          <div class="ko-field">
+            <label for="f-name">Bracket Name</label>
+            <input id="f-name" type="text" placeholder="Your bracket name" autocomplete="off">
+            <div class="hint">What to call your entry</div>
+          </div>
+          <div class="ko-field">
+            <label for="f-email">Email</label>
+            <input id="f-email" type="email" placeholder="you@example.com" autocomplete="email">
+            <div class="hint">For your confirmation code</div>
+          </div>
+          <div class="ko-field">
+            <label for="f-venmo">Venmo Handle</label>
+            <input id="f-venmo" type="text" placeholder="@YourHandle" autocomplete="off">
+            <div class="hint">Send $50 to @Warren-Konigsmark after submitting</div>
+          </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="picks-progress">
+          <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+          <span class="progress-label" id="progress-label">0 / 32 picks</span>
+        </div>
+
+        <!-- ── Round of 32 ───────────────────────────────── -->
+        <div class="round-section">
+          <div class="round-header">
+            <span class="round-title">Round of 32</span>
+            <span class="round-badge" id="badge-r32">0 / 16</span>
+            <div class="round-divider"></div>
+            <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">1 pt each</span>
+          </div>
+          <div class="matchups-grid matchups-r32" id="matchups-r32"></div>
+        </div>
+
+        <!-- ── Round of 16 ───────────────────────────────── -->
+        <div class="round-section">
+          <div class="round-header">
+            <span class="round-title">Round of 16</span>
+            <span class="round-badge" id="badge-r16">0 / 8</span>
+            <div class="round-divider"></div>
+            <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">2 pts each</span>
+          </div>
+          <div class="matchups-grid matchups-r16" id="matchups-r16"></div>
+        </div>
+
+        <!-- ── Quarterfinals ─────────────────────────────── -->
+        <div class="round-section">
+          <div class="round-header">
+            <span class="round-title">Quarterfinals</span>
+            <span class="round-badge" id="badge-qf">0 / 4</span>
+            <div class="round-divider"></div>
+            <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">4 pts each</span>
+          </div>
+          <div class="matchups-grid matchups-qf" id="matchups-qf"></div>
+        </div>
+
+        <!-- ── Semifinals ────────────────────────────────── -->
+        <div class="round-section">
+          <div class="round-header">
+            <span class="round-title">Semifinals</span>
+            <span class="round-badge" id="badge-sf">0 / 2</span>
+            <div class="round-divider"></div>
+            <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">8 pts each</span>
+          </div>
+          <div class="matchups-grid matchups-sf" id="matchups-sf"></div>
+        </div>
+
+        <!-- ── Final & 3rd Place ─────────────────────────── -->
+        <div class="round-section">
+          <div class="round-header">
+            <span class="round-title">Final &amp; 3rd Place</span>
+            <span class="round-badge" id="badge-end">0 / 2</span>
+            <div class="round-divider"></div>
+            <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">16 pts Final · 12 pts 3rd</span>
+          </div>
+          <div class="matchups-grid matchups-end" id="matchups-end"></div>
+        </div>
+
+        <!-- ── Tiebreakers ───────────────────────────────── -->
+        <div class="round-section">
+          <div class="round-header">
+            <span class="round-title">Tiebreakers</span>
+            <div class="round-divider"></div>
+            <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">3 tiebreakers</span>
+          </div>
+          <div class="tb-section">
+            <h3>Tiebreaker 1 · Golden Boot</h3>
+            <div class="tb-row">
+              <label>Who scores the most goals in the knockout stage?</label>
+              <span class="tb-hint">Ties broken by earliest bracket exit · write-in accepted</span>
+              <select id="tb-golden-boot">
+                <option value="">— Select a player —</option>
+                <option value="Julián Álvarez">Julián Álvarez (Argentina)</option>
+                <option value="Folarin Balogun">Folarin Balogun (USA)</option>
+                <option value="Jude Bellingham">Jude Bellingham (England)</option>
+                <option value="Kevin De Bruyne">Kevin De Bruyne (Belgium)</option>
+                <option value="Jonathan David">Jonathan David (Canada)</option>
+                <option value="Paulo Dybala">Paulo Dybala (Argentina)</option>
+                <option value="Endrick">Endrick (Brazil)</option>
+                <option value="Youssef En-Nesyri">Youssef En-Nesyri (Morocco)</option>
+                <option value="Bruno Fernandes">Bruno Fernandes (Portugal)</option>
+                <option value="Phil Foden">Phil Foden (England)</option>
+                <option value="Cody Gakpo">Cody Gakpo (Netherlands)</option>
+                <option value="Santiago Giménez">Santiago Giménez (Mexico)</option>
+                <option value="Erling Haaland">Erling Haaland (Norway)</option>
+                <option value="Kai Havertz">Kai Havertz (Germany)</option>
+                <option value="Cucho Hernández">Cucho Hernández (Colombia)</option>
+                <option value="Diogo Jota">Diogo Jota (Portugal)</option>
+                <option value="Daichi Kamada">Daichi Kamada (Japan)</option>
+                <option value="Harry Kane">Harry Kane (England)</option>
+                <option value="Cyle Larin">Cyle Larin (Canada)</option>
+                <option value="Rafael Leão">Rafael Leão (Portugal)</option>
+                <option value="Luis Díaz">Luis Díaz (Colombia)</option>
+                <option value="Hirving Lozano">Hirving Lozano (Mexico)</option>
+                <option value="Romelu Lukaku">Romelu Lukaku (Belgium)</option>
+                <option value="Donyell Malen">Donyell Malen (Netherlands)</option>
+                <option value="Sadio Mané">Sadio Mané (Senegal)</option>
+                <option value="Lautaro Martínez">Lautaro Martínez (Argentina)</option>
+                <option value="Lamine Yamal">Lamine Yamal (Spain)</option>
+                <option value="Kylian Mbappé">Kylian Mbappé (France)</option>
+                <option value="Lionel Messi">Lionel Messi (Argentina)</option>
+                <option value="Takumi Minamino">Takumi Minamino (Japan)</option>
+                <option value="Álvaro Morata">Álvaro Morata (Spain)</option>
+                <option value="Jamal Musiala">Jamal Musiala (Germany)</option>
+                <option value="Darwin Núñez">Darwin Núñez (Uruguay)</option>
+                <option value="Ricardo Pepi">Ricardo Pepi (USA)</option>
+                <option value="Christian Pulisic">Christian Pulisic (USA)</option>
+                <option value="Gonçalo Ramos">Gonçalo Ramos (Portugal)</option>
+                <option value="Marcus Rashford">Marcus Rashford (England)</option>
+                <option value="Richarlison">Richarlison (Brazil)</option>
+                <option value="Rodrygo">Rodrygo (Brazil)</option>
+                <option value="James Rodríguez">James Rodríguez (Colombia)</option>
+                <option value="Bukayo Saka">Bukayo Saka (England)</option>
+                <option value="Mohamed Salah">Mohamed Salah (Egypt)</option>
+                <option value="Leroy Sané">Leroy Sané (Germany)</option>
+                <option value="Xavi Simons">Xavi Simons (Netherlands)</option>
+                <option value="Son Heung-min">Son Heung-min (South Korea)</option>
+                <option value="Mehdi Taremi">Mehdi Taremi (Iran)</option>
+                <option value="Facundo Torres">Facundo Torres (Uruguay)</option>
+                <option value="Ferran Torres">Ferran Torres (Spain)</option>
+                <option value="Leandro Trossard">Leandro Trossard (Belgium)</option>
+                <option value="Federico Valverde">Federico Valverde (Uruguay)</option>
+                <option value="Vinicius Jr.">Vinicius Jr. (Brazil)</option>
+                <option value="Nico Williams">Nico Williams (Spain)</option>
+                <option value="Florian Wirtz">Florian Wirtz (Germany)</option>
+                <option value="Hakim Ziyech">Hakim Ziyech (Morocco)</option>
+                <option value="__other__">Other (write in below)</option>
+              </select>
+              <div class="tb-writein" id="tb-writein-wrap">
+                <input type="text" id="tb-golden-boot-writein" placeholder="Player name (Team)">
+              </div>
+            </div>
+          </div>
+
+          <div class="tb-section">
+            <h3>Tiebreaker 2 · Penalty Shootouts</h3>
+            <div class="tb-row">
+              <label>How many penalty shootouts will there be in the entire knockout stage?</label>
+              <span class="tb-hint">Closest guess wins. Ties broken by Tiebreaker 3.</span>
+              <input type="number" id="tb-penalties" min="0" max="20" placeholder="e.g. 3">
+            </div>
+          </div>
+
+          <div class="tb-section">
+            <h3>Tiebreaker 3 · Knockout Total Goals</h3>
+            <div class="tb-row">
+              <label>How many total goals will be scored in the entire knockout stage?</label>
+              <span class="tb-hint">Closest guess wins (absolute difference).</span>
+              <input type="number" id="tb-goals" min="0" max="200" placeholder="e.g. 85">
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Submit ────────────────────────────────────── -->
+        <div id="view-submit">
+          <div class="ko-submit-area">
+            <h3>Ready to submit?</h3>
+            <p>All 32 bracket picks, all 3 tiebreakers, and your info are required. After submitting, send <strong>$50 via Venmo to @Warren-Konigsmark</strong> to confirm your entry.</p>
+            <button class="ko-submit-btn" id="submit-btn" disabled>Complete all picks to submit</button>
+            <div class="ko-error-msg" id="error-msg"></div>
+          </div>
+        </div>
+
+        <!-- ── Success ───────────────────────────────────── -->
+        <div class="ko-success" id="view-success">
+          <div class="trophy">🏆</div>
+          <h2>Entry Submitted!</h2>
+          <p>Your entry code is:</p>
+          <div class="entry-code" id="entry-code-display"></div>
+          <p style="margin-top:18px;">Screenshot this code! Now send <strong>$50 via Venmo to @Warren-Konigsmark</strong> to lock in your entry.</p>
+          <a href="../" class="ko-back" style="margin-top:24px;">← Back to home</a>
+        </div>
+
+      </div><!-- /.ko-form-wrap -->
+    </div><!-- /#view-form -->
+
     <footer class="wc-footer">
-      <span>Entry form opens Saturday night · Check back soon</span>
+      <span>$50 entry · 70/20/10 payout · Knockout Stage 2026</span>
     </footer>
-  </div>
+  </div><!-- /.wc-shell -->
+
+  <script type="module">
+    import { teams, teamsById, groups, groupStageMatches } from "../data/world-cup-2026.js";
+    import { calculateGroupTables, calculateThirdPlaceStandings } from "../scoreboard/scoreboard-engine.js";
+    import { supabaseConfig } from "../data/supabase-config.js";
+    import { koSupabaseConfig } from "../data/ko-supabase-config.js";
+
+    // ── Toggle: flip to true on Saturday to open the pool ──────────
+    const POOL_OPEN = false;
+    const KO_PIN = "2019";
+    const KO_TESTER_KEY = "ko_tester_access";
+
+    const el = (id) => document.getElementById(id);
+
+    function revealForm() {
+      el("view-coming-soon").style.display = "none";
+      el("view-form").style.display = "";
+      initForm();
+    }
+
+    function checkAccess() {
+      if (POOL_OPEN || sessionStorage.getItem(KO_TESTER_KEY) === "1") {
+        revealForm();
+      } else {
+        el("view-coming-soon").style.display = "";
+        el("view-form").style.display = "none";
+        const lockIcon = el("ko-lock-icon");
+        lockIcon.style.cursor = "pointer";
+        lockIcon.title = "Tester access";
+        lockIcon.addEventListener("click", () => {
+          const pin = prompt("Enter access PIN:");
+          if (pin === KO_PIN) {
+            sessionStorage.setItem(KO_TESTER_KEY, "1");
+            revealForm();
+          } else if (pin !== null) {
+            alert("Incorrect PIN.");
+          }
+        });
+      }
+    }
+
+    checkAccess();
+
+    // ── Team helpers ────────────────────────────────────────────────
+    function flagUrl(teamId) {
+      const t = teamsById[teamId];
+      if (!t) return "";
+      const code = t.id === "ENG" ? "gb-eng" : t.id === "SCO" ? "gb-sct" : t.countryCode.toLowerCase();
+      return `https://flagcdn.com/w80/${code}.png`;
+    }
+    const teamName = (id) => {
+      if (!id) return "TBD";
+      const t = teamsById[id];
+      if (!t) return id;
+      return t.shortName || t.name;
+    };
+
+    // ── Bracket state ───────────────────────────────────────────────
+    const picks = {
+      r32: Array(16).fill(null),
+      r16: Array(8).fill(null),
+      qf:  Array(4).fill(null),
+      sf:  Array(2).fill(null),
+      third: null,
+      final: null,
+    };
+
+    // r32Data: Array of 16 {num, top:{id,seed}, bot:{id,seed}}
+    let r32Data = [];
+
+    // ── Bracket cascade ─────────────────────────────────────────────
+    function clearDownstream(round, idx) {
+      if (round === "r32") {
+        const i = Math.floor(idx / 2);
+        picks.r16[i] = null;
+        clearDownstream("r16", i);
+      } else if (round === "r16") {
+        const i = Math.floor(idx / 2);
+        picks.qf[i] = null;
+        clearDownstream("qf", i);
+      } else if (round === "qf") {
+        const i = Math.floor(idx / 2);
+        picks.sf[i] = null;
+        clearDownstream("sf", i);
+      } else if (round === "sf") {
+        picks.final = null;
+        picks.third = null;
+      }
+    }
+
+    function setPick(round, idx, teamId) {
+      if (round === "final") {
+        picks.final = teamId;
+      } else if (round === "third") {
+        picks.third = teamId;
+      } else {
+        if (picks[round][idx] !== teamId) {
+          clearDownstream(round, idx);
+        }
+        picks[round][idx] = teamId;
+      }
+      renderAllRounds();
+      updateProgress();
+      updateSubmitBtn();
+    }
+
+    // ── Team source for each round slot ─────────────────────────────
+    function r32Slot(idx) { return r32Data[idx] || { top: { id: null, seed: "?" }, bot: { id: null, seed: "?" } }; }
+    function r16Slot(idx) {
+      const a = picks.r32[idx * 2], b = picks.r32[idx * 2 + 1];
+      return { top: a || null, bot: b || null };
+    }
+    function qfSlot(idx) {
+      const a = picks.r16[idx * 2], b = picks.r16[idx * 2 + 1];
+      return { top: a || null, bot: b || null };
+    }
+    function sfSlot(idx) {
+      const a = picks.qf[idx * 2], b = picks.qf[idx * 2 + 1];
+      return { top: a || null, bot: b || null };
+    }
+    function finalSlot() { return { top: picks.sf[0] || null, bot: picks.sf[1] || null }; }
+    function thirdSlot() {
+      if (!picks.sf[0] || !picks.sf[1]) return { top: null, bot: null };
+      const { top: qa, bot: qb } = qfSlot(0);
+      const { top: qc, bot: qd } = qfSlot(1);
+      const loser0 = (picks.sf[0] === qa) ? qb : qa;
+      const loser1 = (picks.sf[1] === qc) ? qd : qc;
+      return { top: loser0 || null, bot: loser1 || null };
+    }
+
+    // ── Render a matchup card ────────────────────────────────────────
+    function makeTeamBtn(teamId, seed, round, idx, side, pickedId) {
+      const name = teamName(teamId);
+      const isSelected = (round === "final" || round === "third")
+        ? (round === "final" ? picks.final : picks.third) === teamId
+        : picks[round][idx] === teamId;
+      const isTbd = !teamId;
+      const isDisabled = isTbd;
+
+      const flagImg = teamId
+        ? `<img src="${flagUrl(teamId)}" alt="${name}" loading="lazy">`
+        : `<span style="width:26px;height:18px;display:inline-block;background:rgba(255,255,255,0.06);border-radius:3px;flex:0 0 auto;"></span>`;
+
+      return `<button
+        class="team-btn${isSelected ? " selected" : ""}"
+        ${isDisabled ? "disabled" : ""}
+        data-round="${round}" data-idx="${idx}" data-team="${teamId || ""}" data-side="${side}">
+        ${flagImg}
+        <span class="team-btn-seed">${seed}</span>
+        <span class="team-btn-name${isTbd ? " tbd" : ""}">${isTbd ? "TBD" : name}</span>
+        <span class="check">✓</span>
+      </button>`;
+    }
+
+    function makeMatchCard(label, topId, topSeed, botId, botSeed, round, idx, isChampion = false) {
+      const bothTbd = !topId && !botId;
+      return `<div class="matchup-card${isChampion ? " champion-card" : ""}">
+        <div class="matchup-label">${label}</div>
+        ${bothTbd
+          ? `<div class="matchup-locked">Complete earlier rounds to unlock</div>`
+          : `${makeTeamBtn(topId, topSeed, round, idx, "top", picks[round]?.[idx])}
+             ${makeTeamBtn(botId, botSeed, round, idx, "bot", picks[round]?.[idx])}`
+        }
+      </div>`;
+    }
+
+    function makeEndCard(label, topId, botId, round, pts, isChampion = false) {
+      const bothTbd = !topId && !botId;
+      return `<div class="matchup-card${isChampion ? " champion-card" : ""}">
+        <div class="matchup-label">${label} <span style="float:right;color:var(--wc-gold)">${pts}</span></div>
+        ${bothTbd
+          ? `<div class="matchup-locked">Complete Semifinals to unlock</div>`
+          : `${makeTeamBtn(topId, "", round, 0, "top")}
+             ${makeTeamBtn(botId, "", round, 0, "bot")}`
+        }
+      </div>`;
+    }
+
+    // ── Render all rounds ────────────────────────────────────────────
+    function renderAllRounds() {
+      // R32
+      const r32html = r32Data.map((m, i) =>
+        makeMatchCard(`M${m.num}`, m.top.id, m.top.seed, m.bot.id, m.bot.seed, "r32", i)
+      ).join("");
+      el("matchups-r32").innerHTML = r32html || "<p class='loading-teams'>Loading teams…</p>";
+
+      // R16
+      const r16html = Array.from({ length: 8 }, (_, i) => {
+        const s = r16Slot(i);
+        return makeMatchCard(`R16 · Match ${i + 1}`, s.top, s.top ? `R${i+1}` : "", s.bot, s.bot ? `R${i+1}` : "", "r16", i);
+      }).join("");
+      el("matchups-r16").innerHTML = r16html;
+
+      // QF
+      const qfhtml = Array.from({ length: 4 }, (_, i) => {
+        const s = qfSlot(i);
+        return makeMatchCard(`QF · Match ${i + 1}`, s.top, "", s.bot, "", "qf", i);
+      }).join("");
+      el("matchups-qf").innerHTML = qfhtml;
+
+      // SF
+      const sfhtml = Array.from({ length: 2 }, (_, i) => {
+        const s = sfSlot(i);
+        return makeMatchCard(`Semifinal ${i + 1}`, s.top, "", s.bot, "", "sf", i);
+      }).join("");
+      el("matchups-sf").innerHTML = sfhtml;
+
+      // Final + 3rd
+      const fs = finalSlot(), ts = thirdSlot();
+      const endhtml =
+        makeEndCard("🏆 Final · Champion", fs.top, fs.bot, "final", "16 pts", true) +
+        makeEndCard("🥉 3rd Place Match", ts.top, ts.bot, "third", "12 pts");
+      el("matchups-end").innerHTML = endhtml;
+
+      // Attach click handlers
+      document.querySelectorAll(".team-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const { round, idx, team } = btn.dataset;
+          if (!team) return;
+          if (round === "final") { picks.final = team; renderAllRounds(); updateProgress(); updateSubmitBtn(); return; }
+          if (round === "third") { picks.third = team; renderAllRounds(); updateProgress(); updateSubmitBtn(); return; }
+          setPick(round, parseInt(idx), team);
+        });
+      });
+
+      // Update badges
+      const r32done = picks.r32.filter(Boolean).length;
+      const r16done = picks.r16.filter(Boolean).length;
+      const qfdone  = picks.qf.filter(Boolean).length;
+      const sfdone  = picks.sf.filter(Boolean).length;
+      const enddone = (picks.final ? 1 : 0) + (picks.third ? 1 : 0);
+      const setBadge = (id, done, total) => {
+        const el2 = el(id);
+        el2.textContent = `${done} / ${total}`;
+        el2.className = "round-badge" + (done === total ? " done" : "");
+      };
+      setBadge("badge-r32", r32done, 16);
+      setBadge("badge-r16", r16done, 8);
+      setBadge("badge-qf",  qfdone,  4);
+      setBadge("badge-sf",  sfdone,  2);
+      setBadge("badge-end", enddone, 2);
+    }
+
+    // ── Progress ─────────────────────────────────────────────────────
+    function countPicks() {
+      return picks.r32.filter(Boolean).length +
+             picks.r16.filter(Boolean).length +
+             picks.qf.filter(Boolean).length +
+             picks.sf.filter(Boolean).length +
+             (picks.final ? 1 : 0) +
+             (picks.third ? 1 : 0);
+    }
+
+    function updateProgress() {
+      const done = countPicks();
+      const pct = Math.round((done / 32) * 100);
+      el("progress-fill").style.width = pct + "%";
+      const lbl = el("progress-label");
+      lbl.textContent = `${done} / 32 picks`;
+      lbl.className = "progress-label" + (done === 32 ? " done" : "");
+    }
+
+    // ── Submit button ─────────────────────────────────────────────────
+    function isFormComplete() {
+      if (countPicks() < 32) return false;
+      if (!el("f-name").value.trim()) return false;
+      if (!el("f-email").value.trim()) return false;
+      if (!el("f-venmo").value.trim()) return false;
+      const gb = el("tb-golden-boot").value;
+      if (!gb) return false;
+      if (gb === "__other__" && !el("tb-golden-boot-writein").value.trim()) return false;
+      if (el("tb-penalties").value === "") return false;
+      if (el("tb-goals").value === "") return false;
+      return true;
+    }
+
+    function updateSubmitBtn() {
+      const btn = el("submit-btn");
+      const complete = isFormComplete();
+      btn.disabled = !complete;
+      btn.textContent = complete ? "Submit Entry — $50 via Venmo" : "Complete all picks + tiebreakers to submit";
+    }
+
+    // ── Init form ─────────────────────────────────────────────────────
+    async function initForm() {
+      // Tiebreaker: show write-in when "Other" selected
+      el("tb-golden-boot").addEventListener("change", () => {
+        const wrap = el("tb-writein-wrap");
+        wrap.className = "tb-writein" + (el("tb-golden-boot").value === "__other__" ? " visible" : "");
+        updateSubmitBtn();
+      });
+
+      // Info/tiebreaker changes update submit button
+      ["f-name","f-email","f-venmo","tb-penalties","tb-goals","tb-golden-boot-writein"].forEach(id => {
+        el(id).addEventListener("input", updateSubmitBtn);
+      });
+
+      // Load group stage results to determine R32 teams
+      try {
+        const res = await fetch(`${supabaseConfig.url}/rest/v1/rpc/get_public_match_results`, {
+          method: "POST",
+          headers: {
+            apikey: supabaseConfig.anonKey,
+            Authorization: `Bearer ${supabaseConfig.anonKey}`,
+            "Content-Type": "application/json",
+          },
+          body: "{}",
+        });
+        const rows = res.ok ? await res.json() : [];
+        const resultsMap = new Map();
+        (rows || []).forEach(r => {
+          resultsMap.set(Number(r.match_number), {
+            homeScore: Number(r.home_score || 0),
+            awayScore: Number(r.away_score || 0),
+            status: r.status || "completed",
+            winnerId: r.winner_id || null,
+          });
+        });
+
+        // Build group tables
+        const matchesWithResults = groupStageMatches.map(m => ({
+          ...m,
+          result: resultsMap.get(m.matchNumber) || null,
+        }));
+        const tables = calculateGroupTables(matchesWithResults, teams);
+        const thirds = calculateThirdPlaceStandings(tables);
+
+        // Resolve R32 matchups
+        const getT = (rank, g) => tables[g] ? tables[g][rank - 1]?.id : null;
+        const advancingThirds = thirds.filter(t => t.status === "Q").map(t => t.group).sort();
+        const lookup = window.BRACKET_LOOKUP || {};
+        const mapping = lookup[advancingThirds.join("")] || {
+          "A": "3E", "B": "3G", "D": "3I", "E": "3D", "G": "3H", "I": "3F", "K": "3L", "L": "3K"
+        };
+        const get3rd = (g) => thirds.find(x => x.group === g)?.id || null;
+        const slot = (type, g) => {
+          if (type === 1) return { id: getT(1, g), seed: `${g}1` };
+          if (type === 2) return { id: getT(2, g), seed: `${g}2` };
+          const src = mapping[g];
+          return { id: get3rd(src ? src[1] : null), seed: src ? `3${src[1]}` : "3?" };
+        };
+
+        r32Data = [
+          { num: 73, top: slot(1,"E"), bot: slot(3,"E") },
+          { num: 74, top: slot(1,"I"), bot: slot(3,"I") },
+          { num: 75, top: slot(2,"A"), bot: slot(2,"B") },
+          { num: 76, top: slot(1,"F"), bot: slot(2,"C") },
+          { num: 77, top: slot(1,"C"), bot: slot(2,"F") },
+          { num: 78, top: slot(2,"E"), bot: slot(2,"I") },
+          { num: 79, top: slot(1,"A"), bot: slot(3,"A") },
+          { num: 80, top: slot(1,"L"), bot: slot(3,"L") },
+          { num: 81, top: slot(2,"K"), bot: slot(2,"L") },
+          { num: 82, top: slot(1,"H"), bot: slot(2,"J") },
+          { num: 83, top: slot(1,"D"), bot: slot(3,"D") },
+          { num: 84, top: slot(1,"G"), bot: slot(3,"G") },
+          { num: 85, top: slot(1,"B"), bot: slot(3,"B") },
+          { num: 86, top: slot(1,"K"), bot: slot(3,"K") },
+          { num: 87, top: slot(1,"J"), bot: slot(2,"H") },
+          { num: 88, top: slot(2,"D"), bot: slot(2,"G") },
+        ];
+      } catch (e) {
+        console.warn("Could not load group stage results:", e);
+        // Leave r32Data empty — teams show as TBD
+      }
+
+      renderAllRounds();
+      updateProgress();
+      updateSubmitBtn();
+
+      // Submit handler
+      el("submit-btn").addEventListener("click", handleSubmit);
+    }
+
+    // ── Submit ──────────────────────────────────────────────────────
+    async function handleSubmit() {
+      const errEl = el("error-msg");
+      errEl.className = "ko-error-msg";
+
+      // Validate
+      const name  = el("f-name").value.trim();
+      const email = el("f-email").value.trim();
+      const venmo = el("f-venmo").value.trim();
+
+      let hasErr = false;
+      const markErr = (id, flag) => {
+        el(id).className = el(id).className.replace(" error", "") + (flag ? " error" : "");
+        if (flag) hasErr = true;
+      };
+      markErr("f-name",  !name);
+      markErr("f-email", !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+      markErr("f-venmo", !venmo);
+
+      const gbSel = el("tb-golden-boot").value;
+      const gbWritein = el("tb-golden-boot-writein").value.trim();
+      const goldenBoot = gbSel === "__other__" ? gbWritein : gbSel;
+      const penaltiesVal = el("tb-penalties").value;
+      const goalsVal     = el("tb-goals").value;
+
+      markErr("tb-golden-boot", !gbSel || (gbSel === "__other__" && !gbWritein));
+      markErr("tb-penalties",   penaltiesVal === "");
+      markErr("tb-goals",       goalsVal === "");
+
+      if (hasErr || countPicks() < 32) {
+        errEl.textContent = countPicks() < 32
+          ? `Missing bracket picks: ${32 - countPicks()} remaining.`
+          : "Please fill in all required fields.";
+        errEl.className = "ko-error-msg visible";
+        return;
+      }
+
+      const btn = el("submit-btn");
+      btn.disabled = true;
+      btn.textContent = "Submitting…";
+
+      const entryCode = "KO-" + Math.random().toString(36).slice(2, 10).toUpperCase();
+
+      const bracketPicks = {
+        r32:   [...picks.r32],
+        r16:   [...picks.r16],
+        qf:    [...picks.qf],
+        sf:    [...picks.sf],
+        third: picks.third,
+        final: picks.final,
+      };
+
+      try {
+        const res = await fetch(`${koSupabaseConfig.url}/rest/v1/knockout_entries`, {
+          method: "POST",
+          headers: {
+            apikey: koSupabaseConfig.publishableKey,
+            Authorization: `Bearer ${koSupabaseConfig.publishableKey}`,
+            "Content-Type": "application/json",
+            Prefer: "return=minimal",
+          },
+          body: JSON.stringify({
+            entry_code:           entryCode,
+            bracket_name:         name,
+            email:                email,
+            venmo:                venmo,
+            bracket_picks:        bracketPicks,
+            golden_boot_pick:     goldenBoot,
+            penalty_games_pick:   parseInt(penaltiesVal),
+            ko_total_goals_pick:  parseInt(goalsVal),
+          }),
+        });
+
+        if (!res.ok) {
+          const txt = await res.text();
+          throw new Error(`HTTP ${res.status}: ${txt}`);
+        }
+
+        // Success
+        el("view-submit").style.display = "none";
+        const successEl = el("view-success");
+        successEl.className = "ko-success visible";
+        el("entry-code-display").textContent = entryCode;
+        successEl.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      } catch (err) {
+        console.error(err);
+        btn.disabled = false;
+        btn.textContent = "Submit Entry — $50 via Venmo";
+        errEl.textContent = "Submission failed — please try again or contact Warren.";
+        errEl.className = "ko-error-msg visible";
+      }
+    }
+  </script>
 </body>
 </html>

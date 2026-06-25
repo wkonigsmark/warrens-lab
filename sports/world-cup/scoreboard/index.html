@@ -956,6 +956,7 @@
     <nav class="tab-selectors" id="scoreboard-tabs-nav">
       <button class="sim-tab-btn active" data-tab="standings">🏆 Projected Standings</button>
       <button class="sim-tab-btn" data-tab="matches">📅 Match Center</button>
+      <button class="sim-tab-btn" data-tab="ko-pool">🔒 KO Pool</button>
     </nav>
 
     <!-- Tab Panels Container -->
@@ -1024,6 +1025,32 @@
         </div>
       </div>
 
+      <!-- KO Pool tab -->
+      <div class="sim-view-panel" id="panel-ko-pool">
+        <div style="margin-bottom:20px;">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;" id="ko-stats-row">
+            <div class="wc-stat"><strong id="ko-entry-count">--</strong><span>KO Entries</span></div>
+            <div class="wc-stat"><strong id="ko-paid-count">--</strong><span>Paid</span></div>
+            <div class="wc-stat"><strong id="ko-purse">$--</strong><span>KO Purse (paid)</span></div>
+          </div>
+          <div class="wc-table-wrap">
+            <table class="wc-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Bracket</th>
+                  <th>Champion Pick</th>
+                  <th>Submitted</th>
+                </tr>
+              </thead>
+              <tbody id="ko-entry-table">
+                <tr><td colspan="4">Click the KO Pool tab to load entries.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -1040,6 +1067,7 @@
       seedDefaultEntries 
     } from "./scoreboard-engine.js?v=third-actuals-20260604";
     import { supabaseConfig } from "../data/supabase-config.js";
+    import { koSupabaseConfig } from "../data/ko-supabase-config.js";
 
     const W_INDEX_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVvIfHFjZgu-7IHXuaRB236HXxyKxftdabTXm-x6eItHaJZzxGyla-0uENR_J01DfPlkPIwXTIkYxL/pub?gid=639413055&single=true&output=csv";
     const ADMIN_API_BASE = "http://127.0.0.1:8787/api";
@@ -2448,9 +2476,46 @@
         });
       }
 
+      // KO Pool tab — lazy load entries on first visit
+      let koLoaded = false;
+      async function loadKoEntries() {
+        if (koLoaded) return;
+        const tbody = document.getElementById("ko-entry-table");
+        tbody.innerHTML = `<tr><td colspan="4">Loading…</td></tr>`;
+        try {
+          const res = await fetch(`${koSupabaseConfig.url}/rest/v1/knockout_entries?order=submitted_at&voided=eq.false`, {
+            headers: {
+              apikey: koSupabaseConfig.publishableKey,
+              Authorization: `Bearer ${koSupabaseConfig.publishableKey}`,
+            },
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const entries = await res.json();
+          const paid = entries.filter(e => e.paid);
+          document.getElementById("ko-entry-count").textContent = entries.length;
+          document.getElementById("ko-paid-count").textContent = paid.length;
+          document.getElementById("ko-purse").textContent = `$${paid.length * 50}`;
+          if (!entries.length) {
+            tbody.innerHTML = `<tr><td colspan="4">No entries yet.</td></tr>`;
+          } else {
+            tbody.innerHTML = entries.map((e, i) => {
+              const champ = e.bracket_picks?.final || "—";
+              const t = new Date(e.submitted_at).toLocaleDateString();
+              return `<tr><td>${i + 1}</td><td><strong>${e.bracket_name}</strong></td><td>${champ}</td><td>${t}</td></tr>`;
+            }).join("");
+          }
+          koLoaded = true;
+        } catch (err) {
+          tbody.innerHTML = `<tr><td colspan="4">Failed to load KO entries: ${err.message}</td></tr>`;
+        }
+      }
+
       // Tab selector clicks
       document.querySelectorAll(".sim-tab-btn").forEach(btn => {
-        btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+        btn.addEventListener("click", () => {
+          switchTab(btn.dataset.tab);
+          if (btn.dataset.tab === "ko-pool") loadKoEntries();
+        });
       });
 
       if (elements.scoreboardSearch) {

@@ -102,6 +102,26 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
+
+    .admin-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:22px 0 0; }
+    .admin-tab-btn {
+      padding:9px 18px; border-radius:999px; border:1px solid var(--wc-line);
+      background:var(--wc-panel); color:var(--wc-muted); font-weight:850;
+      font-size:0.85rem; cursor:pointer; transition:all .15s;
+    }
+    .admin-tab-btn:hover { color:var(--wc-ink); border-color:var(--wc-gold); }
+    .admin-tab-btn.active { background:var(--wc-ink); color:#07130f; border-color:var(--wc-ink); }
+    .admin-tab-panel { display:none; }
+    .admin-tab-panel.active { display:block; }
+
+    .ko-match-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:10px; margin-top:16px; }
+    .ko-match-card { border:1px solid var(--wc-line); border-radius:8px; background:var(--wc-panel); padding:14px; }
+    .ko-match-card h4 { margin:0 0 10px; font-size:0.75rem; font-weight:900; color:var(--wc-gold); letter-spacing:0.08em; text-transform:uppercase; }
+    .ko-match-inputs { display:flex; align-items:center; gap:8px; }
+    .ko-match-inputs input[type="number"] { width:52px; padding:6px 8px; border:1px solid var(--wc-line); border-radius:6px; background:rgba(255,255,255,0.05); color:var(--wc-ink); font-size:0.9rem; text-align:center; }
+    .ko-match-inputs select { flex:1; padding:6px 8px; border:1px solid var(--wc-line); border-radius:6px; background:rgba(255,255,255,0.05); color:var(--wc-ink); font-size:0.82rem; }
+    .ko-match-save { padding:5px 12px; background:var(--wc-gold); color:#07130f; border:none; border-radius:6px; font-weight:900; font-size:0.78rem; cursor:pointer; }
+    .ko-match-saved { font-size:0.72rem; color:var(--wc-green); margin-top:6px; display:none; }
   </style>
 </head>
 
@@ -132,6 +152,12 @@
       <span class="wc-pill" id="admin-status">Loading config...</span>
     </section>
 
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" data-admin-tab="group">🏆 Group Pool</button>
+      <button class="admin-tab-btn" data-admin-tab="ko">🔒 KO Pool</button>
+    </div>
+
+    <div id="admin-panel-group" class="admin-tab-panel active">
     <section class="admin-summary">
       <div class="wc-stat"><strong id="entry-count">--</strong><span>Entries</span></div>
       <div class="wc-stat"><strong id="paid-count">--</strong><span>Paid</span></div>
@@ -170,6 +196,55 @@
         </table>
       </div>
     </section>
+    </div><!-- /#admin-panel-group -->
+
+    <div id="admin-panel-ko" class="admin-tab-panel">
+      <section class="admin-summary" style="margin-top:18px;">
+        <div class="wc-stat"><strong id="ko-entry-count-admin">--</strong><span>KO Entries</span></div>
+        <div class="wc-stat"><strong id="ko-paid-count-admin">--</strong><span>Paid</span></div>
+        <div class="wc-stat"><strong id="ko-pending-count-admin">--</strong><span>Pending</span></div>
+        <div class="wc-stat"><strong id="ko-purse-admin">$--</strong><span>Paid Purse</span></div>
+      </section>
+
+      <section class="wc-section">
+        <div class="wc-section-header">
+          <div><h2>KO Entries</h2><p>Confirm payment after receiving Venmo. Void test entries.</p></div>
+        </div>
+        <div class="admin-toolbar">
+          <button class="wc-button" id="ko-refresh-entries" type="button">Refresh</button>
+          <button class="wc-button secondary" id="ko-export-entries" type="button">Export CSV</button>
+        </div>
+        <div class="wc-table-wrap">
+          <table class="wc-table">
+            <thead>
+              <tr>
+                <th>Submitted</th>
+                <th>Code</th>
+                <th>Bracket</th>
+                <th>Email</th>
+                <th>Venmo</th>
+                <th>Golden Boot</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ko-entry-table-admin">
+              <tr><td colspan="8">Click KO Pool tab to load.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="wc-section">
+        <div class="wc-section-header">
+          <div><h2>KO Match Center</h2><p>Enter official scores for knockout matches. Winner required to score entries.</p></div>
+        </div>
+        <div id="ko-match-grid" class="ko-match-grid">
+          <p style="color:var(--wc-muted);font-size:0.85rem;">Loading matches…</p>
+        </div>
+      </section>
+    </div><!-- /#admin-panel-ko -->
+
   </main>
 
   <div class="admin-lock" id="admin-lock" role="dialog" aria-modal="true" aria-labelledby="admin-lock-title">
@@ -375,6 +450,169 @@
     document.getElementById("refresh-entries").addEventListener("click", loadEntries);
     document.getElementById("export-entries").addEventListener("click", () => downloadCsv(`world-cup-pool-entries-${Date.now()}.csv`, entries));
     document.getElementById("export-picks").addEventListener("click", () => downloadCsv(`world-cup-pool-picks-${Date.now()}.csv`, picks));
+
+    // ── Admin tabs ───────────────────────────────────────────────────
+    document.querySelectorAll(".admin-tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".admin-tab-btn").forEach(b => b.classList.toggle("active", b === btn));
+        document.getElementById("admin-panel-group").classList.toggle("active", btn.dataset.adminTab === "group");
+        document.getElementById("admin-panel-ko").classList.toggle("active", btn.dataset.adminTab === "ko");
+        if (btn.dataset.adminTab === "ko") loadKoAdmin();
+      });
+    });
+
+    // ── KO Admin ─────────────────────────────────────────────────────
+    const KO_API = "http://127.0.0.1:8788/api";
+    let koEntries = [];
+    let koLoaded = false;
+
+    async function koFetch(path, { method = "GET", body } = {}) {
+      const res = await fetch(`${KO_API}${path}`, {
+        method,
+        headers: { "Content-Type": "application/json", "X-Admin-Pin": ADMIN_PIN },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const text = await res.text();
+      return text ? JSON.parse(text) : null;
+    }
+
+    function renderKoEntries() {
+      const tbody = document.getElementById("ko-entry-table-admin");
+      const live = koEntries.filter(e => !e.voided);
+      const paid = live.filter(e => e.paid);
+      document.getElementById("ko-entry-count-admin").textContent = live.length;
+      document.getElementById("ko-paid-count-admin").textContent = paid.length;
+      document.getElementById("ko-pending-count-admin").textContent = live.filter(e => !e.paid).length;
+      document.getElementById("ko-purse-admin").textContent = money.format(paid.length * 50);
+      if (!live.length) { tbody.innerHTML = `<tr><td colspan="8">No entries yet.</td></tr>`; return; }
+      tbody.innerHTML = live.map(e => {
+        const rc = e.paid ? "admin-row-paid" : e.voided ? "admin-row-test" : "admin-row-pending";
+        return `<tr class="${rc}">
+          <td>${new Date(e.submitted_at).toLocaleString()}</td>
+          <td><strong>${escapeHtml(e.entry_code)}</strong></td>
+          <td>${escapeHtml(e.bracket_name)}</td>
+          <td>${escapeHtml(e.email)}</td>
+          <td>${escapeHtml(e.venmo)}</td>
+          <td>${escapeHtml(e.golden_boot_pick || "—")}</td>
+          <td>${escapeHtml(e.status)}${e.paid ? " / paid" : ""}</td>
+          <td><div class="admin-actions">
+            <button class="wc-button" data-ko-action="paid" data-ko-id="${e.id}">Paid</button>
+            <button class="wc-button secondary" data-ko-action="pending" data-ko-id="${e.id}">Pending</button>
+            <button class="wc-button secondary" data-ko-action="void" data-ko-id="${e.id}">Void</button>
+          </div></td>
+        </tr>`;
+      }).join("");
+    }
+
+    // KO match center — R32 matches M73–M88
+    const KO_MATCHES = [
+      {num:73,label:"M73 · E1 vs 3E"},{num:74,label:"M74 · I1 vs 3I"},
+      {num:75,label:"M75 · A2 vs B2"},{num:76,label:"M76 · F1 vs C2"},
+      {num:77,label:"M77 · C1 vs F2"},{num:78,label:"M78 · E2 vs I2"},
+      {num:79,label:"M79 · A1 vs 3A"},{num:80,label:"M80 · L1 vs 3L"},
+      {num:81,label:"M81 · K2 vs L2"},{num:82,label:"M82 · H1 vs J2"},
+      {num:83,label:"M83 · D1 vs 3D"},{num:84,label:"M84 · G1 vs 3G"},
+      {num:85,label:"M85 · B1 vs 3B"},{num:86,label:"M86 · K1 vs 3K"},
+      {num:87,label:"M87 · J1 vs H2"},{num:88,label:"M88 · D2 vs G2"},
+      // R16–Final entries can be added dynamically after R32 completes
+    ];
+
+    async function renderKoMatchGrid(existingResults = []) {
+      const grid = document.getElementById("ko-match-grid");
+      const resultsMap = new Map(existingResults.map(r => [r.match_number, r]));
+      grid.innerHTML = KO_MATCHES.map(m => {
+        const r = resultsMap.get(m.num);
+        const hs = r?.home_score ?? "";
+        const as = r?.away_score ?? "";
+        const win = r?.winner_id || "";
+        const pens = r?.went_to_penalties ? "checked" : "";
+        return `<div class="ko-match-card">
+          <h4>${m.label}</h4>
+          <div class="ko-match-inputs">
+            <input type="number" min="0" max="20" value="${hs}" placeholder="H" id="ko-hs-${m.num}">
+            <span>–</span>
+            <input type="number" min="0" max="20" value="${as}" placeholder="A" id="ko-as-${m.num}">
+          </div>
+          <div style="margin:8px 0;display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--wc-muted);">
+            <input type="checkbox" id="ko-pen-${m.num}" ${pens}> <label for="ko-pen-${m.num}">Went to penalties</label>
+          </div>
+          <div style="font-size:0.72rem;color:var(--wc-muted);margin-bottom:6px;">Winner ID (team code):</div>
+          <div class="ko-match-inputs">
+            <input type="text" value="${escapeHtml(win)}" placeholder="e.g. ESP" id="ko-win-${m.num}" style="flex:1;padding:6px 8px;border:1px solid var(--wc-line);border-radius:6px;background:rgba(255,255,255,0.05);color:var(--wc-ink);">
+            <button class="ko-match-save" data-match="${m.num}">Save</button>
+          </div>
+          <div class="ko-match-saved" id="ko-saved-${m.num}">✓ Saved</div>
+        </div>`;
+      }).join("");
+
+      grid.addEventListener("click", async (e) => {
+        const btn = e.target.closest(".ko-match-save");
+        if (!btn) return;
+        const num = parseInt(btn.dataset.match);
+        const hs = parseInt(document.getElementById(`ko-hs-${num}`).value);
+        const as = parseInt(document.getElementById(`ko-as-${num}`).value);
+        const win = document.getElementById(`ko-win-${num}`).value.trim().toUpperCase();
+        const pens = document.getElementById(`ko-pen-${num}`).checked;
+        if (!win) { alert("Enter a winner ID (team code)."); return; }
+        try {
+          btn.disabled = true;
+          await koFetch(`/ko/results/${num}`, {
+            method: "POST",
+            body: { round:"r32", match_slot:num-72, home_score:hs, away_score:as, winner_id:win, went_to_penalties:pens, status:"completed" },
+          });
+          const saved = document.getElementById(`ko-saved-${num}`);
+          saved.style.display = "block";
+          setTimeout(() => { saved.style.display = "none"; }, 2500);
+        } catch (err) {
+          alert("Save failed: " + err.message);
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    }
+
+    async function loadKoAdmin() {
+      if (koLoaded) return;
+      const tbody = document.getElementById("ko-entry-table-admin");
+      tbody.innerHTML = `<tr><td colspan="8">Loading…</td></tr>`;
+      try {
+        const [entryRows, resultRows] = await Promise.all([
+          koFetch("/ko/entries"),
+          koFetch("/ko/results"),
+        ]);
+        koEntries = entryRows || [];
+        renderKoEntries();
+        await renderKoMatchGrid(resultRows || []);
+        koLoaded = true;
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="8">KO admin server offline? Start ko_admin_server.py on port 8788. (${err.message})</td></tr>`;
+        document.getElementById("ko-match-grid").innerHTML = `<p style="color:var(--wc-muted);">Start ko_admin_server.py to manage matches.</p>`;
+      }
+    }
+
+    document.getElementById("ko-refresh-entries").addEventListener("click", async () => {
+      koLoaded = false;
+      await loadKoAdmin();
+    });
+    document.getElementById("ko-export-entries").addEventListener("click", () =>
+      downloadCsv(`ko-pool-entries-${Date.now()}.csv`, koEntries));
+
+    document.getElementById("ko-entry-table-admin").addEventListener("click", async (e) => {
+      const btn = e.target.closest("[data-ko-action]");
+      if (!btn) return;
+      const id = btn.dataset.koId;
+      const action = btn.dataset.koAction;
+      try {
+        if (action === "paid")    await koFetch(`/ko/entries/${id}`, { method:"PATCH", body:{ paid:true, status:"paid", voided:false } });
+        if (action === "pending") await koFetch(`/ko/entries/${id}`, { method:"PATCH", body:{ paid:false, status:"pending_payment", voided:false } });
+        if (action === "void")    await koFetch(`/ko/entries/${id}`, { method:"PATCH", body:{ voided:true, status:"voided" } });
+        koLoaded = false;
+        await loadKoAdmin();
+      } catch (err) {
+        setStatus("KO action failed: " + err.message);
+      }
+    });
 
     requirePin();
   </script>
