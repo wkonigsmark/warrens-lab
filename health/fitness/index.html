@@ -209,6 +209,9 @@
     .weight-input:focus{outline:none;border-color:var(--accent);background:rgba(249,115,22,.06)}
     .weight-input::placeholder{color:var(--muted);font-weight:600}
     .weight-unit{font-size:.54rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+    .weight-suggest{font-size:.48rem;font-weight:800;letter-spacing:.03em;padding:2px 5px;border-radius:5px;white-space:nowrap;display:none;cursor:default}
+    .weight-suggest.up{display:block;color:var(--green);background:var(--green-dim);border:1px solid rgba(74,222,128,.2)}
+    .weight-suggest.hold{display:block;color:var(--muted-light);background:var(--surface);border:1px solid var(--border)}
 
     /* ── SUBMIT ── */
     .submit-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px 16px;margin-bottom:10px}
@@ -1087,16 +1090,55 @@ async function syncSession() {
 }
 
 async function populateLastWeights() {
-  if(WORKOUT.mode !== 'dumbbell') return;
+  if(WORKOUT.mode === 'cardio') return;
   try {
-    const {data}=await sb.from('weight_logs').select('exercise_id,weight_lbs').eq('user_id','warren').order('logged_at',{ascending:false});
+    // Fetch last 5 logs per exercise (weight + completion status for progression logic)
+    const {data} = await sb.from('exercise_logs')
+      .select('exercise_id,weight_lbs,sets_completed,total_sets,created_at')
+      .not('weight_lbs','is',null)
+      .gt('weight_lbs',0)
+      .order('created_at',{ascending:false})
+      .limit(500);
     if(!data) return;
-    const seen=new Set();
-    data.forEach(row=>{
-      if(!seen.has(row.exercise_id)){ seen.add(row.exercise_id);
-        const input=document.querySelector(`.weight-input[data-ex="${row.exercise_id}"]`);
-        if(input && !input.value){ input.placeholder=`${row.weight_lbs} lbs`; }
-        if(!state.weights[row.exercise_id]){ state.weights[row.exercise_id]=row.weight_lbs; if(input&&!input.value) input.value=row.weight_lbs; }
+
+    // Build per-exercise history: [most recent, ...older]
+    const history = {};
+    data.forEach(row => {
+      if(!history[row.exercise_id]) history[row.exercise_id] = [];
+      if(history[row.exercise_id].length < 5) history[row.exercise_id].push(row);
+    });
+
+    Object.entries(history).forEach(([exId, logs]) => {
+      const input = document.querySelector(`.weight-input[data-ex="${exId}"]`);
+      if(!input) return;
+      const last = logs[0];
+      const lastWeight = parseFloat(last.weight_lbs);
+
+      // Pre-fill if not already set from today's session
+      if(!state.weights[exId]) {
+        state.weights[exId] = lastWeight;
+        if(!input.value) input.value = lastWeight;
+      }
+
+      // Progressive overload suggestion
+      const chip = document.getElementById(`ws-${exId}`);
+      if(!chip) return;
+      const lastCompleted = last.sets_completed >= last.total_sets;
+      // Check if 2 consecutive sessions were also completed at same or higher weight
+      const twoInARow = logs.length >= 2 && logs[1].sets_completed >= logs[1].total_sets;
+      if(lastCompleted && twoInARow) {
+        const suggest = Math.round((lastWeight + 2.5) * 4) / 4; // nearest 0.25
+        chip.textContent = `▲ Try ${suggest} lbs`;
+        chip.className = 'weight-suggest up';
+        chip.title = `You crushed all sets at ${lastWeight} lbs twice — time to level up`;
+      } else if(lastCompleted) {
+        chip.textContent = `✓ ${lastWeight} lbs last time`;
+        chip.className = 'weight-suggest hold';
+        chip.title = 'Complete all sets again to unlock the +2.5 suggestion';
+      } else {
+        chip.textContent = `↺ ${lastWeight} lbs last time`;
+        chip.className = 'weight-suggest hold';
+        chip.title = 'Aim to complete all sets before increasing weight';
       }
     });
   } catch(e){}
@@ -1223,7 +1265,7 @@ function buildSections() {
       const tip=ex.tip?`<div class="ex-tip">${ex.tip}</div>`:'';
       const videoBtn=ex.video_url?`<a class="ex-video-btn" href="${ex.video_url}" target="_blank" rel="noopener noreferrer">▶ Form</a>`:'';
       const currentWeight=state.weights[ex.id]||'';
-      const weightBlock=sec.weighted?`<div class="weight-wrap"><input type="number" class="weight-input" data-ex="${ex.id}" value="${currentWeight}" placeholder="lbs" min="1" max="300" step="2.5" onchange="onWeightChange(this)"><div class="weight-unit">lbs</div></div>`:'';
+      const weightBlock=sec.weighted?`<div class="weight-wrap"><input type="number" class="weight-input" data-ex="${ex.id}" value="${currentWeight}" placeholder="lbs" min="1" max="300" step="2.5" onchange="onWeightChange(this)"><div class="weight-unit">lbs</div><div class="weight-suggest" id="ws-${ex.id}"></div></div>`:'';
       const rowDone=done>=ex.sets;
       return `<div class="exercise-row${rowDone?' row-done':''}" id="row-${ex.id}">
         <div class="exercise-info">
@@ -1370,6 +1412,15 @@ async function submitWorkout() {
     await ensureSession();
     await Promise.all(WORKOUT.sections.flatMap(sec=>sec.exercises.filter(ex=>(state.checks[ex.id]||0)>0).map(ex=>syncExerciseLog(ex.id))));
     await syncSession();
+    // Flush all weights to weight_logs so history is always up-to-date
+    if(WORKOUT.mode !== 'cardio') {
+      const weightRows = WORKOUT.sections
+        .filter(sec=>sec.weighted)
+        .flatMap(sec=>sec.exercises.filter(ex=>state.weights[ex.id]).map(ex=>({
+          user_id:'warren', exercise_id:ex.id, exercise_name:ex.name, weight_lbs:state.weights[ex.id]
+        })));
+      if(weightRows.length) await sb.from('weight_logs').insert(weightRows);
+    }
     setSyncStatus('synced');
     document.getElementById('submitPanel').classList.add('submitted');
     btn.classList.add('done'); btn.disabled=false;

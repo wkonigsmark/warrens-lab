@@ -128,15 +128,24 @@
     .bk-mobile-rh { display:none; }
 
     /* Desktop quadrant labels & separators */
-    .bk-qdecor { position:absolute; inset:0; pointer-events:none; z-index:2; }
+    .bk-body { overflow:visible; }
+    .bk-qdecor { position:absolute; inset:0; pointer-events:none; z-index:2; overflow:visible; }
     .bk-qlabel {
-      position:absolute; left:3px;
-      font-size:0.4rem; font-weight:900; text-transform:uppercase;
-      letter-spacing:0.14em; color:rgba(244,201,93,0.4); white-space:nowrap;
+      position:absolute; left:0;
+      font-size:0.68rem; font-weight:900; text-transform:uppercase;
+      letter-spacing:0.12em; color:rgba(244,201,93,0.78); white-space:nowrap;
+      line-height:1.4;
+    }
+    /* Labels that float in the open R16-column gap between quadrant pairs */
+    .bk-qlabel-sep {
+      left:222px;  /* start of R16 column, past the R32 connector arm */
+      transform:translateY(-50%);
+      font-size:0.75rem;
+      background:var(--wc-bg); padding:2px 12px 2px 8px;
     }
     .bk-qsep {
-      position:absolute; left:-8px; right:-8px;
-      border-top:1px dashed rgba(255,255,255,0.09);
+      position:absolute; left:-8px; right:415px;
+      border-top:1px dashed rgba(255,255,255,0.1);
     }
 
     /* ── Mobile bracket (scroll-snap pane layout) ───────────────── */
@@ -435,13 +444,13 @@
 
             <!-- Quadrant labels + dotted separators (desktop only) -->
             <div class="bk-qdecor">
-              <div class="bk-qlabel" style="top:5px">Zidane</div>
+              <div class="bk-qlabel bk-qlabel-sep" style="top:26px">Zidane</div>
               <div class="bk-qsep"   style="top:360px"></div>
-              <div class="bk-qlabel" style="top:366px">Pelé</div>
+              <div class="bk-qlabel bk-qlabel-sep" style="top:360px">Pelé</div>
               <div class="bk-qsep"   style="top:720px"></div>
-              <div class="bk-qlabel" style="top:726px">Maradona</div>
+              <div class="bk-qlabel bk-qlabel-sep" style="top:720px">Maradona</div>
               <div class="bk-qsep"   style="top:1080px"></div>
-              <div class="bk-qlabel" style="top:1086px">Klose</div>
+              <div class="bk-qlabel bk-qlabel-sep" style="top:1080px">Klose</div>
             </div>
 
             <div class="bk-col bk-r32">
@@ -1031,13 +1040,19 @@
       mobilePane = Math.max(0, Math.min(3, n));
       const wrap = el("bk-mpanes");
       if (!wrap) return;
-      // Rebuild to update content, then smooth-scroll
+      // Rebuild to update content, then smooth-scroll horizontally
       renderMobileBracket();
       requestAnimationFrame(() => {
         wrap.style.scrollBehavior = 'smooth';
         wrap.scrollLeft = mobilePane * wrap.offsetWidth;
         setTimeout(() => { wrap.style.scrollBehavior = ''; }, 600);
       });
+      // Scroll page so the sticky nav bar is at the top of the viewport
+      const nav = el("bk-mnav");
+      if (nav) {
+        const navTop = nav.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: navTop - 4, behavior: 'smooth' });
+      }
     }
 
     function checkMobileAutoAdvance() {
