@@ -88,6 +88,22 @@
     .bk-round:not(.bk-final) .bk-match:nth-child(odd)::after { top:50%; border-top:2px solid var(--wc-line); }
     .bk-round:not(.bk-final) .bk-match:nth-child(even)::after { bottom:50%; border-bottom:2px solid var(--wc-line); }
     .bk-champion { align-self:center; margin-top:10px; font-size:0.74rem; color:var(--wc-muted); }
+    /* Quadrant overlay */
+    .bracket { position:relative; }
+    .bk-qdecor { position:absolute; inset:0; pointer-events:none; z-index:2; overflow:visible; }
+    .bk-qlabel {
+      position:absolute; left:0;
+      font-size:0.68rem; font-weight:900; text-transform:uppercase;
+      letter-spacing:0.12em; color:rgba(244,201,93,0.78); white-space:nowrap; line-height:1.4;
+    }
+    .bk-qlabel-sep {
+      left:188px; transform:translateY(-50%);
+      font-size:0.75rem; background:var(--wc-bg); padding:2px 12px 2px 8px;
+    }
+    .bk-qsep {
+      position:absolute; left:-8px; right:382px;
+      border-top:1px dashed rgba(255,255,255,0.1);
+    }
   </style>
 </head>
 <body>
@@ -492,6 +508,20 @@
       colFinal.className = "bk-round bk-final";
       colFinal.innerHTML = bkTbd();
       bracket.appendChild(colFinal);
+
+      // Quadrant labels overlay
+      const decor = document.createElement("div");
+      decor.className = "bk-qdecor";
+      decor.innerHTML = `
+        <div class="bk-qlabel bk-qlabel-sep" style="top:22px">Zidane</div>
+        <div class="bk-qsep" style="top:288px"></div>
+        <div class="bk-qlabel bk-qlabel-sep" style="top:288px">Pelé</div>
+        <div class="bk-qsep" style="top:576px"></div>
+        <div class="bk-qlabel bk-qlabel-sep" style="top:576px">Klose</div>
+        <div class="bk-qsep" style="top:864px"></div>
+        <div class="bk-qlabel bk-qlabel-sep" style="top:864px">Maradona</div>
+      `;
+      bracket.appendChild(decor);
     }
 
     // ===================== BOOT + REFRESH =====================
