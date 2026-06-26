@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USA · Road to the Final | 2026 World Cup</title>
+  <link rel="stylesheet" href="../shared/world-cup.css">
+  <style>
+    .usa-page { max-width:860px; margin:0 auto; padding:0 16px 56px; }
+
+    /* ── Hero ───────────────────────────────── */
+    .usa-hero { display:flex; align-items:center; gap:14px; padding:24px 0 20px; }
+    .usa-hero-flag { width:52px; height:35px; object-fit:cover; border-radius:4px; border:2px solid rgba(244,201,93,0.4); flex:0 0 auto; }
+    .usa-hero h1 { font-size:1.3rem; font-weight:950; color:var(--wc-ink); margin:0 0 2px; }
+    .usa-hero p  { font-size:0.82rem; color:var(--wc-muted); margin:0; }
+
+    /* ── Card shell ─────────────────────────── */
+    .u-card { background:var(--wc-panel); border:1px solid var(--wc-line); border-radius:var(--wc-radius); overflow:hidden; }
+    .u-card-hd { padding:10px 14px; border-bottom:1px solid var(--wc-line); display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .u-card-title { font-size:0.68rem; font-weight:900; letter-spacing:0.12em; text-transform:uppercase; color:var(--wc-gold); }
+    .u-card-sub { font-size:0.72rem; color:var(--wc-muted); }
+
+    /* ── Live badge ─────────────────────────── */
+    .live-badge { display:flex; align-items:center; gap:4px; font-size:0.62rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:var(--wc-muted); }
+    .live-dot { width:6px; height:6px; border-radius:50%; background:#4ade80; box-shadow:0 0 6px rgba(74,222,128,0.6); animation:blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* ── Main grid ──────────────────────────── */
+    .main-grid { display:grid; grid-template-columns:188px 1fr; gap:16px; margin-bottom:16px; align-items:start; }
+    @media(max-width:599px) { .main-grid { grid-template-columns:1fr; } }
+
+    /* ── W-Index poll ───────────────────────── */
+    .wi-row { display:flex; align-items:center; gap:8px; padding:7px 13px; border-bottom:1px solid rgba(255,255,255,0.04); }
+    .wi-row:last-child { border-bottom:none; }
+    .wi-num  { font-size:0.66rem; font-weight:900; color:var(--wc-faint); width:17px; text-align:right; flex:0 0 auto; font-variant-numeric:tabular-nums; }
+    .wi-flag { width:22px; height:14px; object-fit:cover; border-radius:2px; border:1px solid rgba(255,255,255,0.08); flex:0 0 auto; }
+    .wi-name { font-size:0.78rem; font-weight:800; color:var(--wc-ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .wi-row.is-usa { background:rgba(244,201,93,0.09); }
+    .wi-row.is-usa .wi-num  { color:var(--wc-gold); }
+    .wi-row.is-usa .wi-name { color:var(--wc-gold); font-weight:950; }
+
+    /* ── Path rounds ────────────────────────── */
+    .path-rounds { display:flex; flex-direction:column; gap:10px; padding:12px; }
+
+    .pround { border:1px solid var(--wc-line); border-radius:10px; overflow:hidden; }
+    .pround-hd { display:flex; align-items:center; gap:9px; padding:8px 12px; background:rgba(255,255,255,0.025); border-bottom:1px solid var(--wc-line); }
+    .pround-badge { font-size:0.6rem; font-weight:900; letter-spacing:0.09em; text-transform:uppercase; background:rgba(244,201,93,0.14); color:var(--wc-gold); border-radius:4px; padding:2px 7px; white-space:nowrap; }
+    .pround-label { font-size:0.75rem; color:var(--wc-muted); font-weight:700; }
+
+    .pround-body { padding:10px 12px; display:flex; flex-direction:column; gap:5px; }
+    .pround-team { display:flex; align-items:center; gap:8px; }
+    .pround-team img { width:22px; height:15px; object-fit:cover; border-radius:2px; border:1px solid rgba(255,255,255,0.08); flex:0 0 auto; }
+    .pround-team .pt-name { font-size:0.78rem; font-weight:800; color:var(--wc-ink); }
+    .pround-team .pt-rank { margin-left:auto; font-size:0.62rem; color:var(--wc-faint); font-weight:700; white-space:nowrap; }
+    .pround-team.fav  { opacity:1; }
+    .pround-team.rest { opacity:0.45; }
+    .pround-tbd { font-size:0.76rem; color:var(--wc-faint); font-style:italic; padding:2px 0; }
+    .pround-divider { font-size:0.62rem; color:var(--wc-faint); font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin:2px 0; }
+
+    /* Match-pair rows within a path round */
+    .pmatch { display:flex; align-items:center; gap:8px; padding:4px 0; }
+    .pmatch + .pmatch { border-top:1px solid rgba(255,255,255,0.05); padding-top:8px; margin-top:4px; }
+    .pmatch-num { font-size:0.6rem; font-weight:900; color:var(--wc-faint); letter-spacing:0.06em; text-transform:uppercase; width:28px; flex:0 0 auto; }
+    .pmatch-teams { display:flex; flex-direction:column; gap:4px; flex:1; }
+    .pmatch-vs { font-size:0.58rem; font-weight:900; color:var(--wc-faint); letter-spacing:0.08em; text-transform:uppercase; padding-left:30px; }
+
+    /* ── Klose bracket ──────────────────────── */
+    .bracket-section { margin-bottom:16px; }
+    .kb-scroll { overflow-x:auto; padding:14px 14px 10px; }
+    .kb-wrap { display:flex; gap:0; min-width:480px; }
+
+    /* R32 column */
+    .kb-r32 { flex:0 0 170px; display:flex; flex-direction:column; gap:0; }
+    .kb-pair { display:flex; flex-direction:column; gap:5px; padding:0 0 10px; }
+    .kb-pair + .kb-pair { padding:10px 0 0; border-top:1px dashed rgba(255,255,255,0.08); }
+
+    .kb-match { border:1px solid var(--wc-line); border-radius:7px; overflow:hidden; }
+    .kb-match.usa { border-color:rgba(244,201,93,0.6); box-shadow:0 0 10px rgba(244,201,93,0.12); }
+    .kb-team { display:flex; align-items:center; gap:6px; padding:5px 8px; font-size:0.72rem; font-weight:800; color:var(--wc-ink); }
+    .kb-team + .kb-team { border-top:1px solid var(--wc-line); }
+    .kb-team img { width:18px; height:12px; object-fit:cover; border-radius:2px; flex:0 0 auto; }
+    .kb-team.tbd  { color:var(--wc-faint); font-style:italic; font-weight:600; font-size:0.68rem; }
+    .kb-team.usa-row { background:rgba(244,201,93,0.1); color:var(--wc-gold); font-weight:950; }
+    .kb-team .kb-star { margin-left:auto; font-size:0.6rem; }
+    .kb-match-num { font-size:0.56rem; color:var(--wc-faint); padding:3px 8px; border-bottom:1px solid var(--wc-line); background:rgba(255,255,255,0.02); letter-spacing:0.06em; text-transform:uppercase; font-weight:700; }
+
+    /* Connectors */
+    .kb-conn { flex:0 0 14px; position:relative; }
+    .kb-conn svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+
+    /* R16 column */
+    .kb-r16 { flex:0 0 78px; display:flex; flex-direction:column; justify-content:space-around; }
+    /* QF column */
+    .kb-qf  { flex:0 0 60px; display:flex; align-items:center; }
+    /* SF arrow */
+    .kb-sf  { flex:0 0 44px; display:flex; align-items:center; padding-left:6px; }
+
+    .kb-slot { border:1px solid var(--wc-line); border-radius:6px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:5px 4px; font-size:0.62rem; font-weight:800; color:var(--wc-muted); text-align:center; line-height:1.3; gap:3px; }
+    .kb-slot img { width:20px; height:14px; object-fit:cover; border-radius:2px; }
+    .kb-slot.qf  { border-color:rgba(244,201,93,0.35); }
+    .kb-slot.usa-side { border-color:rgba(244,201,93,0.25); }
+    .kb-slot-lbl { font-size:0.58rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--wc-faint); }
+    .kb-sf-arrow { font-size:0.72rem; font-weight:900; color:rgba(244,201,93,0.5); white-space:nowrap; }
+
+    /* R16 column has two slots, space-around distributes them */
+    .kb-r16 { gap:0; }
+
+    /* ── Maradona SF section ────────────────── */
+    .sf-section { }
+    .sf-bracket { padding:12px 14px; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    @media(max-width:480px) { .sf-bracket { grid-template-columns:1fr; } }
+
+    .sf-match { border:1px solid var(--wc-line); border-radius:8px; overflow:hidden; }
+    .sf-match-num { font-size:0.56rem; color:var(--wc-faint); padding:3px 8px; border-bottom:1px solid var(--wc-line); letter-spacing:0.06em; text-transform:uppercase; font-weight:700; }
+    .sf-team { display:flex; align-items:center; gap:7px; padding:6px 9px; font-size:0.75rem; font-weight:800; color:var(--wc-ink); }
+    .sf-team + .sf-team { border-top:1px solid var(--wc-line); }
+    .sf-team img { width:20px; height:14px; object-fit:cover; border-radius:2px; flex:0 0 auto; }
+    .sf-team.tbd  { color:var(--wc-faint); font-style:italic; font-weight:600; font-size:0.7rem; }
+    .sf-team .sf-rank { margin-left:auto; font-size:0.62rem; color:var(--wc-faint); font-weight:700; }
+
+    /* ── Section label ──────────────────────── */
+    .sec-label { font-size:0.68rem; font-weight:900; letter-spacing:0.1em; text-transform:uppercase; color:var(--wc-muted); margin:20px 0 10px; }
+  </style>
+</head>
+<body>
+  <div class="wc-shell">
+    <header class="wc-header">
+      <nav class="wc-nav">
+        <a href="../" class="wc-brand">⚽ Warren's WC 2026</a>
+        <div class="wc-nav-links">
+          <a href="../groups/">Groups</a>
+          <a href="../standings/">Standings</a>
+          <a href="../insights/">Insights</a>
+          <a href="../knockout/" class="active">Knockout</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="usa-page">
+      <div class="usa-hero">
+        <img class="usa-hero-flag" src="https://flagcdn.com/w80/us.png" alt="USA flag">
+        <div>
+          <h1>USA · Road to the Final</h1>
+          <p>Klose Bracket · W-Index #<span id="usa-rank">14</span> of <span id="total-active">48</span></p>
+        </div>
+      </div>
+
+      <!-- Main grid: W-Index poll + Path overview -->
+      <div class="main-grid">
+
+        <!-- W-Index AP Poll -->
+        <div class="u-card">
+          <div class="u-card-hd">
+            <span class="u-card-title">W-Index</span>
+            <span class="live-badge"><span class="live-dot"></span>Live</span>
+          </div>
+          <div id="wi-poll">
+            <div class="wi-row"><span class="wi-num">—</span><span class="wi-name" style="color:var(--wc-faint);font-style:italic">Loading…</span></div>
+          </div>
+        </div>
+
+        <!-- USA's projected path -->
+        <div class="u-card">
+          <div class="u-card-hd">
+            <span class="u-card-title">USA's Path</span>
+            <span class="u-card-sub">Opponents sorted by strength</span>
+          </div>
+          <div class="path-rounds" id="path-rounds">
+            <div style="padding:4px 0;color:var(--wc-faint);font-size:0.8rem;font-style:italic">Loading bracket…</div>
+          </div>
+        </div>
+
+      </div><!-- /.main-grid -->
+
+      <!-- Klose Bracket -->
+      <div class="sec-label">Klose Bracket — USA's Quadrant</div>
+      <div class="u-card bracket-section">
+        <div class="u-card-hd">
+          <span class="u-card-title">Round of 32 → Quarterfinal</span>
+          <span class="u-card-sub" id="bracket-status">Loading…</span>
+        </div>
+        <div class="kb-scroll">
+          <div class="kb-wrap" id="klose-bracket">
+            <!-- rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Maradona SF preview -->
+      <div class="sec-label">If USA Wins the Klose Bracket · Semifinal Opponents</div>
+      <div class="u-card sf-section">
+        <div class="u-card-hd">
+          <span class="u-card-title">Maradona Bracket</span>
+          <span class="u-card-sub">USA would face this group's winner in the SF</span>
+        </div>
+        <div class="sf-bracket" id="sf-bracket">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Bracket slot lookup: maps advancing-thirds combo → 3rd-place slot assignments -->
+  <script src="../archive/world-cup-1/bracket_lookup.js"></script>
+
+  <script type="module">
+    import { teams, teamsById, groups, groupStageMatches } from "../data/world-cup-2026.js";
+    import { calculateGroupTables, calculateThirdPlaceStandings } from "../scoreboard/scoreboard-engine.js";
+    import { supabaseConfig } from "../data/supabase-config.js";
+    import { W_INDEX_URL, fetchWithTimeout, wIndexBaselineRows } from "../data/w-index-baseline.js";
+
+    const SUPA = supabaseConfig.url.replace(/\/$/, "");
+
+    // ── Utilities ──────────────────────────────────────────────────────────
+    function flagUrl(teamId) {
+      const t = teamsById[teamId];
+      if (!t) return "https://flagcdn.com/w80/un.png";
+      const code = t.id === "ENG" ? "gb-eng" : t.id === "SCO" ? "gb-sct" : t.countryCode.toLowerCase();
+      return `https://flagcdn.com/w80/${code}.png`;
+    }
+
+    function normalizeName(name) {
+      return String(name || "").toLowerCase().normalize("NFD")
+        .replace(/[̀-ͯ]/g, "").replace(/&/g, "and")
+        .replace(/[^a-z0-9]+/g, " ").trim();
+    }
+
+    const teamAliases = new Map();
+    for (const team of teams) {
+      const names = [team.name, team.shortName, team.id];
+      if (team.id === "USA") names.push("United States of America", "USMNT", "United States");
+      if (team.id === "KOR") names.push("South Korea");
+      if (team.id === "CIV") names.push("Cote d Ivoire", "Côte d'Ivoire");
+      if (team.id === "COD") names.push("Congo DR", "Democratic Republic of Congo");
+      if (team.id === "TUR") names.push("Turkey", "Türkiye");
+      if (team.id === "IRN") names.push("IR Iran", "Iran");
+      if (team.id === "CPV") names.push("Cabo Verde", "Cape Verde");
+      if (team.id === "CUW") names.push("Curaçao", "Curacao");
+      for (const n of names.filter(Boolean)) teamAliases.set(normalizeName(n), team.id);
+    }
+
+    function parseCsv(text) {
+      const rows = []; let row = [], field = "", inQ = false;
+      for (let i = 0; i < text.length; i++) {
+        const c = text[i], nx = text[i + 1];
+        if (c === '"' && inQ && nx === '"') { field += '"'; i++; }
+        else if (c === '"') { inQ = !inQ; }
+        else if (c === ',' && !inQ) { row.push(field); field = ""; }
+        else if ((c === '\n' || c === '\r') && !inQ) {
+          if (c === '\r' && nx === '\n') i++;
+          row.push(field); if (row.some(v => v.trim())) rows.push(row);
+          row = []; field = "";
+        } else { field += c; }
+      }
+      row.push(field); if (row.some(v => v.trim())) rows.push(row);
+      return rows;
+    }
+
+    function rowsToObjects(rows) {
+      const headers = rows[0].map(h => h.trim());
+      return rows.slice(1).map(row => Object.fromEntries(headers.map((h, i) => [h, row[i]?.trim() || ""])));
+    }
+
+    // ── State ──────────────────────────────────────────────────────────────
+    let wIndexMap = new Map(); // teamId → { score, rank, status }
+    let tables = {}, thirds = [], advancingThirds = [];
+    let matchResults = [];
+
+    // ── W-Index loading ────────────────────────────────────────────────────
+    function applyWIndexRows(rows) {
+      const next = new Map();
+      for (const row of rows) {
+        const id = teamAliases.get(normalizeName(row.Team));
+        if (!id) continue;
+        next.set(id, {
+          score:  parseFloat(String(row["W-Index"]).replace("%", "")) || 0,
+          rank:   Number(row.Rank),
+          status: (row.Status || "").trim(),
+        });
+      }
+      wIndexMap = next;
+      renderWIndex();
+      renderPath();
+    }
+
+    async function loadWIndex() {
+      applyWIndexRows(wIndexBaselineRows);
+      try {
+        const res = await fetchWithTimeout(W_INDEX_URL);
+        if (!res.ok) throw new Error(res.status);
+        applyWIndexRows(rowsToObjects(parseCsv(await res.text())));
+      } catch (e) {
+        console.warn("Live W-Index unavailable, using baseline.", e.message);
+      }
+    }
+
+    // ── Supabase match results ─────────────────────────────────────────────
+    // The RPC returns rows keyed { match_number, home_team_id, away_team_id,
+    // home_score, away_score, status }. The scoreboard engine, however, expects
+    // the canonical schedule shape { matchNumber, group, home, away, homeScore,
+    // awayScore }. So we build a Map(matchNumber → scores) from the live feed and
+    // merge it onto the static groupStageMatches schedule — identical to Insights.
+    async function loadMatches() {
+      const resultsByNum = new Map();
+      try {
+        const res = await fetch(`${SUPA}/rest/v1/rpc/get_public_match_results`, {
+          method: "POST",
+          headers: { apikey: supabaseConfig.anonKey, Authorization: `Bearer ${supabaseConfig.anonKey}`, "Content-Type": "application/json" },
+          body: "{}",
+        });
+        if (!res.ok) throw new Error(res.status);
+        const rows = await res.json();
+        (rows || []).forEach(r => {
+          resultsByNum.set(Number(r.match_number), {
+            homeScore: Number(r.home_score || 0),
+            awayScore: Number(r.away_score || 0),
+            status: r.status || "completed",
+          });
+        });
+      } catch (e) {
+        console.warn("Match results unavailable, bracket will show TBD.", e.message);
+      }
+
+      const matches = groupStageMatches.map(m => {
+        const r = resultsByNum.get(m.matchNumber);
+        return {
+          matchNumber: m.matchNumber, group: m.group, home: m.home, away: m.away,
+          homeScore: r ? r.homeScore : 0, awayScore: r ? r.awayScore : 0,
+          status: r && r.status === "completed" ? "completed" : "upcoming",
+        };
+      });
+
+      tables = calculateGroupTables(matches, teams);
+      const thirdsRaw = calculateThirdPlaceStandings(tables);
+      advancingThirds = thirdsRaw.filter(t => t.status === "Q").map(t => t.group).sort();
+      thirds = thirdsRaw;
+    }
+
+    // ── Slot resolver (same logic as insights) ─────────────────────────────
+    function makeSlot() {
+      const mapping = (window.BRACKET_LOOKUP || {})[advancingThirds.join("")] || {
+        "A":"3E","B":"3G","D":"3I","E":"3D","G":"3H","I":"3F","K":"3L","L":"3K"
+      };
+      const getT  = (rank, g) => tables[g] ? tables[g][rank - 1]?.id || null : null;
+      const get3  = (g)       => thirds.find(x => x.group === g)?.id || null;
+      return (type, g) => {
+        if (type === 1) return getT(1, g);
+        if (type === 2) return getT(2, g);
+        const src = mapping[g];
+        return src ? get3(src[1]) : null;
+      };
+    }
+
+    // ── Match definitions ──────────────────────────────────────────────────
+    // Klose: r32 indices 8-11 (matches 81-84)
+    // Bracket R16 pairings: M81+M82 → R16A, M83+M84 → R16B
+    // QF2 = R16A winner vs R16B winner
+    // Maradona: r32 indices 12-15 (matches 85-88)
+
+    function getKloseDef(slot) {
+      return [
+        { num:81, top:slot(2,"K"), bot:slot(2,"L"), label:"M81" },
+        { num:82, top:slot(1,"H"), bot:slot(2,"J"), label:"M82" },
+        { num:83, top:slot(1,"D"), bot:slot(3,"D"), label:"M83", usaSlot:"top" },
+        { num:84, top:slot(1,"G"), bot:slot(3,"G"), label:"M84" },
+      ];
+    }
+
+    function getMaradonaDef(slot) {
+      return [
+        { num:85, top:slot(1,"B"), bot:slot(3,"B"), label:"M85" },
+        { num:86, top:slot(1,"K"), bot:slot(3,"K"), label:"M86" },
+        { num:87, top:slot(1,"J"), bot:slot(2,"H"), label:"M87" },
+        { num:88, top:slot(2,"D"), bot:slot(2,"G"), label:"M88" },
+      ];
+    }
+
+    // ── Render helpers ─────────────────────────────────────────────────────
+    function wi(id) { return wIndexMap.get(id); }
+
+    function sortByWI(ids) {
+      return [...ids].filter(Boolean).sort((a, b) => (wi(b)?.score ?? 0) - (wi(a)?.score ?? 0));
+    }
+
+    function teamHtml(id, extra = "") {
+      if (!id) return `<span class="pround-tbd">TBD</span>`;
+      const w = wi(id);
+      const rank = w ? `#${w.rank}` : "";
+      return `<div class="pround-team ${extra}">
+        <img src="${flagUrl(id)}" alt="">
+        <span class="pt-name">${teamsById[id]?.name || id}</span>
+        <span class="pt-rank">${rank}</span>
+      </div>`;
+    }
+
+    // ── Render: W-Index poll ───────────────────────────────────────────────
+    function renderWIndex() {
+      const active = [...wIndexMap.entries()]
+        .filter(([, v]) => v.status !== "Eliminated")
+        .sort((a, b) => a[1].rank - b[1].rank);
+
+      const usaIdx = active.findIndex(([id]) => id === "USA");
+      const cutoff = usaIdx >= 0 ? usaIdx + 1 : active.length;
+      const poll = active.slice(0, cutoff);
+
+      document.getElementById("usa-rank").textContent = cutoff;
+      document.getElementById("total-active").textContent = active.length;
+
+      document.getElementById("wi-poll").innerHTML = poll.map(([id], i) => {
+        const isUsa = id === "USA";
+        return `<div class="wi-row${isUsa ? " is-usa" : ""}">
+          <span class="wi-num">${i + 1}</span>
+          <img class="wi-flag" src="${flagUrl(id)}" alt="">
+          <span class="wi-name">${teamsById[id]?.name || id}</span>
+        </div>`;
+      }).join("");
+    }
+
+    // ── Render: bracket match card ─────────────────────────────────────────
+    function kbTeam(id, isUsa = false) {
+      if (isUsa) {
+        return `<div class="kb-team usa-row">
+          <img src="${flagUrl("USA")}" alt="USA">USA <span class="kb-star">★</span>
+        </div>`;
+      }
+      if (!id) return `<div class="kb-team tbd">TBD</div>`;
+      return `<div class="kb-team">
+        <img src="${flagUrl(id)}" alt="${teamsById[id]?.name || id}">
+        ${teamsById[id]?.shortName || teamsById[id]?.name || id}
+      </div>`;
+    }
+
+    function kbMatch(m) {
+      const isUsaMatch = m.usaSlot;
+      const topIsUsa = isUsaMatch === "top" && m.top === "USA";
+      const botIsUsa = isUsaMatch === "bot" && m.bot === "USA";
+      return `<div class="kb-match${isUsaMatch ? " usa" : ""}">
+        <div class="kb-match-num">Match ${m.num}</div>
+        ${kbTeam(m.top, topIsUsa)}
+        ${kbTeam(m.bot, botIsUsa)}
+      </div>`;
+    }
+
+    function kbSlot(label, cls = "") {
+      return `<div class="kb-slot${cls ? " " + cls : ""}"><span class="kb-slot-lbl">${label}</span>TBD</div>`;
+    }
+
+    // ── Render: Klose bracket ──────────────────────────────────────────────
+    function renderKloseBracket(klose) {
+      const [m81, m82, m83, m84] = klose;
+
+      // Simple SVG connector lines between pairs
+      // We use a minimal SVG in the connector column
+      const connSvg = `<svg viewBox="0 0 14 100" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 25 H7 V75 H0" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" fill="none"/>
+        <circle cx="14" cy="50" r="2" fill="rgba(255,255,255,0.15)"/>
+      </svg>`;
+
+      document.getElementById("klose-bracket").innerHTML = `
+        <!-- R32 -->
+        <div class="kb-r32">
+          <div class="kb-pair">${kbMatch(m81)}${kbMatch(m82)}</div>
+          <div class="kb-pair">${kbMatch(m83)}${kbMatch(m84)}</div>
+        </div>
+        <!-- Connector R32→R16 -->
+        <div class="kb-conn" style="flex:0 0 18px">${connSvg}</div>
+        <!-- R16 -->
+        <div class="kb-r16" style="gap:10px">
+          ${kbSlot("R16")}
+          ${kbSlot("R16","usa-side")}
+        </div>
+        <!-- Connector R16→QF -->
+        <div class="kb-conn" style="flex:0 0 14px">${connSvg}</div>
+        <!-- QF -->
+        <div class="kb-qf" style="padding:0 4px">
+          ${kbSlot("QF","qf")}
+        </div>
+        <!-- SF arrow -->
+        <div class="kb-sf">
+          <span class="kb-sf-arrow">→&nbsp;SF</span>
+        </div>`;
+
+      document.getElementById("bracket-status").textContent =
+        klose.some(m => m.top || m.bot) ? "Live group data" : "Groups in progress";
+    }
+
+    // ── Render: USA's path ─────────────────────────────────────────────────
+    function renderPath(klose, maradona) {
+      if (!klose) return;
+      const [m81, m82, m83, m84] = klose;
+
+      // One team row (confirmed opponent or "strong side" of a match)
+      function teamRow(id, cls = "") {
+        if (!id) return `<div class="pround-tbd">TBD</div>`;
+        const w = wi(id);
+        return `<div class="pround-team ${cls}">
+          <img src="${flagUrl(id)}" alt="">
+          <span class="pt-name">${teamsById[id]?.name || id}</span>
+          ${w ? `<span class="pt-rank">#${w.rank}</span>` : ""}
+        </div>`;
+      }
+
+      // A "vs" mini-match showing two teams sorted by W-Index (favourite on top)
+      function matchRow(a, b, matchNum) {
+        const [top, bot] = sortByWI([a, b].filter(Boolean));
+        const numLabel = matchNum ? `<span class="pmatch-num">M${matchNum}</span>` : "";
+        return `<div class="pmatch">
+          ${numLabel}
+          <div class="pmatch-teams">
+            ${teamRow(top, "fav")}
+            <span class="pmatch-vs">vs</span>
+            ${teamRow(bot)}
+          </div>
+        </div>`;
+      }
+
+      function round(badge, label, body) {
+        return `<div class="pround">
+          <div class="pround-hd">
+            <span class="pround-badge">${badge}</span>
+            <span class="pround-label">${label}</span>
+          </div>
+          <div class="pround-body">${body}</div>
+        </div>`;
+      }
+
+      // R32: USA's confirmed single opponent
+      const usaOpp = m83.top === "USA" ? m83.bot : m83.top;
+
+      // R16: USA faces winner of M84
+      const r16Body = matchRow(m84.top, m84.bot, m84.num);
+
+      // QF: USA faces winner of M81 vs M82 winner — show as two distinct matches
+      // Sort each match's two teams by W-Index so favourite is on top
+      const qfBody = matchRow(m81.top, m81.bot, m81.num) +
+                     matchRow(m82.top, m82.bot, m82.num);
+
+      // SF: Maradona bracket — show all 4 matches sorted by overall strength
+      const sfMatches = maradona ? [...maradona].sort((a, b) => {
+        const bestA = Math.max(wi(a.top)?.score ?? 0, wi(a.bot)?.score ?? 0);
+        const bestB = Math.max(wi(b.top)?.score ?? 0, wi(b.bot)?.score ?? 0);
+        return bestB - bestA;
+      }) : [];
+      const sfBody = sfMatches.map(m => matchRow(m.top, m.bot, m.num)).join("");
+
+      document.getElementById("path-rounds").innerHTML =
+        round("R32", "USA's first match",
+          usaOpp
+            ? teamRow(usaOpp, "fav")
+            : `<div class="pround-tbd">TBD — groups in progress</div>`) +
+        round("R16", `Winner of M${m84.num}`, r16Body) +
+        round("QF",  "Winner of M81 / M82", qfBody) +
+        round("SF",  "Maradona bracket winner", sfBody || `<div class="pround-tbd">TBD</div>`);
+    }
+
+    // ── Render: Maradona SF bracket ────────────────────────────────────────
+    function renderMaradona(maradona) {
+      document.getElementById("sf-bracket").innerHTML = maradona.map(m => {
+        const topW = m.top ? wi(m.top) : null;
+        const botW = m.bot ? wi(m.bot) : null;
+        function sfTeam(id, w) {
+          if (!id) return `<div class="sf-team tbd"><span>TBD</span></div>`;
+          return `<div class="sf-team">
+            <img src="${flagUrl(id)}" alt="">
+            ${teamsById[id]?.name || id}
+            <span class="sf-rank">${w ? "#"+w.rank : ""}</span>
+          </div>`;
+        }
+        return `<div class="sf-match">
+          <div class="sf-match-num">Match ${m.num}</div>
+          ${sfTeam(m.top, topW)}
+          ${sfTeam(m.bot, botW)}
+        </div>`;
+      }).join("");
+    }
+
+    // ── Boot ───────────────────────────────────────────────────────────────
+    async function init() {
+      await Promise.all([loadWIndex(), loadMatches()]);
+
+      const slot = makeSlot();
+      const klose    = getKloseDef(slot);
+      const maradona = getMaradonaDef(slot);
+
+      renderKloseBracket(klose);
+      renderPath(klose, maradona);
+      renderMaradona(maradona);
+    }
+
+    init();
+  </script>
+</body>
+</html>

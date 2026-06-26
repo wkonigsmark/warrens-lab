@@ -230,7 +230,9 @@
 
     /* ── HISTORY ── */
     .history-empty{font-size:.78rem;color:var(--muted);text-align:center;padding:20px 0}
-    .hist-item{padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:12px}
+    .hist-item{padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .hist-item .hist-ring,.hist-item .hist-info,.hist-item .hist-date{flex-shrink:0}
+    .hist-item .hist-info{flex:1;min-width:0}
     .hist-item:last-child{border-bottom:none}
     .hist-ring{position:relative;width:36px;height:36px;flex-shrink:0}
     .hist-svg{width:36px;height:36px;transform:rotate(-90deg)}
@@ -240,7 +242,23 @@
     .hist-info{flex:1;min-width:0}
     .hist-name{font-size:.82rem;font-weight:700}
     .hist-meta{font-size:.66rem;color:var(--muted-light);margin-top:2px}
-    .hist-date{font-size:.68rem;font-weight:700;color:var(--muted-light);text-align:right;white-space:nowrap}
+    .hist-date{font-size:.68rem;font-weight:700;color:var(--muted-light);text-align:right;white-space:nowrap;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+    .hist-menu-wrap{position:relative}
+    .hist-menu-btn{background:none;border:none;color:var(--muted);cursor:pointer;padding:1px 7px;font-size:1rem;font-weight:700;letter-spacing:1px;line-height:1;border-radius:5px;transition:color .2s,background .2s}
+    .hist-menu-btn:hover{color:var(--text);background:rgba(255,255,255,.07)}
+    .hist-menu-dropdown{display:none;position:absolute;right:0;top:calc(100% + 4px);background:#1e1e1e;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:4px;min-width:130px;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+    .hist-menu-dropdown.open{display:block}
+    .hist-menu-item{display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;color:var(--text);cursor:pointer;padding:8px 10px;border-radius:7px;font-family:inherit;font-size:.73rem;font-weight:600;text-align:left;transition:background .15s}
+    .hist-menu-item:hover{background:rgba(255,255,255,.07)}
+    .hist-menu-item.danger{color:var(--red)}
+    .hist-menu-item.danger:hover{background:rgba(248,113,113,.1)}
+    .hist-anomaly-badge{display:inline-flex;align-items:center;gap:3px;font-size:.54rem;font-weight:800;color:#fbbf24;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);border-radius:6px;padding:2px 7px;margin-top:4px;cursor:default}
+    .hist-confirm{display:flex;align-items:center;gap:7px;padding:9px 12px;border-top:1px solid var(--border);background:rgba(248,113,113,.05);margin:4px -12px -12px;border-radius:0 0 12px 12px;flex:0 0 100%;width:100%}
+    .hist-confirm-text{flex:1;font-size:.64rem;color:var(--muted-light);line-height:1.4}
+    .hist-confirm-cancel{background:var(--surface);border:1px solid var(--border);color:var(--muted-light);padding:5px 11px;border-radius:7px;font-family:inherit;font-size:.65rem;font-weight:700;cursor:pointer;white-space:nowrap}
+    .hist-confirm-cancel:hover{border-color:#444;color:var(--text)}
+    .hist-confirm-delete{background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.4);color:var(--red);padding:5px 11px;border-radius:7px;font-family:inherit;font-size:.65rem;font-weight:800;cursor:pointer;white-space:nowrap}
+    .hist-confirm-delete:hover{background:rgba(248,113,113,.3)}
 
     /* ── NUTRITION / PANEL ── */
     .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:17px 15px;margin-bottom:10px}
@@ -1430,6 +1448,66 @@ async function submitWorkout() {
   } catch(e){ setSyncStatus('error'); btn.disabled=false; btn.textContent='Retry — Save Failed'; }
 }
 
+function editSession(sessionId, btn) {
+  document.querySelectorAll('.hist-menu-dropdown.open').forEach(d => d.classList.remove('open'));
+  // TODO: edit session details
+}
+
+function detectAnomaly(s) {
+  const reasons = [];
+  const dur = s.duration_seconds;
+  const sets = s.sets_completed;
+  const total = s.total_sets || 31;
+  if (!dur && sets > 0) reasons.push('No duration was recorded');
+  if (dur && dur < 90 && sets > 2) reasons.push(`Very short: ${Math.round(dur)}s for ${sets} sets`);
+  if (dur && sets && (sets / (dur / 60)) > 6) reasons.push(`${sets} sets in ${Math.round(dur/60)} min — faster than physically possible`);
+  if (s.completion_pct === 100 && sets < Math.round(total * 0.85)) reasons.push(`Marked 100% but only ${sets}/${total} sets logged`);
+  return { anomalous: reasons.length > 0, reasons };
+}
+
+function toggleHistMenu(btn) {
+  const wrap = btn.closest('.hist-menu-wrap');
+  const dropdown = wrap.querySelector('.hist-menu-dropdown');
+  const isOpen = dropdown.classList.contains('open');
+  document.querySelectorAll('.hist-menu-dropdown.open').forEach(d => d.classList.remove('open'));
+  if (!isOpen) dropdown.classList.add('open');
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.hist-menu-wrap')) {
+    document.querySelectorAll('.hist-menu-dropdown.open').forEach(d => d.classList.remove('open'));
+  }
+});
+
+function confirmDelete(sessionId, btn) {
+  document.querySelectorAll('.hist-menu-dropdown.open').forEach(d => d.classList.remove('open'));
+  const item = btn.closest('.hist-item');
+  if (item.querySelector('.hist-confirm')) { item.querySelector('.hist-confirm').remove(); return; }
+  const {anomalous, reasons} = JSON.parse(item.dataset.anomaly || '{"anomalous":false,"reasons":[]}');
+  const warningText = anomalous
+    ? `⚠️ Anomaly detected: ${reasons[0]}. Delete this session permanently?`
+    : '⚠️ Delete this session permanently? This cannot be undone.';
+  const confirm = document.createElement('div');
+  confirm.className = 'hist-confirm';
+  confirm.innerHTML = `<span class="hist-confirm-text">${warningText}</span>
+    <button class="hist-confirm-cancel" onclick="this.closest('.hist-confirm').remove()">Cancel</button>
+    <button class="hist-confirm-delete" onclick="deleteSession('${sessionId}',this)">Delete</button>`;
+  item.appendChild(confirm);
+}
+
+async function deleteSession(sessionId, btn) {
+  btn.textContent = 'Deleting…'; btn.disabled = true;
+  try {
+    const {error} = await sb.from('workout_sessions').delete().eq('id', sessionId).eq('user_id','warren');
+    if (error) throw error;
+    const item = btn.closest('.hist-item');
+    item.style.transition = 'opacity .3s, max-height .4s, margin .4s, padding .4s';
+    item.style.opacity = '0'; item.style.maxHeight = '0'; item.style.overflow = 'hidden';
+    item.style.marginBottom = '0'; item.style.padding = '0';
+    setTimeout(() => item.remove(), 420);
+  } catch(e) { btn.textContent = 'Error — retry'; btn.disabled = false; }
+}
+
 function relativeDate(iso) {
   const d=new Date(iso),now=new Date(),diff=Math.floor((now-d)/86400000);
   if(diff===0) return 'Today'; if(diff===1) return 'Yesterday';
@@ -1452,17 +1530,30 @@ async function loadHistory() {
       const mset=musclesBySession[s.id]||new Set();
       const muscles=[...mset].slice(0,3).join(', ')||'—';
       const extra=mset.size>3?` +${mset.size-3}`:'';
-      const modeBadge=s.workout_type==='calisthenics'?'🤸':'🏋️';
-      return `<div class="hist-item">
+      const typeIcon=s.workout_type==='calisthenics'?'🤸':(['run','bike','swim'].includes(s.workout_type)?'🏃':'🏋️');
+      const {anomalous,reasons}=detectAnomaly(s);
+      const anomalyBadge=anomalous?`<div class="hist-anomaly-badge">⚠️ ${reasons[0]}</div>`:'';
+      const anomalyData=JSON.stringify({anomalous,reasons}).replace(/"/g,'&quot;');
+      return `<div class="hist-item" data-anomaly="${anomalyData}">
         <div class="hist-ring">
           <svg class="hist-svg" viewBox="0 0 36 36"><circle class="hist-track" cx="18" cy="18" r="12"/><circle class="hist-fill" cx="18" cy="18" r="12" style="stroke:${color};stroke-dashoffset:${offset}"/></svg>
           <div class="hist-pct-txt">${pct}%</div>
         </div>
         <div class="hist-info">
-          <div class="hist-name">${modeBadge} ${s.workout_name}</div>
+          <div class="hist-name">${typeIcon} ${s.workout_name}</div>
           <div class="hist-meta">${s.sets_completed}/${s.total_sets} sets · ${dur} · ${muscles}${extra}</div>
+          ${anomalyBadge}
         </div>
-        <div class="hist-date">${relativeDate(s.started_at)}</div>
+        <div class="hist-date">
+          <span>${relativeDate(s.started_at)}</span>
+          <div class="hist-menu-wrap">
+            <button class="hist-menu-btn" onclick="toggleHistMenu(this)">···</button>
+            <div class="hist-menu-dropdown">
+              <button class="hist-menu-item" onclick="editSession('${s.id}',this)">✏️ Edit</button>
+              <button class="hist-menu-item danger" onclick="confirmDelete('${s.id}',this)">🗑 Delete</button>
+            </div>
+          </div>
+        </div>
       </div>`;
     }).join('');
   } catch(e){ listEl.innerHTML='<div class="history-empty">Could not load history.</div>'; }
