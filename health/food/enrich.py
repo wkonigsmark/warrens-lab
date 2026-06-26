@@ -18,10 +18,14 @@ import time
 import argparse
 from pathlib import Path
 
+import ssl
 import urllib.request
 import urllib.parse
+import certifi
 
 from schema import get_connection, init_db, DB_PATH
+
+SSL_CTX = ssl.create_default_context(cafile=certifi.where())
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -53,7 +57,7 @@ def _get(url, params, api_key):
     query = urllib.parse.urlencode(params)
     full_url = f"{url}?{query}"
     req = urllib.request.Request(full_url, headers={"Accept": "application/json"})
-    with urllib.request.urlopen(req, timeout=15) as resp:
+    with urllib.request.urlopen(req, timeout=15, context=SSL_CTX) as resp:
         return json.loads(resp.read().decode())
 
 def search_food(query, api_key, data_types=None):
@@ -76,8 +80,10 @@ def get_food_detail(fdc_id, api_key):
 # USDA nutrient IDs: https://api.nal.usda.gov/fdc/v1/nutrients
 
 NUTRIENT_MAP = {
-    # Macros
+    # Macros — Foundation foods use 2048, SR Legacy uses 1008
     1008: "calories",
+    2047: "calories",  # Energy (Atwater General Factors) - Foundation
+    2048: "calories",  # Energy (Atwater Specific Factors) - Foundation (preferred)
     1003: "protein_g",
     1005: "carbs_g",
     1079: "fiber_g",
@@ -173,13 +179,27 @@ def parse_nutrients(detail):
     nutrients = {}
     aminos = {}
 
+    # Track which nutrient ID filled each field so we can prefer more specific ones
+    # Priority: 2048 > 2047 > 1008 for calories
+    calorie_priority = {2048: 0, 2047: 1, 1008: 2}
+    calorie_filled_by = None
+
     for n in detail.get("foodNutrients", []):
         nid = n.get("nutrient", {}).get("id") or n.get("nutrientId")
         amount = n.get("amount")
         if nid is None or amount is None:
             continue
         if nid in NUTRIENT_MAP:
-            nutrients[NUTRIENT_MAP[nid]] = float(amount)
+            field = NUTRIENT_MAP[nid]
+            if field == "calories":
+                # Only overwrite with a higher-priority source
+                cur_pri = calorie_priority.get(calorie_filled_by, 99)
+                new_pri = calorie_priority.get(nid, 99)
+                if calorie_filled_by is None or new_pri < cur_pri:
+                    nutrients["calories"] = float(amount)
+                    calorie_filled_by = nid
+            else:
+                nutrients[field] = float(amount)
         elif nid in AMINO_MAP:
             aminos[AMINO_MAP[nid]] = float(amount)
 
@@ -247,23 +267,24 @@ def write_nutrients(conn, food_id, nutrients, aminos, fdc_id, usda_type, serving
 
     # Upsert nutrients (raw method)
     cols = list(nutrients.keys())
-    placeholders = ",".join(["?"] * len(cols))
     col_names = ",".join(cols)
-    updates = ",".join(f"{c_}=excluded.{c_}" for c_ in cols)
+    placeholders = ",".join(["?"] * len(cols))
+    updates = ",".join(f"{col}=excluded.{col}" for col in cols)
 
+    values = [food_id] + [nutrients[k] for k in cols]
     c.execute(f"""
         INSERT INTO nutrients (food_id, cooking_method, per_grams, data_source, {col_names})
         VALUES (?, 'raw', 100, 'usda_api', {placeholders})
         ON CONFLICT(food_id, cooking_method) DO UPDATE SET
             data_source=excluded.data_source, {updates}
-    """, [food_id, "raw"] + [nutrients[k] for k in cols])
+    """, values)
 
     # Upsert amino acids
     if aminos:
         a_cols = list(aminos.keys())
         a_ph = ",".join(["?"] * len(a_cols))
         a_names = ",".join(a_cols)
-        a_updates = ",".join(f"{c_}=excluded.{c_}" for c_ in a_cols)
+        a_updates = ",".join(f"{col}=excluded.{col}" for col in a_cols)
 
         c.execute(f"""
             INSERT INTO amino_acids (food_id, cooking_method, {a_names})
@@ -327,8 +348,13 @@ def enrich_food(conn, api_key, name, display_name, category, subcategory, tags, 
 
     return True
 
-def enrich_all_seeds(verbose=True):
-    from seed_list import SEED_FOODS
+def enrich_all_seeds(verbose=True, seed_module="seed_list"):
+    if seed_module == "seed_list":
+        from seed_list import SEED_FOODS as foods
+    elif seed_module == "seed_list_v2":
+        from seed_list_v2 import SEED_FOODS_V2 as foods
+    else:
+        from seed_list_v2_fixes import SEED_FIXES as foods
 
     if not DB_PATH.exists():
         init_db()
@@ -337,7 +363,7 @@ def enrich_all_seeds(verbose=True):
     conn = get_connection()
 
     ok, fail = 0, 0
-    for item in SEED_FOODS:
+    for item in foods:
         name, display_name, category, subcategory, tags = item
         try:
             success = enrich_food(conn, api_key, name, display_name, category, subcategory, tags, verbose)
@@ -358,7 +384,9 @@ def enrich_all_seeds(verbose=True):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="USDA food enrichment engine")
-    parser.add_argument("--seed", action="store_true", help="Enrich all seed list foods")
+    parser.add_argument("--seed", action="store_true", help="Enrich all seed list foods (seed_list.py)")
+    parser.add_argument("--seed-v2", action="store_true", help="Enrich expansion seed list (seed_list_v2.py, ~200 new foods)")
+    parser.add_argument("--seed-fixes", action="store_true", help="Re-enrich failed/unenriched v2 items with corrected search terms")
     parser.add_argument("--food", type=str, help="Search and enrich a single food by name")
     parser.add_argument("--display", type=str, default=None, help="Display name for --food")
     parser.add_argument("--category", type=str, default="other", help="Category for --food")
@@ -375,7 +403,15 @@ if __name__ == "__main__":
 
     if args.seed:
         conn.close()
-        enrich_all_seeds(verbose)
+        enrich_all_seeds(verbose, seed_module="seed_list")
+
+    elif args.seed_v2:
+        conn.close()
+        enrich_all_seeds(verbose, seed_module="seed_list_v2")
+
+    elif args.seed_fixes:
+        conn.close()
+        enrich_all_seeds(verbose, seed_module="seed_list_v2_fixes")
 
     elif args.food:
         display = args.display or args.food.title()
