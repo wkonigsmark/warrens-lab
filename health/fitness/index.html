@@ -260,6 +260,47 @@
     .hist-confirm-delete{background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.4);color:var(--red);padding:5px 11px;border-radius:7px;font-family:inherit;font-size:.65rem;font-weight:800;cursor:pointer;white-space:nowrap}
     .hist-confirm-delete:hover{background:rgba(248,113,113,.3)}
 
+    /* ── PLANNER MODAL ── */
+    .planner-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+    .planner-overlay.open{opacity:1;pointer-events:all}
+    .planner-overlay::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(6px)}
+    .planner-modal{position:relative;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;background:var(--surface);border-radius:22px 22px 0 0;padding-bottom:36px;transform:translateY(100%);transition:transform .32s cubic-bezier(.32,1,.6,1)}
+    .planner-overlay.open .planner-modal{transform:translateY(0)}
+    .planner-drag{width:36px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:10px auto 4px}
+    .planner-hd{position:sticky;top:0;background:var(--surface);border-bottom:1px solid var(--border);padding:12px 18px 12px;display:flex;align-items:center;justify-content:space-between;z-index:2}
+    .planner-title{font-size:.88rem;font-weight:900;letter-spacing:.01em}
+    .planner-close{background:rgba(255,255,255,.07);border:none;color:var(--muted-light);cursor:pointer;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;transition:background .15s;flex-shrink:0}
+    .planner-close:hover{background:rgba(255,255,255,.14)}
+    .planner-sec{padding:16px 18px 0}
+    .planner-sec-hd{font-size:.58rem;text-transform:uppercase;letter-spacing:.12em;font-weight:900;color:var(--muted-light);margin-bottom:10px}
+    .planner-trail-item{display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+    .planner-trail-item:last-child{border-bottom:none}
+    .planner-trail-date{font-size:.64rem;font-weight:800;color:var(--muted-light);width:46px;flex-shrink:0;padding-top:2px}
+    .planner-trail-date.today{color:var(--accent)}
+    .planner-trail-acts{display:flex;flex-wrap:wrap;gap:5px;flex:1}
+    .planner-badge{display:inline-flex;align-items:center;gap:4px;font-size:.62rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.07);color:var(--text)}
+    .planner-badge.strength{background:rgba(249,115,22,.12);color:var(--accent)}
+    .planner-badge.cardio{background:rgba(252,76,2,.12);color:#fc4c02}
+    .planner-badge.rest{background:rgba(255,255,255,.04);color:var(--muted)}
+    .muscle-row{display:flex;align-items:center;gap:8px;padding:5px 0}
+    .muscle-label{font-size:.63rem;text-transform:capitalize;color:var(--muted-light);width:82px;flex-shrink:0}
+    .muscle-bar-bg{flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+    .muscle-bar-fill{height:100%;border-radius:3px;transition:width .4s ease}
+    .muscle-pct{font-size:.62rem;font-weight:800;width:38px;text-align:right;flex-shrink:0}
+    .muscle-status{font-size:.58rem;width:48px;text-align:right;flex-shrink:0}
+    .plan-day{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+    .plan-day:last-child{border-bottom:none}
+    .plan-day-label{font-size:.63rem;font-weight:800;color:var(--muted-light);width:66px;flex-shrink:0;padding-top:3px;line-height:1.3}
+    .plan-day-label.next{color:var(--accent)}
+    .plan-day-content{flex:1}
+    .plan-day-name{font-size:.78rem;font-weight:700;color:var(--text)}
+    .plan-day-reason{font-size:.62rem;color:var(--muted-light);margin-top:2px;line-height:1.4}
+    .plan-score-pill{display:inline-block;font-size:.56rem;font-weight:900;padding:2px 7px;border-radius:20px;margin-top:4px}
+    .plan-score-pill.ready{background:rgba(74,222,128,.12);color:#4ade80}
+    .plan-score-pill.partial{background:rgba(251,191,36,.12);color:#fbbf24}
+    .plan-score-pill.rest{background:rgba(255,255,255,.06);color:var(--muted-light)}
+    .plan-cardio-note{font-size:.7rem;font-weight:600;color:#fc4c02;background:rgba(252,76,2,.08);border:1px solid rgba(252,76,2,.2);border-radius:10px;padding:9px 12px;margin-top:12px;line-height:1.5}
+
     /* ── NUTRITION / PANEL ── */
     .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:17px 15px;margin-bottom:10px}
     .panel-hd{font-size:.67rem;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:var(--muted-light);margin-bottom:13px;display:flex;align-items:center;gap:8px}
@@ -420,7 +461,7 @@
 
     <!-- HISTORY -->
     <div class="panel" id="historyPanel">
-      <div class="panel-hd"><span>Session History</span></div>
+      <div class="panel-hd"><span>Session History</span><button onclick="openPlanner()" style="background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);color:var(--accent);padding:4px 11px;border-radius:20px;font-family:inherit;font-size:.65rem;font-weight:800;cursor:pointer;letter-spacing:.02em">🗓 Plan</button></div>
       <div id="historyList"><div class="history-empty">Loading…</div></div>
     </div>
 
@@ -1549,19 +1590,31 @@ function relativeDate(iso) {
   return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
 }
 
+function parseCSVLine(line) {
+  const fields = [];
+  let f='', inQ=false;
+  for(const ch of line) {
+    if(ch==='"') inQ=!inQ;
+    else if(ch===','&&!inQ) { fields.push(f.trim()); f=''; }
+    else f+=ch;
+  }
+  fields.push(f.trim());
+  return fields;
+}
+
 async function fetchStravaActivities(days=14) {
   try {
     const res = await fetch(STRAVA_CSV_URL);
     if(!res.ok) return [];
     const lines = (await res.text()).trim().split('\n');
-    const h = lines[0].split(',').map(x=>x.replace(/"/g,'').trim());
+    const h = parseCSVLine(lines[0]).map(x=>x.replace(/"/g,'').trim());
     const ni=h.findIndex(x=>x==='Name'), ti=h.findIndex(x=>x==='Type'),
           di=h.findIndex(x=>x.includes('Distance')), mi=h.findIndex(x=>x.includes('Moving')),
           si=h.findIndex(x=>x.includes('Start'));
     const cutoff = Date.now() - days*86400000;
     const acts = [];
     for(let i=1; i<lines.length; i++) {
-      const f = lines[i].split(',').map(x=>x.replace(/"/g,'').trim());
+      const f = parseCSVLine(lines[i]).map(x=>x.replace(/"/g,'').trim());
       if(!f[si]) continue;
       const dt = new Date(f[si]);
       if(isNaN(dt.getTime())||dt.getTime()<cutoff) continue;
@@ -1650,13 +1703,33 @@ function renderStravaCard(a) {
 
 async function loadHistory() {
   const listEl=document.getElementById('historyList');
+  listEl.innerHTML='<div class="history-empty">Loading…</div>';
   try {
-    const {data,error}=await sb.from('workout_sessions').select('id,workout_name,workout_type,started_at,completed_at,duration_seconds,completion_pct,sets_completed,total_sets').eq('user_id','warren').gt('sets_completed',0).order('started_at',{ascending:false}).limit(10);
+    const cutoff14=new Date(Date.now()-14*86400000).toISOString();
+    const [stravaActs,{data,error}]=await Promise.all([
+      fetchStravaActivities(14),
+      sb.from('workout_sessions').select('id,workout_name,workout_type,started_at,completed_at,duration_seconds,completion_pct,sets_completed,total_sets').eq('user_id','warren').gt('sets_completed',0).order('started_at',{ascending:false}).limit(14)
+    ]);
     if(error||!data||data.length===0){ listEl.innerHTML='<div class="history-empty">No sessions yet — this will be your first!</div>'; return; }
+
     const {data:logs}=await sb.from('exercise_logs').select('session_id,muscle_groups').in('session_id',data.map(s=>s.id)).gt('sets_completed',0);
     const musclesBySession={};
-    (logs||[]).forEach(log=>{ if(!musclesBySession[log.session_id]) musclesBySession[log.session_id]=new Set(); (log.muscle_groups||[]).forEach(m=>musclesBySession[log.session_id].add(m)); });
-    listEl.innerHTML=data.map(s=>{
+    const logsBySess={};
+    (logs||[]).forEach(log=>{
+      if(!musclesBySession[log.session_id]) musclesBySession[log.session_id]=new Set();
+      if(!logsBySess[log.session_id]) logsBySess[log.session_id]=[];
+      (log.muscle_groups||[]).forEach(m=>{ musclesBySession[log.session_id].add(m); logsBySess[log.session_id].push(m); });
+    });
+
+    // Recovery recommendation — use last 14 days of sessions
+    const recentSessions=data.filter(s=>new Date(s.started_at)>=new Date(cutoff14));
+    const muscleTimeline=buildMuscleTimeline(recentSessions,logsBySess,stravaActs);
+    const readiness=getReadiness(muscleTimeline);
+    const ranked=rankWorkouts(readiness);
+    const recHtml=renderRecoveryPanel(readiness,ranked[0]);
+
+    // Build strength cards
+    const strengthItems=data.map(s=>{
       const pct=s.completion_pct||0, circ=75.4, offset=circ-(circ*pct/100);
       const color=pct>=100?'#22c55e':pct>=50?'#fbbf24':'#f97316';
       const dur=s.duration_seconds?formatDuration(s.duration_seconds*1000):'—';
@@ -1667,28 +1740,39 @@ async function loadHistory() {
       const {anomalous,reasons}=detectAnomaly(s);
       const anomalyBadge=anomalous?`<div class="hist-anomaly-badge">⚠️ ${reasons[0]}</div>`:'';
       const anomalyData=JSON.stringify({anomalous,reasons}).replace(/"/g,'&quot;');
-      return `<div class="hist-item" data-anomaly="${anomalyData}">
-        <div class="hist-ring">
-          <svg class="hist-svg" viewBox="0 0 36 36"><circle class="hist-track" cx="18" cy="18" r="12"/><circle class="hist-fill" cx="18" cy="18" r="12" style="stroke:${color};stroke-dashoffset:${offset}"/></svg>
-          <div class="hist-pct-txt">${pct}%</div>
-        </div>
-        <div class="hist-info">
-          <div class="hist-name">${typeIcon} ${s.workout_name}</div>
-          <div class="hist-meta">${s.sets_completed}/${s.total_sets} sets · ${dur} · ${muscles}${extra}</div>
-          ${anomalyBadge}
-        </div>
-        <div class="hist-date">
-          <span>${relativeDate(s.started_at)}</span>
-          <div class="hist-menu-wrap">
-            <button class="hist-menu-btn" onclick="toggleHistMenu(this)">···</button>
-            <div class="hist-menu-dropdown">
-              <button class="hist-menu-item" onclick="editSession('${s.id}',this)">✏️ Edit</button>
-              <button class="hist-menu-item danger" onclick="confirmDelete('${s.id}',this)">🗑 Delete</button>
+      return {
+        date:new Date(s.started_at),
+        html:`<div class="hist-item" data-anomaly="${anomalyData}">
+          <div class="hist-ring">
+            <svg class="hist-svg" viewBox="0 0 36 36"><circle class="hist-track" cx="18" cy="18" r="12"/><circle class="hist-fill" cx="18" cy="18" r="12" style="stroke:${color};stroke-dashoffset:${offset}"/></svg>
+            <div class="hist-pct-txt">${pct}%</div>
+          </div>
+          <div class="hist-info">
+            <div class="hist-name">${typeIcon} ${s.workout_name}</div>
+            <div class="hist-meta">${s.sets_completed}/${s.total_sets} sets · ${dur} · ${muscles}${extra}</div>
+            ${anomalyBadge}
+          </div>
+          <div class="hist-date">
+            <span>${relativeDate(s.started_at)}</span>
+            <div class="hist-menu-wrap">
+              <button class="hist-menu-btn" onclick="toggleHistMenu(this)">···</button>
+              <div class="hist-menu-dropdown">
+                <button class="hist-menu-item" onclick="editSession('${s.id}',this)">✏️ Edit</button>
+                <button class="hist-menu-item danger" onclick="confirmDelete('${s.id}',this)">🗑 Delete</button>
+              </div>
             </div>
           </div>
-        </div>
-      </div>`;
-    }).join('');
+        </div>`
+      };
+    });
+
+    // Merge strength + Strava sorted by date
+    const allItems=[
+      ...strengthItems,
+      ...stravaActs.map(a=>({date:new Date(a.started_at),html:renderStravaCard(a)}))
+    ].sort((a,b)=>b.date-a.date);
+
+    listEl.innerHTML=recHtml+allItems.map(i=>i.html).join('');
   } catch(e){ listEl.innerHTML='<div class="history-empty">Could not load history.</div>'; }
 }
 
@@ -1820,6 +1904,160 @@ function init() {
 }
 
 init();
+
+// ═══════════════════════════════════════════════════════
+//  PLANNER
+// ═══════════════════════════════════════════════════════
+
+function closePlanner() {
+  document.getElementById('plannerOverlay').classList.remove('open');
+}
+
+function projectPlan(muscleTimeline, numDays=5) {
+  const tl = {};
+  Object.keys(muscleTimeline).forEach(m => tl[m] = new Date(muscleTimeline[m].getTime()));
+  const now = Date.now(), msDay = 86400000;
+  const plan = [];
+  for(let d=1; d<=numDays; d++) {
+    const atMs = now + d*msDay;
+    const r = {};
+    Object.keys(RECOVERY_H).forEach(m => {
+      r[m] = tl[m] ? Math.min(1,(atMs-tl[m].getTime())/(RECOVERY_H[m]*3600000)) : 1.0;
+    });
+    const ranked = Object.entries(DB_REC_MUSCLES).map(([wid,ms])=>({
+      wid, name:DB_REC_NAMES[wid],
+      score: ms.reduce((s,m)=>s+(r[m]??1),0)/ms.length,
+    })).sort((a,b)=>b.score-a.score);
+    const top = ranked[0];
+    plan.push({day:new Date(atMs), wid:top.wid, name:top.name, score:top.score, r});
+    if(top.score >= 0.55) {
+      DB_REC_MUSCLES[top.wid].forEach(m=>{ tl[m]=new Date(atMs); });
+    }
+  }
+  return plan;
+}
+
+async function openPlanner() {
+  const overlay = document.getElementById('plannerOverlay');
+  const body = document.getElementById('plannerBody');
+  body.innerHTML='<div style="padding:32px;text-align:center;color:var(--muted-light);font-size:.78rem">Loading…</div>';
+  overlay.classList.add('open');
+
+  try {
+    const cutoff14 = new Date(Date.now()-14*86400000).toISOString();
+    const [stravaActs,{data:sessions}] = await Promise.all([
+      fetchStravaActivities(14),
+      sb.from('workout_sessions').select('id,workout_name,workout_type,started_at').eq('user_id','warren').gt('sets_completed',0).gte('started_at',cutoff14).order('started_at',{ascending:false})
+    ]);
+    const allSessionIds=(sessions||[]).map(s=>s.id);
+    const {data:logs}=allSessionIds.length
+      ? await sb.from('exercise_logs').select('session_id,muscle_groups').in('session_id',allSessionIds).gt('sets_completed',0)
+      : {data:[]};
+    const logsBySess={};
+    (logs||[]).forEach(l=>{if(!logsBySess[l.session_id])logsBySess[l.session_id]=[];(l.muscle_groups||[]).forEach(m=>logsBySess[l.session_id].push(m));});
+
+    const muscleTimeline = buildMuscleTimeline(sessions||[], logsBySess, stravaActs);
+    const readiness = getReadiness(muscleTimeline);
+    const plan = projectPlan(muscleTimeline);
+
+    // ── Build 14-day trail ──
+    const dayMap={};
+    (sessions||[]).forEach(s=>{
+      const k=s.started_at.slice(0,10);
+      if(!dayMap[k]) dayMap[k]=[];
+      dayMap[k].push({kind:'strength',icon:'🏋️',name:s.workout_name});
+    });
+    stravaActs.forEach(a=>{
+      const k=a.started_at.slice(0,10);
+      if(!dayMap[k]) dayMap[k]=[];
+      const icon=a.type==='Swim'?'🏊':a.type==='Run'?'🏃':'🚴';
+      dayMap[k].push({kind:'cardio',icon,name:a.name});
+    });
+    const today=new Date().toISOString().slice(0,10);
+    const trailDays=[];
+    for(let i=13;i>=0;i--){
+      const d=new Date(Date.now()-i*86400000);
+      const k=d.toISOString().slice(0,10);
+      trailDays.push({k, d, acts:dayMap[k]||[]});
+    }
+    const trailHtml=trailDays.filter(td=>td.acts.length>0||td.k===today).map(td=>{
+      const isToday=td.k===today;
+      const label=isToday?'Today':td.d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+      const acts=td.acts.length?td.acts.map(a=>`<span class="planner-badge ${a.kind}">${a.icon} ${a.name.length>22?a.name.slice(0,20)+'…':a.name}</span>`).join('')
+        :`<span class="planner-badge rest">Rest</span>`;
+      return `<div class="planner-trail-item"><div class="planner-trail-date${isToday?' today':''}">${label}</div><div class="planner-trail-acts">${acts}</div></div>`;
+    }).join('');
+
+    // ── Muscle status ──
+    const muscleOrder=['chest','back','lats','shoulders','biceps','triceps','core','obliques','quads','hamstrings','glutes','calves'];
+    const muscleHtml=muscleOrder.map(m=>{
+      const p=Math.round((readiness[m]??1)*100);
+      const col=p>=80?'#22c55e':p>=50?'#fbbf24':p>=25?'#f97316':'#ef4444';
+      const status=p>=80?'✓ Ready':p>=50?'↗ Partial':p>=25?'⚠ Low':'🔴 Fatigued';
+      return `<div class="muscle-row">
+        <span class="muscle-label">${m}</span>
+        <div class="muscle-bar-bg"><div class="muscle-bar-fill" style="width:${p}%;background:${col}"></div></div>
+        <span class="muscle-pct" style="color:${col}">${p}%</span>
+        <span class="muscle-status" style="color:${col};font-size:.55rem;font-weight:700">${status}</span>
+      </div>`;
+    }).join('');
+
+    // ── 5-day plan ──
+    const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const lastCardio=stravaActs.find(a=>a.muscles.length>0);
+    const hoursSinceCardio=lastCardio?(Date.now()-new Date(lastCardio.started_at).getTime())/3600000:999;
+    const cardioNote=hoursSinceCardio>72?`<div class="plan-cardio-note">🏊 You haven't logged cardio in ${Math.round(hoursSinceCardio/24)} days — consider a swim or easy run to keep aerobic base and flush out lactic acid.</div>`:'';
+
+    const planHtml=plan.map((p,i)=>{
+      const dow=dayNames[p.day.getDay()];
+      const dd=p.day.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+      const isRest=p.score<0.45;
+      const scoreClass=isRest?'rest':p.score>=0.75?'ready':'partial';
+      const scoreLabel=isRest?'Rest day recommended':p.score>=0.75?`${Math.round(p.score*100)}% recovered — go hard`:`${Math.round(p.score*100)}% — light/moderate`;
+      const primary=DB_REC_MUSCLES[p.wid]?.filter((m,_,a)=>a.indexOf(m)===a.lastIndexOf(m)||true)
+        .filter(m=>Math.round((p.r[m]??1)*100)>=60).slice(0,3).join(', ')||'core';
+      const reason=isRest?'Most muscle groups still recovering — use this day for mobility, sleep, or nutrition.':
+        `${primary} will be ready. ${p.score>=0.75?'Good window to push intensity.':'Keep volume moderate.'}`;
+      return `<div class="plan-day">
+        <div class="plan-day-label${i===0?' next':''}">${dow}<br><span style="font-size:.56rem;font-weight:600">${dd}</span></div>
+        <div class="plan-day-content">
+          <div class="plan-day-name">${isRest?'Rest / Mobility':p.name}</div>
+          <div class="plan-day-reason">${reason}</div>
+          <span class="plan-score-pill ${scoreClass}">${scoreLabel}</span>
+        </div>
+      </div>`;
+    }).join('');
+
+    body.innerHTML=`
+      <div class="planner-sec">
+        <div class="planner-sec-hd">14-Day Activity Trail</div>
+        ${trailHtml}
+      </div>
+      <div class="planner-sec" style="margin-top:16px">
+        <div class="planner-sec-hd">Muscle Recovery Status</div>
+        ${muscleHtml}
+      </div>
+      <div class="planner-sec" style="margin-top:16px">
+        <div class="planner-sec-hd">Next 5 Days — Projected Plan</div>
+        ${planHtml}
+        ${cardioNote}
+      </div>`;
+  } catch(e) {
+    body.innerHTML=`<div style="padding:24px;color:var(--muted-light);font-size:.78rem">Could not load planner data.</div>`;
+  }
+}
 </script>
+
+<!-- PLANNER MODAL -->
+<div class="planner-overlay" id="plannerOverlay" onclick="if(event.target===this)closePlanner()">
+  <div class="planner-modal">
+    <div class="planner-drag"></div>
+    <div class="planner-hd">
+      <span class="planner-title">🗓 Training Planner</span>
+      <button class="planner-close" onclick="closePlanner()">✕</button>
+    </div>
+    <div id="plannerBody"></div>
+  </div>
+</div>
 </body>
 </html>
