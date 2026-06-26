@@ -365,8 +365,14 @@ def enrich_all_seeds(verbose=True, seed_module="seed_list"):
         from seed_list_v3 import SEED_FOODS_V3 as foods
     elif seed_module == "seed_list_v4":
         from seed_list_v4 import SEED_FOODS_V4 as foods
-    else:
+    elif seed_module == "seed_list_v5":
         from seed_list_v5 import SEED_FOODS_V5 as foods
+    elif seed_module == "seed_list_v5_nyc":
+        from seed_list_v5_nyc import SEED_FOODS_NYC as foods
+    elif seed_module == "seed_list_salad":
+        from seed_list_salad import SEED_FOODS_SALAD as foods
+    else:
+        from seed_list_alcohol import SEED_FOODS_ALCOHOL as foods
 
     if not DB_PATH.exists():
         init_db()
@@ -374,7 +380,7 @@ def enrich_all_seeds(verbose=True, seed_module="seed_list"):
     api_key = load_api_key()
     conn = get_connection()
 
-    sr_only = seed_module in ("seed_list_v2_retry", "seed_list_v3", "seed_list_v4", "seed_list_v5")
+    sr_only = seed_module in ("seed_list_v2_retry", "seed_list_v3", "seed_list_v4", "seed_list_v5", "seed_list_v5_nyc", "seed_list_salad", "seed_list_alcohol")
 
     ok, fail = 0, 0
     for item in foods:
@@ -405,6 +411,9 @@ if __name__ == "__main__":
     parser.add_argument("--seed-v3", action="store_true", help="Enrich v3 expansion (~130 new foods, SR Legacy only)")
     parser.add_argument("--seed-v4", action="store_true", help="Enrich v4 expansion (~140 new foods, SR Legacy only)")
     parser.add_argument("--seed-v5", action="store_true", help="Enrich v5 pantry expansion (~110 new foods, SR Legacy only)")
+    parser.add_argument("--seed-nyc", action="store_true", help="Enrich NYC staples (pizza, bagels, BEC, deli)")
+    parser.add_argument("--seed-salad", action="store_true", help="Enrich salad staples (croutons, greens, dressings, toppings)")
+    parser.add_argument("--seed-alcohol", action="store_true", help="Enrich adult beverages (beer, wine, spirits, cocktails)")
     parser.add_argument("--food", type=str, help="Search and enrich a single food by name")
     parser.add_argument("--display", type=str, default=None, help="Display name for --food")
     parser.add_argument("--category", type=str, default="other", help="Category for --food")
@@ -446,6 +455,18 @@ if __name__ == "__main__":
     elif args.seed_v5:
         conn.close()
         enrich_all_seeds(verbose, seed_module="seed_list_v5")
+
+    elif args.seed_nyc:
+        conn.close()
+        enrich_all_seeds(verbose, seed_module="seed_list_v5_nyc")
+
+    elif args.seed_salad:
+        conn.close()
+        enrich_all_seeds(verbose, seed_module="seed_list_salad")
+
+    elif args.seed_alcohol:
+        conn.close()
+        enrich_all_seeds(verbose, seed_module="seed_list_alcohol")
 
     elif args.food:
         display = args.display or args.food.title()

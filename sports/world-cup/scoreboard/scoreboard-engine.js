@@ -276,15 +276,20 @@ export function scoreEntry(entry, actualMatches, groupStandings, thirdPlaceStand
   const allGroupMatchesComplete = groupMatches.length === 72
     && groupMatches.every(match => match.status === "completed");
 
-  if (allGroupMatchesComplete) {
-    predictedThirdAdvancers.forEach(teamId => {
-      if (actualThirdAdvancers.has(teamId)) {
-        score += SCORING_RULES.thirdPlaceAdvancer;
-        breakDown.thirdPlaceAdvancerPoints += SCORING_RULES.thirdPlaceAdvancer;
-        breakDown.thirdPlaceAdvancerHits++;
-      }
-    });
-  }
+  // Project third-place advancer points live — consistent with the group-position
+  // projection above and the page's stated contract ("as the tables stand right now").
+  // actualThirdAdvancers is the current provisional top-8 of the twelve third-place
+  // teams; once all groups finish it becomes the locked, official set. We only count a
+  // pick whose group has actually started, so we never award off an empty seeded table.
+  predictedThirdAdvancers.forEach(teamId => {
+    const teamGroup = thirdPlaceStandings?.find(t => t.id === teamId)?.group;
+    const groupStarted = teamGroup ? startedGroups.has(teamGroup) : false;
+    if (groupStarted && actualThirdAdvancers.has(teamId)) {
+      score += SCORING_RULES.thirdPlaceAdvancer;
+      breakDown.thirdPlaceAdvancerPoints += SCORING_RULES.thirdPlaceAdvancer;
+      breakDown.thirdPlaceAdvancerHits++;
+    }
+  });
 
   const actualGoals = groupMatches.reduce((sum, match) => {
     if (match.matchNumber > 72 || match.status !== "completed") return sum;

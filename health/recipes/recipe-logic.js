@@ -138,6 +138,10 @@ function renderList() {
     } else {
       dom.recipeList.innerHTML = filtered.map(recipe => {
         const isSelected = state.plan.some(p => p.id === recipe.id);
+        const nutrition = (window.NUTRITION_DATA || {})[recipe.id];
+        const calBadge = nutrition && nutrition.per_serving.calories > 0
+          ? `<span class="cal-badge">${Math.round(nutrition.per_serving.calories)} kcal</span>`
+          : '';
         return `
           <div class="recipe-card ${isSelected ? 'selected' : ''}" onclick="window.showRecipe('${recipe.id}')">
             <div class="card-header">
@@ -150,9 +154,12 @@ function renderList() {
               </button>
             </div>
             <p>${recipe.description}</p>
-            <div class="tag-list">
-              ${getUniqueIngredients(recipe).slice(0, 4).map(ing => `<span class="tag">${ing}</span>`).join('')}
-              ${recipe.ingredients.length > 4 ? '<span class="tag">...</span>' : ''}
+            <div class="card-footer">
+              <div class="tag-list">
+                ${getUniqueIngredients(recipe).slice(0, 4).map(ing => `<span class="tag">${ing}</span>`).join('')}
+                ${recipe.ingredients.length > 4 ? '<span class="tag">...</span>' : ''}
+              </div>
+              ${calBadge}
             </div>
           </div>
         `;
@@ -188,6 +195,24 @@ window.setCategory = (cat) => {
   renderList();
 };
 
+function renderNutritionStrip(id) {
+  const n = (window.NUTRITION_DATA || {})[id];
+  if (!n || n.per_serving.calories === 0) return '';
+  const ps = n.per_serving;
+  return `
+    <div class="nutrition-strip">
+      <div class="nutrition-strip-inner">
+        <div class="macro-pill cals"><span class="macro-val">${Math.round(ps.calories)}</span><span class="macro-label">kcal</span></div>
+        <div class="macro-pill protein"><span class="macro-val">${ps.protein.toFixed(1)}g</span><span class="macro-label">protein</span></div>
+        <div class="macro-pill carbs"><span class="macro-val">${ps.carbs.toFixed(1)}g</span><span class="macro-label">carbs</span></div>
+        <div class="macro-pill fat"><span class="macro-val">${ps.fat.toFixed(1)}g</span><span class="macro-label">fat</span></div>
+        ${ps.fiber > 0 ? `<div class="macro-pill fiber"><span class="macro-val">${ps.fiber.toFixed(1)}g</span><span class="macro-label">fiber</span></div>` : ''}
+      </div>
+      <div class="nutrition-note">per serving · estimated (${n.coverage_note})</div>
+    </div>
+  `;
+}
+
 function getUniqueIngredients(recipe) {
   return [...new Set(recipe.ingredients.map(i => i.item.split(',')[0].trim()))];
 }
@@ -208,6 +233,7 @@ function renderDetail() {
     <div class="recipe-type-tag detail">${recipe.type.join(' / ')}</div>
     <h1 class="recipe-title">${recipe.name}</h1>
     <p class="description">${recipe.description}</p>
+    ${renderNutritionStrip(recipe.id)}
     <section>
       <h3>Ingredients</h3>
       <div class="ingredient-list">

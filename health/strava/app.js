@@ -125,6 +125,13 @@ const app = createApp({
       const now = new Date();
       const yearStart = new Date(now.getFullYear(), 0, 1);
 
+      // Helper function to get activities in a time range
+      const getActivitiesInRange = (days) => {
+        const cutoffDate = new Date(now);
+        cutoffDate.setDate(cutoffDate.getDate() - days);
+        return this.selectedDisciplineActivities.filter(a => new Date(a.startDate) >= cutoffDate);
+      };
+
       // All-time milestone
       const allTimeMiles = this.selectedStats.miles;
       const allTimeRoundNumber = Math.ceil(allTimeMiles / 1000) * 1000;
@@ -135,7 +142,8 @@ const app = createApp({
         description: `${milesShortstOfAllTime.toFixed(1)} more miles to hit ${allTimeRoundNumber.toLocaleString()}!`,
         miles: allTimeMiles,
         target: allTimeRoundNumber,
-        type: 'alltime'
+        type: 'alltime',
+        priority: 1
       });
 
       // Year-to-date milestone
@@ -150,7 +158,60 @@ const app = createApp({
           description: `${milesShortOfYTD.toFixed(1)} more miles for a ${ytdRoundNumber.toLocaleString()} mile year!`,
           miles: ytdMiles,
           target: ytdRoundNumber,
-          type: 'ytd'
+          type: 'ytd',
+          priority: 2
+        });
+      }
+
+      // Last 365 days milestone
+      const last365Activities = getActivitiesInRange(365);
+      const last365Miles = last365Activities.reduce((sum, a) => sum + a.distance, 0) / 1609.34;
+      const last365RoundNumber = Math.ceil(last365Miles / 100) * 100;
+      const milesShortOf365 = last365RoundNumber - last365Miles;
+
+      if (last365RoundNumber > 0) {
+        milestones.push({
+          title: `Last 12 months`,
+          description: `${milesShortOf365.toFixed(1)} more miles for a ${last365RoundNumber.toLocaleString()} mile year!`,
+          miles: last365Miles,
+          target: last365RoundNumber,
+          type: 'last365',
+          priority: 3
+        });
+      }
+
+      // Last 90 days milestone
+      const last90Activities = getActivitiesInRange(90);
+      const last90Miles = last90Activities.reduce((sum, a) => sum + a.distance, 0) / 1609.34;
+      const last90RoundNumber = Math.ceil(last90Miles / 50) * 50;
+      const milesShortOf90 = last90RoundNumber - last90Miles;
+
+      if (last90RoundNumber > 0) {
+        milestones.push({
+          title: `Last 90 days`,
+          description: `${milesShortOf90.toFixed(1)} more miles for a ${last90RoundNumber.toLocaleString()} mile quarter!`,
+          miles: last90Miles,
+          target: last90RoundNumber,
+          type: 'last90',
+          priority: 4
+        });
+      }
+
+      // Trending pace (projection based on last 90 days)
+      if (last90Activities.length > 0) {
+        const daysSinceFirstActivity = last90Activities.length > 1 ?
+          (new Date(last90Activities[0].startDate) - new Date(last90Activities[last90Activities.length - 1].startDate)) / (1000 * 60 * 60 * 24) : 90;
+        const projectedAnnualMiles = (last90Miles / Math.max(daysSinceFirstActivity, 1)) * 365;
+        const projectedRoundNumber = Math.ceil(projectedAnnualMiles / 100) * 100;
+
+        milestones.push({
+          title: `Trending pace (projected)`,
+          description: `At your current pace, you're on track for ${projectedRoundNumber.toLocaleString()} miles this year!`,
+          miles: last90Miles,
+          target: projectedRoundNumber * (last90Miles / projectedAnnualMiles),
+          type: 'trending',
+          priority: 5,
+          secondary: true
         });
       }
 
@@ -166,11 +227,96 @@ const app = createApp({
           miles: strollerMiles,
           target: strollerTarget,
           type: 'stroller',
+          priority: 6,
           secondary: true
         });
       }
 
-      return milestones;
+      // Sort by priority
+      return milestones.sort((a, b) => a.priority - b.priority);
+    },
+    // Pace/Speed metrics for selected discipline
+    paceMetrics() {
+      const discipline = this.selectedDiscipline;
+      const activities = this.selectedDisciplineActivities;
+
+      if (activities.length === 0) {
+        return null;
+      }
+
+      if (discipline === 'Run') {
+        const totalSeconds = activities.reduce((sum, a) => sum + a.movingTime, 0);
+        const totalMiles = activities.reduce((sum, a) => sum + a.distance, 0) / 1609.34;
+        const avgPaceSeconds = (totalSeconds / totalMiles);
+        const minutes = Math.floor(avgPaceSeconds / 60);
+        const seconds = Math.floor(avgPaceSeconds % 60);
+
+        // Best pace (fastest)
+        let bestPace = Infinity;
+        activities.forEach(a => {
+          const miles = a.distance / 1609.34;
+          const paceSeconds = a.movingTime / miles;
+          bestPace = Math.min(bestPace, paceSeconds);
+        });
+        const bestMin = Math.floor(bestPace / 60);
+        const bestSec = Math.floor(bestPace % 60);
+
+        return {
+          type: 'pace',
+          current: `${minutes}:${seconds.toString().padStart(2, '0')}/mi`,
+          currentSeconds: avgPaceSeconds,
+          best: `${bestMin}:${bestSec.toString().padStart(2, '0')}/mi`,
+          label: 'Average Pace'
+        };
+      } else if (discipline === 'Ride') {
+        const totalMiles = activities.reduce((sum, a) => sum + a.distance, 0) / 1609.34;
+        const totalHours = activities.reduce((sum, a) => sum + a.movingTime, 0) / 3600;
+        const avgSpeed = totalMiles / totalHours;
+
+        // Best speed
+        let bestSpeed = 0;
+        activities.forEach(a => {
+          const miles = a.distance / 1609.34;
+          const hours = a.movingTime / 3600;
+          const speed = miles / hours;
+          bestSpeed = Math.max(bestSpeed, speed);
+        });
+
+        return {
+          type: 'speed',
+          current: `${avgSpeed.toFixed(1)} mph`,
+          currentMPH: avgSpeed,
+          best: `${bestSpeed.toFixed(1)} mph`,
+          label: 'Average Speed'
+        };
+      } else if (discipline === 'Swim') {
+        const totalSeconds = activities.reduce((sum, a) => sum + a.movingTime, 0);
+        const totalYards = activities.reduce((sum, a) => sum + (a.distance / 0.9144), 0); // meters to yards
+        const total100Yards = totalYards / 100;
+        const avgPaceSeconds = (totalSeconds / total100Yards);
+        const minutes = Math.floor(avgPaceSeconds / 60);
+        const seconds = Math.floor(avgPaceSeconds % 60);
+
+        // Best pace
+        let bestPace = Infinity;
+        activities.forEach(a => {
+          const yards = a.distance / 0.9144;
+          const pace100Yards = a.movingTime / (yards / 100);
+          bestPace = Math.min(bestPace, pace100Yards);
+        });
+        const bestMin = Math.floor(bestPace / 60);
+        const bestSec = Math.floor(bestPace % 60);
+
+        return {
+          type: 'pace',
+          current: `${minutes}:${seconds.toString().padStart(2, '0')}/100yd`,
+          currentSeconds: avgPaceSeconds,
+          best: `${bestMin}:${bestSec.toString().padStart(2, '0')}/100yd`,
+          label: 'Average Pace'
+        };
+      }
+
+      return null;
     }
   },
   methods: {

@@ -52,18 +52,33 @@
           </div>
         </section>
 
+        <!-- Pace/Speed Metrics -->
+        <section v-if="paceMetrics" class="pace-section">
+          <div class="pace-card">
+            <div class="pace-label">{{ paceMetrics.label }}</div>
+            <div class="pace-current">{{ paceMetrics.current }}</div>
+            <div class="pace-best">
+              <span class="pace-best-label">Best:</span>
+              <span class="pace-best-value">{{ paceMetrics.best }}</span>
+            </div>
+          </div>
+        </section>
+
         <!-- Milestones -->
         <section class="milestones-section">
-          <div v-for="milestone in milestones" :key="milestone.type" class="milestone-card" :class="{ secondary: milestone.secondary }">
-            <div class="milestone-header">
-              <h3>{{ milestone.title }}</h3>
-            </div>
-            <div class="milestone-message">{{ milestone.description }}</div>
-            <div class="milestone-progress">
-              <div class="progress-bar">
-                <div class="progress-fill" :style="{ width: (milestone.miles / milestone.target * 100) + '%' }"></div>
+          <h2>🎯 Milestones & Goals</h2>
+          <div class="milestones-grid">
+            <div v-for="milestone in milestones" :key="milestone.type" class="milestone-card" :class="{ secondary: milestone.secondary }">
+              <div class="milestone-header">
+                <h3>{{ milestone.title }}</h3>
               </div>
-              <div class="progress-text">{{ milestone.miles.toFixed(1) }} / {{ milestone.target }} mi</div>
+              <div class="milestone-message">{{ milestone.description }}</div>
+              <div class="milestone-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" :style="{ width: (milestone.miles / milestone.target * 100) + '%' }"></div>
+                </div>
+                <div class="progress-text">{{ milestone.miles.toFixed(1) }} / {{ milestone.target }} mi</div>
+              </div>
             </div>
           </div>
         </section>
