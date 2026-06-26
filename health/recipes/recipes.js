@@ -870,6 +870,66 @@ const RAW_RECIPES = [
             "Serve immediately."
         ],
         upgrades: ["Brightness: Add a tiny pinch of lemon zest.", "Garlic Kick: Add 1 small minced garlic clove (cook briefly in butter first).", "Protein Boost: Stir in 1 cup of shredded chicken."]
+    },
+    {
+        id: 'akils-morning-oatmeal',
+        name: "Akil's Morning Oatmeal",
+        type: ['Breakfast'],
+        description: "Creamy, fruit-studded oatmeal from chef Edouardo Jordan. Serves 2.",
+        ingredients: [
+            { item: 'rolled oats', amount: '1.25', unit: 'cups (100g)' },
+            { item: 'agave syrup', amount: '1.5', unit: 'tbsp (30g)' },
+            { item: 'strawberries, thinly sliced', amount: '0.33', unit: 'cup (60g)' },
+            { item: 'banana, thinly sliced', amount: '0.25', unit: 'cup (50g)' },
+            { item: 'vanilla extract', amount: '0.25', unit: 'tsp' },
+            { item: 'ground cinnamon', amount: '', unit: 'pinch' },
+            { item: 'milk', amount: '0.67', unit: 'cup (150ml)' },
+            { item: 'salt', amount: '', unit: 'pinch' },
+            { item: 'yogurt', amount: '0.25', unit: 'cup (50g)' },
+            { item: 'fresh fruit, sliced', amount: '', unit: 'for serving' }
+        ],
+        instructions: [
+            "Combine oats, agave syrup, and 1⅓ cups (325ml) water in a small pot. Bring to a simmer over medium heat.",
+            "Add the strawberries, banana, vanilla, and cinnamon. Cook about 3 minutes, stirring occasionally, until the oats are tacky and thick.",
+            "Stir in the milk and continue cooking until the oatmeal is creamy. Add a pinch of salt and stir to finish.",
+            "Divide into two bowls. Top each with yogurt and fresh sliced fruit."
+        ],
+        upgrades: ["Make it heartier: Stir in a spoonful of almond or peanut butter at the end.", "Sweeter finish: Drizzle extra agave or a little honey over the yogurt topping."]
+    },
+    {
+        id: 'lunch-box-noodle-bowl',
+        name: 'Lunch Box Noodle Bowl',
+        type: ['Lunch', 'Kid'],
+        description: "Meal-prep noodle bowls from chef Karena Armstrong — makes 8 lunch boxes. Assemble morning-of; don't slice avocado or peel eggs until the day of.",
+        ingredients: [
+            { item: 'baby spinach', amount: '5', unit: 'oz (150g)' },
+            { item: 'noodles (sweet potato, soba, or udon)', amount: '17.5', unit: 'oz (500g)' },
+            { item: 'fresh ginger', amount: '1', unit: 'oz (30g)' },
+            { item: 'soy sauce (noodles)', amount: '6', unit: 'tbsp' },
+            { item: 'extra-virgin olive oil', amount: '2 tbsp +', unit: '2 tsp' },
+            { item: 'toasted sesame oil (noodles)', amount: '2', unit: 'tsp' },
+            { item: 'rice bran oil (or neutral oil)', amount: '3.5', unit: 'tbsp' },
+            { item: 'firm tofu, cut into 8 slices', amount: '17.5', unit: 'oz (500g)' },
+            { item: 'soy sauce (tofu)', amount: '2 tbsp +', unit: '2 tsp' },
+            { item: 'oyster sauce or hoisin', amount: '2 tbsp +', unit: '2 tsp' },
+            { item: 'fresh lemon juice', amount: '2', unit: 'tbsp' },
+            { item: 'toasted sesame oil (tofu)', amount: '2', unit: 'tsp' },
+            { item: 'Chinese broccoli (or similar greens)', amount: '3', unit: 'bunches' },
+            { item: 'nori sheets', amount: '3', unit: 'sheets' },
+            { item: 'toasted sesame seeds', amount: '0.33', unit: 'cup (50g)' },
+            { item: 'frozen shelled edamame, thawed', amount: '7', unit: 'oz (200g)' },
+            { item: 'avocados', amount: '2', unit: '' },
+            { item: 'free-range eggs', amount: '4', unit: 'hard-boiled (6 min)' }
+        ],
+        instructions: [
+            "Noodles: Set spinach in a colander in the sink. Cook noodles per package directions, then drain the hot water directly over the spinach — this wilts it perfectly.",
+            "Grate ginger into a large container. Add the noodle-and-spinach mixture, soy sauce, olive oil, and sesame oil. Mix well. Refrigerate.",
+            "Tofu (optional — kids may skip): Heat rice bran oil in a large frying pan over medium-high. Cook tofu slices on both sides until golden brown, then remove to a plate. Whisk together soy sauce, oyster sauce, lemon juice, and sesame oil; pour over hot tofu. Let cool.",
+            "Greens: Prepare an ice bath. Steam Chinese broccoli quickly (1–2 min), plunge into ice bath, drain well, then chop small.",
+            "Nori: Toast nori sheets in a low oven until crisp. Store in a sealed bag until assembly.",
+            "Assemble morning-of: portion noodles into boxes, add broccoli, edamame, sesame seeds, and nori. Slice avocado and peel eggs only on the day of serving. Use extra noodle dressing to keep everything moist."
+        ],
+        upgrades: ["Skip the tofu for picky eaters — the noodles, edamame, and egg provide plenty of protein.", "Swap oyster sauce for hoisin to keep it vegetarian.", "Add a soft-boiled egg instead of hard-boiled for a richer yolk."]
     }
 ];
 
