@@ -21,16 +21,18 @@ DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fitness_sim.
 
 RECOVERY_HOURS = {
     'chest': 60, 'shoulders': 48, 'triceps': 48,
-    'back':  60, 'biceps':    48,
+    'back':  60, 'biceps':    48, 'lats':    60,
     'quads': 72, 'hamstrings': 72, 'glutes': 72, 'calves': 48,
+    'core':  36,
 }
 ALL_MUSCLES = list(RECOVERY_HOURS.keys())
 
 WORKOUT_MUSCLES = {
-    'db-push':  ['chest', 'shoulders', 'triceps'],
-    'db-lower': ['quads', 'hamstrings', 'glutes', 'calves'],
-    'db-pull':  ['back', 'biceps'],
-    'db-upper': ['chest', 'back', 'shoulders', 'biceps', 'triceps'],
+    'db-push':       ['chest', 'shoulders', 'triceps', 'core'],
+    'db-lower':      ['quads', 'hamstrings', 'glutes', 'calves', 'core'],
+    'db-pull':       ['back', 'lats', 'biceps', 'core'],
+    'db-upper':      ['chest', 'back', 'lats', 'shoulders', 'biceps', 'triceps', 'core'],
+    'full-body-core':['chest', 'back', 'lats', 'shoulders', 'quads', 'glutes', 'hamstrings', 'core'],
 }
 
 BAR_WIDTH = 30

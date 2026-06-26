@@ -480,6 +480,28 @@ const SB_KEY = 'sb_publishable_oGz8JW7fQ0n5GJ2WYBansg_AxPcBbgT';
 const sb = window.supabase.createClient(SB_URL, SB_KEY);
 function setSyncStatus(s){document.getElementById('syncDot').className='sync-status '+s}
 
+const STRAVA_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRQeJ7KYeuApFOqd5MhVQoIVqQaE5Nc9RmJuLzLAhpCEKEWKPCX2MzyLE-jzrpF41y7sDRKHLwmXxaP/pub?gid=766949107&single=true&output=csv';
+const STRAVA_MUSCLES = {
+  Swim: ['core','obliques','lats','shoulders','triceps'],
+  Run:  ['core','quads','hamstrings','glutes','calves'],
+  Ride: ['core','quads','hamstrings','glutes','calves'],
+};
+const RECOVERY_H = {
+  chest:60, shoulders:48, triceps:48, back:60, biceps:48, lats:60,
+  quads:72, hamstrings:72, glutes:72, calves:48, core:36, obliques:36,
+};
+const DB_REC_MUSCLES = {
+  'db-push':        ['chest','shoulders','triceps','core'],
+  'db-lower':       ['quads','hamstrings','glutes','calves','core'],
+  'db-pull':        ['back','lats','biceps','core'],
+  'db-upper':       ['chest','back','lats','shoulders','biceps','triceps','core'],
+  'full-body-core': ['chest','back','lats','shoulders','quads','glutes','hamstrings','core'],
+};
+const DB_REC_NAMES = {
+  'db-push':'DB Push Day','db-lower':'DB Lower Body','db-pull':'DB Pull & Back',
+  'db-upper':'DB Upper Burn','full-body-core':'Full Body Core Focus',
+};
+
 // ═══════════════════════════════════════════════════════
 //  WEEK PLANS
 // ═══════════════════════════════════════════════════════
@@ -556,7 +578,7 @@ const WORKOUTS = {
       ]},
       { id:'strength', name:'Push Block', emoji:'💪', meta:'3 rounds · 60-90s rest', weighted:true, exercises:[
         { id:'s1', name:'DB Floor Press',         detail:'12 reps',              sets:3, muscles:[['upper','Chest'],['upper','Triceps'],['upper','Shoulders']], tip:'Elbows at 45°, full range — touch floor, lockout at top', video_url:'https://www.youtube.com/watch?v=uUGDRwge4F8' },
-        { id:'s2', name:'DB Overhead Press',      detail:'10-12 reps',           sets:3, muscles:[['upper','Shoulders'],['upper','Triceps']], tip:'Core braced — press straight overhead, don\'t flare ribs', video_url:'https://www.youtube.com/watch?v=qEwKCR5JCog' },
+        { id:'s2', name:'DB Overhead Press',      detail:'10-12 reps',           sets:3, muscles:[['upper','Shoulders'],['upper','Triceps'],['core','Core']], tip:'Core braced — press straight overhead, don\'t flare ribs', video_url:'https://www.youtube.com/watch?v=qEwKCR5JCog' },
         { id:'s3', name:'DB Lateral Raise',       detail:'12-15 reps',           sets:3, muscles:[['upper','Shoulders'],['upper','Lateral Delts']], tip:'Slight forward lean, lead with elbows — go lighter than you think', video_url:'https://www.youtube.com/watch?v=3VcKaXpzqRo' },
         { id:'s4', name:'DB Arnold Press',        detail:'10-12 reps',           sets:3, muscles:[['upper','Shoulders'],['upper','Triceps']], tip:'Start palms facing you, rotate out as you press — hits all three delt heads', video_url:'https://www.youtube.com/watch?v=vj2w851ZHRM' },
         { id:'s5', name:'DB Tricep Kickback',     detail:'12 reps each arm',     sets:3, muscles:[['upper','Triceps']], tip:'Upper arm parallel to floor, extend fully — squeeze at lockout', video_url:'https://www.youtube.com/watch?v=6SS6K3lAwZ8' },
@@ -587,9 +609,9 @@ const WORKOUTS = {
       ]},
       { id:'strength', name:'Lower Body Block', emoji:'🦵', meta:'3 rounds · 60-90s rest', weighted:true, exercises:[
         { id:'s1', name:'Goblet Squat',           detail:'12 reps',              sets:3, muscles:[['lower','Quads'],['lower','Glutes'],['core','Core']], tip:'Chest tall, DB at sternum — squat deep, drive through heels', video_url:'https://www.youtube.com/watch?v=MeIiIdhvXT4' },
-        { id:'s2', name:'Romanian Deadlift',      detail:'12 reps',              sets:3, muscles:[['lower','Hamstrings'],['lower','Glutes'],['back','Lower Back']], tip:'Hinge at hips, soft knee bend — feel the stretch in hamstrings', video_url:'https://www.youtube.com/watch?v=jEy_czb3RKA' },
-        { id:'s3', name:'Walking Lunges',         detail:'10 each leg',          sets:3, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Front shin stays vertical — rear knee drops toward floor', video_url:'https://www.youtube.com/watch?v=L8fvypPrzzs' },
-        { id:'s4', name:'DB Step-Up (chair/step)',detail:'10 each leg',          sets:3, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Drive through the heel of the working leg — don\'t push off the floor', video_url:'https://www.youtube.com/watch?v=dQqApCGd5Ss' },
+        { id:'s2', name:'Romanian Deadlift',      detail:'12 reps',              sets:3, muscles:[['lower','Hamstrings'],['lower','Glutes'],['back','Lower Back'],['core','Core']], tip:'Hinge at hips, soft knee bend — feel the stretch in hamstrings', video_url:'https://www.youtube.com/watch?v=jEy_czb3RKA' },
+        { id:'s3', name:'Walking Lunges',         detail:'10 each leg',          sets:3, muscles:[['lower','Quads'],['lower','Glutes'],['core','Core']], tip:'Front shin stays vertical — rear knee drops toward floor', video_url:'https://www.youtube.com/watch?v=L8fvypPrzzs' },
+        { id:'s4', name:'DB Step-Up (chair/step)',detail:'10 each leg',          sets:3, muscles:[['lower','Quads'],['lower','Glutes'],['core','Core']], tip:'Drive through the heel of the working leg — don\'t push off the floor', video_url:'https://www.youtube.com/watch?v=dQqApCGd5Ss' },
         { id:'s5', name:'DB Hip Thrust',          detail:'15 reps',              sets:3, muscles:[['lower','Glutes'],['lower','Hamstrings']], tip:'Shoulders on a surface, DB on hips — drive through heels, squeeze at top', video_url:'https://www.youtube.com/watch?v=wPM8icPu6H8' },
       ]},
       { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds', weighted:true, exercises:[
@@ -617,11 +639,11 @@ const WORKOUTS = {
         { id:'w3', name:'Thoracic Rotation',      detail:'10 each side',         sets:1, muscles:[['back','Upper Back'],['other','Spine']], tip:'Rotate just the upper back, not the hips', video_url:'https://www.youtube.com/results?search_query=thoracic+rotation+mobility+warmup' },
       ]},
       { id:'strength', name:'Pull Block', emoji:'🔙', meta:'3 rounds · 60-90s rest', weighted:true, exercises:[
-        { id:'s1', name:'DB Single-Arm Row',      detail:'12 reps each side',    sets:3, muscles:[['back','Back'],['back','Lats'],['upper','Biceps']], tip:'Brace on a surface, drive elbow to ceiling — not the weight', video_url:'https://www.youtube.com/watch?v=pYcpY20QaE8' },
+        { id:'s1', name:'DB Single-Arm Row',      detail:'12 reps each side',    sets:3, muscles:[['back','Back'],['back','Lats'],['upper','Biceps'],['core','Core']], tip:'Brace on a surface, drive elbow to ceiling — not the weight', video_url:'https://www.youtube.com/watch?v=pYcpY20QaE8' },
         { id:'s2', name:'DB Rear Delt Fly',       detail:'15 reps',              sets:3, muscles:[['upper','Rear Delts'],['back','Upper Back']], tip:'Hinge at hips, arms out to sides — lead with elbows, not hands', video_url:'https://www.youtube.com/watch?v=EA7u4Q_8HQ0' },
         { id:'s3', name:'DB Bicep Curl',          detail:'12 reps',              sets:3, muscles:[['upper','Biceps']], tip:'Full extension at bottom, supinate at top — control the negative', video_url:'https://www.youtube.com/watch?v=in7PaeYlhrM' },
         { id:'s4', name:'DB Hammer Curl',         detail:'12 reps',              sets:3, muscles:[['upper','Biceps'],['upper','Brachialis']], tip:'Neutral grip (thumbs up) — hits the outer bicep and brachialis', video_url:'https://www.youtube.com/watch?v=zC3nLlEvin4' },
-        { id:'s5', name:'DB Bent-Over Row',       detail:'12 reps',              sets:3, muscles:[['back','Back'],['back','Lats'],['upper','Biceps']], tip:'Hip hinge, flat back — row both DBs to lower ribcage', video_url:'https://www.youtube.com/watch?v=FWJR5Ve8bnQ' },
+        { id:'s5', name:'DB Bent-Over Row',       detail:'12 reps',              sets:3, muscles:[['back','Back'],['back','Lats'],['upper','Biceps'],['core','Core']], tip:'Hip hinge, flat back — row both DBs to lower ribcage', video_url:'https://www.youtube.com/watch?v=FWJR5Ve8bnQ' },
       ]},
       { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds', weighted:true, exercises:[
         { id:'c1', name:'Dead Bug',               detail:'10 each side',         sets:2, muscles:[['core','Core']], tip:null, video_url:'https://www.youtube.com/watch?v=4XLEnwUr1d8' },
@@ -827,6 +849,7 @@ const WORKOUTS = {
   // ── CARDIO: EASY RUN ────────────────────────────────
   'run-easy': {
     title:'Zone 2 Easy Run', mode:'cardio', sport:'run', icon:'🏃',
+    muscles_worked:['core','quads','hamstrings','glutes','calves'],
     totalSets:1, target:'30–40 min', zone:2, zoneName:'Easy Aerobic',
     hrRange:'120–145 bpm', rpe:'4–5 / 10',
     description:'The aerobic foundation of every triathlon plan. At this pace your body learns to burn fat efficiently and builds the mitochondrial density needed for race-day endurance.',
@@ -844,6 +867,7 @@ const WORKOUTS = {
   // ── CARDIO: SWIM ─────────────────────────────────────
   'swim-easy': {
     title:'Swim Technique Session', mode:'cardio', sport:'swim', icon:'🏊',
+    muscles_worked:['core','obliques','lats','shoulders','triceps'],
     totalSets:1, target:'20–30 min', zone:2, zoneName:'Technique Focus',
     hrRange:'Low intensity', rpe:'3–5 / 10',
     description:'Swim technique is the highest-leverage improvement in triathlon. Poor form in the water costs exponentially more energy than poor form on the bike or run.',
@@ -861,6 +885,7 @@ const WORKOUTS = {
   // ── CARDIO: LONG RIDE ────────────────────────────────
   'bike-long': {
     title:'Long Zone 2 Ride', mode:'cardio', sport:'bike', icon:'🚴',
+    muscles_worked:['core','quads','hamstrings','glutes','calves'],
     totalSets:1, target:'45–75 min', zone:2, zoneName:'Aerobic Base',
     hrRange:'120–145 bpm', rpe:'4–5 / 10',
     description:'Your weekly long ride builds the cycling-specific endurance that\'s the backbone of triathlon performance. The bike leg is where most race time is spent.',
@@ -1427,8 +1452,17 @@ async function submitWorkout() {
   if(!state.endMs && state.startMs){ state.endMs=Date.now(); saveState(); }
   setSyncStatus('syncing');
   try {
-    await ensureSession();
+    const sessionId = await ensureSession();
     await Promise.all(WORKOUT.sections.flatMap(sec=>sec.exercises.filter(ex=>(state.checks[ex.id]||0)>0).map(ex=>syncExerciseLog(ex.id))));
+    // Log muscle groups for cardio sessions (swim/run/bike don't have exercise dots)
+    if(WORKOUT.mode === 'cardio' && WORKOUT.muscles_worked?.length && sessionId) {
+      await sb.from('exercise_logs').insert({
+        session_id:sessionId, exercise_id:`${WORKOUT.sport}-session`,
+        exercise_name:WORKOUT.title, section:'cardio',
+        sets_completed:1, total_sets:1,
+        muscle_groups:WORKOUT.muscles_worked, weight_lbs:null,
+      });
+    }
     await syncSession();
     // Flush all weights to weight_logs so history is always up-to-date
     if(WORKOUT.mode !== 'cardio') {
@@ -1513,6 +1547,105 @@ function relativeDate(iso) {
   if(diff===0) return 'Today'; if(diff===1) return 'Yesterday';
   if(diff<7) return `${diff}d ago`;
   return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+
+async function fetchStravaActivities(days=14) {
+  try {
+    const res = await fetch(STRAVA_CSV_URL);
+    if(!res.ok) return [];
+    const lines = (await res.text()).trim().split('\n');
+    const h = lines[0].split(',').map(x=>x.replace(/"/g,'').trim());
+    const ni=h.findIndex(x=>x==='Name'), ti=h.findIndex(x=>x==='Type'),
+          di=h.findIndex(x=>x.includes('Distance')), mi=h.findIndex(x=>x.includes('Moving')),
+          si=h.findIndex(x=>x.includes('Start'));
+    const cutoff = Date.now() - days*86400000;
+    const acts = [];
+    for(let i=1; i<lines.length; i++) {
+      const f = lines[i].split(',').map(x=>x.replace(/"/g,'').trim());
+      if(!f[si]) continue;
+      const dt = new Date(f[si]);
+      if(isNaN(dt.getTime())||dt.getTime()<cutoff) continue;
+      const type = f[ti]||'';
+      if(type==='WeightTraining') continue;
+      acts.push({ source:'strava', type, name:f[ni]||'Activity',
+        started_at:dt.toISOString(), distance_m:parseFloat(f[di])||0,
+        moving_s:parseFloat(f[mi])||0, muscles:STRAVA_MUSCLES[type]||[] });
+    }
+    return acts.sort((a,b)=>new Date(b.started_at)-new Date(a.started_at));
+  } catch(e){ return []; }
+}
+
+function buildMuscleTimeline(sessions, logsBySess, stravaActs) {
+  const last = {};
+  sessions.forEach(s => {
+    const dt = new Date(s.started_at);
+    (logsBySess[s.id]||[]).forEach(m => { if(!last[m]||dt>last[m]) last[m]=dt; });
+  });
+  stravaActs.forEach(a => {
+    const dt = new Date(a.started_at);
+    a.muscles.forEach(m => { if(!last[m]||dt>last[m]) last[m]=dt; });
+  });
+  return last;
+}
+
+function getReadiness(muscleTimeline) {
+  const now = Date.now();
+  const r = {};
+  Object.keys(RECOVERY_H).forEach(m => {
+    r[m] = muscleTimeline[m]
+      ? Math.min(1, (now - muscleTimeline[m].getTime()) / (RECOVERY_H[m]*3600000))
+      : 1.0;
+  });
+  return r;
+}
+
+function rankWorkouts(readiness) {
+  return Object.entries(DB_REC_MUSCLES).map(([wid,ms])=>({
+    wid, name:DB_REC_NAMES[wid],
+    score: ms.reduce((sum,m)=>sum+(readiness[m]??1),0)/ms.length,
+    muscles: [...new Set(ms)],
+  })).sort((a,b)=>b.score-a.score);
+}
+
+function renderRecoveryPanel(readiness, top) {
+  const pct = m => Math.round((readiness[m]??1)*100);
+  const bar = m => {
+    const p = pct(m);
+    const col = p>=80?'#22c55e':p>=50?'#fbbf24':'#f97316';
+    return `<div style="flex:1;height:5px;background:rgba(255,255,255,.1);border-radius:3px">
+      <div style="width:${p}%;height:100%;border-radius:3px;background:${col}"></div></div>`;
+  };
+  const avgPct = Math.round(top.score*100);
+  const tip = avgPct>=80?'Ready to go':'Mostly recovered — light session OK';
+  return `<div style="background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.22);border-radius:12px;padding:12px 14px;margin-bottom:12px">
+    <div style="font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:var(--accent);margin-bottom:8px">🎯 Recommended Next</div>
+    <div style="font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:2px">${top.name}</div>
+    <div style="font-size:.64rem;color:var(--muted-light);margin-bottom:10px">${tip} · primary muscles avg ${avgPct}% recovered</div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      ${top.muscles.map(m=>`<div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:.62rem;color:var(--muted-light);width:88px;flex-shrink:0;text-transform:capitalize">${m}</span>
+        ${bar(m)}
+        <span style="font-size:.62rem;font-weight:700;width:32px;text-align:right;color:${pct(m)>=80?'#22c55e':pct(m)>=50?'#fbbf24':'#f97316'}">${pct(m)}%</span>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderStravaCard(a) {
+  const icon = a.type==='Swim'?'🏊':a.type==='Run'?'🏃':'🚴';
+  const distMi = a.distance_m>100 ? `${(a.distance_m/1609.34).toFixed(1)}mi · ` : '';
+  const durMin = Math.round(a.moving_s/60);
+  const muscles = a.muscles.slice(0,3).join(', ')||'cardio';
+  const extra = a.muscles.length>3?` +${a.muscles.length-3}`:'';
+  return `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid rgba(252,76,2,.15);background:rgba(252,76,2,.04);margin-bottom:8px">
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(252,76,2,.15);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">${icon}</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:.78rem;font-weight:700;color:var(--text)">${a.name}</div>
+      <div style="font-size:.64rem;color:var(--muted-light);margin-top:2px">${distMi}${durMin}m · ${muscles}${extra}</div>
+      <div style="display:inline-flex;align-items:center;font-size:.54rem;font-weight:800;color:#fc4c02;background:rgba(252,76,2,.1);border:1px solid rgba(252,76,2,.2);border-radius:6px;padding:2px 7px;margin-top:4px">Strava</div>
+    </div>
+    <div style="font-size:.68rem;font-weight:700;color:var(--muted-light);flex-shrink:0">${relativeDate(a.started_at)}</div>
+  </div>`;
 }
 
 async function loadHistory() {

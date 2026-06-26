@@ -67,7 +67,7 @@ WORKOUTS = {
     'db-push': {
         'name': 'DB Push Day',
         'type': 'dumbbell',
-        'primary_muscles': ['chest', 'shoulders', 'triceps'],
+        'primary_muscles': ['chest', 'shoulders', 'triceps', 'core'],
         'exercises': [
             {'id': 'db-chest-press',      'name': 'DB Chest Press',      'sets': 4, 'base_weight': 35.0},
             {'id': 'db-incline-press',    'name': 'DB Incline Press',    'sets': 3, 'base_weight': 30.0},
@@ -79,7 +79,7 @@ WORKOUTS = {
     'db-lower': {
         'name': 'DB Lower Body',
         'type': 'dumbbell',
-        'primary_muscles': ['quads', 'hamstrings', 'glutes', 'calves'],
+        'primary_muscles': ['quads', 'hamstrings', 'glutes', 'calves', 'core'],
         'exercises': [
             {'id': 'db-goblet-squat', 'name': 'Goblet Squat',       'sets': 4, 'base_weight': 40.0},
             {'id': 'db-rdl',          'name': 'Romanian Deadlift',  'sets': 3, 'base_weight': 35.0},
@@ -91,7 +91,7 @@ WORKOUTS = {
     'db-pull': {
         'name': 'DB Pull Day',
         'type': 'dumbbell',
-        'primary_muscles': ['back', 'biceps'],
+        'primary_muscles': ['back', 'lats', 'biceps', 'core'],
         'exercises': [
             {'id': 'db-bent-row',    'name': 'Bent-Over Row',      'sets': 4, 'base_weight': 35.0},
             {'id': 'db-single-row',  'name': 'Single-Arm Row',     'sets': 3, 'base_weight': 35.0},
@@ -103,7 +103,7 @@ WORKOUTS = {
     'db-upper': {
         'name': 'DB Upper Body',
         'type': 'dumbbell',
-        'primary_muscles': ['chest', 'back', 'shoulders', 'biceps', 'triceps'],
+        'primary_muscles': ['chest', 'back', 'lats', 'shoulders', 'biceps', 'triceps', 'core'],
         'exercises': [
             {'id': 'db-chest-press-u',    'name': 'DB Chest Press',       'sets': 3, 'base_weight': 35.0},
             {'id': 'db-bent-row-u',       'name': 'Bent-Over Row',        'sets': 3, 'base_weight': 35.0},
@@ -112,12 +112,26 @@ WORKOUTS = {
             {'id': 'db-tricep-ext',       'name': 'Overhead Tricep Ext',  'sets': 3, 'base_weight': 20.0},
         ],
     },
+    'full-body-core': {
+        'name': 'Full Body Core Focus',
+        'type': 'dumbbell',
+        'primary_muscles': ['chest', 'back', 'lats', 'shoulders', 'quads', 'glutes', 'hamstrings', 'core'],
+        'exercises': [
+            {'id': 'fbc-goblet-squat',   'name': 'Goblet Squat',          'sets': 3, 'base_weight': 35.0},
+            {'id': 'fbc-db-row',         'name': 'Dumbbell Row',           'sets': 3, 'base_weight': 30.0},
+            {'id': 'fbc-floor-press',    'name': 'DB Floor Press',         'sets': 3, 'base_weight': 30.0},
+            {'id': 'fbc-rdl',            'name': 'Romanian Deadlift',      'sets': 3, 'base_weight': 35.0},
+            {'id': 'fbc-russian-twist',  'name': 'Weighted Russian Twist', 'sets': 2, 'base_weight': 10.0},
+            {'id': 'fbc-deadbug',        'name': 'Dumbbell Deadbug',       'sets': 2, 'base_weight': 5.0},
+        ],
+    },
 }
 
 RECOVERY_HOURS = {
     'chest': 60, 'shoulders': 48, 'triceps': 48,
-    'back':  60, 'biceps':    48,
+    'back':  60, 'biceps':    48, 'lats':    60,
     'quads': 72, 'hamstrings': 72, 'glutes': 72, 'calves': 48,
+    'core':  36,  # recovers faster than compound muscle groups
 }
 
 PERSONAS = {

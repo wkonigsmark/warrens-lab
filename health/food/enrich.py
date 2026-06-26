@@ -246,15 +246,16 @@ def parse_serving_sizes(detail):
 
 def upsert_food(conn, name, display_name, category, subcategory, tags):
     c = conn.cursor()
+    c.execute("SELECT id FROM foods WHERE name = ?", (name,))
+    row = c.fetchone()
+    if row:
+        return row["id"]
     c.execute("""
         INSERT INTO foods (name, display_name, category, subcategory, tags)
         VALUES (?, ?, ?, ?, ?)
-        ON CONFLICT DO NOTHING
     """, (name, display_name, category, subcategory, json.dumps(tags)))
     conn.commit()
-    c.execute("SELECT id FROM foods WHERE name = ?", (name,))
-    row = c.fetchone()
-    return row["id"] if row else None
+    return c.lastrowid
 
 def write_nutrients(conn, food_id, nutrients, aminos, fdc_id, usda_type, servings):
     c = conn.cursor()
@@ -305,12 +306,15 @@ def write_nutrients(conn, food_id, nutrients, aminos, fdc_id, usda_type, serving
 
 # ── Main enrichment logic ─────────────────────────────────────────────────────
 
-def enrich_food(conn, api_key, name, display_name, category, subcategory, tags, verbose=True):
+def enrich_food(conn, api_key, name, display_name, category, subcategory, tags, verbose=True, sr_only=False):
     if verbose:
         print(f"  Searching: {display_name!r} ({name!r})")
 
-    # Search Foundation + SR Legacy first, then fall back to all types
-    candidates = search_food(name, api_key, data_types=["Foundation", "SR Legacy"])
+    if sr_only:
+        candidates = search_food(name, api_key, data_types=["SR Legacy"])
+    else:
+        # Search Foundation + SR Legacy first, then fall back to all types
+        candidates = search_food(name, api_key, data_types=["Foundation", "SR Legacy"])
     if not candidates:
         candidates = search_food(name, api_key)
     if not candidates:
@@ -353,8 +357,14 @@ def enrich_all_seeds(verbose=True, seed_module="seed_list"):
         from seed_list import SEED_FOODS as foods
     elif seed_module == "seed_list_v2":
         from seed_list_v2 import SEED_FOODS_V2 as foods
-    else:
+    elif seed_module == "seed_list_v2_fixes":
         from seed_list_v2_fixes import SEED_FIXES as foods
+    elif seed_module == "seed_list_v2_retry":
+        from seed_list_v2_retry import SEED_RETRY as foods
+    elif seed_module == "seed_list_v3":
+        from seed_list_v3 import SEED_FOODS_V3 as foods
+    else:
+        from seed_list_v4 import SEED_FOODS_V4 as foods
 
     if not DB_PATH.exists():
         init_db()
@@ -362,11 +372,13 @@ def enrich_all_seeds(verbose=True, seed_module="seed_list"):
     api_key = load_api_key()
     conn = get_connection()
 
+    sr_only = seed_module in ("seed_list_v2_retry", "seed_list_v3", "seed_list_v4")
+
     ok, fail = 0, 0
     for item in foods:
         name, display_name, category, subcategory, tags = item
         try:
-            success = enrich_food(conn, api_key, name, display_name, category, subcategory, tags, verbose)
+            success = enrich_food(conn, api_key, name, display_name, category, subcategory, tags, verbose, sr_only=sr_only)
             if success:
                 ok += 1
             else:
@@ -387,6 +399,9 @@ if __name__ == "__main__":
     parser.add_argument("--seed", action="store_true", help="Enrich all seed list foods (seed_list.py)")
     parser.add_argument("--seed-v2", action="store_true", help="Enrich expansion seed list (seed_list_v2.py, ~200 new foods)")
     parser.add_argument("--seed-fixes", action="store_true", help="Re-enrich failed/unenriched v2 items with corrected search terms")
+    parser.add_argument("--seed-retry", action="store_true", help="Retry 36 unenriched foods with correct SR Legacy search terms")
+    parser.add_argument("--seed-v3", action="store_true", help="Enrich v3 expansion (~130 new foods, SR Legacy only)")
+    parser.add_argument("--seed-v4", action="store_true", help="Enrich v4 expansion (~140 new foods, SR Legacy only)")
     parser.add_argument("--food", type=str, help="Search and enrich a single food by name")
     parser.add_argument("--display", type=str, default=None, help="Display name for --food")
     parser.add_argument("--category", type=str, default="other", help="Category for --food")
@@ -412,6 +427,18 @@ if __name__ == "__main__":
     elif args.seed_fixes:
         conn.close()
         enrich_all_seeds(verbose, seed_module="seed_list_v2_fixes")
+
+    elif args.seed_retry:
+        conn.close()
+        enrich_all_seeds(verbose, seed_module="seed_list_v2_retry")
+
+    elif args.seed_v3:
+        conn.close()
+        enrich_all_seeds(verbose, seed_module="seed_list_v3")
+
+    elif args.seed_v4:
+        conn.close()
+        enrich_all_seeds(verbose, seed_module="seed_list_v4")
 
     elif args.food:
         display = args.display or args.food.title()
