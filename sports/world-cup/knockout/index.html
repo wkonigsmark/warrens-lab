@@ -148,6 +148,27 @@
       border-top:1px dashed rgba(255,255,255,0.1);
     }
 
+    /* Desktop-only elements hidden on mobile */
+    @media(max-width:899px) { .ko-desktop-only { display:none !important; } }
+
+    /* Deadline banner */
+    .ko-deadline-banner {
+      background:rgba(244,201,93,0.1); border:1px solid rgba(244,201,93,0.35);
+      border-radius:10px; padding:12px 18px; margin-bottom:24px;
+      font-size:0.85rem; font-weight:750; color:var(--wc-cream); text-align:center; line-height:1.5;
+    }
+    .ko-deadline-banner strong { color:var(--wc-gold); }
+
+    /* Completion toast for mobile */
+    .ko-complete-toast {
+      position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
+      background:rgba(10,26,20,0.96); border:1px solid rgba(244,201,93,0.5);
+      border-radius:12px; padding:14px 20px; color:var(--wc-gold);
+      font-size:0.82rem; font-weight:850; white-space:nowrap;
+      z-index:100; pointer-events:none; opacity:0; transition:opacity .3s;
+    }
+    .ko-complete-toast.show { opacity:1; }
+
     /* ── Mobile bracket (scroll-snap pane layout) ───────────────── */
     #bk-mobile { display:none; }
 
@@ -386,6 +407,9 @@
           <h1>Knockout Pool</h1>
           <p>Pick every match R32 → Final · Golden Boot tiebreaker · $50 entry</p>
         </div>
+        <div class="ko-deadline-banner">
+          💳 <strong>$50 entry</strong> — Venmo <strong>@Warren-Konigsmark</strong> &nbsp;·&nbsp; Due by <strong>3 PM EST Sunday</strong>
+        </div>
 
         <!-- Entrant info -->
         <div class="ko-info-section">
@@ -506,8 +530,8 @@
           </div><!-- /.bk-body -->
         </div><!-- /.bk-wrap -->
 
-        <!-- ── 3rd Place (below bracket) ─────────────────── -->
-        <div class="round-section">
+        <!-- ── 3rd Place (below bracket) — hidden on mobile, handled in pane 3 ── -->
+        <div class="round-section ko-desktop-only">
           <div class="round-header">
             <span class="round-title">🥉 3rd Place Match</span>
             <span class="round-badge" id="badge-end">0 / 1</span>
@@ -774,10 +798,10 @@
     function finalSlot() { return { top: picks.sf[0] || null, bot: picks.sf[1] || null }; }
     function thirdSlot() {
       if (!picks.sf[0] || !picks.sf[1]) return { top: null, bot: null };
-      const { top: qa, bot: qb } = qfSlot(0);
-      const { top: qc, bot: qd } = qfSlot(1);
-      const loser0 = (picks.sf[0] === qa) ? qb : qa;
-      const loser1 = (picks.sf[1] === qc) ? qd : qc;
+      const sf0 = sfSlot(0); // {top: QF winner 0, bot: QF winner 1} — the two SF1 teams
+      const sf1 = sfSlot(1); // {top: QF winner 2, bot: QF winner 3} — the two SF2 teams
+      const loser0 = picks.sf[0] === sf0.top ? sf0.bot : sf0.top;
+      const loser1 = picks.sf[1] === sf1.top ? sf1.bot : sf1.top;
       return { top: loser0 || null, bot: loser1 || null };
     }
 
@@ -1029,8 +1053,8 @@
         btn.addEventListener("click", () => {
           const { round, idx, team } = btn.dataset;
           if (!team) return;
-          if (round === "final") { picks.final = team; renderAllRounds(); updateProgress(); updateSubmitBtn(); return; }
-          if (round === "third") { picks.third = team; renderAllRounds(); updateProgress(); updateSubmitBtn(); return; }
+          if (round === "final") { picks.final = team; renderAllRounds(); updateProgress(); updateSubmitBtn(); checkMobileAutoAdvance(); return; }
+          if (round === "third") { picks.third = team; renderAllRounds(); updateProgress(); updateSubmitBtn(); checkMobileAutoAdvance(); return; }
           setPick(round, parseInt(idx), team);
         });
       });
@@ -1040,32 +1064,60 @@
       mobilePane = Math.max(0, Math.min(3, n));
       const wrap = el("bk-mpanes");
       if (!wrap) return;
-      // Rebuild to update content, then smooth-scroll horizontally
       renderMobileBracket();
       requestAnimationFrame(() => {
         wrap.style.scrollBehavior = 'smooth';
         wrap.scrollLeft = mobilePane * wrap.offsetWidth;
         setTimeout(() => { wrap.style.scrollBehavior = ''; }, 600);
       });
-      // Scroll page so the sticky nav bar is at the top of the viewport
-      const nav = el("bk-mnav");
-      if (nav) {
-        const navTop = nav.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo({ top: navTop - 4, behavior: 'smooth' });
+      // Scroll page to top of #bk-mobile (not the sticky nav — its getBCR is always 0 when stuck)
+      const mobile = el("bk-mobile");
+      if (mobile) {
+        const absTop = mobile.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: Math.max(0, absTop - 8), behavior: 'smooth' });
       }
+    }
+
+    function showMobileToast(msg) {
+      let t = document.getElementById('ko-mob-toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'ko-mob-toast';
+        t.className = 'ko-complete-toast';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
     }
 
     function checkMobileAutoAdvance() {
       if (window.innerWidth > 899 || autoAdvanceTimer) return;
       const totals = [16, 8, 4, 2];
       const rounds = ['r32','r16','qf','sf'];
-      if (mobilePane >= totals.length) return;
-      const done = picks[rounds[mobilePane]].filter(Boolean).length;
-      if (done >= totals[mobilePane]) {
-        autoAdvanceTimer = setTimeout(() => {
-          autoAdvanceTimer = null;
-          scrollMobileToPane(mobilePane + 1);
-        }, 500);
+      if (mobilePane < 3) {
+        // Advance panes 0–2 when that round is fully picked
+        const done = picks[rounds[mobilePane]].filter(Boolean).length;
+        if (done >= totals[mobilePane]) {
+          autoAdvanceTimer = setTimeout(() => {
+            autoAdvanceTimer = null;
+            scrollMobileToPane(mobilePane + 1);
+          }, 500);
+        }
+      } else {
+        // Pane 3 (SF·Final): once SF + Final + 3rd all picked, nudge to tiebreakers
+        const allDone = picks.sf.filter(Boolean).length === 2 && picks.final && picks.third;
+        if (allDone) {
+          autoAdvanceTimer = setTimeout(() => {
+            autoAdvanceTimer = null;
+            showMobileToast('🎉 All picks done! Scroll down to finish & submit.');
+            const tb = document.querySelector('.tb-section');
+            if (tb) {
+              const absTop = tb.getBoundingClientRect().top + window.scrollY;
+              window.scrollTo({ top: Math.max(0, absTop - 24), behavior: 'smooth' });
+            }
+          }, 700);
+        }
       }
     }
 
