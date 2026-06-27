@@ -301,6 +301,31 @@
     .plan-score-pill.rest{background:rgba(255,255,255,.06);color:var(--muted-light)}
     .plan-cardio-note{font-size:.7rem;font-weight:600;color:#fc4c02;background:rgba(252,76,2,.08);border:1px solid rgba(252,76,2,.2);border-radius:10px;padding:9px 12px;margin-top:12px;line-height:1.5}
 
+    /* ── SMART BUILD ── */
+    .smart-btn{display:inline-flex;align-items:center;gap:5px;font-family:inherit;font-size:.66rem;font-weight:800;padding:7px 16px;border-radius:20px;cursor:pointer;letter-spacing:.02em;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);color:#fbbf24;transition:background .15s}
+    .smart-btn:hover{background:rgba(251,191,36,.2)}
+    .smart-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+    .smart-overlay.open{opacity:1;pointer-events:all}
+    .smart-overlay::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(6px)}
+    .smart-modal{position:relative;width:100%;max-width:520px;max-height:86vh;overflow-y:auto;background:var(--surface);border-radius:22px 22px 0 0;padding-bottom:36px;transform:translateY(100%);transition:transform .32s cubic-bezier(.32,1,.6,1)}
+    .smart-overlay.open .smart-modal{transform:translateY(0)}
+    .smart-drag{width:36px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:10px auto 4px}
+    .smart-hd{position:sticky;top:0;background:var(--surface);border-bottom:1px solid var(--border);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;z-index:2}
+    .smart-title{font-size:.88rem;font-weight:900}
+    .smart-close{background:rgba(255,255,255,.07);border:none;color:var(--muted-light);cursor:pointer;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;transition:background .15s;flex-shrink:0}
+    .smart-close:hover{background:rgba(255,255,255,.14)}
+    .muscle-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:14px 18px}
+    .muscle-toggle{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:12px;border:1px solid var(--border);background:var(--card);cursor:pointer;transition:border-color .15s,background .15s;user-select:none}
+    .muscle-toggle.selected{border-color:#fbbf24;background:rgba(251,191,36,.08)}
+    .muscle-toggle-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#000;flex-shrink:0;transition:background .15s,border-color .15s}
+    .muscle-toggle.selected .muscle-toggle-check{background:#fbbf24;border-color:#fbbf24}
+    .muscle-toggle-name{font-size:.72rem;font-weight:700;text-transform:capitalize;color:var(--text)}
+    .muscle-toggle-pct{font-size:.6rem;font-weight:700;margin-top:1px}
+    .smart-build-btn{display:block;width:calc(100% - 36px);margin:4px 18px 0;padding:13px;border-radius:12px;background:linear-gradient(135deg,#fbbf24,#f97316);border:none;color:#000;font-family:inherit;font-size:.82rem;font-weight:900;cursor:pointer;letter-spacing:.02em;transition:opacity .15s}
+    .smart-build-btn:hover{opacity:.9}
+    .smart-build-btn:disabled{opacity:.35;cursor:not-allowed}
+    .smart-tag{display:inline-flex;align-items:center;gap:5px;font-size:.56rem;font-weight:900;padding:3px 8px;border-radius:20px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.35);color:#fbbf24;vertical-align:middle;margin-left:6px}
+
     /* ── NUTRITION / PANEL ── */
     .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:17px 15px;margin-bottom:10px}
     .panel-hd{font-size:.67rem;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:var(--muted-light);margin-bottom:13px;display:flex;align-items:center;gap:8px}
@@ -404,6 +429,9 @@
     </div>
   </div>
   <div class="week-scroll" id="weekScroll"></div>
+  <div style="padding:8px 0 2px;text-align:center">
+    <button class="smart-btn" onclick="openSmartBuilder()">⚡ Smart Build — auto-select by recovery</button>
+  </div>
 </div>
 
 <!-- HERO -->
@@ -541,6 +569,76 @@ const DB_REC_MUSCLES = {
 const DB_REC_NAMES = {
   'db-push':'DB Push Day','db-lower':'DB Lower Body','db-pull':'DB Pull & Back',
   'db-upper':'DB Upper Burn','full-body-core':'Full Body Core Focus',
+};
+
+const SMART_POOL = {
+  chest:[
+    {name:'DB Floor Press',     detail:'12 reps',           sets:3, muscles:[['upper','Chest'],['upper','Triceps']], tip:'Elbows at 45° — touch floor, lockout at top', video_url:'https://www.youtube.com/watch?v=uUGDRwge4F8'},
+    {name:'DB Chest Fly',       detail:'12-15 reps',        sets:3, muscles:[['upper','Chest']], tip:'Wide arc, slight bend in elbows — feel the stretch', video_url:'https://www.youtube.com/watch?v=eozdVDA78K0'},
+    {name:'Push-Ups',           detail:'15 reps',           sets:3, muscles:[['upper','Chest'],['upper','Triceps']], tip:'Full range — chest touches floor at bottom', video_url:'https://www.youtube.com/watch?v=IODxDxX7oi4'},
+    {name:'DB Squeeze Press',   detail:'12 reps',           sets:3, muscles:[['upper','Chest']], tip:'Press DBs together hard throughout — constant tension', video_url:'https://www.youtube.com/results?search_query=dumbbell+squeeze+press+chest'},
+  ],
+  back:[
+    {name:'Single-Arm DB Row',  detail:'10-12 reps each side', sets:3, muscles:[['back','Back'],['upper','Biceps']], tip:'Drive elbow to ceiling, not the weight', video_url:'https://www.youtube.com/watch?v=pYcpY20QaE8'},
+    {name:'Bent-Over DB Row',   detail:'10-12 reps',        sets:3, muscles:[['back','Back'],['back','Lats']], tip:'Hinge 45°, pull to hip — squeeze shoulder blades', video_url:'https://www.youtube.com/watch?v=FWJR5Ve8bnQ'},
+    {name:'DB Reverse Fly',     detail:'15 reps',           sets:3, muscles:[['back','Rear Delts'],['back','Rhomboids']], tip:'Lead with elbows — squeeze hard at top', video_url:'https://www.youtube.com/watch?v=Dt8PkLbIfDU'},
+  ],
+  lats:[
+    {name:'DB Pullover',        detail:'12 reps',           sets:3, muscles:[['back','Lats'],['upper','Chest']], tip:'Arms nearly straight — feel the lat stretch', video_url:'https://www.youtube.com/watch?v=FK4rHfPuKbM'},
+    {name:'Renegade Row',       detail:'8-10 reps each side', sets:3, muscles:[['back','Lats'],['core','Core']], tip:'Hips square to floor — no rotation', video_url:'https://www.youtube.com/watch?v=pYcpY20QaE8'},
+    {name:'Wide-Grip DB Row',   detail:'12 reps',           sets:3, muscles:[['back','Lats']], tip:'Elbows flare wide — biases lats over biceps', video_url:'https://www.youtube.com/watch?v=FWJR5Ve8bnQ'},
+  ],
+  shoulders:[
+    {name:'DB Overhead Press',  detail:'10-12 reps',        sets:3, muscles:[['upper','Shoulders'],['upper','Triceps']], tip:'Core braced — press overhead without flaring ribs', video_url:'https://www.youtube.com/watch?v=qEwKCR5JCog'},
+    {name:'DB Lateral Raise',   detail:'12-15 reps',        sets:3, muscles:[['upper','Shoulders']], tip:'Slight forward lean, lead with elbows', video_url:'https://www.youtube.com/watch?v=3VcKaXpzqRo'},
+    {name:'DB Arnold Press',    detail:'10-12 reps',        sets:3, muscles:[['upper','Shoulders'],['upper','Triceps']], tip:'Rotate palms out as you press — hits all 3 delt heads', video_url:'https://www.youtube.com/watch?v=vj2w851ZHRM'},
+    {name:'DB Front Raise',     detail:'12 reps',           sets:3, muscles:[['upper','Shoulders']], tip:'Raise to shoulder height, controlled — no swinging', video_url:'https://www.youtube.com/watch?v=hRu2ECKaVqg'},
+  ],
+  biceps:[
+    {name:'DB Bicep Curl',      detail:'12 reps',           sets:3, muscles:[['upper','Biceps']], tip:'Elbows pinned to ribs — no body swing', video_url:'https://www.youtube.com/watch?v=ykJmrZ5v0Oo'},
+    {name:'Hammer Curl',        detail:'12 reps each arm',  sets:3, muscles:[['upper','Biceps'],['upper','Brachialis']], tip:'Neutral grip — great for arm thickness', video_url:'https://www.youtube.com/watch?v=zC3nLlEvin4'},
+    {name:'Concentration Curl', detail:'10 reps each side', sets:3, muscles:[['upper','Biceps']], tip:'Full stretch at bottom, hard squeeze at top', video_url:'https://www.youtube.com/watch?v=Jvj2wV0vOYU'},
+    {name:'Incline DB Curl',    detail:'10-12 reps',        sets:3, muscles:[['upper','Biceps']], tip:'Long-head emphasis — recline back for peak stretch', video_url:'https://www.youtube.com/watch?v=soxrZlIl35U'},
+  ],
+  triceps:[
+    {name:'DB Tricep Kickback',      detail:'12 reps each side', sets:3, muscles:[['upper','Triceps']], tip:'Upper arm parallel to floor — full extension at top', video_url:'https://www.youtube.com/watch?v=6SS6K3lAwZ8'},
+    {name:'Overhead Tricep Ext.',    detail:'12 reps',           sets:3, muscles:[['upper','Triceps']], tip:'Elbows stay close to head throughout', video_url:'https://www.youtube.com/watch?v=_gsUck-7M74'},
+    {name:'DB Skull Crusher',        detail:'12 reps',           sets:3, muscles:[['upper','Triceps']], tip:'Lower to temples with control, press straight up', video_url:'https://www.youtube.com/watch?v=d_KZxkY_0cM'},
+    {name:'Close-Grip Push-Up',      detail:'12 reps',           sets:3, muscles:[['upper','Triceps'],['upper','Chest']], tip:'Hands shoulder-width, elbows track back not out', video_url:'https://www.youtube.com/watch?v=IODxDxX7oi4'},
+  ],
+  quads:[
+    {name:'Goblet Squat',            detail:'12 reps',             sets:3, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Chest tall, knees track over toes', video_url:'https://www.youtube.com/watch?v=MeIiIdhvXT4'},
+    {name:'DB Bulgarian Split Squat',detail:'10 reps each leg',    sets:3, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Front shin stays vertical — don\'t let knee cave', video_url:'https://www.youtube.com/watch?v=2C-uNgKwPLE'},
+    {name:'DB Step-Up',              detail:'12 reps each leg',    sets:3, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Drive through heel — don\'t push off back foot', video_url:'https://www.youtube.com/watch?v=jrgM0nFT2KA'},
+    {name:'DB Wall Sit',             detail:'45 sec',              sets:3, muscles:[['lower','Quads']], tip:'DBs on thighs, thighs parallel to floor', video_url:'https://www.youtube.com/results?search_query=wall+sit+with+dumbbells'},
+  ],
+  hamstrings:[
+    {name:'Romanian Deadlift',       detail:'12 reps',             sets:3, muscles:[['lower','Hamstrings'],['lower','Glutes'],['back','Lower Back']], tip:'Hinge at hips, soft knee bend — feel the stretch', video_url:'https://www.youtube.com/watch?v=jEy_czb3RKA'},
+    {name:'DB Good Morning',         detail:'12 reps',             sets:3, muscles:[['lower','Hamstrings'],['back','Lower Back']], tip:'Hinge forward until you feel the hamstring pull', video_url:'https://www.youtube.com/watch?v=YA-h3n9L4YU'},
+    {name:'Single-Leg Deadlift',     detail:'10 reps each leg',    sets:3, muscles:[['lower','Hamstrings'],['lower','Glutes']], tip:'Hinge forward keeping back flat — slow and controlled', video_url:'https://www.youtube.com/watch?v=lP_UFQs3-ck'},
+  ],
+  glutes:[
+    {name:'DB Hip Thrust',           detail:'12-15 reps',          sets:3, muscles:[['lower','Glutes'],['lower','Hamstrings']], tip:'Full hip extension — squeeze hard at the top', video_url:'https://www.youtube.com/watch?v=LM8XHLYJoYs'},
+    {name:'DB Sumo Deadlift',        detail:'12 reps',             sets:3, muscles:[['lower','Glutes'],['lower','Hamstrings']], tip:'Wide stance, toes out 45° — push the floor away', video_url:'https://www.youtube.com/watch?v=RlXoMB_yaRk'},
+    {name:'Walking Lunges',          detail:'10 reps each leg',    sets:3, muscles:[['lower','Glutes'],['lower','Quads']], tip:'Big step, front knee doesn\'t pass toe', video_url:'https://www.youtube.com/watch?v=L8fvypPrzzs'},
+    {name:'DB Donkey Kick',          detail:'15 reps each side',   sets:3, muscles:[['lower','Glutes']], tip:'Hips square to floor — don\'t rotate', video_url:'https://www.youtube.com/results?search_query=dumbbell+donkey+kick+glute'},
+  ],
+  calves:[
+    {name:'DB Calf Raise',           detail:'20 reps (slow tempo)',sets:4, muscles:[['lower','Calves']], tip:'Full range — all the way up, all the way down', video_url:'https://www.youtube.com/watch?v=c5Kv6-fnTj8'},
+    {name:'Single-Leg Calf Raise',   detail:'15 reps each foot',  sets:3, muscles:[['lower','Calves']], tip:'Hold DB in same-side hand, full range of motion', video_url:'https://www.youtube.com/results?search_query=single+leg+calf+raise+dumbbell'},
+    {name:'Seated Calf Raise',       detail:'20 reps',            sets:3, muscles:[['lower','Calves'],['lower','Soleus']], tip:'DB on knees — heel drops below toes if possible', video_url:'https://www.youtube.com/results?search_query=seated+calf+raise+dumbbell'},
+  ],
+  core:[
+    {name:'Weighted Russian Twists', detail:'15 each side',       sets:3, muscles:[['core','Obliques'],['core','Core']], tip:'Rotate from chest, not arms — lean back 45°', video_url:'https://www.youtube.com/watch?v=wkD8rjkodUI'},
+    {name:'DB Deadbug',              detail:'10 each side',       sets:3, muscles:[['core','Core']], tip:'Lower back pressed to floor the whole time', video_url:'https://www.youtube.com/watch?v=4XLEnwUr1d8'},
+    {name:'Plank Hold',              detail:'45 sec',             sets:3, muscles:[['core','Core'],['upper','Shoulders']], tip:'Squeeze glutes and abs simultaneously', video_url:'https://www.youtube.com/watch?v=pvIjcsm_8dU'},
+    {name:'DB Woodchop',             detail:'12 each side',       sets:3, muscles:[['core','Obliques'],['core','Core']], tip:'Rotate from hips — power from core not arms', video_url:'https://www.youtube.com/results?search_query=dumbbell+woodchop+core'},
+  ],
+  obliques:[
+    {name:'DB Side Bend',            detail:'15 reps each side',  sets:3, muscles:[['core','Obliques']], tip:'Slow on the lowering phase — control the stretch', video_url:'https://www.youtube.com/results?search_query=dumbbell+side+bend+obliques'},
+    {name:'Suitcase Carry',          detail:'40 steps each side', sets:3, muscles:[['core','Obliques'],['core','Core']], tip:'Stand tall — resist leaning toward the weight', video_url:'https://www.youtube.com/results?search_query=suitcase+carry+obliques'},
+    {name:'DB Woodchop',             detail:'12 each side',       sets:3, muscles:[['core','Obliques']], tip:'Rotate from hips — power from core not arms', video_url:'https://www.youtube.com/results?search_query=dumbbell+woodchop+core'},
+  ],
 };
 
 // ═══════════════════════════════════════════════════════
@@ -1584,10 +1682,15 @@ async function deleteSession(sessionId, btn) {
 }
 
 function relativeDate(iso) {
-  const d=new Date(iso),now=new Date(),diff=Math.floor((now-d)/86400000);
-  if(diff===0) return 'Today'; if(diff===1) return 'Yesterday';
-  if(diff<7) return `${diff}d ago`;
-  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const calDay = d => d.toLocaleDateString('en-CA', {timeZone: tz}); // YYYY-MM-DD
+  const d = new Date(iso), now = new Date();
+  const dDay = calDay(d), nowDay = calDay(now);
+  if(dDay === nowDay) return 'Today';
+  if(dDay === calDay(new Date(now - 86400000))) return 'Yesterday';
+  const diffDays = Math.round((new Date(nowDay) - new Date(dDay)) / 86400000);
+  if(diffDays < 7) return `${diffDays}d ago`;
+  return d.toLocaleDateString('en-US', {timeZone: tz, month:'short', day:'numeric'});
 }
 
 function parseCSVLine(line) {
@@ -1662,24 +1765,25 @@ function rankWorkouts(readiness) {
 
 function renderRecoveryPanel(readiness, top) {
   const pct = m => Math.round((readiness[m]??1)*100);
-  const bar = m => {
-    const p = pct(m);
-    const col = p>=80?'#22c55e':p>=50?'#fbbf24':'#f97316';
-    return `<div style="flex:1;height:5px;background:rgba(255,255,255,.1);border-radius:3px">
-      <div style="width:${p}%;height:100%;border-radius:3px;background:${col}"></div></div>`;
-  };
+  const col = p => p>=80?'#22c55e':p>=50?'#fbbf24':p>=25?'#f97316':'#ef4444';
   const avgPct = Math.round(top.score*100);
   const tip = avgPct>=80?'Ready to go':'Mostly recovered — light session OK';
+  const allMuscles = Object.keys(RECOVERY_H).sort((a,b)=>(readiness[a]??1)-(readiness[b]??1));
+  const inTop = new Set(top.muscles);
   return `<div style="background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.22);border-radius:12px;padding:12px 14px;margin-bottom:12px">
-    <div style="font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:var(--accent);margin-bottom:8px">🎯 Recommended Next</div>
+    <div style="font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:var(--accent);margin-bottom:6px">🎯 Recommended Next</div>
     <div style="font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:2px">${top.name}</div>
     <div style="font-size:.64rem;color:var(--muted-light);margin-bottom:10px">${tip} · primary muscles avg ${avgPct}% recovered</div>
+    <div style="font-size:.56rem;text-transform:uppercase;letter-spacing:.09em;font-weight:800;color:var(--muted);margin-bottom:7px">All Muscle Recovery — bold = in this workout</div>
     <div style="display:flex;flex-direction:column;gap:5px">
-      ${top.muscles.map(m=>`<div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:.62rem;color:var(--muted-light);width:88px;flex-shrink:0;text-transform:capitalize">${m}</span>
-        ${bar(m)}
-        <span style="font-size:.62rem;font-weight:700;width:32px;text-align:right;color:${pct(m)>=80?'#22c55e':pct(m)>=50?'#fbbf24':'#f97316'}">${pct(m)}%</span>
-      </div>`).join('')}
+      ${allMuscles.map(m=>{
+        const p=pct(m), c=col(p), bold=inTop.has(m);
+        return `<div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:.62rem;width:90px;flex-shrink:0;text-transform:capitalize;color:${bold?'var(--text)':'var(--muted-light)'};font-weight:${bold?700:400}">${m}</span>
+          <div style="flex:1;height:5px;background:rgba(255,255,255,.1);border-radius:3px"><div style="width:${p}%;height:100%;border-radius:3px;background:${c}"></div></div>
+          <span style="font-size:.62rem;font-weight:700;width:32px;text-align:right;color:${c}">${p}%</span>
+        </div>`;
+      }).join('')}
     </div>
   </div>`;
 }
@@ -1913,6 +2017,126 @@ function closePlanner() {
   document.getElementById('plannerOverlay').classList.remove('open');
 }
 
+// ═══════════════════════════════════════════════════════
+//  SMART BUILD
+// ═══════════════════════════════════════════════════════
+
+function buildSmartWorkout(targetMuscles) {
+  if(!targetMuscles.length) return null;
+  const perMuscle = targetMuscles.length <= 2 ? 3 : targetMuscles.length <= 4 ? 2 : 1;
+  const usedNames = new Set();
+  const exercises = [];
+  for(const m of targetMuscles) {
+    const pool = (SMART_POOL[m]||[]).slice().sort(()=>Math.random()-.5);
+    let added = 0;
+    for(const ex of pool) {
+      if(exercises.length >= 7 || added >= perMuscle) break;
+      if(!usedNames.has(ex.name)) {
+        exercises.push({...ex, id:`sb-${m}-${exercises.length}`});
+        usedNames.add(ex.name);
+        added++;
+      }
+    }
+  }
+  const shuffled = exercises.sort(()=>Math.random()-.5);
+  const warmup = [
+    {id:'sb-w1',name:'Jumping Jacks',              detail:'30 sec',           sets:1, muscles:[['other','Full Body']], tip:null, video_url:'https://www.youtube.com/results?search_query=jumping+jacks+warmup'},
+    {id:'sb-w2',name:'Arm Circles + Shoulder Rolls',detail:'10 each direction',sets:1, muscles:[['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/results?search_query=arm+circles+shoulder+warmup'},
+    {id:'sb-w3',name:'Hip Circles + Leg Swings',   detail:'10 each side',     sets:1, muscles:[['other','Hips'],['lower','Glutes']], tip:null, video_url:'https://www.youtube.com/results?search_query=hip+circles+leg+swings+warmup'},
+  ];
+  const cooldown = [
+    {id:'sb-d1',name:'Standing Quad Stretch',  detail:'Hold 30 sec each',sets:1, muscles:[['lower','Quads']], tip:null, video_url:'https://www.youtube.com/results?search_query=standing+quad+stretch'},
+    {id:'sb-d2',name:'Chest & Shoulder Opener',detail:'Hold 30 sec',     sets:1, muscles:[['upper','Chest'],['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/results?search_query=chest+shoulder+stretch'},
+    {id:'sb-d3',name:'Seated Forward Fold',    detail:'Hold 30-45 sec',  sets:1, muscles:[['lower','Hamstrings'],['back','Lower Back']], tip:null, video_url:'https://www.youtube.com/results?search_query=seated+forward+fold+stretch'},
+  ];
+  const totalSets = warmup.reduce((s,e)=>s+e.sets,0) + shuffled.reduce((s,e)=>s+e.sets,0) + cooldown.reduce((s,e)=>s+e.sets,0);
+  const label = targetMuscles.map(m=>m.charAt(0).toUpperCase()+m.slice(1)).join(' · ');
+  return {
+    id:'smart-build', title:`Smart Build — ${label}`, mode:'dumbbell', totalSets,
+    sections:[
+      {id:'sb-warmup', name:'Warm-Up', emoji:'🔥', meta:'5 min · no equipment', weighted:false, exercises:warmup},
+      {id:'sb-main', name:'Focus Block', emoji:'⚡', meta:`60-90s rest · targets: ${targetMuscles.join(', ')}`, weighted:true, exercises:shuffled},
+      {id:'sb-cooldown', name:'Cool-Down', emoji:'🧘', meta:'5 min · breathe deep', weighted:false, exercises:cooldown},
+    ]
+  };
+}
+
+function loadCustomWorkout(wo) {
+  currentWorkoutId = wo.id;
+  WORKOUT = wo;
+  state = {...STATE_DEFAULTS};
+  document.getElementById('restScreen').classList.remove('visible');
+  document.getElementById('workoutContent').classList.remove('hidden');
+  document.getElementById('mainRingAnchor').parentElement.style.display='';
+  renderHeroMeta();
+  buildSections();
+  updateProgress();
+  populateLastWeights();
+  clearInterval(timerInterval); timerInterval=null;
+  document.getElementById('completionBanner').classList.remove('visible');
+  document.getElementById('ringGlow').classList.remove('on');
+  document.getElementById('statTimer').textContent='—';
+  updateSubmitPanel();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function closeSmartBuilder() {
+  document.getElementById('smartOverlay').classList.remove('open');
+}
+
+function toggleSmartMuscle(el) {
+  const sel = el.dataset.selected==='true';
+  el.dataset.selected = !sel;
+  el.classList.toggle('selected', !sel);
+  el.querySelector('.muscle-toggle-check').textContent = !sel ? '✓' : '';
+}
+
+function executeSmartBuild() {
+  const selected = [...document.querySelectorAll('#smartMuscleGrid .muscle-toggle[data-selected="true"]')].map(el=>el.dataset.muscle);
+  if(!selected.length) return;
+  closeSmartBuilder();
+  loadCustomWorkout(buildSmartWorkout(selected));
+}
+
+async function openSmartBuilder() {
+  const overlay = document.getElementById('smartOverlay');
+  const grid = document.getElementById('smartMuscleGrid');
+  const btn = document.getElementById('smartBuildBtn');
+  grid.innerHTML='<div style="grid-column:1/-1;padding:20px;text-align:center;color:var(--muted-light);font-size:.78rem">Loading recovery data…</div>';
+  btn.disabled=true;
+  overlay.classList.add('open');
+  try {
+    const cutoff14=new Date(Date.now()-14*86400000).toISOString();
+    const [stravaActs,{data:sessions}]=await Promise.all([
+      fetchStravaActivities(14),
+      sb.from('workout_sessions').select('id,started_at').eq('user_id','warren').gt('sets_completed',0).gte('started_at',cutoff14).order('started_at',{ascending:false})
+    ]);
+    const {data:logs}=(sessions||[]).length
+      ? await sb.from('exercise_logs').select('session_id,muscle_groups').in('session_id',(sessions||[]).map(s=>s.id)).gt('sets_completed',0)
+      : {data:[]};
+    const logsBySess={};
+    (logs||[]).forEach(l=>{if(!logsBySess[l.session_id])logsBySess[l.session_id]=[];(l.muscle_groups||[]).forEach(m=>logsBySess[l.session_id].push(m));});
+    const readiness=getReadiness(buildMuscleTimeline(sessions||[],logsBySess,stravaActs));
+    const poolMuscles=Object.keys(SMART_POOL).sort((a,b)=>(readiness[b]??1)-(readiness[a]??1));
+    const autoSelected=new Set(poolMuscles.slice(0,4));
+    grid.innerHTML=poolMuscles.map(m=>{
+      const p=Math.round((readiness[m]??1)*100);
+      const col=p>=80?'#22c55e':p>=50?'#fbbf24':p>=25?'#f97316':'#ef4444';
+      const sel=autoSelected.has(m);
+      return `<div class="muscle-toggle${sel?' selected':''}" data-muscle="${m}" data-selected="${sel}" onclick="toggleSmartMuscle(this)">
+        <div class="muscle-toggle-check">${sel?'✓':''}</div>
+        <div>
+          <div class="muscle-toggle-name">${m}</div>
+          <div class="muscle-toggle-pct" style="color:${col}">${p}% ready</div>
+        </div>
+      </div>`;
+    }).join('');
+    btn.disabled=false;
+  } catch(e) {
+    grid.innerHTML='<div style="grid-column:1/-1;padding:16px;color:var(--red)">Could not load data. Try again.</div>';
+  }
+}
+
 function projectPlan(muscleTimeline, numDays=5) {
   const tl = {};
   Object.keys(muscleTimeline).forEach(m => tl[m] = new Date(muscleTimeline[m].getTime()));
@@ -2047,6 +2271,22 @@ async function openPlanner() {
   }
 }
 </script>
+
+<!-- SMART BUILD MODAL -->
+<div class="smart-overlay" id="smartOverlay" onclick="if(event.target===this)closeSmartBuilder()">
+  <div class="smart-modal">
+    <div class="smart-drag"></div>
+    <div class="smart-hd">
+      <span class="smart-title">⚡ Smart Build</span>
+      <button class="smart-close" onclick="closeSmartBuilder()">✕</button>
+    </div>
+    <div style="padding:12px 18px 4px;font-size:.71rem;color:var(--muted-light);line-height:1.5">
+      Sorted by recovery — top 4 auto-selected. Tap to toggle which muscles to target.
+    </div>
+    <div class="muscle-grid" id="smartMuscleGrid"></div>
+    <button class="smart-build-btn" id="smartBuildBtn" onclick="executeSmartBuild()" disabled>Build My Workout →</button>
+  </div>
+</div>
 
 <!-- PLANNER MODAL -->
 <div class="planner-overlay" id="plannerOverlay" onclick="if(event.target===this)closePlanner()">

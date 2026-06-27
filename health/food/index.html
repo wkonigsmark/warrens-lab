@@ -43,6 +43,124 @@
     margin-left: auto;
   }
 
+  .btn-info-setup {
+    margin-left: 12px;
+    padding: 6px 12px;
+    background: #fbbf24;
+    color: #1a1a1a;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-info-setup:hover { background: #f59e0b; }
+
+  /* ── Modal ─────────────────────────────────────────────────────────────── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.active {
+    display: flex;
+  }
+
+  .modal-content {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 32px;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .modal-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #e6edf3;
+    margin: 0;
+  }
+
+  .modal-section {
+    margin-bottom: 20px;
+  }
+
+  .modal-section h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fbbf24;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .modal-section p {
+    font-size: 13px;
+    color: #8b949e;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .modal-code {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 12px;
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 12px;
+    color: #79c0ff;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+
+  .modal-solution {
+    background: #0d1117;
+    border-left: 3px solid #3fb950;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 4px;
+  }
+
+  .modal-solution strong {
+    color: #3fb950;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: #8b949e;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-close:hover { color: #e6edf3; }
+
   /* ── App layout ───────────────────────────────────────────────────────── */
   .app {
     display: grid;
@@ -518,7 +636,56 @@
 <header>
   <h1>🥗 <span>Nutrition</span> Planner</h1>
   <span class="header-stats" id="dbStats">Loading database…</span>
+  <button class="btn-info-setup" onclick="openSetupGuide()">💡 Setup Guide</button>
 </header>
+
+<!-- Setup Guide Modal -->
+<div class="modal-overlay" id="setupModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeSetupGuide()">✕</button>
+
+    <div class="modal-header">
+      <span>ℹ️</span>
+      <h2>Local Development Setup</h2>
+    </div>
+
+    <div class="modal-section">
+      <h3>⚠️ What's Happening</h3>
+      <p>The Nutrition Planner is a <strong>local development app</strong>. It requires a Python backend server to load food data from the SQLite database. Right now, you may be seeing "Loading foods…" because the server isn't running.</p>
+    </div>
+
+    <div class="modal-section">
+      <h3>✅ Solution 1: Run Locally (Recommended)</h3>
+      <p>Open a terminal and run:</p>
+      <div class="modal-code">cd /Users/warren/labs/warrens-lab-main/health/food<br>python3 server.py</div>
+      <p>Then visit <strong>http://localhost:9020</strong> in your browser. The app will load instantly with all 600+ foods.</p>
+    </div>
+
+    <div class="modal-section">
+      <h3>🚀 Solution 2: Deploy to Production</h3>
+      <p>To use this on your website (burnmarkproductions.com), you'll need to:</p>
+      <div class="modal-solution">
+        <strong>1. Deploy the Python server</strong> — Host server.py on a service like <strong>Railway</strong>, <strong>Heroku</strong>, or <strong>PythonAnywhere</strong>
+      </div>
+      <div class="modal-solution">
+        <strong>2. Update API URLs</strong> — Change the fetch URLs in index.html from relative paths (<code>/api/...</code>) to absolute URLs pointing to your deployed server
+      </div>
+      <div class="modal-solution">
+        <strong>3. Deploy the HTML</strong> — Then push index.html to your static host
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <h3>📊 Database Status</h3>
+      <p>Your food database (<strong>food.db</strong>) contains:</p>
+      <div class="modal-code" id="dbInfoCode">Loading database info…</div>
+    </div>
+
+    <div class="modal-section">
+      <p style="color: #3fb950; font-size: 12px; font-weight: 600;">✓ For now, run the server locally using Solution 1 above.</p>
+    </div>
+  </div>
+</div>
 
 <div class="app">
 
@@ -1002,6 +1169,35 @@ function toggleExpand() {
   toggle.classList.toggle('open', open);
   toggle.childNodes[2].textContent = open ? ' Hide full breakdown' : ' Full nutrient breakdown';
 }
+
+// ── Setup Guide Modal ─────────────────────────────────────────────────────────
+function openSetupGuide() {
+  const modal = document.getElementById('setupModal');
+  modal.classList.add('active');
+
+  // Fetch DB info
+  fetch('/api/categories')
+    .then(r => r.json())
+    .then(cats => {
+      const totalFoods = cats.reduce((sum, c) => sum + c.count, 0);
+      const catList = cats.map(c => `${c.name}: ${c.count}`).join(' • ');
+      document.getElementById('dbInfoCode').textContent = `${totalFoods} foods loaded\n\n${catList}`;
+    })
+    .catch(() => {
+      document.getElementById('dbInfoCode').textContent = '⚠️ Server not responding\nStart the server to load database info';
+    });
+}
+
+function closeSetupGuide() {
+  document.getElementById('setupModal').classList.remove('active');
+}
+
+// Close modal on outside click
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('setupModal').addEventListener('click', (e) => {
+    if (e.target.id === 'setupModal') closeSetupGuide();
+  });
+});
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
 init();
