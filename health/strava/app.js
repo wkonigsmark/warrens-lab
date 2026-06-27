@@ -15,11 +15,13 @@ const app = createApp({
       charts: {
         ytdDistance: null,
         ytdCumulative: null,
-        ytdActivities: null
+        ytdActivities: null,
+        paceTrend: null
       },
       triatlonTypes: ['Run', 'Swim', 'Ride'],
       disciplines: ['Run', 'Swim', 'Ride'],
       selectedDiscipline: 'Run',
+      selectedRunSubtype: 'all', // 'all', 'regular', 'stroller'
       // Published Google Sheet CSV URL
       csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRQeJ7KYeuApFOqd5MhVQoIVqQaE5Nc9RmJuLzLAhpCEKEWKPCX2MzyLE-jzrpF41y7sDRKHLwmXxaP/pub?gid=766949107&single=true&output=csv'
     };
@@ -235,45 +237,176 @@ const app = createApp({
       // Sort by priority
       return milestones.sort((a, b) => a.priority - b.priority);
     },
+    // Trend data for pace chart
+    paceTrendData() {
+      const discipline = this.selectedDiscipline;
+      let activities = this.selectedDisciplineActivities;
+
+      // For Run discipline, further filter by subtype
+      if (discipline === 'Run') {
+        if (this.selectedRunSubtype === 'regular') {
+          activities = activities.filter(a => !a.name.toLowerCase().includes('w/'));
+        } else if (this.selectedRunSubtype === 'stroller') {
+          activities = activities.filter(a => a.name.toLowerCase().includes('w/'));
+        }
+      }
+
+      if (discipline === 'Run' || discipline === 'Swim') {
+        return this.getMovingAverageTrendData(activities, discipline);
+      }
+      return null;
+    },
+
+    // Tomorrow's Workout Recommendation
+    tomorrowsRecommendation() {
+      if (this.activities.length < 5) return null;
+
+      const now = new Date();
+      const last14Days = new Date(now);
+      last14Days.setDate(last14Days.getDate() - 14);
+
+      // Get activities from last 14 days
+      const recentActivities = this.activities.filter(a => new Date(a.startDate) >= last14Days);
+
+      if (recentActivities.length === 0) return null;
+
+      // Count activities by discipline
+      const disciplineCounts = {};
+      const lastActivityDate = {};
+
+      this.triatlonTypes.forEach(type => {
+        disciplineCounts[type] = 0;
+        lastActivityDate[type] = null;
+      });
+
+      recentActivities.forEach(a => {
+        if (this.triatlonTypes.includes(a.type)) {
+          disciplineCounts[a.type]++;
+          if (!lastActivityDate[a.type]) {
+            lastActivityDate[a.type] = new Date(a.startDate);
+          }
+        }
+      });
+
+      // Calculate days since last activity
+      const daysSinceLast = {};
+      this.triatlonTypes.forEach(type => {
+        if (lastActivityDate[type]) {
+          daysSinceLast[type] = Math.floor((now - lastActivityDate[type]) / (1000 * 60 * 60 * 24));
+        } else {
+          daysSinceLast[type] = 999; // Never done
+        }
+      });
+
+      // Find most overdue discipline
+      const mostOverdue = Object.keys(daysSinceLast).reduce((prev, curr) =>
+        daysSinceLast[curr] > daysSinceLast[prev] ? curr : prev
+      );
+
+      // Get averages for recommended discipline
+      const disciplineActivities = this.triathlonActivities.filter(a => a.type === mostOverdue);
+      const avgDistance = disciplineActivities.length > 0 ?
+        (disciplineActivities.reduce((sum, a) => sum + a.distance, 0) / disciplineActivities.length) : 0;
+
+      let suggestedDistance = avgDistance;
+      let intensity = 'moderate';
+
+      // Determine intensity based on recent pattern
+      const recentIntensity = recentActivities.length > 0 ?
+        recentActivities.slice(0, 3).reduce((sum, a) => sum + a.movingTime, 0) / 3 : 0;
+
+      if (daysSinceLast[mostOverdue] > 7) {
+        intensity = 'moderate'; // They're due for it, don't go too hard
+      } else if (recentIntensity > 3600) {
+        intensity = 'easy'; // They've been working hard, take it easy
+      } else {
+        intensity = 'moderate';
+      }
+
+      // Format distance based on type
+      let distanceDisplay = '';
+      let distanceReason = '';
+
+      if (mostOverdue === 'Run') {
+        const miles = suggestedDistance / 1609.34;
+        distanceDisplay = `${miles.toFixed(1)} miles`;
+        distanceReason = `Based on your recent average of ${(this.selectedStats.miles / (disciplineActivities.filter(a => a.type === 'Run').length || 1)).toFixed(1)} mi/run`;
+      } else if (mostOverdue === 'Swim') {
+        const miles = suggestedDistance / 1609.34;
+        distanceDisplay = `${miles.toFixed(1)} miles`;
+        distanceReason = `Your consistent swim distance`;
+      } else if (mostOverdue === 'Ride') {
+        const miles = suggestedDistance / 1609.34;
+        distanceDisplay = `${miles.toFixed(1)} miles`;
+        distanceReason = `Based on your typical ride distance`;
+      }
+
+      return {
+        discipline: mostOverdue,
+        distance: suggestedDistance,
+        distanceDisplay: distanceDisplay,
+        distanceReason: distanceReason,
+        intensity: intensity,
+        daysSinceLast: daysSinceLast[mostOverdue],
+        emoji: this.getDisciplineEmoji(mostOverdue),
+        reason: this.getRecommendationReason(mostOverdue, daysSinceLast[mostOverdue], intensity)
+      };
+    },
+
+    // Get a friendly reason for the recommendation
+    getRecommendationReason(discipline, daysSinceLast, intensity) {
+      if (daysSinceLast > 10) {
+        return `You haven't done ${discipline} in ${daysSinceLast} days — time to get back to it!`;
+      } else if (daysSinceLast > 6) {
+        return `Good time for ${discipline} — ${daysSinceLast} days since your last one`;
+      } else if (intensity === 'easy') {
+        return `Keep it easy today — you've been pushing hard lately`;
+      } else {
+        return `Well-balanced — this completes your weekly mix`;
+      }
+    },
+
     // Pace/Speed metrics for selected discipline
     paceMetrics() {
       const discipline = this.selectedDiscipline;
-      const activities = this.selectedDisciplineActivities;
+      let activities = this.selectedDisciplineActivities;
+
+      // For Run discipline, further filter by subtype
+      if (discipline === 'Run') {
+        if (this.selectedRunSubtype === 'regular') {
+          activities = activities.filter(a => !a.name.toLowerCase().includes('w/'));
+        } else if (this.selectedRunSubtype === 'stroller') {
+          activities = activities.filter(a => a.name.toLowerCase().includes('w/'));
+        }
+        // 'all' includes both
+      }
 
       if (activities.length === 0) {
         return null;
       }
 
       if (discipline === 'Run') {
-        const totalSeconds = activities.reduce((sum, a) => sum + a.movingTime, 0);
-        const totalMiles = activities.reduce((sum, a) => sum + a.distance, 0) / 1609.34;
-        const avgPaceSeconds = (totalSeconds / totalMiles);
-        const minutes = Math.floor(avgPaceSeconds / 60);
-        const seconds = Math.floor(avgPaceSeconds % 60);
-
-        // Best pace (fastest)
-        let bestPace = Infinity;
-        activities.forEach(a => {
-          const miles = a.distance / 1609.34;
-          const paceSeconds = a.movingTime / miles;
-          bestPace = Math.min(bestPace, paceSeconds);
-        });
-        const bestMin = Math.floor(bestPace / 60);
-        const bestSec = Math.floor(bestPace % 60);
+        // Calculate 6-month moving averages
+        const current6mAvg = this.calculateMovingAverage(activities, 'Run', 6);
+        const best6mAvg = this.findBestMovingAverage(activities, 'Run', 6);
+        const trend = this.calculateTrend(current6mAvg, best6mAvg);
 
         return {
           type: 'pace',
-          current: `${minutes}:${seconds.toString().padStart(2, '0')}/mi`,
-          currentSeconds: avgPaceSeconds,
-          best: `${bestMin}:${bestSec.toString().padStart(2, '0')}/mi`,
-          label: 'Average Pace'
+          current: current6mAvg ? this.formatPaceSeconds(current6mAvg, 'Run') : 'N/A',
+          currentSeconds: current6mAvg,
+          best: best6mAvg ? this.formatPaceSeconds(best6mAvg, 'Run') : 'N/A',
+          bestSeconds: best6mAvg,
+          label: '6-Month Avg Pace',
+          trend: trend,
+          trendEmoji: trend === 'faster' ? '⚡' : trend === 'slower' ? '📉' : '→'
         };
       } else if (discipline === 'Ride') {
         const totalMiles = activities.reduce((sum, a) => sum + a.distance, 0) / 1609.34;
         const totalHours = activities.reduce((sum, a) => sum + a.movingTime, 0) / 3600;
         const avgSpeed = totalMiles / totalHours;
 
-        // Best speed
+        // Best speed (fastest single ride)
         let bestSpeed = 0;
         activities.forEach(a => {
           const miles = a.distance / 1609.34;
@@ -290,29 +423,20 @@ const app = createApp({
           label: 'Average Speed'
         };
       } else if (discipline === 'Swim') {
-        const totalSeconds = activities.reduce((sum, a) => sum + a.movingTime, 0);
-        const totalYards = activities.reduce((sum, a) => sum + (a.distance / 0.9144), 0); // meters to yards
-        const total100Yards = totalYards / 100;
-        const avgPaceSeconds = (totalSeconds / total100Yards);
-        const minutes = Math.floor(avgPaceSeconds / 60);
-        const seconds = Math.floor(avgPaceSeconds % 60);
-
-        // Best pace
-        let bestPace = Infinity;
-        activities.forEach(a => {
-          const yards = a.distance / 0.9144;
-          const pace100Yards = a.movingTime / (yards / 100);
-          bestPace = Math.min(bestPace, pace100Yards);
-        });
-        const bestMin = Math.floor(bestPace / 60);
-        const bestSec = Math.floor(bestPace % 60);
+        // Calculate 6-month moving averages
+        const current6mAvg = this.calculateMovingAverage(activities, 'Swim', 6);
+        const best6mAvg = this.findBestMovingAverage(activities, 'Swim', 6);
+        const trend = this.calculateTrend(current6mAvg, best6mAvg);
 
         return {
           type: 'pace',
-          current: `${minutes}:${seconds.toString().padStart(2, '0')}/100yd`,
-          currentSeconds: avgPaceSeconds,
-          best: `${bestMin}:${bestSec.toString().padStart(2, '0')}/100yd`,
-          label: 'Average Pace'
+          current: current6mAvg ? this.formatPaceSeconds(current6mAvg, 'Swim') : 'N/A',
+          currentSeconds: current6mAvg,
+          best: best6mAvg ? this.formatPaceSeconds(best6mAvg, 'Swim') : 'N/A',
+          bestSeconds: best6mAvg,
+          label: '6-Month Avg Pace',
+          trend: trend,
+          trendEmoji: trend === 'faster' ? '⚡' : trend === 'slower' ? '📉' : '→'
         };
       }
 
@@ -501,6 +625,194 @@ const app = createApp({
       return emojis[discipline] || '⚽';
     },
 
+    // Calculate pace in seconds for an activity
+    calculateActivityPace(activity, discipline) {
+      if (discipline === 'Run' || discipline === 'Swim') {
+        const miles = discipline === 'Run' ?
+          activity.distance / 1609.34 :
+          (activity.distance / 0.9144) / 100; // yards to 100-yard increments
+        return activity.movingTime / miles;
+      }
+      return null;
+    },
+
+    // Detect outliers using IQR method
+    detectOutliers(paces) {
+      if (paces.length < 4) return []; // Need at least 4 points for quartiles
+
+      const sorted = [...paces].sort((a, b) => a - b);
+      const q1Index = Math.floor(sorted.length * 0.25);
+      const q3Index = Math.floor(sorted.length * 0.75);
+
+      const q1 = sorted[q1Index];
+      const q3 = sorted[q3Index];
+      const iqr = q3 - q1;
+
+      const lowerBound = q1 - 1.5 * iqr;
+      const upperBound = q3 + 1.5 * iqr;
+
+      return paces.filter(pace => pace < lowerBound || pace > upperBound);
+    },
+
+    // Get activities with outliers removed
+    getActivitiesWithoutOutliers(activities, discipline) {
+      const paces = activities.map(a => this.calculateActivityPace(a, discipline)).filter(p => p !== null);
+      const outliers = this.detectOutliers(paces);
+
+      if (outliers.length === 0) return activities;
+
+      return activities.filter(a => {
+        const pace = this.calculateActivityPace(a, discipline);
+        return !outliers.includes(pace);
+      });
+    },
+
+    // Calculate moving average over last N months
+    calculateMovingAverage(activities, discipline, months = 6) {
+      if (activities.length === 0) return null;
+
+      // Remove outliers for moving average calculation
+      const cleanActivities = this.getActivitiesWithoutOutliers(activities, discipline);
+      if (cleanActivities.length === 0) return null;
+
+      // Sort by date
+      const sorted = [...cleanActivities].sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+
+      const now = new Date();
+      const cutoffDate = new Date(now);
+      cutoffDate.setMonth(cutoffDate.getMonth() - months);
+
+      const recentActivities = sorted.filter(a => new Date(a.startDate) >= cutoffDate);
+
+      if (recentActivities.length === 0) return null;
+
+      const totalSeconds = recentActivities.reduce((sum, a) => sum + a.movingTime, 0);
+      let totalUnits = 0;
+
+      if (discipline === 'Run') {
+        totalUnits = recentActivities.reduce((sum, a) => sum + (a.distance / 1609.34), 0);
+      } else if (discipline === 'Swim') {
+        totalUnits = recentActivities.reduce((sum, a) => sum + ((a.distance / 0.9144) / 100), 0);
+      }
+
+      return totalUnits > 0 ? totalSeconds / totalUnits : null;
+    },
+
+    // Find the best (fastest) N-month average ever
+    findBestMovingAverage(activities, discipline, months = 6) {
+      if (activities.length === 0) return null;
+
+      const cleanActivities = this.getActivitiesWithoutOutliers(activities, discipline);
+      if (cleanActivities.length === 0) return null;
+
+      const sorted = [...cleanActivities].sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+
+      let bestAverage = Infinity;
+      const windowMs = months * 30 * 24 * 60 * 60 * 1000; // Approximate month length
+
+      for (let i = 0; i < sorted.length; i++) {
+        const windowStart = new Date(sorted[i].startDate);
+        const windowEnd = new Date(windowStart);
+        windowEnd.setMonth(windowEnd.getMonth() + months);
+
+        const windowActivities = sorted.filter(a => {
+          const date = new Date(a.startDate);
+          return date >= windowStart && date <= windowEnd;
+        });
+
+        if (windowActivities.length > 0) {
+          const totalSeconds = windowActivities.reduce((sum, a) => sum + a.movingTime, 0);
+          let totalUnits = 0;
+
+          if (discipline === 'Run') {
+            totalUnits = windowActivities.reduce((sum, a) => sum + (a.distance / 1609.34), 0);
+          } else if (discipline === 'Swim') {
+            totalUnits = windowActivities.reduce((sum, a) => sum + ((a.distance / 0.9144) / 100), 0);
+          }
+
+          if (totalUnits > 0) {
+            const average = totalSeconds / totalUnits;
+            bestAverage = Math.min(bestAverage, average);
+          }
+        }
+      }
+
+      return bestAverage !== Infinity ? bestAverage : null;
+    },
+
+    // Format pace seconds to string
+    formatPaceSeconds(seconds, discipline) {
+      if (discipline === 'Run') {
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes}:${secs.toString().padStart(2, '0')}/mi`;
+      } else if (discipline === 'Swim') {
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes}:${secs.toString().padStart(2, '0')}/100yd`;
+      }
+      return '';
+    },
+
+    // Determine trend (faster or slower)
+    calculateTrend(current, best) {
+      if (!current || !best) return null;
+      const improvement = ((best - current) / best) * 100;
+      if (Math.abs(improvement) < 1) return 'stable';
+      return improvement > 0 ? 'slower' : 'faster';
+    },
+
+    // Get moving average trend data for charting
+    getMovingAverageTrendData(activities, discipline) {
+      if (activities.length < 12) return null; // Need at least 12 activities to show trend
+
+      const cleanActivities = this.getActivitiesWithoutOutliers(activities, discipline);
+      if (cleanActivities.length === 0) return null;
+
+      const sorted = [...cleanActivities].sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+
+      const trendData = [];
+      const now = new Date();
+
+      // Calculate 6-month average for each month going back
+      for (let monthsBack = 0; monthsBack < 24; monthsBack++) {
+        const endDate = new Date(now);
+        endDate.setMonth(endDate.getMonth() - monthsBack);
+
+        const startDate = new Date(endDate);
+        startDate.setMonth(startDate.getMonth() - 6);
+
+        const windowActivities = sorted.filter(a => {
+          const date = new Date(a.startDate);
+          return date >= startDate && date <= endDate;
+        });
+
+        if (windowActivities.length > 0) {
+          const totalSeconds = windowActivities.reduce((sum, a) => sum + a.movingTime, 0);
+          let totalUnits = 0;
+
+          if (discipline === 'Run') {
+            totalUnits = windowActivities.reduce((sum, a) => sum + (a.distance / 1609.34), 0);
+          } else if (discipline === 'Swim') {
+            totalUnits = windowActivities.reduce((sum, a) => sum + ((a.distance / 0.9144) / 100), 0);
+          }
+
+          if (totalUnits > 0) {
+            const avgPaceSeconds = totalSeconds / totalUnits;
+            const monthLabel = endDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+
+            trendData.unshift({
+              month: monthLabel,
+              pace: avgPaceSeconds,
+              paceFormatted: this.formatPaceSeconds(avgPaceSeconds, discipline)
+            });
+          }
+        }
+      }
+
+      return trendData.length > 0 ? trendData : null;
+    },
+
     formatTabName(tab) {
       const names = {
         recent: '📅 Recent',
@@ -509,6 +821,15 @@ const app = createApp({
         goals: '🎯 Goals'
       };
       return names[tab] || tab;
+    },
+
+    formatRunSubtype(subtype) {
+      const names = {
+        all: 'All Runs',
+        regular: 'Regular Runs',
+        stroller: 'Stroller Runs (w/)'
+      };
+      return names[subtype] || subtype;
     },
 
     formatDate(dateString) {
@@ -762,6 +1083,68 @@ const app = createApp({
           }
         }
       });
+    },
+
+    renderPaceTrendChart() {
+      const ctx = document.getElementById('pace-trend-chart');
+      if (!ctx || !this.paceTrendData) return;
+
+      const trendData = this.paceTrendData;
+      const labels = trendData.map(d => d.month);
+      const paces = trendData.map(d => d.pace);
+
+      // Convert paces to minutes for display
+      const paceMinutes = paces.map(p => p / 60);
+
+      if (this.charts.paceTrend) this.charts.paceTrend.destroy();
+
+      this.charts.paceTrend = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: '6-Month Average Pace',
+              data: paceMinutes,
+              borderColor: '#fc5200',
+              backgroundColor: '#fc5200' + '20',
+              borderWidth: 3,
+              tension: 0.4,
+              fill: true,
+              pointBackgroundColor: '#fc5200',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointRadius: 5,
+              pointHoverRadius: 7
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              ticks: {
+                callback: function(value) {
+                  const min = Math.floor(value);
+                  const sec = Math.round((value - min) * 60);
+                  return `${min}:${sec.toString().padStart(2, '0')}`;
+                }
+              },
+              title: {
+                display: true,
+                text: 'Pace (minutes per unit)'
+              }
+            }
+          }
+        }
+      });
     }
   },
   watch: {
@@ -771,6 +1154,16 @@ const app = createApp({
           this.renderYTDCharts();
         });
       }
+    },
+    selectedDiscipline() {
+      this.$nextTick(() => {
+        this.renderPaceTrendChart();
+      });
+    },
+    selectedRunSubtype() {
+      this.$nextTick(() => {
+        this.renderPaceTrendChart();
+      });
     }
   },
   mounted() {
@@ -780,6 +1173,10 @@ const app = createApp({
   updated() {
     if (this.activeTab === 'ytd' && this.activities.length > 0) {
       this.renderYTDCharts();
+    }
+    // Render pace trend chart when pace metrics are displayed
+    if (this.paceTrendData && this.paceMetrics) {
+      this.renderPaceTrendChart();
     }
   }
 });

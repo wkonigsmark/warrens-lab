@@ -73,6 +73,16 @@ create policy "ko_results_public_read"
 
 -- Service role (admin server) handles all admin writes — no extra policy needed.
 
+-- 3b. TABLE-LEVEL GRANTS  ← REQUIRED in addition to the RLS policies above.
+--     RLS policies decide *which rows* a role may touch; the base GRANT decides
+--     whether the role may touch the table at all. Without these, the public
+--     entry form and the public scoreboard read both fail with
+--     "permission denied for table knockout_entries" (error 42501),
+--     even though the policies exist.
+grant insert on knockout_entries to anon;   -- entry form (knockout/index.html)
+grant select on knockout_entries to anon;   -- scoreboard read (RLS still hides voided rows)
+grant select on knockout_match_results to anon;  -- future public results read
+
 -- 4. PUBLIC READ RPCs (called by browser with publishable key)
 
 create or replace function get_ko_entries()

@@ -348,9 +348,113 @@
     .ko-success h2 { font-size:1.8rem; font-weight:950; color:var(--wc-gold); margin:0 0 10px; }
     .ko-success p { font-size:0.9rem; color:var(--wc-muted); line-height:1.6; margin:0 0 18px; }
     .ko-success .entry-code { font-size:1.1rem; font-weight:950; font-family:monospace; color:var(--wc-gold); letter-spacing:0.08em; }
+    .ko-pay-reminder {
+      max-width:380px; margin:26px auto 0; padding:20px 22px;
+      border:1px solid rgba(244,201,93,0.4); border-radius:14px;
+      background:linear-gradient(180deg, rgba(244,201,93,0.12), rgba(244,201,93,0.03));
+      text-align:center; animation:ko-pay-flash 1.1s ease-in-out 2;
+    }
+    @keyframes ko-pay-flash {
+      0%,100% { box-shadow:0 0 0 0 rgba(244,201,93,0); }
+      50% { box-shadow:0 0 0 5px rgba(244,201,93,0.18); }
+    }
+    .ko-pay-reminder .pr-title { font-size:0.78rem; font-weight:900; color:#ffd9a8; margin-bottom:14px; letter-spacing:0.01em; }
+    .ko-pay-reminder .pr-amount { font-size:1.5rem; font-weight:950; color:var(--wc-ink); line-height:1; }
+    .ko-pay-reminder .pr-amount span { color:var(--wc-gold); }
+    .ko-pay-reminder .pr-venmo { font-size:1.05rem; font-weight:950; color:var(--wc-gold); margin:4px 0 14px; }
+    .ko-pay-reminder .pr-memo { font-size:0.82rem; color:var(--wc-muted); line-height:1.5; }
+    .ko-pay-reminder .pr-memo strong { display:inline-block; margin-top:4px; font-size:0.95rem; color:var(--wc-ink); font-weight:900; }
+    .ko-pay-reminder .pr-deadline {
+      margin-top:14px; font-size:0.76rem; font-weight:850; color:#ffd9a8;
+      background:rgba(244,201,93,0.1); border-radius:8px; padding:8px 10px;
+    }
 
     /* Loading state */
     .loading-teams { font-size:0.8rem; color:var(--wc-faint); padding:6px 0; font-style:italic; }
+
+    /* ── Welcome / acknowledge overlay ─────────────────────── */
+    .ko-overlay {
+      position:fixed; inset:0; z-index:1000; display:none;
+      align-items:flex-start; justify-content:center; overflow-y:auto;
+      background:rgba(4,12,9,0.82); backdrop-filter:blur(5px);
+      padding:24px 16px;
+    }
+    .ko-overlay.visible { display:flex; }
+    .ko-modal {
+      width:100%; max-width:440px; margin:auto;
+      background:var(--wc-panel); border:1px solid var(--wc-line);
+      border-radius:18px; overflow:hidden;
+      box-shadow:0 24px 60px rgba(0,0,0,0.5);
+      animation:ko-modal-in .28s cubic-bezier(.2,.8,.3,1);
+    }
+    @keyframes ko-modal-in { from{opacity:0;transform:translateY(14px) scale(.98)} to{opacity:1;transform:none} }
+
+    .ko-modal-pay {
+      padding:24px 24px 20px; text-align:center;
+      background:linear-gradient(180deg, rgba(244,201,93,0.13), rgba(244,201,93,0.02));
+      border-bottom:1px solid var(--wc-line);
+    }
+    .ko-modal-pay .badge {
+      display:inline-block; font-size:0.62rem; font-weight:900; letter-spacing:0.14em;
+      text-transform:uppercase; color:var(--wc-gold);
+      border:1px solid rgba(244,201,93,0.4); border-radius:999px; padding:4px 13px; margin-bottom:14px;
+    }
+    .ko-modal-pay .fee { font-size:2.1rem; font-weight:950; color:var(--wc-ink); line-height:1; margin:0 0 14px; }
+    .ko-modal-pay .fee span { color:var(--wc-gold); }
+    .ko-pay-rows { display:flex; flex-direction:column; gap:7px; font-size:0.86rem; }
+    .ko-pay-row { display:flex; align-items:center; justify-content:center; gap:7px; color:var(--wc-muted); }
+    .ko-pay-row strong { color:var(--wc-ink); font-weight:850; }
+    .ko-pay-row .venmo { color:var(--wc-gold); font-weight:950; }
+    .ko-pay-deadline {
+      margin-top:13px; font-size:0.78rem; font-weight:850; color:#ffd9a8;
+      background:rgba(244,201,93,0.1); border-radius:9px; padding:9px 12px;
+    }
+
+    .ko-modal-scoring { padding:20px 24px 8px; }
+    .ko-modal-scoring h3 {
+      font-size:0.66rem; font-weight:900; letter-spacing:0.13em; text-transform:uppercase;
+      color:var(--wc-gold); margin:0 0 12px; text-align:center;
+    }
+    .ko-score-table { width:100%; border-collapse:collapse; font-size:0.84rem; }
+    .ko-score-table th, .ko-score-table td { padding:7px 6px; text-align:right; }
+    .ko-score-table th { font-size:0.6rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--wc-faint); border-bottom:1px solid var(--wc-line); }
+    .ko-score-table th:first-child, .ko-score-table td:first-child { text-align:left; }
+    .ko-score-table td { border-bottom:1px solid rgba(255,255,255,0.05); color:var(--wc-muted); }
+    .ko-score-table td:first-child { color:var(--wc-ink); font-weight:800; }
+    .ko-score-table td.pts { color:var(--wc-gold); font-weight:850; }
+    .ko-score-table tr.total td { border-bottom:none; padding-top:11px; font-weight:950; color:var(--wc-ink); font-size:0.95rem; }
+    .ko-score-table tr.total td.pts { color:var(--wc-gold); }
+
+    .ko-modal-payout { padding:18px 24px 4px; border-top:1px solid var(--wc-line); margin-top:4px; }
+    .ko-modal-payout h3 {
+      font-size:0.66rem; font-weight:900; letter-spacing:0.13em; text-transform:uppercase;
+      color:var(--wc-gold); margin:0 0 12px; text-align:center;
+    }
+    .ko-payout-flow { display:flex; flex-direction:column; gap:4px; margin-bottom:12px; }
+    .ko-payout-step { display:flex; align-items:baseline; justify-content:space-between; gap:10px; font-size:0.82rem; padding:5px 0; }
+    .ko-payout-step .lbl { font-weight:850; color:var(--wc-ink); }
+    .ko-payout-step .val { color:var(--wc-muted); font-size:0.78rem; text-align:right; }
+    .ko-payout-step.minus .lbl { color:var(--wc-muted); }
+    .ko-payout-step.net { border-top:1px dashed rgba(255,255,255,0.1); padding-top:9px; margin-top:2px; }
+    .ko-payout-step.net .lbl { color:var(--wc-gold); }
+    .ko-payout-split { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:4px; }
+    .ko-split-card {
+      display:flex; flex-direction:column; align-items:center; gap:3px;
+      padding:11px 6px; border:1px solid var(--wc-line); border-radius:10px; background:rgba(255,255,255,0.02);
+    }
+    .ko-split-card.first { border-color:rgba(244,201,93,0.4); background:rgba(244,201,93,0.07); }
+    .ko-split-card .place { font-size:0.72rem; font-weight:850; color:var(--wc-muted); }
+    .ko-split-card .pct { font-size:1.25rem; font-weight:950; color:var(--wc-ink); }
+    .ko-split-card.first .pct { color:var(--wc-gold); }
+
+    .ko-modal-foot { padding:16px 24px 24px; }
+    .ko-ack-btn {
+      width:100%; padding:15px; border:none; border-radius:12px; cursor:pointer;
+      background:var(--wc-gold); color:#07130f; font-size:1rem; font-weight:950; letter-spacing:0.01em;
+      transition:opacity .15s, transform .1s;
+    }
+    .ko-ack-btn:hover { opacity:0.9; }
+    .ko-ack-btn:active { transform:translateY(1px); }
   </style>
   <script src="../archive/world-cup-1/bracket_lookup.js"></script>
 </head>
@@ -397,6 +501,66 @@
         </div>
         <a href="../insights/#r32" class="ko-live-bracket-btn">🗺️ View Live Bracket</a>
         <a href="../" class="ko-back">← Back to home</a>
+      </div>
+    </div>
+
+    <!-- ── WELCOME / ACKNOWLEDGE OVERLAY ────────────────────── -->
+    <div id="ko-overlay" class="ko-overlay">
+      <div class="ko-modal" role="dialog" aria-modal="true" aria-labelledby="ko-modal-fee">
+        <div class="ko-modal-pay">
+          <span class="badge">Knockout Pool · Entry</span>
+          <div class="fee" id="ko-modal-fee"><span>$50</span> entry</div>
+          <div class="ko-pay-rows">
+            <div class="ko-pay-row">Venmo <span class="venmo">@Warren-Konigsmark</span></div>
+            <div class="ko-pay-row">Include your <strong>bracket name</strong> in the memo</div>
+          </div>
+          <div class="ko-pay-deadline">⏰ Payment must be received before 3 PM EST · Sunday, June 28</div>
+        </div>
+
+        <div class="ko-modal-scoring">
+          <h3>How Points Are Scored</h3>
+          <table class="ko-score-table">
+            <thead>
+              <tr><th>Round</th><th>Pts each</th><th>Results</th><th>Possible</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Round of 32</td><td>1</td><td>16</td><td class="pts">16</td></tr>
+              <tr><td>Round of 16</td><td>2</td><td>8</td><td class="pts">16</td></tr>
+              <tr><td>Quarterfinal</td><td>4</td><td>4</td><td class="pts">16</td></tr>
+              <tr><td>Semifinal</td><td>8</td><td>2</td><td class="pts">16</td></tr>
+              <tr><td>3rd Place</td><td>12</td><td>1</td><td class="pts">12</td></tr>
+              <tr><td>Final</td><td>16</td><td>1</td><td class="pts">16</td></tr>
+              <tr class="total"><td>Total</td><td></td><td></td><td class="pts">92</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ko-modal-payout">
+          <h3>Payout</h3>
+          <div class="ko-payout-flow">
+            <div class="ko-payout-step">
+              <span class="lbl">Gross entries</span>
+              <span class="val">Total of all $50 buy-ins</span>
+            </div>
+            <div class="ko-payout-step minus">
+              <span class="lbl">− Organizer fee</span>
+              <span class="val">5% of gross</span>
+            </div>
+            <div class="ko-payout-step net">
+              <span class="lbl">= Net purse</span>
+              <span class="val">Remaining 95%, split:</span>
+            </div>
+          </div>
+          <div class="ko-payout-split">
+            <div class="ko-split-card first"><span class="place">🥇 1st</span><span class="pct">70%</span></div>
+            <div class="ko-split-card"><span class="place">🥈 2nd</span><span class="pct">20%</span></div>
+            <div class="ko-split-card"><span class="place">🥉 3rd</span><span class="pct">10%</span></div>
+          </div>
+        </div>
+
+        <div class="ko-modal-foot">
+          <button id="ko-ack-btn" class="ko-ack-btn">Acknowledge &amp; Start Picking →</button>
+        </div>
       </div>
     </div>
 
@@ -655,7 +819,17 @@
           <h2>Entry Submitted!</h2>
           <p>Your entry code is:</p>
           <div class="entry-code" id="entry-code-display"></div>
-          <p style="margin-top:18px;">Screenshot this code! Now send <strong>$50 via Venmo to @Warren-Konigsmark</strong> to lock in your entry.</p>
+
+          <div class="ko-pay-reminder">
+            <div class="pr-title">⚠️ You're not locked in until you pay</div>
+            <div class="pr-amount"><span>$50</span> via Venmo</div>
+            <div class="pr-venmo">@Warren-Konigsmark</div>
+            <div class="pr-memo">Include your bracket name in the memo:<br>
+              <strong id="pr-bracket-name">—</strong>
+            </div>
+            <div class="pr-deadline">⏰ Due before 3 PM EST · Sunday, June 28</div>
+          </div>
+
           <a href="../" class="ko-back" style="margin-top:24px;">← Back to home</a>
         </div>
 
@@ -684,6 +858,18 @@
       el("view-coming-soon").style.display = "none";
       el("view-form").style.display = "";
       initForm();
+      showWelcomeOverlay();
+    }
+
+    function showWelcomeOverlay() {
+      const overlay = el("ko-overlay");
+      if (!overlay) return;
+      overlay.classList.add("visible");
+      document.body.style.overflow = "hidden";
+      el("ko-ack-btn")?.addEventListener("click", () => {
+        overlay.classList.remove("visible");
+        document.body.style.overflow = "";
+      }, { once: true });
     }
 
     function checkAccess() {
@@ -1368,6 +1554,7 @@
         const successEl = el("view-success");
         successEl.className = "ko-success visible";
         el("entry-code-display").textContent = entryCode;
+        el("pr-bracket-name").textContent = name;
         successEl.scrollIntoView({ behavior: "smooth", block: "center" });
 
       } catch (err) {

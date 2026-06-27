@@ -19,6 +19,29 @@
       </header>
 
       <main v-if="!loading && activities.length" class="main">
+        <!-- Tomorrow's Workout Recommendation -->
+        <section v-if="tomorrowsRecommendation" class="recommendation-section">
+          <div class="recommendation-card">
+            <div class="recommendation-header">
+              <div class="recommendation-title">
+                <span class="recommendation-emoji">{{ tomorrowsRecommendation.emoji }}</span>
+                Tomorrow's Recommendation
+              </div>
+              <span class="recommendation-intensity" :class="tomorrowsRecommendation.intensity">
+                {{ tomorrowsRecommendation.intensity.toUpperCase() }}
+              </span>
+            </div>
+            <div class="recommendation-body">
+              <h3>{{ tomorrowsRecommendation.discipline }} – {{ tomorrowsRecommendation.distanceDisplay }}</h3>
+              <p class="recommendation-reason">{{ tomorrowsRecommendation.reason }}</p>
+              <p class="recommendation-detail">{{ tomorrowsRecommendation.distanceReason }}</p>
+              <div class="recommendation-note">
+                ↳ {{ tomorrowsRecommendation.daysSinceLast }} days since your last {{ tomorrowsRecommendation.discipline }}
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- Discipline Selector -->
         <section class="discipline-selector">
           <button
@@ -52,15 +75,44 @@
           </div>
         </section>
 
+        <!-- Run Sub-tabs (if Run discipline selected) -->
+        <nav v-if="selectedDiscipline === 'Run'" class="run-subtabs">
+          <button
+            v-for="subtype in ['all', 'regular', 'stroller']"
+            :key="subtype"
+            :class="['subtab-button', { active: selectedRunSubtype === subtype }]"
+            @click="selectedRunSubtype = subtype"
+          >
+            {{ formatRunSubtype(subtype) }}
+          </button>
+        </nav>
+
         <!-- Pace/Speed Metrics -->
         <section v-if="paceMetrics" class="pace-section">
           <div class="pace-card">
             <div class="pace-label">{{ paceMetrics.label }}</div>
-            <div class="pace-current">{{ paceMetrics.current }}</div>
-            <div class="pace-best">
-              <span class="pace-best-label">Best:</span>
-              <span class="pace-best-value">{{ paceMetrics.best }}</span>
+            <div class="pace-metrics-grid">
+              <div class="pace-metric">
+                <div class="metric-label">Current</div>
+                <div class="metric-value">{{ paceMetrics.current }}</div>
+              </div>
+              <div class="pace-metric">
+                <div class="metric-label">Best Ever</div>
+                <div class="metric-value">{{ paceMetrics.best }}</div>
+              </div>
+              <div v-if="paceMetrics.trend" class="pace-metric">
+                <div class="metric-label">Trend</div>
+                <div class="metric-value trend-value" :class="paceMetrics.trend">
+                  {{ paceMetrics.trendEmoji }} {{ paceMetrics.trend }}
+                </div>
+              </div>
             </div>
+          </div>
+
+          <!-- Pace Trend Chart -->
+          <div v-if="paceTrendData" class="pace-chart-container">
+            <h3>6-Month Average Pace Trend</h3>
+            <canvas id="pace-trend-chart"></canvas>
           </div>
         </section>
 

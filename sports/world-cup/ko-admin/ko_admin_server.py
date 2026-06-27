@@ -18,10 +18,21 @@ Endpoints:
 import json
 import os
 import re
+import ssl
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from urllib.error import URLError
 from urllib.request import Request, urlopen
+
+# ── SSL context ──────────────────────────────────────────────────────────────
+# macOS system Python often ships without a usable CA bundle, so urllib's HTTPS
+# calls to Supabase fail with CERTIFICATE_VERIFY_FAILED. Prefer certifi's bundle
+# when available; fall back to the system default otherwise. Verification stays ON.
+try:
+    import certifi
+    SSL_CONTEXT = ssl.create_default_context(cafile=certifi.where())
+except ImportError:
+    SSL_CONTEXT = ssl.create_default_context()
 
 # ── Config ──────────────────────────────────────────────────────────────────
 ENV_PATH = Path(__file__).parent / ".env"
@@ -56,7 +67,7 @@ def supa_request(method, path, body=None):
     req.add_header("Content-Type", "application/json")
     req.add_header("Prefer", "return=representation,resolution=merge-duplicates")
     try:
-        with urlopen(req, timeout=8) as resp:
+        with urlopen(req, timeout=8, context=SSL_CONTEXT) as resp:
             raw = resp.read().decode()
             return json.loads(raw) if raw.strip() else []
     except URLError as e:
