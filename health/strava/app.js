@@ -237,7 +237,7 @@ const app = createApp({
       // Sort by priority
       return milestones.sort((a, b) => a.priority - b.priority);
     },
-    // Trend data for pace chart
+    // Trend data for pace/speed chart
     paceTrendData() {
       const discipline = this.selectedDiscipline;
       let activities = this.selectedDisciplineActivities;
@@ -253,6 +253,8 @@ const app = createApp({
 
       if (discipline === 'Run' || discipline === 'Swim') {
         return this.getMovingAverageTrendData(activities, discipline);
+      } else if (discipline === 'Ride') {
+        return this.getMovingAverageSpeedTrendData(activities);
       }
       return null;
     },
@@ -330,7 +332,8 @@ const app = createApp({
       if (mostOverdue === 'Run') {
         const miles = suggestedDistance / 1609.34;
         distanceDisplay = `${miles.toFixed(1)} miles`;
-        distanceReason = `Based on your recent average of ${(this.selectedStats.miles / (disciplineActivities.filter(a => a.type === 'Run').length || 1)).toFixed(1)} mi/run`;
+        const avgMilesPerRun = (disciplineActivities.reduce((sum, a) => sum + a.distance, 0) / 1609.34) / (disciplineActivities.length || 1);
+        distanceReason = `Based on your recent average of ${avgMilesPerRun.toFixed(1)} mi/run`;
       } else if (mostOverdue === 'Swim') {
         const miles = suggestedDistance / 1609.34;
         distanceDisplay = `${miles.toFixed(1)} miles`;
@@ -402,25 +405,20 @@ const app = createApp({
           trendEmoji: trend === 'faster' ? '⚡' : trend === 'slower' ? '📉' : '→'
         };
       } else if (discipline === 'Ride') {
-        const totalMiles = activities.reduce((sum, a) => sum + a.distance, 0) / 1609.34;
-        const totalHours = activities.reduce((sum, a) => sum + a.movingTime, 0) / 3600;
-        const avgSpeed = totalMiles / totalHours;
-
-        // Best speed (fastest single ride)
-        let bestSpeed = 0;
-        activities.forEach(a => {
-          const miles = a.distance / 1609.34;
-          const hours = a.movingTime / 3600;
-          const speed = miles / hours;
-          bestSpeed = Math.max(bestSpeed, speed);
-        });
+        // Calculate 6-month moving averages
+        const current6mAvg = this.calculateMovingAverageSpeed(activities, 6);
+        const best6mAvg = this.findBestMovingAverageSpeed(activities, 6);
+        const trend = this.calculateTrend(current6mAvg, best6mAvg);
 
         return {
           type: 'speed',
-          current: `${avgSpeed.toFixed(1)} mph`,
-          currentMPH: avgSpeed,
-          best: `${bestSpeed.toFixed(1)} mph`,
-          label: 'Average Speed'
+          current: current6mAvg ? `${current6mAvg.toFixed(1)} mph` : 'N/A',
+          currentMPH: current6mAvg,
+          best: best6mAvg ? `${best6mAvg.toFixed(1)} mph` : 'N/A',
+          bestMPH: best6mAvg,
+          label: '6-Month Avg Speed',
+          trend: trend,
+          trendEmoji: trend === 'faster' ? '⚡' : trend === 'slower' ? '📉' : '→'
         };
       } else if (discipline === 'Swim') {
         // Calculate 6-month moving averages
@@ -813,6 +811,93 @@ const app = createApp({
       return trendData.length > 0 ? trendData : null;
     },
 
+    // Get moving average speed trend data for Bike (in mph)
+    getMovingAverageSpeedTrendData(activities) {
+      if (activities.length < 5) return null;
+
+      const trendData = [];
+      const now = new Date();
+
+      // Calculate average speed for each month going back
+      for (let monthsBack = 0; monthsBack < 24; monthsBack++) {
+        const endDate = new Date(now);
+        endDate.setMonth(endDate.getMonth() - monthsBack);
+
+        const startDate = new Date(endDate);
+        startDate.setMonth(startDate.getMonth() - 6);
+
+        const windowActivities = activities.filter(a => {
+          const date = new Date(a.startDate);
+          return date >= startDate && date <= endDate;
+        });
+
+        if (windowActivities.length > 0) {
+          const totalMiles = windowActivities.reduce((sum, a) => sum + (a.distance / 1609.34), 0);
+          const totalHours = windowActivities.reduce((sum, a) => sum + (a.movingTime / 3600), 0);
+          const avgSpeed = totalMiles / totalHours;
+          const monthLabel = endDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+
+          trendData.unshift({
+            month: monthLabel,
+            speed: avgSpeed,
+            speedFormatted: `${avgSpeed.toFixed(1)} mph`
+          });
+        }
+      }
+
+      return trendData.length > 0 ? trendData : null;
+    },
+
+    // Calculate moving average speed for Bike (last N months)
+    calculateMovingAverageSpeed(activities, months = 6) {
+      if (activities.length === 0) return null;
+
+      const now = new Date();
+      const cutoffDate = new Date(now);
+      cutoffDate.setMonth(cutoffDate.getMonth() - months);
+
+      const recentActivities = activities.filter(a => new Date(a.startDate) >= cutoffDate);
+
+      if (recentActivities.length === 0) return null;
+
+      const totalMiles = recentActivities.reduce((sum, a) => sum + (a.distance / 1609.34), 0);
+      const totalHours = recentActivities.reduce((sum, a) => sum + (a.movingTime / 3600), 0);
+
+      return totalHours > 0 ? totalMiles / totalHours : null;
+    },
+
+    // Find the best (fastest) N-month average speed ever
+    findBestMovingAverageSpeed(activities, months = 6) {
+      if (activities.length === 0) return null;
+
+      const sorted = [...activities].sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+
+      let bestSpeed = 0;
+
+      for (let i = 0; i < sorted.length; i++) {
+        const windowStart = new Date(sorted[i].startDate);
+        const windowEnd = new Date(windowStart);
+        windowEnd.setMonth(windowEnd.getMonth() + months);
+
+        const windowActivities = sorted.filter(a => {
+          const date = new Date(a.startDate);
+          return date >= windowStart && date <= windowEnd;
+        });
+
+        if (windowActivities.length > 0) {
+          const totalMiles = windowActivities.reduce((sum, a) => sum + (a.distance / 1609.34), 0);
+          const totalHours = windowActivities.reduce((sum, a) => sum + (a.movingTime / 3600), 0);
+
+          if (totalHours > 0) {
+            const speed = totalMiles / totalHours;
+            bestSpeed = Math.max(bestSpeed, speed);
+          }
+        }
+      }
+
+      return bestSpeed > 0 ? bestSpeed : null;
+    },
+
     formatTabName(tab) {
       const names = {
         recent: '📅 Recent',
@@ -1091,60 +1176,104 @@ const app = createApp({
 
       const trendData = this.paceTrendData;
       const labels = trendData.map(d => d.month);
-      const paces = trendData.map(d => d.pace);
-
-      // Convert paces to minutes for display
-      const paceMinutes = paces.map(p => p / 60);
+      const discipline = this.selectedDiscipline;
 
       if (this.charts.paceTrend) this.charts.paceTrend.destroy();
 
-      this.charts.paceTrend = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [
-            {
-              label: '6-Month Average Pace',
-              data: paceMinutes,
-              borderColor: '#fc5200',
-              backgroundColor: '#fc5200' + '20',
-              borderWidth: 3,
-              tension: 0.4,
-              fill: true,
-              pointBackgroundColor: '#fc5200',
-              pointBorderColor: '#fff',
-              pointBorderWidth: 2,
-              pointRadius: 5,
-              pointHoverRadius: 7
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: true,
-          plugins: {
-            legend: {
-              position: 'bottom'
-            }
+      if (discipline === 'Ride') {
+        // Speed chart for Bike
+        const speeds = trendData.map(d => d.speed);
+
+        this.charts.paceTrend = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [
+              {
+                label: '6-Month Average Speed',
+                data: speeds,
+                borderColor: '#4CAF50',
+                backgroundColor: '#4CAF50' + '20',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#4CAF50',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
+              }
+            ]
           },
-          scales: {
-            y: {
-              beginAtZero: false,
-              ticks: {
-                callback: function(value) {
-                  const min = Math.floor(value);
-                  const sec = Math.round((value - min) * 60);
-                  return `${min}:${sec.toString().padStart(2, '0')}`;
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                position: 'bottom'
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: false,
+                ticks: {
+                  callback: function(value) {
+                    return `${value.toFixed(1)} mph`;
+                  }
                 }
-              },
-              title: {
-                display: true,
-                text: 'Pace (minutes per unit)'
               }
             }
           }
-        }
-      });
+        });
+      } else {
+        // Pace chart for Run/Swim
+        const paces = trendData.map(d => d.pace);
+        const paceMinutes = paces.map(p => p / 60);
+
+        this.charts.paceTrend = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [
+              {
+                label: '6-Month Average Pace',
+                data: paceMinutes,
+                borderColor: '#fc5200',
+                backgroundColor: '#fc5200' + '20',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#fc5200',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                position: 'bottom'
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: false,
+                ticks: {
+                  callback: function(value) {
+                    const min = Math.floor(value);
+                    const sec = Math.round((value - min) * 60);
+                    return `${min}:${sec.toString().padStart(2, '0')}`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
     }
   },
   watch: {
@@ -1174,10 +1303,7 @@ const app = createApp({
     if (this.activeTab === 'ytd' && this.activities.length > 0) {
       this.renderYTDCharts();
     }
-    // Render pace trend chart when pace metrics are displayed
-    if (this.paceTrendData && this.paceMetrics) {
-      this.renderPaceTrendChart();
-    }
+    // Pace trend chart renders via watch, not updated hook to avoid infinite loops
   }
 });
 

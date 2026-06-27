@@ -64,6 +64,31 @@ body {
   border-color: #b8d4b8;
 }
 
+.spreadsheet-link {
+  padding: 6px 10px;
+  background: #e8dfd5;
+  border: 1px solid #d9cfc2;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.spreadsheet-link:hover {
+  background: #ddd1c6;
+  border-color: #cfc5b8;
+}
+
+#ideasSection {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px solid #e8dfd5;
+}
+
 header {
   display: flex;
   justify-content: space-between;

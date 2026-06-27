@@ -479,7 +479,63 @@ document.getElementById('copyAddress').addEventListener('click', async () => {
   }
 });
 
+// Ideas & Inspiration
+const ideas = {
+  categories: [
+    {
+      name: "Attractions & Shops",
+      items: [
+        { name: "Visit Rhinebeck Village" },
+        { name: "Land of Oz Toys" },
+        { name: "Samuel's Sweet Shop" }
+      ]
+    },
+    {
+      name: "Dining",
+      items: [
+        { name: "Rhinebeck Village Pizza" },
+        { name: "Gigi Trattoria - 6422 Montgomery Street" },
+        { name: "Posto Pizza Rhinebeck" },
+        { name: "Buns Burgers" }
+      ]
+    },
+    {
+      name: "Activities",
+      items: [
+        { name: "Private Guided Fly Fishing Trip at Orvis Sandanona", url: "https://www.orvis.com/sandanona-private-instruction.html" },
+        { name: "Visit Clover Brooke Lama Alpaca Farm - 7 minute drive from the house", url: "https://app.squarespacescheduling.com/schedule/7e160064/?appointmentTypeIds[]=36172939" },
+        { name: "Hudson Valley Renegades" },
+        { name: "Slow Fox Farm Brewery" }
+      ]
+    },
+    {
+      name: "To-Do Before Trip",
+      items: [
+        { name: "Get fireworks" },
+        { name: "Pack a cooler for trip" }
+      ]
+    }
+  ]
+};
+
+function renderIdeas() {
+  const ideasContainer = document.getElementById('ideasCategories');
+  ideasContainer.innerHTML = ideas.categories.map(category => `
+    <div class="guide-category">
+      <h3>${category.name}</h3>
+      ${category.items.map(item => `
+        <div class="activity-item">
+          <div class="activity-name">
+            ${item.url ? `<a href="${item.url}" target="_blank" style="color: #5a5a5a; text-decoration: none; cursor: pointer;">${item.name}</a>` : item.name}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
 // Initial load and refresh
 fetchAndParse();
 renderActivitiesGuide();
+renderIdeas();
 setInterval(fetchAndParse, REFRESH_INTERVAL);
