@@ -641,6 +641,59 @@ const SMART_POOL = {
   ],
 };
 
+const STRETCH_POOL = {
+  chest:[
+    {name:'Chest & Shoulder Opener',    detail:'Hold 30 sec',          muscles:[['upper','Chest'],['upper','Shoulders']], tip:'Clasp hands behind back, open chest to ceiling', video_url:'https://www.youtube.com/results?search_query=chest+opener+stretch'},
+    {name:'Doorway Chest Stretch',      detail:'Hold 30 sec each side', muscles:[['upper','Chest']], tip:'Arm at 90° on wall — lean through gently', video_url:'https://www.youtube.com/results?search_query=doorway+chest+stretch'},
+  ],
+  back:[
+    {name:"Child's Pose",               detail:'Hold 45 sec',           muscles:[['back','Back'],['other','Spine']], tip:'Walk hands far forward, sink hips to heels', video_url:'https://www.youtube.com/results?search_query=childs+pose+back+stretch'},
+    {name:'Seated Spinal Twist',        detail:'Hold 30 sec each side', muscles:[['back','Back'],['other','Spine']], tip:'Sit tall, rotate from waist — not shoulders', video_url:'https://www.youtube.com/results?search_query=seated+spinal+twist+stretch'},
+    {name:'Cat-Cow Stretch',            detail:'10 slow reps',          muscles:[['back','Spine'],['core','Core']], tip:'Inhale to arch, exhale to round — breathe slowly', video_url:'https://www.youtube.com/results?search_query=cat+cow+stretch'},
+  ],
+  lats:[
+    {name:'Overhead Lat Stretch',       detail:'Hold 30 sec each side', muscles:[['back','Lats']], tip:'Arm overhead, lean to opposite side — feel the lat lengthen', video_url:'https://www.youtube.com/results?search_query=lat+stretch+overhead'},
+    {name:'Thread the Needle',          detail:'Hold 30 sec each side', muscles:[['back','Lats'],['back','Back']], tip:'From all-fours, slide arm under — follow the rotation', video_url:'https://www.youtube.com/results?search_query=thread+the+needle+stretch'},
+  ],
+  shoulders:[
+    {name:'Cross-Body Shoulder Stretch', detail:'Hold 30 sec each side', muscles:[['upper','Shoulders']], tip:'Pull arm across chest, keep shoulder pressed down', video_url:'https://www.youtube.com/results?search_query=cross+body+shoulder+stretch'},
+    {name:'Chest & Shoulder Opener',    detail:'Hold 30 sec',           muscles:[['upper','Shoulders'],['upper','Chest']], tip:'Clasp hands behind back, open chest skyward', video_url:'https://www.youtube.com/results?search_query=chest+opener+stretch'},
+  ],
+  biceps:[
+    {name:'Bicep Wall Stretch',         detail:'Hold 30 sec each side', muscles:[['upper','Biceps']], tip:'Palm flat on wall, arm straight — rotate body away gently', video_url:'https://www.youtube.com/results?search_query=bicep+stretch+wall'},
+    {name:'Arms Clasped Behind Back',   detail:'Hold 30 sec',           muscles:[['upper','Biceps'],['upper','Chest']], tip:'Interlace fingers, straighten arms, lift slightly', video_url:'https://www.youtube.com/results?search_query=bicep+chest+stretch+behind+back'},
+  ],
+  triceps:[
+    {name:'Overhead Tricep Stretch',    detail:'Hold 30 sec each side', muscles:[['upper','Triceps'],['upper','Shoulders']], tip:'Arm overhead, bend elbow — gently pull with other hand', video_url:'https://www.youtube.com/results?search_query=overhead+tricep+stretch'},
+  ],
+  quads:[
+    {name:'Standing Quad Stretch',      detail:'Hold 30 sec each leg',  muscles:[['lower','Quads']], tip:'Pull heel to glute — keep knees together, stand tall', video_url:'https://www.youtube.com/results?search_query=standing+quad+stretch'},
+    {name:'Low Lunge (Hip Flexor)',     detail:'Hold 45 sec each side', muscles:[['lower','Quads'],['lower','Hip Flexors']], tip:'Back knee on floor, sink hips forward — opens hip flexors', video_url:'https://www.youtube.com/results?search_query=low+lunge+hip+flexor+stretch'},
+  ],
+  hamstrings:[
+    {name:'Seated Forward Fold',        detail:'Hold 30-45 sec',        muscles:[['lower','Hamstrings'],['back','Lower Back']], tip:'Hinge from hips — reach long, don\'t round your upper back', video_url:'https://www.youtube.com/results?search_query=seated+forward+fold+hamstring+stretch'},
+    {name:'Downward Dog',               detail:'Hold 45 sec, pedal heels', muscles:[['lower','Hamstrings'],['lower','Calves']], tip:'Push heels toward floor — alternate pedaling for calves too', video_url:'https://www.youtube.com/results?search_query=downward+dog+hamstring+calf+stretch'},
+    {name:'Single-Leg Hamstring Stretch', detail:'Hold 30 sec each leg', muscles:[['lower','Hamstrings']], tip:'Leg straight on low surface, lean forward with flat back', video_url:'https://www.youtube.com/results?search_query=single+leg+hamstring+stretch'},
+  ],
+  glutes:[
+    {name:'Figure-4 Hip Stretch',       detail:'Hold 30 sec each side', muscles:[['lower','Glutes'],['other','Hips']], tip:'Cross ankle over opposite knee, gentle pressure — breathe into it', video_url:'https://www.youtube.com/results?search_query=figure+4+glute+stretch'},
+    {name:'Pigeon Pose',                detail:'Hold 45 sec each side', muscles:[['lower','Glutes'],['other','Hips']], tip:'Front shin parallel to mat — sink in slowly, no forcing', video_url:'https://www.youtube.com/results?search_query=pigeon+pose+glute+stretch'},
+  ],
+  calves:[
+    {name:'Standing Calf Stretch',      detail:'Hold 30-45 sec each',   muscles:[['lower','Calves']], tip:'Press heel down against wall or step — straight leg for gastroc', video_url:'https://www.youtube.com/results?search_query=standing+calf+stretch'},
+    {name:'Downward Dog Calf Stretch',  detail:'Hold 45 sec, pedal heels', muscles:[['lower','Calves'],['lower','Hamstrings']], tip:'Push both heels toward floor, then alternate — full calf flush', video_url:'https://www.youtube.com/results?search_query=downward+dog+calf+stretch'},
+    {name:'Bent-Knee Calf Stretch',     detail:'Hold 30 sec each',      muscles:[['lower','Calves'],['lower','Soleus']], tip:'Same as standing stretch but with knee bent — targets soleus', video_url:'https://www.youtube.com/results?search_query=bent+knee+calf+stretch+soleus'},
+  ],
+  core:[
+    {name:'Cobra Stretch',              detail:'Hold 30 sec',           muscles:[['core','Core'],['back','Spine']], tip:'Press through palms, lift chest — don\'t scrunch neck', video_url:'https://www.youtube.com/results?search_query=cobra+stretch+core'},
+    {name:'Supine Twist',               detail:'Hold 30 sec each side', muscles:[['core','Core'],['back','Spine']], tip:'Lie on back, guide knee across — both shoulders stay on floor', video_url:'https://www.youtube.com/results?search_query=supine+spinal+twist'},
+  ],
+  obliques:[
+    {name:'Standing Side Reach',        detail:'Hold 30 sec each side', muscles:[['core','Obliques']], tip:'Arm overhead, lean to side — hips stay square', video_url:'https://www.youtube.com/results?search_query=standing+side+stretch+obliques'},
+    {name:'Supine Twist',               detail:'Hold 30 sec each side', muscles:[['core','Obliques'],['back','Spine']], tip:'Lie on back, guide knee across — both shoulders stay grounded', video_url:'https://www.youtube.com/results?search_query=supine+spinal+twist'},
+  ],
+};
+
 // ═══════════════════════════════════════════════════════
 //  WEEK PLANS
 // ═══════════════════════════════════════════════════════
@@ -2044,11 +2097,27 @@ function buildSmartWorkout(targetMuscles) {
     {id:'sb-w2',name:'Arm Circles + Shoulder Rolls',detail:'10 each direction',sets:1, muscles:[['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/results?search_query=arm+circles+shoulder+warmup'},
     {id:'sb-w3',name:'Hip Circles + Leg Swings',   detail:'10 each side',     sets:1, muscles:[['other','Hips'],['lower','Glutes']], tip:null, video_url:'https://www.youtube.com/results?search_query=hip+circles+leg+swings+warmup'},
   ];
-  const cooldown = [
-    {id:'sb-d1',name:'Standing Quad Stretch',  detail:'Hold 30 sec each',sets:1, muscles:[['lower','Quads']], tip:null, video_url:'https://www.youtube.com/results?search_query=standing+quad+stretch'},
-    {id:'sb-d2',name:'Chest & Shoulder Opener',detail:'Hold 30 sec',     sets:1, muscles:[['upper','Chest'],['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/results?search_query=chest+shoulder+stretch'},
-    {id:'sb-d3',name:'Seated Forward Fold',    detail:'Hold 30-45 sec',  sets:1, muscles:[['lower','Hamstrings'],['back','Lower Back']], tip:null, video_url:'https://www.youtube.com/results?search_query=seated+forward+fold+stretch'},
-  ];
+  // Build cooldown from the muscles actually worked — one targeted stretch per muscle group
+  const usedStretches = new Set();
+  const cooldown = [];
+  for(const m of targetMuscles) {
+    if(cooldown.length >= 5) break;
+    const pool = STRETCH_POOL[m] || [];
+    for(const s of pool) {
+      if(!usedStretches.has(s.name)) {
+        cooldown.push({...s, id:`sb-d${cooldown.length+1}`, sets:1});
+        usedStretches.add(s.name);
+        break;
+      }
+    }
+  }
+  // Always end with a spinal decompression if back/core not already covered
+  const spineAlreadyCovered = targetMuscles.some(m=>['back','core'].includes(m));
+  if(!spineAlreadyCovered && !usedStretches.has("Child's Pose")) {
+    cooldown.push({id:`sb-d${cooldown.length+1}`, name:"Child's Pose", detail:'Hold 45 sec', sets:1,
+      muscles:[['back','Back'],['other','Spine']], tip:'Walk hands forward, sink hips to heels — decompress the spine',
+      video_url:'https://www.youtube.com/results?search_query=childs+pose+back+stretch'});
+  }
   const totalSets = warmup.reduce((s,e)=>s+e.sets,0) + shuffled.reduce((s,e)=>s+e.sets,0) + cooldown.reduce((s,e)=>s+e.sets,0);
   const label = targetMuscles.map(m=>m.charAt(0).toUpperCase()+m.slice(1)).join(' · ');
   return {
