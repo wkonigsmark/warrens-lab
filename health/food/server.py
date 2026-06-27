@@ -13,7 +13,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from pathlib import Path
 import urllib.parse
 
-PORT = 9020
+PORT = int(os.environ.get("PORT", 9020))
 
 os.chdir(Path(__file__).parent)
 from schema import get_connection

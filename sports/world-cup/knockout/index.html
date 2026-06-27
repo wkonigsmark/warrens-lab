@@ -847,7 +847,12 @@
     import { supabaseConfig } from "../data/supabase-config.js";
     import { koSupabaseConfig } from "../data/ko-supabase-config.js";
 
-    // ── Toggle: flip to true on Saturday to open the pool ──────────
+    // ════════════════════════════════════════════════════════════════
+    //  GO LIVE — the ONLY switch you need to touch:
+    //    • OPEN the pool : change  false  →  true   (saves + auto-deploys)
+    //    • CLOSE the pool: change  true   →  false  (entrants see the locked screen)
+    //  ⚠️ Close it BEFORE the first R32 match — Sun Jun 28, 3:00 PM ET.
+    // ════════════════════════════════════════════════════════════════
     const POOL_OPEN = false;
     const KO_PIN = "2019";
     const KO_TESTER_KEY = "ko_tester_access";

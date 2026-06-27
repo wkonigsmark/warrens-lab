@@ -71,17 +71,25 @@ create policy "ko_results_public_read"
   on knockout_match_results for select
   using (true);
 
--- Service role (admin server) handles all admin writes — no extra policy needed.
+-- Service role (admin server) bypasses RLS, so no *policy* is needed for it —
+-- but it STILL needs the table-level GRANTs below to touch the tables at all.
 
 -- 3b. TABLE-LEVEL GRANTS  ← REQUIRED in addition to the RLS policies above.
 --     RLS policies decide *which rows* a role may touch; the base GRANT decides
 --     whether the role may touch the table at all. Without these, the public
---     entry form and the public scoreboard read both fail with
+--     entry form, the public scoreboard read, AND the admin server all fail with
 --     "permission denied for table knockout_entries" (error 42501),
 --     even though the policies exist.
+
+-- Public (browser, publishable key / anon role)
 grant insert on knockout_entries to anon;   -- entry form (knockout/index.html)
 grant select on knockout_entries to anon;   -- scoreboard read (RLS still hides voided rows)
 grant select on knockout_match_results to anon;  -- future public results read
+
+-- Admin server (secret key / service_role). Supabase usually grants these by
+-- default, but on RLS-enabled tables created via SQL they must be set explicitly.
+grant all on knockout_entries       to service_role;  -- list entries, mark paid/void/status
+grant all on knockout_match_results to service_role;  -- commissioner enters scores
 
 -- 4. PUBLIC READ RPCs (called by browser with publishable key)
 
