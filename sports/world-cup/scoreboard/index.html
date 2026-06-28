@@ -955,16 +955,16 @@
 
     <!-- Navigation Tabs -->
     <nav class="tab-selectors" id="scoreboard-tabs-nav">
-      <button class="sim-tab-btn active" data-tab="standings">🏆 Projected Standings</button>
+      <button class="sim-tab-btn active" data-tab="ko-pool">🏆 KO Pool</button>
       <button class="sim-tab-btn" data-tab="matches">📅 Match Center</button>
-      <button class="sim-tab-btn" data-tab="ko-pool">🔒 KO Pool</button>
+      <button class="sim-tab-btn" data-tab="standings">📊 Group Play</button>
     </nav>
 
     <!-- Tab Panels Container -->
     <div id="scoreboard-views-container">
       
-      <!-- Tab 1: Leaderboard Standings -->
-      <div class="sim-view-panel active" id="panel-standings">
+      <!-- Tab 1: Group Play (Historical) -->
+      <div class="sim-view-panel" id="panel-standings">
         <section class="scoring-note" aria-label="Projected scoring note">
           <div>
             <h3>Projected During Group Play</h3>
@@ -1027,7 +1027,7 @@
       </div>
 
       <!-- KO Pool tab -->
-      <div class="sim-view-panel" id="panel-ko-pool">
+      <div class="sim-view-panel active" id="panel-ko-pool">
         <div style="margin-bottom:20px;">
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;" id="ko-stats-row">
             <div class="wc-stat"><strong id="ko-entry-count">--</strong><span>KO Entries</span></div>
@@ -1038,14 +1038,16 @@
             <table class="wc-table">
               <thead>
                 <tr>
-                  <th>#</th>
+                  <th style="width:50px;">#</th>
                   <th>Bracket</th>
-                  <th>Champion Pick</th>
-                  <th>Submitted</th>
+                  <th style="text-align:center;">R32 (Next)</th>
+                  <th style="text-align:center;">R16</th>
+                  <th style="text-align:center;">QF</th>
+                  <th style="text-align:center;">Champion</th>
                 </tr>
               </thead>
               <tbody id="ko-entry-table">
-                <tr><td colspan="4">Click the KO Pool tab to load entries.</td></tr>
+                <tr><td colspan="7">Click the KO Pool tab to load entries.</td></tr>
               </tbody>
             </table>
           </div>
@@ -2497,12 +2499,32 @@
           document.getElementById("ko-paid-count").textContent = paid.length;
           document.getElementById("ko-purse").textContent = `$${paid.length * 50}`;
           if (!entries.length) {
-            tbody.innerHTML = `<tr><td colspan="4">No entries yet.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7">No entries yet.</td></tr>`;
           } else {
+            // Helper to format team display with flag and 3-letter code
+            const teamDisplay = (teamId) => {
+              if (!teamId) return '—';
+              const team = teamsById[teamId];
+              if (!team) return teamId;
+              const flagUrl = `https://flagcdn.com/w24/${team.flag_code || 'un'}.png`;
+              const code = teamId.substring(0, 3).toUpperCase();
+              return `<img src="${flagUrl}" alt="${teamId}" style="height:16px;margin-right:4px;vertical-align:middle;"><span title="${team.name}">${code}</span>`;
+            };
+
             tbody.innerHTML = entries.map((e, i) => {
-              const champ = e.bracket_picks?.final || "—";
-              const t = new Date(e.submitted_at).toLocaleDateString();
-              return `<tr><td>${i + 1}</td><td><strong>${e.bracket_name}</strong></td><td>${champ}</td><td>${t}</td></tr>`;
+              const picks = e.bracket_picks || {};
+              const r32Pick = (picks.r32 && picks.r32[0]) ? picks.r32[0] : "—"; // First R32 match pick (NEXT UPCOMING)
+              const r16Pick = (picks.r16 && picks.r16[0]) ? picks.r16[0] : "—"; // First R16 pick
+              const qfPick = (picks.qf && picks.qf[0]) ? picks.qf[0] : "—"; // First QF pick
+              const champ = picks.final || "—";
+              return `<tr>
+                <td>${i + 1}</td>
+                <td><strong>${e.bracket_name}</strong></td>
+                <td style="text-align:center;font-weight:bold;">${teamDisplay(r32Pick)}</td>
+                <td style="text-align:center;">${teamDisplay(r16Pick)}</td>
+                <td style="text-align:center;">${teamDisplay(qfPick)}</td>
+                <td style="text-align:center;font-weight:bold;">${teamDisplay(champ)}</td>
+              </tr>`;
             }).join("");
           }
           koLoaded = true;
