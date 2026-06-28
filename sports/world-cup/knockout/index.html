@@ -499,27 +499,14 @@
       <div class="ko-card">
         <div class="ko-lock" id="ko-lock-icon">🔒</div>
         <div class="ko-eyebrow">Round 2 — Knockout Stage</div>
-        <h1 class="ko-title">Knockout<br>Pool</h1>
-        <p class="ko-subtitle">Pick every match from the Round of 32 all the way to the Final. A second chance to compete — and a whole new pot.</p>
-        <div class="ko-timing">⏰ Expected live Saturday night, June 27 · Exact timing TBD</div>
+        <h1 class="ko-title">KO Pool<br>Closed</h1>
+        <p class="ko-subtitle">Entries are no longer being accepted. The bracket is locked and scoring has begun.</p>
+        <div class="ko-timing">⏰ Pool closed · June 28, 2026</div>
         <div class="ko-teaser">
-          <div class="ko-teaser-row"><span class="ko-teaser-icon">🗺️</span><div><strong>Full bracket pick</strong> — R32 through Final + 3rd place match</div></div>
-          <div class="ko-teaser-row"><span class="ko-teaser-icon">⚽</span><div><strong>Golden Boot tiebreaker</strong> — predict the tournament's top scorer</div></div>
-          <div class="ko-teaser-row"><span class="ko-teaser-icon">🎯</span><div><strong>Penalty & goals tiebreakers</strong> — closest to actual wins</div></div>
-          <div class="ko-teaser-row"><span class="ko-teaser-icon">💸</span><div><strong>$50 entry</strong> · 70 / 20 / 10 payout · Venmo to @Warren-Konigsmark</div></div>
+          <div class="ko-teaser-row"><span class="ko-teaser-icon">📊</span><div><strong>Watch the scoreboard</strong> — live scoring &amp; bracket standings</div></div>
+          <div class="ko-teaser-row"><span class="ko-teaser-icon">🏆</span><div><strong>100 entries locked</strong> — competing for 70/20/10 payout</div></div>
         </div>
-        <div style="margin-bottom:16px;">
-          <div style="font-size:0.72rem;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;color:var(--wc-gold);margin-bottom:10px;">Scoring</div>
-          <div class="ko-scoring">
-            <div class="ko-pts"><strong>1 pt</strong><span>Round of 32</span></div>
-            <div class="ko-pts"><strong>2 pts</strong><span>Round of 16</span></div>
-            <div class="ko-pts"><strong>4 pts</strong><span>Quarterfinal</span></div>
-            <div class="ko-pts"><strong>12 pts</strong><span>3rd Place</span></div>
-            <div class="ko-pts"><strong>8 pts</strong><span>Semifinal</span></div>
-            <div class="ko-pts"><strong>16 pts</strong><span>Final / Champ</span></div>
-          </div>
-        </div>
-        <a href="../insights/#r32" class="ko-live-bracket-btn">🗺️ View Live Bracket</a>
+        <a href="../scoreboard/" class="ko-live-bracket-btn">📊 View Scoreboard</a>
         <a href="../" class="ko-back">← Back to home</a>
       </div>
     </div>
@@ -847,7 +834,7 @@
     //    • CLOSE the pool: change  true   →  false  (entrants see the locked screen)
     //  ⚠️ Close it BEFORE the first R32 match — Sun Jun 28, 3:00 PM ET.
     // ════════════════════════════════════════════════════════════════
-    const POOL_OPEN = true;
+    const POOL_OPEN = false;
     const KO_PIN = "2019";
     const KO_TESTER_KEY = "ko_tester_access";
 
