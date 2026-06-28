@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-02T19:57:53+00:00",
+  "generated": "2026-06-28T03:05:44+00:00",
   "categoryOrder": [
     "animals",
     "constructs",
@@ -1757,11 +1757,74 @@
     ],
     "objects": [
       {
+        "file": "backpack-1.png",
+        "name": "backpack",
+        "num": 1,
+        "label": "Backpack 1",
+        "src": "assets/images/objects/backpack-1.png"
+      },
+      {
+        "file": "backpack-2.png",
+        "name": "backpack",
+        "num": 2,
+        "label": "Backpack 2",
+        "src": "assets/images/objects/backpack-2.png"
+      },
+      {
         "file": "bike-1.png",
         "name": "bike",
         "num": 1,
         "label": "Bike 1",
         "src": "assets/images/objects/bike-1.png"
+      },
+      {
+        "file": "books-1.png",
+        "name": "books",
+        "num": 1,
+        "label": "Books 1",
+        "src": "assets/images/objects/books-1.png"
+      },
+      {
+        "file": "calculator-1.png",
+        "name": "calculator",
+        "num": 1,
+        "label": "Calculator 1",
+        "src": "assets/images/objects/calculator-1.png"
+      },
+      {
+        "file": "car-1.png",
+        "name": "car",
+        "num": 1,
+        "label": "Car 1",
+        "src": "assets/images/objects/car-1.png"
+      },
+      {
+        "file": "car-2.png",
+        "name": "car",
+        "num": 2,
+        "label": "Car 2",
+        "src": "assets/images/objects/car-2.png"
+      },
+      {
+        "file": "crayons-1.png",
+        "name": "crayons",
+        "num": 1,
+        "label": "Crayons 1",
+        "src": "assets/images/objects/crayons-1.png"
+      },
+      {
+        "file": "eraser-1.png",
+        "name": "eraser",
+        "num": 1,
+        "label": "Eraser 1",
+        "src": "assets/images/objects/eraser-1.png"
+      },
+      {
+        "file": "glue-1.png",
+        "name": "glue",
+        "num": 1,
+        "label": "Glue 1",
+        "src": "assets/images/objects/glue-1.png"
       },
       {
         "file": "heart-1.png",
@@ -1771,11 +1834,74 @@
         "src": "assets/images/objects/heart-1.png"
       },
       {
+        "file": "lunchbox-1.png",
+        "name": "lunchbox",
+        "num": 1,
+        "label": "Lunchbox 1",
+        "src": "assets/images/objects/lunchbox-1.png"
+      },
+      {
+        "file": "markers-pens-1.png",
+        "name": "markers-pens",
+        "num": 1,
+        "label": "Markers Pens 1",
+        "src": "assets/images/objects/markers-pens-1.png"
+      },
+      {
+        "file": "notebook-1.png",
+        "name": "notebook",
+        "num": 1,
+        "label": "Notebook 1",
+        "src": "assets/images/objects/notebook-1.png"
+      },
+      {
+        "file": "notebook-2.png",
+        "name": "notebook",
+        "num": 2,
+        "label": "Notebook 2",
+        "src": "assets/images/objects/notebook-2.png"
+      },
+      {
+        "file": "notebook-paper-1.png",
+        "name": "notebook-paper",
+        "num": 1,
+        "label": "Notebook Paper 1",
+        "src": "assets/images/objects/notebook-paper-1.png"
+      },
+      {
+        "file": "pencil-1.png",
+        "name": "pencil",
+        "num": 1,
+        "label": "Pencil 1",
+        "src": "assets/images/objects/pencil-1.png"
+      },
+      {
+        "file": "pencils-ruler-scissors-1.png",
+        "name": "pencils-ruler-scissors",
+        "num": 1,
+        "label": "Pencils Ruler Scissors 1",
+        "src": "assets/images/objects/pencils-ruler-scissors-1.png"
+      },
+      {
         "file": "scooter-1.png",
         "name": "scooter",
         "num": 1,
         "label": "Scooter 1",
         "src": "assets/images/objects/scooter-1.png"
+      },
+      {
+        "file": "supply-kit-holder-pencils-1.png",
+        "name": "supply-kit-holder-pencils",
+        "num": 1,
+        "label": "Supply Kit Holder Pencils 1",
+        "src": "assets/images/objects/supply-kit-holder-pencils-1.png"
+      },
+      {
+        "file": "textbook-1.png",
+        "name": "textbook",
+        "num": 1,
+        "label": "Textbook 1",
+        "src": "assets/images/objects/textbook-1.png"
       }
     ],
     "misc": [],
@@ -1862,20 +1988,21 @@
     ]
   },
   "summary": {
-    "totalImages": 262,
-    "totalTypes": 111,
+    "totalImages": 280,
+    "totalTypes": 126,
     "byCategory": {
       "animals": 132,
       "constructs": 31,
       "nature": 82,
       "food": 3,
-      "objects": 3,
+      "objects": 21,
       "misc": 0,
       "flags": 1,
       "sports": 10
     },
     "byType": {
       "aye-aye": 1,
+      "backpack": 2,
       "badger": 3,
       "baseball": 1,
       "baseball-bat": 1,
@@ -1888,12 +2015,15 @@
       "beaver": 3,
       "bike": 1,
       "bobcat": 2,
+      "books": 1,
       "brick-wall": 1,
       "bunny-rabbit": 3,
       "bush": 2,
       "butterfly": 1,
       "cactus": 1,
       "cake": 2,
+      "calculator": 1,
+      "car": 2,
       "castle": 9,
       "cheetah": 2,
       "cliff": 3,
@@ -1903,6 +2033,7 @@
       "coral-reef": 6,
       "cougar": 2,
       "crab": 2,
+      "crayons": 1,
       "creek": 1,
       "cupcake": 1,
       "deer": 1,
@@ -1913,6 +2044,7 @@
       "duck": 6,
       "eagle": 1,
       "elephant": 2,
+      "eraser": 1,
       "fence": 3,
       "fire-station": 1,
       "fish": 8,
@@ -1921,6 +2053,7 @@
       "fossa": 1,
       "frog": 3,
       "giraffe": 2,
+      "glue": 1,
       "gorilla": 1,
       "grass": 1,
       "heart": 1,
@@ -1937,17 +2070,23 @@
       "lemur": 1,
       "leopard": 1,
       "lion": 3,
+      "lunchbox": 1,
+      "markers-pens": 1,
       "marlin-swordfish-sailfish": 5,
       "monkey": 1,
       "moon": 1,
       "mountains": 1,
       "mouse": 3,
+      "notebook": 2,
+      "notebook-paper": 1,
       "octopus": 2,
       "orangutan": 1,
       "orca-killer-whale": 2,
       "otter": 3,
       "owl": 3,
       "panda": 1,
+      "pencil": 1,
+      "pencils-ruler-scissors": 1,
       "plant": 2,
       "police-station": 1,
       "pond": 5,
@@ -1971,7 +2110,9 @@
       "stone-wall": 1,
       "sun": 1,
       "sunken-ship": 2,
+      "supply-kit-holder-pencils": 1,
       "tasmanian-devil": 1,
+      "textbook": 1,
       "tiger": 3,
       "train-track": 2,
       "tree": 5,
