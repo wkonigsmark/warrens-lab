@@ -62,6 +62,24 @@
     .round-badge.done { color:var(--wc-gold); border-color:rgba(244,201,93,0.4); }
     .round-divider { flex:1; height:1px; background:var(--wc-line); }
 
+    /* 3rd-place pick — make it impossible to miss on desktop */
+    .ko-third-highlight {
+      border:1.5px solid rgba(244,201,93,0.5); border-radius:14px;
+      background:linear-gradient(180deg, rgba(244,201,93,0.10), rgba(244,201,93,0.02));
+      padding:18px 20px 20px; animation:ko-third-pulse 2.6s ease-in-out infinite;
+    }
+    @keyframes ko-third-pulse {
+      0%,100% { box-shadow:0 0 0 0 rgba(244,201,93,0); }
+      50%     { box-shadow:0 0 20px 1px rgba(244,201,93,0.18); }
+    }
+    .ko-third-callout { display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+    .ko-third-icon { font-size:1.9rem; line-height:1; flex:0 0 auto; }
+    .ko-third-copy { flex:1; min-width:0; }
+    .ko-third-head { font-size:1rem; font-weight:950; color:var(--wc-gold); letter-spacing:0.01em; }
+    .ko-third-sub { font-size:0.82rem; color:var(--wc-muted); line-height:1.45; margin-top:3px; }
+    .ko-third-sub strong { color:var(--wc-ink); }
+    .ko-third-callout .round-badge { flex:0 0 auto; align-self:flex-start; }
+
     /* Matchup grid */
     .matchups-grid { display:grid; gap:10px; }
     /* ── Bracket layout (desktop) ───────────────────────────────── */
@@ -698,14 +716,16 @@
         </div><!-- /.bk-wrap -->
 
         <!-- ── 3rd Place (below bracket) — hidden on mobile, handled in pane 3 ── -->
-        <div class="round-section ko-desktop-only">
-          <div class="round-header">
-            <span class="round-title">🥉 3rd Place Match</span>
+        <div class="round-section ko-desktop-only ko-third-highlight">
+          <div class="ko-third-callout">
+            <span class="ko-third-icon">🥉</span>
+            <div class="ko-third-copy">
+              <div class="ko-third-head">One more pick — your 3rd-Place winner</div>
+              <div class="ko-third-sub">The two semifinal <em>losers</em> play here. Worth <strong>12 pts</strong> — don't skip it! Choose a winner below.</div>
+            </div>
             <span class="round-badge" id="badge-end">0 / 1</span>
-            <div class="round-divider"></div>
-            <span style="font-size:0.7rem;color:var(--wc-faint);white-space:nowrap;">12 pts</span>
           </div>
-          <div id="matchups-end" style="max-width:320px;"></div>
+          <div id="matchups-end" style="max-width:340px;"></div>
         </div>
 
         <!-- ── Tiebreakers ───────────────────────────────── -->
