@@ -455,14 +455,16 @@
         { num: 74, top: slot(1,"I"), bot: slot(3,"I") },
         { num: 75, top: slot(2,"A"), bot: slot(2,"B") },
         { num: 76, top: slot(1,"F"), bot: slot(2,"C") },
-        { num: 77, top: slot(1,"C"), bot: slot(2,"F") },
-        { num: 78, top: slot(2,"E"), bot: slot(2,"I") },
-        { num: 79, top: slot(1,"A"), bot: slot(3,"A") },
-        { num: 80, top: slot(1,"L"), bot: slot(3,"L") },
+        // Klose quadrant (81-84) stacked 2nd so it meets Zidane in the SF
         { num: 81, top: slot(2,"K"), bot: slot(2,"L") },
         { num: 82, top: slot(1,"H"), bot: slot(2,"J") },
         { num: 83, top: slot(1,"D"), bot: slot(3,"D") },
         { num: 84, top: slot(1,"G"), bot: slot(3,"G") },
+        // Pelé quadrant (77-80) stacked 3rd so it meets Maradona in the SF
+        { num: 77, top: slot(1,"C"), bot: slot(2,"F") },
+        { num: 78, top: slot(2,"E"), bot: slot(2,"I") },
+        { num: 79, top: slot(1,"A"), bot: slot(3,"A") },
+        { num: 80, top: slot(1,"L"), bot: slot(3,"L") },
         { num: 85, top: slot(1,"B"), bot: slot(3,"B") },
         { num: 86, top: slot(1,"K"), bot: slot(3,"K") },
         { num: 87, top: slot(1,"J"), bot: slot(2,"H") },
@@ -515,9 +517,9 @@
       decor.innerHTML = `
         <div class="bk-qlabel bk-qlabel-sep" style="top:22px">Zidane</div>
         <div class="bk-qsep" style="top:288px"></div>
-        <div class="bk-qlabel bk-qlabel-sep" style="top:288px">Pelé</div>
+        <div class="bk-qlabel bk-qlabel-sep" style="top:288px">Klose</div>
         <div class="bk-qsep" style="top:576px"></div>
-        <div class="bk-qlabel bk-qlabel-sep" style="top:576px">Klose</div>
+        <div class="bk-qlabel bk-qlabel-sep" style="top:576px">Pelé</div>
         <div class="bk-qsep" style="top:864px"></div>
         <div class="bk-qlabel bk-qlabel-sep" style="top:864px">Maradona</div>
       `;

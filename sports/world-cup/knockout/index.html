@@ -637,9 +637,9 @@
             <div class="bk-qdecor">
               <div class="bk-qlabel bk-qlabel-sep" style="top:26px">Zidane</div>
               <div class="bk-qsep"   style="top:360px"></div>
-              <div class="bk-qlabel bk-qlabel-sep" style="top:360px">Pelé</div>
+              <div class="bk-qlabel bk-qlabel-sep" style="top:360px">Klose</div>
               <div class="bk-qsep"   style="top:720px"></div>
-              <div class="bk-qlabel bk-qlabel-sep" style="top:720px">Klose</div>
+              <div class="bk-qlabel bk-qlabel-sep" style="top:720px">Pelé</div>
               <div class="bk-qsep"   style="top:1080px"></div>
               <div class="bk-qlabel bk-qlabel-sep" style="top:1080px">Maradona</div>
             </div>
@@ -928,10 +928,13 @@
     let r32Data = [];
 
     // ── Quadrant definitions (4 groups of 4 R32 matches) ────────────
+    // Quadrants stacked top→bottom so the bracket resolves correctly:
+    //   SF1 = Zidane winner vs Klose winner   (qf0 vs qf1)
+    //   SF2 = Pelé winner   vs Maradona winner (qf2 vs qf3)
     const QUADS = [
       { name:"Zidane",   r32:[0,1,2,3],    r16:[0,1], qf:0 },
-      { name:"Pelé",     r32:[4,5,6,7],    r16:[2,3], qf:1 },
-      { name:"Klose",    r32:[8,9,10,11],  r16:[4,5], qf:2 },
+      { name:"Klose",    r32:[4,5,6,7],    r16:[2,3], qf:1 },
+      { name:"Pelé",     r32:[8,9,10,11],  r16:[4,5], qf:2 },
       { name:"Maradona", r32:[12,13,14,15],r16:[6,7], qf:3 },
     ];
 
@@ -1420,14 +1423,16 @@
           { num: 74, top: slot(1,"I"), bot: slot(3,"I") },
           { num: 75, top: slot(2,"A"), bot: slot(2,"B") },
           { num: 76, top: slot(1,"F"), bot: slot(2,"C") },
-          { num: 77, top: slot(1,"C"), bot: slot(2,"F") },
-          { num: 78, top: slot(2,"E"), bot: slot(2,"I") },
-          { num: 79, top: slot(1,"A"), bot: slot(3,"A") },
-          { num: 80, top: slot(1,"L"), bot: slot(3,"L") },
+          // ── Klose quadrant (matches 81-84) — stacked 2nd so its winner meets Zidane's in the SF
           { num: 81, top: slot(2,"K"), bot: slot(2,"L") },
           { num: 82, top: slot(1,"H"), bot: slot(2,"J") },
           { num: 83, top: slot(1,"D"), bot: slot(3,"D") },
           { num: 84, top: slot(1,"G"), bot: slot(3,"G") },
+          // ── Pelé quadrant (matches 77-80) — stacked 3rd so its winner meets Maradona's in the SF
+          { num: 77, top: slot(1,"C"), bot: slot(2,"F") },
+          { num: 78, top: slot(2,"E"), bot: slot(2,"I") },
+          { num: 79, top: slot(1,"A"), bot: slot(3,"A") },
+          { num: 80, top: slot(1,"L"), bot: slot(3,"L") },
           { num: 85, top: slot(1,"B"), bot: slot(3,"B") },
           { num: 86, top: slot(1,"K"), bot: slot(3,"K") },
           { num: 87, top: slot(1,"J"), bot: slot(2,"H") },
