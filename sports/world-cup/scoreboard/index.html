@@ -604,10 +604,7 @@
       }
 
       #panel-ko-pool .wc-table {
-        display: grid;
-        gap: 12px;
-        border: none;
-        background: none;
+        display: contents;
       }
 
       #panel-ko-pool .wc-table thead {
@@ -615,67 +612,148 @@
       }
 
       #panel-ko-pool .wc-table tbody {
-        display: grid;
-        gap: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
       }
 
       #panel-ko-pool .wc-table tr {
         display: grid;
-        grid-template-columns: 40px 1fr;
-        gap: 12px;
+        grid-template-columns: 28px 1fr auto;
+        gap: 8px;
         background: var(--wc-panel);
         border: 1px solid var(--wc-line);
-        border-radius: 10px;
-        padding: 12px;
-        align-items: start;
+        border-radius: 8px;
+        padding: 8px 12px;
+        align-items: center;
+        overflow: hidden;
       }
 
       #panel-ko-pool .wc-table td {
         border: none;
         padding: 0;
-        text-align: left !important;
+        font-size: 0.7rem;
       }
 
+      /* ── Row 1: Rank | Name | Points ── */
+
+      /* Rank number */
       #panel-ko-pool .wc-table td:nth-child(1) {
         grid-column: 1;
-        grid-row: 1 / 4;
-        font-size: 0.75rem;
-        color: var(--wc-muted);
+        grid-row: 1;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(244, 201, 93, 0.15);
+        color: var(--wc-gold);
+        font-weight: 900;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 900;
+        font-size: 0.65rem;
       }
 
+      /* Bracket name */
       #panel-ko-pool .wc-table td:nth-child(2) {
         grid-column: 2;
         grid-row: 1;
         font-weight: 900;
         color: var(--wc-ink);
+        font-size: 0.72rem;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
+      /* Points */
       #panel-ko-pool .wc-table td:nth-child(3) {
-        grid-column: 2;
-        grid-row: 2;
-        font-size: 0.8rem;
+        grid-column: 3;
+        grid-row: 1;
         font-weight: 900;
         color: var(--wc-gold);
+        font-size: 0.68rem;
+        text-align: right;
       }
 
+      /* ── Row 2: Next / Fol / Champ (labels above, flags below) ── */
+
+      /* Current match (Next) */
       #panel-ko-pool .wc-table td:nth-child(4) {
-        grid-column: 2;
-        grid-row: 3;
-        font-size: 0.8rem;
-        color: var(--wc-muted);
+        grid-column: 1;
+        grid-row: 2;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 6px;
+        gap: 3px;
+        padding-top: 4px;
       }
 
-      /* Hide Following Match and Champion on very small screens */
-      #panel-ko-pool .wc-table td:nth-child(5),
+      #panel-ko-pool .wc-table td:nth-child(4)::before {
+        content: 'Next';
+        font-weight: 700;
+        color: var(--wc-muted);
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      #panel-ko-pool .wc-table td:nth-child(4) img {
+        width: 20px;
+        height: auto;
+        border-radius: 2px;
+      }
+
+      /* Following match (Fol) */
+      #panel-ko-pool .wc-table td:nth-child(5) {
+        grid-column: 2;
+        grid-row: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding-top: 4px;
+      }
+
+      #panel-ko-pool .wc-table td:nth-child(5)::before {
+        content: 'Fol';
+        font-weight: 700;
+        color: var(--wc-muted);
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      #panel-ko-pool .wc-table td:nth-child(5) img {
+        width: 20px;
+        height: auto;
+        border-radius: 2px;
+      }
+
+      /* Champion */
       #panel-ko-pool .wc-table td:nth-child(6) {
-        display: none;
+        grid-column: 3;
+        grid-row: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding-top: 4px;
+      }
+
+      #panel-ko-pool .wc-table td:nth-child(6)::before {
+        content: 'Champ';
+        font-weight: 700;
+        color: var(--wc-gold);
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      #panel-ko-pool .wc-table td:nth-child(6) img {
+        width: 20px;
+        height: auto;
+        border-radius: 2px;
       }
     }
 
