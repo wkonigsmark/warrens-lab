@@ -597,6 +597,88 @@
       }
     }
 
+    /* Mobile KO Pool optimizations */
+    @media (max-width: 768px) {
+      #panel-ko-pool .wc-table-wrap {
+        overflow-x: visible;
+      }
+
+      #panel-ko-pool .wc-table {
+        display: grid;
+        gap: 12px;
+        border: none;
+        background: none;
+      }
+
+      #panel-ko-pool .wc-table thead {
+        display: none;
+      }
+
+      #panel-ko-pool .wc-table tbody {
+        display: grid;
+        gap: 12px;
+      }
+
+      #panel-ko-pool .wc-table tr {
+        display: grid;
+        grid-template-columns: 40px 1fr;
+        gap: 12px;
+        background: var(--wc-panel);
+        border: 1px solid var(--wc-line);
+        border-radius: 10px;
+        padding: 12px;
+        align-items: start;
+      }
+
+      #panel-ko-pool .wc-table td {
+        border: none;
+        padding: 0;
+        text-align: left !important;
+      }
+
+      #panel-ko-pool .wc-table td:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1 / 4;
+        font-size: 0.75rem;
+        color: var(--wc-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+      }
+
+      #panel-ko-pool .wc-table td:nth-child(2) {
+        grid-column: 2;
+        grid-row: 1;
+        font-weight: 900;
+        color: var(--wc-ink);
+      }
+
+      #panel-ko-pool .wc-table td:nth-child(3) {
+        grid-column: 2;
+        grid-row: 2;
+        font-size: 0.8rem;
+        font-weight: 900;
+        color: var(--wc-gold);
+      }
+
+      #panel-ko-pool .wc-table td:nth-child(4) {
+        grid-column: 2;
+        grid-row: 3;
+        font-size: 0.8rem;
+        color: var(--wc-muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* Hide Following Match and Champion on very small screens */
+      #panel-ko-pool .wc-table td:nth-child(5),
+      #panel-ko-pool .wc-table td:nth-child(6) {
+        display: none;
+      }
+    }
+
     .sandbox-card {
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid var(--wc-line);
@@ -1034,20 +1116,24 @@
             <div class="wc-stat"><strong id="ko-paid-count">--</strong><span>Paid</span></div>
             <div class="wc-stat"><strong id="ko-purse">$--</strong><span>KO Purse (paid)</span></div>
           </div>
+          <div style="margin-bottom:16px;">
+            <input type="text" id="ko-search" placeholder="Search by bracket name..."
+              style="width:100%;padding:10px 12px;border:1px solid var(--wc-line);border-radius:6px;background:var(--wc-panel);color:var(--wc-ink);font-size:0.9rem;box-sizing:border-box;">
+          </div>
           <div class="wc-table-wrap">
             <table class="wc-table">
               <thead>
                 <tr>
                   <th style="width:50px;">#</th>
                   <th>Bracket</th>
-                  <th style="text-align:center;">CAN vs RSA</th>
-                  <th style="text-align:center;">R16</th>
-                  <th style="text-align:center;">QF</th>
+                  <th style="text-align:center;">Points</th>
+                  <th style="text-align:center;">Next Match</th>
+                  <th style="text-align:center;">Following Match</th>
                   <th style="text-align:center;">Champion</th>
                 </tr>
               </thead>
               <tbody id="ko-entry-table">
-                <tr><td colspan="7">Click the KO Pool tab to load entries.</td></tr>
+                <tr><td colspan="6">Click the KO Pool tab to load entries.</td></tr>
               </tbody>
             </table>
           </div>
@@ -2514,13 +2600,13 @@
         return `${roundNames[match.round] || match.round} (#${match.matchNumber})`;
       }
 
-      // Update the KO Pool "current match" column header.
+      // Update the KO Pool "Next Match" column header.
       function updateNextMatchHeader() {
         const current = getCurrentMatch();
         const koTable = document.getElementById("ko-entry-table")?.closest("table");
         if (koTable) {
           const headers = koTable.querySelectorAll("th");
-          if (headers[2]) headers[2].textContent = matchLabel(current);
+          if (headers[3]) headers[3].textContent = matchLabel(current);
         }
       }
 
@@ -2535,6 +2621,38 @@
         return `<img src="${flagUrl}" alt="${teamId}" style="height:32px;width:auto;margin-right:8px;vertical-align:middle;border-radius:2px;" loading="lazy" onerror="this.style.display='none'"><strong>${code}</strong>`;
       }
 
+      // Calculate points for a bracket based on correct picks.
+      // Returns { earned, max } where max is based on completed matches only.
+      function calculateKoPoints(picks) {
+        let earned = 0;
+        let maxAvailable = 0;
+        const r32Array = picks.r32 || [];
+
+        // For each R32 match in the schedule
+        knockoutSchedule.filter(m => m.round === "R32").forEach(match => {
+          const result = actualMatches.find(r => r.matchNumber === match.matchNumber);
+          if (!result || !result.winnerId) return; // No result yet
+
+          // This match has a result, so it's available to score
+          maxAvailable += 1; // 1 point per R32 match
+          // Check if this entry picked the winner
+          if (r32Array.includes(result.winnerId)) {
+            earned += 1;
+          }
+        });
+
+        return { earned, max: maxAvailable };
+      }
+
+      // Get a team pick for the match at a given sequence number.
+      function getPickForSeq(picks, seq) {
+        const match = knockoutSchedule.find(m => m.seq === seq);
+        if (!match || !match.teamsKnown) return "—";
+        const matchTeams = [match.team1, match.team2];
+        const r32 = picks.r32 || [];
+        return r32.find(t => matchTeams.includes(t)) || "—";
+      }
+
       // Render the KO Pool table from the already-fetched entries. Safe to call
       // repeatedly — it recomputes the current (result-driven) match each time.
       function renderKoPool() {
@@ -2547,35 +2665,35 @@
           return;
         }
 
-        // The current match has two teams; each entry picked one of them to advance.
-        // The bracket's r32 array is NOT in schedule order, so scan it for whichever
-        // of the two current-match teams the entry chose. Only meaningful once the
-        // matchup is concrete (R32, or a later round whose teams have resolved).
-        const current = getCurrentMatch();
-        const matchTeams = (current && current.teamsKnown)
-          ? [current.team1, current.team2]
-          : [];
-        const pickForCurrentMatch = (picks) => {
-          if (!matchTeams.length) return "—";
-          const r32 = picks.r32 || [];
-          return r32.find(t => matchTeams.includes(t)) || "—";
-        };
+        // Get search filter value
+        const searchTerm = document.getElementById("ko-search")?.value?.toLowerCase() || "";
 
-        tbody.innerHTML = koEntries.map((e, i) => {
-          const picks = e.bracket_picks || {};
-          const currentPick = pickForCurrentMatch(picks); // Their winner of the current match
-          const r16Pick = (picks.r16 && picks.r16[0]) ? picks.r16[0] : "—";
-          const qfPick = (picks.qf && picks.qf[0]) ? picks.qf[0] : "—";
-          const champ = picks.final || "—";
-          return `<tr>
-            <td>${i + 1}</td>
-            <td><strong>${e.bracket_name}</strong></td>
-            <td style="text-align:center;font-weight:bold;">${koTeamDisplay(currentPick)}</td>
-            <td style="text-align:center;">${koTeamDisplay(r16Pick)}</td>
-            <td style="text-align:center;">${koTeamDisplay(qfPick)}</td>
-            <td style="text-align:center;font-weight:bold;">${koTeamDisplay(champ)}</td>
-          </tr>`;
-        }).join("");
+        // Current and following match sequences
+        const current = getCurrentMatch();
+        const currentSeq = current.seq;
+        const followingSeq = currentSeq + 1;
+
+        // Build rows for each entry
+        const rows = koEntries
+          .filter(e => !searchTerm || e.bracket_name.toLowerCase().includes(searchTerm))
+          .map((e, displayIndex) => {
+            const picks = e.bracket_picks || {};
+            const { earned, max } = calculateKoPoints(picks);
+            const currentPick = getPickForSeq(picks, currentSeq);
+            const followingPick = getPickForSeq(picks, followingSeq);
+            const champ = picks.final || "—";
+
+            return `<tr>
+              <td>${displayIndex + 1}</td>
+              <td><strong>${e.bracket_name}</strong></td>
+              <td style="text-align:center;font-weight:bold;"><strong>${earned}</strong>/${max}</td>
+              <td style="text-align:center;font-weight:bold;">${koTeamDisplay(currentPick)}</td>
+              <td style="text-align:center;">${koTeamDisplay(followingPick)}</td>
+              <td style="text-align:center;font-weight:bold;">${koTeamDisplay(champ)}</td>
+            </tr>`;
+          }).join("");
+
+        tbody.innerHTML = rows || `<tr><td colspan="6">No matching brackets found.</td></tr>`;
       }
 
       async function loadKoEntries() {
@@ -2615,6 +2733,12 @@
 
       if (elements.scoreboardSearch) {
         elements.scoreboardSearch.addEventListener("input", () => renderStandings());
+      }
+
+      // KO Pool search — filter by bracket name
+      const koSearchInput = document.getElementById("ko-search");
+      if (koSearchInput) {
+        koSearchInput.addEventListener("input", renderKoPool);
       }
 
       // Match center filter clicks
