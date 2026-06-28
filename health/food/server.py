@@ -42,6 +42,7 @@ class Handler(BaseHTTPRequestHandler):
             ".html": "text/html; charset=utf-8",
             ".css":  "text/css",
             ".js":   "application/javascript",
+            ".json": "application/json",
             ".png":  "image/png",
         }.get(p.suffix, "text/plain")
         body = p.read_bytes()
@@ -58,6 +59,8 @@ class Handler(BaseHTTPRequestHandler):
 
         if path in ("/", "/index.html"):
             self.send_file("index.html")
+        elif path == "/foods.json":
+            self.send_file("foods.json")
         elif path == "/api/search":
             self._search(params)
         elif path.startswith("/api/food/"):

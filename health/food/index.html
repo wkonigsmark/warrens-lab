@@ -637,6 +637,7 @@
   <h1>🥗 <span>Nutrition</span> Planner</h1>
   <span class="header-stats" id="dbStats">Loading database…</span>
   <button class="btn-info-setup" onclick="openSetupGuide()">💡 Setup Guide</button>
+  <button class="btn-info-setup" style="background: #10b981;" onclick="openAddFoodsGuide()">➕ Add Foods</button>
 </header>
 
 <!-- Setup Guide Modal -->
@@ -683,6 +684,75 @@
 
     <div class="modal-section">
       <p style="color: #3fb950; font-size: 12px; font-weight: 600;">✓ For now, run the server locally using Solution 1 above.</p>
+    </div>
+  </div>
+</div>
+
+<!-- How to Add Foods Modal -->
+<div class="modal-overlay" id="addFoodsModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeAddFoodsGuide()">✕</button>
+
+    <div class="modal-header">
+      <span>➕</span>
+      <h2>How to Add New Foods</h2>
+    </div>
+
+    <div class="modal-section">
+      <h3>📋 The Workflow</h3>
+      <p>Adding new foods is a batch process. Here's the complete workflow:</p>
+    </div>
+
+    <div class="modal-section">
+      <h3>🔧 Step 1: Add Foods Locally</h3>
+      <p>Create a new seed list file (or edit an existing one):</p>
+      <div class="modal-code">nano /Users/warren/labs/warrens-lab-main/health/food/seed_list_new.py</div>
+      <p>Or edit <code>enrich.py</code> to add a CLI flag for your new list:</p>
+      <div class="modal-code">python3 enrich.py --seed-new</div>
+    </div>
+
+    <div class="modal-section">
+      <h3>🌐 Step 2: Enrich from USDA</h3>
+      <p>The enrichment engine automatically fetches nutrient data from USDA FoodData Central:</p>
+      <div class="modal-code">cd /Users/warren/labs/warrens-lab-main/health/food<br>python3 enrich.py --seed-new</div>
+      <p><strong>What happens:</strong></p>
+      <div class="modal-solution">
+        • Searches USDA for each food by name<br>
+        • Fetches nutrition data per 100g<br>
+        • Stores in food.db SQLite database<br>
+        • For items without USDA matches, use manual insert with computed macros
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <h3>📦 Step 3: Export to JSON</h3>
+      <p>Convert the updated database to a static JSON file:</p>
+      <div class="modal-code">python3 export_to_json.py</div>
+      <p>This generates <code>foods.json</code> with all 600+ foods.</p>
+    </div>
+
+    <div class="modal-section">
+      <h3>🚀 Step 4: Commit & Deploy</h3>
+      <p>Push to GitHub and the app auto-updates:</p>
+      <div class="modal-code">git add food.db foods.json<br>git commit -m "Add new foods"<br>git push</div>
+      <p>Your static site (GitHub Pages, Vercel, etc.) will serve the new foods.json automatically.</p>
+    </div>
+
+    <div class="modal-section">
+      <h3>⚡ Manual Foods (No USDA Match)</h3>
+      <p>For items like cocktails, local pizza, or custom recipes without USDA entries:</p>
+      <div class="modal-solution">
+        <strong>Use insert_manual():</strong> Compute macros from the recipe and insert directly with <code>data_source='recipe_calculated'</code>. See enrich.py for examples.
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <h3>📖 Full Documentation</h3>
+      <p>See <code>WORKFLOW.md</code> in the health/food folder for detailed step-by-step instructions and troubleshooting.</p>
+    </div>
+
+    <div class="modal-section">
+      <p style="color: #10b981; font-size: 12px; font-weight: 600;">✓ The key: Enrich locally, export to JSON, commit to GitHub, deploy anywhere!</p>
     </div>
   </div>
 </div>
@@ -799,6 +869,7 @@
 const meal = {};         // foodId → { food, nutrients, grams }
 let searchTimer = null;
 let allFoodIds = new Set();
+let foodsData = null;    // Loaded from foods.json
 
 // ── Category metadata ────────────────────────────────────────────────────────
 const CAT_META = {
@@ -894,22 +965,36 @@ function scaledNutrient(nutrients, key, grams) {
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 async function init() {
-  // Load categories
-  const cats = await fetch('/api/categories').then(r => r.json());
+  // Load foods.json
+  try {
+    foodsData = await fetch('foods.json').then(r => r.json());
+  } catch (e) {
+    console.error('Failed to load foods.json:', e);
+    document.getElementById('dbStats').textContent = '❌ Data unavailable';
+    return;
+  }
+
+  // Build category dropdown and index
+  const catCounts = {};
+  foodsData.foods.forEach(f => {
+    catCounts[f.category] = (catCounts[f.category] || 0) + 1;
+    allFoodIds.add(f.id);
+  });
+
   const sel = document.getElementById('catFilter');
-  cats.forEach(c => {
-    const m = catMeta(c.name);
+  Object.entries(catCounts).sort().forEach(([cat, count]) => {
+    const m = catMeta(cat);
     const opt = document.createElement('option');
-    opt.value = c.name;
-    opt.textContent = `${m.emoji} ${c.name.replace(/_/g, ' ')} (${c.count})`;
+    opt.value = cat;
+    opt.textContent = `${m.emoji} ${cat.replace(/_/g, ' ')} (${count})`;
     sel.appendChild(opt);
   });
 
-  const total = cats.reduce((s, c) => s + c.count, 0);
+  const total = foodsData.metadata.total_foods;
   document.getElementById('dbStats').textContent = `${total} enriched foods`;
 
   // Load initial results
-  await doSearch('', '');
+  doSearch('', '');
 
   // Bind events
   document.getElementById('searchInput').addEventListener('input', e => {
@@ -922,13 +1007,21 @@ async function init() {
 }
 
 // ── Search ───────────────────────────────────────────────────────────────────
-async function doSearch(q, cat) {
-  const params = new URLSearchParams();
-  if (q)   params.set('q', q);
-  if (cat) params.set('category', cat);
+function doSearch(q, cat) {
+  if (!foodsData) return;
 
-  const foods = await fetch('/api/search?' + params).then(r => r.json());
-  renderResults(foods, q);
+  // Filter foods
+  const results = foodsData.foods.filter(f => {
+    if (cat && f.category !== cat) return false;
+    if (!q) return true;
+
+    const query = q.toLowerCase();
+    return f.display_name.toLowerCase().includes(query) ||
+           f.name.toLowerCase().includes(query) ||
+           (f.tags && f.tags.some(t => t.toLowerCase().includes(query)));
+  });
+
+  renderResults(results, q);
 }
 
 function renderResults(foods, q) {
@@ -976,22 +1069,28 @@ function renderResults(foods, q) {
 }
 
 // ── Meal management ───────────────────────────────────────────────────────────
-async function addFood(foodId) {
+function addFood(foodId) {
   if (meal[foodId]) {
     // Already in meal — just highlight it
     document.getElementById(`mi-${foodId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
 
-  const data = await fetch(`/api/food/${foodId}`).then(r => r.json());
-  if (data.error) return;
+  // Find food in the loaded data
+  const food = foodsData.foods.find(f => f.id === parseInt(foodId));
+  if (!food || !food.nutrients.length) return;
 
-  // Default serving: first non-100g serving, or 100g
-  const defaultServing = data.servings.find(s => s.is_default && s.grams !== 100) || { grams: 100 };
+  // Use first nutrient entry (raw cooking method) as default
+  const nutrients = food.nutrients[0];
+
   meal[foodId] = {
-    food:      data.food,
-    nutrients: data.nutrients,
-    grams:     defaultServing.grams,
+    food: {
+      id: food.id,
+      display_name: food.display_name,
+      category: food.category,
+    },
+    nutrients: nutrients,
+    grams: 100,  // Default to 100g
   };
 
   renderMeal();
@@ -1175,27 +1274,38 @@ function openSetupGuide() {
   const modal = document.getElementById('setupModal');
   modal.classList.add('active');
 
-  // Fetch DB info
-  fetch('/api/categories')
-    .then(r => r.json())
-    .then(cats => {
-      const totalFoods = cats.reduce((sum, c) => sum + c.count, 0);
-      const catList = cats.map(c => `${c.name}: ${c.count}`).join(' • ');
-      document.getElementById('dbInfoCode').textContent = `${totalFoods} foods loaded\n\n${catList}`;
-    })
-    .catch(() => {
-      document.getElementById('dbInfoCode').textContent = '⚠️ Server not responding\nStart the server to load database info';
-    });
+  if (foodsData) {
+    const totalFoods = foodsData.metadata.total_foods;
+    const catList = foodsData.metadata.categories.map(c => {
+      const count = foodsData.foods.filter(f => f.category === c).length;
+      return `${c}: ${count}`;
+    }).join(' • ');
+    document.getElementById('dbInfoCode').textContent = `${totalFoods} foods loaded\n\n${catList}`;
+  } else {
+    document.getElementById('dbInfoCode').textContent = '⚠️ Loading database…';
+  }
 }
 
 function closeSetupGuide() {
   document.getElementById('setupModal').classList.remove('active');
 }
 
-// Close modal on outside click
+// ── How to Add Foods Modal ─────────────────────────────────────────────────────
+function openAddFoodsGuide() {
+  document.getElementById('addFoodsModal').classList.add('active');
+}
+
+function closeAddFoodsGuide() {
+  document.getElementById('addFoodsModal').classList.remove('active');
+}
+
+// Close modals on outside click
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('setupModal').addEventListener('click', (e) => {
     if (e.target.id === 'setupModal') closeSetupGuide();
+  });
+  document.getElementById('addFoodsModal').addEventListener('click', (e) => {
+    if (e.target.id === 'addFoodsModal') closeAddFoodsGuide();
   });
 });
 
