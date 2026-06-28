@@ -953,27 +953,33 @@
     }
 
     try {
-      const { supabaseConfig } = await import('./data/supabase-config.js');
-      if (!supabaseConfig?.url || !supabaseConfig?.anonKey || supabaseConfig.url.includes('YOUR_PROJECT_REF')) {
-        throw new Error('Supabase config not filled in');
-      }
-      const response = await fetch(`${supabaseConfig.url.replace(/\/$/, '')}/rest/v1/rpc/get_pool_purse_summary`, {
+      const { koSupabaseConfig } = await import('./data/ko-supabase-config.js');
+
+      // ── Knockout Pool (live purse counter) ───────────────────────────────
+      const koRes = await fetch(`${koSupabaseConfig.url.replace(/\/$/, '')}/rest/v1/rpc/get_ko_entries`, {
         method: 'POST',
         headers: {
-          apikey: supabaseConfig.anonKey,
-          Authorization: `Bearer ${supabaseConfig.anonKey}`,
+          apikey: koSupabaseConfig.publishableKey,
+          Authorization: `Bearer ${koSupabaseConfig.publishableKey}`,
           'Content-Type': 'application/json',
         },
         body: '{}',
       });
-      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-      const [summary] = await response.json();
-      totalPurse.textContent = `${summary.total_entries} / ${currency.format(summary.total_purse)}`;
-      paidPurse.textContent = `${summary.paid_entries} / ${currency.format(summary.paid_purse)}`;
-      pendingPurse.textContent = `${summary.pending_entries} / ${currency.format(summary.pending_purse)}`;
-      renderSubmittedPayouts(summary.total_purse);
+      const koEntries = koRes.ok ? await koRes.json() : [];
+      const totalKO = koEntries.length;
+      const paidKO = koEntries.filter(e => e.paid).length;
+      const pendingKO = totalKO - paidKO;
+      const koTotalPurse = totalKO * 50;
+      const koPaidPurse = paidKO * 50;
+      const koPendingPurse = pendingKO * 50;
+
+      // Display KO pool purse only
+      totalPurse.textContent = `${totalKO} / ${currency.format(koTotalPurse)}`;
+      paidPurse.textContent = `${paidKO} / ${currency.format(koPaidPurse)}`;
+      pendingPurse.textContent = `${pendingKO} / ${currency.format(koPendingPurse)}`;
+      renderSubmittedPayouts(koTotalPurse);
     } catch (error) {
-      console.warn('Pool purse summary unavailable:', error);
+      console.warn('KO pool purse summary unavailable:', error);
       setPurseFallback();
     }
   </script>

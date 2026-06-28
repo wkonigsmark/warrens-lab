@@ -462,8 +462,10 @@
     }
     .ko-split-card.first { border-color:rgba(244,201,93,0.4); background:rgba(244,201,93,0.07); }
     .ko-split-card .place { font-size:0.72rem; font-weight:850; color:var(--wc-muted); }
-    .ko-split-card .pct { font-size:1.25rem; font-weight:950; color:var(--wc-ink); }
-    .ko-split-card.first .pct { color:var(--wc-gold); }
+    .ko-split-card .val { font-size:1.3rem; font-weight:950; color:var(--wc-ink); line-height:1.2; }
+    .ko-split-card.first .val { color:var(--wc-gold); }
+    .ko-split-card .pct { font-size:0.75rem; font-weight:700; color:var(--wc-muted); margin-top:4px; }
+    .ko-split-card.first .pct { color:var(--wc-muted); }
 
     .ko-modal-foot { padding:16px 24px 24px; }
     .ko-ack-btn {
@@ -738,7 +740,7 @@
           <div class="tb-section">
             <h3>Tiebreaker 1 · Golden Boot</h3>
             <div class="tb-row">
-              <label>Who scores the most goals in the knockout stage?</label>
+              <label>Who will score the most World Cup goals (group + knockout)?</label>
               <span class="tb-hint">Ties broken by earliest bracket exit · write-in accepted</span>
               <select id="tb-golden-boot">
                 <option value="">— Select a player —</option>
@@ -858,9 +860,58 @@
       showWelcomeOverlay();
     }
 
+    // ── Load and display live purse on overlay ───────────────────────────
+    async function updateOverlayPurse() {
+      try {
+        // Fetch current KO entry count
+        const { koSupabaseConfig } = await import('../data/ko-supabase-config.js');
+        const res = await fetch(`${koSupabaseConfig.url.replace(/\/$/, '')}/rest/v1/rpc/get_ko_entries`, {
+          method: 'POST',
+          headers: {
+            apikey: koSupabaseConfig.publishableKey,
+            Authorization: `Bearer ${koSupabaseConfig.publishableKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: '{}',
+        });
+        const entries = res.ok ? await res.json() : [];
+        const entryCount = entries.length;
+        const grossPurse = entryCount * 50;
+        const orgFee = grossPurse * 0.05;
+        const netPurse = grossPurse * 0.95;
+        const first = Math.round(netPurse * 0.70);
+        const second = Math.round(netPurse * 0.20);
+        const third = Math.round(netPurse * 0.10);
+
+        // Update the payout display in the overlay
+        const grossEl = document.querySelector('.ko-payout-flow .ko-payout-step:nth-child(1) .val');
+        const feeEl = document.querySelector('.ko-payout-flow .ko-payout-step:nth-child(2) .val');
+        const netEl = document.querySelector('.ko-payout-flow .ko-payout-step:nth-child(3) .val');
+
+        if (grossEl) grossEl.innerHTML = `<strong>${entryCount} entries</strong> × $50 = <strong>$${grossPurse.toLocaleString()}</strong>`;
+        if (feeEl) feeEl.innerHTML = `<strong>$${Math.round(orgFee).toLocaleString()}</strong> (5%)`;
+        if (netEl) netEl.innerHTML = `<strong>$${Math.round(netPurse).toLocaleString()}</strong>, split:`;
+
+        // Update the split cards to show actual dollar amounts
+        const splitCards = document.querySelectorAll('.ko-split-card');
+        if (splitCards[0]) {
+          splitCards[0].innerHTML = `<span class="place">🥇 1st</span><span class="val"><strong>$${first.toLocaleString()}</strong></span><span class="pct">(70%)</span>`;
+        }
+        if (splitCards[1]) {
+          splitCards[1].innerHTML = `<span class="place">🥈 2nd</span><span class="val"><strong>$${second.toLocaleString()}</strong></span><span class="pct">(20%)</span>`;
+        }
+        if (splitCards[2]) {
+          splitCards[2].innerHTML = `<span class="place">🥉 3rd</span><span class="val"><strong>$${third.toLocaleString()}</strong></span><span class="pct">(10%)</span>`;
+        }
+      } catch (e) {
+        console.warn('Could not load live purse:', e);
+      }
+    }
+
     function showWelcomeOverlay() {
       const overlay = el("ko-overlay");
       if (!overlay) return;
+      updateOverlayPurse();
       overlay.classList.add("visible");
       document.body.style.overflow = "hidden";
       el("ko-ack-btn")?.addEventListener("click", () => {

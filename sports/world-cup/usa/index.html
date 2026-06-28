@@ -264,6 +264,7 @@
 
     // ── State ──────────────────────────────────────────────────────────────
     let wIndexMap = new Map(); // teamId → { score, rank, status }
+    let qualifiedTeamIds = new Set(); // Track which teams actually qualified (1st/2nd in group + advancing thirds)
     let tables = {}, thirds = [], advancingThirds = [];
     let matchResults = [];
 
@@ -280,7 +281,7 @@
         });
       }
       wIndexMap = next;
-      renderWIndex();
+      // renderWIndex moved to init() so it runs AFTER tables are calculated
       renderPath();
     }
 
@@ -335,6 +336,24 @@
       const thirdsRaw = calculateThirdPlaceStandings(tables);
       advancingThirds = thirdsRaw.filter(t => t.status === "Q").map(t => t.group).sort();
       thirds = thirdsRaw;
+
+      // ── Mark eliminated teams in W-Index ─────────────────────────────────
+      // Only teams that finished 1st or 2nd in their group, plus advancing thirds, remain
+      qualifiedTeamIds = new Set();
+      Object.values(tables).forEach(group => {
+        if (group[0]) qualifiedTeamIds.add(group[0].id);  // 1st place
+        if (group[1]) qualifiedTeamIds.add(group[1].id);  // 2nd place
+      });
+      thirds.filter(t => t.status === "Q").forEach(t => {
+        qualifiedTeamIds.add(t.id);  // Advancing 3rd place teams
+      });
+
+      // Mark teams not in qualified set as eliminated
+      wIndexMap.forEach((entry, teamId) => {
+        if (!qualifiedTeamIds.has(teamId)) {
+          entry.status = "Eliminated";
+        }
+      });
     }
 
     // ── Slot resolver (same logic as insights) ─────────────────────────────
@@ -398,8 +417,18 @@
 
     // ── Render: W-Index poll ───────────────────────────────────────────────
     function renderWIndex() {
+      // Filter: show only teams that qualified (rank <= 32, or explicitly marked as non-eliminated)
+      // If groups have results, qualifiedTeamIds is populated; otherwise use rank-based filtering
       const active = [...wIndexMap.entries()]
-        .filter(([, v]) => v.status !== "Eliminated")
+        .filter(([id, v]) => {
+          if (qualifiedTeamIds.size > 0) {
+            // Groups have started — use actual qualification data
+            return qualifiedTeamIds.has(id);
+          } else {
+            // No group results yet — use baseline ranking (1-32 are qualified)
+            return v.rank <= 32 && v.status !== "Eliminated";
+          }
+        })
         .sort((a, b) => a[1].rank - b[1].rank);
 
       const usaIdx = active.findIndex(([id]) => id === "USA");
@@ -580,6 +609,9 @@
     // ── Boot ───────────────────────────────────────────────────────────────
     async function init() {
       await Promise.all([loadWIndex(), loadMatches()]);
+
+      // Now that tables are calculated, mark eliminated teams in W-Index and render
+      renderWIndex();
 
       const slot = makeSlot();
       const klose    = getKloseDef(slot);
