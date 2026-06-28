@@ -105,7 +105,7 @@
     /* R16 column has two slots, space-around distributes them */
     .kb-r16 { gap:0; }
 
-    /* ── Maradona SF section ────────────────── */
+    /* ── Zidane SF section (USA's SF opponent) ─ */
     .sf-section { }
     .sf-bracket { padding:12px 14px; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
     @media(max-width:480px) { .sf-bracket { grid-template-columns:1fr; } }
@@ -186,12 +186,12 @@
         </div>
       </div>
 
-      <!-- Maradona SF preview -->
+      <!-- Zidane SF preview (Klose meets Zidane in the semifinal) -->
       <div class="sec-label">If USA Wins the Klose Bracket · Semifinal Opponents</div>
       <div class="u-card sf-section">
         <div class="u-card-hd">
-          <span class="u-card-title">Maradona Bracket</span>
-          <span class="u-card-sub">USA would face this group's winner in the SF</span>
+          <span class="u-card-title">Zidane Bracket</span>
+          <span class="u-card-sub">USA would face this bracket's winner in the SF</span>
         </div>
         <div class="sf-bracket" id="sf-bracket">
           <!-- rendered by JS -->
@@ -353,10 +353,11 @@
     }
 
     // ── Match definitions ──────────────────────────────────────────────────
-    // Klose: r32 indices 8-11 (matches 81-84)
-    // Bracket R16 pairings: M81+M82 → R16A, M83+M84 → R16B
-    // QF2 = R16A winner vs R16B winner
-    // Maradona: r32 indices 12-15 (matches 85-88)
+    // Klose (USA's quadrant): matches 81-84.
+    // Bracket: M81+M82 → one R16, M83+M84 → other R16 → Klose QF winner.
+    // Corrected SF pairing: Klose meets ZIDANE in the semifinal
+    //   (Pelé meets Maradona in the other half). So USA's SF opponent, if it wins
+    //   the Klose quadrant, is the winner of the Zidane bracket (matches 73-76).
 
     function getKloseDef(slot) {
       return [
@@ -367,12 +368,13 @@
       ];
     }
 
-    function getMaradonaDef(slot) {
+    // Zidane bracket (matches 73-76) — USA's semifinal opponent quadrant
+    function getZidaneDef(slot) {
       return [
-        { num:85, top:slot(1,"B"), bot:slot(3,"B"), label:"M85" },
-        { num:86, top:slot(1,"K"), bot:slot(3,"K"), label:"M86" },
-        { num:87, top:slot(1,"J"), bot:slot(2,"H"), label:"M87" },
-        { num:88, top:slot(2,"D"), bot:slot(2,"G"), label:"M88" },
+        { num:73, top:slot(1,"E"), bot:slot(3,"E"), label:"M73" },
+        { num:74, top:slot(1,"I"), bot:slot(3,"I"), label:"M74" },
+        { num:75, top:slot(2,"A"), bot:slot(2,"B"), label:"M75" },
+        { num:76, top:slot(1,"F"), bot:slot(2,"C"), label:"M76" },
       ];
     }
 
@@ -486,7 +488,7 @@
     }
 
     // ── Render: USA's path ─────────────────────────────────────────────────
-    function renderPath(klose, maradona) {
+    function renderPath(klose, zidane) {
       if (!klose) return;
       const [m81, m82, m83, m84] = klose;
 
@@ -536,8 +538,8 @@
       const qfBody = matchRow(m81.top, m81.bot, m81.num) +
                      matchRow(m82.top, m82.bot, m82.num);
 
-      // SF: Maradona bracket — show all 4 matches sorted by overall strength
-      const sfMatches = maradona ? [...maradona].sort((a, b) => {
+      // SF: Zidane bracket — show all 4 matches sorted by overall strength
+      const sfMatches = zidane ? [...zidane].sort((a, b) => {
         const bestA = Math.max(wi(a.top)?.score ?? 0, wi(a.bot)?.score ?? 0);
         const bestB = Math.max(wi(b.top)?.score ?? 0, wi(b.bot)?.score ?? 0);
         return bestB - bestA;
@@ -551,12 +553,12 @@
             : `<div class="pround-tbd">TBD — groups in progress</div>`) +
         round("R16", `Winner of M${m84.num}`, r16Body) +
         round("QF",  "Winner of M81 / M82", qfBody) +
-        round("SF",  "Maradona bracket winner", sfBody || `<div class="pround-tbd">TBD</div>`);
+        round("SF",  "Zidane bracket winner", sfBody || `<div class="pround-tbd">TBD</div>`);
     }
 
-    // ── Render: Maradona SF bracket ────────────────────────────────────────
-    function renderMaradona(maradona) {
-      document.getElementById("sf-bracket").innerHTML = maradona.map(m => {
+    // ── Render: Zidane SF bracket ──────────────────────────────────────────
+    function renderZidane(zidane) {
+      document.getElementById("sf-bracket").innerHTML = zidane.map(m => {
         const topW = m.top ? wi(m.top) : null;
         const botW = m.bot ? wi(m.bot) : null;
         function sfTeam(id, w) {
@@ -581,11 +583,11 @@
 
       const slot = makeSlot();
       const klose    = getKloseDef(slot);
-      const maradona = getMaradonaDef(slot);
+      const zidane = getZidaneDef(slot);
 
       renderKloseBracket(klose);
-      renderPath(klose, maradona);
-      renderMaradona(maradona);
+      renderPath(klose, zidane);
+      renderZidane(zidane);
     }
 
     init();
