@@ -1040,7 +1040,7 @@
                 <tr>
                   <th style="width:50px;">#</th>
                   <th>Bracket</th>
-                  <th style="text-align:center;">R32 (Next)</th>
+                  <th style="text-align:center;">CAN vs RSA</th>
                   <th style="text-align:center;">R16</th>
                   <th style="text-align:center;">QF</th>
                   <th style="text-align:center;">Champion</th>
@@ -1061,7 +1061,7 @@
   <script src="../archive/world-cup-1/bracket_lookup.js"></script>
 
   <script type="module">
-    import { groupStageMatches, teams, groups, teamsById } from "../data/world-cup-2026.js";
+    import { groupStageMatches, teams, groups, teamsById, knockoutSchedule } from "../data/world-cup-2026.js?v=koschedule-20260628";
     import { 
       SCORING_RULES, 
       calculateGroupTables, 
@@ -1084,6 +1084,7 @@
     let officialResultCount = 0;
     const expandedKeys = new Set(); // entries whose pick details are open (kept across re-renders)
     let lastResultsSignature = null; // skip redundant re-renders when nothing changed
+    let koRerenderHook = null; // set by init; re-renders the KO Pool table when results change
     let sandboxUnlocked = sessionStorage.getItem("world_cup_sandbox_unlocked") === "true";
     
     // UI Selectors
@@ -1440,6 +1441,8 @@
         lastResultsSignature = signature;
         renderStandings();
         renderMatches(getActiveMatchFilter());
+        // Advance the KO Pool "current match" column now that a result changed.
+        if (koRerenderHook) koRerenderHook();
       }
       return rows.length;
     }
@@ -2383,8 +2386,10 @@
       ).join("\n");
     }
 
-    // Set up interactive event listeners
-    document.addEventListener("DOMContentLoaded", () => {
+    // Set up interactive event listeners.
+    // NOTE: this is a deferred ES module, so DOMContentLoaded may have already
+    // fired by the time we get here — run init now if so, otherwise wait.
+    function initScoreboard() {
       // Standings CSV & copy
       if (elements.copyStandingsBtn) {
         elements.copyStandingsBtn.addEventListener("click", async () => {
@@ -2479,12 +2484,104 @@
         });
       }
 
-      // KO Pool tab — lazy load entries on first visit
+      // KO Pool tab — entries are fetched once, then re-rendered whenever results change.
       let koLoaded = false;
-      async function loadKoEntries() {
-        if (koLoaded) return;
+      let koEntries = [];
+
+      // True when an official result has been entered for this match number.
+      function matchHasResult(matchNumber) {
+        const m = actualMatches.find(x => x.matchNumber === matchNumber);
+        return !!m && m.status === "completed";
+      }
+
+      // The "current match" is the first match in play order (seq) that does NOT
+      // yet have a result entered. Progression is result-driven — it never advances
+      // on the clock, only when the commissioner records a result.
+      function getCurrentMatch() {
+        const ordered = [...knockoutSchedule].sort((a, b) => a.seq - b.seq);
+        return ordered.find(m => !matchHasResult(m.matchNumber)) || ordered[ordered.length - 1];
+      }
+
+      // Readable label for a match (concrete team codes for R32, round label otherwise).
+      function matchLabel(match) {
+        if (!match) return "Next match";
+        if (match.teamsKnown) {
+          const t1 = teamsById[match.team1]?.id || match.team1;
+          const t2 = teamsById[match.team2]?.id || match.team2;
+          return `${t1} vs ${t2}`;
+        }
+        const roundNames = { R16: "Round of 16", QF: "Quarter-final", SF: "Semi-final", "3P": "Third place", F: "Final" };
+        return `${roundNames[match.round] || match.round} (#${match.matchNumber})`;
+      }
+
+      // Update the KO Pool "current match" column header.
+      function updateNextMatchHeader() {
+        const current = getCurrentMatch();
+        const koTable = document.getElementById("ko-entry-table")?.closest("table");
+        if (koTable) {
+          const headers = koTable.querySelectorAll("th");
+          if (headers[2]) headers[2].textContent = matchLabel(current);
+        }
+      }
+
+      // Flag + 3-letter code for a team id.
+      function koTeamDisplay(teamId) {
+        if (!teamId) return '—';
+        const team = teamsById[teamId];
+        if (!team) return teamId;
+        const countryCode = teamId === 'ENG' ? 'gb-eng' : (teamId === 'SCO' ? 'gb-sct' : team.countryCode.toLowerCase());
+        const flagUrl = `https://flagcdn.com/w80/${countryCode}.png`;
+        const code = teamId.substring(0, 3).toUpperCase();
+        return `<img src="${flagUrl}" alt="${teamId}" style="height:32px;width:auto;margin-right:8px;vertical-align:middle;border-radius:2px;" loading="lazy" onerror="this.style.display='none'"><strong>${code}</strong>`;
+      }
+
+      // Render the KO Pool table from the already-fetched entries. Safe to call
+      // repeatedly — it recomputes the current (result-driven) match each time.
+      function renderKoPool() {
         const tbody = document.getElementById("ko-entry-table");
-        tbody.innerHTML = `<tr><td colspan="4">Loading…</td></tr>`;
+        if (!tbody) return;
+        updateNextMatchHeader();
+
+        if (!koEntries.length) {
+          tbody.innerHTML = `<tr><td colspan="6">No entries yet.</td></tr>`;
+          return;
+        }
+
+        // The current match has two teams; each entry picked one of them to advance.
+        // The bracket's r32 array is NOT in schedule order, so scan it for whichever
+        // of the two current-match teams the entry chose. Only meaningful once the
+        // matchup is concrete (R32, or a later round whose teams have resolved).
+        const current = getCurrentMatch();
+        const matchTeams = (current && current.teamsKnown)
+          ? [current.team1, current.team2]
+          : [];
+        const pickForCurrentMatch = (picks) => {
+          if (!matchTeams.length) return "—";
+          const r32 = picks.r32 || [];
+          return r32.find(t => matchTeams.includes(t)) || "—";
+        };
+
+        tbody.innerHTML = koEntries.map((e, i) => {
+          const picks = e.bracket_picks || {};
+          const currentPick = pickForCurrentMatch(picks); // Their winner of the current match
+          const r16Pick = (picks.r16 && picks.r16[0]) ? picks.r16[0] : "—";
+          const qfPick = (picks.qf && picks.qf[0]) ? picks.qf[0] : "—";
+          const champ = picks.final || "—";
+          return `<tr>
+            <td>${i + 1}</td>
+            <td><strong>${e.bracket_name}</strong></td>
+            <td style="text-align:center;font-weight:bold;">${koTeamDisplay(currentPick)}</td>
+            <td style="text-align:center;">${koTeamDisplay(r16Pick)}</td>
+            <td style="text-align:center;">${koTeamDisplay(qfPick)}</td>
+            <td style="text-align:center;font-weight:bold;">${koTeamDisplay(champ)}</td>
+          </tr>`;
+        }).join("");
+      }
+
+      async function loadKoEntries() {
+        if (koLoaded) { renderKoPool(); return; }
+        const tbody = document.getElementById("ko-entry-table");
+        tbody.innerHTML = `<tr><td colspan="6">Loading…</td></tr>`;
         try {
           const res = await fetch(`${koSupabaseConfig.url}/rest/v1/knockout_entries?order=submitted_at&voided=eq.false`, {
             headers: {
@@ -2493,43 +2590,15 @@
             },
           });
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const entries = await res.json();
-          const paid = entries.filter(e => e.paid);
-          document.getElementById("ko-entry-count").textContent = entries.length;
+          koEntries = await res.json();
+          const paid = koEntries.filter(e => e.paid);
+          document.getElementById("ko-entry-count").textContent = koEntries.length;
           document.getElementById("ko-paid-count").textContent = paid.length;
           document.getElementById("ko-purse").textContent = `$${paid.length * 50}`;
-          if (!entries.length) {
-            tbody.innerHTML = `<tr><td colspan="7">No entries yet.</td></tr>`;
-          } else {
-            // Helper to format team display with flag and 3-letter code
-            const teamDisplay = (teamId) => {
-              if (!teamId) return '—';
-              const team = teamsById[teamId];
-              if (!team) return teamId;
-              const flagUrl = `https://flagcdn.com/w24/${team.flag_code || 'un'}.png`;
-              const code = teamId.substring(0, 3).toUpperCase();
-              return `<img src="${flagUrl}" alt="${teamId}" style="height:16px;margin-right:4px;vertical-align:middle;"><span title="${team.name}">${code}</span>`;
-            };
-
-            tbody.innerHTML = entries.map((e, i) => {
-              const picks = e.bracket_picks || {};
-              const r32Pick = (picks.r32 && picks.r32[0]) ? picks.r32[0] : "—"; // First R32 match pick (NEXT UPCOMING)
-              const r16Pick = (picks.r16 && picks.r16[0]) ? picks.r16[0] : "—"; // First R16 pick
-              const qfPick = (picks.qf && picks.qf[0]) ? picks.qf[0] : "—"; // First QF pick
-              const champ = picks.final || "—";
-              return `<tr>
-                <td>${i + 1}</td>
-                <td><strong>${e.bracket_name}</strong></td>
-                <td style="text-align:center;font-weight:bold;">${teamDisplay(r32Pick)}</td>
-                <td style="text-align:center;">${teamDisplay(r16Pick)}</td>
-                <td style="text-align:center;">${teamDisplay(qfPick)}</td>
-                <td style="text-align:center;font-weight:bold;">${teamDisplay(champ)}</td>
-              </tr>`;
-            }).join("");
-          }
           koLoaded = true;
+          renderKoPool();
         } catch (err) {
-          tbody.innerHTML = `<tr><td colspan="4">Failed to load KO entries: ${err.message}</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="6">Failed to load KO entries: ${err.message}</td></tr>`;
         }
       }
 
@@ -2537,7 +2606,10 @@
       document.querySelectorAll(".sim-tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           switchTab(btn.dataset.tab);
-          if (btn.dataset.tab === "ko-pool") loadKoEntries();
+          if (btn.dataset.tab === "ko-pool") {
+            loadKoEntries();
+            updateNextMatchHeader();
+          }
         });
       });
 
@@ -2570,9 +2642,20 @@
       }
 
       // Initialize
+      // Let refreshOfficialResults re-render the KO Pool table when results change.
+      koRerenderHook = renderKoPool;
       loadWIndexFeed();
+      // KO Pool is the default active tab — load its entries immediately
+      updateNextMatchHeader();
+      loadKoEntries();
       window.setInterval(refreshOfficialResults, 30000);
-    });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initScoreboard);
+    } else {
+      initScoreboard();
+    }
   </script>
 </body>
 

@@ -254,3 +254,53 @@ export const matches = rawMatches.map(([matchNumber, stage, localDate, localTime
 export const groupStageMatches = matches.filter((match) => match.matchNumber <= 72);
 export const knockoutMatches = matches.filter((match) => match.matchNumber > 72);
 export const teamsById = teamById;
+
+// Knockout schedule — SOURCE OF TRUTH for the bracket order of play.
+// `seq` is the chronological play order (1-32). `matchNumber` is the official
+// FIFA bracket match id (used to look up entered results). For Round of 32,
+// team1/team2 are concrete team ids. For later rounds the matchup is conditional
+// (pipe-separated possible advancers) until results resolve it; `teamsKnown`
+// flags whether the two teams are concrete yet.
+export const knockoutSchedule = [
+  // Round of 32 (seq 1-16)
+  { seq: 1,  matchNumber: 73,  date: "2026-06-28", time: "15:00", round: "R32", teamsKnown: true,  team1: "RSA", team2: "CAN" },
+  { seq: 2,  matchNumber: 76,  date: "2026-06-29", time: "13:00", round: "R32", teamsKnown: true,  team1: "BRA", team2: "JAP" },
+  { seq: 3,  matchNumber: 74,  date: "2026-06-29", time: "16:30", round: "R32", teamsKnown: true,  team1: "GER", team2: "PAR" },
+  { seq: 4,  matchNumber: 75,  date: "2026-06-29", time: "21:00", round: "R32", teamsKnown: true,  team1: "NED", team2: "MAR" },
+  { seq: 5,  matchNumber: 78,  date: "2026-06-30", time: "13:00", round: "R32", teamsKnown: true,  team1: "CIV", team2: "NOR" },
+  { seq: 6,  matchNumber: 77,  date: "2026-06-30", time: "17:00", round: "R32", teamsKnown: true,  team1: "FRA", team2: "SWE" },
+  { seq: 7,  matchNumber: 79,  date: "2026-06-30", time: "21:00", round: "R32", teamsKnown: true,  team1: "MEX", team2: "ECU" },
+  { seq: 8,  matchNumber: 80,  date: "2026-07-01", time: "12:00", round: "R32", teamsKnown: true,  team1: "ENG", team2: "COD" },
+  { seq: 9,  matchNumber: 82,  date: "2026-07-01", time: "16:00", round: "R32", teamsKnown: true,  team1: "BEL", team2: "SEN" },
+  { seq: 10, matchNumber: 81,  date: "2026-07-01", time: "20:00", round: "R32", teamsKnown: true,  team1: "USA", team2: "BIH" },
+  { seq: 11, matchNumber: 84,  date: "2026-07-02", time: "15:00", round: "R32", teamsKnown: true,  team1: "ESP", team2: "AUT" },
+  { seq: 12, matchNumber: 83,  date: "2026-07-02", time: "19:00", round: "R32", teamsKnown: true,  team1: "POR", team2: "CRO" },
+  { seq: 13, matchNumber: 85,  date: "2026-07-02", time: "23:00", round: "R32", teamsKnown: true,  team1: "SUI", team2: "ALG" },
+  { seq: 14, matchNumber: 88,  date: "2026-07-03", time: "14:00", round: "R32", teamsKnown: true,  team1: "AUS", team2: "EGY" },
+  { seq: 15, matchNumber: 86,  date: "2026-07-03", time: "18:00", round: "R32", teamsKnown: true,  team1: "ARG", team2: "CPV" },
+  { seq: 16, matchNumber: 87,  date: "2026-07-03", time: "21:30", round: "R32", teamsKnown: true,  team1: "COL", team2: "GHA" },
+  // Round of 16 (seq 17-24)
+  { seq: 17, matchNumber: 90,  date: "2026-07-04", time: "13:00", round: "R16", teamsKnown: false, team1: "RSA|CAN", team2: "NED|MAR" },
+  { seq: 18, matchNumber: 89,  date: "2026-07-04", time: "17:00", round: "R16", teamsKnown: false, team1: "GER|PAR", team2: "FRA|SWE" },
+  { seq: 19, matchNumber: 91,  date: "2026-07-05", time: "16:00", round: "R16", teamsKnown: false, team1: "BRA|JAP", team2: "CIV|NOR" },
+  { seq: 20, matchNumber: 92,  date: "2026-07-05", time: "20:00", round: "R16", teamsKnown: false, team1: "MEX|ECU", team2: "ENG|COD" },
+  { seq: 21, matchNumber: 93,  date: "2026-07-06", time: "15:00", round: "R16", teamsKnown: false, team1: "POR|CRO", team2: "ESP|AUT" },
+  { seq: 22, matchNumber: 94,  date: "2026-07-06", time: "20:00", round: "R16", teamsKnown: false, team1: "USA|BIH", team2: "BEL|SEN" },
+  { seq: 23, matchNumber: 95,  date: "2026-07-07", time: "12:00", round: "R16", teamsKnown: false, team1: "ARG|CPV", team2: "AUS|EGY" },
+  { seq: 24, matchNumber: 96,  date: "2026-07-07", time: "16:00", round: "R16", teamsKnown: false, team1: "SUI|ALG", team2: "COL|GHA" },
+  // Quarter-finals (seq 25-28)
+  { seq: 25, matchNumber: 97,  date: "2026-07-09", time: "16:00", round: "QF",  teamsKnown: false, team1: "GER|PAR|FRA|SWE", team2: "RSA|CAN|NED|MAR" },
+  { seq: 26, matchNumber: 98,  date: "2026-07-10", time: "15:00", round: "QF",  teamsKnown: false, team1: "POR|CRO|ESP|AUT", team2: "USA|BIH|BEL|SEN" },
+  { seq: 27, matchNumber: 99,  date: "2026-07-11", time: "17:00", round: "QF",  teamsKnown: false, team1: "BRA|JAP|CIV|NOR", team2: "MEX|ECU|ENG|COD" },
+  { seq: 28, matchNumber: 100, date: "2026-07-11", time: "21:00", round: "QF",  teamsKnown: false, team1: "ARG|CPV|AUS|EGY", team2: "SUI|ALG|COL|GHA" },
+  // Semi-finals (seq 29-30)
+  { seq: 29, matchNumber: 101, date: "2026-07-14", time: "15:00", round: "SF",  teamsKnown: false, team1: "GER|PAR|FRA|SWE|RSA|CAN|NED|MAR", team2: "POR|CRO|ESP|AUT|USA|BIH|BEL|SEN" },
+  { seq: 30, matchNumber: 102, date: "2026-07-15", time: "15:00", round: "SF",  teamsKnown: false, team1: "BRA|JAP|CIV|NOR|MEX|ECU|ENG|COD", team2: "ARG|CPV|AUS|EGY|SUI|ALG|COL|GHA" },
+  // Third-place match (seq 31)
+  { seq: 31, matchNumber: 103, date: "2026-07-18", time: "17:00", round: "3P",  teamsKnown: false, team1: "Loser 101", team2: "Loser 102" },
+  // Final (seq 32)
+  { seq: 32, matchNumber: 104, date: "2026-07-19", time: "15:00", round: "F",   teamsKnown: false, team1: "Winner 101", team2: "Winner 102" },
+];
+
+// Back-compat alias: the Round of 32 slice (concrete matchups).
+export const r32Schedule = knockoutSchedule.filter(m => m.round === "R32");
