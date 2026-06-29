@@ -597,8 +597,6 @@
       }
     }
 
-    /* My Picks temporarily hidden pending picks accuracy fix */
-    .ko-my-picks-btn, #panel-ko-pool .wc-table td:nth-child(7) { display: none !important; }
 
     /* Flag display: emoji on mobile, img on desktop */
     .flag-emoji { display: none; }
@@ -3158,241 +3156,50 @@
         const picks = bracket.bracket_picks || {};
         document.getElementById("ko-picks-bracket-name").textContent = `${bracketName}'s Picks`;
 
-        // Build bracket HTML showing all 32 knockout matches
-        let html = `<div style="background:var(--wc-panel);border:1px solid var(--wc-line);border-radius:8px;padding:16px;">`;
-
-        const r32Teams = picks.r32 || [];
-        const champ = picks.final || null;
-
-        // Build bracket simulation in seq order so each round feeds the next
-        const sortedKO = [...knockoutSchedule].sort((a, b) => a.seq - b.seq);
-        const simWinner = {}; // seq → winning teamId
-        const simLoser  = {}; // seq → losing teamId (for 3P)
-        const simActT1  = {}; // seq → actual predicted team on left side
-        const simActT2  = {}; // seq → actual predicted team on right side
-
-        sortedKO.forEach(match => {
-          const result = actualMatches.find(r => r.matchNumber === match.matchNumber);
-
-          if (match.round === 'R32') {
-            // Exact teams known for R32
-            simActT1[match.seq] = match.team1;
-            simActT2[match.seq] = match.team2;
-            const w = result?.winnerId
-              || (r32Teams.includes(match.team1) ? match.team1
-                : r32Teams.includes(match.team2) ? match.team2 : null);
-            if (w) {
-              simWinner[match.seq] = w;
-              simLoser[match.seq] = w === match.team1 ? match.team2 : match.team1;
-            }
-
-          } else if (match.round === '3P') {
-            // 3P = losers of both SF matches
-            const sfSeqs = sortedKO.filter(m => m.round === 'SF').map(m => m.seq);
-            const losers = sfSeqs.map(s => simLoser[s]).filter(Boolean);
-            simActT1[match.seq] = losers[0] || null;
-            simActT2[match.seq] = losers[1] || null;
-            const w = result?.winnerId || losers[0] || null;
-            if (w) simWinner[match.seq] = w;
-
-          } else if (match.round === 'F') {
-            // F = winners of both SF matches
-            const sfSeqs = sortedKO.filter(m => m.round === 'SF').map(m => m.seq);
-            const winners = sfSeqs.map(s => simWinner[s]).filter(Boolean);
-            simActT1[match.seq] = winners[0] || null;
-            simActT2[match.seq] = winners[1] || null;
-            const w = result?.winnerId
-              || (champ && winners.includes(champ) ? champ : winners[0] || null);
-            if (w) simWinner[match.seq] = w;
-
-          } else {
-            // R16 / QF / SF: find most-recent prior winner in each side's pool
-            const t1Pool = match.team1.split('|');
-            const t2Pool = match.team2.split('|');
-            const prevSeqs = Object.keys(simWinner).map(Number)
-              .filter(s => s < match.seq).sort((a, b) => b - a);
-
-            let actualT1 = null, actualT2 = null;
-            for (const s of prevSeqs) {
-              const team = simWinner[s];
-              if (!actualT1 && t1Pool.includes(team)) actualT1 = team;
-              if (!actualT2 && t2Pool.includes(team)) actualT2 = team;
-              if (actualT1 && actualT2) break;
-            }
-
-            simActT1[match.seq] = actualT1;
-            simActT2[match.seq] = actualT2;
-
-            let w = result?.winnerId || null;
-            if (!w) {
-              if      (champ && actualT1 === champ) w = champ;
-              else if (champ && actualT2 === champ) w = champ;
-              else                                   w = actualT1 || null;
-            }
-            if (w) {
-              simWinner[match.seq] = w;
-              const loser = w === actualT1 ? actualT2 : actualT1;
-              if (loser) simLoser[match.seq] = loser;
-            }
-          }
-        });
-
-        // Compact team display for bracket cards
-        function bktTeam(teamId) {
-          if (!teamId) return '<span style="color:rgba(247,244,235,0.25);font-size:0.7rem;">—</span>';
+        function teamChip(teamId) {
+          if (!teamId) return '';
           const team = teamsById[teamId];
           const cc = teamId === 'ENG' ? 'gb-eng' : (teamId === 'SCO' ? 'gb-sct' : (team?.countryCode?.toLowerCase() || teamId.toLowerCase()));
-          return '<img src="https://flagcdn.com/w40/' + cc + '.png" alt="' + teamId + '" style="height:16px;width:auto;border-radius:1px;vertical-align:middle;margin-right:2px;" loading="lazy" onerror="this.style.display=\'none\'">'
-            + '<strong style="font-size:0.58rem;color:#f4c95d;">' + teamId + '</strong>';
-        }
-
-        // Build a single bracket match card
-        function bktCard(seq, big) {
-          const m = knockoutSchedule.find(x => x.seq === seq);
-          if (!m) return '<div class="bkc"></div>';
-          const t1 = simActT1[seq], t2 = simActT2[seq], w = simWinner[seq];
-          const mu = (t1 && t2) ? (t1 + ' v ' + t2) : 'TBD';
-          const pick = w ? bktTeam(w) : '<span style="color:rgba(247,244,235,0.25);font-size:0.7rem;">—</span>';
-          const gold = (m.round === 'F' || (w && w === champ && m.round !== '3P')) ? 'border-color:#f4c95d;' : '';
-          const sz = big ? 'font-size:0.58rem;' : 'font-size:0.52rem;';
-          return '<div class="bkc" style="' + gold + '">'
-            + '<div style="' + sz + 'color:rgba(247,244,235,0.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;margin-bottom:3px;">' + mu + '</div>'
-            + '<div style="display:flex;align-items:center;justify-content:center;gap:2px;">' + pick + '</div>'
+          const emoji = teamFlagEmoji(teamId);
+          return '<div style="display:inline-flex;align-items:center;gap:5px;background:#0b1a14;border:1px solid rgba(247,244,235,0.15);border-radius:6px;padding:5px 9px;">'
+            + '<img class="flag-img" src="https://flagcdn.com/w40/' + cc + '.png" style="height:14px;width:auto;border-radius:1px;" loading="lazy" onerror="this.style.display=\'none\'">'
+            + '<span class="flag-emoji" style="font-size:1rem;line-height:1;">' + emoji + '</span>'
+            + '<span style="font-size:0.75rem;font-weight:700;color:var(--wc-ink);">' + teamId + '</span>'
             + '</div>';
         }
 
-        // Bracket layout: hardcoded feeder order matching actual schedule structure
-        // Left half: seqs flow R32→R16→QF→SF toward center
-        // Right half: seqs flow SF→QF→R16→R32 away from center
-        const L_R32 = [1, 4, 3, 6, 12, 11, 10, 9];   // top 4 feed R16 17+18→QF25, bottom 4 feed R16 21+22→QF26
-        const L_R16 = [17, 18, 21, 22];
-        const L_QF  = [25, 26];
-        const R_R32 = [2, 5, 7, 8, 15, 14, 13, 16];  // top 4 feed R16 19+20→QF27, bottom 4 feed R16 23+24→QF28
-        const R_R16 = [19, 20, 23, 24];
-        const R_QF  = [27, 28];
-
-        // Each R32 takes 2 rows, 8 R32 = 16 rows total per half
-        // R16 each spans 4 rows (2 R32 feeders), QF spans 8 rows, SF spans 16 rows
-        function gridCells(seqs, col, rowSize) {
-          return seqs.map((seq, i) => {
-            const r = i * rowSize + 1;
-            return '<div class="bkc-wrap" style="grid-column:' + col + ';grid-row:' + r + '/' + (r + rowSize) + ';">' + bktCard(seq) + '</div>';
-          }).join('');
-        }
-
-        const finT1 = simActT1[32], finT2 = simActT2[32], finW = simWinner[32];
-        const tpT1 = simActT1[31], tpT2 = simActT2[31], tpW = simWinner[31];
-
-        // Mobile stacked view — rounds as rows of cards
-        const mobileRounds = [
-          { label: 'Round of 32', seqs: [1,4,3,6,12,11,10,9, 2,5,7,8,15,14,13,16] },
-          { label: 'Round of 16', seqs: [17,18,21,22, 19,20,23,24] },
-          { label: 'Quarterfinals', seqs: [25,26,27,28] },
-          { label: 'Semifinals', seqs: [29,30] },
-          { label: '3rd Place', seqs: [31] },
-          { label: 'Final', seqs: [32] },
-        ];
-
-        let mobileRows = '';
-        mobileRounds.forEach(({ label, seqs }) => {
-          const isChampRound = label === 'Final';
-          mobileRows += '<div style="margin-bottom:14px;">'
-            + '<div style="font-size:0.65rem;font-weight:900;color:#f4c95d;text-transform:uppercase;margin-bottom:6px;">' + label + '</div>'
-            + '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
-          seqs.forEach(seq => {
-            const w = simWinner[seq], t1 = simActT1[seq], t2 = simActT2[seq];
-            const border = (isChampRound && w === champ) ? 'border-color:#f4c95d;' : '';
-            mobileRows += '<div style="background:#0b1a14;border:1px solid rgba(247,244,235,0.15);' + border + 'border-radius:6px;padding:8px 10px;min-width:90px;text-align:center;">'
-              + '<div style="font-size:0.58rem;color:rgba(247,244,235,0.45);margin-bottom:5px;white-space:nowrap;">' + (t1||'?') + ' v ' + (t2||'?') + '</div>'
-              + '<div style="display:flex;align-items:center;justify-content:center;gap:4px;">' + (w ? bktTeam(w) : '<span style="color:rgba(247,244,235,0.3)">—</span>') + '</div>'
-              + '</div>';
-          });
-          mobileRows += '</div></div>';
+        let picksHtml = '';
+        [
+          { label: 'Round of 32', key: 'r32' },
+          { label: 'Round of 16', key: 'r16' },
+          { label: 'Quarterfinals', key: 'qf' },
+          { label: 'Semifinals', key: 'sf' },
+        ].forEach(({ label, key }) => {
+          const teams = picks[key] || [];
+          if (!teams.length) return;
+          picksHtml += '<div style="margin-bottom:18px;">'
+            + '<div style="font-size:0.55rem;font-weight:900;color:rgba(247,244,235,0.4);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">' + label + '</div>'
+            + '<div style="display:flex;flex-wrap:wrap;gap:6px;">' + teams.map(t => teamChip(t)).join('') + '</div>'
+            + '</div>';
         });
-        mobileRows += '<div style="text-align:center;padding:12px;border:2px solid #f4c95d;border-radius:8px;margin-top:4px;">'
-          + '<div style="font-size:0.6rem;color:#f4c95d;font-weight:900;margin-bottom:6px;">🏆 CHAMPION</div>'
-          + '<div style="display:flex;align-items:center;justify-content:center;gap:6px;">' + (champ ? bktTeam(champ) : '—') + '</div>'
-          + '</div>';
 
-        const bktHtml = `
-<style>
-  .bkt-desktop { display:none; }
-  .bkt-mobile  { display:block; }
-  @media (min-width:640px) {
-    .bkt-desktop { display:block; }
-    .bkt-mobile  { display:none; }
-  }
-  .bkt-scroll { overflow-x:auto; }
-  .bkt-inner { width:fit-content; margin:0 auto; }
-  .bkt-outer { display:flex; align-items:stretch; gap:0; }
-  .bkt-half { display:grid; grid-template-rows:repeat(16,30px); }
-  .bkt-left { grid-template-columns:78px 68px 60px 54px; }
-  .bkt-right { grid-template-columns:54px 60px 68px 78px; }
-  .bkc-wrap { display:flex; align-items:center; justify-content:center; padding:2px; box-sizing:border-box; }
-  .bkc {
-    width:100%; height:calc(100% - 4px); min-height:36px; max-height:56px;
-    background:#0b1a14; border:1px solid rgba(247,244,235,0.12); border-radius:3px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:3px 4px; box-sizing:border-box; text-align:center; overflow:hidden;
-  }
-  .bkt-center { flex:0 0 104px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:0 6px; }
-  .bkt-fin { border:2px solid #f4c95d; border-radius:6px; padding:8px 6px; background:#0b1a14; width:92px; box-sizing:border-box; text-align:center; }
-  .bkt-3p  { border:1px solid rgba(247,244,235,0.2); border-radius:6px; padding:6px; background:#0b1a14; width:92px; box-sizing:border-box; text-align:center; }
-  .bkt-lbl { font-size:0.52rem; color:#f4c95d; font-weight:900; text-transform:uppercase; margin-bottom:4px; }
-  .bkt-hdr { display:flex; font-size:0.52rem; font-weight:900; color:#f4c95d; text-transform:uppercase; text-align:center; margin-bottom:6px; border-bottom:1px solid rgba(247,244,235,0.08); padding-bottom:4px; }
-  .bkt-hdr > div { flex-shrink:0; }
-</style>
+        const champ = picks.final, third = picks.third;
+        picksHtml += '<div style="display:flex;gap:10px;flex-wrap:wrap;">';
+        if (champ) picksHtml += '<div style="flex:1;min-width:140px;background:#0b1a14;border:2px solid #f4c95d;border-radius:8px;padding:12px 14px;text-align:center;">'
+          + '<div style="font-size:0.55rem;color:#f4c95d;font-weight:900;text-transform:uppercase;margin-bottom:8px;">🏆 Champion</div>'
+          + teamChip(champ) + '</div>';
+        if (third) picksHtml += '<div style="flex:1;min-width:140px;background:#0b1a14;border:1px solid rgba(247,244,235,0.2);border-radius:8px;padding:12px 14px;text-align:center;">'
+          + '<div style="font-size:0.55rem;color:rgba(247,244,235,0.4);font-weight:900;text-transform:uppercase;margin-bottom:8px;">3rd Place</div>'
+          + teamChip(third) + '</div>';
+        picksHtml += '</div>';
 
-<!-- Mobile: stacked round-by-round -->
-<div class="bkt-mobile">${mobileRows}</div>
-
-<!-- Desktop: 9-column bracket -->
-<div class="bkt-desktop">
-<div class="bkt-scroll">
-  <div class="bkt-inner">
-  <div class="bkt-hdr" style="min-width:680px;">
-    <div style="width:78px;">R32</div><div style="width:68px;">R16</div><div style="width:60px;">QF</div><div style="width:54px;">SF</div>
-    <div style="flex:0 0 104px;">Final</div>
-    <div style="width:54px;">SF</div><div style="width:60px;">QF</div><div style="width:68px;">R16</div><div style="width:78px;">R32</div>
-  </div>
-  <div class="bkt-outer">
-    <div class="bkt-half bkt-left">
-      ${gridCells(L_R32, 1, 2)}
-      ${gridCells(L_R16, 2, 4)}
-      ${gridCells(L_QF,  3, 8)}
-      <div class="bkc-wrap" style="grid-column:4;grid-row:1/17;">${bktCard(29)}</div>
-    </div>
-    <div class="bkt-center">
-      <div class="bkt-fin">
-        <div class="bkt-lbl">Final</div>
-        <div style="font-size:0.52rem;color:rgba(247,244,235,0.45);margin-bottom:5px;">${finT1||'?'} v ${finT2||'?'}</div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:3px;">${finW ? bktTeam(finW) : '<span style="color:rgba(247,244,235,0.25)">—</span>'}</div>
-      </div>
-      <div style="font-size:0.65rem;font-weight:900;color:#f4c95d;text-align:center;">🏆 ${champ||'—'}</div>
-      <div class="bkt-3p">
-        <div class="bkt-lbl">3rd Place</div>
-        <div style="font-size:0.52rem;color:rgba(247,244,235,0.45);margin-bottom:5px;">${tpT1||'?'} v ${tpT2||'?'}</div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:3px;">${tpW ? bktTeam(tpW) : '<span style="color:rgba(247,244,235,0.25)">—</span>'}</div>
-      </div>
-    </div>
-    <div class="bkt-half bkt-right">
-      <div class="bkc-wrap" style="grid-column:1;grid-row:1/17;">${bktCard(30)}</div>
-      ${gridCells(R_QF,  2, 8)}
-      ${gridCells(R_R16, 3, 4)}
-      ${gridCells(R_R32, 4, 2)}
-    </div>
-  </div>
-  </div>
-</div>
-</div>`;
-
-        const gbPick  = bracket.golden_boot_pick  || '—';
-        const penPick = bracket.penalty_games_pick != null ? bracket.penalty_games_pick : '—';
+        const gbPick   = bracket.golden_boot_pick  || '—';
+        const penPick  = bracket.penalty_games_pick  != null ? bracket.penalty_games_pick  : '—';
         const goalPick = bracket.ko_total_goals_pick != null ? bracket.ko_total_goals_pick : '—';
 
         const tiebreakersHtml = `
 <div style="margin-top:20px;border-top:1px solid rgba(247,244,235,0.1);padding-top:16px;">
-  <div style="font-size:0.65rem;font-weight:900;color:#f4c95d;text-transform:uppercase;margin-bottom:10px;">Tiebreakers</div>
+  <div style="font-size:0.55rem;font-weight:900;color:rgba(247,244,235,0.4);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Tiebreakers</div>
   <div style="display:flex;flex-wrap:wrap;gap:10px;">
     <div style="background:#0b1a14;border:1px solid rgba(247,244,235,0.15);border-radius:8px;padding:10px 14px;flex:1;min-width:120px;">
       <div style="font-size:0.55rem;color:rgba(247,244,235,0.45);text-transform:uppercase;margin-bottom:4px;">Golden Boot</div>
@@ -3409,7 +3216,7 @@
   </div>
 </div>`;
 
-        document.getElementById("ko-picks-content").innerHTML = bktHtml + tiebreakersHtml;
+        document.getElementById("ko-picks-content").innerHTML = picksHtml + tiebreakersHtml;
         document.getElementById("ko-picks-modal").style.display = 'block';
         document.body.style.overflow = 'hidden';
         window.currentPicksBracket = { name: bracketName, picks };
