@@ -1292,14 +1292,14 @@
       </div>
 
       <!-- My Picks Modal -->
-      <div id="ko-picks-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:1000;overflow-y:scroll;-webkit-overflow-scrolling:touch;">
-        <div style="background:var(--wc-bg);border:1px solid var(--wc-line);border-radius:12px;max-width:900px;margin:40px auto;padding:30px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-            <h2 id="ko-picks-bracket-name" style="margin:0;color:var(--wc-ink);">My Picks</h2>
+      <div id="ko-picks-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:1000;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;box-sizing:border-box;">
+        <div style="background:var(--wc-bg);border:1px solid var(--wc-line);border-radius:12px;max-width:900px;margin:0 auto;padding:24px 20px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h2 id="ko-picks-bracket-name" style="margin:0;color:var(--wc-ink);font-size:1.2rem;">My Picks</h2>
             <button id="ko-picks-close" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--wc-muted);">✕</button>
           </div>
-          <div id="ko-picks-content" style="margin-bottom:24px;"></div>
-          <div style="display:flex;gap:12px;justify-content:center;">
+          <div id="ko-picks-content" style="margin-bottom:20px;"></div>
+          <div style="display:flex;gap:12px;justify-content:center;padding-bottom:8px;">
             <button id="ko-picks-download" class="wc-button" style="background:var(--wc-green);color:#07130f;">📥 Download Bracket</button>
             <button id="ko-picks-close-btn" class="wc-button" style="background:var(--wc-line);color:var(--wc-muted);">Close</button>
           </div>
@@ -3144,8 +3144,45 @@
         const finT1 = simActT1[32], finT2 = simActT2[32], finW = simWinner[32];
         const tpT1 = simActT1[31], tpT2 = simActT2[31], tpW = simWinner[31];
 
+        // Mobile stacked view — rounds as rows of cards
+        const mobileRounds = [
+          { label: 'Round of 32', seqs: [1,4,3,6,12,11,10,9, 2,5,7,8,15,14,13,16] },
+          { label: 'Round of 16', seqs: [17,18,21,22, 19,20,23,24] },
+          { label: 'Quarterfinals', seqs: [25,26,27,28] },
+          { label: 'Semifinals', seqs: [29,30] },
+          { label: '3rd Place', seqs: [31] },
+          { label: 'Final', seqs: [32] },
+        ];
+
+        let mobileRows = '';
+        mobileRounds.forEach(({ label, seqs }) => {
+          const isChampRound = label === 'Final';
+          mobileRows += '<div style="margin-bottom:14px;">'
+            + '<div style="font-size:0.65rem;font-weight:900;color:#f4c95d;text-transform:uppercase;margin-bottom:6px;">' + label + '</div>'
+            + '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
+          seqs.forEach(seq => {
+            const w = simWinner[seq], t1 = simActT1[seq], t2 = simActT2[seq];
+            const border = (isChampRound && w === champ) ? 'border-color:#f4c95d;' : '';
+            mobileRows += '<div style="background:#0b1a14;border:1px solid rgba(247,244,235,0.15);' + border + 'border-radius:6px;padding:8px 10px;min-width:90px;text-align:center;">'
+              + '<div style="font-size:0.58rem;color:rgba(247,244,235,0.45);margin-bottom:5px;white-space:nowrap;">' + (t1||'?') + ' v ' + (t2||'?') + '</div>'
+              + '<div style="display:flex;align-items:center;justify-content:center;gap:4px;">' + (w ? bktTeam(w) : '<span style="color:rgba(247,244,235,0.3)">—</span>') + '</div>'
+              + '</div>';
+          });
+          mobileRows += '</div></div>';
+        });
+        mobileRows += '<div style="text-align:center;padding:12px;border:2px solid #f4c95d;border-radius:8px;margin-top:4px;">'
+          + '<div style="font-size:0.6rem;color:#f4c95d;font-weight:900;margin-bottom:6px;">🏆 CHAMPION</div>'
+          + '<div style="display:flex;align-items:center;justify-content:center;gap:6px;">' + (champ ? bktTeam(champ) : '—') + '</div>'
+          + '</div>';
+
         const bktHtml = `
 <style>
+  .bkt-desktop { display:none; }
+  .bkt-mobile  { display:block; }
+  @media (min-width:640px) {
+    .bkt-desktop { display:block; }
+    .bkt-mobile  { display:none; }
+  }
   .bkt-scroll { overflow-x:auto; }
   .bkt-inner { width:fit-content; margin:0 auto; }
   .bkt-outer { display:flex; align-items:stretch; gap:0; }
@@ -3159,16 +3196,19 @@
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     padding:3px 4px; box-sizing:border-box; text-align:center; overflow:hidden;
   }
-  .bkt-center {
-    flex:0 0 104px; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; gap:10px; padding:0 6px;
-  }
+  .bkt-center { flex:0 0 104px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:0 6px; }
   .bkt-fin { border:2px solid #f4c95d; border-radius:6px; padding:8px 6px; background:#0b1a14; width:92px; box-sizing:border-box; text-align:center; }
   .bkt-3p  { border:1px solid rgba(247,244,235,0.2); border-radius:6px; padding:6px; background:#0b1a14; width:92px; box-sizing:border-box; text-align:center; }
   .bkt-lbl { font-size:0.52rem; color:#f4c95d; font-weight:900; text-transform:uppercase; margin-bottom:4px; }
   .bkt-hdr { display:flex; font-size:0.52rem; font-weight:900; color:#f4c95d; text-transform:uppercase; text-align:center; margin-bottom:6px; border-bottom:1px solid rgba(247,244,235,0.08); padding-bottom:4px; }
   .bkt-hdr > div { flex-shrink:0; }
 </style>
+
+<!-- Mobile: stacked round-by-round -->
+<div class="bkt-mobile">${mobileRows}</div>
+
+<!-- Desktop: 9-column bracket -->
+<div class="bkt-desktop">
 <div class="bkt-scroll">
   <div class="bkt-inner">
   <div class="bkt-hdr" style="min-width:680px;">
@@ -3204,10 +3244,12 @@
     </div>
   </div>
   </div>
+</div>
 </div>`;
 
         document.getElementById("ko-picks-content").innerHTML = bktHtml;
         document.getElementById("ko-picks-modal").style.display = 'block';
+        document.body.style.overflow = 'hidden';
         window.currentPicksBracket = { name: bracketName, picks };
       }
 
@@ -3244,18 +3286,15 @@
         setTimeout(() => printWindow.print(), 250);
       }
 
+      function closePicksModal() {
+        document.getElementById("ko-picks-modal").style.display = 'none';
+        document.body.style.overflow = '';
+      }
+
       // Modal close handlers
-      document.getElementById("ko-picks-close").addEventListener("click", () => {
-        document.getElementById("ko-picks-modal").style.display = 'none';
-      });
-
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") document.getElementById("ko-picks-modal").style.display = 'none';
-      });
-
-      document.getElementById("ko-picks-close-btn").addEventListener("click", () => {
-        document.getElementById("ko-picks-modal").style.display = 'none';
-      });
+      document.getElementById("ko-picks-close").addEventListener("click", closePicksModal);
+      document.getElementById("ko-picks-close-btn").addEventListener("click", closePicksModal);
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePicksModal(); });
 
       document.getElementById("ko-picks-download").addEventListener("click", downloadMyPicksBracket);
 
@@ -3275,7 +3314,18 @@
             loadKoEntries();
             updateNextMatchHeader();
           } else if (btn.dataset.tab === "ko-match-center") {
-            loadKoMatchCenter();
+            if (sessionStorage.getItem("ko_match_center_unlocked") === "true") {
+              loadKoMatchCenter();
+            } else {
+              const pin = prompt("Enter PIN to access KO Match Center:");
+              if (pin === "2019") {
+                sessionStorage.setItem("ko_match_center_unlocked", "true");
+                loadKoMatchCenter();
+              } else {
+                alert("Incorrect PIN.");
+                switchTab("ko-pool");
+              }
+            }
           }
         });
       });
