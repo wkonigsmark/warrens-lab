@@ -1195,6 +1195,8 @@
             <div class="wc-stat"><strong id="ko-paid-count">--</strong><span>Paid</span></div>
             <div class="wc-stat"><strong id="ko-purse">$--</strong><span>KO Purse (paid)</span></div>
           </div>
+          <div id="ko-champion-split"></div>
+          <div id="ko-match-split"></div>
           <div style="margin-bottom:16px;">
             <input type="text" id="ko-search" placeholder="Search by bracket name..."
               style="width:100%;padding:10px 12px;border:1px solid var(--wc-line);border-radius:6px;background:var(--wc-panel);color:var(--wc-ink);font-size:0.9rem;box-sizing:border-box;">
@@ -2739,6 +2741,7 @@
       // KO Pool tab — entries are fetched once, then re-rendered whenever results change.
       let koLoaded = false;
       let koEntries = [];
+      let koChampFilter = null;
 
       // True when an official result has been entered for this match number.
       function matchHasResult(matchNumber) {
@@ -2826,6 +2829,9 @@
         if (!tbody) return;
         updateNextMatchHeader();
 
+        renderChampionSplitBar();
+        renderMatchSplitBar();
+
         if (!koEntries.length) {
           tbody.innerHTML = `<tr><td colspan="6">No entries yet.</td></tr>`;
           return;
@@ -2842,6 +2848,7 @@
         // Build and sort entries by points (highest first)
         let sortedEntries = koEntries
           .filter(e => !searchTerm || e.bracket_name.toLowerCase().includes(searchTerm))
+          .filter(e => !koChampFilter || (e.bracket_picks || {}).final === koChampFilter)
           .map(e => {
             const picks = e.bracket_picks || {};
             const { earned, max } = calculateKoPoints(picks);
@@ -3010,6 +3017,167 @@
       });
 
       // ── My Picks Modal ──────────────────────────────────────────
+
+      // Simulate a full bracket for any set of picks (or actual results when picks={r32:[],final:null}).
+      // Returns {simWinner, simLoser, simActT1, simActT2} keyed by seq.
+      function buildBracketSim(picks) {
+        const r32Teams = picks.r32 || [];
+        const champ    = picks.final || null;
+        const sortedKO = [...knockoutSchedule].sort((a, b) => a.seq - b.seq);
+        const simWinner = {}, simLoser = {}, simActT1 = {}, simActT2 = {};
+
+        sortedKO.forEach(match => {
+          const result = actualMatches.find(r => r.matchNumber === match.matchNumber);
+          if (match.round === 'R32') {
+            simActT1[match.seq] = match.team1;
+            simActT2[match.seq] = match.team2;
+            const w = result?.winnerId
+              || (r32Teams.includes(match.team1) ? match.team1
+                : r32Teams.includes(match.team2) ? match.team2 : null);
+            if (w) { simWinner[match.seq] = w; simLoser[match.seq] = w === match.team1 ? match.team2 : match.team1; }
+          } else if (match.round === '3P') {
+            const sfSeqs = sortedKO.filter(m => m.round === 'SF').map(m => m.seq);
+            const losers = sfSeqs.map(s => simLoser[s]).filter(Boolean);
+            simActT1[match.seq] = losers[0] || null;
+            simActT2[match.seq] = losers[1] || null;
+            const w = result?.winnerId || losers[0] || null;
+            if (w) simWinner[match.seq] = w;
+          } else if (match.round === 'F') {
+            const sfSeqs = sortedKO.filter(m => m.round === 'SF').map(m => m.seq);
+            const winners = sfSeqs.map(s => simWinner[s]).filter(Boolean);
+            simActT1[match.seq] = winners[0] || null;
+            simActT2[match.seq] = winners[1] || null;
+            const w = result?.winnerId || (champ && winners.includes(champ) ? champ : winners[0] || null);
+            if (w) simWinner[match.seq] = w;
+          } else {
+            const t1Pool = match.team1.split('|');
+            const t2Pool = match.team2.split('|');
+            const prevSeqs = Object.keys(simWinner).map(Number).filter(s => s < match.seq).sort((a, b) => b - a);
+            let actualT1 = null, actualT2 = null;
+            for (const s of prevSeqs) {
+              const team = simWinner[s];
+              if (!actualT1 && t1Pool.includes(team)) actualT1 = team;
+              if (!actualT2 && t2Pool.includes(team)) actualT2 = team;
+              if (actualT1 && actualT2) break;
+            }
+            simActT1[match.seq] = actualT1;
+            simActT2[match.seq] = actualT2;
+            let w = result?.winnerId || null;
+            if (!w) {
+              if      (champ && actualT1 === champ) w = champ;
+              else if (champ && actualT2 === champ) w = champ;
+              else                                   w = actualT1 || null;
+            }
+            if (w) { simWinner[match.seq] = w; const loser = w === actualT1 ? actualT2 : actualT1; if (loser) simLoser[match.seq] = loser; }
+          }
+        });
+        return { simWinner, simLoser, simActT1, simActT2 };
+      }
+
+      window.setKoChampFilter = function(teamId) {
+        koChampFilter = (koChampFilter === teamId) ? null : teamId;
+        renderKoPool();
+      };
+
+      // Render the champion pick distribution across all entries.
+      function renderChampionSplitBar() {
+        const el = document.getElementById("ko-champion-split");
+        if (!el || !koEntries.length) return;
+
+        const counts = {};
+        koEntries.forEach(entry => {
+          const champ = (entry.bracket_picks || {}).final;
+          if (champ) counts[champ] = (counts[champ] || 0) + 1;
+        });
+
+        const total = koEntries.length;
+        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+
+        function champChip(teamId, count) {
+          const team = teamsById[teamId];
+          const cc = teamId === 'ENG' ? 'gb-eng' : (teamId === 'SCO' ? 'gb-sct' : (team?.countryCode?.toLowerCase() || teamId.toLowerCase()));
+          const pct = Math.round(count / total * 100);
+          const active = koChampFilter === teamId;
+          const border = active ? 'border-color:#f4c95d;' : 'border-color:rgba(247,244,235,0.12);';
+          const bg     = active ? 'background:#1a2e1f;'   : 'background:var(--wc-bg);';
+          return '<div onclick="window.setKoChampFilter(\'' + teamId + '\')" style="display:flex;align-items:center;gap:5px;' + bg + 'border:1px solid;' + border + 'border-radius:6px;padding:5px 8px;cursor:pointer;">'
+            + '<img src="https://flagcdn.com/w40/' + cc + '.png" style="height:16px;width:auto;border-radius:2px;" loading="lazy" onerror="this.style.display=\'none\'">'
+            + '<span style="font-size:0.72rem;font-weight:700;color:var(--wc-ink);">' + teamId + '</span>'
+            + '<span style="font-size:0.68rem;font-weight:900;color:#f4c95d;">' + pct + '%</span>'
+            + '<span style="font-size:0.6rem;color:rgba(247,244,235,0.3);">(' + count + ')</span>'
+            + '</div>';
+        }
+
+        const clearBtn = koChampFilter
+          ? '<button onclick="window.setKoChampFilter(null)" style="background:#f4c95d;border:none;border-radius:6px;padding:6px 12px;color:#07130f;font-size:0.7rem;font-weight:900;cursor:pointer;letter-spacing:0.03em;">✕ Clear filter</button>'
+          : '';
+
+        el.innerHTML = '<div style="background:var(--wc-panel);border:1px solid var(--wc-line);border-radius:8px;padding:12px 14px;margin-bottom:16px;">'
+          + '<div style="font-size:0.6rem;font-weight:900;color:rgba(247,244,235,0.4);text-transform:uppercase;margin-bottom:8px;">🏆 Champion picks</div>'
+          + '<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">'
+          + sorted.map(([teamId, count]) => champChip(teamId, count)).join('')
+          + clearBtn
+          + '</div>'
+          + '</div>';
+      }
+
+      // Render the "who picked whom" split bar for the current match.
+      function renderMatchSplitBar() {
+        const el = document.getElementById("ko-match-split");
+        if (!el) return;
+        const current = getCurrentMatch();
+        if (!current || !koEntries.length) { el.innerHTML = ''; return; }
+
+        // Determine actual contestants using result-driven sim (no personal picks)
+        const actualSim = buildBracketSim({ r32: [], final: null });
+        const t1 = actualSim.simActT1[current.seq];
+        const t2 = actualSim.simActT2[current.seq];
+        if (!t1 && !t2) { el.innerHTML = ''; return; }
+
+        // Count picks across all entries
+        let countT1 = 0, countT2 = 0, countNeither = 0;
+        koEntries.forEach(entry => {
+          const sim = buildBracketSim(entry.bracket_picks || {});
+          const predicted = sim.simWinner[current.seq];
+          if      (predicted === t1) countT1++;
+          else if (predicted === t2) countT2++;
+          else                       countNeither++;
+        });
+        const total = koEntries.length;
+        const pT1  = Math.round(countT1      / total * 100);
+        const pT2  = Math.round(countT2      / total * 100);
+        const pN   = 100 - pT1 - pT2;
+
+        function flagChip(teamId, pct, align) {
+          if (!teamId) return '';
+          const team = teamsById[teamId];
+          const cc = teamId === 'ENG' ? 'gb-eng' : (teamId === 'SCO' ? 'gb-sct' : (team?.countryCode?.toLowerCase() || teamId.toLowerCase()));
+          const nameAlign = align === 'right' ? 'flex-direction:row-reverse;' : '';
+          return '<div style="display:flex;align-items:center;gap:5px;' + nameAlign + '">'
+            + '<img src="https://flagcdn.com/w40/' + cc + '.png" style="height:18px;width:auto;border-radius:2px;" loading="lazy" onerror="this.style.display=\'none\'">'
+            + '<span style="font-size:0.75rem;font-weight:700;color:var(--wc-ink);">' + teamId + '</span>'
+            + '<span style="font-size:0.7rem;color:#f4c95d;font-weight:900;">' + pct + '%</span>'
+            + '</div>';
+        }
+
+        const roundNames = { R32:'R32', R16:'R16', QF:'QF', SF:'SF', '3P':'3rd Place', F:'Final' };
+        const label = roundNames[current.round] || current.round;
+
+        el.innerHTML = '<div style="background:var(--wc-panel);border:1px solid var(--wc-line);border-radius:8px;padding:12px 14px;margin-bottom:16px;">'
+          + '<div style="font-size:0.6rem;font-weight:900;color:rgba(247,244,235,0.4);text-transform:uppercase;margin-bottom:8px;">' + label + ' · Who the pool picked</div>'
+          + '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;">'
+          + flagChip(t1, pT1, 'left')
+          + '<div style="font-size:0.6rem;color:rgba(247,244,235,0.3);">vs</div>'
+          + flagChip(t2, pT2, 'right')
+          + '</div>'
+          + '<div style="display:flex;border-radius:4px;overflow:hidden;height:10px;">'
+          + (pT1  > 0 ? '<div style="flex:' + pT1  + ';background:#3a8c5c;"></div>' : '')
+          + (pN   > 0 ? '<div style="flex:' + pN   + ';background:rgba(247,244,235,0.12);"></div>' : '')
+          + (pT2  > 0 ? '<div style="flex:' + pT2  + ';background:#c0392b;"></div>' : '')
+          + '</div>'
+          + (pN > 0 ? '<div style="font-size:0.58rem;color:rgba(247,244,235,0.35);margin-top:5px;text-align:center;">' + pN + '% picked a team already eliminated</div>' : '')
+          + '</div>';
+      }
 
       // Show bracket view for a bracket
       function showMyPicksModal(bracketName) {
@@ -3247,7 +3415,30 @@
 </div>
 </div>`;
 
-        document.getElementById("ko-picks-content").innerHTML = bktHtml;
+        const gbPick  = bracket.golden_boot_pick  || '—';
+        const penPick = bracket.penalty_games_pick != null ? bracket.penalty_games_pick : '—';
+        const goalPick = bracket.ko_total_goals_pick != null ? bracket.ko_total_goals_pick : '—';
+
+        const tiebreakersHtml = `
+<div style="margin-top:20px;border-top:1px solid rgba(247,244,235,0.1);padding-top:16px;">
+  <div style="font-size:0.65rem;font-weight:900;color:#f4c95d;text-transform:uppercase;margin-bottom:10px;">Tiebreakers</div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;">
+    <div style="background:#0b1a14;border:1px solid rgba(247,244,235,0.15);border-radius:8px;padding:10px 14px;flex:1;min-width:120px;">
+      <div style="font-size:0.55rem;color:rgba(247,244,235,0.45);text-transform:uppercase;margin-bottom:4px;">Golden Boot</div>
+      <div style="font-size:0.85rem;color:var(--wc-ink);font-weight:600;">${gbPick}</div>
+    </div>
+    <div style="background:#0b1a14;border:1px solid rgba(247,244,235,0.15);border-radius:8px;padding:10px 14px;flex:1;min-width:120px;">
+      <div style="font-size:0.55rem;color:rgba(247,244,235,0.45);text-transform:uppercase;margin-bottom:4px;">Penalty Shootouts</div>
+      <div style="font-size:0.85rem;color:var(--wc-ink);font-weight:600;">${penPick}</div>
+    </div>
+    <div style="background:#0b1a14;border:1px solid rgba(247,244,235,0.15);border-radius:8px;padding:10px 14px;flex:1;min-width:120px;">
+      <div style="font-size:0.55rem;color:rgba(247,244,235,0.45);text-transform:uppercase;margin-bottom:4px;">KO Round Goals</div>
+      <div style="font-size:0.85rem;color:var(--wc-ink);font-weight:600;">${goalPick}</div>
+    </div>
+  </div>
+</div>`;
+
+        document.getElementById("ko-picks-content").innerHTML = bktHtml + tiebreakersHtml;
         document.getElementById("ko-picks-modal").style.display = 'block';
         document.body.style.overflow = 'hidden';
         window.currentPicksBracket = { name: bracketName, picks };

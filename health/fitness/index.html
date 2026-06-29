@@ -694,6 +694,72 @@ const STRETCH_POOL = {
   ],
 };
 
+const SMART_POOL_BW = {
+  chest:[
+    {name:'Push-Ups',             detail:'15 reps',             sets:3, muscles:[['upper','Chest'],['upper','Triceps']], tip:'Full range — chest to floor, full lockout at top', video_url:'https://www.youtube.com/watch?v=IODxDxX7oi4'},
+    {name:'Wide Push-Ups',        detail:'12 reps',             sets:3, muscles:[['upper','Chest']], tip:'Hands wider than shoulder-width — more chest activation', video_url:'https://www.youtube.com/results?search_query=wide+push+up+chest'},
+    {name:'Decline Push-Ups',     detail:'10 reps',             sets:3, muscles:[['upper','Chest'],['upper','Shoulders']], tip:'Feet elevated on chair — targets upper chest', video_url:'https://www.youtube.com/results?search_query=decline+push+up+upper+chest'},
+    {name:'Archer Push-Up',       detail:'8 reps each side',    sets:3, muscles:[['upper','Chest']], tip:'One arm wide and straight as you lower to the other — advanced', video_url:'https://www.youtube.com/results?search_query=archer+push+up'},
+  ],
+  back:[
+    {name:'Superman Hold',        detail:'12 reps, 2 sec hold', sets:3, muscles:[['back','Lower Back'],['back','Rhomboids']], tip:'Lift arms and legs simultaneously — squeeze at top', video_url:'https://www.youtube.com/results?search_query=superman+hold+back'},
+    {name:'Reverse Snow Angel',   detail:'12 reps',             sets:3, muscles:[['back','Rhomboids'],['back','Rear Delts']], tip:'Face down, arms sweep from sides to overhead — keep them off the floor', video_url:'https://www.youtube.com/results?search_query=reverse+snow+angel+back+exercise'},
+    {name:'Table Inverted Row',   detail:'10-12 reps',          sets:3, muscles:[['back','Back'],['upper','Biceps']], tip:'Lie under sturdy table, pull chest up — body straight', video_url:'https://www.youtube.com/results?search_query=inverted+row+table+bodyweight'},
+  ],
+  lats:[
+    {name:'Table Inverted Row (Wide)', detail:'10 reps',        sets:3, muscles:[['back','Lats'],['back','Back']], tip:'Wide grip, flare elbows out — biases lats', video_url:'https://www.youtube.com/results?search_query=wide+inverted+row+lats'},
+    {name:'Active Hang Stretch',  detail:'20-30 sec hang',      sets:3, muscles:[['back','Lats'],['other','Spine']], tip:'Fully relax and decompress — great for lats and spine if you have a bar', video_url:'https://www.youtube.com/results?search_query=dead+hang+lat+stretch'},
+  ],
+  shoulders:[
+    {name:'Pike Push-Up',         detail:'10-12 reps',          sets:3, muscles:[['upper','Shoulders'],['upper','Triceps']], tip:'Hips high, head tracks toward floor — press like a vertical push', video_url:'https://www.youtube.com/results?search_query=pike+push+up+shoulders'},
+    {name:'Wall Handstand Hold',  detail:'20-30 sec hold',       sets:3, muscles:[['upper','Shoulders'],['core','Core']], tip:'Walk feet up wall, straight body — control breathing', video_url:'https://www.youtube.com/results?search_query=wall+handstand+hold'},
+    {name:'Plank Shoulder Taps',  detail:'10 each side',         sets:3, muscles:[['upper','Shoulders'],['core','Core']], tip:'Hips stay square — slow and controlled, no rocking', video_url:'https://www.youtube.com/results?search_query=plank+shoulder+taps'},
+    {name:'Lateral Raise (no weight)', detail:'15 reps',        sets:3, muscles:[['upper','Shoulders']], tip:'Control the tempo — 2 sec up, 3 sec down for tension', video_url:'https://www.youtube.com/results?search_query=lateral+raise+no+weight+shoulder'},
+  ],
+  biceps:[
+    {name:'Table Inverted Row (Underhand)', detail:'10-12 reps', sets:3, muscles:[['upper','Biceps'],['back','Back']], tip:'Supinated (palms-up) grip shifts load to biceps', video_url:'https://www.youtube.com/results?search_query=inverted+row+underhand+bicep'},
+    {name:'Towel Curl',           detail:'15 reps each side',    sets:3, muscles:[['upper','Biceps']], tip:'Stand on towel, curl handles up — slow and controlled', video_url:'https://www.youtube.com/results?search_query=towel+curl+bodyweight+bicep'},
+  ],
+  triceps:[
+    {name:'Tricep Dips',          detail:'12-15 reps',           sets:3, muscles:[['upper','Triceps'],['upper','Chest']], tip:'Hands on chair behind you, lower until 90° — elbows track back', video_url:'https://www.youtube.com/watch?v=0326dy_-CzM'},
+    {name:'Diamond Push-Ups',     detail:'10-12 reps',           sets:3, muscles:[['upper','Triceps'],['upper','Chest']], tip:'Hands form a diamond under chest — elbows track back not out', video_url:'https://www.youtube.com/results?search_query=diamond+push+up+tricep'},
+    {name:'Close-Grip Push-Up',   detail:'12 reps',              sets:3, muscles:[['upper','Triceps'],['upper','Chest']], tip:'Hands shoulder-width, elbows close to body throughout', video_url:'https://www.youtube.com/results?search_query=close+grip+push+up+tricep'},
+  ],
+  quads:[
+    {name:'Bodyweight Squat',     detail:'20 reps',              sets:3, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Chest up, weight in heels — full depth if knees allow', video_url:'https://www.youtube.com/watch?v=aclHkVaku9U'},
+    {name:'Jump Squat',           detail:'10 reps',              sets:3, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Explode up, land soft — absorb through the hips', video_url:'https://www.youtube.com/results?search_query=jump+squat+bodyweight'},
+    {name:'Bulgarian Split Squat',detail:'10 reps each leg',     sets:3, muscles:[['lower','Quads'],['lower','Glutes']], tip:'Back foot elevated, front shin vertical — control the drop', video_url:'https://www.youtube.com/results?search_query=bodyweight+bulgarian+split+squat'},
+    {name:'Wall Sit',             detail:'45 sec',               sets:3, muscles:[['lower','Quads']], tip:'Thighs parallel to floor — don\'t let knees drift inward', video_url:'https://www.youtube.com/results?search_query=wall+sit+hold'},
+  ],
+  hamstrings:[
+    {name:'Single-Leg RDL (BW)',  detail:'10 reps each leg',     sets:3, muscles:[['lower','Hamstrings'],['lower','Glutes']], tip:'Hinge forward keeping back flat — feel the hamstring load', video_url:'https://www.youtube.com/results?search_query=single+leg+romanian+deadlift+bodyweight'},
+    {name:'Glute Bridge',         detail:'15-20 reps',           sets:3, muscles:[['lower','Hamstrings'],['lower','Glutes']], tip:'Drive hips up, squeeze glutes at top — full extension', video_url:'https://www.youtube.com/results?search_query=glute+bridge+hamstring'},
+    {name:'Nordic Curl',          detail:'6-8 reps',             sets:3, muscles:[['lower','Hamstrings']], tip:'Anchor feet, lower body slowly with straight back — most effective hamstring exercise', video_url:'https://www.youtube.com/results?search_query=nordic+curl+bodyweight+hamstring'},
+  ],
+  glutes:[
+    {name:'Glute Bridge',         detail:'20 reps',              sets:3, muscles:[['lower','Glutes'],['lower','Hamstrings']], tip:'Full hip extension, hard squeeze at top — don\'t let hips sag', video_url:'https://www.youtube.com/results?search_query=glute+bridge'},
+    {name:'Donkey Kick',          detail:'15 reps each side',    sets:3, muscles:[['lower','Glutes']], tip:'Hips square to floor — don\'t rotate or compensate', video_url:'https://www.youtube.com/results?search_query=donkey+kick+glute'},
+    {name:'Fire Hydrant',         detail:'15 reps each side',    sets:3, muscles:[['lower','Glutes']], tip:'Keep core braced — only the hip moves, not the torso', video_url:'https://www.youtube.com/results?search_query=fire+hydrant+glute+exercise'},
+    {name:'Single-Leg Glute Bridge', detail:'12 reps each side', sets:3, muscles:[['lower','Glutes'],['lower','Hamstrings']], tip:'One leg extended — drive through the working heel', video_url:'https://www.youtube.com/results?search_query=single+leg+glute+bridge'},
+  ],
+  calves:[
+    {name:'Calf Raise (BW)',      detail:'25 reps (slow tempo)', sets:4, muscles:[['lower','Calves']], tip:'Full range — all the way up, heel drops fully down', video_url:'https://www.youtube.com/results?search_query=bodyweight+calf+raise'},
+    {name:'Single-Leg Calf Raise (BW)', detail:'20 reps each',  sets:3, muscles:[['lower','Calves']], tip:'Hand on wall for balance — feel the burn and hold at top', video_url:'https://www.youtube.com/results?search_query=single+leg+calf+raise+bodyweight'},
+    {name:'Jump Rope (Simulated)', detail:'30 sec',              sets:3, muscles:[['lower','Calves'],['lower','Quads']], tip:'Bounce on balls of feet — tight, quick hops', video_url:'https://www.youtube.com/results?search_query=jump+rope+simulation+no+rope'},
+  ],
+  core:[
+    {name:'Plank Hold',           detail:'45 sec',               sets:3, muscles:[['core','Core'],['upper','Shoulders']], tip:'Squeeze glutes and abs simultaneously — don\'t let hips sag', video_url:'https://www.youtube.com/watch?v=pvIjcsm_8dU'},
+    {name:'Dead Bug',             detail:'10 each side',         sets:3, muscles:[['core','Core']], tip:'Lower back pressed to floor the entire time', video_url:'https://www.youtube.com/watch?v=4XLEnwUr1d8'},
+    {name:'Hollow Body Hold',     detail:'20-30 sec',            sets:3, muscles:[['core','Core']], tip:'Lower back flat, arms and legs just off the floor — breathe', video_url:'https://www.youtube.com/results?search_query=hollow+body+hold+core'},
+    {name:'Mountain Climbers',    detail:'20 reps (10 each)',    sets:3, muscles:[['core','Core'],['lower','Quads']], tip:'Hips stay down, drive knees toward chest — controlled pace', video_url:'https://www.youtube.com/results?search_query=mountain+climbers+core'},
+  ],
+  obliques:[
+    {name:'Side Plank',           detail:'30 sec each side',     sets:3, muscles:[['core','Obliques'],['upper','Shoulders']], tip:'Body in a straight line — don\'t let hips drop', video_url:'https://www.youtube.com/results?search_query=side+plank+obliques'},
+    {name:'Bicycle Crunches',     detail:'20 total',             sets:3, muscles:[['core','Obliques'],['core','Core']], tip:'Slow and controlled — elbow to opposite knee, full rotation', video_url:'https://www.youtube.com/results?search_query=bicycle+crunch+obliques'},
+    {name:'Russian Twist (BW)',   detail:'15 each side',         sets:3, muscles:[['core','Obliques'],['core','Core']], tip:'Feet off floor for more challenge — rotate from chest', video_url:'https://www.youtube.com/results?search_query=russian+twist+bodyweight'},
+  ],
+};
+
 // ═══════════════════════════════════════════════════════
 //  WEEK PLANS
 // ═══════════════════════════════════════════════════════
@@ -2076,11 +2142,13 @@ function closePlanner() {
 
 function buildSmartWorkout(targetMuscles) {
   if(!targetMuscles.length) return null;
+  const isBW = currentMode === 'calisthenics';
+  const exercisePool = isBW ? SMART_POOL_BW : SMART_POOL;
   const perMuscle = targetMuscles.length <= 2 ? 3 : targetMuscles.length <= 4 ? 2 : 1;
   const usedNames = new Set();
   const exercises = [];
   for(const m of targetMuscles) {
-    const pool = (SMART_POOL[m]||[]).slice().sort(()=>Math.random()-.5);
+    const pool = (exercisePool[m]||[]).slice().sort(()=>Math.random()-.5);
     let added = 0;
     for(const ex of pool) {
       if(exercises.length >= 7 || added >= perMuscle) break;
@@ -2121,10 +2189,10 @@ function buildSmartWorkout(targetMuscles) {
   const totalSets = warmup.reduce((s,e)=>s+e.sets,0) + shuffled.reduce((s,e)=>s+e.sets,0) + cooldown.reduce((s,e)=>s+e.sets,0);
   const label = targetMuscles.map(m=>m.charAt(0).toUpperCase()+m.slice(1)).join(' · ');
   return {
-    id:'smart-build', title:`Smart Build — ${label}`, mode:'dumbbell', totalSets,
+    id:'smart-build', title:`Smart Build — ${label}`, mode: isBW ? 'calisthenics' : 'dumbbell', totalSets,
     sections:[
       {id:'sb-warmup', name:'Warm-Up', emoji:'🔥', meta:'5 min · no equipment', weighted:false, exercises:warmup},
-      {id:'sb-main', name:'Focus Block', emoji:'⚡', meta:`60-90s rest · targets: ${targetMuscles.join(', ')}`, weighted:true, exercises:shuffled},
+      {id:'sb-main', name:'Focus Block', emoji:'⚡', meta:`60-90s rest · targets: ${targetMuscles.join(', ')}`, weighted:!isBW, exercises:shuffled},
       {id:'sb-cooldown', name:'Cool-Down', emoji:'🧘', meta:'5 min · breathe deep', weighted:false, exercises:cooldown},
     ]
   };
@@ -2171,6 +2239,8 @@ async function openSmartBuilder() {
   const overlay = document.getElementById('smartOverlay');
   const grid = document.getElementById('smartMuscleGrid');
   const btn = document.getElementById('smartBuildBtn');
+  const isBW = currentMode === 'calisthenics';
+  document.getElementById('smartModalTitle').textContent = isBW ? '🤸 Smart Build — Bodyweight' : '⚡ Smart Build — Dumbbells';
   grid.innerHTML='<div style="grid-column:1/-1;padding:20px;text-align:center;color:var(--muted-light);font-size:.78rem">Loading recovery data…</div>';
   btn.disabled=true;
   overlay.classList.add('open');
@@ -2346,7 +2416,7 @@ async function openPlanner() {
   <div class="smart-modal">
     <div class="smart-drag"></div>
     <div class="smart-hd">
-      <span class="smart-title">⚡ Smart Build</span>
+      <span class="smart-title" id="smartModalTitle">⚡ Smart Build</span>
       <button class="smart-close" onclick="closeSmartBuilder()">✕</button>
     </div>
     <div style="padding:12px 18px 4px;font-size:.71rem;color:var(--muted-light);line-height:1.5">
