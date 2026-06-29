@@ -597,163 +597,116 @@
       }
     }
 
-    /* Mobile KO Pool optimizations */
+    /* Flag display: emoji on mobile, img on desktop */
+    .flag-emoji { display: none; }
     @media (max-width: 768px) {
-      #panel-ko-pool .wc-table-wrap {
-        overflow-x: visible;
-      }
+      .flag-img   { display: none !important; }
+      .flag-emoji { display: inline; font-size: 1.5rem; line-height: 1; vertical-align: middle; }
+    }
 
-      #panel-ko-pool .wc-table {
-        display: contents;
-      }
-
-      #panel-ko-pool .wc-table thead {
-        display: none;
-      }
-
-      #panel-ko-pool .wc-table tbody {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
+    /* Mobile KO Pool — polished card layout */
+    @media (max-width: 768px) {
+      #panel-ko-pool .wc-table-wrap { overflow-x: visible; }
+      #panel-ko-pool .wc-table      { display: contents; }
+      #panel-ko-pool .wc-table thead { display: none; }
+      #panel-ko-pool .wc-table tbody { display: flex; flex-direction: column; gap: 10px; }
 
       #panel-ko-pool .wc-table tr {
         display: grid;
-        grid-template-columns: 28px 1fr auto;
-        gap: 8px;
+        grid-template-columns: 40px 1fr auto;
+        grid-template-rows: auto auto auto auto;
         background: var(--wc-panel);
         border: 1px solid var(--wc-line);
-        border-radius: 8px;
-        padding: 8px 12px;
-        align-items: center;
+        border-radius: 10px;
         overflow: hidden;
       }
 
-      #panel-ko-pool .wc-table td {
-        border: none;
-        padding: 0;
-        font-size: 0.7rem;
-      }
+      #panel-ko-pool .wc-table td { border: none; padding: 0; }
 
-      /* ── Row 1: Rank | Name | Points ── */
-
-      /* Rank number */
+      /* Rank */
       #panel-ko-pool .wc-table td:nth-child(1) {
-        grid-column: 1;
-        grid-row: 1;
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        background: rgba(244, 201, 93, 0.15);
-        color: var(--wc-gold);
-        font-weight: 900;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.65rem;
+        grid-column: 1; grid-row: 1 / 5;
+        display: flex; align-items: center; justify-content: center;
+        background: rgba(244,201,93,0.08);
+        border-right: 1px solid var(--wc-line);
+        color: var(--wc-gold); font-weight: 900; font-size: 0.75rem;
       }
 
-      /* Bracket name */
+      /* Name */
       #panel-ko-pool .wc-table td:nth-child(2) {
-        grid-column: 2;
-        grid-row: 1;
-        font-weight: 900;
-        color: var(--wc-ink);
-        font-size: 0.72rem;
-        text-align: left;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        grid-column: 2; grid-row: 1;
+        display: flex; align-items: center;
+        padding: 10px 10px 0;
+        font-weight: 900; font-size: 0.9rem; color: var(--wc-ink);
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
 
       /* Points */
       #panel-ko-pool .wc-table td:nth-child(3) {
-        grid-column: 3;
-        grid-row: 1;
-        font-weight: 900;
-        color: var(--wc-gold);
-        font-size: 0.68rem;
-        text-align: right;
+        grid-column: 3; grid-row: 1;
+        display: flex; align-items: center;
+        padding: 10px 12px 0;
+        font-weight: 900; font-size: 0.8rem; color: var(--wc-gold);
       }
 
-      /* ── Row 2: Next / Fol / Champ (labels above, flags below) ── */
-
-      /* Current match (Next) */
+      /* Next match — prominent row */
       #panel-ko-pool .wc-table td:nth-child(4) {
-        grid-column: 1;
-        grid-row: 2;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 3px;
-        padding-top: 4px;
+        grid-column: 2; grid-row: 2;
+        display: flex; align-items: center; gap: 6px;
+        padding: 8px 10px 6px;
+        border-top: 1px solid rgba(247,244,235,0.07);
       }
-
       #panel-ko-pool .wc-table td:nth-child(4)::before {
-        content: 'Next';
-        font-weight: 700;
-        color: var(--wc-muted);
-        font-size: 0.55rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        content: 'NEXT';
+        font-size: 0.48rem; font-weight: 900; letter-spacing: 0.1em;
+        color: rgba(247,244,235,0.35); white-space: nowrap;
+        margin-right: 2px;
       }
+      #panel-ko-pool .wc-table td:nth-child(4) .flag-emoji { font-size: 1.5rem; }
+      #panel-ko-pool .wc-table td:nth-child(4) strong { font-size: 0.85rem; color: var(--wc-ink); }
 
-      #panel-ko-pool .wc-table td:nth-child(4) img {
-        width: 20px;
-        height: auto;
-        border-radius: 2px;
-      }
-
-      /* Following match (Fol) */
-      #panel-ko-pool .wc-table td:nth-child(5) {
-        grid-column: 2;
-        grid-row: 2;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 3px;
-        padding-top: 4px;
-      }
-
-      #panel-ko-pool .wc-table td:nth-child(5)::before {
-        content: 'Fol';
-        font-weight: 700;
-        color: var(--wc-muted);
-        font-size: 0.55rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      #panel-ko-pool .wc-table td:nth-child(5) img {
-        width: 20px;
-        height: auto;
-        border-radius: 2px;
-      }
-
-      /* Champion */
+      /* Champ — stacked right column rows 2+3 */
       #panel-ko-pool .wc-table td:nth-child(6) {
-        grid-column: 3;
-        grid-row: 2;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 3px;
-        padding-top: 4px;
+        grid-column: 3; grid-row: 2 / 4;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 6px 10px;
+        border-top: 1px solid rgba(247,244,235,0.07);
+        border-left: 1px solid var(--wc-line);
+        gap: 2px; text-align: center;
       }
-
       #panel-ko-pool .wc-table td:nth-child(6)::before {
-        content: 'Champ';
-        font-weight: 700;
-        color: var(--wc-gold);
-        font-size: 0.55rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        content: '🏆';
+        font-size: 0.75rem;
       }
+      #panel-ko-pool .wc-table td:nth-child(6) .flag-emoji { font-size: 1.4rem; }
+      #panel-ko-pool .wc-table td:nth-child(6) strong { font-size: 0.65rem; color: var(--wc-gold); }
 
-      #panel-ko-pool .wc-table td:nth-child(6) img {
-        width: 20px;
-        height: auto;
-        border-radius: 2px;
+      /* Following match — smaller third row */
+      #panel-ko-pool .wc-table td:nth-child(5) {
+        grid-column: 2; grid-row: 3;
+        display: flex; align-items: center; gap: 5px;
+        padding: 4px 10px 10px;
+        font-size: 0.6rem; color: var(--wc-muted);
+      }
+      #panel-ko-pool .wc-table td:nth-child(5)::before {
+        content: '→';
+        font-size: 0.55rem; color: rgba(247,244,235,0.25);
+      }
+      #panel-ko-pool .wc-table td:nth-child(5) .flag-emoji { font-size: 1rem; }
+      #panel-ko-pool .wc-table td:nth-child(5) strong { font-size: 0.7rem; color: rgba(247,244,235,0.6); }
+
+      /* My Picks button — full-width row at bottom */
+      #panel-ko-pool .wc-table td:nth-child(7) {
+        grid-column: 2 / 4; grid-row: 4;
+        display: flex; align-items: center; justify-content: center;
+        padding: 6px 12px 10px;
+        border-top: 1px solid rgba(247,244,235,0.07);
+      }
+      #panel-ko-pool .wc-table td:nth-child(7) button {
+        width: 100%; font-size: 0.72rem; font-weight: 700;
+        padding: 7px 12px; border-radius: 6px;
+        border: 1px solid var(--wc-gold); background: rgba(244,201,93,0.08);
+        color: var(--wc-gold); cursor: pointer; letter-spacing: 0.03em;
       }
     }
 
@@ -2779,7 +2732,17 @@
         }
       }
 
-      // Flag + 3-letter code for a team id.
+      // Convert a 2-letter country code to its flag emoji.
+      function teamFlagEmoji(teamId) {
+        if (!teamId) return '';
+        if (teamId === 'ENG') return '🏴\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}';
+        if (teamId === 'SCO') return '🏴\u{E0067}\u{E0062}\u{E0073}\u{E0063}\u{E0074}\u{E007F}';
+        const team = teamsById[teamId];
+        if (!team) return '';
+        return [...team.countryCode.toUpperCase()].map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65)).join('');
+      }
+
+      // Flag + 3-letter code for a team id. Shows img on desktop, emoji on mobile.
       function koTeamDisplay(teamId) {
         if (!teamId) return '—';
         const team = teamsById[teamId];
@@ -2787,7 +2750,8 @@
         const countryCode = teamId === 'ENG' ? 'gb-eng' : (teamId === 'SCO' ? 'gb-sct' : team.countryCode.toLowerCase());
         const flagUrl = `https://flagcdn.com/w80/${countryCode}.png`;
         const code = teamId.substring(0, 3).toUpperCase();
-        return `<img src="${flagUrl}" alt="${teamId}" style="height:32px;width:auto;margin-right:8px;vertical-align:middle;border-radius:2px;" loading="lazy" onerror="this.style.display='none'"><strong>${code}</strong>`;
+        const emoji = teamFlagEmoji(teamId);
+        return `<img class="flag-img" src="${flagUrl}" alt="${teamId}" style="height:32px;width:auto;margin-right:8px;vertical-align:middle;border-radius:2px;" loading="lazy" onerror="this.style.display='none'"><span class="flag-emoji">${emoji}</span><strong>${code}</strong>`;
       }
 
       // Calculate points for a bracket based on correct picks.
@@ -3100,8 +3064,10 @@
           const active = koChampFilter === teamId;
           const border = active ? 'border-color:#f4c95d;' : 'border-color:rgba(247,244,235,0.12);';
           const bg     = active ? 'background:#1a2e1f;'   : 'background:var(--wc-bg);';
+          const emoji  = teamFlagEmoji(teamId);
           return '<div onclick="window.setKoChampFilter(\'' + teamId + '\')" style="display:flex;align-items:center;gap:5px;' + bg + 'border:1px solid;' + border + 'border-radius:6px;padding:5px 8px;cursor:pointer;">'
-            + '<img src="https://flagcdn.com/w40/' + cc + '.png" style="height:16px;width:auto;border-radius:2px;" loading="lazy" onerror="this.style.display=\'none\'">'
+            + '<img class="flag-img" src="https://flagcdn.com/w40/' + cc + '.png" style="height:16px;width:auto;border-radius:2px;" loading="lazy" onerror="this.style.display=\'none\'">'
+            + '<span class="flag-emoji" style="font-size:1.1rem;line-height:1;">' + emoji + '</span>'
             + '<span style="font-size:0.72rem;font-weight:700;color:var(--wc-ink);">' + teamId + '</span>'
             + '<span style="font-size:0.68rem;font-weight:900;color:#f4c95d;">' + pct + '%</span>'
             + '<span style="font-size:0.6rem;color:rgba(247,244,235,0.3);">(' + count + ')</span>'
@@ -3152,9 +3118,11 @@
           if (!teamId) return '';
           const team = teamsById[teamId];
           const cc = teamId === 'ENG' ? 'gb-eng' : (teamId === 'SCO' ? 'gb-sct' : (team?.countryCode?.toLowerCase() || teamId.toLowerCase()));
+          const emoji = teamFlagEmoji(teamId);
           const nameAlign = align === 'right' ? 'flex-direction:row-reverse;' : '';
           return '<div style="display:flex;align-items:center;gap:5px;' + nameAlign + '">'
-            + '<img src="https://flagcdn.com/w40/' + cc + '.png" style="height:18px;width:auto;border-radius:2px;" loading="lazy" onerror="this.style.display=\'none\'">'
+            + '<img class="flag-img" src="https://flagcdn.com/w40/' + cc + '.png" style="height:18px;width:auto;border-radius:2px;" loading="lazy" onerror="this.style.display=\'none\'">'
+            + '<span class="flag-emoji" style="font-size:1.3rem;line-height:1;">' + emoji + '</span>'
             + '<span style="font-size:0.75rem;font-weight:700;color:var(--wc-ink);">' + teamId + '</span>'
             + '<span style="font-size:0.7rem;color:#f4c95d;font-weight:900;">' + pct + '%</span>'
             + '</div>';
