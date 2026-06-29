@@ -1116,6 +1116,7 @@
     <!-- Navigation Tabs -->
     <nav class="tab-selectors" id="scoreboard-tabs-nav">
       <button class="sim-tab-btn active" data-tab="ko-pool">🏆 KO Pool</button>
+      <button class="sim-tab-btn" data-tab="ko-match-center">⚽ KO Match Center</button>
       <button class="sim-tab-btn" data-tab="matches">📅 Match Center</button>
       <button class="sim-tab-btn" data-tab="standings">📊 Group Play</button>
     </nav>
@@ -1208,12 +1209,99 @@
                   <th style="text-align:center;">Next Match</th>
                   <th style="text-align:center;">Following Match</th>
                   <th style="text-align:center;">Champion</th>
+                  <th style="width:100px;text-align:center;">Action</th>
                 </tr>
               </thead>
               <tbody id="ko-entry-table">
                 <tr><td colspan="6">Click the KO Pool tab to load entries.</td></tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- KO Match Center tab -->
+      <div class="sim-view-panel" id="panel-ko-match-center">
+        <div style="max-width:800px;margin:0 auto;padding:20px;">
+          <h2>Knockout Match Center</h2>
+          <p style="color:var(--wc-muted);margin-bottom:24px;">Record official final scores for knockout stage matches. Results automatically advance winners to the next round.</p>
+
+          <!-- Current Match Display -->
+          <div style="background:var(--wc-panel);border:1px solid var(--wc-line);border-radius:12px;padding:20px;margin-bottom:24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+              <div>
+                <div style="font-size:0.8rem;color:var(--wc-muted);margin-bottom:4px;">CURRENT MATCH</div>
+                <div style="font-size:1.4rem;font-weight:900;color:var(--wc-ink);" id="ko-match-title">Loading...</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.8rem;color:var(--wc-muted);margin-bottom:4px;">MATCH #</div>
+                <div style="font-size:1.2rem;font-weight:900;color:var(--wc-gold);" id="ko-match-number">--</div>
+              </div>
+            </div>
+            <div style="padding-top:16px;border-top:1px solid var(--wc-line);">
+              <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;">
+                <!-- Team 1 -->
+                <div style="text-align:center;">
+                  <div style="font-size:2rem;margin-bottom:8px;" id="ko-team1-flag">--</div>
+                  <div style="font-weight:900;color:var(--wc-ink);" id="ko-team1-name">--</div>
+                </div>
+                <!-- Score -->
+                <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                  <div style="display:flex;gap:12px;align-items:center;">
+                    <input type="number" id="ko-score-team1" placeholder="0" min="0" style="width:50px;padding:8px;border:1px solid var(--wc-line);border-radius:6px;background:var(--wc-bg);color:var(--wc-ink);text-align:center;font-weight:900;font-size:1.2rem;">
+                    <div style="font-weight:900;color:var(--wc-muted);">-</div>
+                    <input type="number" id="ko-score-team2" placeholder="0" min="0" style="width:50px;padding:8px;border:1px solid var(--wc-line);border-radius:6px;background:var(--wc-bg);color:var(--wc-ink);text-align:center;font-weight:900;font-size:1.2rem;">
+                  </div>
+                  <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;cursor:pointer;">
+                    <input type="checkbox" id="ko-penalties-toggle" style="cursor:pointer;">
+                    <span>Decided by penalties</span>
+                  </label>
+                </div>
+                <!-- Team 2 -->
+                <div style="text-align:center;">
+                  <div style="font-size:2rem;margin-bottom:8px;" id="ko-team2-flag">--</div>
+                  <div style="font-weight:900;color:var(--wc-ink);" id="ko-team2-name">--</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Penalties Section (hidden by default) -->
+          <div id="ko-penalties-section" style="background:var(--wc-panel);border:1px solid var(--wc-gold);border-radius:12px;padding:16px;margin-bottom:24px;display:none;">
+            <div style="font-size:0.8rem;color:var(--wc-gold);font-weight:900;margin-bottom:12px;">⚽ WHO WON THE PENALTY SHOOTOUT?</div>
+            <div style="display:flex;gap:12px;">
+              <label style="flex:1;display:flex;align-items:center;gap:8px;padding:12px;border:1px solid var(--wc-line);border-radius:8px;cursor:pointer;transition:all 0.2s;">
+                <input type="radio" name="ko-penalty-winner" value="team1" style="cursor:pointer;">
+                <span id="ko-penalty-team1-label">Team 1</span>
+              </label>
+              <label style="flex:1;display:flex;align-items:center;gap:8px;padding:12px;border:1px solid var(--wc-line);border-radius:8px;cursor:pointer;transition:all 0.2s;">
+                <input type="radio" name="ko-penalty-winner" value="team2" style="cursor:pointer;">
+                <span id="ko-penalty-team2-label">Team 2</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div style="display:flex;gap:12px;justify-content:center;">
+            <button id="ko-save-result" class="wc-button" style="background:var(--wc-green);color:#07130f;">✓ Save Result</button>
+            <button id="ko-clear-form" class="wc-button" style="background:var(--wc-line);color:var(--wc-muted);">Clear</button>
+          </div>
+
+          <div id="ko-save-message" style="text-align:center;margin-top:16px;font-size:0.9rem;color:var(--wc-green);display:none;"></div>
+        </div>
+      </div>
+
+      <!-- My Picks Modal -->
+      <div id="ko-picks-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:1000;overflow-y:scroll;-webkit-overflow-scrolling:touch;">
+        <div style="background:var(--wc-bg);border:1px solid var(--wc-line);border-radius:12px;max-width:900px;margin:40px auto;padding:30px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+            <h2 id="ko-picks-bracket-name" style="margin:0;color:var(--wc-ink);">My Picks</h2>
+            <button id="ko-picks-close" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--wc-muted);">✕</button>
+          </div>
+          <div id="ko-picks-content" style="margin-bottom:24px;"></div>
+          <div style="display:flex;gap:12px;justify-content:center;">
+            <button id="ko-picks-download" class="wc-button" style="background:var(--wc-green);color:#07130f;">📥 Download Bracket</button>
+            <button id="ko-picks-close-btn" class="wc-button" style="background:var(--wc-line);color:var(--wc-muted);">Close</button>
           </div>
         </div>
       </div>
@@ -2751,23 +2839,34 @@
         const currentSeq = current.seq;
         const followingSeq = currentSeq + 1;
 
-        // Build rows for each entry
-        const rows = koEntries
+        // Build and sort entries by points (highest first)
+        let sortedEntries = koEntries
           .filter(e => !searchTerm || e.bracket_name.toLowerCase().includes(searchTerm))
-          .map((e, displayIndex) => {
+          .map(e => {
             const picks = e.bracket_picks || {};
             const { earned, max } = calculateKoPoints(picks);
+            return { entry: e, picks, earned, max };
+          })
+          .sort((a, b) => b.earned - a.earned); // Sort by points descending
+
+        // Render rows with ranking
+        const rows = sortedEntries
+          .map((item, rank) => {
+            const { entry, picks, earned, max } = item;
             const currentPick = getPickForSeq(picks, currentSeq);
             const followingPick = getPickForSeq(picks, followingSeq);
             const champ = picks.final || "—";
 
             return `<tr>
-              <td>${displayIndex + 1}</td>
-              <td><strong>${e.bracket_name}</strong></td>
+              <td>${rank + 1}</td>
+              <td><strong>${entry.bracket_name}</strong></td>
               <td style="text-align:center;font-weight:bold;"><strong>${earned}</strong>/${max}</td>
               <td style="text-align:center;font-weight:bold;">${koTeamDisplay(currentPick)}</td>
               <td style="text-align:center;">${koTeamDisplay(followingPick)}</td>
               <td style="text-align:center;font-weight:bold;">${koTeamDisplay(champ)}</td>
+              <td style="text-align:center;">
+                <button class="ko-my-picks-btn" data-bracket-name="${entry.bracket_name}" style="padding:6px 12px;font-size:0.75rem;border:1px solid var(--wc-gold);background:var(--wc-panel);color:var(--wc-gold);border-radius:4px;cursor:pointer;font-weight:700;">My Picks</button>
+              </td>
             </tr>`;
           }).join("");
 
@@ -2798,6 +2897,376 @@
         }
       }
 
+      // ── KO Match Center ──────────────────────────────────────────
+
+      // Load and display current KO match
+      function loadKoMatchCenter() {
+        const current = getCurrentMatch();
+        if (!current) {
+          document.getElementById("ko-match-title").textContent = "Tournament Complete";
+          return;
+        }
+
+        // Display match info
+        document.getElementById("ko-match-number").textContent = current.matchNumber;
+        const team1 = teamsById[current.team1];
+        const team2 = teamsById[current.team2];
+
+        // Flags
+        const flag1 = team1 ? `https://flagcdn.com/w80/${team1.countryCode.toLowerCase()}.png` : '';
+        const flag2 = team2 ? `https://flagcdn.com/w80/${team2.countryCode.toLowerCase()}.png` : '';
+
+        document.getElementById("ko-team1-name").textContent = current.team1;
+        document.getElementById("ko-team2-name").textContent = current.team2;
+        document.getElementById("ko-team1-flag").innerHTML = flag1 ? `<img src="${flag1}" style="width:32px;height:auto;border-radius:2px;">` : '🏁';
+        document.getElementById("ko-team2-flag").innerHTML = flag2 ? `<img src="${flag2}" style="width:32px;height:auto;border-radius:2px;">` : '🏁';
+
+        document.getElementById("ko-match-title").textContent = `${current.team1} vs ${current.team2}`;
+        document.getElementById("ko-penalty-team1-label").textContent = `${current.team1} wins shootout`;
+        document.getElementById("ko-penalty-team2-label").textContent = `${current.team2} wins shootout`;
+
+        // Clear form
+        document.getElementById("ko-score-team1").value = '';
+        document.getElementById("ko-score-team2").value = '';
+        document.getElementById("ko-penalties-toggle").checked = false;
+        document.getElementById("ko-penalties-section").style.display = 'none';
+        document.querySelectorAll('input[name="ko-penalty-winner"]').forEach(r => r.checked = false);
+      }
+
+      // Save KO match result
+      async function saveKoResult() {
+        const current = getCurrentMatch();
+        if (!current) {
+          alert("No match to score");
+          return;
+        }
+
+        const score1 = parseInt(document.getElementById("ko-score-team1").value || 0);
+        const score2 = parseInt(document.getElementById("ko-score-team2").value || 0);
+        const isPenalties = document.getElementById("ko-penalties-toggle").checked;
+        let winnerId = null;
+
+        // Determine winner
+        if (isPenalties) {
+          const penaltyWinner = document.querySelector('input[name="ko-penalty-winner"]:checked');
+          if (!penaltyWinner) {
+            alert("Please select who won the penalty shootout");
+            return;
+          }
+          winnerId = penaltyWinner.value === "team1" ? current.team1 : current.team2;
+        } else {
+          if (score1 === score2) {
+            alert("Scores are tied. Please indicate penalties or correct the score.");
+            return;
+          }
+          winnerId = score1 > score2 ? current.team1 : current.team2;
+        }
+
+        try {
+          const res = await fetch(`${ADMIN_API_BASE}/results/${current.matchNumber}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Admin-Pin': ADMIN_PIN,
+            },
+            body: JSON.stringify({
+              home_score: score1,
+              away_score: score2,
+              status: 'completed',
+              winner_id: winnerId,
+              shootout_winner_id: isPenalties ? winnerId : null,
+            }),
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+          // Success — refresh data and load next match
+          await refreshOfficialResults();
+          loadKoMatchCenter();
+
+          const msgEl = document.getElementById("ko-save-message");
+          msgEl.textContent = `✓ ${winnerId} advances!`;
+          msgEl.style.display = 'block';
+          setTimeout(() => msgEl.style.display = 'none', 3000);
+        } catch (err) {
+          alert(`Failed to save result: ${err.message}`);
+        }
+      }
+
+      // Penalties toggle
+      document.getElementById("ko-penalties-toggle").addEventListener("change", (e) => {
+        document.getElementById("ko-penalties-section").style.display = e.target.checked ? 'block' : 'none';
+      });
+
+      // Save button
+      document.getElementById("ko-save-result").addEventListener("click", saveKoResult);
+
+      // Clear button
+      document.getElementById("ko-clear-form").addEventListener("click", () => {
+        document.getElementById("ko-score-team1").value = '';
+        document.getElementById("ko-score-team2").value = '';
+        document.getElementById("ko-penalties-toggle").checked = false;
+        document.getElementById("ko-penalties-section").style.display = 'none';
+        document.querySelectorAll('input[name="ko-penalty-winner"]').forEach(r => r.checked = false);
+      });
+
+      // ── My Picks Modal ──────────────────────────────────────────
+
+      // Show bracket view for a bracket
+      function showMyPicksModal(bracketName) {
+        const bracket = koEntries.find(e => e.bracket_name === bracketName);
+        if (!bracket) return;
+
+        const picks = bracket.bracket_picks || {};
+        document.getElementById("ko-picks-bracket-name").textContent = `${bracketName}'s Picks`;
+
+        // Build bracket HTML showing all 32 knockout matches
+        let html = `<div style="background:var(--wc-panel);border:1px solid var(--wc-line);border-radius:8px;padding:16px;">`;
+
+        const r32Teams = picks.r32 || [];
+        const champ = picks.final || null;
+
+        // Build bracket simulation in seq order so each round feeds the next
+        const sortedKO = [...knockoutSchedule].sort((a, b) => a.seq - b.seq);
+        const simWinner = {}; // seq → winning teamId
+        const simLoser  = {}; // seq → losing teamId (for 3P)
+        const simActT1  = {}; // seq → actual predicted team on left side
+        const simActT2  = {}; // seq → actual predicted team on right side
+
+        sortedKO.forEach(match => {
+          const result = actualMatches.find(r => r.matchNumber === match.matchNumber);
+
+          if (match.round === 'R32') {
+            // Exact teams known for R32
+            simActT1[match.seq] = match.team1;
+            simActT2[match.seq] = match.team2;
+            const w = result?.winnerId
+              || (r32Teams.includes(match.team1) ? match.team1
+                : r32Teams.includes(match.team2) ? match.team2 : null);
+            if (w) {
+              simWinner[match.seq] = w;
+              simLoser[match.seq] = w === match.team1 ? match.team2 : match.team1;
+            }
+
+          } else if (match.round === '3P') {
+            // 3P = losers of both SF matches
+            const sfSeqs = sortedKO.filter(m => m.round === 'SF').map(m => m.seq);
+            const losers = sfSeqs.map(s => simLoser[s]).filter(Boolean);
+            simActT1[match.seq] = losers[0] || null;
+            simActT2[match.seq] = losers[1] || null;
+            const w = result?.winnerId || losers[0] || null;
+            if (w) simWinner[match.seq] = w;
+
+          } else if (match.round === 'F') {
+            // F = winners of both SF matches
+            const sfSeqs = sortedKO.filter(m => m.round === 'SF').map(m => m.seq);
+            const winners = sfSeqs.map(s => simWinner[s]).filter(Boolean);
+            simActT1[match.seq] = winners[0] || null;
+            simActT2[match.seq] = winners[1] || null;
+            const w = result?.winnerId
+              || (champ && winners.includes(champ) ? champ : winners[0] || null);
+            if (w) simWinner[match.seq] = w;
+
+          } else {
+            // R16 / QF / SF: find most-recent prior winner in each side's pool
+            const t1Pool = match.team1.split('|');
+            const t2Pool = match.team2.split('|');
+            const prevSeqs = Object.keys(simWinner).map(Number)
+              .filter(s => s < match.seq).sort((a, b) => b - a);
+
+            let actualT1 = null, actualT2 = null;
+            for (const s of prevSeqs) {
+              const team = simWinner[s];
+              if (!actualT1 && t1Pool.includes(team)) actualT1 = team;
+              if (!actualT2 && t2Pool.includes(team)) actualT2 = team;
+              if (actualT1 && actualT2) break;
+            }
+
+            simActT1[match.seq] = actualT1;
+            simActT2[match.seq] = actualT2;
+
+            let w = result?.winnerId || null;
+            if (!w) {
+              if      (champ && actualT1 === champ) w = champ;
+              else if (champ && actualT2 === champ) w = champ;
+              else                                   w = actualT1 || null;
+            }
+            if (w) {
+              simWinner[match.seq] = w;
+              const loser = w === actualT1 ? actualT2 : actualT1;
+              if (loser) simLoser[match.seq] = loser;
+            }
+          }
+        });
+
+        // Compact team display for bracket cards
+        function bktTeam(teamId) {
+          if (!teamId) return '<span style="color:rgba(247,244,235,0.25);font-size:0.7rem;">—</span>';
+          const team = teamsById[teamId];
+          const cc = teamId === 'ENG' ? 'gb-eng' : (teamId === 'SCO' ? 'gb-sct' : (team?.countryCode?.toLowerCase() || teamId.toLowerCase()));
+          return '<img src="https://flagcdn.com/w40/' + cc + '.png" alt="' + teamId + '" style="height:16px;width:auto;border-radius:1px;vertical-align:middle;margin-right:2px;" loading="lazy" onerror="this.style.display=\'none\'">'
+            + '<strong style="font-size:0.58rem;color:#f4c95d;">' + teamId + '</strong>';
+        }
+
+        // Build a single bracket match card
+        function bktCard(seq, big) {
+          const m = knockoutSchedule.find(x => x.seq === seq);
+          if (!m) return '<div class="bkc"></div>';
+          const t1 = simActT1[seq], t2 = simActT2[seq], w = simWinner[seq];
+          const mu = (t1 && t2) ? (t1 + ' v ' + t2) : 'TBD';
+          const pick = w ? bktTeam(w) : '<span style="color:rgba(247,244,235,0.25);font-size:0.7rem;">—</span>';
+          const gold = (m.round === 'F' || (w && w === champ && m.round !== '3P')) ? 'border-color:#f4c95d;' : '';
+          const sz = big ? 'font-size:0.58rem;' : 'font-size:0.52rem;';
+          return '<div class="bkc" style="' + gold + '">'
+            + '<div style="' + sz + 'color:rgba(247,244,235,0.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;margin-bottom:3px;">' + mu + '</div>'
+            + '<div style="display:flex;align-items:center;justify-content:center;gap:2px;">' + pick + '</div>'
+            + '</div>';
+        }
+
+        // Bracket layout: hardcoded feeder order matching actual schedule structure
+        // Left half: seqs flow R32→R16→QF→SF toward center
+        // Right half: seqs flow SF→QF→R16→R32 away from center
+        const L_R32 = [1, 4, 3, 6, 12, 11, 10, 9];   // top 4 feed R16 17+18→QF25, bottom 4 feed R16 21+22→QF26
+        const L_R16 = [17, 18, 21, 22];
+        const L_QF  = [25, 26];
+        const R_R32 = [2, 5, 7, 8, 15, 14, 13, 16];  // top 4 feed R16 19+20→QF27, bottom 4 feed R16 23+24→QF28
+        const R_R16 = [19, 20, 23, 24];
+        const R_QF  = [27, 28];
+
+        // Each R32 takes 2 rows, 8 R32 = 16 rows total per half
+        // R16 each spans 4 rows (2 R32 feeders), QF spans 8 rows, SF spans 16 rows
+        function gridCells(seqs, col, rowSize) {
+          return seqs.map((seq, i) => {
+            const r = i * rowSize + 1;
+            return '<div class="bkc-wrap" style="grid-column:' + col + ';grid-row:' + r + '/' + (r + rowSize) + ';">' + bktCard(seq) + '</div>';
+          }).join('');
+        }
+
+        const finT1 = simActT1[32], finT2 = simActT2[32], finW = simWinner[32];
+        const tpT1 = simActT1[31], tpT2 = simActT2[31], tpW = simWinner[31];
+
+        const bktHtml = `
+<style>
+  .bkt-scroll { overflow-x:auto; }
+  .bkt-inner { width:fit-content; margin:0 auto; }
+  .bkt-outer { display:flex; align-items:stretch; gap:0; }
+  .bkt-half { display:grid; grid-template-rows:repeat(16,30px); }
+  .bkt-left { grid-template-columns:78px 68px 60px 54px; }
+  .bkt-right { grid-template-columns:54px 60px 68px 78px; }
+  .bkc-wrap { display:flex; align-items:center; justify-content:center; padding:2px; box-sizing:border-box; }
+  .bkc {
+    width:100%; height:calc(100% - 4px); min-height:36px; max-height:56px;
+    background:#0b1a14; border:1px solid rgba(247,244,235,0.12); border-radius:3px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:3px 4px; box-sizing:border-box; text-align:center; overflow:hidden;
+  }
+  .bkt-center {
+    flex:0 0 104px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:10px; padding:0 6px;
+  }
+  .bkt-fin { border:2px solid #f4c95d; border-radius:6px; padding:8px 6px; background:#0b1a14; width:92px; box-sizing:border-box; text-align:center; }
+  .bkt-3p  { border:1px solid rgba(247,244,235,0.2); border-radius:6px; padding:6px; background:#0b1a14; width:92px; box-sizing:border-box; text-align:center; }
+  .bkt-lbl { font-size:0.52rem; color:#f4c95d; font-weight:900; text-transform:uppercase; margin-bottom:4px; }
+  .bkt-hdr { display:flex; font-size:0.52rem; font-weight:900; color:#f4c95d; text-transform:uppercase; text-align:center; margin-bottom:6px; border-bottom:1px solid rgba(247,244,235,0.08); padding-bottom:4px; }
+  .bkt-hdr > div { flex-shrink:0; }
+</style>
+<div class="bkt-scroll">
+  <div class="bkt-inner">
+  <div class="bkt-hdr" style="min-width:680px;">
+    <div style="width:78px;">R32</div><div style="width:68px;">R16</div><div style="width:60px;">QF</div><div style="width:54px;">SF</div>
+    <div style="flex:0 0 104px;">Final</div>
+    <div style="width:54px;">SF</div><div style="width:60px;">QF</div><div style="width:68px;">R16</div><div style="width:78px;">R32</div>
+  </div>
+  <div class="bkt-outer">
+    <div class="bkt-half bkt-left">
+      ${gridCells(L_R32, 1, 2)}
+      ${gridCells(L_R16, 2, 4)}
+      ${gridCells(L_QF,  3, 8)}
+      <div class="bkc-wrap" style="grid-column:4;grid-row:1/17;">${bktCard(29)}</div>
+    </div>
+    <div class="bkt-center">
+      <div class="bkt-fin">
+        <div class="bkt-lbl">Final</div>
+        <div style="font-size:0.52rem;color:rgba(247,244,235,0.45);margin-bottom:5px;">${finT1||'?'} v ${finT2||'?'}</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:3px;">${finW ? bktTeam(finW) : '<span style="color:rgba(247,244,235,0.25)">—</span>'}</div>
+      </div>
+      <div style="font-size:0.65rem;font-weight:900;color:#f4c95d;text-align:center;">🏆 ${champ||'—'}</div>
+      <div class="bkt-3p">
+        <div class="bkt-lbl">3rd Place</div>
+        <div style="font-size:0.52rem;color:rgba(247,244,235,0.45);margin-bottom:5px;">${tpT1||'?'} v ${tpT2||'?'}</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:3px;">${tpW ? bktTeam(tpW) : '<span style="color:rgba(247,244,235,0.25)">—</span>'}</div>
+      </div>
+    </div>
+    <div class="bkt-half bkt-right">
+      <div class="bkc-wrap" style="grid-column:1;grid-row:1/17;">${bktCard(30)}</div>
+      ${gridCells(R_QF,  2, 8)}
+      ${gridCells(R_R16, 3, 4)}
+      ${gridCells(R_R32, 4, 2)}
+    </div>
+  </div>
+  </div>
+</div>`;
+
+        document.getElementById("ko-picks-content").innerHTML = bktHtml;
+        document.getElementById("ko-picks-modal").style.display = 'block';
+        window.currentPicksBracket = { name: bracketName, picks };
+      }
+
+      // Download bracket as image/PDF
+      function downloadMyPicksBracket() {
+        if (!window.currentPicksBracket) return;
+
+        const { name, picks } = window.currentPicksBracket;
+
+        // Simple approach: print the modal content
+        const content = document.getElementById("ko-picks-content").innerHTML;
+
+        const html = '<!DOCTYPE html><html><head><title>' + name + ' - World Cup Bracket Picks</title><style>' +
+          'body { font-family: Arial, sans-serif; padding: 20px; background: #07130f; color: #f7f4eb; }' +
+          'h1 { text-align: center; margin-bottom: 30px; }' +
+          '.section { margin-bottom: 30px; }' +
+          '.section h2 { color: #f4c95d; font-size: 14px; margin-bottom: 15px; text-transform: uppercase; }' +
+          '.matches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }' +
+          '.match { border: 1px solid #333; padding: 10px; text-align: center; }' +
+          '.matchup { font-size: 11px; margin-bottom: 8px; }' +
+          '.team-code { font-weight: bold; color: #f4c95d; font-size: 14px; }' +
+          '.champion { text-align: center; padding: 20px; border: 2px solid #f4c95d; margin: 0 auto; width: 300px; }' +
+          '.champion h2 { margin: 0 0 10px 0; }' +
+          '.champion .team-code { font-size: 24px; }' +
+          '</style></head><body>' +
+          '<h1>' + name + '</h1>' +
+          '<h2 style="text-align: center; color: #f4c95d; margin-bottom: 30px;">World Cup 2026 Bracket Picks</h2>' +
+          content +
+          '</body></html>';
+
+        const printWindow = window.open('', '', 'width=900,height=1000');
+        printWindow.document.write(html);
+        printWindow.document.close();
+        setTimeout(() => printWindow.print(), 250);
+      }
+
+      // Modal close handlers
+      document.getElementById("ko-picks-close").addEventListener("click", () => {
+        document.getElementById("ko-picks-modal").style.display = 'none';
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") document.getElementById("ko-picks-modal").style.display = 'none';
+      });
+
+      document.getElementById("ko-picks-close-btn").addEventListener("click", () => {
+        document.getElementById("ko-picks-modal").style.display = 'none';
+      });
+
+      document.getElementById("ko-picks-download").addEventListener("click", downloadMyPicksBracket);
+
+      // "My Picks" button click handler
+      document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("ko-my-picks-btn")) {
+          const bracketName = e.target.getAttribute("data-bracket-name");
+          showMyPicksModal(bracketName);
+        }
+      });
+
       // Tab selector clicks
       document.querySelectorAll(".sim-tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -2805,6 +3274,8 @@
           if (btn.dataset.tab === "ko-pool") {
             loadKoEntries();
             updateNextMatchHeader();
+          } else if (btn.dataset.tab === "ko-match-center") {
+            loadKoMatchCenter();
           }
         });
       });
