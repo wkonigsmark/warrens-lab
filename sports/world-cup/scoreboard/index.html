@@ -1195,8 +1195,8 @@
                 <tr>
                   <th style="width:50px;">#</th>
                   <th>Bracket</th>
-                  <th style="text-align:center;">Points</th>
-                  <th style="text-align:center;">Max</th>
+                  <th id="ko-th-points" style="text-align:center;cursor:pointer;user-select:none;" onclick="window.setKoSort('earned')">Points ↓</th>
+                  <th id="ko-th-max" style="text-align:center;cursor:pointer;user-select:none;" onclick="window.setKoSort('max')">Max</th>
                   <th style="text-align:center;">Next Match</th>
                   <th style="text-align:center;">Following Match</th>
                   <th style="text-align:center;">Champion</th>
@@ -2735,6 +2735,8 @@
       let koEntries = [];
       let koChampFilter = null;
       let koMatchFilter = null; // team picked to win the current match
+      let koSortCol = 'earned'; // 'earned' | 'max'
+      let koSortDir = 'desc';
 
       // True when an official result has been entered for this match number.
       function matchHasResult(matchNumber) {
@@ -2901,19 +2903,33 @@
         // Compute eliminated set once for this render pass
         const eliminated = getKoEliminatedTeams();
 
-        // Score and rank ALL entries first (universal pool ranking, ignores any filter)
-        const allScoredEntries = koEntries
-          .map(e => {
-            const picks = e.bracket_picks || {};
-            const { earned, max, maxPossible } = calculateKoPoints(picks, eliminated);
-            return { entry: e, picks, earned, max, maxPossible };
-          })
-          .sort((a, b) => b.earned - a.earned || b.max - a.max);
+        // Update sort indicators on column headers
+        const arrow = dir => dir === 'desc' ? ' ↓' : ' ↑';
+        const thPts = document.getElementById('ko-th-points');
+        const thMax = document.getElementById('ko-th-max');
+        if (thPts) thPts.textContent = 'Points' + (koSortCol === 'earned' ? arrow(koSortDir) : '');
+        if (thMax) thMax.textContent = 'Max' + (koSortCol === 'max' ? arrow(koSortDir) : '');
 
+        // Score all entries
+        const allScoredEntries = koEntries.map(e => {
+          const picks = e.bracket_picks || {};
+          const { earned, max, maxPossible } = calculateKoPoints(picks, eliminated);
+          return { entry: e, picks, earned, max, maxPossible };
+        });
+
+        // Assign universal pool ranks — always by earned desc, max as tiebreaker (never affected by display sort)
+        const rankedForPool = [...allScoredEntries].sort((a, b) => b.earned - a.earned || b.max - a.max);
         let tiedRank = 1;
-        allScoredEntries.forEach((item, i) => {
-          if (i > 0 && item.earned !== allScoredEntries[i - 1].earned) tiedRank = i + 1;
+        rankedForPool.forEach((item, i) => {
+          if (i > 0 && item.earned !== rankedForPool[i - 1].earned) tiedRank = i + 1;
           item.rank = tiedRank;
+        });
+
+        // Apply display sort (independent of pool ranking)
+        const sortD = koSortDir === 'desc' ? -1 : 1;
+        allScoredEntries.sort((a, b) => {
+          if (koSortCol === 'max') return sortD * (a.max - b.max) || (b.earned - a.earned);
+          return sortD * (a.earned - b.earned) || (b.max - a.max);
         });
 
         // Apply filters for display only — ranks stay from the full pool
@@ -3241,6 +3257,16 @@
 
       window.setKoMatchFilter = function(teamId) {
         koMatchFilter = (koMatchFilter === teamId) ? null : teamId;
+        renderKoPool();
+      };
+
+      window.setKoSort = function(col) {
+        if (koSortCol === col) {
+          koSortDir = koSortDir === 'desc' ? 'asc' : 'desc';
+        } else {
+          koSortCol = col;
+          koSortDir = 'desc';
+        }
         renderKoPool();
       };
 
