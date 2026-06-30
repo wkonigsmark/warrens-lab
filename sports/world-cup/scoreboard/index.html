@@ -1180,9 +1180,9 @@
           <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px;" id="ko-stats-row">
             <div class="wc-stat"><strong id="ko-entry-count">--</strong><span>Entries</span></div>
             <div class="wc-stat"><strong id="ko-paid-count">--</strong><span>Paid</span></div>
-            <div class="wc-stat" style="border-color:rgba(244,201,93,0.4);background:rgba(244,201,93,0.06);"><strong id="ko-payout-1st" style="color:var(--wc-gold);">$--</strong><span>🥇 1st</span></div>
-            <div class="wc-stat"><strong id="ko-payout-2nd">$--</strong><span>🥈 2nd</span></div>
-            <div class="wc-stat"><strong id="ko-payout-3rd">$--</strong><span>🥉 3rd</span></div>
+            <div class="wc-stat" style="border-color:rgba(244,201,93,0.4);background:rgba(244,201,93,0.06);"><strong id="ko-payout-1st" style="color:var(--wc-gold);font-size:1.1rem;">$--</strong><span>🥇 1st</span></div>
+            <div class="wc-stat"><strong id="ko-payout-2nd" style="font-size:1.1rem;">$--</strong><span>🥈 2nd</span></div>
+            <div class="wc-stat"><strong id="ko-payout-3rd" style="font-size:1.1rem;">$--</strong><span>🥉 3rd</span></div>
           </div>
           <div id="ko-champion-split"></div>
           <div id="ko-match-split"></div>
@@ -2795,25 +2795,72 @@
 
       // Calculate points for a bracket based on correct picks.
       // Returns { earned, max } where max is based on completed matches only.
-      function calculateKoPoints(picks) {
+      // Round scoring config: picks key → schedule round code → point value
+      const KO_ROUND_SCORING = [
+        { key: 'r32',   koRound: 'R32', pts: 1  },
+        { key: 'r16',   koRound: 'R16', pts: 2  },
+        { key: 'qf',    koRound: 'QF',  pts: 4  },
+        { key: 'sf',    koRound: 'SF',  pts: 8  },
+        { key: 'final', koRound: 'F',   pts: 16 },
+      ];
+
+      // Pre-built round → match number lookup (knockoutSchedule is static)
+      const KO_ROUND_MATCH_NUMS = (() => {
+        const map = {};
+        for (const m of knockoutSchedule) {
+          (map[m.round] = map[m.round] || []).push(m.matchNumber);
+        }
+        return map;
+      })();
+
+      function getKoEliminatedTeams() {
+        const eliminated = new Set();
+        // R32: knockoutSchedule has concrete team1/team2 IDs
+        for (const match of knockoutSchedule) {
+          if (match.round !== 'R32') continue;
+          const result = actualMatches.find(r => r.matchNumber === match.matchNumber && r.status === 'completed');
+          if (!result?.winnerId) continue;
+          const loser = result.winnerId === match.team1 ? match.team2 : match.team1;
+          if (loser) eliminated.add(loser);
+        }
+        // R16+: use buildBracketSim to propagate actuals and find losers
+        const { simLoser } = buildBracketSim({ r32: [], final: null });
+        for (const [seqStr, loser] of Object.entries(simLoser)) {
+          const seq = Number(seqStr);
+          const match = knockoutSchedule.find(m => m.seq === seq && m.round !== 'R32');
+          if (!match) continue;
+          const result = actualMatches.find(r => r.matchNumber === match.matchNumber && r.status === 'completed');
+          if (result?.winnerId && loser) eliminated.add(loser);
+        }
+        return eliminated;
+      }
+
+      function calculateKoPoints(picks, eliminated) {
         let earned = 0;
-        let maxAvailable = 0;
-        const r32Array = picks.r32 || [];
+        let maxPossible = 0;
 
-        // For each R32 match in the schedule
-        knockoutSchedule.filter(m => m.round === "R32").forEach(match => {
-          const result = actualMatches.find(r => r.matchNumber === match.matchNumber);
-          if (!result || !result.winnerId) return; // No result yet
+        for (const { key, koRound, pts } of KO_ROUND_SCORING) {
+          const teams = key === 'final'
+            ? (picks.final ? [picks.final] : [])
+            : (picks[key] || []);
+          const matchNums = KO_ROUND_MATCH_NUMS[koRound] || [];
 
-          // This match has a result, so it's available to score
-          maxAvailable += 1; // 1 point per R32 match
-          // Check if this entry picked the winner
-          if (r32Array.includes(result.winnerId)) {
-            earned += 1;
+          for (const teamId of teams) {
+            // KO actualMatches don't have home/away — score purely by winnerId
+            const won = actualMatches.some(m =>
+              matchNums.includes(m.matchNumber) &&
+              m.status === 'completed' &&
+              m.winnerId === teamId
+            );
+            if (won) {
+              earned += pts;
+            } else if (!eliminated.has(teamId)) {
+              maxPossible += pts; // team still alive, this round not yet won
+            }
           }
-        });
+        }
 
-        return { earned, max: maxAvailable };
+        return { earned, max: earned + maxPossible, maxPossible };
       }
 
       // Get a team pick for the match at a given sequence number.
@@ -2848,28 +2895,40 @@
         const currentSeq = current.seq;
         const followingSeq = currentSeq + 1;
 
-        // Build and sort entries by points (highest first)
+        // Compute eliminated set once for this render pass
+        const eliminated = getKoEliminatedTeams();
+
+        // Build and sort entries by points (highest first), max as tiebreaker
         let sortedEntries = koEntries
           .filter(e => !searchTerm || e.bracket_name.toLowerCase().includes(searchTerm))
           .filter(e => !koChampFilter || (e.bracket_picks || {}).final === koChampFilter)
           .map(e => {
             const picks = e.bracket_picks || {};
-            const { earned, max } = calculateKoPoints(picks);
-            return { entry: e, picks, earned, max };
+            const { earned, max, maxPossible } = calculateKoPoints(picks, eliminated);
+            return { entry: e, picks, earned, max, maxPossible };
           })
-          .sort((a, b) => b.earned - a.earned); // Sort by points descending
+          .sort((a, b) => b.earned - a.earned || b.max - a.max);
 
-        // Compute tied ranks: same points = same rank; next rank skips
+        // Compute tied ranks: same earned points = same rank; next rank skips
         let tiedRank = 1;
         sortedEntries.forEach((item, i) => {
           if (i > 0 && item.earned !== sortedEntries[i - 1].earned) tiedRank = i + 1;
           item.rank = tiedRank;
         });
 
+        // Leader's current score — anything whose max < this is mathematically eliminated
+        // Points in play = sum of points for all completed KO matches to date
+        // (same denominator for every entry — how many points have been decided so far)
+        const inPlay = KO_ROUND_SCORING.reduce((sum, { koRound, pts }) => {
+          const matchNums = KO_ROUND_MATCH_NUMS[koRound] || [];
+          const done = actualMatches.filter(m => matchNums.includes(m.matchNumber) && m.status === 'completed').length;
+          return sum + done * pts;
+        }, 0);
+
         // Render rows with ranking
         const rows = sortedEntries
           .map((item) => {
-            const { entry, picks, earned, max, rank } = item;
+            const { entry, picks, earned, rank } = item;
             const currentPick = getPickForSeq(picks, currentSeq);
             const followingPick = getPickForSeq(picks, followingSeq);
             const champ = picks.final || "—";
@@ -2877,7 +2936,7 @@
             return `<tr>
               <td style="font-weight:900;color:${rank <= 3 ? 'var(--wc-gold)' : 'var(--wc-muted)'};font-size:0.85rem;">${rank}</td>
               <td><strong>${entry.bracket_name}</strong></td>
-              <td style="text-align:center;font-weight:bold;"><strong>${earned}</strong>/${max}</td>
+              <td style="text-align:center;font-weight:bold;"><strong>${earned}</strong>/${inPlay}</td>
               <td style="text-align:center;font-weight:bold;">${koTeamDisplay(currentPick)}</td>
               <td style="text-align:center;">${koTeamDisplay(followingPick)}</td>
               <td style="text-align:center;font-weight:bold;">${koTeamDisplay(champ)}</td>
@@ -2906,11 +2965,12 @@
           const paid = koEntries.filter(e => e.paid);
           document.getElementById("ko-entry-count").textContent = koEntries.length;
           document.getElementById("ko-paid-count").textContent = paid.length;
-          const purse = paid.length * 50;
-          const fmt = (n) => `$${n.toLocaleString()}`;
-          document.getElementById("ko-payout-1st").textContent = fmt(Math.round(purse * 0.50));
-          document.getElementById("ko-payout-2nd").textContent = fmt(Math.round(purse * 0.30));
-          document.getElementById("ko-payout-3rd").textContent = fmt(Math.round(purse * 0.20));
+          const gross = koEntries.length * 50;
+          const net = gross * 0.95; // 5% org fee
+          const fmt = (n) => `$${Math.round(n).toLocaleString()}`;
+          document.getElementById("ko-payout-1st").textContent = fmt(net * 0.70);
+          document.getElementById("ko-payout-2nd").textContent = fmt(net * 0.20);
+          document.getElementById("ko-payout-3rd").textContent = fmt(net * 0.10);
           koLoaded = true;
           renderKoPool();
         } catch (err) {
