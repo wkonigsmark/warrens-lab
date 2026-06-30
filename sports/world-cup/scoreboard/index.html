@@ -1177,18 +1177,17 @@
       <!-- KO Pool tab -->
       <div class="sim-view-panel active" id="panel-ko-pool">
         <div style="margin-bottom:20px;">
-          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px;" id="ko-stats-row">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;" id="ko-stats-row">
             <div class="wc-stat"><strong id="ko-entry-count">--</strong><span>Entries</span></div>
-            <div class="wc-stat"><strong id="ko-paid-count">--</strong><span>Paid</span></div>
-            <div class="wc-stat" style="border-color:rgba(244,201,93,0.4);background:rgba(244,201,93,0.06);"><strong id="ko-payout-1st" style="color:var(--wc-gold);font-size:1.1rem;">$--</strong><span>🥇 1st</span></div>
-            <div class="wc-stat"><strong id="ko-payout-2nd" style="font-size:1.1rem;">$--</strong><span>🥈 2nd</span></div>
-            <div class="wc-stat"><strong id="ko-payout-3rd" style="font-size:1.1rem;">$--</strong><span>🥉 3rd</span></div>
+            <div class="wc-stat" style="border-color:rgba(244,201,93,0.4);background:rgba(244,201,93,0.06);"><strong id="ko-payout-1st" style="color:var(--wc-gold);">$--</strong><span>🥇 1st</span></div>
+            <div class="wc-stat"><strong id="ko-payout-2nd">$--</strong><span>🥈 2nd</span></div>
+            <div class="wc-stat"><strong id="ko-payout-3rd">$--</strong><span>🥉 3rd</span></div>
           </div>
           <div id="ko-champion-split"></div>
           <div id="ko-match-split"></div>
           <div style="margin-bottom:16px;">
-            <input type="text" id="ko-search" placeholder="Search by bracket name..."
-              style="width:100%;padding:10px 12px;border:1px solid var(--wc-line);border-radius:6px;background:var(--wc-panel);color:var(--wc-ink);font-size:0.9rem;box-sizing:border-box;">
+            <input type="text" id="ko-search" placeholder="🔍  Search by bracket name..."
+              style="width:100%;padding:11px 14px;border:1.5px solid rgba(247,244,235,0.3);border-radius:8px;background:rgba(247,244,235,0.06);color:var(--wc-ink);font-size:0.9rem;box-sizing:border-box;outline:none;">
           </div>
           <div class="wc-table-wrap">
             <table class="wc-table">
@@ -1197,6 +1196,7 @@
                   <th style="width:50px;">#</th>
                   <th>Bracket</th>
                   <th style="text-align:center;">Points</th>
+                  <th style="text-align:center;">Max</th>
                   <th style="text-align:center;">Next Match</th>
                   <th style="text-align:center;">Following Match</th>
                   <th style="text-align:center;">Champion</th>
@@ -2734,6 +2734,7 @@
       let koLoaded = false;
       let koEntries = [];
       let koChampFilter = null;
+      let koMatchFilter = null; // team picked to win the current match
 
       // True when an official result has been entered for this match number.
       function matchHasResult(matchNumber) {
@@ -2767,7 +2768,7 @@
         const koTable = document.getElementById("ko-entry-table")?.closest("table");
         if (koTable) {
           const headers = koTable.querySelectorAll("th");
-          if (headers[3]) headers[3].textContent = matchLabel(current);
+          if (headers[4]) headers[4].textContent = matchLabel(current);
         }
       }
 
@@ -2796,12 +2797,14 @@
       // Calculate points for a bracket based on correct picks.
       // Returns { earned, max } where max is based on completed matches only.
       // Round scoring config: picks key → schedule round code → point value
+      // 92 total possible: R32 16×1 + R16 8×2 + QF 4×4 + SF 2×8 + 3P 1×12 + F 1×16
       const KO_ROUND_SCORING = [
-        { key: 'r32',   koRound: 'R32', pts: 1  },
-        { key: 'r16',   koRound: 'R16', pts: 2  },
-        { key: 'qf',    koRound: 'QF',  pts: 4  },
-        { key: 'sf',    koRound: 'SF',  pts: 8  },
-        { key: 'final', koRound: 'F',   pts: 16 },
+        { key: 'r32',   koRound: 'R32', pts: 1,  single: false },
+        { key: 'r16',   koRound: 'R16', pts: 2,  single: false },
+        { key: 'qf',    koRound: 'QF',  pts: 4,  single: false },
+        { key: 'sf',    koRound: 'SF',  pts: 8,  single: false },
+        { key: 'third', koRound: '3P',  pts: 12, single: true  },
+        { key: 'final', koRound: 'F',   pts: 16, single: true  },
       ];
 
       // Pre-built round → match number lookup (knockoutSchedule is static)
@@ -2839,9 +2842,9 @@
         let earned = 0;
         let maxPossible = 0;
 
-        for (const { key, koRound, pts } of KO_ROUND_SCORING) {
-          const teams = key === 'final'
-            ? (picks.final ? [picks.final] : [])
+        for (const { key, koRound, pts, single } of KO_ROUND_SCORING) {
+          const teams = single
+            ? (picks[key] ? [picks[key]] : [])
             : (picks[key] || []);
           const matchNums = KO_ROUND_MATCH_NUMS[koRound] || [];
 
@@ -2898,10 +2901,8 @@
         // Compute eliminated set once for this render pass
         const eliminated = getKoEliminatedTeams();
 
-        // Build and sort entries by points (highest first), max as tiebreaker
-        let sortedEntries = koEntries
-          .filter(e => !searchTerm || e.bracket_name.toLowerCase().includes(searchTerm))
-          .filter(e => !koChampFilter || (e.bracket_picks || {}).final === koChampFilter)
+        // Score and rank ALL entries first (universal pool ranking, ignores any filter)
+        const allScoredEntries = koEntries
           .map(e => {
             const picks = e.bracket_picks || {};
             const { earned, max, maxPossible } = calculateKoPoints(picks, eliminated);
@@ -2909,12 +2910,17 @@
           })
           .sort((a, b) => b.earned - a.earned || b.max - a.max);
 
-        // Compute tied ranks: same earned points = same rank; next rank skips
         let tiedRank = 1;
-        sortedEntries.forEach((item, i) => {
-          if (i > 0 && item.earned !== sortedEntries[i - 1].earned) tiedRank = i + 1;
+        allScoredEntries.forEach((item, i) => {
+          if (i > 0 && item.earned !== allScoredEntries[i - 1].earned) tiedRank = i + 1;
           item.rank = tiedRank;
         });
+
+        // Apply filters for display only — ranks stay from the full pool
+        const sortedEntries = allScoredEntries
+          .filter(e => !searchTerm || e.entry.bracket_name.toLowerCase().includes(searchTerm))
+          .filter(e => !koChampFilter || e.picks.final === koChampFilter)
+          .filter(e => !koMatchFilter || getPickForSeq(e.picks, currentSeq) === koMatchFilter);
 
         // Leader's current score — anything whose max < this is mathematically eliminated
         // Points in play = sum of points for all completed KO matches to date
@@ -2928,7 +2934,7 @@
         // Render rows with ranking
         const rows = sortedEntries
           .map((item) => {
-            const { entry, picks, earned, rank } = item;
+            const { entry, picks, earned, max, rank } = item;
             const currentPick = getPickForSeq(picks, currentSeq);
             const followingPick = getPickForSeq(picks, followingSeq);
             const champ = picks.final || "—";
@@ -2937,6 +2943,7 @@
               <td style="font-weight:900;color:${rank <= 3 ? 'var(--wc-gold)' : 'var(--wc-muted)'};font-size:0.85rem;">${rank}</td>
               <td><strong>${entry.bracket_name}</strong></td>
               <td style="text-align:center;font-weight:bold;"><strong>${earned}</strong>/${inPlay}</td>
+              <td style="text-align:center;color:var(--wc-muted);font-size:0.85rem;">${max}</td>
               <td style="text-align:center;font-weight:bold;">${koTeamDisplay(currentPick)}</td>
               <td style="text-align:center;">${koTeamDisplay(followingPick)}</td>
               <td style="text-align:center;font-weight:bold;">${koTeamDisplay(champ)}</td>
@@ -2964,7 +2971,6 @@
           koEntries = await res.json();
           const paid = koEntries.filter(e => e.paid);
           document.getElementById("ko-entry-count").textContent = koEntries.length;
-          document.getElementById("ko-paid-count").textContent = paid.length;
           const gross = koEntries.length * 50;
           const net = gross * 0.95; // 5% org fee
           const fmt = (n) => `$${Math.round(n).toLocaleString()}`;
@@ -3233,6 +3239,11 @@
         renderKoPool();
       };
 
+      window.setKoMatchFilter = function(teamId) {
+        koMatchFilter = (koMatchFilter === teamId) ? null : teamId;
+        renderKoPool();
+      };
+
       // Render the champion pick distribution across all entries.
       function renderChampionSplitBar() {
         const el = document.getElementById("ko-champion-split");
@@ -3269,7 +3280,10 @@
           : '';
 
         el.innerHTML = '<div style="background:var(--wc-panel);border:1px solid var(--wc-line);border-radius:8px;padding:12px 14px;margin-bottom:16px;">'
-          + '<div style="font-size:0.6rem;font-weight:900;color:rgba(247,244,235,0.4);text-transform:uppercase;margin-bottom:8px;">🏆 Champion picks</div>'
+          + '<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;">'
+          + '<div style="font-size:0.6rem;font-weight:900;color:rgba(247,244,235,0.4);text-transform:uppercase;">🏆 Champion picks</div>'
+          + '<div style="font-size:0.6rem;color:rgba(247,244,235,0.3);font-style:italic;">Click a champion to filter the table</div>'
+          + '</div>'
           + '<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">'
           + sorted.map(([teamId, count]) => champChip(teamId, count)).join('')
           + clearBtn
@@ -3310,7 +3324,10 @@
           const cc = teamId === 'ENG' ? 'gb-eng' : (teamId === 'SCO' ? 'gb-sct' : (team?.countryCode?.toLowerCase() || teamId.toLowerCase()));
           const emoji = teamFlagEmoji(teamId);
           const nameAlign = align === 'right' ? 'flex-direction:row-reverse;' : '';
-          return '<div style="display:flex;align-items:center;gap:5px;' + nameAlign + '">'
+          const active = koMatchFilter === teamId;
+          const activeBorder = active ? 'border:1.5px solid #f4c95d;' : 'border:1px solid rgba(247,244,235,0.15);';
+          const activeBg = active ? 'background:#1a2e1f;' : '';
+          return '<div onclick="window.setKoMatchFilter(\'' + teamId + '\')" style="cursor:pointer;display:flex;align-items:center;gap:5px;' + nameAlign + activeBg + activeBorder + 'border-radius:6px;padding:5px 8px;">'
             + '<img class="flag-img" src="https://flagcdn.com/w40/' + cc + '.png" style="height:18px;width:auto;border-radius:2px;" loading="lazy" onerror="this.style.display=\'none\'">'
             + '<span class="flag-emoji" style="font-size:1.3rem;line-height:1;">' + emoji + '</span>'
             + '<span style="font-size:0.75rem;font-weight:700;color:var(--wc-ink);">' + teamId + '</span>'
@@ -3320,12 +3337,21 @@
 
         const roundNames = { R32:'R32', R16:'R16', QF:'QF', SF:'SF', '3P':'3rd Place', F:'Final' };
         const label = roundNames[current.round] || current.round;
+        const clearBtn = koMatchFilter
+          ? '<button onclick="window.setKoMatchFilter(null)" style="background:#f4c95d;border:none;border-radius:6px;padding:4px 10px;color:#07130f;font-size:0.65rem;font-weight:900;cursor:pointer;letter-spacing:0.03em;">✕ Clear filter</button>'
+          : '';
 
         el.innerHTML = '<div style="background:var(--wc-panel);border:1px solid var(--wc-line);border-radius:8px;padding:12px 14px;margin-bottom:16px;">'
-          + '<div style="font-size:0.6rem;font-weight:900;color:rgba(247,244,235,0.4);text-transform:uppercase;margin-bottom:8px;">' + label + ' · Who the pool picked</div>'
+          + '<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;">'
+          + '<div style="font-size:0.6rem;font-weight:900;color:rgba(247,244,235,0.4);text-transform:uppercase;">' + label + ' · Who the pool picked</div>'
+          + '<div style="font-size:0.6rem;color:rgba(247,244,235,0.3);font-style:italic;">Click a team to filter the table</div>'
+          + '</div>'
           + '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;">'
           + flagChip(t1, pT1, 'left')
+          + '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">'
           + '<div style="font-size:0.6rem;color:rgba(247,244,235,0.3);">vs</div>'
+          + clearBtn
+          + '</div>'
           + flagChip(t2, pT2, 'right')
           + '</div>'
           + '<div style="display:flex;border-radius:4px;overflow:hidden;height:10px;">'
