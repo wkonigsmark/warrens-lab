@@ -65,6 +65,31 @@
       box-shadow: 0 0 10px var(--wc-gold);
     }
 
+    .wc-menu-link {
+      display: block;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: rgba(247,244,235,0.8);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    .wc-menu-link:hover {
+      background: rgba(255,255,255,0.07);
+      color: var(--wc-ink);
+    }
+    .wc-menu-link[aria-current="page"] {
+      color: var(--wc-gold);
+      background: rgba(244,201,93,0.1);
+    }
+    @media (max-width: 840px) {
+      #wc-menu-dropdown {
+        left: 0 !important;
+        right: auto !important;
+      }
+    }
+
     .sim-view-panel {
       display: none;
       animation: fadeIn 0.3s ease-out forwards;
@@ -1042,28 +1067,37 @@
   <main class="wc-shell">
     <header class="wc-topbar">
       <a class="wc-brand" href="../">Warren's World Cup Pool</a>
-      <nav class="wc-nav" aria-label="World Cup sections">
-        <a href="../pool/">Pool</a>
+      <nav class="wc-nav" aria-label="World Cup sections" style="position:relative;">
+        <button id="wc-menu-btn" class="wc-pill" style="cursor:pointer;border:none;gap:6px;font-size:0.78rem;font-weight:850;">☰ More</button>
+        <div id="wc-menu-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;z-index:500;background:var(--wc-panel);border:1px solid var(--wc-line);border-radius:12px;padding:12px;min-width:220px;backdrop-filter:blur(20px);box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+          <div style="font-size:0.5rem;font-weight:900;color:rgba(247,244,235,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;padding:0 4px;">Group Play</div>
+          <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px;">
+            <a href="../pool/" class="wc-menu-link">Pool</a>
+            <a href="../standings/" class="wc-menu-link">Standings</a>
+            <a href="../fixtures/" class="wc-menu-link">Fixtures</a>
+            <a href="../groups/" class="wc-menu-link">Groups</a>
+            <a href="../insights/" class="wc-menu-link">Insights</a>
+          </div>
+          <div style="font-size:0.5rem;font-weight:900;color:rgba(247,244,235,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;padding:0 4px;">Knockout</div>
+          <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px;">
+            <a href="../knockout/" class="wc-menu-link">🔒 Knockout Pool</a>
+            <a href="./" class="wc-menu-link" aria-current="page">Scoreboard</a>
+          </div>
+          <div style="font-size:0.5rem;font-weight:900;color:rgba(247,244,235,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;padding:0 4px;">Explore</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <a href="../simulation/" class="wc-menu-link">Simulator</a>
+            <a href="../news/" class="wc-menu-link">News</a>
+            <a href="../quiz/" class="wc-menu-link">Quiz</a>
+            <a href="../rankings-odds/" class="wc-menu-link">W-Index</a>
+          </div>
+        </div>
         <a class="wc-nav-hidden" href="../meta/" aria-hidden="true" tabindex="-1">Meta</a>
-        <a href="../fixtures/">Fixtures</a>
-        <a href="../rankings-odds/">W-Index</a>
-        <a href="../groups/">Groups</a>
-        <a href="../standings/">Standings</a>
-        <a href="../insights/">Insights</a>
-        <a href="../insights/#r32">Bracket</a>
-        <a href="../quiz/">Quiz</a>
-        <a href="../knockout/">🔒 Knockout Pool</a>
-        <a href="./" aria-current="page">Scoreboard</a>
-        <a href="../news/">News</a>
-        <a href="../simulation/">Simulator</a>
-        <a href="../admin/">Admin</a>
       </nav>
     </header>
 
     <section class="wc-hero">
       <div>
-        <h1 class="wc-title">Scoreboard</h1>
-        <div class="wc-pill" id="sync-status" style="margin-top: 16px; width: fit-content;">Loading W-Index data...</div>
+        <h1 class="wc-title" style="font-size:clamp(2.4rem,8vw,4rem);">Scoreboard</h1>
       </div>
     </section>
 
@@ -1072,7 +1106,6 @@
       <button class="sim-tab-btn active" data-tab="ko-pool">🏆 KO Pool</button>
       <button class="sim-tab-btn" data-tab="ko-match-center">⚽ KO Match Center</button>
       <button class="sim-tab-btn" data-tab="matches">📅 Match Center</button>
-      <button class="sim-tab-btn" data-tab="standings">📊 Group Play</button>
     </nav>
 
     <!-- Tab Panels Container -->
@@ -1144,10 +1177,12 @@
       <!-- KO Pool tab -->
       <div class="sim-view-panel active" id="panel-ko-pool">
         <div style="margin-bottom:20px;">
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;" id="ko-stats-row">
-            <div class="wc-stat"><strong id="ko-entry-count">--</strong><span>KO Entries</span></div>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px;" id="ko-stats-row">
+            <div class="wc-stat"><strong id="ko-entry-count">--</strong><span>Entries</span></div>
             <div class="wc-stat"><strong id="ko-paid-count">--</strong><span>Paid</span></div>
-            <div class="wc-stat"><strong id="ko-purse">$--</strong><span>KO Purse (paid)</span></div>
+            <div class="wc-stat" style="border-color:rgba(244,201,93,0.4);background:rgba(244,201,93,0.06);"><strong id="ko-payout-1st" style="color:var(--wc-gold);">$--</strong><span>🥇 1st</span></div>
+            <div class="wc-stat"><strong id="ko-payout-2nd">$--</strong><span>🥈 2nd</span></div>
+            <div class="wc-stat"><strong id="ko-payout-3rd">$--</strong><span>🥉 3rd</span></div>
           </div>
           <div id="ko-champion-split"></div>
           <div id="ko-match-split"></div>
@@ -1180,20 +1215,24 @@
       <div class="sim-view-panel" id="panel-ko-match-center">
         <div style="max-width:800px;margin:0 auto;padding:20px;">
           <h2>Knockout Match Center</h2>
-          <p style="color:var(--wc-muted);margin-bottom:24px;">Record official final scores for knockout stage matches. Results automatically advance winners to the next round.</p>
+          <p style="color:var(--wc-muted);margin-bottom:24px;">Record official final scores. Use ← → to navigate and correct any match.</p>
 
-          <!-- Current Match Display -->
+          <!-- Match Navigation + Display -->
           <div style="background:var(--wc-panel);border:1px solid var(--wc-line);border-radius:12px;padding:20px;margin-bottom:24px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-              <div>
-                <div style="font-size:0.8rem;color:var(--wc-muted);margin-bottom:4px;">CURRENT MATCH</div>
-                <div style="font-size:1.4rem;font-weight:900;color:var(--wc-ink);" id="ko-match-title">Loading...</div>
+            <!-- Nav row -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+              <button id="ko-nav-prev" style="background:none;border:1px solid var(--wc-line);border-radius:6px;color:var(--wc-muted);padding:6px 12px;cursor:pointer;font-size:0.85rem;font-weight:700;">← Prev</button>
+              <div style="text-align:center;flex:1;margin:0 12px;">
+                <div style="font-size:0.62rem;font-weight:900;color:rgba(247,244,235,0.35);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;">
+                  Match #<span id="ko-match-number">--</span> · <span id="ko-match-round">R32</span>
+                </div>
+                <div style="font-size:1.3rem;font-weight:900;color:var(--wc-ink);" id="ko-match-title">Loading...</div>
+                <div id="ko-result-badge" style="display:none;margin-top:6px;font-size:0.7rem;font-weight:900;padding:3px 10px;border-radius:99px;background:rgba(244,201,93,0.15);color:var(--wc-gold);border:1px solid rgba(244,201,93,0.3);display:inline-block;"></div>
               </div>
-              <div style="text-align:right;">
-                <div style="font-size:0.8rem;color:var(--wc-muted);margin-bottom:4px;">MATCH #</div>
-                <div style="font-size:1.2rem;font-weight:900;color:var(--wc-gold);" id="ko-match-number">--</div>
-              </div>
+              <button id="ko-nav-next" style="background:none;border:1px solid var(--wc-line);border-radius:6px;color:var(--wc-muted);padding:6px 12px;cursor:pointer;font-size:0.85rem;font-weight:700;">Next →</button>
             </div>
+
+            <!-- Teams + Score input -->
             <div style="padding-top:16px;border-top:1px solid var(--wc-line);">
               <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;">
                 <!-- Team 1 -->
@@ -1374,10 +1413,12 @@
         },
       };
       const selected = tones[tone] || tones.green;
-      elements.syncStatus.textContent = message;
-      elements.syncStatus.style.borderColor = selected.border;
-      elements.syncStatus.style.color = selected.color;
-      elements.syncStatus.style.background = selected.background;
+      if (elements.syncStatus) {
+        elements.syncStatus.textContent = message;
+        elements.syncStatus.style.borderColor = selected.border;
+        elements.syncStatus.style.color = selected.color;
+        elements.syncStatus.style.background = selected.background;
+      }
     }
 
     function parsePayload(payload) {
@@ -1635,9 +1676,6 @@
     async function refreshOfficialResults() {
       const rows = await loadOfficialResults();
       applyOfficialResults(rows);
-      if (rows.length && elements.syncStatus) {
-        elements.syncStatus.textContent = `🏆 ${poolEntries.length} submitted entries • ${rows.length} official result${rows.length === 1 ? "" : "s"}`;
-      }
       updateKnockoutPairings();
 
       // Only re-render when the official results actually changed. This avoids
@@ -2821,16 +2859,23 @@
           })
           .sort((a, b) => b.earned - a.earned); // Sort by points descending
 
+        // Compute tied ranks: same points = same rank; next rank skips
+        let tiedRank = 1;
+        sortedEntries.forEach((item, i) => {
+          if (i > 0 && item.earned !== sortedEntries[i - 1].earned) tiedRank = i + 1;
+          item.rank = tiedRank;
+        });
+
         // Render rows with ranking
         const rows = sortedEntries
-          .map((item, rank) => {
-            const { entry, picks, earned, max } = item;
+          .map((item) => {
+            const { entry, picks, earned, max, rank } = item;
             const currentPick = getPickForSeq(picks, currentSeq);
             const followingPick = getPickForSeq(picks, followingSeq);
             const champ = picks.final || "—";
 
             return `<tr>
-              <td>${rank + 1}</td>
+              <td style="font-weight:900;color:${rank <= 3 ? 'var(--wc-gold)' : 'var(--wc-muted)'};font-size:0.85rem;">${rank}</td>
               <td><strong>${entry.bracket_name}</strong></td>
               <td style="text-align:center;font-weight:bold;"><strong>${earned}</strong>/${max}</td>
               <td style="text-align:center;font-weight:bold;">${koTeamDisplay(currentPick)}</td>
@@ -2861,7 +2906,11 @@
           const paid = koEntries.filter(e => e.paid);
           document.getElementById("ko-entry-count").textContent = koEntries.length;
           document.getElementById("ko-paid-count").textContent = paid.length;
-          document.getElementById("ko-purse").textContent = `$${paid.length * 50}`;
+          const purse = paid.length * 50;
+          const fmt = (n) => `$${n.toLocaleString()}`;
+          document.getElementById("ko-payout-1st").textContent = fmt(Math.round(purse * 0.50));
+          document.getElementById("ko-payout-2nd").textContent = fmt(Math.round(purse * 0.30));
+          document.getElementById("ko-payout-3rd").textContent = fmt(Math.round(purse * 0.20));
           koLoaded = true;
           renderKoPool();
         } catch (err) {
@@ -2871,76 +2920,124 @@
 
       // ── KO Match Center ──────────────────────────────────────────
 
-      // Load and display current KO match
-      function loadKoMatchCenter() {
-        const current = getCurrentMatch();
+      // Which seq is currently displayed in the form. Save always targets THIS match,
+      // never re-calls getCurrentMatch() so async result loads can't cause mismatch.
+      let koDisplayedSeq = null;
+
+      const koOrdered = () => [...knockoutSchedule].sort((a, b) => a.seq - b.seq);
+
+      function koMatchBySeq(seq) {
+        return koOrdered().find(m => m.seq === seq) || null;
+      }
+
+      const ROUND_LABELS = { R32: "Round of 32", R16: "Round of 16", QF: "Quarter-final", SF: "Semi-final", "3P": "3rd Place", F: "Final" };
+
+      function loadKoMatchCenter(seq) {
+        const ordered = koOrdered();
+        if (!seq) {
+          // Default: first unresolved match
+          const first = ordered.find(m => !matchHasResult(m.matchNumber));
+          seq = first ? first.seq : ordered[ordered.length - 1].seq;
+        }
+        koDisplayedSeq = seq;
+        const current = koMatchBySeq(seq);
+
         if (!current) {
           document.getElementById("ko-match-title").textContent = "Tournament Complete";
           return;
         }
 
-        // Display match info
+        // Nav button visibility
+        const minSeq = ordered[0].seq;
+        const maxSeq = ordered[ordered.length - 1].seq;
+        document.getElementById("ko-nav-prev").disabled = (seq <= minSeq);
+        document.getElementById("ko-nav-next").disabled = (seq >= maxSeq);
+        document.getElementById("ko-nav-prev").style.opacity = seq <= minSeq ? '0.3' : '1';
+        document.getElementById("ko-nav-next").style.opacity = seq >= maxSeq ? '0.3' : '1';
+
+        // Match header
         document.getElementById("ko-match-number").textContent = current.matchNumber;
+        document.getElementById("ko-match-round").textContent = ROUND_LABELS[current.round] || current.round;
+        document.getElementById("ko-match-title").textContent = current.teamsKnown
+          ? `${current.team1} vs ${current.team2}`
+          : (ROUND_LABELS[current.round] || current.round) + " #" + current.matchNumber;
+
+        // Teams
         const team1 = teamsById[current.team1];
         const team2 = teamsById[current.team2];
-
-        // Flags
-        const flag1 = team1 ? `https://flagcdn.com/w80/${team1.countryCode.toLowerCase()}.png` : '';
-        const flag2 = team2 ? `https://flagcdn.com/w80/${team2.countryCode.toLowerCase()}.png` : '';
-
-        document.getElementById("ko-team1-name").textContent = current.team1;
-        document.getElementById("ko-team2-name").textContent = current.team2;
+        const flag1 = team1 ? `https://flagcdn.com/w80/${team1.id === 'ENG' ? 'gb-eng' : team1.countryCode.toLowerCase()}.png` : '';
+        const flag2 = team2 ? `https://flagcdn.com/w80/${team2.id === 'ENG' ? 'gb-eng' : team2.countryCode.toLowerCase()}.png` : '';
+        document.getElementById("ko-team1-name").textContent = current.team1 || "TBD";
+        document.getElementById("ko-team2-name").textContent = current.team2 || "TBD";
         document.getElementById("ko-team1-flag").innerHTML = flag1 ? `<img src="${flag1}" style="width:32px;height:auto;border-radius:2px;">` : '🏁';
         document.getElementById("ko-team2-flag").innerHTML = flag2 ? `<img src="${flag2}" style="width:32px;height:auto;border-radius:2px;">` : '🏁';
+        document.getElementById("ko-penalty-team1-label").textContent = `${current.team1 || "Team 1"} wins shootout`;
+        document.getElementById("ko-penalty-team2-label").textContent = `${current.team2 || "Team 2"} wins shootout`;
 
-        document.getElementById("ko-match-title").textContent = `${current.team1} vs ${current.team2}`;
-        document.getElementById("ko-penalty-team1-label").textContent = `${current.team1} wins shootout`;
-        document.getElementById("ko-penalty-team2-label").textContent = `${current.team2} wins shootout`;
-
-        // Clear form
-        document.getElementById("ko-score-team1").value = '';
-        document.getElementById("ko-score-team2").value = '';
-        document.getElementById("ko-penalties-toggle").checked = false;
-        document.getElementById("ko-penalties-section").style.display = 'none';
-        document.querySelectorAll('input[name="ko-penalty-winner"]').forEach(r => r.checked = false);
+        // If this match already has a result, pre-fill and show a badge
+        const badge = document.getElementById("ko-result-badge");
+        const existing = actualMatches.find(x => x.matchNumber === current.matchNumber);
+        if (existing && existing.status === "completed") {
+          const onPens = !!existing.shootoutWinnerId;
+          const scoreText = `${existing.homeScore}–${existing.awayScore}${onPens ? " (pens)" : ""}`;
+          badge.textContent = `✓ Saved: ${existing.winnerId} wins · ${scoreText} — editing will overwrite`;
+          badge.style.display = 'inline-block';
+          // Pre-fill scores
+          document.getElementById("ko-score-team1").value = existing.homeScore;
+          document.getElementById("ko-score-team2").value = existing.awayScore;
+          const isPens = !!existing.shootoutWinnerId;
+          document.getElementById("ko-penalties-toggle").checked = isPens;
+          document.getElementById("ko-penalties-section").style.display = isPens ? 'block' : 'none';
+          if (isPens) {
+            const winner = existing.shootoutWinnerId;
+            document.querySelectorAll('input[name="ko-penalty-winner"]').forEach(r => {
+              const teamId = r.value === "team1" ? current.team1 : current.team2;
+              r.checked = teamId === winner;
+            });
+          } else {
+            document.querySelectorAll('input[name="ko-penalty-winner"]').forEach(r => r.checked = false);
+          }
+          document.getElementById("ko-save-result").textContent = "✓ Overwrite Result";
+          document.getElementById("ko-save-result").style.background = "var(--wc-gold)";
+          document.getElementById("ko-save-result").style.color = "#07130f";
+        } else {
+          badge.style.display = 'none';
+          document.getElementById("ko-score-team1").value = '';
+          document.getElementById("ko-score-team2").value = '';
+          document.getElementById("ko-penalties-toggle").checked = false;
+          document.getElementById("ko-penalties-section").style.display = 'none';
+          document.querySelectorAll('input[name="ko-penalty-winner"]').forEach(r => r.checked = false);
+          document.getElementById("ko-save-result").textContent = "✓ Save Result";
+          document.getElementById("ko-save-result").style.background = "var(--wc-green)";
+          document.getElementById("ko-save-result").style.color = "#07130f";
+        }
       }
 
-      // Save KO match result
+      // Save KO match result — always targets koDisplayedSeq, never getCurrentMatch()
       async function saveKoResult() {
-        const current = getCurrentMatch();
-        if (!current) {
-          alert("No match to score");
-          return;
-        }
+        const current = koMatchBySeq(koDisplayedSeq);
+        if (!current) { alert("No match loaded"); return; }
 
-        const score1 = parseInt(document.getElementById("ko-score-team1").value || 0);
-        const score2 = parseInt(document.getElementById("ko-score-team2").value || 0);
+        const score1 = parseInt(document.getElementById("ko-score-team1").value);
+        const score2 = parseInt(document.getElementById("ko-score-team2").value);
+        if (isNaN(score1) || isNaN(score2)) { alert("Please enter both scores."); return; }
+
         const isPenalties = document.getElementById("ko-penalties-toggle").checked;
         let winnerId = null;
 
-        // Determine winner
         if (isPenalties) {
           const penaltyWinner = document.querySelector('input[name="ko-penalty-winner"]:checked');
-          if (!penaltyWinner) {
-            alert("Please select who won the penalty shootout");
-            return;
-          }
+          if (!penaltyWinner) { alert("Please select who won the penalty shootout."); return; }
           winnerId = penaltyWinner.value === "team1" ? current.team1 : current.team2;
         } else {
-          if (score1 === score2) {
-            alert("Scores are tied. Please indicate penalties or correct the score.");
-            return;
-          }
+          if (score1 === score2) { alert("Scores are tied — tick 'Decided by penalties' and pick the winner."); return; }
           winnerId = score1 > score2 ? current.team1 : current.team2;
         }
 
         try {
           const res = await fetch(`${ADMIN_API_BASE}/results/${current.matchNumber}`, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Admin-Pin': ADMIN_PIN,
-            },
+            headers: { 'Content-Type': 'application/json', 'X-Admin-Pin': ADMIN_PIN },
             body: JSON.stringify({
               home_score: score1,
               away_score: score2,
@@ -2951,14 +3048,26 @@
           });
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-          // Success — refresh data and load next match
           await refreshOfficialResults();
-          loadKoMatchCenter();
 
+          // Stay on same match (now shows "editing will overwrite" badge) then auto-advance
+          loadKoMatchCenter(koDisplayedSeq);
+
+          // Advance to next unresolved match after a brief moment
+          const nextUnresolved = koOrdered().find(m => !matchHasResult(m.matchNumber));
           const msgEl = document.getElementById("ko-save-message");
-          msgEl.textContent = `✓ ${winnerId} advances!`;
-          msgEl.style.display = 'block';
-          setTimeout(() => msgEl.style.display = 'none', 3000);
+          if (nextUnresolved && nextUnresolved.seq !== koDisplayedSeq) {
+            msgEl.textContent = `✓ ${winnerId} advances! Loading next match…`;
+            msgEl.style.display = 'block';
+            setTimeout(() => {
+              loadKoMatchCenter(nextUnresolved.seq);
+              msgEl.style.display = 'none';
+            }, 1500);
+          } else {
+            msgEl.textContent = `✓ ${winnerId} advances!`;
+            msgEl.style.display = 'block';
+            setTimeout(() => msgEl.style.display = 'none', 3000);
+          }
         } catch (err) {
           alert(`Failed to save result: ${err.message}`);
         }
@@ -2967,6 +3076,26 @@
       // Penalties toggle
       document.getElementById("ko-penalties-toggle").addEventListener("change", (e) => {
         document.getElementById("ko-penalties-section").style.display = e.target.checked ? 'block' : 'none';
+      });
+
+      // Auto-show penalty section when scores are equal
+      function checkScoreTie() {
+        const s1 = document.getElementById("ko-score-team1").value;
+        const s2 = document.getElementById("ko-score-team2").value;
+        if (s1 !== '' && s2 !== '' && s1 === s2) {
+          document.getElementById("ko-penalties-toggle").checked = true;
+          document.getElementById("ko-penalties-section").style.display = 'block';
+        }
+      }
+      document.getElementById("ko-score-team1").addEventListener("input", checkScoreTie);
+      document.getElementById("ko-score-team2").addEventListener("input", checkScoreTie);
+
+      // Prev / Next navigation
+      document.getElementById("ko-nav-prev").addEventListener("click", () => {
+        if (koDisplayedSeq > 1) loadKoMatchCenter(koDisplayedSeq - 1);
+      });
+      document.getElementById("ko-nav-next").addEventListener("click", () => {
+        loadKoMatchCenter(koDisplayedSeq + 1);
       });
 
       // Save button
@@ -3283,13 +3412,19 @@
             loadKoEntries();
             updateNextMatchHeader();
           } else if (btn.dataset.tab === "ko-match-center") {
+            const unlock = () => {
+              // Always refresh official results before displaying the form,
+              // so getCurrentMatch() and matchHasResult() see the latest state.
+              document.getElementById("ko-match-title").textContent = "Loading…";
+              refreshOfficialResults().then(() => loadKoMatchCenter());
+            };
             if (sessionStorage.getItem("ko_match_center_unlocked") === "true") {
-              loadKoMatchCenter();
+              unlock();
             } else {
               const pin = prompt("Enter PIN to access KO Match Center:");
               if (pin === "2019") {
                 sessionStorage.setItem("ko_match_center_unlocked", "true");
-                loadKoMatchCenter();
+                unlock();
               } else {
                 alert("Incorrect PIN.");
                 switchTab("ko-pool");
@@ -3298,6 +3433,21 @@
           }
         });
       });
+
+      // "More" nav menu toggle
+      const menuBtn = document.getElementById("wc-menu-btn");
+      const menuDropdown = document.getElementById("wc-menu-dropdown");
+      if (menuBtn && menuDropdown) {
+        menuBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const open = menuDropdown.style.display !== "none";
+          menuDropdown.style.display = open ? "none" : "block";
+        });
+        document.addEventListener("click", () => {
+          menuDropdown.style.display = "none";
+        });
+        menuDropdown.addEventListener("click", (e) => e.stopPropagation());
+      }
 
       if (elements.scoreboardSearch) {
         elements.scoreboardSearch.addEventListener("input", () => renderStandings());

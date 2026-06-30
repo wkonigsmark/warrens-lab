@@ -527,7 +527,7 @@
       <div class="windex-panel">
         <div>
           <h2>Team Rankings</h2>
-          <p class="wc-muted">All 48 teams ranked on the W-Index scale.</p>
+          <p class="wc-muted">Active teams re-ranked among themselves · eliminated teams shown below.</p>
         </div>
         <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
           <select id="group-filter" class="wc-select">
@@ -606,8 +606,9 @@
   </main>
 
   <script type="module">
-    import { matches, teams, teamsById } from "../data/world-cup-2026.js";
+    import { matches, teams, teamsById, knockoutSchedule } from "../data/world-cup-2026.js";
     import { W_INDEX_URL, fetchWithTimeout, wIndexBaselineRows } from "../data/w-index-baseline.js";
+    import { supabaseConfig } from "../data/supabase-config.js";
 
     const $ = (id) => document.getElementById(id);
 
@@ -617,6 +618,47 @@
     let sortColumn = "Rank";
     let sortAscending = true;
     let groupFilter = "All";
+
+    // Teams that reached R32 (group survivors)
+    const r32Teams = new Set(
+      knockoutSchedule
+        .filter(m => m.round === "R32")
+        .flatMap(m => [m.team1, m.team2])
+    );
+
+    // Teams eliminated in KO rounds (populated by fetchKoResults)
+    const koEliminatedTeams = new Set();
+
+    function isEliminated(teamId) {
+      return !r32Teams.has(teamId) || koEliminatedTeams.has(teamId);
+    }
+
+    async function fetchKoResults() {
+      try {
+        const response = await fetchWithTimeout(`${supabaseConfig.url.replace(/\/$/, "")}/rest/v1/rpc/get_public_match_results`, {
+          method: "POST",
+          headers: {
+            apikey: supabaseConfig.anonKey,
+            Authorization: `Bearer ${supabaseConfig.anonKey}`,
+            "Content-Type": "application/json",
+          },
+          body: "{}",
+        }, 5000);
+        if (!response.ok) return;
+        const rows = await response.json();
+        koEliminatedTeams.clear();
+        for (const row of rows) {
+          const matchNum = Number(row.match_number);
+          if (matchNum < 73) continue; // only KO matches
+          const winnerId = row.winner_id;
+          if (!winnerId) continue;
+          const home = row.home_team_id;
+          const away = row.away_team_id;
+          const loser = winnerId === home ? away : home;
+          if (loser) koEliminatedTeams.add(loser);
+        }
+      } catch (_) { /* silently ignore — shows all as active */ }
+    }
 
     const elements = {
       status: $("status"),
@@ -828,17 +870,8 @@
       return `<br class="windex-position-break"><span class="wc-position-tag ${positionClass(path.groupPosition)}">${positionLabel(path.groupPosition)}</span>`;
     }
 
-    function renderRankings() {
-      let rows = teams.map((team) => ({
-        team,
-        data: wIndexByTeam.get(team.id),
-      }));
-
-      if (groupFilter !== "All") {
-        rows = rows.filter(row => row.team.group === groupFilter);
-      }
-
-      rows.sort((a, b) => {
+    function sortRows(rows) {
+      return rows.sort((a, b) => {
         let valA, valB;
         if (sortColumn === "Rank") {
           valA = a.data?.rank ?? 999;
@@ -866,33 +899,29 @@
           const adjB = pathByTeam.get(b.team.id)?.pathAdjusted;
           valB = (Number.isFinite(scoreB) && Number.isFinite(adjB)) ? adjB - scoreB : -999;
         }
-
         if (valA < valB) return sortAscending ? -1 : 1;
         if (valA > valB) return sortAscending ? 1 : -1;
-        
-        // tiebreaker
         const tbA = a.data?.rank ?? 999;
         const tbB = b.data?.rank ?? 999;
         return tbA - tbB;
       });
+    }
 
-      document.querySelectorAll(".windex-table .wc-table th[data-sort]").forEach(th => {
-        th.classList.remove("sort-asc", "sort-desc");
-        if (th.dataset.sort === sortColumn) {
-          th.classList.add(sortAscending ? "sort-asc" : "sort-desc");
-        }
-      });
-
-      elements.rankingsBody.innerHTML = rows.map((row, index) => `
-        <tr>
-          <td class="wc-number" data-label="Rank">${row.data?.rank || "—"}</td>
+    function teamRow(row, rankLabel, eliminated) {
+      const opacity = eliminated ? 'opacity:0.42;' : '';
+      const rankStyle = eliminated
+        ? 'color:var(--wc-muted);border-color:rgba(247,244,235,0.12);'
+        : '';
+      return `
+        <tr style="${opacity}">
+          <td class="wc-number" data-label="Rank"><span class="windex-rank" style="${rankStyle}">${rankLabel}</span></td>
           <td class="windex-flag-cell" data-label="Flag">
             <span class="windex-flag-thumb" aria-label="${row.team.name} flag">
               <img src="${flagUrl(row.team, 160)}" alt="" loading="lazy">
             </span>
           </td>
           <td data-label="Team">
-            <strong>${row.team.name}</strong>
+            <strong>${row.team.name}</strong>${eliminated ? ' <span style="font-size:0.65rem;color:var(--wc-muted);font-weight:700;">ELIM</span>' : ''}
             <br class="windex-desktop-team-break">
             <span class="wc-small windex-desktop-team-meta">${row.team.confederation}</span>
             <span class="windex-mobile-team-meta">${row.team.confederation}: ${row.team.group}</span>
@@ -907,8 +936,45 @@
           <td class="wc-number" data-label="Diff"><strong>${diffLabel(row)}</strong></td>
           <td data-label="Status">${row.data?.status || '<span class="wc-empty">Missing from feed</span>'}</td>
           <td data-label="Canonical Match">${row.data ? '<span class="wc-trend-good">Matched</span>' : '<span class="wc-trend-watch">Needs alias</span>'}</td>
-        </tr>
-      `).join("");
+        </tr>`;
+    }
+
+    function eliminatedDividerRow() {
+      return `<tr class="windex-elim-divider">
+        <td colspan="10" style="padding:10px 16px 6px;border:none;background:transparent;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:0.58rem;font-weight:900;color:rgba(247,244,235,0.35);text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap;">Eliminated</span>
+            <div style="flex:1;height:1px;background:rgba(247,244,235,0.12);"></div>
+          </div>
+        </td>
+      </tr>`;
+    }
+
+    function renderRankings() {
+      let allRows = teams.map((team) => ({
+        team,
+        data: wIndexByTeam.get(team.id),
+      }));
+
+      if (groupFilter !== "All") {
+        allRows = allRows.filter(row => row.team.group === groupFilter);
+      }
+
+      const activeRows = sortRows(allRows.filter(row => !isEliminated(row.team.id)));
+      const elimRows  = sortRows(allRows.filter(row =>  isEliminated(row.team.id)));
+
+      document.querySelectorAll(".windex-table .wc-table th[data-sort]").forEach(th => {
+        th.classList.remove("sort-asc", "sort-desc");
+        if (th.dataset.sort === sortColumn) {
+          th.classList.add(sortAscending ? "sort-asc" : "sort-desc");
+        }
+      });
+
+      const activeHtml = activeRows.map((row, i) => teamRow(row, `#${i + 1}`, false)).join("");
+      const elimHtml   = elimRows.map((row, i) => teamRow(row, `E${i + 1}`, true)).join("");
+      const divider    = elimRows.length ? eliminatedDividerRow() : "";
+
+      elements.rankingsBody.innerHTML = activeHtml + divider + elimHtml;
     }
 
     function renderPathStories() {
@@ -968,17 +1034,21 @@
     }
 
     function renderTopline() {
-      const topRows = teams.map((team) => ({
+      const allRows = teams.map((team) => ({
         team,
         data: wIndexByTeam.get(team.id),
-      }))
-        .filter((row) => row.data)
-        .sort((a, b) => a.data.rank - b.data.rank)
-        .slice(0, 5);
+      })).filter((row) => row.data);
 
-      elements.topline.innerHTML = topRows.map((row) => `
+      // Rank active teams among themselves, show top 5
+      const activeRows = allRows
+        .filter(row => !isEliminated(row.team.id))
+        .sort((a, b) => a.data.rank - b.data.rank);
+
+      const topRows = activeRows.slice(0, 5);
+
+      elements.topline.innerHTML = topRows.map((row, i) => `
         <article class="windex-team-card" style="--flag-image: url('${flagUrl(row.team, 320)}');">
-          <span class="windex-rank">#${row.data.rank}</span>
+          <span class="windex-rank">#${i + 1}</span>
           <div class="windex-flag-large" aria-label="${row.team.name} flag">
             <img src="${flagUrl(row.team, 320)}" alt="" loading="lazy">
           </div>
@@ -1114,6 +1184,11 @@
     renderRankings();
     renderFixtureFilter();
     renderMatchups();
+    // Fetch KO results first so eliminated teams are correct before W-Index renders
+    fetchKoResults().then(() => {
+      renderRankings();
+      renderTopline();
+    });
     loadWIndex();
   </script>
 </body>
