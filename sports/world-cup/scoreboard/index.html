@@ -1628,7 +1628,7 @@
         try {
           const response = await fetchWithTimeout(`${ADMIN_API_BASE}/results`, {
             headers: { "X-Admin-Pin": ADMIN_PIN },
-          }, 2500);
+          }, 5000);
           if (response.ok) {
             const data = await response.json();
             rows = data.results || [];
@@ -3018,6 +3018,7 @@
       const ROUND_LABELS = { R32: "Round of 32", R16: "Round of 16", QF: "Quarter-final", SF: "Semi-final", "3P": "3rd Place", F: "Final" };
 
       function loadKoMatchCenter(seq) {
+        const isDefaultNav = (seq === undefined);
         const ordered = koOrdered();
         if (!seq) {
           // Default: first unresolved match
@@ -3067,6 +3068,20 @@
           const scoreText = `${existing.homeScore}–${existing.awayScore}${onPens ? " (pens)" : ""}`;
           badge.textContent = `✓ Saved: ${existing.winnerId} wins · ${scoreText} — editing will overwrite`;
           badge.style.display = 'inline-block';
+
+          // If this was a default navigation, auto-advance past completed matches
+          if (isDefaultNav) {
+            const nextUnresolved = koOrdered().find(m => !matchHasResult(m.matchNumber));
+            if (nextUnresolved && nextUnresolved.seq !== current.seq) {
+              const msgEl = document.getElementById("ko-save-message");
+              msgEl.textContent = `Already entered — jumping to next match…`;
+              msgEl.style.display = 'block';
+              setTimeout(() => {
+                loadKoMatchCenter(nextUnresolved.seq);
+                msgEl.style.display = 'none';
+              }, 1000);
+            }
+          }
           // Pre-fill scores
           document.getElementById("ko-score-team1").value = existing.homeScore;
           document.getElementById("ko-score-team2").value = existing.awayScore;
@@ -3531,7 +3546,13 @@
               // Always refresh official results before displaying the form,
               // so getCurrentMatch() and matchHasResult() see the latest state.
               document.getElementById("ko-match-title").textContent = "Loading…";
-              refreshOfficialResults().then(() => loadKoMatchCenter());
+              refreshOfficialResults().then(async () => {
+                // If zero KO results loaded (admin server was down at page load),
+                // try one more time before rendering the form.
+                const anyKoDone = actualMatches.some(m => m.matchNumber >= 73 && m.status === 'completed');
+                if (!anyKoDone) await refreshOfficialResults();
+                loadKoMatchCenter();
+              });
             };
             if (sessionStorage.getItem("ko_match_center_unlocked") === "true") {
               unlock();
