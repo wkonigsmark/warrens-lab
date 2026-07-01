@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ants &amp; Apples — For Parents &amp; Teachers</title>
+<meta name="description" content="Why Ants & Apples is built to send kids off the screen and onto the page.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐜</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="deck">
+
+  <div id="deck-topbar">
+    <img id="deck-logo" src="../assets/ants-apples-text.png" alt="Ants & Apples">
+    <div id="deck-progress-track"><div id="deck-progress-fill"></div></div>
+    <div id="deck-counter"><span id="deck-counter-current">1</span> / <span id="deck-counter-total">10</span></div>
+  </div>
+
+  <div id="deck-track">
+
+    <!-- 1: Title -->
+    <section class="slide" id="slide-title">
+      <div class="banner-frame">
+        <img src="../assets/ants_apples_.webp" alt="Ants & Apples" class="hero-banner">
+      </div>
+      <h1 class="hero-tagline">A math game that knows when to get out of the way.</h1>
+      <p class="hero-sub">A short pitch for parents and teachers — 10 slides, no hype.</p>
+      <div class="scroll-cue">Press <kbd>→</kbd> or swipe to begin</div>
+    </section>
+
+    <!-- 2: The problem -->
+    <section class="slide">
+      <div class="slide-kicker">The problem</div>
+      <h2>Screens are good at one thing.<br>Fluency isn't it.</h2>
+      <p class="lead">Most educational apps want more time on the screen — more levels, more streaks, more notifications pulling a child back in. That's a fine business model. It is not how kids actually get good at math.</p>
+      <p class="lead">Real fluency comes from working problems, by hand, over and over, until the answer stops being a calculation and becomes a fact.</p>
+    </section>
+
+    <!-- 3: Our position -->
+    <section class="slide">
+      <div class="slide-kicker">Our position</div>
+      <h2>Learn on the app.<br>Study on the page.</h2>
+      <p class="lead">Ants &amp; Apples draws a clean line: the app is for learning a concept and checking where a child stands — not for hours of drilling. Every session is designed to end with something to do <em>away</em> from the screen.</p>
+      <div class="two-col">
+        <div class="col-card col-app">
+          <div class="col-emoji">📱</div>
+          <div class="col-title">The App</div>
+          <div class="col-desc">Learn a concept. Get assessed. Short, focused, occasionally a fun way to pass the time on a trip.</div>
+        </div>
+        <div class="col-card col-paper">
+          <div class="col-emoji">🖨️</div>
+          <div class="col-title">The Page</div>
+          <div class="col-desc">Practice until it sticks. As long as it takes, with a pencil, at a table, away from a device.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4: How it works - the grid -->
+    <section class="slide slide-media">
+      <div class="media-text">
+        <div class="slide-kicker">How it works</div>
+        <h2>One problem at a time, inside a bigger picture</h2>
+        <p class="lead">The game is a grid — column headers across the top, row headers down the side. One square lights up: that's the problem. Row 2, column 3 means 2 + 3.</p>
+        <p class="lead">Just scanning the grid to find the highlighted square gets a child rehearsing rows and columns before they ever tap a key. The grid grows with them, from 3×3 all the way up to 9×9.</p>
+      </div>
+      <div class="media-image">
+        <img src="screens/02-grid.png" alt="Ants & Apples grid with a highlighted problem tile" class="screenshot">
+      </div>
+    </section>
+
+    <!-- 5: The Helper -->
+    <section class="slide slide-media media-reverse">
+      <div class="media-text">
+        <div class="slide-kicker">The helper</div>
+        <h2>Stuck? Count it out.</h2>
+        <p class="lead">Every problem has a built-in visual helper — real ants, real apples, right on screen. A child who doesn't know 3 + 2 can press <kbd>Esc</kbd> and simply count three ants and two apples. No penalty, no waiting on a parent.</p>
+        <p class="lead">As they get faster, they turn the helper off and play in <strong>Master Mode</strong> — same grid, same problems, no crutch. Nobody forces that switch. It feels like leveling up.</p>
+      </div>
+      <div class="media-image">
+        <img src="screens/05-helper-closeup.png" alt="Helper Calculator showing 3 ants plus 2 apples" class="screenshot screenshot-card">
+      </div>
+    </section>
+
+    <!-- 6: Ladder of operators -->
+    <section class="slide">
+      <div class="slide-kicker">The ladder</div>
+      <h2>Same idea, harder math</h2>
+      <p class="lead">Once a grid is mastered, the ladder continues — and every rung gets its own visual helper, scaled to the concept.</p>
+      <div class="ladder-row">
+        <div class="ladder-item">
+          <img src="screens/09-helper-subtract-neg.png" alt="Subtraction helper with ghosted apples">
+          <div class="ladder-label">Subtraction <span>(negatives, too)</span></div>
+        </div>
+        <div class="ladder-item">
+          <img src="screens/07-helper-multiply.png" alt="Multiplication helper showing an array of apples">
+          <div class="ladder-label">Multiplication</div>
+        </div>
+        <div class="ladder-item">
+          <img src="screens/08b-helper-divide-clean.png" alt="Division helper showing apples grouped into equal sets">
+          <div class="ladder-label">Division</div>
+        </div>
+      </div>
+      <p class="lead center-note">Addition → Subtraction → Subtraction with negatives → Multiplication → Division.</p>
+    </section>
+
+    <!-- 7: Worksheets -->
+    <section class="slide slide-media">
+      <div class="media-text">
+        <div class="slide-kicker">Where it sticks</div>
+        <h2>One click. Exactly their level.</h2>
+        <p class="lead"><strong>Print Worksheet</strong> takes the grid, operation, and difficulty a child is playing right now and turns it into a clean, ready-to-print page — no searching for "3rd grade subtraction worksheets" online, no guessing if it's the right level.</p>
+        <p class="lead">That's the whole point of the app: it isn't where the studying happens. It's where the studying gets assigned.</p>
+      </div>
+      <div class="media-image">
+        <img src="screens/10-worksheet-crop.png" alt="Printable Ants & Apples worksheet" class="screenshot">
+      </div>
+    </section>
+
+    <!-- 8: Why parents & teachers like it -->
+    <section class="slide">
+      <div class="slide-kicker">Why it earns trust</div>
+      <h2>What parents &amp; teachers notice</h2>
+      <ul class="check-list">
+        <li><span class="check-mark">✓</span> No accounts, no ads, no data leaving the device.</li>
+        <li><span class="check-mark">✓</span> A gentle off-ramp — idle 30 seconds and the music pauses itself. Nobody has to be the bad guy.</li>
+        <li><span class="check-mark">✓</span> Meets a child exactly where they are — 3×3 to 9×9, five operations, a learning aid that can be switched off.</li>
+        <li><span class="check-mark">✓</span> Builds the habit that actually works: screen to learn a concept, paper to make it stick.</li>
+      </ul>
+    </section>
+
+    <!-- 9: Coming soon -->
+    <section class="slide">
+      <div class="slide-kicker">Coming soon</div>
+      <h2>What's next</h2>
+      <p class="lead">A progress meter, so a parent or teacher can see at a glance exactly where a child stands — and which worksheet to print next.</p>
+      <p class="lead">An expanding ladder: fractions, algebra, and multi-step "math chains" are already in testing.</p>
+      <p class="lead roadmap-note">Roadmap items — not shipped yet, but the direction is set.</p>
+    </section>
+
+    <!-- 10: CTA -->
+    <section class="slide" id="slide-cta">
+      <img src="../assets/coloring-template-ants/ants_celebration.png" alt="Two ants celebrating" class="cta-illustration">
+      <h2>Give it a try</h2>
+      <p class="lead">Made for curious kids — and the ants who love them.</p>
+      <a href="../index.html" class="cta-button">Play Ants &amp; Apples</a>
+    </section>
+
+  </div>
+
+  <button id="nav-prev" class="deck-nav" aria-label="Previous slide">‹</button>
+  <button id="nav-next" class="deck-nav deck-nav-next" aria-label="Next slide">›</button>
+
+  <div id="deck-dots"></div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
