@@ -635,27 +635,58 @@
 
     async function fetchKoResults() {
       try {
-        const response = await fetchWithTimeout(`${supabaseConfig.url.replace(/\/$/, "")}/rest/v1/rpc/get_public_match_results`, {
-          method: "POST",
-          headers: {
-            apikey: supabaseConfig.anonKey,
-            Authorization: `Bearer ${supabaseConfig.anonKey}`,
-            "Content-Type": "application/json",
-          },
-          body: "{}",
-        }, 5000);
-        if (!response.ok) return;
-        const rows = await response.json();
+        let rows = [];
+
+        // Prefer local admin API when running on localhost (source of truth)
+        if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
+          try {
+            const r = await fetchWithTimeout("http://127.0.0.1:8787/api/results", {
+              headers: { "X-Admin-Pin": "2019" },
+            }, 5000);
+            if (r.ok) {
+              const data = await r.json();
+              rows = (data.results || []).filter(x => Number(x.match_number) >= 73);
+            }
+          } catch (_) { /* fall through to Supabase */ }
+        }
+
+        // Supabase fallback
+        if (!rows.length) {
+          const response = await fetchWithTimeout(`${supabaseConfig.url.replace(/\/$/, "")}/rest/v1/rpc/get_public_match_results`, {
+            method: "POST",
+            headers: {
+              apikey: supabaseConfig.anonKey,
+              Authorization: `Bearer ${supabaseConfig.anonKey}`,
+              "Content-Type": "application/json",
+            },
+            body: "{}",
+          }, 5000);
+          if (response.ok) {
+            const all = await response.json();
+            rows = all.filter(x => Number(x.match_number) >= 73);
+          }
+        }
+
         koEliminatedTeams.clear();
+        // Build a map from matchNumber → knockoutSchedule entry for quick loser lookup
+        const koScheduleByMatch = new Map(knockoutSchedule.map(m => [m.matchNumber, m]));
+
         for (const row of rows) {
           const matchNum = Number(row.match_number);
-          if (matchNum < 73) continue; // only KO matches
           const winnerId = row.winner_id;
-          if (!winnerId) continue;
-          const home = row.home_team_id;
-          const away = row.away_team_id;
-          const loser = winnerId === home ? away : home;
-          if (loser) koEliminatedTeams.add(loser);
+          if (!winnerId || !row.status || row.status !== "completed") continue;
+
+          // KO admin rows have null home/away — derive the loser from knockoutSchedule instead
+          const schedEntry = koScheduleByMatch.get(matchNum);
+          if (schedEntry && schedEntry.teamsKnown) {
+            // R32: team1/team2 are concrete IDs
+            const loser = winnerId === schedEntry.team1 ? schedEntry.team2 : schedEntry.team1;
+            if (loser) koEliminatedTeams.add(loser);
+          } else {
+            // R16+: fall back to home/away if available
+            const loser = winnerId === row.home_team_id ? row.away_team_id : row.home_team_id;
+            if (loser) koEliminatedTeams.add(loser);
+          }
         }
       } catch (_) { /* silently ignore — shows all as active */ }
     }
