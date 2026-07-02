@@ -1680,7 +1680,6 @@
       const rows = await loadOfficialResults();
       applyOfficialResults(rows);
       updateKnockoutPairings();
-      zeroWIndexForKoEliminated();
 
       // Only re-render when the official results actually changed. This avoids
       // wiping the leaderboard (and any open pick-details) on every 30s poll.
@@ -1695,15 +1694,6 @@
         if (koRerenderHook) koRerenderHook();
       }
       return rows.length;
-    }
-
-    // Zero out the W-Index for any team eliminated in the KO stage so they
-    // can't inflate projected scores. Called after every results refresh.
-    function zeroWIndexForKoEliminated() {
-      const eliminated = getKoEliminatedTeams();
-      for (const teamId of eliminated) {
-        wIndexMap.set(teamId, 0);
-      }
     }
 
     // Initialize matches array (1 to 104)
@@ -2913,8 +2903,10 @@
         const currentSeq = current.seq;
         const followingSeq = currentSeq + 1;
 
-        // Compute eliminated set once for this render pass
+        // Compute eliminated set once for this render pass; zero wIndex so
+        // eliminated teams don't inflate projected scores in rankings.
         const eliminated = getKoEliminatedTeams();
+        for (const teamId of eliminated) wIndexMap.set(teamId, 0);
 
         // Update sort indicators on column headers
         const arrow = dir => dir === 'desc' ? ' ↓' : ' ↑';
