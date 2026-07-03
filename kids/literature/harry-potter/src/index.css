@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --accent: #e6c25a;
+  --accent-soft: rgba(230, 194, 90, 0.18);
+  --trim: #e6c25a;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  @apply font-body text-amber-50;
+  background:
+    radial-gradient(ellipse 120% 60% at 50% -10%, #2b2160 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 85% 100%, #1d1440 0%, transparent 55%),
+    linear-gradient(180deg, #0b0c22 0%, #131032 55%, #1a1035 100%);
+  background-attachment: fixed;
+  min-height: 100dvh;
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---- starfield ---- */
+.stars, .stars2 {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-repeat: repeat;
+  background-size: 420px 420px;
+}
+.stars {
+  background-image:
+    radial-gradient(1.2px 1.2px at 30px 60px, #fff9, transparent),
+    radial-gradient(1px 1px at 120px 200px, #fff7, transparent),
+    radial-gradient(1.5px 1.5px at 220px 90px, #ffe9b3aa, transparent),
+    radial-gradient(1px 1px at 320px 300px, #fff6, transparent),
+    radial-gradient(1.3px 1.3px at 380px 160px, #fff8, transparent),
+    radial-gradient(1px 1px at 70px 350px, #ffe9b399, transparent);
+  animation: twinkle 4.5s ease-in-out infinite alternate;
+}
+.stars2 {
+  background-image:
+    radial-gradient(1px 1px at 180px 40px, #fff5, transparent),
+    radial-gradient(1.4px 1.4px at 60px 250px, #fff8, transparent),
+    radial-gradient(1px 1px at 280px 380px, #ffe9b388, transparent),
+    radial-gradient(1.2px 1.2px at 400px 240px, #fff6, transparent);
+  animation: twinkle 6s ease-in-out infinite alternate-reverse;
+}
+@keyframes twinkle {
+  from { opacity: 0.45; }
+  to   { opacity: 1; }
+}
+
+/* ---- reusable pieces ---- */
+.glass {
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(230, 194, 90, 0.28);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+.gold-text {
+  background: linear-gradient(180deg, #ffe9a8 20%, #e6c25a 55%, #b28a2e 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.parchment {
+  background: linear-gradient(160deg, #f6e7c6 0%, #eed9ab 100%);
+  color: #4a3418;
+  border: 1px solid #c9a86a;
+  box-shadow: inset 0 0 24px rgba(154, 116, 50, 0.25), 0 8px 24px rgba(0,0,0,0.35);
+}
+
+.option-btn {
+  @apply w-full text-left rounded-2xl px-4 py-3.5 font-bold text-[15px] leading-snug transition-all duration-150 select-none;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  min-height: 56px;
+}
+.option-btn:active { transform: scale(0.97); }
+.option-btn.correct {
+  background: rgba(74, 222, 128, 0.22);
+  border-color: #4ade80;
+  box-shadow: 0 0 18px rgba(74, 222, 128, 0.35);
+}
+.option-btn.wrong {
+  background: rgba(248, 113, 113, 0.14);
+  border-color: rgba(248, 113, 113, 0.55);
+  opacity: 0.55;
+  animation: shake 0.35s ease;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.floaty { animation: floaty 3.5s ease-in-out infinite; }
+
+/* safe-area padding for phones with notches */
+.safe-pad {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
