@@ -2872,12 +2872,32 @@
       }
 
       // Get a team pick for the match at a given sequence number.
-      function getPickForSeq(picks, seq) {
+      function getPickForSeq(picks, seq, sim) {
         const match = knockoutSchedule.find(m => m.seq === seq);
-        if (!match || !match.teamsKnown) return "—";
-        const matchTeams = [match.team1, match.team2];
-        const r32 = picks.r32 || [];
-        return r32.find(t => matchTeams.includes(t)) || "—";
+        if (!match) return null;
+
+        let t1, t2;
+        if (match.round === 'R32') {
+          t1 = match.team1;
+          t2 = match.team2;
+        } else {
+          // R16+: resolve actual contestants from the result-driven sim
+          if (!sim) return null;
+          t1 = sim.simActT1[seq];
+          t2 = sim.simActT2[seq];
+          if (!t1 && !t2) return null;
+        }
+
+        const KEY_MAP = { R32: 'r32', R16: 'r16', QF: 'qf', SF: 'sf', '3P': 'third', F: 'final' };
+        const key = KEY_MAP[match.round];
+        if (!key) return null;
+
+        // 3P / Final are stored as a single value, not an array
+        if (match.round === '3P' || match.round === 'F') {
+          const p = picks[key];
+          return (p === t1 || p === t2) ? p : null;
+        }
+        return (picks[key] || []).find(t => t === t1 || t === t2) || null;
       }
 
       // Render the KO Pool table from the already-fetched entries. Safe to call
@@ -2952,12 +2972,15 @@
           return sum + done * pts;
         }, 0);
 
+        // Compute actual contestants for each match once (result-driven, no personal picks)
+        const actualSim = buildBracketSim({ r32: [], final: null });
+
         // Render rows with ranking
         const rows = sortedEntries
           .map((item) => {
             const { entry, picks, earned, max, rank } = item;
-            const currentPick = getPickForSeq(picks, currentSeq);
-            const followingPick = getPickForSeq(picks, followingSeq);
+            const currentPick = getPickForSeq(picks, currentSeq, actualSim);
+            const followingPick = getPickForSeq(picks, followingSeq, actualSim);
             const champ = picks.final || "—";
 
             return `<tr>
