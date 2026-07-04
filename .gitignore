@@ -20,6 +20,7 @@ lib64/
 # not Python build output). Without this, the Python `lib/` rule above silently
 # drops src/lib/ and breaks the Vercel build ("Could not resolve ../../lib/...").
 !iq/*/src/lib/
+!kids/**/src/lib/
 parts/
 sdist/
 var/
