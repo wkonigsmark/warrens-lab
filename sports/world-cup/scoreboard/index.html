@@ -1150,7 +1150,8 @@
       <button class="sim-tab-btn active" data-tab="ko-pool">🏆 KO Pool</button>
       <button class="sim-tab-btn" data-tab="ko-match-center">⚽ KO Match Center</button>
       <button class="sim-tab-btn" data-tab="ko-bracket">🗺️ Bracket</button>
-      <button class="sim-tab-btn" data-tab="matches">📅 Match Center</button>
+      <button class="sim-tab-btn" data-tab="ko-schedule">📅 Fixtures</button>
+      <button class="sim-tab-btn" data-tab="matches">📋 Match Center</button>
     </nav>
 
     <!-- Tab Panels Container -->
@@ -1344,6 +1345,11 @@
           </div>
           <div id="ko-bracket-vis" class="ko-bracket"></div>
         </div>
+      </div>
+
+      <div class="sim-view-panel" id="panel-ko-schedule">
+        <p style="color:var(--wc-muted);font-size:0.85rem;margin:0 0 14px;">Remaining knockout fixtures · updates as results are confirmed.</p>
+        <div id="ko-schedule-vis"></div>
       </div>
 
       <!-- My Picks Modal -->
@@ -3430,11 +3436,13 @@
         const t2 = actualSim.simActT2[current.seq];
         if (!t1 && !t2) { el.innerHTML = ''; return; }
 
-        // Count picks across all entries
+        // Count picks across all entries.
+        // Use getPickForSeq (not buildBracketSim.simWinner) so that entries whose
+        // pick never reached this round (e.g. picked NED who lost R32) correctly
+        // count as N/A rather than silently falling back to t1.
         let countT1 = 0, countT2 = 0, countNeither = 0;
         koEntries.forEach(entry => {
-          const sim = buildBracketSim(entry.bracket_picks || {});
-          const predicted = sim.simWinner[current.seq];
+          const predicted = getPickForSeq(entry.bracket_picks || {}, current.seq, actualSim);
           if      (predicted === t1) countT1++;
           else if (predicted === t2) countT2++;
           else                       countNeither++;
@@ -3475,17 +3483,22 @@
           + '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;">'
           + flagChip(t1, pT1, 'left')
           + '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">'
-          + '<div style="font-size:0.6rem;color:rgba(247,244,235,0.3);">vs</div>'
+          + (pN > 0
+              ? '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">'
+                + '<div style="font-size:0.7rem;font-weight:900;color:rgba(247,244,235,0.35);">N/A</div>'
+                + '<div style="font-size:0.65rem;font-weight:700;color:rgba(247,244,235,0.25);">' + pN + '%</div>'
+                + '</div>'
+              : '<div style="font-size:0.6rem;color:rgba(247,244,235,0.3);">vs</div>')
           + clearBtn
           + '</div>'
           + flagChip(t2, pT2, 'right')
           + '</div>'
           + '<div style="display:flex;border-radius:4px;overflow:hidden;height:10px;">'
           + (pT1  > 0 ? '<div style="flex:' + pT1  + ';background:#3a8c5c;"></div>' : '')
-          + (pN   > 0 ? '<div style="flex:' + pN   + ';background:rgba(247,244,235,0.12);"></div>' : '')
+          + (pN   > 0 ? '<div style="flex:' + pN   + ';background:rgba(247,244,235,0.12);border-left:1px solid rgba(247,244,235,0.08);border-right:1px solid rgba(247,244,235,0.08);"></div>' : '')
           + (pT2  > 0 ? '<div style="flex:' + pT2  + ';background:#c0392b;"></div>' : '')
           + '</div>'
-          + (pN > 0 ? '<div style="font-size:0.58rem;color:rgba(247,244,235,0.35);margin-top:5px;text-align:center;">' + pN + '% picked a team already eliminated</div>' : '')
+          + (pN > 0 ? '<div style="font-size:0.58rem;color:rgba(247,244,235,0.3);margin-top:5px;text-align:center;">' + countNeither + ' of ' + total + ' picked an eliminated team</div>' : '')
           + '</div>';
       }
 
@@ -3625,6 +3638,8 @@
             updateNextMatchHeader();
           } else if (btn.dataset.tab === "ko-bracket") {
             renderKoBracket();
+          } else if (btn.dataset.tab === "ko-schedule") {
+            renderSchedule();
           } else if (btn.dataset.tab === "ko-match-center") {
             const unlock = () => {
               // Always refresh official results before displaying the form,
@@ -3833,9 +3848,112 @@
         vis.appendChild(decor);
       }
 
+      function renderSchedule() {
+        const el = document.getElementById('ko-schedule-vis');
+        if (!el) return;
+
+        // Build confirmed slot resolution (same traversal as renderKoBracket)
+        const confirmed = {}, slotT1 = {}, slotT2 = {};
+        [...knockoutSchedule].sort((a, b) => a.seq - b.seq).forEach(match => {
+          const result = actualMatches.find(m => m.matchNumber === match.matchNumber);
+          const w = result?.status === 'completed' ? result.winnerId : null;
+          if (match.round === 'R32') {
+            slotT1[match.seq] = match.team1; slotT2[match.seq] = match.team2;
+          } else if (match.round === '3P') {
+            const sfSeqs = knockoutSchedule.filter(m => m.round === 'SF').map(m => m.seq).sort((a,b) => a-b);
+            const loser = s => { const w2 = confirmed[s]; if (!w2) return null; return w2 === slotT1[s] ? slotT2[s] : slotT1[s]; };
+            slotT1[match.seq] = loser(sfSeqs[0]); slotT2[match.seq] = loser(sfSeqs[1]);
+          } else if (match.round === 'F') {
+            const sfSeqs = knockoutSchedule.filter(m => m.round === 'SF').map(m => m.seq).sort((a,b) => a-b);
+            slotT1[match.seq] = confirmed[sfSeqs[0]] || null; slotT2[match.seq] = confirmed[sfSeqs[1]] || null;
+          } else {
+            const PREV_ROUND = { R16: 'R32', QF: 'R16', SF: 'QF' };
+            const prevSeqs = new Set(knockoutSchedule.filter(m => m.round === PREV_ROUND[match.round]).map(m => m.seq));
+            const t1Pool = match.team1.split('|'), t2Pool = match.team2.split('|');
+            let t1 = null, t2 = null;
+            for (const [s, winner] of Object.entries(confirmed)) {
+              if (prevSeqs.has(Number(s))) {
+                if (!t1 && t1Pool.includes(winner)) t1 = winner;
+                if (!t2 && t2Pool.includes(winner)) t2 = winner;
+              }
+            }
+            slotT1[match.seq] = t1; slotT2[match.seq] = t2;
+          }
+          if (w) confirmed[match.seq] = w;
+        });
+
+        const today = new Date().toISOString().slice(0, 10);
+        const tomorrow = new Date(Date.now() + 864e5).toISOString().slice(0, 10);
+
+        function fmtTime(t) {
+          const [h, m] = t.split(':').map(Number);
+          return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`;
+        }
+        function fmtDateHdr(dateStr) {
+          const d = new Date(dateStr + 'T12:00:00');
+          const month = d.toLocaleDateString('en-US', { month: 'long' });
+          const day = d.getDate();
+          if (dateStr === today)    return `Today · ${month} ${day}`;
+          if (dateStr === tomorrow) return `Tomorrow · ${month} ${day}`;
+          return `${d.toLocaleDateString('en-US', { weekday: 'long' })} · ${month} ${day}`;
+        }
+
+        const ROUND_LABELS = { R32: 'R32', R16: 'R16', QF: 'QF', SF: 'SF', '3P': '3rd Place', F: 'Final' };
+
+        function teamChip(teamId, align, isWinner, isLoser) {
+          const nameAlign = align === 'right' ? 'flex-direction:row-reverse;' : '';
+          if (!teamId) return `<div style="display:flex;align-items:center;gap:5px;${nameAlign}opacity:0.3;"><span style="font-size:0.75rem;font-weight:600;color:var(--wc-ink);">TBD</span></div>`;
+          const team = teamsById[teamId];
+          const cc = teamId === 'ENG' ? 'gb-eng' : teamId === 'SCO' ? 'gb-sct' : (team?.countryCode?.toLowerCase() || teamId.toLowerCase());
+          const emoji = teamFlagEmoji(teamId);
+          const winStyle  = isWinner ? 'color:#f4c95d;' : '';
+          const elimStyle = isLoser  ? 'text-decoration:line-through;opacity:0.5;' : '';
+          const flagElim  = isLoser  ? 'opacity:0.4;' : '';
+          return `<div style="display:flex;align-items:center;gap:5px;${nameAlign}">
+            <img class="flag-img" src="https://flagcdn.com/w40/${cc}.png" style="height:16px;width:auto;border-radius:2px;${flagElim}" loading="lazy" onerror="this.style.display='none'">
+            <span class="flag-emoji" style="font-size:1.05rem;line-height:1;">${emoji}</span>
+            <span style="font-size:0.75rem;font-weight:700;color:var(--wc-ink);${winStyle}${elimStyle}">${teamId}</span>
+          </div>`;
+        }
+
+        // Group by date, today onwards
+        const byDate = {};
+        [...knockoutSchedule]
+          .sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : a.seq - b.seq)
+          .filter(m => m.date >= today)
+          .forEach(m => { (byDate[m.date] = byDate[m.date] || []).push(m); });
+
+        let html = '';
+        for (const [date, matches] of Object.entries(byDate)) {
+          const isToday = date === today;
+          html += `<div style="margin-bottom:20px;">`;
+          html += `<div style="font-size:0.65rem;font-weight:900;text-transform:uppercase;letter-spacing:0.07em;color:${isToday ? '#f4c95d' : 'rgba(247,244,235,0.45)'};margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--wc-line);">${fmtDateHdr(date)}</div>`;
+          for (const match of matches) {
+            const result = actualMatches.find(m => m.matchNumber === match.matchNumber);
+            const isDone = result?.status === 'completed';
+            const winner = isDone ? result.winnerId : null;
+            const t1 = slotT1[match.seq] || null;
+            const t2 = slotT2[match.seq] || null;
+            const roundLabel = ROUND_LABELS[match.round] || match.round;
+            html += `<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(247,244,235,0.06);">`;
+            html += `<span style="font-size:0.68rem;color:${isDone ? 'rgba(247,244,235,0.3)' : 'rgba(247,244,235,0.65)'};min-width:58px;font-variant-numeric:tabular-nums;flex-shrink:0;">${fmtTime(match.time)}</span>`;
+            html += `<div style="flex:1;display:flex;align-items:center;gap:6px;min-width:0;">`;
+            html += `<div style="flex:1;min-width:0;">${teamChip(t1, 'left', winner === t1, winner && winner !== t1)}</div>`;
+            html += `<span style="font-size:0.6rem;color:rgba(247,244,235,0.3);flex-shrink:0;">${isDone ? 'FINAL' : 'vs'}</span>`;
+            html += `<div style="flex:1;min-width:0;display:flex;justify-content:flex-end;">${teamChip(t2, 'right', winner === t2, winner && winner !== t2)}</div>`;
+            html += `</div>`;
+            html += `<span style="font-size:0.6rem;font-weight:700;background:rgba(247,244,235,0.09);border-radius:4px;padding:2px 7px;color:rgba(247,244,235,0.45);flex-shrink:0;">${roundLabel}</span>`;
+            html += `</div>`;
+          }
+          html += `</div>`;
+        }
+
+        el.innerHTML = html || '<p style="color:var(--wc-muted);font-size:0.85rem;">No upcoming matches.</p>';
+      }
+
       // Initialize
       // Let refreshOfficialResults re-render the KO Pool table when results change.
-      koRerenderHook = () => { renderKoPool(); renderKoBracket(); };
+      koRerenderHook = () => { renderKoPool(); renderKoBracket(); renderSchedule(); };
       loadWIndexFeed();
       // KO Pool is the default active tab — load its entries immediately
       updateNextMatchHeader();
