@@ -19,10 +19,10 @@ export const BOOK1 = [
   },
   {
     type: 'quote', cat: 'story',
-    quote: 'Yer a wizard, Harry.',
+    quote: 'Harry — yer a wizard.',
     options: ['Hagrid', 'Dumbledore', 'Ron', 'Uncle Vernon'],
     answer: 0,
-    fact: 'Hagrid burst in at midnight on Harry’s 11th birthday — with a slightly squashed birthday cake.',
+    fact: 'Hagrid burst in at midnight on Harry’s 11th birthday — with a slightly squashed birthday cake. (The movie says “Yer a wizard, Harry” — the book puts it this way!)',
   },
   {
     type: 'mc', cat: 'story',
@@ -309,10 +309,10 @@ export const BOOK1 = [
   },
   {
     type: 'quote', cat: 'superfan',
-    quote: 'I shouldn’ta said that. I should NOT have said that.',
-    options: ['Hagrid', 'Ron', 'Neville', 'Quirrell'],
+    quote: 'NEVER — insult — Albus — Dumbledore — in — front — of — me!',
+    options: ['Hagrid', 'McGonagall', 'Snape', 'Percy Weasley'],
     answer: 0,
-    fact: 'Poor Hagrid keeps letting secrets slip — like a certain three-headed dog’s weakness for music.',
+    fact: 'Hagrid thundered it at Uncle Vernon — then pointed his umbrella at Dudley, and POOF: pig’s tail.',
   },
   {
     type: 'quote', cat: 'superfan',
@@ -330,10 +330,10 @@ export const BOOK1 = [
   },
   {
     type: 'quote', cat: 'superfan',
-    quote: 'You’re a little scary sometimes, you know that? Brilliant… but scary.',
-    options: ['Ron, about Hermione', 'Harry, about McGonagall', 'Neville, about Snape', 'Fred, about his mum'],
+    quote: 'I hope you’re pleased with yourselves. We could all have been killed — or worse, expelled.',
+    options: ['Hermione', 'Percy Weasley', 'Ron', 'Professor McGonagall'],
     answer: 0,
-    fact: 'Ron said it after Hermione calmly solved the potion riddle while trapped in a ring of magical fire.',
+    fact: 'Hermione, after the midnight run-in with Fluffy. Only Hermione would rank getting expelled as worse than getting eaten!',
   },
   {
     type: 'mc', cat: 'superfan',

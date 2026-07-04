@@ -55,7 +55,9 @@ export function presentOptions(question) {
   }
 }
 
-export function pointsFor(q, firstTry) {
+// Full points on the first try, halved for each miss, never below 2 —
+// e.g. a 10-pointer pays 10 / 5 / 3 / 2, a superfan 20-pointer 20 / 10 / 5 / 3 / 2.
+export function pointsFor(q, misses) {
   const base = q.cat === 'superfan' ? 20 : q.type === 'order' ? 15 : 10
-  return firstTry ? base : Math.ceil(base / 2)
+  return Math.max(2, Math.ceil(base * Math.pow(0.5, misses)))
 }

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BOOK1 } from '../data/book1.js'
 import { BOOK2 } from '../data/book2.js'
@@ -21,9 +21,9 @@ export default function Quiz({ game, setGame, book, onHome }) {
   const q = deck[i]
   const houseName = game.house ? HOUSES[game.house].name : null
 
-  function handleCorrect(firstTry) {
-    const pts = pointsFor(q, firstTry)
-    const nextStreak = firstTry ? streak + 1 : 0
+  function handleCorrect(misses) {
+    const pts = pointsFor(q, misses)
+    const nextStreak = misses === 0 ? streak + 1 : 0
     setEarned(pts)
     setStreak(nextStreak)
     setSolved(true)
@@ -57,6 +57,22 @@ export default function Quiz({ game, setGame, book, onHome }) {
       setLap(l => l + 1)
     }
   }
+
+  // Enter/Return advances: collects a fresh frog card first, otherwise next question.
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key !== 'Enter' || e.repeat) return
+      if (newCard) {
+        e.preventDefault()
+        setNewCard(null)
+      } else if (solved) {
+        e.preventDefault()
+        next()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  })
 
   const cat = CATS[q.cat]
 
@@ -190,14 +206,12 @@ function OptionsQuestion({ q, solved, onCorrect }) {
     return presentOptions(q)
   }, [q])
   const [wrong, setWrong] = useState([])
-  const firstTry = useRef(true)
 
   function pick(idx) {
     if (solved || wrong.includes(idx)) return
     if (idx === presented.answer) {
-      onCorrect(firstTry.current)
+      onCorrect(wrong.length)
     } else {
-      firstTry.current = false
       setWrong(w => [...w, idx])
     }
   }
@@ -243,16 +257,16 @@ function OrderQuestion({ q, solved, onCorrect }) {
   }, [q])
   const [placed, setPlaced] = useState([])       // items placed correctly, in order
   const [shakeItem, setShakeItem] = useState(null)
-  const firstTry = useRef(true)
+  const misses = useRef(0)
 
   function pick(item) {
     if (solved || placed.includes(item)) return
     if (item === q.items[placed.length]) {
       const nextPlaced = [...placed, item]
       setPlaced(nextPlaced)
-      if (nextPlaced.length === q.items.length) onCorrect(firstTry.current)
+      if (nextPlaced.length === q.items.length) onCorrect(misses.current)
     } else {
-      firstTry.current = false
+      misses.current += 1
       setShakeItem(item)
       setTimeout(() => setShakeItem(null), 400)
     }

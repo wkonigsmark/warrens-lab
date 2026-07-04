@@ -423,10 +423,10 @@ export const BOOK2 = [
   },
   {
     type: 'mc', cat: 'superfan',
-    q: 'SUPERFAN: Harry’s first try with Floo powder goes wrong. What does he say instead of “Diagon Alley”?',
-    options: ['“Diagonally”', '“Dragon Alley”', '“Diagon Valley”', 'He sneezes and says nothing'],
+    q: 'SUPERFAN: Harry’s first try with Floo powder goes wrong — he coughs mid-word and garbles “Diagon Alley.” Where does he tumble out?',
+    options: ['Knockturn Alley, at Borgin and Burkes', 'The Leaky Cauldron', 'The Burrow’s kitchen', 'The Hogwarts kitchens'],
     answer: 0,
-    fact: 'One mumbled word sent him to creepy Knockturn Alley — where he hid in a cabinet and spied on the Malfoys!',
+    fact: 'He hid in a big black cabinet and spied on the Malfoys selling their darkest stuff — until Hagrid found him, covered in soot.',
   },
   {
     type: 'mc', cat: 'superfan',
@@ -444,7 +444,7 @@ export const BOOK2 = [
   },
   {
     type: 'mc', cat: 'superfan',
-    q: 'SUPERFAN: What potion regrows all 33 bones in Harry’s arm?',
+    q: 'SUPERFAN: What potion regrows all the bones in Harry’s arm?',
     options: ['Skele-Gro', 'Pepperup Potion', 'Polyjuice Potion', 'Mandrake Draught'],
     answer: 0,
     fact: 'Lockhart “fixed” Harry’s broken arm by removing every bone in it. Skele-Gro burns going down — and regrowing bones takes all night.',
@@ -500,17 +500,17 @@ export const BOOK2 = [
   },
   {
     type: 'quote', cat: 'superfan',
-    quote: 'Why spiders? Why couldn’t it be “follow the butterflies”?',
-    options: ['Ron', 'Harry', 'Neville', 'Hagrid'],
+    quote: 'Follow the spiders! I’ll never forgive Hagrid. We’re lucky to be alive.',
+    options: ['Ron', 'Harry', 'Neville', 'Fang'],
     answer: 0,
-    fact: 'Ron, deep in the Forbidden Forest, summing up how we all feel about giant spiders.',
+    fact: 'Ron, right after escaping Aragog’s family. (The movie’s “why couldn’t it be follow the butterflies” line isn’t in the book!)',
   },
   {
     type: 'quote', cat: 'superfan',
-    quote: 'Training for the ballet, Potter?',
+    quote: 'All right there, Scarhead?',
     options: ['Draco Malfoy', 'Marcus Flint', 'Crabbe', 'Lockhart'],
     answer: 0,
-    fact: 'Draco was too busy jeering at Harry to notice the Golden Snitch hovering an inch above his own ear. Harry noticed.',
+    fact: 'Draco jeering during the Quidditch match — too busy taunting Harry to notice the Golden Snitch hovering right by his own ear. Harry noticed.',
   },
   {
     type: 'quote', cat: 'superfan',
