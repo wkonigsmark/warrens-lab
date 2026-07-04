@@ -1061,6 +1061,47 @@
         transform: translateY(8px) scale(0.98);
       }
     }
+
+    /* ── KO Bracket ─────────────────────────────── */
+    .ko-bk-wrap { overflow-x:auto; padding:4px 0 20px; }
+    .ko-bk-head { display:flex; min-width:760px; margin-bottom:10px; }
+    .ko-bk-rh  { flex:0 0 128px; margin-right:22px; font-size:0.62rem; font-weight:900;
+                  text-transform:uppercase; letter-spacing:0.08em; color:var(--wc-gold); text-align:center; }
+    .ko-bk-rh:last-child { margin-right:0; }
+    .ko-bracket { display:flex; height:1152px; min-width:760px; position:relative; }
+    .ko-bk-round { display:flex; flex-direction:column; justify-content:space-around;
+                   flex:0 0 128px; margin-right:22px; }
+    .ko-bk-round:last-child { margin-right:0; }
+    .ko-bk-r32 { --h:36px; } .ko-bk-r16 { --h:72px; }
+    .ko-bk-qf  { --h:144px; } .ko-bk-sf  { --h:288px; }
+    .ko-bk-match { position:relative; height:56px; box-sizing:border-box;
+                   border:1px solid var(--wc-line); border-radius:7px; background:var(--wc-panel); }
+    .ko-bk-side { display:flex; align-items:center; gap:5px; height:50%; padding:0 7px;
+                  font-size:0.76rem; overflow:hidden; }
+    .ko-bk-side + .ko-bk-side { border-top:1px solid rgba(255,255,255,0.08); }
+    .ko-bk-side img { width:18px; aspect-ratio:3/2; object-fit:cover; border-radius:2px;
+                      border:1px solid var(--wc-line); flex:0 0 auto; }
+    .ko-bk-code { font-weight:850; letter-spacing:0.02em; flex:1; min-width:0;
+                  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .ko-bk-code.tbd  { color:var(--wc-faint); font-style:italic; font-weight:600; }
+    .ko-bk-code.won  { color:var(--wc-gold); font-weight:950; }
+    .ko-bk-code.elim { color:rgba(247,244,235,0.25); text-decoration:line-through; }
+    /* elbow connectors */
+    .ko-bk-round:not(.ko-bk-final) .ko-bk-match::after {
+      content:""; position:absolute; left:100%; width:22px; box-sizing:border-box;
+      border-right:2px solid var(--wc-line); height:var(--h);
+    }
+    .ko-bk-round:not(.ko-bk-final) .ko-bk-match:nth-child(odd)::after  { top:50%;    border-top:2px solid var(--wc-line); }
+    .ko-bk-round:not(.ko-bk-final) .ko-bk-match:nth-child(even)::after { bottom:50%; border-bottom:2px solid var(--wc-line); }
+    /* quadrant labels */
+    .ko-bk-qdecor { position:absolute; inset:0; pointer-events:none; overflow:visible; z-index:2; }
+    .ko-bk-qlabel { position:absolute; left:0; font-size:0.62rem; font-weight:900;
+                    text-transform:uppercase; letter-spacing:0.12em;
+                    color:rgba(244,201,93,0.6); white-space:nowrap; }
+    .ko-bk-qlabel-sep { left:158px; transform:translateY(-50%); font-size:0.68rem;
+                        background:var(--wc-bg); padding:2px 8px; }
+    .ko-bk-qsep { position:absolute; left:-6px; right:360px;
+                  border-top:1px dashed rgba(255,255,255,0.09); }
   </style>
 </head>
 
@@ -1108,6 +1149,7 @@
     <nav class="tab-selectors" id="scoreboard-tabs-nav">
       <button class="sim-tab-btn active" data-tab="ko-pool">🏆 KO Pool</button>
       <button class="sim-tab-btn" data-tab="ko-match-center">⚽ KO Match Center</button>
+      <button class="sim-tab-btn" data-tab="ko-bracket">🗺️ Bracket</button>
       <button class="sim-tab-btn" data-tab="matches">📅 Match Center</button>
     </nav>
 
@@ -1286,6 +1328,21 @@
           </div>
 
           <div id="ko-save-message" style="text-align:center;margin-top:16px;font-size:0.9rem;color:var(--wc-green);display:none;"></div>
+        </div>
+      </div>
+
+      <!-- Bracket tab -->
+      <div class="sim-view-panel" id="panel-ko-bracket">
+        <p style="color:var(--wc-muted);font-size:0.85rem;margin:0 0 14px;">Live knockout bracket · updates as results are entered.</p>
+        <div class="ko-bk-wrap">
+          <div class="ko-bk-head">
+            <div class="ko-bk-rh">Round of 32</div>
+            <div class="ko-bk-rh">Round of 16</div>
+            <div class="ko-bk-rh">Quarterfinal</div>
+            <div class="ko-bk-rh">Semifinal</div>
+            <div class="ko-bk-rh">🏆 Final</div>
+          </div>
+          <div id="ko-bracket-vis" class="ko-bracket"></div>
         </div>
       </div>
 
@@ -3566,6 +3623,8 @@
           if (btn.dataset.tab === "ko-pool") {
             loadKoEntries();
             updateNextMatchHeader();
+          } else if (btn.dataset.tab === "ko-bracket") {
+            renderKoBracket();
           } else if (btn.dataset.tab === "ko-match-center") {
             const unlock = () => {
               // Always refresh official results before displaying the form,
@@ -3644,9 +3703,139 @@
         });
       }
 
+      // ── KO Bracket ────────────────────────────────────────────────
+      // Match order arrays define visual top→bottom position in the bracket.
+      // Adjacent pairs feed the same next-round slot (odd=top side, even=bottom side).
+      const BK_R32 = [1,4,3,6,12,11,10,9,2,5,7,8,15,14,13,16];
+      const BK_R16 = [17,18,21,22,19,20,23,24];
+      const BK_QF  = [25,26,27,28];
+      const BK_SF  = [29,30];
+
+      function renderKoBracket() {
+        const vis = document.getElementById('ko-bracket-vis');
+        if (!vis) return;
+
+        // Build confirmed-only bracket state — no simulation or projection.
+        // A team only appears in a slot when an actual winnerId is on record.
+        const confirmed = {}; // seq → confirmed winnerId
+        const slotT1 = {}, slotT2 = {};
+
+        [...knockoutSchedule].sort((a, b) => a.seq - b.seq).forEach(match => {
+          const result = actualMatches.find(m => m.matchNumber === match.matchNumber);
+          const w = result?.status === 'completed' ? result.winnerId : null;
+
+          if (match.round === 'R32') {
+            slotT1[match.seq] = match.team1;
+            slotT2[match.seq] = match.team2;
+          } else if (match.round === '3P') {
+            const sfSeqs = knockoutSchedule.filter(m => m.round === 'SF').map(m => m.seq).sort((a,b) => a-b);
+            const loser = (sfSeq) => {
+              const w2 = confirmed[sfSeq];
+              if (!w2) return null;
+              return w2 === slotT1[sfSeq] ? slotT2[sfSeq] : slotT1[sfSeq];
+            };
+            slotT1[match.seq] = loser(sfSeqs[0]);
+            slotT2[match.seq] = loser(sfSeqs[1]);
+          } else if (match.round === 'F') {
+            const sfSeqs = knockoutSchedule.filter(m => m.round === 'SF').map(m => m.seq).sort((a,b) => a-b);
+            slotT1[match.seq] = confirmed[sfSeqs[0]] || null;
+            slotT2[match.seq] = confirmed[sfSeqs[1]] || null;
+          } else {
+            // R16 / QF / SF: only fill from confirmed winners of the *immediately* preceding round.
+            // Using all earlier seqs would let R32 winners skip directly into QF slots.
+            const PREV_ROUND = { R16: 'R32', QF: 'R16', SF: 'QF' };
+            const prevSeqs = new Set(
+              knockoutSchedule.filter(m => m.round === PREV_ROUND[match.round]).map(m => m.seq)
+            );
+            const t1Pool = match.team1.split('|');
+            const t2Pool = match.team2.split('|');
+            let t1 = null, t2 = null;
+            for (const [s, winner] of Object.entries(confirmed)) {
+              if (prevSeqs.has(Number(s))) {
+                if (!t1 && t1Pool.includes(winner)) t1 = winner;
+                if (!t2 && t2Pool.includes(winner)) t2 = winner;
+              }
+            }
+            slotT1[match.seq] = t1;
+            slotT2[match.seq] = t2;
+          }
+
+          if (w) confirmed[match.seq] = w;
+        });
+
+        function matchInfo(seq) {
+          const sched = knockoutSchedule.find(m => m.seq === seq);
+          if (!sched) return null;
+          return {
+            t1: slotT1[seq] || null,
+            t2: slotT2[seq] || null,
+            winner: confirmed[seq] || null,
+            done: !!confirmed[seq],
+            matchNumber: sched.matchNumber,
+          };
+        }
+
+        function bkFlagUrl(id) {
+          if (!id) return '';
+          const t = teamsById[id];
+          if (!t) return '';
+          const cc = id === 'ENG' ? 'gb-eng' : id === 'SCO' ? 'gb-sct' : t.countryCode.toLowerCase();
+          return `https://flagcdn.com/w80/${cc}.png`;
+        }
+
+        function bkSide(id, isWinner, done) {
+          const isLoser = done && id && !isWinner;
+          const cls = !id ? 'tbd' : isWinner ? 'won' : isLoser ? 'elim' : '';
+          const code = id ? id.substring(0, 3) : 'TBD';
+          const img = id ? `<img src="${bkFlagUrl(id)}" alt="${id}" style="opacity:${isLoser ? 0.3 : 1};border:none;">` : '';
+          return `<div class="ko-bk-side">${img}<span class="ko-bk-code ${cls}">${code}</span></div>`;
+        }
+
+        function bkMatch(seq) {
+          const d = matchInfo(seq);
+          if (!d) return '<div class="ko-bk-match"><div class="ko-bk-side"><span class="ko-bk-code tbd">TBD</span></div><div class="ko-bk-side"><span class="ko-bk-code tbd">TBD</span></div></div>';
+          return `<div class="ko-bk-match" title="Match ${d.matchNumber}">
+            ${bkSide(d.t1, d.winner === d.t1, d.done)}
+            ${bkSide(d.t2, d.winner === d.t2, d.done)}
+          </div>`;
+        }
+
+        function buildRound(seqs, cls) {
+          const col = document.createElement('div');
+          col.className = `ko-bk-round ${cls}`;
+          seqs.forEach(s => col.innerHTML += bkMatch(s));
+          return col;
+        }
+
+        vis.innerHTML = '';
+        vis.appendChild(buildRound(BK_R32, 'ko-bk-r32'));
+        vis.appendChild(buildRound(BK_R16, 'ko-bk-r16'));
+        vis.appendChild(buildRound(BK_QF,  'ko-bk-qf'));
+        vis.appendChild(buildRound(BK_SF,  'ko-bk-sf'));
+
+        const finalCol = document.createElement('div');
+        finalCol.className = 'ko-bk-round ko-bk-final';
+        finalCol.innerHTML = bkMatch(32);
+        vis.appendChild(finalCol);
+
+        // Quadrant labels (4 sections × 288px each in 1152px total)
+        const decor = document.createElement('div');
+        decor.className = 'ko-bk-qdecor';
+        [
+          { top:  22, label: 'Zidane' },
+          { top: 288, label: 'Klose'  },
+          { top: 576, label: 'Pelé'   },
+          { top: 864, label: 'Maradona' },
+        ].forEach(({ top, label }) => {
+          decor.innerHTML += `<div class="ko-bk-qsep" style="top:${top}px"></div>
+            <div class="ko-bk-qlabel ko-bk-qlabel-sep" style="top:${top}px">${label}</div>`;
+        });
+        vis.appendChild(decor);
+      }
+
       // Initialize
       // Let refreshOfficialResults re-render the KO Pool table when results change.
-      koRerenderHook = renderKoPool;
+      koRerenderHook = () => { renderKoPool(); renderKoBracket(); };
       loadWIndexFeed();
       // KO Pool is the default active tab — load its entries immediately
       updateNextMatchHeader();
