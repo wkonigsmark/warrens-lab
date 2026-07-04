@@ -4,17 +4,19 @@ import { BOOK1 } from '../data/book1.js'
 import { BOOK2 } from '../data/book2.js'
 import { CATS, HOUSES } from '../data/houses.js'
 import { FROG_CARDS } from '../data/frogCards.js'
-import { buildDeck, presentOptions, pointsFor, shuffle } from '../lib/game.js'
+import { buildDeck, presentOptions, pointsFor, qKey, shuffle } from '../lib/game.js'
 import FrogCard from '../components/FrogCard.jsx'
 import Burst from '../components/Burst.jsx'
 
 export default function Quiz({ game, setGame, book, onHome }) {
-  const [deck, setDeck] = useState(() => buildDeck(book === 1 ? BOOK1 : book === 2 ? BOOK2 : [...BOOK1, ...BOOK2]))
+  const bank = book === 1 ? BOOK1 : book === 2 ? BOOK2 : [...BOOK1, ...BOOK2]
+  const [deck, setDeck] = useState(() => buildDeck(bank, game.seen))
   const [i, setI] = useState(0)
   const [streak, setStreak] = useState(0)
   const [solved, setSolved] = useState(false)   // current question answered correctly
   const [earned, setEarned] = useState(0)
   const [newCard, setNewCard] = useState(null)  // frog card just unlocked
+  const [champion, setChampion] = useState(false) // all-22 ceremony showing
   const [burstKey, setBurstKey] = useState(0)
   const [lap, setLap] = useState(0)             // how many times the deck has been reshuffled
 
@@ -37,13 +39,24 @@ export default function Quiz({ game, setGame, book, onHome }) {
       // reveal the card after the sparkles land
       setTimeout(() => setNewCard(unlockedCard), 650)
     }
+    const seen = game.seen.includes(qKey(q)) ? game.seen : [...game.seen, qKey(q)]
     setGame({
       ...game,
       points: game.points + pts,
       totalCorrect,
       cards,
+      seen,
       bestStreak: Math.max(game.bestStreak, nextStreak),
     })
+  }
+
+  function collectCard() {
+    setNewCard(null)
+    // Collecting the 22nd card starts the completion ceremony (once ever).
+    if (game.cards === FROG_CARDS.length && !game.celebrated) {
+      setGame({ ...game, celebrated: true })
+      setChampion(true)
+    }
   }
 
   function next() {
@@ -52,19 +65,22 @@ export default function Quiz({ game, setGame, book, onHome }) {
     if (i + 1 < deck.length) {
       setI(i + 1)
     } else {
-      setDeck(buildDeck(book === 1 ? BOOK1 : book === 2 ? BOOK2 : [...BOOK1, ...BOOK2]))
+      setDeck(buildDeck(bank, game.seen))
       setI(0)
       setLap(l => l + 1)
     }
   }
 
-  // Enter/Return advances: collects a fresh frog card first, otherwise next question.
+  // Enter/Return advances: ceremony → frog card → next question, in that order.
   useEffect(() => {
     function onKey(e) {
       if (e.key !== 'Enter' || e.repeat) return
-      if (newCard) {
+      if (champion) {
         e.preventDefault()
-        setNewCard(null)
+        setChampion(false)
+      } else if (newCard) {
+        e.preventDefault()
+        collectCard()
       } else if (solved) {
         e.preventDefault()
         next()
@@ -162,7 +178,7 @@ export default function Quiz({ game, setGame, book, onHome }) {
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 grid place-items-center bg-black/75 px-8 backdrop-blur-sm"
-            onClick={() => setNewCard(null)}
+            onClick={collectCard}
           >
             <motion.div
               initial={{ scale: 0.4, rotate: -8 }}
@@ -178,11 +194,74 @@ export default function Quiz({ game, setGame, book, onHome }) {
                 <FrogCard card={newCard} />
               </div>
               <button
-                onClick={() => setNewCard(null)}
+                onClick={collectCard}
                 className="mt-5 w-full rounded-2xl py-3.5 font-heading font-bold text-night-900"
                 style={{ background: 'linear-gradient(180deg, #ffe9a8, #e6c25a)' }}
               >
                 Collect! 🍫
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* All-22 completion ceremony */}
+      <AnimatePresence>
+        {champion && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/85 px-6 py-8 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.3, rotate: -6 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: 'spring', bounce: 0.45 }}
+              className="relative w-full max-w-sm text-center"
+            >
+              <Burst triggerKey={1} />
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ repeat: Infinity, duration: 2.4, ease: 'easeInOut' }}
+                className="text-7xl drop-shadow-lg"
+              >
+                🏆
+              </motion.div>
+              <h2 className="gold-text mt-3 font-magic text-3xl font-black leading-tight drop-shadow">
+                Master Collector!
+              </h2>
+              <p className="mt-3 text-sm font-bold leading-relaxed text-indigo-100">
+                All <span style={{ color: 'var(--trim)' }}>22 Chocolate Frog Cards</span> collected!
+                {houseName ? ` ${HOUSES[game.house].emoji} ` : ' '}
+                You are hereby granted a
+              </p>
+              <div
+                className="mx-auto mt-4 rounded-2xl px-5 py-4"
+                style={{
+                  background: 'linear-gradient(160deg, rgba(230,194,90,0.2), rgba(230,194,90,0.06))',
+                  border: '1.5px solid rgba(230,194,90,0.65)',
+                  boxShadow: '0 0 28px rgba(230,194,90,0.2)',
+                }}
+              >
+                <div className="text-3xl">🛡️</div>
+                <div className="gold-text mt-1 font-heading text-lg font-bold leading-tight">
+                  Special Award for Services to Hogwarts
+                </div>
+                <div className="mt-1.5 text-xs font-semibold leading-snug text-indigo-100/85">
+                  Unlike a certain T. M. Riddle, you earned yours honestly — {game.totalCorrect} questions answered true.
+                </div>
+              </div>
+              <button
+                onClick={() => window.print()}
+                className="mt-5 w-full rounded-2xl py-3.5 font-heading font-bold text-night-900"
+                style={{ background: 'linear-gradient(180deg, #ffe9a8, #e6c25a)' }}
+              >
+                🖨 Print your certificate
+              </button>
+              <button
+                onClick={() => setChampion(false)}
+                className="glass mt-2.5 w-full rounded-2xl py-3 font-heading font-bold text-indigo-100"
+              >
+                Keep playing ✨
               </button>
             </motion.div>
           </motion.div>

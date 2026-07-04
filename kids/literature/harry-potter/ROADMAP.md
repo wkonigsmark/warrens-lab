@@ -1,5 +1,11 @@
 # Wizarding Quiz — Roadmap
 
+## v1.1 (shipped)
+- Question trove deepened to 178 (74 + 104), superfan-heavy; book-text-only audit
+- Unseen-first dealing — no repeats until the whole bank is cleared
+- Graduated scoring (halve per miss, floor 2) + Enter/Return to advance
+- Master Collector finale: trophy ceremony + printable certificate at 22/22 cards
+
 ## v1 (shipped)
 - Endless forgiving quiz stream: Book I, Book II, Grand Mix
 - 5 mechanics: multiple choice · true/false · Who Said It? · Order the Events · Odd One Out

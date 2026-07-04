@@ -19,7 +19,14 @@ function defaultState() {
     totalCorrect: 0,
     bestStreak: 0,
     cards: 0,           // number of frog cards unlocked (index into FROG_CARDS)
+    seen: [],           // keys of questions already answered correctly
+    celebrated: false,  // completion ceremony shown once
   }
+}
+
+// Stable identity for a question (survives bank reordering/growth).
+export function qKey(q) {
+  return (q.quote || q.q).slice(0, 60)
 }
 
 // Fisher–Yates
@@ -32,10 +39,20 @@ export function shuffle(arr) {
   return a
 }
 
-// Build an endless deck: shuffled, but never two superfan questions in a row
-// and never the same type twice in a row (keeps the stream feeling varied).
-export function buildDeck(questions) {
-  const deck = shuffle(questions)
+// Build an endless deck: questions never answered correctly come first, so
+// nothing repeats until the whole bank is cleared. Within each half the order
+// is shuffled, but never two superfan questions in a row and never the same
+// type twice in a row (keeps the stream feeling varied).
+export function buildDeck(questions, seen = []) {
+  const seenSet = new Set(seen)
+  const fresh = vary(shuffle(questions.filter(q => !seenSet.has(qKey(q)))))
+  const replays = vary(shuffle(questions.filter(q => seenSet.has(qKey(q)))))
+  return [...fresh, ...replays]
+}
+
+// Smooth a segment so the same type (and back-to-back superfans) don't cluster.
+// Swaps stay inside the segment, preserving the fresh-before-replays guarantee.
+function vary(deck) {
   for (let i = 1; i < deck.length; i++) {
     if (deck[i].type === deck[i - 1].type || (deck[i].cat === 'superfan' && deck[i - 1].cat === 'superfan')) {
       const j = deck.findIndex((q, k) => k > i && q.type !== deck[i - 1].type)

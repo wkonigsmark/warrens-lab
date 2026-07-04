@@ -116,3 +116,85 @@ body {
   padding-right: max(1rem, env(safe-area-inset-right));
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
+
+/* ---- printable Master Collector certificate ---- */
+.print-cert { display: none; }
+
+@media print {
+  body { background: #fff !important; }
+  .app-screen, .stars, .stars2 { display: none !important; }
+  .print-cert {
+    display: block;
+    color: #2c2416;
+    font-family: 'Nunito', sans-serif;
+    padding: 0.5in 0.25in;
+  }
+  .print-cert-frame {
+    border: 3px double #2c2416;
+    outline: 1px solid #2c2416;
+    outline-offset: 6px;
+    padding: 36px 40px;
+    text-align: center;
+  }
+  .print-cert-script {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 10px;
+  }
+  .print-cert h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 40px;
+    font-weight: 900;
+    margin: 6px 0 0;
+  }
+  .print-cert-sub {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    margin: 2px 0 22px;
+  }
+  .print-cert-line {
+    font-size: 13px;
+    font-style: italic;
+    margin: 0 0 2px;
+  }
+  .print-cert-name {
+    border-bottom: 1.5px solid #2c2416;
+    width: 70%;
+    height: 34px;
+    margin: 0 auto 18px;
+  }
+  .print-cert-body {
+    font-size: 13.5px;
+    line-height: 1.5;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .print-cert-cards {
+    font-size: 20px;
+    letter-spacing: 6px;
+    margin: 18px 0 26px;
+  }
+  .print-cert-foot {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .print-cert-foot p {
+    font-size: 11px;
+    margin: 3px 0 0;
+  }
+  .print-cert-sig {
+    border-bottom: 1px solid #2c2416;
+    min-width: 140px;
+    height: 22px;
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+}

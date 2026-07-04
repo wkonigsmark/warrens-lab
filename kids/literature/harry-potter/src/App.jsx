@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import Home from './screens/Home.jsx'
 import Quiz from './screens/Quiz.jsx'
+import Certificate from './components/Certificate.jsx'
 import { loadState, saveState } from './lib/game.js'
 import { HOUSES } from './data/houses.js'
+import { FROG_CARDS } from './data/frogCards.js'
 
 export default function App() {
   const [game, setGame] = useState(loadState)
@@ -20,26 +22,29 @@ export default function App() {
   }, [house])
 
   return (
-    <div className="relative min-h-dvh">
-      <div className="stars" />
-      <div className="stars2" />
-      <div className="relative z-10">
-        {screen === 'home' && (
-          <Home
-            game={game}
-            setGame={setGame}
-            onPlay={(book) => { setBookPick(book); setScreen('quiz') }}
-          />
-        )}
-        {screen === 'quiz' && (
-          <Quiz
-            game={game}
-            setGame={setGame}
-            book={bookPick}
-            onHome={() => setScreen('home')}
-          />
-        )}
+    <>
+      <div className="app-screen relative min-h-dvh">
+        <div className="stars" />
+        <div className="stars2" />
+        <div className="relative z-10">
+          {screen === 'home' && (
+            <Home
+              game={game}
+              setGame={setGame}
+              onPlay={(book) => { setBookPick(book); setScreen('quiz') }}
+            />
+          )}
+          {screen === 'quiz' && (
+            <Quiz
+              game={game}
+              setGame={setGame}
+              book={bookPick}
+              onHome={() => setScreen('home')}
+            />
+          )}
+        </div>
       </div>
-    </div>
+      {game.cards >= FROG_CARDS.length && <Certificate game={game} />}
+    </>
   )
 }

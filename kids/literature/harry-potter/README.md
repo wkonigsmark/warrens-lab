@@ -15,8 +15,9 @@ Or from the lab root: `preview_start hp-quiz` / launch config `hp-quiz`.
 
 ## How it works
 
-- **Endless mix** — pick Book I, Book II, or the Grand Mix; questions stream forever
-  (deck reshuffles when exhausted). Built for car rides.
+- **Endless mix** — pick Book I, Book II, or the Grand Mix; questions stream forever.
+  The deck always deals questions you haven't answered correctly yet before any
+  repeats, so nothing repeats until the whole bank is cleared. Built for car rides.
 - **Three content flavors**, each tagged on the question card:
   - 📖 **Story** — plotline comprehension, achievable and confidence-building
   - 💖 **Heart & Courage** — themes: courage in the face of fear, wisdom against
@@ -25,18 +26,24 @@ Or from the lab root: `preview_start hp-quiz` / launch config `hp-quiz`.
     that reward kids who really read the books; worth double points
 - **Five question mechanics** — multiple choice, true/false, Who Said It? (parchment
   quote card), Order the Events (tap-in-sequence), Odd One Out.
-- **Forgiving loop** — wrong answers gray out and you just try again (half points);
-  no lives, no game over. Every correct answer shows a "did you know" fact.
+- **Forgiving loop** — wrong answers gray out and you just try again; points halve
+  per miss (10 → 5 → 3 → 2, floor 2), no lives, no game over. Every correct answer
+  shows a "did you know" fact. Enter/Return advances after a correct answer.
 - **Rewards** — house points (pick your house on the home screen), 🔥 streaks, and a
   **Chocolate Frog Card** collection: one card unlocks per 5 correct answers (22 cards).
-- Progress (points, cards, best streak, house) persists in `localStorage`.
+- **Master Collector finale** — collecting all 22 cards triggers a trophy ceremony
+  ("Special Award for Services to Hogwarts") and a printable B&W certificate with a
+  blank name line for kids to fill in. The trophy stays on the home screen forever.
+- Progress (points, cards, seen questions, best streak, house) persists in `localStorage`.
+- **Content rules**: books 1–2 knowledge only (no later-book spoilers), and book text
+  only — never movie lines.
 
 ## Structure
 
 ```
 src/
-  data/book1.js      55 questions — Sorcerer's Stone
-  data/book2.js      61 questions — Chamber of Secrets (the main focus)
+  data/book1.js      74 questions — Sorcerer's Stone
+  data/book2.js      104 questions — Chamber of Secrets (the main focus)
   data/frogCards.js  22 collectible cards, in unlock order
   data/houses.js     house themes, category meta, book list (locked flags)
   lib/game.js        persistence, deck building, option shuffling, scoring

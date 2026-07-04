@@ -30,9 +30,11 @@ export default function Home({ game, setGame, onPlay }) {
         <div className="h-8 w-px bg-white/15" />
         <button onClick={() => setShowCards(true)} className="active:scale-95 transition">
           <div className="text-xl font-black" style={{ color: 'var(--trim)' }}>
-            🍫 {game.cards}<span className="text-sm font-bold text-indigo-200/60">/{FROG_CARDS.length}</span>
+            {game.cards >= FROG_CARDS.length ? '🏆 ' : '🍫 '}{game.cards}<span className="text-sm font-bold text-indigo-200/60">/{FROG_CARDS.length}</span>
           </div>
-          <div className="text-[11px] font-bold uppercase tracking-wide text-indigo-200/70">Frog cards · tap!</div>
+          <div className="text-[11px] font-bold uppercase tracking-wide text-indigo-200/70">
+            {game.cards >= FROG_CARDS.length ? 'Master collector!' : 'Frog cards · tap!'}
+          </div>
         </button>
         <div className="h-8 w-px bg-white/15" />
         <div>
@@ -128,9 +130,22 @@ export default function Home({ game, setGame, onPlay }) {
           >
             <div className="safe-pad mx-auto w-full max-w-md flex-1 overflow-y-auto px-4 py-8" onClick={e => e.stopPropagation()}>
               <h2 className="gold-text text-center font-magic text-2xl font-black">Chocolate Frog Cards</h2>
-              <p className="mt-1 text-center text-xs font-semibold text-indigo-200/80">
-                Answer 5 questions right to earn each card!
-              </p>
+              {game.cards >= FROG_CARDS.length ? (
+                <div className="mt-2 text-center">
+                  <p className="text-sm font-black text-amber-200">🏆 Master Collector — every card earned!</p>
+                  <button
+                    onClick={() => window.print()}
+                    className="mt-2.5 rounded-xl px-5 py-2.5 font-heading text-sm font-bold text-night-900"
+                    style={{ background: 'linear-gradient(180deg, #ffe9a8, #e6c25a)' }}
+                  >
+                    🖨 Print your certificate
+                  </button>
+                </div>
+              ) : (
+                <p className="mt-1 text-center text-xs font-semibold text-indigo-200/80">
+                  Answer 5 questions right to earn each card!
+                </p>
+              )}
               <div className="mt-5 grid grid-cols-2 gap-3">
                 {FROG_CARDS.map((card, i) => (
                   <FrogCard key={card.id} card={card} locked={i >= unlocked.length} small />
