@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Road Trip Quiz</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <span class="brand">🚗 Road Trip Quiz</span>
+      <span class="streak" id="streak">🔥 0</span>
+    </header>
+
+    <main class="card" id="card">
+      <div class="cat-pill" id="catPill">Category</div>
+      <h1 class="question" id="questionText">Loading…</h1>
+      <div class="choices" id="choices"></div>
+      <div class="reveal" id="revealBox" hidden>
+        <p class="reveal-label">Answer:</p>
+        <p class="reveal-answer" id="revealAnswer"></p>
+      </div>
+      <button class="btn next" id="nextBtn" hidden>Next question →</button>
+    </main>
+
+    <div class="celebrate" id="celebrate" hidden></div>
+  </div>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

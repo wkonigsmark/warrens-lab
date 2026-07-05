@@ -374,29 +374,48 @@ kbd {
 
 #deck-dots {
   position: absolute;
-  bottom: 18px;
+  bottom: 0;
   left: 0;
   right: 0;
   display: flex;
   justify-content: center;
-  gap: 8px;
+  align-items: center;
+  gap: 2px;
   z-index: 20;
+  padding: 10px 0 calc(10px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(to top, rgba(238,233,223,0.96) 45%, rgba(238,233,223,0));
+  pointer-events: none;
 }
 
+#deck-dots button { pointer-events: auto; }
+
 .deck-dot {
-  width: 8px;
-  height: 8px;
+  position: relative;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: rgba(0,0,0,0.18);
+  background: transparent;
   border: none;
   padding: 0;
   cursor: pointer;
 }
 
-.deck-dot.active {
+.deck-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.22);
+  transition: width 0.2s ease, background 0.2s ease;
+}
+
+.deck-dot.active::after {
   background: var(--green);
   width: 22px;
-  border-radius: 999px;
 }
 
 /* ---------- Responsive ---------- */

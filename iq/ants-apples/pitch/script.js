@@ -54,24 +54,58 @@
     }
   });
 
-  // Swipe support
+  // Swipe support.
+  // Slides taller than the viewport scroll internally (overflow-y: auto), so a
+  // swipe that starts with any vertical component competes with native scroll —
+  // if we wait until touchend to look at the total delta, the browser has often
+  // already claimed the gesture as a scroll and our delta never reads as a clean
+  // horizontal swipe. Instead we lock the gesture's direction as soon as it's
+  // clear (a few px of movement) and preventDefault on touchmove once we know
+  // it's horizontal, so native scrolling never gets a chance to steal it.
   let touchStartX = null;
   let touchStartY = null;
+  let touchDirection = null; // 'horizontal' | 'vertical' | null (undecided)
+  const DIRECTION_LOCK_PX = 8;
+  const SWIPE_TRIGGER_PX = 40;
+
   track.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
+    touchDirection = null;
   }, { passive: true });
+
+  track.addEventListener('touchmove', (e) => {
+    if (touchStartX === null || e.touches.length !== 1) return;
+    const dx = e.touches[0].clientX - touchStartX;
+    const dy = e.touches[0].clientY - touchStartY;
+
+    if (touchDirection === null && (Math.abs(dx) > DIRECTION_LOCK_PX || Math.abs(dy) > DIRECTION_LOCK_PX)) {
+      touchDirection = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical';
+    }
+    if (touchDirection === 'horizontal') {
+      e.preventDefault(); // claim the gesture so vertical scroll can't intercept it
+    }
+  }, { passive: false });
 
   track.addEventListener('touchend', (e) => {
     if (touchStartX === null) return;
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
-      if (dx < 0) goTo(index + 1);
-      else goTo(index - 1);
+    if (touchDirection === 'horizontal') {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > SWIPE_TRIGGER_PX) {
+        if (dx < 0) goTo(index + 1);
+        else goTo(index - 1);
+      }
     }
     touchStartX = null;
     touchStartY = null;
+    touchDirection = null;
+  }, { passive: true });
+
+  track.addEventListener('touchcancel', () => {
+    touchStartX = null;
+    touchStartY = null;
+    touchDirection = null;
   }, { passive: true });
 
   render();
