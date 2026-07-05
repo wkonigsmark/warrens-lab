@@ -7,6 +7,7 @@
   const nextBtn = document.getElementById("nextBtn");
   const streakEl = document.getElementById("streak");
   const celebrateEl = document.getElementById("celebrate");
+  const subjectsEl = document.getElementById("subjects");
 
   const CELEBRATIONS = ["🎉", "⭐️", "🙌", "🏆", "✨", "🥳"];
 
@@ -14,13 +15,35 @@
   let streak = 0;
   let used = new Set();
   let current = null;
+  let activeSubject = "All";
+
+  function renderSubjects() {
+    const subjects = ["All", ...new Set(QUESTIONS.map((q) => q.cat))];
+    subjectsEl.innerHTML = "";
+    subjects.forEach((subject) => {
+      const btn = document.createElement("button");
+      btn.className = "subject-btn" + (subject === activeSubject ? " active" : "");
+      btn.textContent = subject;
+      btn.onclick = () => {
+        if (activeSubject === subject) return;
+        activeSubject = subject;
+        used.clear();
+        renderSubjects();
+        render();
+      };
+      subjectsEl.appendChild(btn);
+    });
+  }
 
   function pickQuestion() {
     const ceilLevel = Math.min(5, Math.ceil(level) + 1);
-    let pool = QUESTIONS.filter((q) => q.diff <= ceilLevel && !used.has(q));
+    const bySubject = activeSubject === "All"
+      ? QUESTIONS
+      : QUESTIONS.filter((q) => q.cat === activeSubject);
+    let pool = bySubject.filter((q) => q.diff <= ceilLevel && !used.has(q));
     if (pool.length === 0) {
       used.clear();
-      pool = QUESTIONS.filter((q) => q.diff <= ceilLevel);
+      pool = bySubject.filter((q) => q.diff <= ceilLevel);
     }
     // weight toward questions near the current level
     const weighted = [];
@@ -119,5 +142,6 @@
 
   nextBtn.onclick = render;
 
+  renderSubjects();
   render();
 })();
