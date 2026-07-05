@@ -28,6 +28,15 @@
       border-bottom: 1px solid var(--wc-line);
       margin-bottom: 24px;
       padding-bottom: 4px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      max-width: 100%;
+    }
+
+    .tab-selectors::-webkit-scrollbar {
+      display: none;
     }
 
     .sim-tab-btn {
@@ -41,6 +50,24 @@
       border-radius: 6px;
       transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 640px) {
+      .sim-tab-btn {
+        font-size: 0.78rem;
+        padding: 7px 12px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      #ko-stats-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+      #ko-stats-row .wc-stat strong {
+        font-size: clamp(1.15rem, 6vw, 1.7rem) !important;
+      }
     }
 
     .sim-tab-btn:hover {
@@ -1151,7 +1178,6 @@
       <button class="sim-tab-btn" data-tab="ko-match-center">⚽ KO Match Center</button>
       <button class="sim-tab-btn" data-tab="ko-bracket">🗺️ Bracket</button>
       <button class="sim-tab-btn" data-tab="ko-schedule">📅 Fixtures</button>
-      <button class="sim-tab-btn" data-tab="matches">📋 Match Center</button>
     </nav>
 
     <!-- Tab Panels Container -->
@@ -1334,16 +1360,27 @@
 
       <!-- Bracket tab -->
       <div class="sim-view-panel" id="panel-ko-bracket">
-        <p style="color:var(--wc-muted);font-size:0.85rem;margin:0 0 14px;">Live knockout bracket · updates as results are entered.</p>
-        <div class="ko-bk-wrap">
-          <div class="ko-bk-head">
-            <div class="ko-bk-rh">Round of 32</div>
-            <div class="ko-bk-rh">Round of 16</div>
-            <div class="ko-bk-rh">Quarterfinal</div>
-            <div class="ko-bk-rh">Semifinal</div>
-            <div class="ko-bk-rh">🏆 Final</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap;">
+          <p style="color:var(--wc-muted);font-size:0.85rem;margin:0;flex:1 1 auto;min-width:180px;">Live knockout bracket · updates as results are entered.</p>
+          <div style="display:flex;gap:5px;flex-shrink:0;">
+            <button id="bk-view-linear" onclick="window._setBracketView('linear')" style="font-size:0.62rem;font-weight:800;padding:4px 10px;border-radius:5px;border:1px solid rgba(247,244,235,0.25);background:rgba(247,244,235,0.14);color:var(--wc-ink);cursor:pointer;letter-spacing:0.03em;">⬛ Linear</button>
+            <button id="bk-view-circle" onclick="window._setBracketView('circle')" style="font-size:0.62rem;font-weight:800;padding:4px 10px;border-radius:5px;border:1px solid rgba(247,244,235,0.15);background:transparent;color:var(--wc-muted);cursor:pointer;letter-spacing:0.03em;">⭕ Circle</button>
           </div>
-          <div id="ko-bracket-vis" class="ko-bracket"></div>
+        </div>
+        <div id="bk-linear-wrap">
+          <div class="ko-bk-wrap">
+            <div class="ko-bk-head">
+              <div class="ko-bk-rh">Round of 32</div>
+              <div class="ko-bk-rh">Round of 16</div>
+              <div class="ko-bk-rh">Quarterfinal</div>
+              <div class="ko-bk-rh">Semifinal</div>
+              <div class="ko-bk-rh">🏆 Final</div>
+            </div>
+            <div id="ko-bracket-vis" class="ko-bracket"></div>
+          </div>
+        </div>
+        <div id="bk-circle-wrap" style="display:none;">
+          <div id="ko-circle-vis" style="max-width:640px;margin:0 auto;"></div>
         </div>
       </div>
 
@@ -3951,9 +3988,172 @@
         el.innerHTML = html || '<p style="color:var(--wc-muted);font-size:0.85rem;">No upcoming matches.</p>';
       }
 
+      // Circle bracket view toggle
+      let _bracketView = 'linear';
+      window._setBracketView = function(view) {
+        _bracketView = view;
+        const lw = document.getElementById('bk-linear-wrap');
+        const cw = document.getElementById('bk-circle-wrap');
+        const lb = document.getElementById('bk-view-linear');
+        const cb = document.getElementById('bk-view-circle');
+        if (lw) lw.style.display = view === 'linear' ? '' : 'none';
+        if (cw) cw.style.display = view === 'circle' ? '' : 'none';
+        if (lb) { lb.style.background = view === 'linear' ? 'rgba(247,244,235,0.14)' : 'transparent'; lb.style.color = view === 'linear' ? 'var(--wc-ink)' : 'var(--wc-muted)'; }
+        if (cb) { cb.style.background = view === 'circle' ? 'rgba(247,244,235,0.14)' : 'transparent'; cb.style.color = view === 'circle' ? 'var(--wc-ink)' : 'var(--wc-muted)'; }
+        if (view === 'circle') renderCircleBracket();
+        else renderKoBracket();
+      };
+
+      function renderCircleBracket() {
+        const vis = document.getElementById('ko-circle-vis');
+        if (!vis) return;
+
+        // Confirmed-only slot resolution (same logic as renderKoBracket)
+        const confirmed = {}, slotT1 = {}, slotT2 = {};
+        [...knockoutSchedule].sort((a,b) => a.seq - b.seq).forEach(match => {
+          const result = actualMatches.find(m => m.matchNumber === match.matchNumber);
+          const w = result?.status === 'completed' ? result.winnerId : null;
+          if (match.round === 'R32') {
+            slotT1[match.seq] = match.team1; slotT2[match.seq] = match.team2;
+          } else if (match.round === '3P') {
+            const sfSeqs = knockoutSchedule.filter(m=>m.round==='SF').map(m=>m.seq).sort((a,b)=>a-b);
+            const loser = s => { const w2=confirmed[s]; if(!w2) return null; return w2===slotT1[s]?slotT2[s]:slotT1[s]; };
+            slotT1[match.seq]=loser(sfSeqs[0]); slotT2[match.seq]=loser(sfSeqs[1]);
+          } else if (match.round === 'F') {
+            const sfSeqs = knockoutSchedule.filter(m=>m.round==='SF').map(m=>m.seq).sort((a,b)=>a-b);
+            slotT1[match.seq]=confirmed[sfSeqs[0]]||null; slotT2[match.seq]=confirmed[sfSeqs[1]]||null;
+          } else {
+            const PREV = {R16:'R32',QF:'R16',SF:'QF'};
+            const prev = new Set(knockoutSchedule.filter(m=>m.round===PREV[match.round]).map(m=>m.seq));
+            const p1=match.team1.split('|'), p2=match.team2.split('|'); let t1=null,t2=null;
+            for (const [s,winner] of Object.entries(confirmed)) {
+              if (prev.has(Number(s))) { if(!t1&&p1.includes(winner))t1=winner; if(!t2&&p2.includes(winner))t2=winner; }
+            }
+            slotT1[match.seq]=t1; slotT2[match.seq]=t2;
+          }
+          if (w) confirmed[match.seq]=w;
+        });
+
+        const S=700, C=350;
+        const R = { outer:308, r32:265, r16:208, qf:150, sf:93, f:40 };
+        const IR = { outer:17, r16:13, qf:12, sf:12, f:27 };
+
+        const BK_R32=[1,4,3,6,12,11,10,9,2,5,7,8,15,14,13,16];
+        const BK_R16=[17,18,21,22,19,20,23,24];
+        const BK_QF=[25,26,27,28];
+        const BK_SF=[29,30];
+
+        // Slot i → angle in degrees (0 = top, clockwise)
+        const STEP = 360/32;
+        function slotDeg(i) { return -90 + i*STEP; }
+        function midDeg(a,b) { return (slotDeg(a)+slotDeg(b))/2; }
+        function toXY(deg,r) {
+          const rad=deg*Math.PI/180;
+          return [+(C+r*Math.cos(rad)).toFixed(2), +(C+r*Math.sin(rad)).toFixed(2)];
+        }
+        function ccFor(id) {
+          if(!id) return null;
+          if(id==='ENG') return 'gb-eng'; if(id==='SCO') return 'gb-sct';
+          return teamsById[id]?.countryCode?.toLowerCase() || id.toLowerCase();
+        }
+
+        let defs='', bg='', lns='', circs='', imgs='';
+
+        // Subtle background rings
+        bg += [R.r16,R.qf,R.sf].map(r=>`<circle cx="${C}" cy="${C}" r="${r}" fill="none" stroke="rgba(247,244,235,0.05)" stroke-width="1" stroke-dasharray="3,5"/>`).join('');
+
+        function addLine(x1,y1,x2,y2,lit) {
+          lns += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${lit?'rgba(210,175,80,0.55)':'rgba(247,244,235,0.09)'}" stroke-width="${lit?1.6:0.8}" stroke-linecap="round"/>`;
+        }
+        function addIcon(id,cx,cy,r,clipId,isWin,isOut) {
+          const cc=ccFor(id), op=isOut?0.28:1, sw=isWin?2.5:1;
+          const border=isWin?'#f4c95d':isOut?'rgba(247,244,235,0.1)':'rgba(247,244,235,0.32)';
+          circs += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#0b1c10" stroke="${border}" stroke-width="${sw}" opacity="${op}"/>`;
+          if(cc){
+            defs += `<clipPath id="${clipId}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath>`;
+            imgs  += `<image href="https://flagcdn.com/w40/${cc}.png" x="${cx-r}" y="${cy-r}" width="${r*2}" height="${r*2}" clip-path="url(#${clipId})" opacity="${op}" preserveAspectRatio="xMidYMid slice"/>`;
+          }
+        }
+        function addNode(cx,cy,r) {
+          circs += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="rgba(15,30,18,0.8)" stroke="rgba(247,244,235,0.15)" stroke-width="0.8"/>`;
+        }
+
+        // R32 — outer ring
+        BK_R32.forEach((seq,mi) => {
+          const s1=mi*2, s2=mi*2+1;
+          const a1=slotDeg(s1), a2=slotDeg(s2), am=(a1+a2)/2;
+          const [x1,y1]=toXY(a1,R.outer), [x2,y2]=toXY(a2,R.outer), [mx,my]=toXY(am,R.r32);
+          const t1=slotT1[seq]||null, t2=slotT2[seq]||null, w=confirmed[seq]||null;
+          addLine(x1,y1,mx,my, w&&w===t1);
+          addLine(x2,y2,mx,my, w&&w===t2);
+          addIcon(t1,x1,y1,IR.outer,`cb-a${mi}-1`, w&&w===t1, w&&w!==t1);
+          addIcon(t2,x2,y2,IR.outer,`cb-a${mi}-2`, w&&w===t2, w&&w!==t2);
+        });
+
+        // R16
+        BK_R16.forEach((seq,j) => {
+          const [nx,ny]=toXY(midDeg(j*4,j*4+3),R.r16);
+          const [ax,ay]=toXY(midDeg(j*4,j*4+1),R.r32);
+          const [bx,by]=toXY(midDeg(j*4+2,j*4+3),R.r32);
+          const wA=confirmed[BK_R32[j*2]]||null, wB=confirmed[BK_R32[j*2+1]]||null, wR=confirmed[seq]||null;
+          addLine(ax,ay,nx,ny, !!wA); addLine(bx,by,nx,ny, !!wB);
+          if(wR) addIcon(wR,nx,ny,IR.r16,`cb-r16-${seq}`, true,false);
+          else addNode(nx,ny, wA||wB ? 5 : 4);
+        });
+
+        // QF
+        BK_QF.forEach((seq,k) => {
+          const [nx,ny]=toXY(midDeg(k*8,k*8+7),R.qf);
+          const [ax,ay]=toXY(midDeg(k*8,k*8+3),R.r16);
+          const [bx,by]=toXY(midDeg(k*8+4,k*8+7),R.r16);
+          const wA=confirmed[BK_R16[k*2]]||null, wB=confirmed[BK_R16[k*2+1]]||null, wQ=confirmed[seq]||null;
+          addLine(ax,ay,nx,ny, !!wA); addLine(bx,by,nx,ny, !!wB);
+          if(wQ) addIcon(wQ,nx,ny,IR.qf,`cb-qf-${seq}`, true,false);
+          else addNode(nx,ny, 4);
+        });
+
+        // SF
+        BK_SF.forEach((seq,l) => {
+          const [nx,ny]=toXY(midDeg(l*16,l*16+15),R.sf);
+          const [ax,ay]=toXY(midDeg(l*16,l*16+7),R.qf);
+          const [bx,by]=toXY(midDeg(l*16+8,l*16+15),R.qf);
+          const wA=confirmed[BK_QF[l*2]]||null, wB=confirmed[BK_QF[l*2+1]]||null, wS=confirmed[seq]||null;
+          addLine(ax,ay,nx,ny, !!wA); addLine(bx,by,nx,ny, !!wB);
+          addLine(nx,ny,C,C, !!wS);
+          if(wS) addIcon(wS,nx,ny,IR.sf,`cb-sf-${seq}`, true,false);
+          else addNode(nx,ny, 4);
+        });
+
+        // Final — center
+        const fSeq = knockoutSchedule.find(m=>m.round==='F')?.seq;
+        const fWin = fSeq ? confirmed[fSeq] : null;
+        if(fWin){
+          addIcon(fWin,C,C,IR.f,'cb-final', true,false);
+          circs += `<circle cx="${C}" cy="${C}" r="${IR.f+7}" fill="none" stroke="rgba(244,201,93,0.2)" stroke-width="1.5"/>`;
+        } else {
+          circs += `<circle cx="${C}" cy="${C}" r="32" fill="rgba(12,24,14,0.9)" stroke="rgba(244,201,93,0.2)" stroke-width="1.5"/>`;
+          imgs  += `<text x="${C}" y="${C}" text-anchor="middle" dominant-baseline="central" font-size="26">🏆</text>`;
+        }
+
+        // Quadrant labels (subtle, at outer edge)
+        const QLABELS = ['ZIDANE','KLOSE','PELÉ','MARADONA'];
+        [0,1,2,3].forEach(q => {
+          const deg = midDeg(q*8, q*8+7);
+          const [lx,ly] = toXY(deg, R.outer+30);
+          // Rotate so text radiates outward (add 90° so text perpendicular to radius)
+          const rot = deg+90;
+          imgs += `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="7" font-weight="900" letter-spacing="0.1em" fill="rgba(244,201,93,0.28)" transform="rotate(${rot.toFixed(1)},${lx},${ly})">${QLABELS[q]}</text>`;
+        });
+
+        vis.innerHTML = `<svg viewBox="0 0 ${S} ${S}" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;display:block;"><defs>${defs}</defs>${bg}${lns}${circs}${imgs}</svg>`;
+      }
+
       // Initialize
       // Let refreshOfficialResults re-render the KO Pool table when results change.
-      koRerenderHook = () => { renderKoPool(); renderKoBracket(); renderSchedule(); };
+      koRerenderHook = () => {
+        renderKoPool(); renderKoBracket(); renderSchedule();
+        if(_bracketView==='circle') renderCircleBracket();
+      };
       loadWIndexFeed();
       // KO Pool is the default active tab — load its entries immediately
       updateNextMatchHeader();
