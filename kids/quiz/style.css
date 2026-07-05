@@ -113,6 +113,51 @@ body {
   color: #fff;
 }
 
+.difficulty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 2px 2px;
+}
+
+.diff-btn {
+  border: none;
+  background: #ffffff;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(38, 50, 74, 0.08);
+  transition: transform 0.08s ease;
+  flex-shrink: 0;
+}
+
+.diff-btn:active {
+  transform: scale(0.94);
+}
+
+.diff-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.diff-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(38, 50, 74, 0.15);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.diff-dot.filled {
+  background: var(--accent);
+  transform: scale(1.15);
+}
+
 .card {
   background: var(--card);
   border-radius: 28px;

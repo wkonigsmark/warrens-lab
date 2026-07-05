@@ -8,10 +8,13 @@
   const streakEl = document.getElementById("streak");
   const celebrateEl = document.getElementById("celebrate");
   const subjectsEl = document.getElementById("subjects");
+  const diffDotsEl = document.getElementById("diffDots");
+  const easierBtn = document.getElementById("easierBtn");
+  const harderBtn = document.getElementById("harderBtn");
 
   const CELEBRATIONS = ["🎉", "⭐️", "🙌", "🏆", "✨", "🥳"];
 
-  let level = 1;      // 1..5, ramps up slowly as questions are answered
+  let level = 1.5;    // 1..5, self-tunes based on right/wrong answers; nudge with Easier/Harder
   let streak = 0;
   let used = new Set();
   let current = null;
@@ -35,15 +38,38 @@
     });
   }
 
+  function renderDifficulty() {
+    diffDotsEl.innerHTML = "";
+    const filled = Math.round(level);
+    for (let i = 1; i <= 5; i++) {
+      const dot = document.createElement("span");
+      dot.className = "diff-dot" + (i <= filled ? " filled" : "");
+      diffDotsEl.appendChild(dot);
+    }
+  }
+
+  function setLevel(newLevel) {
+    level = Math.max(1, Math.min(5, newLevel));
+    renderDifficulty();
+  }
+
   function pickQuestion() {
     const ceilLevel = Math.min(5, Math.ceil(level) + 1);
+    const floorLevel = Math.max(1, Math.floor(level) - 1);
     const bySubject = activeSubject === "All"
       ? QUESTIONS
       : QUESTIONS.filter((q) => q.cat === activeSubject);
-    let pool = bySubject.filter((q) => q.diff <= ceilLevel && !used.has(q));
+    let pool = bySubject.filter((q) => q.diff <= ceilLevel && q.diff >= floorLevel && !used.has(q));
     if (pool.length === 0) {
       used.clear();
-      pool = bySubject.filter((q) => q.diff <= ceilLevel);
+      pool = bySubject.filter((q) => q.diff <= ceilLevel && q.diff >= floorLevel);
+    }
+    if (pool.length === 0) {
+      pool = bySubject.filter((q) => !used.has(q));
+    }
+    if (pool.length === 0) {
+      used.clear();
+      pool = bySubject;
     }
     // weight toward questions near the current level
     const weighted = [];
@@ -99,7 +125,6 @@
         revealBox.hidden = false;
         revealAnswer.textContent = current.answer || "(open-ended — nice job!)";
         nextBtn.hidden = false;
-        bumpLevel();
       };
       choicesBox.appendChild(btn);
     }
@@ -111,23 +136,20 @@
       btn.classList.add("correct");
       streak += 1;
       celebrate();
+      setLevel(level + 0.3);
     } else {
       btn.classList.add("incorrect");
       streak = 0;
       [...choicesBox.children].forEach((b) => {
         if (b.textContent === current.answer) b.classList.add("correct");
       });
+      setLevel(level - 0.5);
     }
     [...choicesBox.children].forEach((b) => {
       if (b !== btn && b.textContent !== current.answer) b.classList.add("dim");
     });
     streakEl.textContent = `🔥 ${streak}`;
     nextBtn.hidden = false;
-    bumpLevel();
-  }
-
-  function bumpLevel() {
-    level = Math.min(5, level + 0.2);
   }
 
   function celebrate() {
@@ -141,7 +163,10 @@
   }
 
   nextBtn.onclick = render;
+  easierBtn.onclick = () => setLevel(level - 1);
+  harderBtn.onclick = () => setLevel(level + 1);
 
   renderSubjects();
+  renderDifficulty();
   render();
 })();
