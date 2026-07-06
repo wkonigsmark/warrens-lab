@@ -12,7 +12,8 @@
           <button id="ants-grid-size-btn" type="button">Settings</button>
           <button id="ants-music-toggle" type="button">Music: On</button>
           <button id="ants-print-worksheet" type="button">Print Worksheet</button>
-          <button id="ants-dev-mode-btn" type="button">Dev Mode</button>
+          <button id="ants-master-toggle" type="button">Master Mode</button>
+          <button id="ants-help-btn" type="button">Learn</button>
         </div>
       </header>
       <main>
@@ -49,13 +50,6 @@
               <div id="ants-helper-plus">+</div>
               <div id="ants-helper-apples"></div>
             </div>
-          </div>
-        </div>
-
-        <div id="ants-dev-view" style="display:none;">
-          <div id="ants-dev-banner" class="dev-banner">Dev Dashboard</div>
-          <div id="ants-dev-canvas">
-            <div class="dev-placeholder">Blank Canvas: Work out the details here...</div>
           </div>
         </div>
       </main>
@@ -123,11 +117,11 @@
           </div>
           <div id="ants-divide-note" style="display:none; font-size:0.78rem; color:#888; margin-top:4px;">Division mode: dynamic 6×6 grid supported for whole-number results.</div>
 
-          <div id="ants-helper-opt-title" style="font-size:0.85rem; margin-top:8px; margin-bottom:4px;">Learning Aids:</div>
+          <div id="ants-helper-opt-title" style="font-size:0.85rem; margin-top:8px; margin-bottom:4px;">Master Mode:</div>
           <div id="ants-helper-options" style="font-size:0.85rem; margin-bottom:12px;">
             <label style="display:flex; align-items:center; gap:6px;">
-              <input type="checkbox" id="ants-show-helper-toggle" checked>
-              Show Ants & Apples Helper
+              <input type="checkbox" id="ants-master-mode-toggle">
+              Master Mode (no Helper Calculator)
             </label>
           </div>
 
@@ -148,7 +142,38 @@
         </div>
       </div>
 
-
+      <div id="ants-help-backdrop">
+        <div id="ants-help-dialog">
+          <div id="ants-help-title">Meet the Math Symbols!</div>
+          <div class="help-op">
+            <div class="help-op-symbol">+</div>
+            <div class="help-op-text">
+              <strong>Addition</strong> is when you add 2 things together to figure out how many they make. If you have 2 apples and you add 3 more, you have 5 apples total! 🍎
+            </div>
+          </div>
+          <div class="help-op">
+            <div class="help-op-symbol">−</div>
+            <div class="help-op-text">
+              <strong>Subtraction</strong> is when you take some away. If you have 5 apples and the ants carry off 2, you have 3 apples left. 🐜
+            </div>
+          </div>
+          <div class="help-op">
+            <div class="help-op-symbol">×</div>
+            <div class="help-op-text">
+              <strong>Multiplication</strong> is adding the same number over and over. 3 × 2 means 3 groups of 2 ants — count them up and that's 6 ants!
+            </div>
+          </div>
+          <div class="help-op">
+            <div class="help-op-symbol">÷</div>
+            <div class="help-op-text">
+              <strong>Division</strong> is sharing things fairly. If 6 apples are shared between 2 ants, each ant gets 3 apples. Everyone's happy!
+            </div>
+          </div>
+          <div id="ants-help-actions">
+            <button id="ants-help-close-btn" type="button">Got it!</button>
+          </div>
+        </div>
+      </div>
     `;
 
     /* Dynamic grid + operation + level-count state */
@@ -158,26 +183,10 @@
     let MAX_LEVEL = 3; // user-chosen max levels
     let operation = 'add'; // 'add', 'multiply', or 'divide'
     let showHelper = true; // showAntsApplesHelper
-    let devMode = false;
-    let fractionDenom = 2; // Starting denominator for fractions level
-    let currentF1 = 0, currentF2 = 0;
-    let fractionProblemsSolved = 0;
-    const FRACTION_TOTAL_PROBLEMS = 6;
-    let fractionOp = 'add'; // 'add', 'subtract', or 'multiply'
-    let algebraOp = 'add'; // 'add', 'subtract', 'multiply', 'divide'
-    let currentAlgA = 0, currentAlgX = 0, currentAlgB = 0;
-    let currentDevModule = 'fractions'; // 'fractions', 'algebra', 'chains', 'chainsX'
-    let currentChainsXMode = 'simple'; // 'simple' or 'complex'
-    let currentChainLength = 3;
-    let currentChainMode = 'simple'; // 'simple' or 'complex'
-    let currentChainAllowNegative = false;
-    let currentChainEquation = "";
-    let currentChainResult = 0;
-    let currentChainsXResult = 0;
 
     let currentLevel = 1;
     let activeTileEl = null;    // For main game tiles
-    let activeInputEl = null;   // For generic inputs (Dev Mode)
+    let activeInputEl = null;   // For generic inputs
     let currentInput = "";
 
     /* Timer + streak */
@@ -467,18 +476,6 @@
       // Branch logic based on target type
       if (activeInputEl) {
         activeInputEl.value = currentInput;
-        
-        // Trigger "Check Answer" if we're in a dev mode that has a submit button
-        if (currentDevModule === 'fractions') {
-          checkFractionAnswer();
-        } else if (currentDevModule === 'algebra') {
-          checkAlgebraAnswer();
-        } else if (currentDevModule === 'chains') {
-          checkChainAnswer();
-        } else if (currentDevModule === 'chainsX') {
-          checkChainsXAnswer();
-        }
-        
         hideKeypad();
         return;
       }
@@ -740,69 +737,31 @@
 
     /* ---------- Event wiring ---------- */
 
-    function toggleDevMode() {
-      const devModeBtn = document.getElementById('ants-dev-mode-btn');
-      devMode = !devMode;
-      const gameView = document.getElementById('ants-game-view');
-      const devView = document.getElementById('ants-dev-view');
-      const banner = document.getElementById('ants-banner');
-      
-      if (devMode) {
-        if (gameView) gameView.style.display = 'none';
-        if (devView) devView.style.display = 'block';
-        if (devModeBtn) {
-          devModeBtn.textContent = 'Back to Game';
-          devModeBtn.classList.add('active');
+    function setMasterMode(masterOn) {
+      showHelper = !masterOn;
+
+      const helperDiv = document.getElementById('ants-helper');
+      const existingBadge = document.getElementById('ants-master-badge');
+      if (existingBadge) existingBadge.remove();
+
+      if (helperDiv) {
+        if (masterOn) {
+          helperDiv.style.display = 'none';
+          const badge = document.createElement('div');
+          badge.id = 'ants-master-badge';
+          badge.className = 'master-mode-badge';
+          badge.innerHTML = 'Master Mode Active';
+          helperDiv.parentNode.insertBefore(badge, helperDiv.nextSibling);
+        } else {
+          helperDiv.style.display = 'block';
         }
-        if (banner) banner.style.opacity = '0.3';
-        pauseMusic();
-        showDevPicker();
-      } else {
-        if (gameView) gameView.style.display = 'block';
-        if (devView) devView.style.display = 'none';
-        if (devModeBtn) {
-          devModeBtn.textContent = 'Dev Mode';
-          devModeBtn.classList.remove('active');
-        }
-        if (banner) banner.style.opacity = '1';
-        if (musicEnabled) playMusic();
       }
-    }
 
-    function showDevPicker() {
-      const banner = document.getElementById('ants-dev-banner');
-      if (banner) banner.textContent = "Dev Dashboard";
-      const devCanvas = document.getElementById('ants-dev-canvas');
-      if (!devCanvas) return;
-      
-      devCanvas.innerHTML = `
-        <div class="dev-picker-container">
-          <h2 class="dev-picker-title">Select Module</h2>
-          <div class="dev-picker-grid">
-            <button id="pick-fractions" class="picker-card">
-              <div class="card-icon">½</div>
-              <div class="card-text">Fractions</div>
-            </button>
-            <button id="pick-algebra" class="picker-card">
-              <div class="card-icon">x</div>
-              <div class="card-text">Algebra</div>
-            </button>
-            <button id="pick-chains" class="picker-card">
-              <div class="card-icon">3+</div>
-              <div class="card-text">Chains</div>
-            </button>
-            <button id="pick-chainsX" class="picker-card">
-              <div class="card-icon">x+</div>
-              <div class="card-text">Chains & X</div>
-            </button>
-          </div>
-        </div>
-      `;
+      const headerToggle = document.getElementById('ants-master-toggle');
+      if (headerToggle) headerToggle.classList.toggle('active', masterOn);
 
-      document.getElementById('pick-fractions').addEventListener('click', initFractionsDev);
-      document.getElementById('pick-algebra').addEventListener('click', initAlgebraDev);
-      document.getElementById('pick-chains').addEventListener('click', initChainsDev);
-      document.getElementById('pick-chainsX').addEventListener('click', initChainsAlgebraDev);
+      const settingsToggle = document.getElementById('ants-master-mode-toggle');
+      if (settingsToggle) settingsToggle.checked = masterOn;
     }
 
     function hookButtons() {
@@ -922,26 +881,7 @@
         if (isNaN(levelCount) || levelCount < 1) levelCount = 3;
         if (levelCount > maxTiles) levelCount = maxTiles;
 
-        showHelper = document.getElementById('ants-show-helper-toggle').checked;
-        const helperDiv = document.getElementById('ants-helper');
-
-        // Handle Master Mode Visuals
-        const existingBadge = document.getElementById('ants-master-badge');
-        if (existingBadge) existingBadge.remove();
-
-        if (helperDiv) {
-          if (showHelper) {
-            helperDiv.style.display = 'block';
-          } else {
-            helperDiv.style.display = 'none';
-            // Inject the Master Badge
-            const badge = document.createElement('div');
-            badge.id = 'ants-master-badge';
-            badge.className = 'master-mode-badge';
-            badge.innerHTML = 'Master Mode Active';
-            helperDiv.parentNode.insertBefore(badge, helperDiv.nextSibling);
-          }
-        }
+        setMasterMode(document.getElementById('ants-master-mode-toggle').checked);
 
         configureGrid(size, levelCount);
         closeSizeDialog();
@@ -1008,13 +948,34 @@
         printBtn.addEventListener('click', printWorksheet);
       }
 
-      // Dev Mode toggle
-      const devModeBtn = document.getElementById('ants-dev-mode-btn');
-      if (devModeBtn) {
-        devModeBtn.addEventListener('click', toggleDevMode);
+      // Master Mode toggle (header)
+      const masterToggle = document.getElementById('ants-master-toggle');
+      if (masterToggle) {
+        masterToggle.addEventListener('click', () => {
+          const masterOn = showHelper; // toggling: helper visible → turn master on
+          setMasterMode(masterOn);
+          setMessage(masterOn
+            ? 'Master Mode on — solve it all in your head!'
+            : 'Master Mode off — the Helper Calculator is back.');
+        });
       }
 
-
+      // Learn overlay
+      const helpBtn = document.getElementById('ants-help-btn');
+      const helpBackdrop = document.getElementById('ants-help-backdrop');
+      if (helpBtn && helpBackdrop) {
+        helpBtn.addEventListener('click', () => {
+          helpBackdrop.style.display = 'flex';
+        });
+        document.getElementById('ants-help-close-btn').addEventListener('click', () => {
+          helpBackdrop.style.display = 'none';
+        });
+        helpBackdrop.addEventListener('click', (e) => {
+          if (e.target.id === 'ants-help-backdrop') {
+            helpBackdrop.style.display = 'none';
+          }
+        });
+      }
 
       // Wire divide note toggle — show hint when Division is selected
       const opRadioEls = document.querySelectorAll('input[name="ants-op"]');
@@ -1122,6 +1083,9 @@
         levelCountMaxLabel.textContent = String(maxTiles);
         levelCountInput.value = '3';
       }
+
+      const masterCheckbox = document.getElementById('ants-master-mode-toggle');
+      if (masterCheckbox) masterCheckbox.checked = !showHelper;
 
       backdrop.style.display = 'flex';
       hideKeypad();
@@ -1296,7 +1260,7 @@
         const currentOpLabel = modeLabel.toLowerCase();
         bodyEl.innerHTML = `
           You completed ${gridSize}×${gridSize} ${currentOpLabel} in ${timeText}.<br><br>
-          Next time, try the same challenge in <strong>Master Mode</strong> (turn off "Learning Aids" in Settings) to become a math master!
+          Next time, try the same challenge in <strong>Master Mode</strong> (tap the Master Mode button up top) to become a math master!
         `;
       }
 
@@ -1320,19 +1284,6 @@
     /* ---------- Worksheet Print ---------- */
 
     function printWorksheet() {
-      if (devMode) {
-        if (currentDevModule === 'fractions') {
-          printFractionsWorksheet();
-        } else if (currentDevModule === 'algebra') {
-          printAlgebraWorksheet();
-        } else if (currentDevModule === 'chains') {
-          printChainsWorksheet();
-        } else if (currentDevModule === 'chainsX') {
-          printChainsXWorksheet();
-        }
-        return;
-      }
-
       const symbols = { 'add': '+', 'subtract': '-', 'subtract-neg': '-', 'multiply': '×', 'divide': '÷' };
       const opSymbol = symbols[operation] || '+';
       const availableProblems = [];
@@ -1564,816 +1515,6 @@
         </html>
       `);
       win.document.close();
-    }
-
-
-
-
-/* ---------- Fractions Dev Mode ---------- */
-
-    function initFractionsDev() {
-      const banner = document.getElementById('ants-dev-banner');
-      if (banner) banner.textContent = "Fractions Dev Mode";
-      
-      currentDevModule = 'fractions';
-      const devCanvas = document.getElementById('ants-dev-canvas');
-      if (!devCanvas) return;
-
-      devCanvas.innerHTML = `
-        <div class="fractions-container">
-          <button id="f-home" class="f-home-btn" title="Back to Settings">🏠</button>
-          <div class="f-settings">
-            <button id="f-op-add" class="f-setting-btn active">+</button>
-            <button id="f-op-sub" class="f-setting-btn">-</button>
-            <button id="f-op-mul" class="f-setting-btn">×</button>
-          </div>
-          <div class="fraction-problem">
-            <div id="f-vis-1" class="fraction-vis"></div>
-            <div class="f-math" id="f-math-1">
-              <div class="f-num" id="f-n1">1</div>
-              <div class="f-bar" id="f-b1"></div>
-              <div class="f-den" id="f-d1">4</div>
-            </div>
-            
-            <div class="f-op" id="f-op-symbol">+</div>
-
-            <div id="f-vis-2" class="fraction-vis"></div>
-            <div class="f-math">
-              <div class="f-num" id="f-n2">2</div>
-              <div class="f-bar"></div>
-              <div class="f-den" id="f-d2">4</div>
-            </div>
-
-            <div class="f-op">=</div>
-
-            <div class="f-math result">
-              <input type="text" id="f-res-n" class="f-res-input" placeholder="?" readonly>
-              <div class="f-bar"></div>
-              <div class="f-den" id="f-res-d">4</div>
-            </div>
-          </div>
-          <div class="f-controls">
-            <button id="f-submit-btn" class="btn">Check Answer</button>
-            <div id="f-msg" class="message"></div>
-          </div>
-          <div class="f-level-track">Problem <span id="f-count-label">1</span> / 6 (Challenge: Denominator <span id="f-denom-label">2</span>)</div>
-        </div>
-      `;
-
-      document.getElementById('f-op-add').addEventListener('click', () => setFractionOp('add'));
-      document.getElementById('f-op-sub').addEventListener('click', () => setFractionOp('subtract'));
-      document.getElementById('f-op-mul').addEventListener('click', () => setFractionOp('multiply'));
-      document.getElementById('f-submit-btn').addEventListener('click', checkFractionAnswer);
-      document.getElementById('f-home').addEventListener('click', showDevPicker);
-      document.getElementById('f-res-n').addEventListener('click', (e) => {
-        showKeypad(e.target, "Solve Fraction");
-      });
-
-      generateFractionProblem(true);
-    }
-
-    function setFractionOp(op) {
-      fractionOp = op;
-      document.getElementById('f-op-add').classList.toggle('active', op === 'add');
-      document.getElementById('f-op-sub').classList.toggle('active', op === 'subtract');
-      document.getElementById('f-op-mul').classList.toggle('active', op === 'multiply');
-      
-      const symbols = { 'add': '+', 'subtract': '-', 'multiply': '×' };
-      document.getElementById('f-op-symbol').textContent = symbols[op];
-      
-      // Update first operand UI for multiplication (show as whole number)
-      const b1 = document.getElementById('f-b1');
-      const d1 = document.getElementById('f-d1');
-      const v1 = document.getElementById('f-vis-1');
-      if (op === 'multiply') {
-        if (b1) b1.style.display = 'none';
-        if (d1) d1.style.display = 'none';
-        if (v1) v1.style.display = 'none';
-      } else {
-        if (b1) b1.style.display = 'block';
-        if (d1) d1.style.display = 'block';
-        if (v1) v1.style.display = 'block';
-      }
-      
-      generateFractionProblem(true);
-    }
-
-    function generateFractionProblem(isFirst = false) {
-      if (isFirst) {
-        fractionProblemsSolved = 0;
-        fractionDenom = 2; // Start simple
-      } else {
-        // Random denominator between 2 and 10
-        fractionDenom = Math.floor(Math.random() * 9) + 2;
-      }
-
-      // f1 (op) f2
-      if (fractionOp === 'add') {
-        currentF1 = Math.floor(Math.random() * fractionDenom) + 1;
-        currentF2 = Math.floor(Math.random() * (fractionDenom - currentF1 + 1));
-        if (currentF2 === 0 && Math.random() > 0.3) currentF2 = 1;
-      } else if (fractionOp === 'subtract') {
-        // Subtraction: f1 >= f2
-        currentF1 = Math.floor(Math.random() * fractionDenom) + 1;
-        currentF2 = Math.floor(Math.random() * (currentF1 + 1));
-        if (currentF1 === 0) currentF1 = 1; 
-      } else {
-        // Multiplication: Integer * Fraction
-        // n1 (whole) * (n2 / d) = (n1*n2) / d
-        currentF1 = Math.floor(Math.random() * 3) + 1; // Multiplier 1-3
-        currentF2 = Math.floor(Math.random() * (Math.floor(fractionDenom / currentF1))) + 1;
-      }
-
-      document.getElementById('f-n1').textContent = currentF1;
-      document.getElementById('f-n2').textContent = currentF2;
-      document.getElementById('f-d1').textContent = fractionDenom;
-      document.getElementById('f-d2').textContent = fractionDenom;
-      document.getElementById('f-res-d').textContent = fractionDenom;
-      document.getElementById('f-denom-label').textContent = fractionDenom;
-      document.getElementById('f-count-label').textContent = fractionProblemsSolved + 1;
-
-      renderFractionVis('f-vis-1', currentF1, fractionDenom, '#448aff');
-      renderFractionVis('f-vis-2', currentF2, fractionDenom, '#ff8a80');
-
-      const input = document.getElementById('f-res-n');
-      if (input) {
-        input.value = '';
-        input.focus();
-      }
-      document.getElementById('f-msg').textContent = '';
-    }
-
-    function renderFractionVis(containerId, num, den, color) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      container.innerHTML = '';
-      for (let i = den; i >= 1; i--) {
-        const box = document.createElement('div');
-        box.className = 'f-box';
-        if (i <= num) {
-          box.style.background = color;
-        }
-        container.appendChild(box);
-      }
-    }
-
-    function checkFractionAnswer() {
-      const input = document.getElementById('f-res-n');
-      if (!input) return;
-      const guess = parseInt(input.value, 10);
-      let correct = 0;
-      if (fractionOp === 'add') correct = currentF1 + currentF2;
-      else if (fractionOp === 'subtract') correct = currentF1 - currentF2;
-      else correct = currentF1 * currentF2;
-      
-      const msg = document.getElementById('f-msg');
-
-      if (guess === correct) {
-        fractionProblemsSolved++;
-        msg.textContent = "Great job!";
-        msg.style.color = "#2e7d32";
-        
-        setTimeout(() => {
-          if (fractionProblemsSolved < FRACTION_TOTAL_PROBLEMS) {
-            generateFractionProblem();
-          } else {
-            msg.textContent = "FRACTIONS MASTER! You've solved all 6 problems.";
-            msg.style.color = "#b8860b";
-            msg.classList.add('master-victory-title');
-          }
-        }, 1500);
-      } else {
-        msg.textContent = "Oops! Try adding the top numbers (numerators).";
-        msg.style.color = "#c62828";
-        input.select();
-      }
-    }
-
-    function initAlgebraDev() {
-      const banner = document.getElementById('ants-dev-banner');
-      if (banner) banner.textContent = "Algebra Dev Mode";
-      
-      currentDevModule = 'algebra';
-      const devCanvas = document.getElementById('ants-dev-canvas');
-      if (!devCanvas) return;
-      
-      devCanvas.innerHTML = `
-        <div class="algebra-dev-container">
-           <button id="a-home" class="f-home-btn" title="Back to Settings">🏠</button>
-           
-           <div class="f-settings">
-            <button id="a-op-add" class="f-setting-btn active">+</button>
-            <button id="a-op-sub" class="f-setting-btn">-</button>
-            <button id="a-op-mul" class="f-setting-btn">×</button>
-            <button id="a-op-div" class="f-setting-btn">÷</button>
-          </div>
-
-           <div class="algebra-problem-box">
-             <div id="a-prob-text" class="algebra-text">2 + x = 5</div>
-             <div class="algebra-input-row">
-               <span class="x-label">x = </span>
-               <input type="text" id="a-res-x" class="f-res-input" placeholder="?" readonly>
-             </div>
-           </div>
-
-           <div class="f-controls">
-            <button id="a-submit-btn" class="btn">Check Answer</button>
-            <div id="a-msg" class="message"></div>
-          </div>
-        </div>
-      `;
-
-      document.getElementById('a-op-add').addEventListener('click', () => setAlgebraOp('add'));
-      document.getElementById('a-op-sub').addEventListener('click', () => setAlgebraOp('subtract'));
-      document.getElementById('a-op-mul').addEventListener('click', () => setAlgebraOp('multiply'));
-      document.getElementById('a-op-div').addEventListener('click', () => setAlgebraOp('divide'));
-      
-      document.getElementById('a-submit-btn').addEventListener('click', checkAlgebraAnswer);
-      document.getElementById('a-res-x').addEventListener('click', (e) => {
-        showKeypad(e.target, "Solve for x");
-      });
-
-      document.getElementById('a-home').addEventListener('click', showDevPicker);
-
-      generateAlgebraProblem();
-    }
-
-    function setAlgebraOp(op) {
-      algebraOp = op;
-      document.getElementById('a-op-add').classList.toggle('active', op === 'add');
-      document.getElementById('a-op-sub').classList.toggle('active', op === 'subtract');
-      document.getElementById('a-op-mul').classList.toggle('active', op === 'multiply');
-      document.getElementById('a-op-div').classList.toggle('active', op === 'divide');
-      generateAlgebraProblem();
-    }
-
-    function generateAlgebraProblem() {
-      // Very simple problems initially
-      const range = 10;
-      if (algebraOp === 'add') {
-        currentAlgA = Math.floor(Math.random() * 9) + 1;
-        currentAlgX = Math.floor(Math.random() * 9) + 1;
-        currentAlgB = currentAlgA + currentAlgX;
-        document.getElementById('a-prob-text').textContent = `${currentAlgA} + x = ${currentAlgB}`;
-      } else if (algebraOp === 'subtract') {
-        currentAlgX = Math.floor(Math.random() * 8) + 1;
-        currentAlgB = Math.floor(Math.random() * 8) + 1;
-        currentAlgA = currentAlgB + currentAlgX;
-        document.getElementById('a-prob-text').textContent = `${currentAlgA} - x = ${currentAlgB}`;
-      } else if (algebraOp === 'multiply') {
-        currentAlgA = Math.floor(Math.random() * 4) + 2; // coefficient 2-5
-        currentAlgX = Math.floor(Math.random() * 5) + 1; // x 1-5
-        currentAlgB = currentAlgA * currentAlgX;
-        document.getElementById('a-prob-text').textContent = `${currentAlgA}x = ${currentAlgB}`;
-      } else {
-        // Division: a / x = b
-        currentAlgX = Math.floor(Math.random() * 4) + 2; // divisor 2-5
-        currentAlgB = Math.floor(Math.random() * 4) + 2; // quotient 2-5
-        currentAlgA = currentAlgB * currentAlgX;
-        document.getElementById('a-prob-text').textContent = `${currentAlgA} ÷ x = ${currentAlgB}`;
-      }
-
-      const input = document.getElementById('a-res-x');
-      if (input) {
-        input.value = '';
-      }
-      document.getElementById('a-msg').textContent = '';
-    }
-
-    function checkAlgebraAnswer() {
-      const input = document.getElementById('a-res-x');
-      const guess = parseInt(input.value, 10);
-      const msg = document.getElementById('a-msg');
-      
-      if (guess === currentAlgX) {
-        msg.textContent = "Great job! x = " + currentAlgX;
-        msg.style.color = "#2e7d32";
-        setTimeout(generateAlgebraProblem, 1500);
-      } else {
-        msg.textContent = "Not quite. Think about what number for x makes the equation true!";
-        msg.style.color = "#c62828";
-        input.select();
-      }
-    }
-
-    /* ---------- Dev Mode Print Logic ---------- */
-
-    function printFractionsWorksheet() {
-      const numProblems = 12;
-      const opSymbol = fractionOp === 'add' ? '+' : (fractionOp === 'subtract' ? '-' : '×');
-      const opLabel = fractionOp.charAt(0).toUpperCase() + fractionOp.slice(1);
-      
-      const problemStrings = [];
-      for (let i = 0; i < numProblems; i++) {
-        let n1, n2, denom = fractionDenom;
-        if (fractionOp === 'add') {
-           n1 = Math.floor(Math.random() * denom) + 1;
-           n2 = Math.floor(Math.random() * (denom - n1 + 1));
-        } else if (fractionOp === 'subtract') {
-           n1 = Math.floor(Math.random() * denom) + 1;
-           n2 = Math.floor(Math.random() * (n1 + 1));
-        } else {
-           n1 = Math.floor(Math.random() * 3) + 1;
-           n2 = Math.floor(Math.random() * (Math.floor(denom / n1))) + 1;
-        }
-
-        const p = `
-          ${fractionOp === 'multiply' ? `<span class="f-whole">${n1}</span>` : `
-          <div class="f-wrap">
-            <div class="n">${n1}</div>
-            <div class="d">${denom}</div>
-          </div>`}
-          <span class="f-op">${opSymbol}</span>
-          <div class="f-wrap">
-            <div class="n">${n2}</div>
-            <div class="d">${denom}</div>
-          </div>
-          <span class="f-op">=</span>
-          <div class="f-box">
-             <div class="b"></div><div class="b"></div>
-          </div>
-        `;
-        problemStrings.push(p);
-      }
-
-      openWorksheet(problemStrings, [`Fractions: ${opLabel} (Denom: ${fractionDenom})`]);
-    }
-
-    function printAlgebraWorksheet() {
-      const numProblems = 12;
-      const opLabel = algebraOp.charAt(0).toUpperCase() + algebraOp.slice(1);
-      const problemStrings = [];
-      for (let i = 0; i < numProblems; i++) {
-        let a, x, b, pStr;
-        if (algebraOp === 'add') {
-          a = Math.floor(Math.random() * 15) + 1;
-          x = Math.floor(Math.random() * 15) + 1;
-          b = a + x;
-          pStr = `${a} + x = ${b}`;
-        } else if (algebraOp === 'subtract') {
-          x = Math.floor(Math.random() * 12) + 1;
-          b = Math.floor(Math.random() * 12) + 1;
-          a = b + x;
-          pStr = `${a} - x = ${b}`;
-        } else if (algebraOp === 'multiply') {
-          a = Math.floor(Math.random() * 6) + 2;
-          x = Math.floor(Math.random() * 10) + 1;
-          b = a * x;
-          pStr = `${a}x = ${b}`;
-        } else {
-          x = Math.floor(Math.random() * 5) + 2;
-          b = Math.floor(Math.random() * 6) + 2;
-          a = b * x;
-          pStr = `${a} ÷ x = ${b}`;
-        }
-        problemStrings.push(pStr + " ___");
-      }
-
-      openWorksheet(problemStrings, [`Algebra: Solve for (x) - ${opLabel}`]);
-    }
-
-    function printChainsWorksheet() {
-      const numProblems = 12;
-      const modeLabel = currentChainAllowNegative ? "± Neg" : "Positive Only";
-      const problemStrings = [];
-      
-      for (let i = 0; i < numProblems; i++) {
-        let terms = [], ops = [], result = 0;
-        let currentVal = Math.floor(Math.random() * 10) + 1;
-        terms.push(currentVal);
-        result = currentVal;
-
-        for (let j = 1; j < currentChainLength; j++) {
-            const op = Math.random() > 0.5 ? '+' : '-';
-            let term = Math.floor(Math.random() * 9) + 1;
-            if (op === '-') {
-                if (!currentChainAllowNegative && term >= result) term = Math.max(1, Math.floor(result / 2));
-                result -= term;
-            } else {
-                result += term;
-            }
-            ops.push(op);
-            terms.push(term);
-        }
-
-        let eq = "";
-        for (let j = 0; j < terms.length; j++) {
-            eq += terms[j];
-            if (j < ops.length) eq += ` ${ops[j]} `;
-        }
-        problemStrings.push(eq + " = ___");
-      }
-
-      openWorksheet(problemStrings, [`Math Chains: Length ${currentChainLength} (${modeLabel})`], 4);
-    }
-
-    function printChainsXWorksheet() {
-      const numProblems = 12;
-      const modeName = currentChainsXMode.charAt(0).toUpperCase() + currentChainsXMode.slice(1);
-      const problemStrings = [];
-
-      for (let i = 0; i < numProblems; i++) {
-        let pStr = "";
-        if (currentChainsXMode === 'simple') {
-            const ops = ['+', '-'];
-            const o1 = ops[Math.floor(Math.random() * 2)], o2 = ops[Math.floor(Math.random() * 2)];
-            let a = Math.floor(Math.random() * 15) + 5, b = Math.floor(Math.random() * 10) + 1, x = Math.floor(Math.random() * 10) + 1;
-            let val = (o1 === '+') ? a + x : a - x;
-            let resFinal = (o2 === '+') ? val + b : val - b;
-            pStr = `${a} ${o1} <span class="math-var">x</span> ${o2} ${b} = ${resFinal}`;
-        } else {
-            const opsFull = ['+', '-', '×', '÷'];
-            const op1 = opsFull[Math.floor(Math.random() * 2)], op2 = opsFull[Math.floor(Math.random() * opsFull.length)];
-            let a, b, c, resultInner, finalResult;
-            if (op2 === '÷') {
-                c = Math.floor(Math.random() * 4) + 2; resultInner = Math.floor(Math.random() * 4) + 1; b = c * resultInner;
-            } else if (op2 === '×') {
-                b = Math.floor(Math.random() * 5) + 2; c = Math.floor(Math.random() * 5) + 1; resultInner = b * c;
-            } else if (op2 === '+') {
-                b = Math.floor(Math.random() * 10) + 1; c = Math.floor(Math.random() * 10) + 1; resultInner = b + c;
-            } else {
-                b = Math.floor(Math.random() * 10) + 5; c = Math.floor(Math.random() * 5) + 1; resultInner = b - c;
-            }
-            a = Math.floor(Math.random() * 10) + 10;
-            if (op1 === '+') finalResult = a + resultInner;
-            else { 
-                if (resultInner >= a) a = resultInner + Math.floor(Math.random() * 5) + 1;
-                finalResult = a - resultInner;
-            }
-            const mulChar = '<span class="math-op-mul">×</span>';
-            const formattedOp2 = op2 === '×' ? mulChar : op2;
-            pStr = `${a} ${op1} (${b} ${formattedOp2} <span class="math-var">x</span>) = ${finalResult}`;
-        }
-        problemStrings.push(`<div style="display:inline-block; text-align:left;">${pStr}<br><span class="math-var">x</span> = ___</div>`);
-      }
-
-      openWorksheet(problemStrings, [`Chains & X: ${modeName} Mode`], 4);
-    }
-
-/* ---------- Chains Dev Mode ---------- */
-
-    function initChainsDev() {
-      const banner = document.getElementById('ants-dev-banner');
-      if (banner) banner.textContent = "Chains Dev Mode";
-      
-      currentDevModule = 'chains';
-      const devCanvas = document.getElementById('ants-dev-canvas');
-      if (!devCanvas) return;
-
-      devCanvas.innerHTML = `
-        <div class="chains-container">
-          <div class="f-settings" style="flex-wrap: wrap; border-radius: 12px; justify-content: center; width: 100%; box-sizing: border-box; gap: 8px;">
-            <button id="c-home" class="f-home-btn" title="Back to Settings" style="position:static; width:34px; height:34px; flex-shrink:0;">🏠</button>
-            
-            <div id="c-simple-settings" style="display:${currentChainMode === 'simple' ? 'flex' : 'none'}; align-items:center; gap:4px; margin:4px 0;">
-              <label style="font-size:0.7rem; font-weight:700; color:#555;">Len:</label>
-              <button class="c-len-btn ${currentChainLength === 3 ? 'active' : ''}" data-len="3">3</button>
-              <button class="c-len-btn ${currentChainLength === 4 ? 'active' : ''}" data-len="4">4</button>
-              <button class="c-len-btn ${currentChainLength === 5 ? 'active' : ''}" data-len="5">5</button>
-            </div>
-
-            <div style="width:1px; height:20px; background:#ddd; margin:0 2px;"></div>
-
-            <button id="c-mode-toggle" class="c-mode-btn" style="min-width: 80px;">
-                ${currentChainMode === 'simple' ? 'Mode: Simple' : 'Mode: Complex'}
-            </button>
-            
-            <button id="c-neg-toggle" class="c-mode-btn ${currentChainAllowNegative ? 'active' : ''}" style="margin:4px 0;">
-                ${currentChainAllowNegative ? 'Result: ± Neg' : 'Result: Pos'}
-            </button>
-          </div>
-          
-          <div class="fraction-problem">
-             <div id="c-prob-text" class="algebra-text" style="margin-bottom:20px;">3 + 4 - 2 = ?</div>
-          </div>
-
-          <div class="algebra-input-row" style="margin-top:0;">
-             <input type="text" id="c-res-input" class="f-res-input" style="width:120px; font-size:2rem;" placeholder="?" readonly>
-          </div>
-
-          <div class="f-controls">
-            <button id="c-submit-btn" class="btn">Check Answer</button>
-            <div id="c-msg" class="message"></div>
-          </div>
-        </div>
-      `;
-
-      // Wire length buttons
-      document.querySelectorAll('.c-len-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.c-len-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentChainLength = parseInt(btn.dataset.len, 10);
-          generateChainProblem();
-        });
-      });
-
-      document.getElementById('c-mode-toggle').addEventListener('click', (e) => {
-        currentChainMode = (currentChainMode === 'simple' ? 'complex' : 'simple');
-        e.target.textContent = (currentChainMode === 'simple' ? 'Mode: Simple' : 'Mode: Complex');
-        document.getElementById('c-simple-settings').style.display = (currentChainMode === 'simple' ? 'flex' : 'none');
-        generateChainProblem();
-      });
-
-      document.getElementById('c-neg-toggle').addEventListener('click', (e) => {
-        currentChainAllowNegative = !currentChainAllowNegative;
-        const btn = e.target;
-        btn.classList.toggle('active', currentChainAllowNegative);
-        btn.textContent = currentChainAllowNegative ? 'Result: ± Neg' : 'Result: Pos';
-        generateChainProblem();
-      });
-
-      document.getElementById('c-submit-btn').addEventListener('click', checkChainAnswer);
-      document.getElementById('c-home').addEventListener('click', showDevPicker);
-      document.getElementById('c-res-input').addEventListener('click', (e) => {
-        showKeypad(e.target, "Solve Chain");
-      });
-
-      generateChainProblem();
-    }
-
-    function generateChainProblem() {
-      if (currentChainMode === 'complex') {
-        generateComplexProblem();
-        return;
-      }
-      
-      let terms = [];
-      let ops = [];
-      let result = 0;
-      
-      // Generate first term 1-10
-      let currentVal = Math.floor(Math.random() * 10) + 1;
-      terms.push(currentVal);
-      result = currentVal;
-
-      for (let i = 1; i < currentChainLength; i++) {
-        const op = Math.random() > 0.5 ? '+' : '-';
-        let term = Math.floor(Math.random() * 6) + 1; // Lowered to 1-6
-        
-        if (op === '-') {
-            // If not allowing negatives, keep intermediate and final result positive
-            if (!currentChainAllowNegative && term >= result) {
-                term = Math.max(1, Math.floor(result / 2));
-            }
-            result -= term;
-        } else {
-            result += term;
-        }
-        
-        ops.push(op);
-        terms.push(term);
-      }
-
-      let equationStr = "";
-      for (let i = 0; i < terms.length; i++) {
-        equationStr += terms[i];
-        if (i < ops.length) {
-          equationStr += ` ${ops[i]} `;
-        }
-      }
-      
-      currentChainEquation = equationStr;
-      currentChainResult = result;
-
-      const probEl = document.getElementById('c-prob-text');
-      if (probEl) {
-        probEl.textContent = equationStr + " =";
-        setProblemFontSize(probEl, equationStr + " =");
-      }
-      const input = document.getElementById('c-res-input');
-      if (input) input.value = '';
-      document.getElementById('c-msg').textContent = '';
-    }
-
-    function checkChainAnswer() {
-      const input = document.getElementById('c-res-input');
-      const guess = parseInt(input.value, 10);
-      const msg = document.getElementById('c-msg');
-      
-      if (guess === currentChainResult) {
-        msg.textContent = "Correct! " + currentChainEquation + " = " + currentChainResult;
-        msg.style.color = "#2e7d32";
-        setTimeout(generateChainProblem, 1500);
-      } else {
-        msg.textContent = "Not quite. Check your math!";
-        msg.style.color = "#c62828";
-      }
-    }
-
-    function generateComplexProblem() {
-        const opsFull = ['+', '-', '×', '÷'];
-        const op1 = opsFull[Math.floor(Math.random() * 2)]; // Outside (+, -)
-        const op2 = opsFull[Math.floor(Math.random() * opsFull.length)]; // Inside (+, -, *, /)
-        
-        let a, b, c;
-        let resultInner = 0;
-        
-        // Inside Parens
-        if (op2 === '÷') {
-            c = Math.floor(Math.random() * 3) + 2; // 2-4
-            resultInner = Math.floor(Math.random() * 4) + 1; // 1-4
-            b = c * resultInner;
-        } else if (op2 === '×') {
-            b = Math.floor(Math.random() * 4) + 2; // 2-5
-            c = Math.floor(Math.random() * 3) + 1; // 1-3
-            resultInner = b * c;
-        } else if (op2 === '+') {
-            b = Math.floor(Math.random() * 6) + 1; // 1-6
-            c = Math.floor(Math.random() * 6) + 1; // 1-6
-            resultInner = b + c;
-        } else {
-            b = Math.floor(Math.random() * 8) + 4; // 4-11
-            c = Math.floor(Math.random() * 4) + 1; // 1-4
-            resultInner = b - c;
-        }
-
-        // Outside Parens
-        a = Math.floor(Math.random() * 8) + 5; // 5-12
-        let finalResult = 0;
-        if (op1 === '+') {
-            finalResult = a + resultInner;
-        } else {
-            // Subtracting the whole block
-            if (!currentChainAllowNegative && resultInner >= a) {
-                // Ensure positive result if needed
-                a = resultInner + Math.floor(Math.random() * 5) + 1;
-            }
-            finalResult = a - resultInner;
-        }
-
-        const mulChar = '<span class="math-op-mul">×</span>';
-        const formattedOp2 = op2 === '×' ? mulChar : op2;
-        currentChainEquation = `${a} ${op1} <span class="math-no-break">(${b} ${formattedOp2} ${c})</span>`;
-        currentChainResult = finalResult;
-
-        if (probEl) {
-            probEl.innerHTML = currentChainEquation + " &nbsp;=";
-            // Use a raw version for length calculation
-            const raw = `${a} ${op1} (${b} ${op2} ${c}) =`;
-            setProblemFontSize(probEl, raw);
-        }
-        const input = document.getElementById('c-res-input');
-        if (input) input.value = '';
-        document.getElementById('c-msg').textContent = '';
-    }
-
-/* ---------- Chains & X (Algebraic Chains) ---------- */
-
-    function initChainsAlgebraDev() {
-      const banner = document.getElementById('ants-dev-banner');
-      if (banner) banner.textContent = "Chains & X Dev Mode";
-      
-      currentDevModule = 'chainsX';
-      const devCanvas = document.getElementById('ants-dev-canvas');
-      if (!devCanvas) return;
-
-      devCanvas.innerHTML = `
-        <div class="chains-container">
-          <div class="f-settings" style="flex-wrap: wrap; border-radius: 12px; justify-content: center; width: 100%; box-sizing: border-box; gap: 8px;">
-            <button id="cx-home" class="f-home-btn" title="Back to Settings" style="position:static; width:34px; height:34px;">🏠</button>
-            <button id="cx-mode-toggle" class="c-mode-btn" style="min-width: 80px;">
-                ${currentChainsXMode === 'simple' ? 'Mode: Simple' : 'Mode: Complex'}
-            </button>
-            <div style="font-size:0.85rem; font-weight:800; color:#1976d2;">Chains & X: Solve for (x)</div>
-          </div>
-          
-          <div class="fraction-problem">
-             <div id="cx-prob-text" class="algebra-text" style="margin-bottom:20px;">10 + (2 + x) = 15</div>
-          </div>
-
-          <div class="algebra-input-row" style="margin-top:0;">
-             <span class="x-label">x = </span>
-             <input type="text" id="cx-res-input" class="f-res-input" style="width:100px; font-size:1.5rem;" placeholder="?" readonly>
-          </div>
-
-          <div class="f-controls">
-            <button id="cx-submit-btn" class="btn">Check Answer</button>
-            <div id="cx-msg" class="message"></div>
-          </div>
-        </div>
-      `;
-
-      document.getElementById('cx-mode-toggle').addEventListener('click', (e) => {
-        currentChainsXMode = (currentChainsXMode === 'simple' ? 'complex' : 'simple');
-        e.target.textContent = (currentChainsXMode === 'simple' ? 'Mode: Simple' : 'Mode: Complex');
-        generateChainsXProblem();
-      });
-
-      document.getElementById('cx-submit-btn').addEventListener('click', checkChainsXAnswer);
-      document.getElementById('cx-home').addEventListener('click', showDevPicker);
-      document.getElementById('cx-res-input').addEventListener('click', (e) => {
-        showKeypad(e.target, "Solve for x");
-      });
-
-      generateChainsXProblem();
-    }
-
-    function generateChainsXProblem() {
-        if (currentChainsXMode === 'complex') {
-            generateComplexChainsXProblem();
-            return;
-        }
-
-        // Form: a op1 x op2 b = resFinal
-        const ops = ['+', '-'];
-        const op1 = ops[Math.floor(Math.random() * 2)];
-        const op2 = ops[Math.floor(Math.random() * 2)];
-        
-        let a, b, x, resFinal;
-
-        a = Math.floor(Math.random() * 10) + 5; // 5-14
-        b = Math.floor(Math.random() * 8) + 1; // 1-8
-        x = Math.floor(Math.random() * 6) + 1; // 1-6
-
-        // Calculate resFinal: a (op1) x (op2) b
-        let val;
-        if (op1 === '+') val = a + x; else val = a - x;
-        if (op2 === '+') resFinal = val + b; else resFinal = val - b;
-
-        // Ensure we don't present a problem with a negative intermediate/final result for simple mode
-        if (val < 0 || resFinal < 0) {
-            generateChainsXProblem();
-            return;
-        }
-
-        currentChainsXResult = x;
-        const eqStr = `${a} ${op1} <span class="math-no-break"><span class="math-var">x</span> ${op2} ${b}</span> = ${resFinal}`;
-
-        const probEl = document.getElementById('cx-prob-text');
-        if (probEl) {
-          probEl.innerHTML = eqStr;
-          // Calculate length without HTML tags
-          const raw = `${a} ${op1} x ${op2} ${b} = ${resFinal}`;
-          setProblemFontSize(probEl, raw);
-        }
-
-        const input = document.getElementById('cx-res-input');
-        if (input) input.value = '';
-        document.getElementById('cx-msg').textContent = '';
-    }
-
-    function generateComplexChainsXProblem() {
-        // Form: a op1 (b op2 x) = resultFinal
-        const opsFull = ['+', '-', '×']; // Keep it sane for beginning
-        const op1 = opsFull[Math.floor(Math.random() * 2)]; // +, -
-        const op2 = opsFull[Math.floor(Math.random() * 3)]; // +, -, ×
-        
-        let a, b, x, resInner, resFinal;
-
-        // 1. Solve for X first
-        x = Math.floor(Math.random() * 5) + 1; // 1-5
-        b = Math.floor(Math.random() * 6) + 1; // 1-6
-
-        if (op2 === '+') {
-            resInner = b + x;
-        } else if (op2 === '-') {
-            b = x + Math.floor(Math.random() * 4); // Ensure b >= x
-            resInner = b - x;
-        } else {
-            // Multiply
-            b = Math.floor(Math.random() * 3) + 2; // 2-4
-            resInner = b * x;
-        }
-
-        // 2. Wrap into overall result
-        a = Math.floor(Math.random() * 10) + 5; // 5-14
-        if (op1 === '+') {
-            resFinal = a + resInner;
-        } else {
-            // Ensure positive result for start
-            a = resInner + Math.floor(Math.random() * 10) + 1;
-            resFinal = a - resInner;
-        }
-
-        currentChainsXResult = x;
-        const eqStr = `${a} ${op1} <span class="math-no-break">(${b} ${op2} x)</span> = ${resFinal}`;
-
-        const probEl = document.getElementById('cx-prob-text');
-        if (probEl) {
-          probEl.innerHTML = eqStr;
-          const raw = `${a} ${op1} (${b} ${op2} x) = ${resFinal}`;
-          setProblemFontSize(probEl, raw);
-        }
-
-        const input = document.getElementById('cx-res-input');
-        if (input) input.value = '';
-        document.getElementById('cx-msg').textContent = '';
-    }
-
-    function checkChainsXAnswer() {
-      const input = document.getElementById('cx-res-input');
-      const guess = parseInt(input.value, 10);
-      const msg = document.getElementById('cx-msg');
-      
-      if (guess === currentChainsXResult) {
-        msg.textContent = "Fantastic! x = " + currentChainsXResult;
-        msg.style.color = "#2e7d32";
-        setTimeout(generateChainsXProblem, 1500);
-      } else {
-        msg.textContent = "Almost! Try checking your parentheses math again.";
-        msg.style.color = "#c62828";
-      }
     }
   }
 

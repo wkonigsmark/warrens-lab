@@ -1,0 +1,245 @@
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --bg-dark: #0f1218;
+  --accent: #c8102e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: white;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  padding: 40px 20px 20px;
+}
+
+header h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+header p {
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 6px;
+}
+
+.tabs-nav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 20px auto 30px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 10px 18px;
+  border-radius: 40px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.tab-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Rankings list */
+.poll-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.poll-row {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.poll-rank {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.poll-row:nth-child(-n+4) .poll-rank {
+  background: var(--accent);
+}
+
+.poll-team {
+  flex: 1;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.poll-conf {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.poll-source {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.8rem;
+  margin-top: 20px;
+}
+
+.poll-source a {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Schedule */
+.schedule-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.week-select {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.ranked-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+}
+
+.ranked-toggle input {
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+}
+
+.game-row {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.game-teams {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.game-at {
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+.rank-badge {
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 0.8rem;
+}
+
+.game-score {
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.game-date {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+/* Coming soon placeholders */
+.stub-card {
+  background: var(--glass-bg);
+  border: 1px dashed var(--glass-border);
+  border-radius: 16px;
+  padding: 40px 20px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.stub-card h3 {
+  color: white;
+  margin-bottom: 8px;
+  font-size: 1.2rem;
+}
+
+.back-link {
+  display: block;
+  text-align: center;
+  margin: 30px 0 10px;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.back-link:hover {
+  color: white;
+}

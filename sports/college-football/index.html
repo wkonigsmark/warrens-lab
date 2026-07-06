@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College Football Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>🏈 College Football Hub</h1>
+      <p>Teams · Schedules · Playoff Bracket</p>
+    </header>
+
+    <nav class="tabs-nav">
+      <button class="tab-btn active" data-tab="tab-rankings">Rankings</button>
+      <button class="tab-btn" data-tab="tab-teams">Teams</button>
+      <button class="tab-btn" data-tab="tab-schedule">Schedule</button>
+      <button class="tab-btn" data-tab="tab-bracket">Playoff Bracket</button>
+    </nav>
+
+    <section id="tab-rankings" class="tab-content active">
+      <div id="poll-list" class="poll-list"></div>
+      <p class="poll-source">
+        Way-too-early Top 25, spring update —
+        <a href="https://www.espn.com/college-football/story/_/id/48370187/2026-college-football-way-too-early-top-25-spring-update" target="_blank" rel="noopener">ESPN</a>
+      </p>
+    </section>
+
+    <section id="tab-teams" class="tab-content">
+      <div class="stub-card">
+        <h3>Teams — coming soon</h3>
+        <p>Track rosters, records, and stats for the teams you follow.</p>
+      </div>
+    </section>
+
+    <section id="tab-schedule" class="tab-content">
+      <div class="stub-card">
+        <h3>Schedule — coming soon</h3>
+        <p>Build out weekly schedules and game results here.</p>
+      </div>
+    </section>
+
+    <section id="tab-bracket" class="tab-content">
+      <div class="stub-card">
+        <h3>Playoff Bracket — coming soon</h3>
+        <p>Simulate the CFP bracket once the field is set.</p>
+      </div>
+    </section>
+
+    <a href="../index.html" class="back-link">← Back to Sports Hub</a>
+  </div>
+
+  <script src="data/teams.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

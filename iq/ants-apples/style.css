@@ -27,7 +27,7 @@
 
 #ants-apples-root header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 8px;
   color: #222;
@@ -35,6 +35,8 @@
 
 #ants-apples-root .header-left {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 6px;
   align-items: center;
 }
@@ -54,7 +56,8 @@
 #ants-grid-size-btn,
 #ants-music-toggle,
 #ants-print-worksheet,
-#ants-dev-mode-btn {
+#ants-master-toggle,
+#ants-help-btn {
   border: none;
   border-radius: 999px;
   padding: 4px 10px;
@@ -74,22 +77,29 @@
   font-weight: 600;
 }
 
-#ants-dev-mode-btn {
+#ants-master-toggle {
+  background: #fff3d6;
+  color: #9a6b00;
+  font-weight: 600;
+}
+
+#ants-master-toggle.active {
+  background: linear-gradient(135deg, #ffd700 0%, #ffcc00 50%, #e6a817 100%);
+  color: #5c4306;
+  box-shadow: 0 2px 8px rgba(184, 134, 11, 0.45);
+}
+
+#ants-help-btn {
   background: #e3f2fd;
   color: #1976d2;
   font-weight: 600;
 }
 
-#ants-dev-mode-btn.active {
-  background: #1976d2;
-  color: #fff;
-}
-
-
 #ants-grid-size-btn:active,
 #ants-music-toggle:active,
 #ants-print-worksheet:active,
-#ants-dev-mode-btn:active {
+#ants-master-toggle:active,
+#ants-help-btn:active {
   transform: scale(0.97);
 }
 
@@ -568,6 +578,82 @@
   transform: scale(0.97);
 }
 
+/* Learn overlay */
+#ants-help-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+#ants-help-dialog {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px 18px 14px;
+  max-width: 360px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  color: #222;
+}
+
+#ants-help-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.help-op {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.help-op-symbol {
+  flex: 0 0 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff3d6;
+  color: #9a6b00;
+  font-size: 1.3rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.help-op-text {
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+#ants-help-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+#ants-help-close-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: #3b7c36;
+  color: #fdfaf5;
+  cursor: pointer;
+}
+
+#ants-help-close-btn:active {
+  transform: scale(0.97);
+}
+
 /* Master Mode Visuals */
 .master-mode-badge {
   width: 100%;
@@ -633,416 +719,3 @@
   filter: grayscale(1);
 }
 
-/* Dev Mode styles */
-#ants-dev-view {
-  width: 100%;
-  margin-top: 10px;
-}
-
-.dev-banner {
-  background: #1976d2;
-  color: #fff;
-  padding: 8px;
-  border-radius: 12px 12px 0 0;
-  font-weight: 700;
-  text-align: center;
-  font-size: 0.9rem;
-  letter-spacing: 1px;
-}
-
-#ants-dev-canvas {
-  background: #fff;
-  border: 2px dashed #1976d2;
-  border-top: none;
-  border-radius: 0 0 12px 12px;
-  min-height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  position: relative;
-}
-
-.dev-placeholder {
-  color: #999;
-  font-style: italic;
-  font-size: 0.9rem;
-  text-align: center;
-}
-/* Fractions Dev Mode UI */
-.fractions-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  width: 100%;
-}
-
-.fraction-problem {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  width: 100%;
-  flex-wrap: wrap;
-}
-
-.fraction-vis {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  width: 50px;
-}
-
-.f-box {
-  height: 24px;
-  border: 2px solid #333;
-  background: #eee;
-}
-
-.f-math {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 1.5rem;
-  font-weight: 700;
-  min-width: 40px;
-}
-
-.f-bar {
-  width: 100%;
-  height: 3px;
-  background: #333;
-  margin: 4px 0;
-}
-
-.f-op {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #333;
-  padding: 0 10px;
-}
-
-.f-res-input {
-  width: 45px;
-  height: 45px;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: 700;
-  border: 2px solid #1976d2;
-  border-radius: 8px;
-  background: #fff;
-  color: #1976d2;
-}
-
-.f-res-input:focus {
-  outline: none;
-  background: #e3f2fd;
-}
-
-.f-level-track {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #666;
-  background: #fff8e6;
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1px solid #e5cf99;
-}
-
-.f-controls {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  margin-top: 20px;
-}
-
-/* Fractions Dev Settings */
-.f-settings {
-  display: flex;
-  gap: 12px;
-  background: #f0f4f8;
-  padding: 6px;
-  border-radius: 999px;
-  border: 1px solid #d1d9e6;
-  margin-bottom: 20px;
-}
-
-.f-setting-btn {
-  border: none;
-  background: transparent;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: #666;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.f-setting-btn.active {
-  background: #1976d2;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.4);
-}
-
-.f-setting-btn:hover:not(.active) {
-  background: #e1e7ef;
-}
-
-/* Dev Picker UI */
-.dev-picker-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-.dev-picker-title {
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: #1976d2;
-  margin-bottom: 30px;
-}
-
-.dev-picker-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  width: 100%;
-  max-width: 320px; /* Force compact 2x2 on most devices */
-  justify-content: center;
-}
-
-.picker-card {
-  width: auto;
-  aspect-ratio: 1 / 1;
-  background: #f8faff;
-  border: 2px solid #e1e7ef;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  padding: 10px;
-}
-
-.picker-card:hover {
-  transform: translateY(-5px);
-  border-color: #1976d2;
-  background: #fff;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-}
-
-.picker-card .card-icon {
-  font-size: 2.4rem;
-  font-weight: 800;
-  color: #1976d2;
-}
-
-.picker-card .card-text {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #444;
-}
-
-/* Common Home Button for Dev */
-.f-home-btn {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  background: #fff;
-  border: 1px solid #1976d2;
-  border-radius: 50%;
-  width: 38px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.2);
-  transition: all 0.2s;
-  z-index: 99;
-  pointer-events: auto;
-}
-
-.f-home-btn:hover {
-  background: #f0f0f0;
-  transform: scale(1.1);
-}
-
-.fractions-container {
-  position: relative;
-  padding-top: 20px;
-}
-
-/* Algebra Blank Canvas */
-.algebra-dev-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-}
-
-.algebra-title {
-  font-size: 1.6rem;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.algebra-canvas-blank {
-  width: 100%;
-  max-width: 500px;
-  height: 200px;
-  border: 4px dashed #ccc;
-  border-radius: 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #888;
-  background: #fafafa;
-}
-
-.blank-indicator {
-  font-family: monospace;
-  font-size: 0.8rem;
-  margin-bottom: 10px;
-  color: #aaa;
-}
-
-/* Algebra Dev UI */
-.algebra-problem-box {
-  background: #fff;
-  border: 1px solid #e1e7ef;
-  border-radius: 24px;
-  padding: 30px;
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  margin-top: 10px;
-}
-
-.algebra-text {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: #333;
-  font-family: 'Courier New', Courier, monospace;
-}
-
-.algebra-input-row {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.x-label {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #1976d2;
-}
-
-.algebra-title {
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: #666;
-  margin-bottom: 20px;
-}
-
-/* Chains Dev Mode Styles */
-.chains-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  position: relative;
-  padding-top: 25px;
-}
-
-.c-len-btn {
-  border: 1px solid #d1d9e6;
-  background: white;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #666;
-  cursor: pointer;
-  transition: all 0.2s;
-  min-width: 45px;
-}
-
-.c-len-btn:hover {
-  background: #f0f4f8;
-}
-
-.c-len-btn.active {
-  background: #1976d2;
-  color: white;
-  border-color: #1976d2;
-  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.4);
-}
-
-.c-mode-btn {
-  border: 1px solid #d1d9e6;
-  background: white;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #666;
-  cursor: pointer;
-  transition: all 0.2s;
-  min-width: 90px;
-}
-
-.c-mode-btn.active {
-  background: #6a1b9a;
-  color: white;
-  border-color: #6a1b9a;
-}
-
-.math-no-break {
-  white-space: nowrap;
-}
-
-.chains-container .algebra-text {
-  white-space: nowrap;
-  font-size: 2.2rem;
-  max-width: 100%;
-  overflow-x: hidden;
-  text-align: center;
-}
-
-.math-op-mul {
-  font-weight: 900;
-  font-size: 0.85em;
-  vertical-align: middle;
-  padding: 0 4px;
-  display: inline-block;
-  transform: translateY(-2px);
-  color: #333;
-}
-
-.math-var {
-  font-family: "Times New Roman", Times, serif;
-  font-style: italic;
-  font-weight: 800;
-  color: #1976d2; /* Keeps it distinct from numbers */
-}
