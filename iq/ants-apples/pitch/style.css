@@ -18,6 +18,7 @@ html, body {
   margin: 0;
   height: 100%;
   overflow: hidden;
+  overscroll-behavior-x: none;
   background: #eee9df;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
@@ -82,9 +83,16 @@ html, body {
   height: 100%;
   width: 100%;
   transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+  /* Tell the browser upfront that this element only natively handles vertical
+     panning — horizontal gestures are always left for our JS swipe handler.
+     Without this, the browser's compositor thread decides scroll-vs-swipe
+     before our touchmove listener reliably gets a say, so preventDefault()
+     alone is too late/racy on real devices. */
+  touch-action: pan-y;
 }
 
 .slide {
+  touch-action: pan-y;
   flex: 0 0 100%;
   width: 100%;
   height: 100%;
