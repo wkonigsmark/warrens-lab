@@ -99,6 +99,86 @@ async function loadSchedule() {
   }
 }
 
+// --- Viva CFP marquee: chasing bulb border ---
+
+function buildMarqueeBulbs() {
+  const box = document.getElementById('marquee-bulbs');
+  const w = box.clientWidth;
+  const h = box.clientHeight;
+  const mobile = w < 420;
+  const spacing = mobile ? 26 : 34;
+  const size = mobile ? 6 : 8;
+
+  const cols = Math.max(4, Math.round(w / spacing));
+  const rows = Math.max(3, Math.round(h / spacing));
+
+  const points = [];
+  for (let i = 0; i < cols; i++) points.push([(i / cols) * w, 0]);
+  for (let i = 0; i < rows; i++) points.push([w, (i / rows) * h]);
+  for (let i = cols; i > 0; i--) points.push([(i / cols) * w, h]);
+  for (let i = rows; i > 0; i--) points.push([0, (i / rows) * h]);
+
+  box.innerHTML = points.map(([x, y], i) => `
+    <span class="bulb ${i % 2 ? 'phase-b' : ''}"
+      style="left:${x.toFixed(1)}px; top:${y.toFixed(1)}px; width:${size}px; height:${size}px"></span>
+  `).join('');
+}
+
+let bulbResizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(bulbResizeTimer);
+  bulbResizeTimer = setTimeout(buildMarqueeBulbs, 150);
+});
+
+// --- Playoff format modal (2026-27 rules as data, not markup) ---
+
+const cfpFormat2026 = {
+  fieldSize: 12,
+  autoBids: {
+    power4: { count: 4, conferences: ['ACC', 'Big 12', 'Big Ten', 'SEC'], rule: 'conference champion, any rank' },
+    groupOf6: { count: 1, conferences: ['AAC', 'C-USA', 'MAC', 'Mountain West', 'Pac-12', 'Sun Belt'], rule: 'highest-ranked team, champion not required' },
+  },
+  independentRule: { team: 'Notre Dame', condition: 'top 12 in the final committee rankings' },
+  atLargeBids: 7,
+  seeding: 'All 12 teams are re-seeded 1–12 purely by final committee rank — a conference title does NOT guarantee a higher seed or a bye. The top 4 seeds overall get the first-round bye, champs or not.',
+  byeSeeds: [1, 2, 3, 4],
+  bracket: [
+    'Seeds 1–4: bye through the first round',
+    "Seeds 5–12: first-round games at the higher seed's campus",
+    'Quarterfinals & semifinals hosted by rotating bowls (Orange, Rose, Sugar, Cotton, Fiesta, Peach)',
+  ],
+  championship: { date: 'January 25, 2027', location: 'Allegiant Stadium, Las Vegas' },
+  selection: 'A 13-person committee (coaches, former players, administrators, journalists) releases weekly rankings during the season and finalizes the field and seeding after conference championship weekend.',
+};
+
+function renderFormatModal(f) {
+  const section = (title, body) => `<div class="format-section"><h3>${title}</h3>${body}</div>`;
+  document.getElementById('format-body').innerHTML = [
+    section('Field Size', `<p><strong>${f.fieldSize} teams.</strong></p>`),
+    section(`Automatic Bids (${f.autoBids.power4.count + f.autoBids.groupOf6.count})`, `<ul>
+      <li><strong>${f.autoBids.power4.count}</strong> to the Power 4 champions — ${f.autoBids.power4.conferences.join(', ')} — ${f.autoBids.power4.rule}.</li>
+      <li><strong>${f.autoBids.groupOf6.count}</strong> to the Group of 6 (${f.autoBids.groupOf6.conferences.join(', ')}) — ${f.autoBids.groupOf6.rule}.</li>
+    </ul>`),
+    section('Notre Dame Rule', `<p>As an independent, <strong>${f.independentRule.team}</strong> gets an automatic bid if it finishes ${f.independentRule.condition} — no conference title needed.</p>`),
+    section(`At-Large Bids (${f.atLargeBids})`, '<p>The next-highest-ranked teams in the final rankings, regardless of conference, after the 5 automatic bids are locked in.</p>'),
+    section('Seeding', `<p>${f.seeding}</p>`),
+    section('Bracket Structure', `<ul>${f.bracket.map(b => `<li>${b}</li>`).join('')}</ul>
+      <p><strong>National Championship:</strong> ${f.championship.date} · ${f.championship.location} 🎰</p>`),
+    section('Selection Process', `<p>${f.selection}</p>`),
+  ].join('');
+}
+
+function initFormatModal() {
+  const overlay = document.getElementById('format-modal');
+  renderFormatModal(cfpFormat2026);
+  document.getElementById('format-btn').addEventListener('click', () => { overlay.hidden = false; });
+  document.getElementById('format-close').addEventListener('click', () => { overlay.hidden = true; });
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.hidden = true; });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') overlay.hidden = true; });
+}
+
 renderPoll();
 initTabs();
 loadSchedule();
+buildMarqueeBulbs();
+initFormatModal();
