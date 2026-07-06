@@ -74,7 +74,7 @@ body {
   gap: 16px;
   padding: 0 20px;
   z-index: 20;
-  background: linear-gradient(to bottom, rgba(238,233,223,0.95), rgba(238,233,223,0));
+  background: #eee9df;
 }
 
 #deck-logo {
@@ -395,19 +395,22 @@ kbd {
 
 /* ---------- Nav arrows ---------- */
 
+/* Floats just under the top bar rather than vertically centered — a fixed
+   spot regardless of how tall/scrollable a slide's content is, so it's never
+   competing with scrolled content underneath (unlike mid-screen placement,
+   or swipe gestures, which turned out to be unreliable across devices). */
 .deck-nav {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 66px;
   left: 14px;
   z-index: 20;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
-  background: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.92);
   box-shadow: var(--card-shadow);
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   line-height: 1;
   color: var(--ink);
   cursor: pointer;
@@ -416,7 +419,7 @@ kbd {
 .deck-nav-next { left: auto; right: 14px; }
 
 .deck-nav:disabled { opacity: 0.25; cursor: default; }
-.deck-nav:not(:disabled):active { transform: translateY(-50%) scale(0.94); }
+.deck-nav:not(:disabled):active { transform: scale(0.94); }
 
 /* ---------- Dots ---------- */
 
@@ -477,7 +480,7 @@ kbd {
   .media-text { align-items: center; text-align: center; }
   .media-text .lead { max-width: 560px; }
   .screenshot { max-height: 38vh; }
-  .deck-nav { display: none; }
+  .deck-nav { width: 36px; height: 36px; font-size: 1.2rem; top: 60px; }
   #deck-logo { height: 22px; }
   #deck-counter { font-size: 0.72rem; }
 }
