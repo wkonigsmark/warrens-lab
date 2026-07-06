@@ -76,6 +76,16 @@ html, body {
   font-variant-numeric: tabular-nums;
 }
 
+/* Deploy-verification watermark — bump the text in index.html on every
+   change so it's obvious from the phone alone whether a fresh build is
+   actually live, independent of any cache/CDN guesswork. */
+#deck-version {
+  font-size: 0.7rem;
+  color: rgba(0, 0, 0, 0.35);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
 /* ---------- Slide track ---------- */
 
 #deck-track {
