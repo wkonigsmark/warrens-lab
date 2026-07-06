@@ -67,7 +67,25 @@
   // touchend and let touch-action handle the arbitration.
   let touchStartX = null;
   let touchStartY = null;
+  let swipeCount = 0;
   const SWIPE_TRIGGER_PX = 40;
+
+  // --- Temporary on-device diagnostics ---
+  // Every fix so far has been validated against Chromium (via Playwright),
+  // which can't reproduce real iOS Safari/WebKit touch-gesture behavior at
+  // all — so passing that test has never actually proven anything about the
+  // real bug. This panel shows exactly what the real device reports for each
+  // swipe attempt, directly on screen, so it can be read/screenshotted after
+  // a failed attempt instead of guessing again. Safe to delete once this is
+  // sorted out.
+  const debugEl = document.createElement('div');
+  debugEl.id = 'swipe-debug';
+  debugEl.style.cssText = 'position:fixed;left:6px;top:64px;z-index:999;' +
+    'background:rgba(0,0,0,0.8);color:#7CFC7C;font:11px/1.4 monospace;' +
+    'padding:6px 8px;border-radius:6px;max-width:92vw;white-space:pre-wrap;' +
+    'pointer-events:none;';
+  debugEl.textContent = 'swipe debug: waiting for a swipe...';
+  document.body.appendChild(debugEl);
 
   track.addEventListener('touchstart', (e) => {
     if (e.touches.length !== 1) return;
@@ -77,17 +95,27 @@
 
   track.addEventListener('touchend', (e) => {
     if (touchStartX === null) return;
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
+    swipeCount += 1;
+    const endX = e.changedTouches[0].clientX;
+    const endY = e.changedTouches[0].clientY;
+    const dx = endX - touchStartX;
+    const dy = endY - touchStartY;
+    const indexBefore = index;
+    let decision = 'ignored (too short / too vertical)';
     if (Math.abs(dx) > SWIPE_TRIGGER_PX && Math.abs(dx) > Math.abs(dy)) {
-      if (dx < 0) goTo(index + 1);
-      else goTo(index - 1);
+      if (dx < 0) { goTo(index + 1); decision = 'advance ->'; }
+      else { goTo(index - 1); decision = '<- back'; }
     }
+    debugEl.textContent =
+      `swipe #${swipeCount} | slide ${indexBefore + 1} -> ${index + 1}\n` +
+      `dx=${dx.toFixed(0)} dy=${dy.toFixed(0)} decision: ${decision}`;
     touchStartX = null;
     touchStartY = null;
   }, { passive: true });
 
   track.addEventListener('touchcancel', () => {
+    swipeCount += 1;
+    debugEl.textContent = `swipe #${swipeCount} | touchcancel fired (gesture aborted by browser, no touchend)`;
     touchStartX = null;
     touchStartY = null;
   }, { passive: true });

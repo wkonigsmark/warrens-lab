@@ -14,11 +14,30 @@
 
 * { box-sizing: border-box; }
 
-html, body {
-  margin: 0;
+html {
+  /* `overflow: hidden` alone is famously NOT enough to stop iOS Safari's
+     outer page-level rubber-band/bounce — the WKWebView's own scroll view
+     sits above our CSS and can still register a native bounce on the very
+     first touch sequence. Once that happens, its gesture recognizer appears
+     to stay primed and starts claiming subsequent touch sequences too, which
+     matches the exact symptom reported: only the first swipe on a fresh page
+     load works, every one after it fails. `position: fixed` on the whole
+     page is the long-standing, documented fix for this — it removes the
+     outer scroll view from the equation entirely instead of just hiding its
+     overflow.
+  */
   height: 100%;
   overflow: hidden;
-  overscroll-behavior-x: none;
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  position: fixed;
+  inset: 0;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
   background: #eee9df;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
@@ -39,6 +58,7 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 /* ---------- Top bar ---------- */
