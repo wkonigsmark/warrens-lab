@@ -99,6 +99,362 @@ async function loadSchedule() {
   }
 }
 
+// --- Teams directory (reads data/teams-db.json from api/build_teams_db.py) ---
+
+const CLASS_LABELS = { fbs: 'FBS', fcs: 'FCS', ii: 'D2', iii: 'D3' };
+let TEAMS_DB = null;
+
+async function loadTeamsDb() {
+  try {
+    const res = await fetch('data/teams-db.json');
+    if (!res.ok) throw new Error(res.status);
+    TEAMS_DB = (await res.json()).teams;
+    renderTeamsUI();
+  } catch {
+    document.getElementById('tab-teams').innerHTML = `
+      <div class="stub-card">
+        <h3>No team database yet</h3>
+        <p>Run <code>python3 api/build_teams_db.py</code> to build it.</p>
+      </div>
+    `;
+  }
+}
+
+const TIER_HEADERS = {
+  power4: { label: 'Power 4', rule: 'conference champs get auto bids' },
+  group6: { label: 'Group of 6', rule: 'highest-ranked team gets the auto bid' },
+  independent: { label: 'Independents', rule: 'Notre Dame: top 12 = auto bid' },
+};
+
+function teamCard(t) {
+  const logo = t.logos[0]
+    ? `<img class="team-logo" src="${t.logos[0]}" alt="" loading="lazy">`
+    : '<div class="team-logo team-logo-empty">🏈</div>';
+  const venue = [t.venue.city, t.venue.state].filter(Boolean).join(', ');
+  const ndBadge = t.school === 'Notre Dame'
+    ? '<span class="nd-badge">★ top-12 auto bid</span>' : '';
+  return `
+    <div class="team-card" style="--team-color: ${t.colors.primary || 'var(--gold-dim)'}">
+      ${logo}
+      <div class="team-card-info">
+        <div class="team-card-name">${t.school} <span class="team-mascot">${t.mascot || ''}</span></div>
+        <div class="team-card-meta">${[t.conference, venue].filter(Boolean).join(' · ')} ${ndBadge}</div>
+      </div>
+      <div class="team-card-badges">
+        ${t.acronym ? `<span class="team-acronym">${t.acronym}</span>` : ''}
+        <span class="team-class">${CLASS_LABELS[t.classification]}</span>
+      </div>
+    </div>
+  `;
+}
+
+function tieredGrid(teams) {
+  return ['power4', 'group6', 'independent'].map(tier => {
+    const group = teams.filter(t => t.confTier === tier);
+    if (!group.length) return '';
+    const { label, rule } = TIER_HEADERS[tier];
+    return `
+      <div class="tier-header">
+        <h4>${label}</h4><span class="tier-rule">${rule}</span>
+      </div>
+      ${group.map(teamCard).join('')}
+    `;
+  }).join('');
+}
+
+function renderTeamsUI() {
+  const container = document.getElementById('tab-teams');
+  container.innerHTML = `
+    <div class="teams-controls">
+      <input type="search" id="team-search" class="team-search" placeholder="Search school, mascot, acronym…">
+      <div class="class-pills" id="class-pills">
+        ${Object.entries(CLASS_LABELS).map(([k, label], i) =>
+          `<button class="class-pill ${i === 0 ? 'active' : ''}" data-class="${k}">${label}</button>`).join('')}
+      </div>
+      <select id="conf-select" class="week-select"></select>
+    </div>
+    <div class="teams-count" id="teams-count"></div>
+    <div class="teams-grid" id="teams-grid"></div>
+  `;
+
+  const searchEl = document.getElementById('team-search');
+  const confEl = document.getElementById('conf-select');
+  const pillsEl = document.getElementById('class-pills');
+  let activeClass = 'fbs';
+
+  function fillConferences() {
+    const confs = [...new Set(TEAMS_DB
+      .filter(t => t.classification === activeClass)
+      .map(t => t.conference).filter(Boolean))].sort();
+    confEl.innerHTML = '<option value="">All conferences</option>' +
+      confs.map(c => `<option value="${c}">${c}</option>`).join('');
+  }
+
+  function draw() {
+    const q = searchEl.value.trim().toLowerCase();
+    let teams;
+    if (q) {
+      // search spans all divisions; class pills apply when browsing
+      teams = TEAMS_DB.filter(t =>
+        t.school.toLowerCase().includes(q) ||
+        (t.mascot || '').toLowerCase().includes(q) ||
+        (t.acronym || '').toLowerCase().includes(q) ||
+        t.aliases.some(a => a.toLowerCase().includes(q)));
+    } else {
+      teams = TEAMS_DB.filter(t => t.classification === activeClass);
+      if (confEl.value) teams = teams.filter(t => t.conference === confEl.value);
+    }
+    document.getElementById('teams-count').textContent =
+      `${teams.length} team${teams.length === 1 ? '' : 's'}`;
+    const useTiers = !q && activeClass === 'fbs';
+    document.getElementById('teams-grid').innerHTML =
+      (useTiers ? tieredGrid(teams) : teams.map(teamCard).join('')) ||
+      '<div class="stub-card"><p>No teams match.</p></div>';
+  }
+
+  pillsEl.addEventListener('click', e => {
+    const btn = e.target.closest('.class-pill');
+    if (!btn) return;
+    activeClass = btn.dataset.class;
+    pillsEl.querySelectorAll('.class-pill').forEach(p => p.classList.toggle('active', p === btn));
+    searchEl.value = '';
+    fillConferences();
+    draw();
+  });
+  confEl.addEventListener('change', draw);
+  searchEl.addEventListener('input', draw);
+
+  fillConferences();
+  draw();
+}
+
+// --- The Index (reads data/power-index-2026.json from api/build_power_index.py) ---
+
+const CONF_ACRO = {
+  'SEC': 'SEC', 'Big Ten': 'B10', 'Big 12': 'B12', 'ACC': 'ACC',
+  'Pac-12': 'P12', 'American Athletic': 'AAC', 'Sun Belt': 'SBC',
+  'Mountain West': 'MW', 'Conference USA': 'CUSA', 'Mid-American': 'MAC',
+  'FBS Independents': 'IND', 'Ind': 'IND',
+};
+
+async function loadPowerIndex() {
+  try {
+    const res = await fetch('data/power-index-2026.json');
+    if (!res.ok) throw new Error(res.status);
+    renderIndexUI(await res.json());
+  } catch {
+    document.getElementById('tab-index').innerHTML = `
+      <div class="stub-card">
+        <h3>No index yet</h3>
+        <p>Run <code>python3 api/build_power_index.py</code> to build it from 2025 results.</p>
+      </div>
+    `;
+  }
+}
+
+function confStrengthTable(data) {
+  const confs = data.confStrength.filter(c => c.conference !== 'FBS Independents');
+  const max = Math.max(...confs.map(c => c.srsAvg2026));
+  const min = Math.min(...confs.map(c => c.srsAvg2026));
+  return `
+    <div class="index-section-title">Conference Strength <span>avg team rating · 2025 results, 2026 rosters</span></div>
+    <div class="conf-strength-list">
+      ${confs.map((c, i) => {
+        const pct = ((c.srsAvg2026 - min) / (max - min)) * 100;
+        const rec = c.crossRecord2025;
+        return `
+          <div class="conf-strength-row">
+            <span class="conf-rank">${i + 1}</span>
+            <span class="conf-name">${c.conference}</span>
+            <div class="conf-bar-track"><div class="conf-bar" style="width:${Math.max(4, pct)}%"></div></div>
+            <span class="conf-srs">${c.srsAvg2026 > 0 ? '+' : ''}${c.srsAvg2026.toFixed(1)}</span>
+            <span class="conf-cross">${rec.w}–${rec.l} cross-conf</span>
+          </div>
+        `;
+      }).join('')}
+    </div>
+    <p class="index-footnote">FBS went ${data.fbsVsFcs2025.w}–${data.fbsVsFcs2025.l} against FCS in 2025 · FCS pool rating: ${data.fcsPoolRating}</p>
+  `;
+}
+
+function confMatrix(data) {
+  const order = data.confStrength
+    .map(c => c.conference)
+    .filter(c => data.confMatrix2025[c]);
+  const cell = (row, col) => {
+    if (row === col) return '<td class="mx-diag">—</td>';
+    const r = (data.confMatrix2025[row] || {})[col];
+    if (!r || (!r.w && !r.l)) return '<td class="mx-empty">·</td>';
+    const cls = r.w > r.l ? 'mx-win' : r.w < r.l ? 'mx-loss' : '';
+    return `<td class="${cls}">${r.w}–${r.l}</td>`;
+  };
+  return `
+    <div class="index-section-title">Head-to-Head by Conference <span>2025 W–L, read across</span></div>
+    <div class="matrix-wrap">
+      <table class="conf-matrix">
+        <tr><th></th>${order.map(c => `<th>${CONF_ACRO[c] || c}</th>`).join('')}</tr>
+        ${order.map(row => `
+          <tr><th>${CONF_ACRO[row] || row}</th>${order.map(col => cell(row, col)).join('')}</tr>
+        `).join('')}
+      </table>
+    </div>
+  `;
+}
+
+function indexTeamRow(t) {
+  const logo = t.logo ? `<img class="index-logo" src="${t.logo}" alt="" loading="lazy">` : '';
+  const poll = t.pollRank ? `<span class="index-poll">★ #${t.pollRank}</span>` : '';
+  const srs = t.srs2025 === null ? 'new' : (t.srs2025 > 0 ? '+' : '') + t.srs2025.toFixed(1);
+  const sos = t.sos2026 === null ? '—' : (t.sos2026 > 0 ? '+' : '') + t.sos2026.toFixed(1);
+  return `
+    <div class="index-row" style="--team-color:${t.color || 'var(--gold-dim)'}">
+      <span class="index-rank">${t.rank}</span>
+      ${logo}
+      <span class="index-school">${t.school} ${poll}</span>
+      <span class="index-conf">${CONF_ACRO[t.conference] || t.conference}</span>
+      <span class="index-stat" title="projected rating">${(t.rating > 0 ? '+' : '') + t.rating.toFixed(1)}</span>
+      <span class="index-stat dim" title="2025 SRS">${srs}</span>
+      <span class="index-stat dim" title="2026 strength of schedule">${sos}</span>
+    </div>
+  `;
+}
+
+function renderIndexUI(data) {
+  document.getElementById('tab-index').innerHTML = `
+    ${confStrengthTable(data)}
+    ${confMatrix(data)}
+    <div class="index-section-title">The Index · 1–${data.teams.length}
+      <span>projected 2026 · rating / '25 SRS / '26 SoS</span></div>
+    <div class="index-list">${data.teams.map(indexTeamRow).join('')}</div>
+    <p class="index-footnote">${data.note}</p>
+  `;
+}
+
+// --- Playoff bracket (computed live from the power index) ---
+
+function buildPlayoffField(teams) {
+  // Byes: presumptive P4 champs = highest-rated team in each power conference
+  const champs = {};
+  for (const t of teams) {
+    if (t.confTier === 'power4' && !champs[t.conference]) champs[t.conference] = t;
+  }
+  const byes = Object.values(champs).sort((a, b) => a.rank - b.rank);
+  // G6 auto bid: highest-rated Group of 6 team
+  const g6 = teams.find(t => t.confTier === 'group6');
+  // At-large: next 7 best by rating (Notre Dame eligible here)
+  const taken = new Set([...byes, g6].map(t => t.school));
+  const atLarge = teams.filter(t => !taken.has(t.school)).slice(0, 7);
+  // Seeds 5-12: at-larges + G6 slotted by rating (G6 falls to 12 if lowest)
+  const five12 = [...atLarge, g6].sort((a, b) => a.rank - b.rank);
+  const seeds = [...byes, ...five12].map((t, i) => ({ seed: i + 1, ...t }));
+  return { seeds, byes, g6, atLarge };
+}
+
+function winProb(a, b) {
+  // rating diff ≈ point spread; logistic conversion to win probability
+  return 1 / (1 + Math.pow(10, -(a.rating - b.rating) / 15));
+}
+
+function teamChip(t, { winner = false, prob = null, dim = false } = {}) {
+  if (!t) return '<div class="chip chip-tbd">TBD</div>';
+  return `
+    <div class="chip ${winner ? 'chip-win' : ''} ${dim ? 'chip-dim' : ''}"
+      style="--team-color:${t.color || 'var(--gold-dim)'}">
+      <span class="chip-seed">${t.seed}</span>
+      ${t.logo ? `<img class="chip-logo" src="${t.logo}" alt="" loading="lazy">` : ''}
+      <span class="chip-name">${t.school}</span>
+      ${prob !== null ? `<span class="chip-prob">${Math.round(prob * 100)}%</span>` : ''}
+    </div>
+  `;
+}
+
+function matchupCard(a, b, { label = '', advanced = false } = {}) {
+  const p = winProb(a, b);
+  const aWins = a.rating >= b.rating;
+  return `
+    <div class="matchup ${advanced ? 'matchup-proj' : ''}">
+      ${label ? `<div class="matchup-label">${label}</div>` : ''}
+      ${teamChip(a, { winner: aWins, prob: aWins ? p : null, dim: advanced })}
+      ${teamChip(b, { winner: !aWins, prob: !aWins ? 1 - p : null, dim: advanced })}
+    </div>
+  `;
+}
+
+function renderBracket(data) {
+  const { seeds, g6 } = buildPlayoffField(data.teams);
+  const s = n => seeds[n - 1];
+  const win = (a, b) => (a.rating >= b.rating ? a : b);
+
+  // Real CFP pairings: QFs are 1v(8/9), 4v(5/12), 2v(7/10), 3v(6/11)
+  const r1 = [[s(8), s(9)], [s(5), s(12)], [s(7), s(10)], [s(6), s(11)]];
+  const r1w = r1.map(([a, b]) => win(a, b));
+  const qf = [[s(1), r1w[0]], [s(4), r1w[1]], [s(2), r1w[2]], [s(3), r1w[3]]];
+  const qfw = qf.map(([a, b]) => win(a, b));
+  const sf = [[qfw[0], qfw[1]], [qfw[2], qfw[3]]];
+  const sfw = sf.map(([a, b]) => win(a, b));
+  const champ = win(sfw[0], sfw[1]);
+
+  document.getElementById('tab-bracket').innerHTML = `
+    <div class="bracket-wrap">
+      <div class="bracket">
+        <div class="bracket-col">
+          <div class="round-title">First Round<span>on campus</span></div>
+          ${r1.map(([a, b]) => matchupCard(a, b)).join('')}
+        </div>
+        <div class="bracket-col">
+          <div class="round-title">Quarterfinals<span>bowl sites</span></div>
+          ${qf.map(([a, b]) => matchupCard(a, b, { advanced: true })).join('')}
+        </div>
+        <div class="bracket-col">
+          <div class="round-title">Semifinals<span>bowl sites</span></div>
+          ${sf.map(([a, b]) => matchupCard(a, b, { advanced: true })).join('')}
+        </div>
+        <div class="bracket-col bracket-col-final">
+          <div class="round-title">Natty<span>Las Vegas · Jan 25 '27</span></div>
+          ${matchupCard(sfw[0], sfw[1], { advanced: true })}
+          <div class="champ-card">
+            <div class="champ-label">🎰 Projected Champion</div>
+            <div class="champ-team" style="--team-color:${champ.color || 'var(--gold)'}">
+              ${champ.logo ? `<img src="${champ.logo}" alt="">` : ''}
+              <span>${champ.school}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bid-summary">
+      <div class="bid-group">
+        <h4>P4 Champs · byes</h4>
+        <p>${seeds.slice(0, 4).map(t => `${t.seed} ${t.school}`).join(' · ')}</p>
+      </div>
+      <div class="bid-group">
+        <h4>G6 auto bid</h4>
+        <p>${g6.seed ?? ''} ${g6.school} (${CONF_ACRO[g6.conference] || g6.conference}, index #${g6.rank})</p>
+      </div>
+      <div class="bid-group">
+        <h4>At-large</h4>
+        <p>${seeds.slice(4).filter(t => t.school !== g6.school).map(t => `${t.seed} ${t.school}`).join(' · ')}</p>
+      </div>
+    </div>
+    <p class="index-footnote">Field & seeds computed from The Index: highest-rated team per P4 conference = presumptive champ (bye), top Group of 6 team gets the auto bid, next 7 by rating at-large. Later rounds are chalk — higher rating advances; % is the favorite's win probability from the rating gap.</p>
+  `;
+}
+
+async function loadBracket() {
+  try {
+    const res = await fetch('data/power-index-2026.json');
+    if (!res.ok) throw new Error(res.status);
+    renderBracket(await res.json());
+  } catch {
+    document.getElementById('tab-bracket').innerHTML = `
+      <div class="stub-card">
+        <h3>No index yet</h3>
+        <p>The bracket seeds itself from the power index — run <code>python3 api/build_power_index.py</code> first.</p>
+      </div>
+    `;
+  }
+}
+
 // --- Viva CFP marquee: chasing bulb border ---
 
 function buildMarqueeBulbs() {
@@ -180,5 +536,8 @@ function initFormatModal() {
 renderPoll();
 initTabs();
 loadSchedule();
+loadTeamsDb();
+loadPowerIndex();
+loadBracket();
 buildMarqueeBulbs();
 initFormatModal();
