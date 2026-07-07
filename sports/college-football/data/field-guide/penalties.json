@@ -1,0 +1,62 @@
+{
+ "title": "Penalties & Ref Signals",
+ "description": "The flags you'll actually see on a broadcast, what the ref's arms are doing, and why.",
+ "entries": [
+  {
+   "id": "holding",
+   "term": "Holding (10 yards)",
+   "explanation": "A blocker grabs and hangs onto a defender — jersey, arm, or a bear hug — instead of just pushing him. Blockers can use their hands, but they can't grab and restrict.",
+   "signal": "The ref grabs one wrist with the other hand and pulls it down in front of his chest, like he's caught himself by the arm.",
+   "whenCalled": "Constantly — it's the most common flag on big runs and long pass plays, and it wipes them out. When a huge gain comes back for no reason you can see, it's usually holding.",
+   "example": "A 40-yard run comes back because a guard tackled the defensive end who was about to make the stop."
+  },
+  {
+   "id": "false-start",
+   "term": "False Start (5 yards)",
+   "explanation": "An offensive player flinches, jumps, or moves after getting set but before the snap. The play is blown dead immediately — the offense doesn't get to run it.",
+   "signal": "Both forearms rotate over each other in front of the chest, a rolling \"revving up\" motion.",
+   "whenCalled": "Most often in loud road stadiums when linemen can't hear the snap count, and on obvious passing downs when they're jumpy about the pass rush.",
+   "example": "3rd and 8 in a deafening stadium — the left tackle flinches early and now it's 3rd and 13."
+  },
+  {
+   "id": "offside",
+   "term": "Offside / Encroachment (5 yards)",
+   "explanation": "A defender is on the wrong side of the ball when it's snapped — or jumps across and touches someone before it. The mirror image of a false start, but on the defense.",
+   "signal": "Hands on hips, like a disappointed parent.",
+   "whenCalled": "When pass rushers try to time the snap and guess wrong, or when a hard count by the quarterback baits them into jumping. Offenses will take a free deep shot when they see a defender jump.",
+   "example": "The QB's fake snap count draws the defensive end across the line — free play, so he launches one deep."
+  },
+  {
+   "id": "pass-interference",
+   "term": "Pass Interference (spot foul in college, 15-yard max)",
+   "explanation": "A defender grabs, shoves, or tangles up a receiver while the ball is in the air, before it arrives. Defenders can play the ball — they just can't play the man to stop the catch.",
+   "signal": "Both arms pushed forward from the shoulders with open hands, a shoving motion.",
+   "whenCalled": "On deep balls where the beaten defender panics and grabs. One of the most argued calls in football because contact happens on almost every pass.",
+   "example": "The receiver is a step behind the corner on a deep ball, so the corner hooks his arm before it lands — flag, big gain awarded."
+  },
+  {
+   "id": "targeting",
+   "term": "Targeting (15 yards + ejection, college)",
+   "explanation": "Forcible contact to an opponent's head or neck, or leading with the crown of the helmet, especially against a defenseless player. College football's most serious safety rule: it's always reviewed, and if confirmed the player is ejected.",
+   "signal": "The ref gives the personal-foul signal — one wrist striking down on the other above the head — and after review, signals the ejection.",
+   "whenCalled": "On big hits to receivers stretched out mid-catch or sliding quarterbacks. The stadium holds its breath during the review because a star player's game (and possibly the next half) is on the line.",
+   "example": "A safety launches helmet-first at a receiver's chin — reviewed, confirmed, and he's done for the day."
+  },
+  {
+   "id": "unnecessary-roughness",
+   "term": "Unnecessary Roughness (15 yards)",
+   "explanation": "A hit that goes beyond playing football: shoving someone out of bounds after the whistle, piling on a downed runner, or a late hit on the quarterback after the throw.",
+   "signal": "The personal-foul signal — one wrist striking down on the other above the head.",
+   "whenCalled": "After the play is effectively over — the ball carrier is already out of bounds or on the ground. Often the flag that turns a defensive stop into a fresh set of downs.",
+   "example": "The defense forces a punt, but a late shove after the whistle gives the offense 15 yards and a new drive instead."
+  },
+  {
+   "id": "delay-of-game",
+   "term": "Delay of Game (5 yards)",
+   "explanation": "The play clock hits zero before the offense snaps the ball. Pure clock management failure — nobody touched anybody.",
+   "signal": "Arms folded across the chest, one over the other.",
+   "whenCalled": "Coming out of confusion — a slow huddle, a late play call, or the QB trying to change the play and running out of time. Also taken on purpose sometimes to give the punter more room.",
+   "example": "The sideline can't get the call in, the QB is screaming at the line, and the :00 flashes — five yards backward."
+  }
+ ]
+}

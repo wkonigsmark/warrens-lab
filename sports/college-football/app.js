@@ -324,10 +324,58 @@ function indexTeamRow(t) {
   `;
 }
 
+const INDEX_EXPLAINER = `
+  <div class="explainer-section">
+    <h4>Rating — projected 2026 strength</h4>
+    <p>Points better (+) or worse (−) than the average FBS team on a neutral field.
+    The gap between two ratings reads like a point spread: a +20 team should beat a
+    +13 team by about a touchdown. Built in three steps:</p>
+    <ol>
+      <li><strong>Start with last season</strong> — the team's '25 SRS (below).</li>
+      <li><strong>Regress toward the conference</strong> — 65% the team's own number,
+      35% its 2026 conference average. Rosters churn every winter, but the league you
+      play in says a lot about where you'll land.</li>
+      <li><strong>Poll blend for the Top 25</strong> — teams in ESPN's way-too-early
+      poll (★) get averaged 50/50 with a poll-implied score (#1 ≈ +26 down to
+      #25 ≈ +12), folding in what the market knows about portal moves and
+      returning QBs that pure 2025 math can't see.</li>
+    </ol>
+  </div>
+  <div class="explainer-section">
+    <h4>'25 SRS — what actually happened last year</h4>
+    <p>Average scoring margin adjusted for opponent strength, iterated across every
+    2025 game including bowls and the playoff. Margins are capped at ±28 so blowouts
+    don't inflate anyone, and all FCS opponents are pooled into one team rated about
+    −23. A team that went 8–4 against a brutal slate can out-rate a 10–2 team that
+    played nobody. <em>"new"</em> = no 2025 FBS results to work from.</p>
+  </div>
+  <div class="explainer-section">
+    <h4>'26 SoS — the road ahead</h4>
+    <p>The average projected rating of every opponent on the 2026 schedule. +6 means
+    the average Saturday is a top-25-caliber fight; a negative number is a soft slate.
+    This is why a good record won't mean the same thing everywhere.</p>
+  </div>
+  <div class="explainer-section">
+    <h4>★ #n — the poll cross-reference</h4>
+    <p>The team's rank in ESPN's way-too-early Top 25. It doubles as an honesty flag:
+    those 25 ratings carry the poll blend, the other 113 are pure formula.</p>
+  </div>
+`;
+
 function renderIndexUI(data) {
   document.getElementById('tab-index').innerHTML = `
     <div class="index-section-title">The Index · 1–${data.teams.length}
-      <span>projected 2026 · rating / '25 SRS / '26 SoS · click a team for its schedule</span></div>
+      <span>projected 2026 · click a team for its schedule</span>
+      <button class="info-toggle" id="index-info-btn" aria-expanded="false"
+        title="How the Index works">?</button>
+    </div>
+    <div class="index-explainer" id="index-explainer" hidden>${INDEX_EXPLAINER}</div>
+    <div class="index-list-head">
+      <span>#</span><span></span><span>Team</span><span>Conf</span>
+      <span title="Projected 2026 strength vs an average FBS team — rating gaps read like point spreads">Rating</span>
+      <span title="2025 results: avg margin adjusted for opponent strength, capped at ±28">'25 SRS</span>
+      <span title="Average projected rating of 2026 opponents — higher = harder schedule">'26 SoS</span>
+    </div>
     <div class="index-list">${data.teams.map(indexTeamRow).join('')}</div>
     ${confStrengthTable(data)}
     ${confMatrix(data)}
@@ -336,6 +384,13 @@ function renderIndexUI(data) {
   document.querySelector('#tab-index .index-list').addEventListener('click', e => {
     const row = e.target.closest('.index-row');
     if (row) openTeamModal(row.dataset.school);
+  });
+  const infoBtn = document.getElementById('index-info-btn');
+  const explainer = document.getElementById('index-explainer');
+  infoBtn.addEventListener('click', () => {
+    explainer.hidden = !explainer.hidden;
+    infoBtn.setAttribute('aria-expanded', String(!explainer.hidden));
+    infoBtn.classList.toggle('open', !explainer.hidden);
   });
 }
 
@@ -437,65 +492,72 @@ function winProb(a, b) {
   return 1 / (1 + Math.pow(10, -(a.rating - b.rating) / 15));
 }
 
-function teamChip(t, { winner = false, prob = null, dim = false } = {}) {
+function teamChip(t, { winner = false, prob = null, upset = false, loser = false } = {}) {
   if (!t) return '<div class="chip chip-tbd">TBD</div>';
   return `
-    <div class="chip ${winner ? 'chip-win' : ''} ${dim ? 'chip-dim' : ''}"
+    <div class="chip ${winner ? 'chip-win' : ''} ${loser ? 'chip-loser' : ''}"
       style="--team-color:${t.color || 'var(--gold-dim)'}">
       <span class="chip-seed">${t.seed}</span>
       ${t.logo ? `<img class="chip-logo" src="${t.logo}" alt="" loading="lazy">` : ''}
       <span class="chip-name">${t.school}</span>
+      ${upset ? '<span class="chip-upset">UPSET</span>' : ''}
       ${prob !== null ? `<span class="chip-prob">${Math.round(prob * 100)}%</span>` : ''}
     </div>
   `;
 }
 
-function matchupCard(a, b, { label = '', advanced = false } = {}) {
-  const p = winProb(a, b);
-  const aWins = a.rating >= b.rating;
-  return `
-    <div class="matchup ${advanced ? 'matchup-proj' : ''}">
-      ${label ? `<div class="matchup-label">${label}</div>` : ''}
-      ${teamChip(a, { winner: aWins, prob: aWins ? p : null, dim: advanced })}
-      ${teamChip(b, { winner: !aWins, prob: !aWins ? 1 - p : null, dim: advanced })}
-    </div>
-  `;
+function matchupCard(a, b, winner) {
+  const pWinner = winner === a ? winProb(a, b) : winProb(b, a);
+  const upset = pWinner < 0.5;
+  const chips = [a, b].map(t =>
+    teamChip(t, {
+      winner: t === winner,
+      loser: t !== winner,
+      prob: t === winner ? pWinner : null,
+      upset: t === winner && upset,
+    }));
+  return `<div class="matchup">${chips.join('')}</div>`;
 }
 
-function renderBracket(data) {
-  const { seeds, g6 } = buildPlayoffField(data.teams);
+let BRACKET_FIELD = null;
+let SIM_COUNT = 0;
+
+function runBracketSim() {
+  const { seeds, g6 } = BRACKET_FIELD;
   const s = n => seeds[n - 1];
-  const win = (a, b) => (a.rating >= b.rating ? a : b);
+  // stochastic: weighted coin flip on the rating-gap win probability
+  const play = (a, b) => (Math.random() < winProb(a, b) ? a : b);
+  SIM_COUNT++;
 
   // Real CFP pairings: QFs are 1v(8/9), 4v(5/12), 2v(7/10), 3v(6/11)
   const r1 = [[s(8), s(9)], [s(5), s(12)], [s(7), s(10)], [s(6), s(11)]];
-  const r1w = r1.map(([a, b]) => win(a, b));
+  const r1w = r1.map(([a, b]) => play(a, b));
   const qf = [[s(1), r1w[0]], [s(4), r1w[1]], [s(2), r1w[2]], [s(3), r1w[3]]];
-  const qfw = qf.map(([a, b]) => win(a, b));
+  const qfw = qf.map(([a, b]) => play(a, b));
   const sf = [[qfw[0], qfw[1]], [qfw[2], qfw[3]]];
-  const sfw = sf.map(([a, b]) => win(a, b));
-  const champ = win(sfw[0], sfw[1]);
+  const sfw = sf.map(([a, b]) => play(a, b));
+  const champ = play(sfw[0], sfw[1]);
 
-  document.getElementById('tab-bracket').innerHTML = `
+  document.getElementById('bracket-live').innerHTML = `
     <div class="bracket-wrap">
       <div class="bracket">
         <div class="bracket-col">
           <div class="round-title">First Round<span>on campus</span></div>
-          ${r1.map(([a, b]) => matchupCard(a, b)).join('')}
+          ${r1.map(([a, b], i) => matchupCard(a, b, r1w[i])).join('')}
         </div>
         <div class="bracket-col">
           <div class="round-title">Quarterfinals<span>bowl sites</span></div>
-          ${qf.map(([a, b]) => matchupCard(a, b, { advanced: true })).join('')}
+          ${qf.map(([a, b], i) => matchupCard(a, b, qfw[i])).join('')}
         </div>
         <div class="bracket-col">
           <div class="round-title">Semifinals<span>bowl sites</span></div>
-          ${sf.map(([a, b]) => matchupCard(a, b, { advanced: true })).join('')}
+          ${sf.map(([a, b], i) => matchupCard(a, b, sfw[i])).join('')}
         </div>
         <div class="bracket-col bracket-col-final">
           <div class="round-title">Natty<span>Las Vegas · Jan 25 '27</span></div>
-          ${matchupCard(sfw[0], sfw[1], { advanced: true })}
+          ${matchupCard(sfw[0], sfw[1], champ)}
           <div class="champ-card">
-            <div class="champ-label">🎰 Projected Champion</div>
+            <div class="champ-label">🎰 Sim #${SIM_COUNT} Champion</div>
             <div class="champ-team" style="--team-color:${champ.color || 'var(--gold)'}">
               ${champ.logo ? `<img src="${champ.logo}" alt="">` : ''}
               <span>${champ.school}</span>
@@ -504,6 +566,18 @@ function renderBracket(data) {
         </div>
       </div>
     </div>
+  `;
+}
+
+function renderBracket(data) {
+  BRACKET_FIELD = buildPlayoffField(data.teams);
+  const { seeds, g6 } = BRACKET_FIELD;
+  document.getElementById('tab-bracket').innerHTML = `
+    <div class="sim-controls">
+      <button class="format-btn" id="sim-btn">🎲 Run It Back</button>
+      <span class="sim-note">field locked from The Index · results re-rolled every sim</span>
+    </div>
+    <div id="bracket-live"></div>
     <div class="bid-summary">
       <div class="bid-group">
         <h4>P4 Champs · byes</h4>
@@ -518,8 +592,10 @@ function renderBracket(data) {
         <p>${seeds.slice(4).filter(t => t.school !== g6.school).map(t => `${t.seed} ${t.school}`).join(' · ')}</p>
       </div>
     </div>
-    <p class="index-footnote">Field & seeds computed from The Index: highest-rated team per P4 conference = presumptive champ (bye), top Group of 6 team gets the auto bid, next 7 by rating at-large. Later rounds are chalk — higher rating advances; % is the favorite's win probability from the rating gap.</p>
+    <p class="index-footnote">Field & seeds are deterministic from The Index: highest-rated team per P4 conference = presumptive champ (bye), top Group of 6 team gets the auto bid, next 7 by rating at-large. Game results are simulated — each game is a weighted coin flip on the rating-gap win probability, so underdogs really do win sometimes. % shown is the winner's pre-game chance.</p>
   `;
+  document.getElementById('sim-btn').addEventListener('click', runBracketSim);
+  runBracketSim();
 }
 
 async function loadBracket() {
@@ -535,6 +611,143 @@ async function loadBracket() {
       </div>
     `;
   }
+}
+
+// --- Governance & Rules (renders data/governance.js; append to items to extend) ---
+
+function govDate(d) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return d; // year-only entries pass through
+  return new Date(d + 'T12:00:00').toLocaleDateString('en-US',
+    { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function govItemCard(item) {
+  return `
+    <div class="gov-item">
+      <div class="gov-item-head">
+        <h4>${item.title}</h4>
+        <span class="gov-date">${govDate(item.date)}</span>
+      </div>
+      <p class="gov-summary">${item.summary}</p>
+      <div class="gov-sources">
+        ${item.sources.map(s =>
+          `<a href="${s.url}" target="_blank" rel="noopener">${s.label} ↗</a>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function governanceHTML() {
+  const tiers = GOVERNANCE_TIMELINE.tiers.map(tier => {
+    const items = [...tier.items].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+    return `
+      <div class="gov-tier gov-${tier.tone}">
+        <div class="gov-tier-head">
+          <span class="gov-badge">${tier.badge}</span>
+          <h3>${tier.label}</h3>
+        </div>
+        <p class="gov-tier-desc">${tier.description}</p>
+        ${items.map(govItemCard).join('')}
+      </div>
+    `;
+  });
+  return `
+    ${tiers.join('')}
+    <p class="index-footnote">${GOVERNANCE_TIMELINE.disclaimer}
+      Sources last reviewed ${GOVERNANCE_TIMELINE.lastReviewed}.</p>
+  `;
+}
+
+// --- Learn hub: Field Guide modules + Policy & Governance ---
+// Adding a 6th field-guide module = one JSON in data/field-guide/ + one line here.
+
+const FIELD_GUIDE_MODULES = [
+  { key: 'basics', icon: '🏈' },
+  { key: 'positions', icon: '🧩' },
+  { key: 'penalties', icon: '🚩' },
+  { key: 'ncaa-vs-nfl', icon: '🔀' },
+  { key: 'glossary', icon: '📖' },
+];
+
+const FIELD_GUIDE = {};   // key -> module JSON, loaded once
+
+async function loadLearn() {
+  try {
+    const loaded = await Promise.all(FIELD_GUIDE_MODULES.map(m =>
+      fetch(`data/field-guide/${m.key}.json`).then(r => r.json())));
+    FIELD_GUIDE_MODULES.forEach((m, i) => { FIELD_GUIDE[m.key] = loaded[i]; });
+    showLearn('hub');
+  } catch {
+    document.getElementById('tab-learn').innerHTML =
+      '<div class="stub-card"><p>Could not load the Learn section.</p></div>';
+  }
+}
+
+function fieldGuideEntry(entry) {
+  return `
+    <div class="fg-entry">
+      <h4>${entry.term}</h4>
+      <p>${entry.explanation}</p>
+      ${entry.signal ? `<p class="fg-signal"><strong>Ref signal:</strong> ${entry.signal}</p>` : ''}
+      ${entry.whenCalled ? `<p class="fg-signal"><strong>When it's called:</strong> ${entry.whenCalled}</p>` : ''}
+      ${entry.example ? `<p class="fg-example">${entry.example}</p>` : ''}
+    </div>
+  `;
+}
+
+function learnHubHTML() {
+  return `
+    <div class="index-section-title">Learn <span>rules for new fans · policy for wonks</span></div>
+    <div class="learn-group">Field Guide — how football works</div>
+    <div class="learn-grid">
+      ${FIELD_GUIDE_MODULES.map(m => {
+        const mod = FIELD_GUIDE[m.key];
+        return `
+          <button class="learn-card" data-learn="${m.key}">
+            <span class="learn-card-icon">${m.icon}</span>
+            <span class="learn-card-body">
+              <strong>${mod.title}</strong>
+              <span>${mod.description}</span>
+            </span>
+          </button>
+        `;
+      }).join('')}
+    </div>
+    <div class="learn-group">Policy & Governance — the business of the sport</div>
+    <div class="learn-grid">
+      <button class="learn-card" data-learn="governance">
+        <span class="learn-card-icon">⚖️</span>
+        <span class="learn-card-body">
+          <strong>Governance & Rules</strong>
+          <span>NIL, revenue sharing, and transfer regulation — what's binding vs. proposed.</span>
+        </span>
+      </button>
+    </div>
+  `;
+}
+
+function showLearn(view) {
+  const container = document.getElementById('tab-learn');
+  if (view === 'hub') {
+    container.innerHTML = learnHubHTML();
+  } else {
+    const back = '<button class="learn-back" data-learn="hub">← Learn</button>';
+    if (view === 'governance') {
+      container.innerHTML = `${back}${governanceHTML()}`;
+    } else {
+      const mod = FIELD_GUIDE[view];
+      container.innerHTML = `
+        ${back}
+        <div class="index-section-title">${mod.title} <span>${mod.description}</span></div>
+        <div class="fg-list ${view === 'glossary' ? 'fg-compact' : ''}">
+          ${mod.entries.map(fieldGuideEntry).join('')}
+        </div>
+      `;
+    }
+  }
+  container.querySelectorAll('[data-learn]').forEach(el =>
+    el.addEventListener('click', () => showLearn(el.dataset.learn)));
+  container.scrollIntoView({ block: 'nearest' });
 }
 
 // --- Viva CFP marquee: chasing bulb border ---
@@ -627,5 +840,6 @@ loadSchedule();
 loadTeamsDb();
 loadPowerIndex();
 loadBracket();
+loadLearn();
 buildMarqueeBulbs();
 initFormatModal();

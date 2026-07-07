@@ -1,0 +1,48 @@
+{
+ "title": "NCAA vs. NFL",
+ "description": "Same sport, different rulebooks — the differences that actually change how the games feel.",
+ "entries": [
+  {
+   "id": "overtime",
+   "term": "Overtime",
+   "explanation": "College: no clock — teams alternate possessions starting at the opponent's 25-yard line, and each team gets a shot to answer. From the second overtime a touchdown must go for two, and from the third overtime teams just alternate two-point tries. NFL: a timed extra period where both teams are guaranteed a possession; ties can actually happen in the regular season.",
+   "example": "That's why college scores like 66-63 in 7OT exist — the alternating two-point shootout can go all night."
+  },
+  {
+   "id": "targeting-ejection",
+   "term": "Targeting & Ejection",
+   "explanation": "College ejects the player on a confirmed targeting call — and if it happens in the second half, he also sits the first half of the next game. The NFL penalizes similar hits 15 yards and fines players afterward, but almost never ejects.",
+   "example": "A college safety's season can change on one replay review; an NFL safety gets a letter from the league office on Tuesday."
+  },
+  {
+   "id": "clock-first-down",
+   "term": "Clock on First Downs",
+   "explanation": "College football's classic quirk: the clock stops briefly when the chains move. Since 2023 it only stops for first downs in the last two minutes of each half — but that's still a difference from the NFL, where the clock never stops just because you got a first down.",
+   "example": "College two-minute drills feel more forgiving: convert a first down late and you get a free clock stop the NFL wouldn't give you."
+  },
+  {
+   "id": "one-foot-two-feet",
+   "term": "Catches: One Foot vs. Two",
+   "explanation": "In college, a receiver needs one foot down in bounds for a catch. In the NFL, he needs both. The same toe-tap sideline grab can be a touchdown on Saturday and incomplete on Sunday.",
+   "example": "Broadcasters saying \"that's a catch in college\" during an NFL game are pointing at exactly this rule."
+  },
+  {
+   "id": "eligibility-redshirt",
+   "term": "Eligibility & Redshirts",
+   "explanation": "College players get four seasons of competition inside a five-year window. A \"redshirt\" year burns none of the four — and a player can appear in up to four games and still preserve it. The NFL has no eligibility clock at all, just contracts; you play until nobody signs you.",
+   "example": "A freshman QB plays exactly four games, redshirts, and still has four full seasons left."
+  },
+  {
+   "id": "playoff-formats",
+   "term": "Playoff Formats",
+   "explanation": "College: a 12-team bracket — 5 automatic bids for conference champions plus 7 at-larges, with byes for the top four seeds and first-round games on campus. NFL: 14 teams (7 per conference), division winners host, and only the #1 seed in each conference gets a bye.",
+   "example": "See the Playoff Format button on this dashboard for the full college bracket rules — that's the system this whole tool simulates."
+  },
+  {
+   "id": "hash-marks",
+   "term": "Hash Marks & Field Geometry",
+   "explanation": "College hash marks are much wider apart than the NFL's. A play ending near the sideline in college is spotted way off-center, creating a wide side and a short side of the field — offenses and kickers have to plan around it. NFL hashes are so narrow every snap is basically middle-of-field.",
+   "example": "College kickers sometimes face sharp-angle field goals from a hash the NFL would never create."
+  }
+ ]
+}

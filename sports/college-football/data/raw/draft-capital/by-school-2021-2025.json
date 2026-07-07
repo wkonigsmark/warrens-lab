@@ -1,0 +1,2635 @@
+{
+ "source": "NFL draft capital by school (via CFBD)",
+ "url": "https://api.collegefootballdata.com/draft/picks",
+ "pulledAt": "2026-07-07",
+ "season": 2025,
+ "notes": "Trailing 5 drafts (2021\u20132025). capital = \u03a3 (257 \u2212 overall pick). Lagging validation signal, not current-season.",
+ "data": [
+  {
+   "team": "Georgia",
+   "value": 8472,
+   "rank": 1,
+   "raw": {
+    "picks": 55,
+    "firstRounders": 14,
+    "byYear": {
+     "2021": 9,
+     "2022": 15,
+     "2023": 10,
+     "2024": 8,
+     "2025": 13
+    },
+    "topPicks": [
+     "2021 #29 Eric Stokes",
+     "2022 #1 Travon Walker",
+     "2022 #13 Jordan Davis",
+     "2022 #22 Quay Walker",
+     "2022 #28 Devonte Wyatt",
+     "2022 #32 Lewis Cine",
+     "2023 #9 Jalen Carter",
+     "2023 #14 Broderick Jones"
+    ]
+   }
+  },
+  {
+   "team": "Alabama",
+   "value": 7811,
+   "rank": 2,
+   "raw": {
+    "picks": 44,
+    "firstRounders": 16,
+    "byYear": {
+     "2021": 10,
+     "2022": 7,
+     "2023": 10,
+     "2024": 10,
+     "2025": 7
+    },
+    "topPicks": [
+     "2021 #6 Jaylen Waddle",
+     "2021 #9 Pat Surtain II",
+     "2021 #10 DeVonta Smith",
+     "2021 #15 Mac Jones",
+     "2021 #17 Alex Leatherwood",
+     "2021 #24 Najee Harris",
+     "2022 #7 Evan Neal",
+     "2022 #12 Jameson Williams"
+    ]
+   }
+  },
+  {
+   "team": "Ohio State",
+   "value": 6613,
+   "rank": 3,
+   "raw": {
+    "picks": 40,
+    "firstRounders": 11,
+    "byYear": {
+     "2021": 10,
+     "2022": 6,
+     "2023": 6,
+     "2024": 4,
+     "2025": 14
+    },
+    "topPicks": [
+     "2021 #11 Justin Fields",
+     "2022 #10 Garrett Wilson",
+     "2022 #11 Chris Olave",
+     "2023 #2 C.J. Stroud",
+     "2023 #6 Paris Johnson Jr.",
+     "2023 #20 Jaxon Smith-Njigba",
+     "2024 #4 Marvin Harrison Jr.",
+     "2025 #19 Emeka Egbuka"
+    ]
+   }
+  },
+  {
+   "team": "Michigan",
+   "value": 5755,
+   "rank": 4,
+   "raw": {
+    "picks": 42,
+    "firstRounders": 8,
+    "byYear": {
+     "2021": 8,
+     "2022": 5,
+     "2023": 9,
+     "2024": 13,
+     "2025": 7
+    },
+    "topPicks": [
+     "2021 #21 Kwity Paye",
+     "2022 #2 Aidan Hutchinson",
+     "2022 #31 Daxton Hill",
+     "2023 #26 Mazi Smith",
+     "2024 #10 J.J. McCarthy",
+     "2025 #5 Mason Graham",
+     "2025 #10 Colston Loveland",
+     "2025 #13 Kenneth Grant"
+    ]
+   }
+  },
+  {
+   "team": "LSU",
+   "value": 4963,
+   "rank": 5,
+   "raw": {
+    "picks": 36,
+    "firstRounders": 6,
+    "byYear": {
+     "2021": 7,
+     "2022": 10,
+     "2023": 6,
+     "2024": 6,
+     "2025": 7
+    },
+    "topPicks": [
+     "2021 #5 Ja'Marr Chase",
+     "2022 #3 Derek Stingley Jr.",
+     "2024 #2 Jayden Daniels",
+     "2024 #6 Malik Nabers",
+     "2024 #23 Brian Thomas Jr.",
+     "2025 #4 Will Campbell"
+    ]
+   }
+  },
+  {
+   "team": "Texas",
+   "value": 4722,
+   "rank": 6,
+   "raw": {
+    "picks": 33,
+    "firstRounders": 6,
+    "byYear": {
+     "2021": 5,
+     "2023": 5,
+     "2024": 11,
+     "2025": 12
+    },
+    "topPicks": [
+     "2023 #8 Bijan Robinson",
+     "2024 #16 Byron Murphy II",
+     "2024 #28 Xavier Worthy",
+     "2025 #9 Kelvin Banks Jr.",
+     "2025 #20 Jahdae Barron",
+     "2025 #23 Matthew Golden"
+    ]
+   }
+  },
+  {
+   "team": "Penn State",
+   "value": 4568,
+   "rank": 7,
+   "raw": {
+    "picks": 33,
+    "firstRounders": 7,
+    "byYear": {
+     "2021": 6,
+     "2022": 8,
+     "2023": 6,
+     "2024": 8,
+     "2025": 5
+    },
+    "topPicks": [
+     "2021 #12 Micah Parsons",
+     "2021 #31 Odafe Oweh",
+     "2022 #16 Jahan Dotson",
+     "2024 #11 Olu Fashanu",
+     "2024 #21 Chop Robinson",
+     "2025 #3 Abdul Carter",
+     "2025 #14 Tyler Warren"
+    ]
+   }
+  },
+  {
+   "team": "Oregon",
+   "value": 4208,
+   "rank": 8,
+   "raw": {
+    "picks": 30,
+    "firstRounders": 6,
+    "byYear": {
+     "2021": 5,
+     "2022": 1,
+     "2023": 6,
+     "2024": 8,
+     "2025": 10
+    },
+    "topPicks": [
+     "2021 #7 Penei Sewell",
+     "2022 #5 Kayvon Thibodeaux",
+     "2023 #17 Christian Gonzalez",
+     "2024 #12 Bo Nix",
+     "2025 #21 Derrick Harmon",
+     "2025 #29 Josh Conerly Jr."
+    ]
+   }
+  },
+  {
+   "team": "Notre Dame",
+   "value": 3877,
+   "rank": 9,
+   "raw": {
+    "picks": 27,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 9,
+     "2022": 2,
+     "2023": 3,
+     "2024": 7,
+     "2025": 6
+    },
+    "topPicks": [
+     "2022 #14 Kyle Hamilton",
+     "2024 #5 Joe Alt"
+    ]
+   }
+  },
+  {
+   "team": "Florida",
+   "value": 3446,
+   "rank": 10,
+   "raw": {
+    "picks": 25,
+    "firstRounders": 5,
+    "byYear": {
+     "2021": 8,
+     "2022": 3,
+     "2023": 6,
+     "2024": 1,
+     "2025": 7
+    },
+    "topPicks": [
+     "2021 #4 Kyle Pitts",
+     "2021 #20 Kadarius Toney",
+     "2022 #23 Kaiir Elam",
+     "2023 #4 Anthony Richardson",
+     "2024 #31 Ricky Pearsall"
+    ]
+   }
+  },
+  {
+   "team": "Clemson",
+   "value": 3179,
+   "rank": 11,
+   "raw": {
+    "picks": 22,
+    "firstRounders": 5,
+    "byYear": {
+     "2021": 5,
+     "2022": 2,
+     "2023": 6,
+     "2024": 6,
+     "2025": 3
+    },
+    "topPicks": [
+     "2021 #1 Trevor Lawrence",
+     "2021 #25 Travis Etienne",
+     "2023 #28 Myles Murphy",
+     "2023 #29 Bryan Bresee",
+     "2024 #30 Nate Wiggins"
+    ]
+   }
+  },
+  {
+   "team": "Washington",
+   "value": 3112,
+   "rank": 12,
+   "raw": {
+    "picks": 19,
+    "firstRounders": 5,
+    "byYear": {
+     "2021": 4,
+     "2022": 4,
+     "2024": 10,
+     "2025": 1
+    },
+    "topPicks": [
+     "2021 #32 Joe Tryon",
+     "2022 #21 Trent McDuffie",
+     "2024 #8 Michael Penix Jr.",
+     "2024 #9 Rome Odunze",
+     "2024 #20 Troy Fautanu"
+    ]
+   }
+  },
+  {
+   "team": "USC",
+   "value": 2855,
+   "rank": 13,
+   "raw": {
+    "picks": 22,
+    "firstRounders": 4,
+    "byYear": {
+     "2021": 5,
+     "2022": 3,
+     "2023": 4,
+     "2024": 7,
+     "2025": 3
+    },
+    "topPicks": [
+     "2021 #14 Alijah Vera-Tucker",
+     "2022 #8 Drake London",
+     "2023 #23 Jordan Addison",
+     "2024 #1 Caleb Williams"
+    ]
+   }
+  },
+  {
+   "team": "Texas A&M",
+   "value": 2844,
+   "rank": 14,
+   "raw": {
+    "picks": 18,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 4,
+     "2022": 4,
+     "2023": 3,
+     "2024": 4,
+     "2025": 3
+    },
+    "topPicks": [
+     "2022 #15 Kenyon Green",
+     "2025 #17 Shemar Stewart"
+    ]
+   }
+  },
+  {
+   "team": "Ole Miss",
+   "value": 2828,
+   "rank": 15,
+   "raw": {
+    "picks": 23,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 2,
+     "2022": 6,
+     "2023": 4,
+     "2024": 3,
+     "2025": 8
+    },
+    "topPicks": [
+     "2025 #16 Walter Nolen",
+     "2025 #25 Jaxson Dart"
+    ]
+   }
+  },
+  {
+   "team": "Tennessee",
+   "value": 2733,
+   "rank": 16,
+   "raw": {
+    "picks": 19,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 2,
+     "2022": 5,
+     "2023": 5,
+     "2024": 3,
+     "2025": 4
+    },
+    "topPicks": [
+     "2023 #10 Darnell Wright",
+     "2025 #26 James Pearce Jr."
+    ]
+   }
+  },
+  {
+   "team": "Oklahoma",
+   "value": 2650,
+   "rank": 17,
+   "raw": {
+    "picks": 22,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 5,
+     "2022": 7,
+     "2023": 5,
+     "2024": 3,
+     "2025": 2
+    },
+    "topPicks": [
+     "2023 #27 Anton Harrison",
+     "2024 #29 Tyler Guyton"
+    ]
+   }
+  },
+  {
+   "team": "Kentucky",
+   "value": 2606,
+   "rank": 18,
+   "raw": {
+    "picks": 19,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 6,
+     "2022": 4,
+     "2023": 3,
+     "2024": 4,
+     "2025": 2
+    },
+    "topPicks": [
+     "2021 #19 Jamin Davis",
+     "2025 #30 Maxwell Hairston"
+    ]
+   }
+  },
+  {
+   "team": "Florida State",
+   "value": 2579,
+   "rank": 19,
+   "raw": {
+    "picks": 18,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 4,
+     "2022": 1,
+     "2023": 1,
+     "2024": 10,
+     "2025": 2
+    },
+    "topPicks": [
+     "2022 #26 Jermaine Johnson II",
+     "2024 #19 Jared Verse"
+    ]
+   }
+  },
+  {
+   "team": "Iowa",
+   "value": 2572,
+   "rank": 20,
+   "raw": {
+    "picks": 19,
+    "firstRounders": 3,
+    "byYear": {
+     "2021": 4,
+     "2022": 2,
+     "2023": 4,
+     "2024": 4,
+     "2025": 5
+    },
+    "topPicks": [
+     "2022 #25 Tyler Linderbaum",
+     "2023 #13 Lukas Van Ness",
+     "2023 #18 Jack Campbell"
+    ]
+   }
+  },
+  {
+   "team": "South Carolina",
+   "value": 2541,
+   "rank": 21,
+   "raw": {
+    "picks": 21,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 4,
+     "2022": 3,
+     "2023": 5,
+     "2024": 4,
+     "2025": 5
+    },
+    "topPicks": [
+     "2021 #8 Jaycee Horn",
+     "2024 #32 Xavier Legette"
+    ]
+   }
+  },
+  {
+   "team": "North Carolina",
+   "value": 2355,
+   "rank": 22,
+   "raw": {
+    "picks": 17,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 5,
+     "2022": 4,
+     "2023": 4,
+     "2024": 3,
+     "2025": 1
+    },
+    "topPicks": [
+     "2024 #3 Drake Maye",
+     "2025 #22 Omarion Hampton"
+    ]
+   }
+  },
+  {
+   "team": "Missouri",
+   "value": 2336,
+   "rank": 23,
+   "raw": {
+    "picks": 17,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 5,
+     "2022": 2,
+     "2023": 1,
+     "2024": 6,
+     "2025": 3
+    },
+    "topPicks": [
+     "2024 #27 Darius Robinson",
+     "2025 #7 Armand Membou"
+    ]
+   }
+  },
+  {
+   "team": "UCLA",
+   "value": 2230,
+   "rank": 24,
+   "raw": {
+    "picks": 19,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 2,
+     "2022": 6,
+     "2023": 4,
+     "2024": 2,
+     "2025": 5
+    },
+    "topPicks": [
+     "2024 #15 Laiatu Latu"
+    ]
+   }
+  },
+  {
+   "team": "TCU",
+   "value": 2151,
+   "rank": 25,
+   "raw": {
+    "picks": 15,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 2,
+     "2023": 8,
+     "2024": 3,
+     "2025": 2
+    },
+    "topPicks": [
+     "2023 #21 Quentin Johnston"
+    ]
+   }
+  },
+  {
+   "team": "Illinois",
+   "value": 2125,
+   "rank": 26,
+   "raw": {
+    "picks": 14,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 2,
+     "2022": 3,
+     "2023": 4,
+     "2024": 4,
+     "2025": 1
+    },
+    "topPicks": [
+     "2023 #5 Devon Witherspoon"
+    ]
+   }
+  },
+  {
+   "team": "Cincinnati",
+   "value": 2037,
+   "rank": 27,
+   "raw": {
+    "picks": 18,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 4,
+     "2022": 9,
+     "2023": 3,
+     "2024": 1,
+     "2025": 1
+    },
+    "topPicks": [
+     "2022 #4 Ahmad Gardner"
+    ]
+   }
+  },
+  {
+   "team": "Miami",
+   "value": 2023,
+   "rank": 28,
+   "raw": {
+    "picks": 19,
+    "firstRounders": 3,
+    "byYear": {
+     "2021": 4,
+     "2022": 1,
+     "2023": 3,
+     "2024": 4,
+     "2025": 7
+    },
+    "topPicks": [
+     "2021 #18 Jaelan Phillips",
+     "2021 #30 Gregory Rousseau",
+     "2025 #1 Cam Ward"
+    ]
+   }
+  },
+  {
+   "team": "Pittsburgh",
+   "value": 1952,
+   "rank": 29,
+   "raw": {
+    "picks": 20,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 6,
+     "2022": 2,
+     "2023": 6,
+     "2024": 3,
+     "2025": 3
+    },
+    "topPicks": [
+     "2022 #20 Kenny Pickett",
+     "2023 #19 Calijah Kancey"
+    ]
+   }
+  },
+  {
+   "team": "Minnesota",
+   "value": 1942,
+   "rank": 30,
+   "raw": {
+    "picks": 13,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 2,
+     "2022": 4,
+     "2023": 3,
+     "2024": 1,
+     "2025": 3
+    },
+    "topPicks": [
+     "2021 #27 Rashod Bateman"
+    ]
+   }
+  },
+  {
+   "team": "Auburn",
+   "value": 1891,
+   "rank": 31,
+   "raw": {
+    "picks": 18,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 4,
+     "2022": 1,
+     "2023": 5,
+     "2024": 5,
+     "2025": 3
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Iowa State",
+   "value": 1785,
+   "rank": 32,
+   "raw": {
+    "picks": 13,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 1,
+     "2022": 4,
+     "2023": 3,
+     "2024": 1,
+     "2025": 4
+    },
+    "topPicks": [
+     "2023 #15 Will McDonald IV"
+    ]
+   }
+  },
+  {
+   "team": "Maryland",
+   "value": 1730,
+   "rank": 33,
+   "raw": {
+    "picks": 16,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 1,
+     "2022": 2,
+     "2023": 5,
+     "2024": 2,
+     "2025": 6
+    },
+    "topPicks": [
+     "2023 #24 Deonte Banks"
+    ]
+   }
+  },
+  {
+   "team": "Louisville",
+   "value": 1647,
+   "rank": 34,
+   "raw": {
+    "picks": 12,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 2,
+     "2023": 3,
+     "2024": 4,
+     "2025": 3
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Wisconsin",
+   "value": 1573,
+   "rank": 35,
+   "raw": {
+    "picks": 15,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 3,
+     "2022": 5,
+     "2023": 3,
+     "2024": 2,
+     "2025": 2
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Virginia Tech",
+   "value": 1519,
+   "rank": 36,
+   "raw": {
+    "picks": 14,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 4,
+     "2022": 4,
+     "2023": 1,
+     "2025": 5
+    },
+    "topPicks": [
+     "2021 #22 Caleb Farley",
+     "2021 #23 Christian Darrisaw"
+    ]
+   }
+  },
+  {
+   "team": "Stanford",
+   "value": 1472,
+   "rank": 37,
+   "raw": {
+    "picks": 13,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 5,
+     "2022": 1,
+     "2023": 5,
+     "2024": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Boston College",
+   "value": 1405,
+   "rank": 38,
+   "raw": {
+    "picks": 9,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 2,
+     "2022": 1,
+     "2023": 1,
+     "2024": 2,
+     "2025": 3
+    },
+    "topPicks": [
+     "2022 #17 Zion Johnson",
+     "2023 #22 Zay Flowers"
+    ]
+   }
+  },
+  {
+   "team": "Utah",
+   "value": 1364,
+   "rank": 39,
+   "raw": {
+    "picks": 10,
+    "firstRounders": 2,
+    "byYear": {
+     "2022": 1,
+     "2023": 3,
+     "2024": 5,
+     "2025": 1
+    },
+    "topPicks": [
+     "2022 #27 Devin Lloyd",
+     "2023 #25 Dalton Kincaid"
+    ]
+   }
+  },
+  {
+   "team": "Kansas State",
+   "value": 1363,
+   "rank": 40,
+   "raw": {
+    "picks": 13,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 1,
+     "2022": 2,
+     "2023": 4,
+     "2024": 3,
+     "2025": 3
+    },
+    "topPicks": [
+     "2023 #31 Felix Anudike-Uzomah"
+    ]
+   }
+  },
+  {
+   "team": "Houston",
+   "value": 1323,
+   "rank": 41,
+   "raw": {
+    "picks": 11,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 3,
+     "2022": 3,
+     "2023": 4,
+     "2024": 1
+    },
+    "topPicks": [
+     "2021 #28 Payton Turner"
+    ]
+   }
+  },
+  {
+   "team": "North Dakota State",
+   "value": 1292,
+   "rank": 42,
+   "raw": {
+    "picks": 7,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 2,
+     "2022": 2,
+     "2023": 1,
+     "2025": 2
+    },
+    "topPicks": [
+     "2021 #3 Trey Lance",
+     "2025 #18 Grey Zabel"
+    ]
+   }
+  },
+  {
+   "team": "Purdue",
+   "value": 1290,
+   "rank": 43,
+   "raw": {
+    "picks": 13,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 2,
+     "2022": 3,
+     "2023": 5,
+     "2024": 2,
+     "2025": 1
+    },
+    "topPicks": [
+     "2022 #30 George Karlaftis"
+    ]
+   }
+  },
+  {
+   "team": "Arkansas",
+   "value": 1210,
+   "rank": 44,
+   "raw": {
+    "picks": 10,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 1,
+     "2022": 3,
+     "2023": 2,
+     "2024": 2,
+     "2025": 2
+    },
+    "topPicks": [
+     "2022 #18 Treylon Burks"
+    ]
+   }
+  },
+  {
+   "team": "Oklahoma State",
+   "value": 1200,
+   "rank": 45,
+   "raw": {
+    "picks": 13,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 4,
+     "2022": 3,
+     "2023": 2,
+     "2025": 4
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Northwestern",
+   "value": 1147,
+   "rank": 46,
+   "raw": {
+    "picks": 7,
+    "firstRounders": 3,
+    "byYear": {
+     "2021": 3,
+     "2023": 4
+    },
+    "topPicks": [
+     "2021 #13 Rashawn Slater",
+     "2021 #26 Greg Newsome II",
+     "2023 #11 Peter Skoronski"
+    ]
+   }
+  },
+  {
+   "team": "UCF",
+   "value": 1114,
+   "rank": 47,
+   "raw": {
+    "picks": 10,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 5,
+     "2022": 1,
+     "2024": 2,
+     "2025": 2
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Arizona",
+   "value": 1092,
+   "rank": 48,
+   "raw": {
+    "picks": 9,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 2,
+     "2024": 3,
+     "2025": 4
+    },
+    "topPicks": [
+     "2024 #25 Jordan Morgan",
+     "2025 #8 Tetairoa McMillan"
+    ]
+   }
+  },
+  {
+   "team": "BYU",
+   "value": 1079,
+   "rank": 49,
+   "raw": {
+    "picks": 10,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 5,
+     "2022": 1,
+     "2023": 3,
+     "2024": 1
+    },
+    "topPicks": [
+     "2021 #2 Zach Wilson"
+    ]
+   }
+  },
+  {
+   "team": "Mississippi State",
+   "value": 1070,
+   "rank": 50,
+   "raw": {
+    "picks": 9,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 2,
+     "2022": 2,
+     "2023": 2,
+     "2024": 3
+    },
+    "topPicks": [
+     "2022 #9 Charles Cross",
+     "2023 #16 Emmanuel Forbes"
+    ]
+   }
+  },
+  {
+   "team": "Baylor",
+   "value": 1018,
+   "rank": 51,
+   "raw": {
+    "picks": 8,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2022": 6,
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "NC State",
+   "value": 1010,
+   "rank": 52,
+   "raw": {
+    "picks": 7,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 1,
+     "2022": 2,
+     "2023": 1,
+     "2024": 2,
+     "2025": 1
+    },
+    "topPicks": [
+     "2022 #6 Ikem Ekwonu"
+    ]
+   }
+  },
+  {
+   "team": "Texas Tech",
+   "value": 945,
+   "rank": 53,
+   "raw": {
+    "picks": 9,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 2,
+     "2022": 2,
+     "2023": 1,
+     "2024": 2,
+     "2025": 2
+    },
+    "topPicks": [
+     "2023 #7 Tyree Wilson"
+    ]
+   }
+  },
+  {
+   "team": "Syracuse",
+   "value": 944,
+   "rank": 54,
+   "raw": {
+    "picks": 8,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 2,
+     "2023": 2,
+     "2025": 4
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Oregon State",
+   "value": 911,
+   "rank": 55,
+   "raw": {
+    "picks": 8,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 2,
+     "2022": 1,
+     "2023": 2,
+     "2024": 3
+    },
+    "topPicks": [
+     "2024 #14 Taliese Fuaga"
+    ]
+   }
+  },
+  {
+   "team": "Washington State",
+   "value": 886,
+   "rank": 56,
+   "raw": {
+    "picks": 7,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 2,
+     "2023": 1,
+     "2024": 3,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Duke",
+   "value": 871,
+   "rank": 57,
+   "raw": {
+    "picks": 7,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 4,
+     "2024": 3
+    },
+    "topPicks": [
+     "2024 #26 Graham Barton"
+    ]
+   }
+  },
+  {
+   "team": "Western Michigan",
+   "value": 859,
+   "rank": 58,
+   "raw": {
+    "picks": 6,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 2,
+     "2022": 1,
+     "2023": 1,
+     "2024": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "California",
+   "value": 851,
+   "rank": 59,
+   "raw": {
+    "picks": 9,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2022": 2,
+     "2023": 1,
+     "2024": 1,
+     "2025": 4
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Nebraska",
+   "value": 838,
+   "rank": 60,
+   "raw": {
+    "picks": 9,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 2,
+     "2022": 3,
+     "2023": 2,
+     "2025": 2
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Wake Forest",
+   "value": 829,
+   "rank": 61,
+   "raw": {
+    "picks": 8,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2022": 2,
+     "2023": 2,
+     "2024": 3
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "SMU",
+   "value": 825,
+   "rank": 62,
+   "raw": {
+    "picks": 7,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 2,
+     "2022": 2,
+     "2023": 1,
+     "2025": 2
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Western Kentucky",
+   "value": 805,
+   "rank": 63,
+   "raw": {
+    "picks": 5,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 2,
+     "2023": 1,
+     "2024": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Tulane",
+   "value": 787,
+   "rank": 64,
+   "raw": {
+    "picks": 8,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 2,
+     "2023": 2,
+     "2024": 2,
+     "2025": 2
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Boise State",
+   "value": 759,
+   "rank": 65,
+   "raw": {
+    "picks": 7,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 2,
+     "2022": 1,
+     "2023": 2,
+     "2025": 2
+    },
+    "topPicks": [
+     "2025 #6 Ashton Jeanty"
+    ]
+   }
+  },
+  {
+   "team": "Michigan State",
+   "value": 737,
+   "rank": 66,
+   "raw": {
+    "picks": 9,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 4,
+     "2023": 3,
+     "2024": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Arizona State",
+   "value": 680,
+   "rank": 67,
+   "raw": {
+    "picks": 7,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2022": 4,
+     "2023": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "San Diego State",
+   "value": 612,
+   "rank": 68,
+   "raw": {
+    "picks": 5,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2022": 4
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Toledo",
+   "value": 603,
+   "rank": 69,
+   "raw": {
+    "picks": 5,
+    "firstRounders": 1,
+    "byYear": {
+     "2022": 2,
+     "2023": 1,
+     "2024": 1,
+     "2025": 1
+    },
+    "topPicks": [
+     "2024 #22 Quinyon Mitchell"
+    ]
+   }
+  },
+  {
+   "team": "Northern Iowa",
+   "value": 601,
+   "rank": 70,
+   "raw": {
+    "picks": 4,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 2,
+     "2022": 1,
+     "2024": 1
+    },
+    "topPicks": [
+     "2022 #19 Trevor Penning"
+    ]
+   }
+  },
+  {
+   "team": "South Dakota State",
+   "value": 547,
+   "rank": 71,
+   "raw": {
+    "picks": 5,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 2,
+     "2023": 1,
+     "2024": 2
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Colorado",
+   "value": 531,
+   "rank": 72,
+   "raw": {
+    "picks": 5,
+    "firstRounders": 1,
+    "byYear": {
+     "2021": 1,
+     "2025": 4
+    },
+    "topPicks": [
+     "2025 #2 Travis Hunter"
+    ]
+   }
+  },
+  {
+   "team": "West Virginia",
+   "value": 522,
+   "rank": 73,
+   "raw": {
+    "picks": 4,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2023": 1,
+     "2024": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Virginia",
+   "value": 519,
+   "rank": 74,
+   "raw": {
+    "picks": 4,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1,
+     "2023": 1,
+     "2024": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Tulsa",
+   "value": 501,
+   "rank": 75,
+   "raw": {
+    "picks": 3,
+    "firstRounders": 2,
+    "byYear": {
+     "2021": 1,
+     "2022": 2
+    },
+    "topPicks": [
+     "2021 #16 Zaven Collins",
+     "2022 #24 Tyler Smith"
+    ]
+   }
+  },
+  {
+   "team": "Kansas",
+   "value": 498,
+   "rank": 76,
+   "raw": {
+    "picks": 5,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1,
+     "2024": 2,
+     "2025": 2
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Marshall",
+   "value": 465,
+   "rank": 77,
+   "raw": {
+    "picks": 5,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2022": 1,
+     "2024": 2,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Central Michigan",
+   "value": 430,
+   "rank": 78,
+   "raw": {
+    "picks": 4,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 2,
+     "2023": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "UAB",
+   "value": 416,
+   "rank": 79,
+   "raw": {
+    "picks": 4,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2022": 1,
+     "2023": 1,
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "UConn",
+   "value": 408,
+   "rank": 80,
+   "raw": {
+    "picks": 3,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1,
+     "2024": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Rutgers",
+   "value": 405,
+   "rank": 81,
+   "raw": {
+    "picks": 7,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 2,
+     "2023": 1,
+     "2024": 1,
+     "2025": 3
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Louisiana",
+   "value": 401,
+   "rank": 82,
+   "raw": {
+    "picks": 5,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2022": 2,
+     "2023": 1,
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Memphis",
+   "value": 393,
+   "rank": 83,
+   "raw": {
+    "picks": 4,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2022": 2,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Colorado State",
+   "value": 392,
+   "rank": 84,
+   "raw": {
+    "picks": 3,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1,
+     "2024": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Georgia Tech",
+   "value": 379,
+   "rank": 85,
+   "raw": {
+    "picks": 6,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 2,
+     "2022": 1,
+     "2023": 1,
+     "2025": 2
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Indiana",
+   "value": 378,
+   "rank": 86,
+   "raw": {
+    "picks": 4,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2022": 1,
+     "2025": 2
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "UTSA",
+   "value": 315,
+   "rank": 87,
+   "raw": {
+    "picks": 3,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 2,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Troy",
+   "value": 315,
+   "rank": 88,
+   "raw": {
+    "picks": 3,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1,
+     "2024": 2
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "App State",
+   "value": 302,
+   "rank": 89,
+   "raw": {
+    "picks": 4,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2022": 1,
+     "2023": 2
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "East Carolina",
+   "value": 299,
+   "rank": 90,
+   "raw": {
+    "picks": 2,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "South Alabama",
+   "value": 273,
+   "rank": 91,
+   "raw": {
+    "picks": 3,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2022": 1,
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Sacramento State",
+   "value": 271,
+   "rank": 92,
+   "raw": {
+    "picks": 2,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Bowling Green",
+   "value": 268,
+   "rank": 93,
+   "raw": {
+    "picks": 2,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Montana State",
+   "value": 265,
+   "rank": 94,
+   "raw": {
+    "picks": 3,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 2,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Nevada",
+   "value": 265,
+   "rank": 95,
+   "raw": {
+    "picks": 3,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 2,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Central Arkansas",
+   "value": 263,
+   "rank": 96,
+   "raw": {
+    "picks": 2,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "William & Mary",
+   "value": 263,
+   "rank": 97,
+   "raw": {
+    "picks": 2,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Old Dominion",
+   "value": 239,
+   "rank": 98,
+   "raw": {
+    "picks": 3,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 3
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Chattanooga",
+   "value": 228,
+   "rank": 99,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 1,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": [
+     "2022 #29 Cole Strange"
+    ]
+   }
+  },
+  {
+   "team": "Fresno State",
+   "value": 220,
+   "rank": 100,
+   "raw": {
+    "picks": 2,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1,
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Liberty",
+   "value": 218,
+   "rank": 101,
+   "raw": {
+    "picks": 2,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1,
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Vanderbilt",
+   "value": 209,
+   "rank": 102,
+   "raw": {
+    "picks": 2,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Eastern Michigan",
+   "value": 201,
+   "rank": 103,
+   "raw": {
+    "picks": 2,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 2
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Yale",
+   "value": 200,
+   "rank": 104,
+   "raw": {
+    "picks": 2,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1,
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Coastal Carolina",
+   "value": 189,
+   "rank": 105,
+   "raw": {
+    "picks": 3,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2022": 2
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Wyoming",
+   "value": 187,
+   "rank": 106,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Louisiana Tech",
+   "value": 184,
+   "rank": 107,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Miami (OH)",
+   "value": 179,
+   "rank": 108,
+   "raw": {
+    "picks": 2,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1,
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Buffalo",
+   "value": 178,
+   "rank": 109,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "UTEP",
+   "value": 176,
+   "rank": 110,
+   "raw": {
+    "picks": 2,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 2
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Houston Christian",
+   "value": 163,
+   "rank": 111,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Wisconsin-Whitewater",
+   "value": 159,
+   "rank": 112,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Rice",
+   "value": 157,
+   "rank": 113,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "British Columbia",
+   "value": 131,
+   "rank": 114,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "North Texas",
+   "value": 128,
+   "rank": 115,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "San Jos\u00e9 State",
+   "value": 128,
+   "rank": 116,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Utah State",
+   "value": 124,
+   "rank": 117,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Fayetteville State",
+   "value": 122,
+   "rank": 118,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Temple",
+   "value": 118,
+   "rank": 119,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Alabama A&M",
+   "value": 116,
+   "rank": 120,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "South Carolina State",
+   "value": 115,
+   "rank": 121,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "North Dakota",
+   "value": 102,
+   "rank": 122,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Sam Houston",
+   "value": 100,
+   "rank": 123,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Missouri State",
+   "value": 98,
+   "rank": 124,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Air Force",
+   "value": 97,
+   "rank": 125,
+   "raw": {
+    "picks": 2,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1,
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Samford",
+   "value": 95,
+   "rank": 126,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Stephen F. Austin",
+   "value": 91,
+   "rank": 127,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Central Missouri",
+   "value": 89,
+   "rank": 128,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Southern Utah",
+   "value": 89,
+   "rank": 129,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Toronto Argonauts",
+   "value": 81,
+   "rank": 130,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Southern Miss",
+   "value": 79,
+   "rank": 131,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Villanova",
+   "value": 72,
+   "rank": 132,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Fordham",
+   "value": 70,
+   "rank": 133,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Youngstown State",
+   "value": 65,
+   "rank": 134,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Ouachita Baptist",
+   "value": 60,
+   "rank": 135,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "New Mexico",
+   "value": 59,
+   "rank": 136,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Northwest Missouri St",
+   "value": 57,
+   "rank": 137,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Navy",
+   "value": 57,
+   "rank": 138,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Georgia State",
+   "value": 55,
+   "rank": 139,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Jackson State",
+   "value": 52,
+   "rank": 140,
+   "raw": {
+    "picks": 2,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1,
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Princeton",
+   "value": 51,
+   "rank": 141,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Findlay",
+   "value": 50,
+   "rank": 142,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "New Hampshire",
+   "value": 49,
+   "rank": 143,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Wagner",
+   "value": 46,
+   "rank": 144,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Southeast Missouri State",
+   "value": 41,
+   "rank": 145,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Kennesaw State",
+   "value": 39,
+   "rank": 146,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "England",
+   "value": 36,
+   "rank": 147,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Wingate",
+   "value": 34,
+   "rank": 148,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Southern",
+   "value": 31,
+   "rank": 149,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "South Dakota",
+   "value": 30,
+   "rank": 150,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "UT Martin",
+   "value": 29,
+   "rank": 151,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "University Of Charleston (WV)",
+   "value": 28,
+   "rank": 152,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Massachusetts",
+   "value": 26,
+   "rank": 153,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "East Texas A&M",
+   "value": 25,
+   "rank": 154,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Lenoir-Rhyne",
+   "value": 24,
+   "rank": 155,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Northern Michigan",
+   "value": 21,
+   "rank": 156,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "UNLV",
+   "value": 19,
+   "rank": 157,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Eastern Kentucky",
+   "value": 18,
+   "rank": 158,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Valdosta State",
+   "value": 13,
+   "rank": 159,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2022": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Holy Cross",
+   "value": 9,
+   "rank": 160,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2024": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Ball State",
+   "value": 7,
+   "rank": 161,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Concordia University St Paul",
+   "value": 5,
+   "rank": 162,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2021": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Montana",
+   "value": 5,
+   "rank": 163,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2025": 1
+    },
+    "topPicks": []
+   }
+  },
+  {
+   "team": "Charlotte",
+   "value": 1,
+   "rank": 164,
+   "raw": {
+    "picks": 1,
+    "firstRounders": 0,
+    "byYear": {
+     "2023": 1
+    },
+    "topPicks": []
+   }
+  }
+ ]
+}

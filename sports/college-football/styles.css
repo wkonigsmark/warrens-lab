@@ -712,6 +712,104 @@ body {
   font-size: 0.8rem;
 }
 
+.info-toggle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(242, 196, 100, 0.1);
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+  font-weight: 800;
+  font-size: 0.8rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.info-toggle:hover,
+.info-toggle.open {
+  background: var(--gold-dim);
+  color: #1d0e11;
+  box-shadow: 0 0 10px rgba(242, 196, 100, 0.35);
+}
+
+.index-explainer {
+  background: linear-gradient(160deg, rgba(242, 196, 100, 0.07), rgba(0, 0, 0, 0.2));
+  border: 1px solid var(--gold-dim);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+
+.explainer-section {
+  margin-bottom: 14px;
+}
+
+.explainer-section:last-child {
+  margin-bottom: 0;
+}
+
+.explainer-section h4 {
+  font-family: 'Oswald', 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--neon-red);
+  margin-bottom: 5px;
+}
+
+.explainer-section p,
+.explainer-section li {
+  color: rgba(245, 233, 208, 0.85);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.explainer-section ol {
+  padding-left: 20px;
+  margin-top: 6px;
+}
+
+.explainer-section li {
+  margin-bottom: 4px;
+}
+
+.explainer-section strong {
+  color: var(--cream);
+}
+
+.index-list-head {
+  display: grid;
+  grid-template-columns: 34px 26px 1fr 46px 52px 52px 52px;
+  gap: 8px;
+  padding: 0 12px 6px;
+  font-family: 'Oswald', 'Outfit', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(245, 233, 208, 0.45);
+}
+
+.index-list-head span {
+  text-align: right;
+  cursor: help;
+}
+
+.index-list-head span:nth-child(-n+3) {
+  text-align: left;
+  cursor: default;
+}
+
+@media (max-width: 560px) {
+  .index-list-head {
+    grid-template-columns: 30px 22px 1fr 40px 48px;
+  }
+
+  .index-list-head span:nth-last-child(-n+2) {
+    display: none;
+  }
+}
+
 .index-row {
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease;
@@ -905,10 +1003,6 @@ body {
   gap: 4px;
 }
 
-.matchup-proj {
-  border-style: dashed;
-}
-
 .chip {
   display: flex;
   align-items: center;
@@ -922,14 +1016,41 @@ body {
   min-height: 32px;
 }
 
-.chip-dim {
-  opacity: 0.85;
-}
-
 .chip-win {
   background: linear-gradient(90deg, rgba(242, 196, 100, 0.16), rgba(0, 0, 0, 0.25));
   border: 1px solid rgba(242, 196, 100, 0.35);
   border-left: 3px solid var(--team-color);
+}
+
+.chip-loser {
+  opacity: 0.55;
+}
+
+.chip-upset {
+  background: linear-gradient(180deg, #a30d24, #7c0a1c);
+  color: var(--cream);
+  font-family: 'Oswald', 'Outfit', sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 1.5px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  text-shadow: 0 0 6px rgba(255, 77, 94, 0.7);
+}
+
+.sim-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.sim-note {
+  font-size: 0.72rem;
+  color: rgba(245, 233, 208, 0.45);
+  letter-spacing: 0.5px;
 }
 
 .chip-tbd {
@@ -1030,6 +1151,239 @@ body {
   line-height: 1.5;
 }
 
+/* Learn hub + Field Guide */
+.learn-group {
+  font-family: 'Oswald', 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--neon-red);
+  margin: 22px 0 10px;
+}
+
+.learn-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+.learn-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  text-align: left;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  color: white;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.learn-card:hover {
+  border-color: var(--gold-dim);
+  background: rgba(242, 196, 100, 0.06);
+}
+
+.learn-card-icon {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.learn-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.learn-card-body strong {
+  font-size: 0.95rem;
+}
+
+.learn-card-body span {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.learn-back {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.learn-back:hover {
+  color: var(--gold);
+  border-color: var(--gold-dim);
+}
+
+.fg-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fg-entry {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.fg-entry h4 {
+  color: var(--gold);
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+}
+
+.fg-entry p {
+  color: rgba(245, 233, 208, 0.82);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.fg-entry p + p {
+  margin-top: 6px;
+}
+
+.fg-signal strong {
+  color: var(--cream);
+}
+
+.fg-example {
+  border-left: 3px solid var(--gold-dim);
+  padding-left: 10px;
+  font-style: italic;
+  color: rgba(245, 233, 208, 0.6) !important;
+  font-size: 0.82rem !important;
+}
+
+.fg-compact .fg-entry {
+  padding: 10px 14px;
+}
+
+.fg-compact .fg-entry h4 {
+  margin-bottom: 2px;
+  font-size: 0.88rem;
+}
+
+/* Governance & Rules */
+.gov-tier {
+  border: 1px solid var(--glass-border);
+  border-left: 4px solid var(--tier-color);
+  border-radius: 14px;
+  background: var(--glass-bg);
+  padding: 16px 18px;
+  margin-bottom: 18px;
+}
+
+.gov-binding { --tier-color: #2ecc71; }
+.gov-pressure { --tier-color: var(--gold); }
+.gov-pending { --tier-color: #e08b3c; }
+
+.gov-tier-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.gov-tier-head h3 {
+  font-family: 'Oswald', 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+
+.gov-badge {
+  font-family: 'Oswald', 'Outfit', sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 2px;
+  font-weight: 600;
+  color: #14090b;
+  background: var(--tier-color);
+  padding: 3px 10px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.gov-tier-desc {
+  color: rgba(245, 233, 208, 0.5);
+  font-size: 0.8rem;
+  margin: 4px 0 12px;
+}
+
+.gov-item {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+
+.gov-item:last-child {
+  margin-bottom: 0;
+}
+
+.gov-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.gov-item-head h4 {
+  font-size: 0.98rem;
+  color: var(--cream);
+}
+
+.gov-date {
+  color: var(--tier-color);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.gov-summary {
+  color: rgba(245, 233, 208, 0.78);
+  font-size: 0.87rem;
+  line-height: 1.55;
+  margin-top: 6px;
+}
+
+.gov-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.gov-sources a {
+  color: rgba(245, 233, 208, 0.65);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 3px 11px;
+  font-size: 0.72rem;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.gov-sources a:hover {
+  color: var(--gold);
+  border-color: var(--gold-dim);
+}
+
 /* Coming soon placeholders */
 .stub-card {
   background: var(--glass-bg);
@@ -1065,7 +1419,16 @@ body {
   margin: -14px 0 26px;
 }
 
+.format-btn-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .format-btn {
+  display: inline-block;
+  text-decoration: none;
   background: linear-gradient(180deg, rgba(242, 196, 100, 0.14), rgba(242, 196, 100, 0.04));
   border: 1px solid var(--gold-dim);
   color: var(--gold);
