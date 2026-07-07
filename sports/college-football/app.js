@@ -588,6 +588,7 @@ function renderBracket(data) {
   document.getElementById('tab-bracket').innerHTML = `
     <div class="sim-controls">
       <button class="format-btn" id="sim-btn">🎲 Run It Back</button>
+      <button class="format-btn" id="format-btn">🏆 Playoff Format</button>
       <span class="sim-note">field locked from The Index · results re-rolled every sim</span>
     </div>
     <div id="bracket-live"></div>
@@ -836,7 +837,10 @@ function initFormatModal() {
   const overlay = document.getElementById('format-modal');
   const teamOverlay = document.getElementById('team-modal');
   renderFormatModal(cfpFormat2026);
-  document.getElementById('format-btn').addEventListener('click', () => { overlay.hidden = false; });
+  // the trigger lives inside the bracket tab, which renders async — delegate
+  document.addEventListener('click', e => {
+    if (e.target.closest('#format-btn')) overlay.hidden = false;
+  });
   document.getElementById('format-close').addEventListener('click', () => { overlay.hidden = true; });
   document.getElementById('team-close').addEventListener('click', () => { teamOverlay.hidden = true; });
   [overlay, teamOverlay].forEach(ov => {
