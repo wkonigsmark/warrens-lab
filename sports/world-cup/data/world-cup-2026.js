@@ -287,12 +287,12 @@ export const knockoutSchedule = [
   { seq: 21, matchNumber: 93,  date: "2026-07-06", time: "15:00", round: "R16", teamsKnown: true,  team1: "POR", team2: "ESP" },
   { seq: 22, matchNumber: 94,  date: "2026-07-06", time: "20:00", round: "R16", teamsKnown: true,  team1: "USA", team2: "BEL" },
   { seq: 23, matchNumber: 95,  date: "2026-07-07", time: "12:00", round: "R16", teamsKnown: true,  team1: "ARG", team2: "EGY" },
-  { seq: 24, matchNumber: 96,  date: "2026-07-07", time: "16:00", round: "R16", teamsKnown: false, team1: "SUI", team2: "COL|GHA" },
+  { seq: 24, matchNumber: 96,  date: "2026-07-07", time: "16:00", round: "R16", teamsKnown: true,  team1: "SUI", team2: "COL" },
   // Quarter-finals (seq 25-28)
-  { seq: 25, matchNumber: 97,  date: "2026-07-09", time: "16:00", round: "QF",  teamsKnown: false, team1: "GER|PAR|FRA|SWE", team2: "RSA|CAN|NED|MAR" },
-  { seq: 26, matchNumber: 98,  date: "2026-07-10", time: "15:00", round: "QF",  teamsKnown: false, team1: "POR|CRO|ESP|AUT", team2: "USA|BIH|BEL|SEN" },
-  { seq: 27, matchNumber: 99,  date: "2026-07-11", time: "17:00", round: "QF",  teamsKnown: false, team1: "BRA|JPN|CIV|NOR", team2: "MEX|ECU|ENG|COD" },
-  { seq: 28, matchNumber: 100, date: "2026-07-11", time: "21:00", round: "QF",  teamsKnown: false, team1: "ARG|CPV|AUS|EGY", team2: "SUI|ALG|COL|GHA" },
+  { seq: 25, matchNumber: 97,  date: "2026-07-09", time: "16:00", round: "QF",  teamsKnown: true,  team1: "FRA", team2: "MAR" },
+  { seq: 26, matchNumber: 98,  date: "2026-07-10", time: "15:00", round: "QF",  teamsKnown: true,  team1: "ESP", team2: "BEL" },
+  { seq: 27, matchNumber: 99,  date: "2026-07-11", time: "17:00", round: "QF",  teamsKnown: true,  team1: "NOR", team2: "ENG" },
+  { seq: 28, matchNumber: 100, date: "2026-07-11", time: "21:00", round: "QF",  teamsKnown: true,  team1: "ARG", team2: "SUI" },
   // Semi-finals (seq 29-30)
   { seq: 29, matchNumber: 101, date: "2026-07-14", time: "15:00", round: "SF",  teamsKnown: false, team1: "GER|PAR|FRA|SWE|RSA|CAN|NED|MAR", team2: "POR|CRO|ESP|AUT|USA|BIH|BEL|SEN" },
   { seq: 30, matchNumber: 102, date: "2026-07-15", time: "15:00", round: "SF",  teamsKnown: false, team1: "BRA|JPN|CIV|NOR|MEX|ECU|ENG|COD", team2: "ARG|CPV|AUS|EGY|SUI|ALG|COL|GHA" },

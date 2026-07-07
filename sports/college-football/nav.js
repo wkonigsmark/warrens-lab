@@ -44,6 +44,10 @@
       overflow-x: auto; scrollbar-width: none;
     }
     .cfb-header-nav::-webkit-scrollbar { display: none; }
+    .cfb-header-nav.can-scroll {
+      -webkit-mask-image: linear-gradient(90deg, black calc(100% - 34px), transparent);
+      mask-image: linear-gradient(90deg, black calc(100% - 34px), transparent);
+    }
     .cfb-header-nav a {
       font-family: 'Oswald', 'Outfit', sans-serif;
       font-size: 0.74rem; letter-spacing: 1px; text-transform: uppercase;
@@ -118,6 +122,17 @@
   }
   window.addEventListener('hashchange', refreshActive);
 
+  // fade the right edge while more sections are hidden off-screen
+  const navRow = header.querySelector('.cfb-header-nav');
+  function refreshScrollHint() {
+    navRow.classList.toggle('can-scroll',
+      navRow.scrollLeft + navRow.clientWidth < navRow.scrollWidth - 2);
+  }
+  navRow.addEventListener('scroll', refreshScrollHint, { passive: true });
+  window.addEventListener('resize', refreshScrollHint);
+  window.addEventListener('load', refreshScrollHint);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refreshScrollHint);
+
   const btn = header.querySelector('.cfb-nav-btn');
   function toggle(open) {
     panel.classList.toggle('open', open);
@@ -130,4 +145,5 @@
   document.body.prepend(header);
   document.body.appendChild(panel);
   refreshActive();
+  refreshScrollHint();
 })();
