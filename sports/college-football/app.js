@@ -1,4 +1,5 @@
 const SEASON = 2026;
+let GAMES_2026 = null;
 
 function renderPoll() {
   const list = document.getElementById('poll-list');
@@ -86,6 +87,7 @@ async function loadSchedule() {
     const res = await fetch(`data/games-${SEASON}.json`);
     if (!res.ok) throw new Error(res.status);
     const { games } = await res.json();
+    GAMES_2026 = games;
     renderSchedule(games);
   } catch {
     document.getElementById('tab-schedule').innerHTML = `
@@ -237,11 +239,14 @@ const CONF_ACRO = {
   'FBS Independents': 'IND', 'Ind': 'IND',
 };
 
+let INDEX_DATA = null;
+
 async function loadPowerIndex() {
   try {
     const res = await fetch('data/power-index-2026.json');
     if (!res.ok) throw new Error(res.status);
-    renderIndexUI(await res.json());
+    INDEX_DATA = await res.json();
+    renderIndexUI(INDEX_DATA);
   } catch {
     document.getElementById('tab-index').innerHTML = `
       <div class="stub-card">
@@ -307,7 +312,7 @@ function indexTeamRow(t) {
   const srs = t.srs2025 === null ? 'new' : (t.srs2025 > 0 ? '+' : '') + t.srs2025.toFixed(1);
   const sos = t.sos2026 === null ? '—' : (t.sos2026 > 0 ? '+' : '') + t.sos2026.toFixed(1);
   return `
-    <div class="index-row" style="--team-color:${t.color || 'var(--gold-dim)'}">
+    <div class="index-row" data-school="${t.school}" style="--team-color:${t.color || 'var(--gold-dim)'}">
       <span class="index-rank">${t.rank}</span>
       ${logo}
       <span class="index-school">${t.school} ${poll}</span>
@@ -321,13 +326,90 @@ function indexTeamRow(t) {
 
 function renderIndexUI(data) {
   document.getElementById('tab-index').innerHTML = `
+    <div class="index-section-title">The Index · 1–${data.teams.length}
+      <span>projected 2026 · rating / '25 SRS / '26 SoS · click a team for its schedule</span></div>
+    <div class="index-list">${data.teams.map(indexTeamRow).join('')}</div>
     ${confStrengthTable(data)}
     ${confMatrix(data)}
-    <div class="index-section-title">The Index · 1–${data.teams.length}
-      <span>projected 2026 · rating / '25 SRS / '26 SoS</span></div>
-    <div class="index-list">${data.teams.map(indexTeamRow).join('')}</div>
     <p class="index-footnote">${data.note}</p>
   `;
+  document.querySelector('#tab-index .index-list').addEventListener('click', e => {
+    const row = e.target.closest('.index-row');
+    if (row) openTeamModal(row.dataset.school);
+  });
+}
+
+// --- Team schedule modal: matchup edges from index ratings ---
+
+const HOME_EDGE = 2.5;
+
+function probClass(p) {
+  if (p >= 0.75) return 'prob-strong';
+  if (p >= 0.55) return 'prob-lean';
+  if (p >= 0.45) return 'prob-toss';
+  return 'prob-dog';
+}
+
+function openTeamModal(school) {
+  if (!INDEX_DATA || !GAMES_2026) return;
+  const team = INDEX_DATA.teams.find(t => t.school === school);
+  if (!team) return;
+  const byName = new Map(INDEX_DATA.teams.map(t => [t.school, t]));
+
+  const games = GAMES_2026
+    .filter(g => g.homeTeam === school || g.awayTeam === school)
+    .sort((a, b) => (a.week - b.week) || String(a.date).localeCompare(String(b.date)));
+
+  let probSum = 0;
+  const rows = games.map(g => {
+    const isHome = g.homeTeam === school;
+    const oppName = isHome ? g.awayTeam : g.homeTeam;
+    const opp = byName.get(oppName);
+    const oppRating = opp ? opp.rating : INDEX_DATA.fcsPoolRating;
+    const hfa = g.neutralSite ? 0 : (isHome ? HOME_EDGE : -HOME_EDGE);
+    const edge = team.rating - oppRating + hfa;
+    const p = 1 / (1 + Math.pow(10, -edge / 15));
+    probSum += p;
+    const date = g.date
+      ? new Date(g.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      : 'TBD';
+    const at = g.neutralSite ? 'vs' : (isHome ? 'vs' : 'at');
+    return `
+      <div class="sched-row">
+        <span class="sched-date">Wk ${g.week}<br>${date}</span>
+        <span class="sched-opp">
+          <span class="sched-at">${at}</span>
+          ${opp && opp.logo ? `<img src="${opp.logo}" alt="" loading="lazy">` : ''}
+          <span>${oppName}</span>
+          ${opp ? `<span class="sched-opp-rank">#${opp.rank}</span>` : '<span class="sched-opp-rank">FCS</span>'}
+        </span>
+        <span class="sched-edge" title="projected edge incl. home field">${edge > 0 ? '+' : ''}${edge.toFixed(1)}</span>
+        <span class="prob-chip ${probClass(p)}">${Math.round(p * 100)}%</span>
+      </div>
+    `;
+  });
+
+  const wins = probSum;
+  const losses = games.length - probSum;
+  document.getElementById('team-modal-body').innerHTML = `
+    <div class="team-modal-head">
+      ${team.logo ? `<img src="${team.logo}" alt="">` : ''}
+      <div>
+        <h2>${team.school}</h2>
+        <div class="team-modal-sub">
+          Index #${team.rank} · ${CONF_ACRO[team.conference] || team.conference}
+          · ${(team.rating > 0 ? '+' : '') + team.rating.toFixed(1)}
+          ${team.pollRank ? ` · ★ ESPN #${team.pollRank}` : ''}
+        </div>
+      </div>
+    </div>
+    <div class="team-proj-record">Projected: <strong>${wins.toFixed(1)}–${losses.toFixed(1)}</strong></div>
+    <div class="sched-list">
+      ${rows.join('') || '<div class="stub-card"><p>No 2026 games on the books yet.</p></div>'}
+    </div>
+    <p class="index-footnote">Edge = rating gap ±${HOME_EDGE} home field (≈ point spread) · % = win probability</p>
+  `;
+  document.getElementById('team-modal').hidden = false;
 }
 
 // --- Playoff bracket (computed live from the power index) ---
@@ -526,11 +608,17 @@ function renderFormatModal(f) {
 
 function initFormatModal() {
   const overlay = document.getElementById('format-modal');
+  const teamOverlay = document.getElementById('team-modal');
   renderFormatModal(cfpFormat2026);
   document.getElementById('format-btn').addEventListener('click', () => { overlay.hidden = false; });
   document.getElementById('format-close').addEventListener('click', () => { overlay.hidden = true; });
-  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.hidden = true; });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') overlay.hidden = true; });
+  document.getElementById('team-close').addEventListener('click', () => { teamOverlay.hidden = true; });
+  [overlay, teamOverlay].forEach(ov => {
+    ov.addEventListener('click', e => { if (e.target === ov) ov.hidden = true; });
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { overlay.hidden = true; teamOverlay.hidden = true; }
+  });
 }
 
 renderPoll();

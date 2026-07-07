@@ -25,8 +25,8 @@
     </header>
 
     <nav class="tabs-nav">
-      <button class="tab-btn active" data-tab="tab-rankings">Rankings</button>
-      <button class="tab-btn" data-tab="tab-index">The Index</button>
+      <button class="tab-btn active" data-tab="tab-index">The Index</button>
+      <button class="tab-btn" data-tab="tab-rankings">ESPN Top 25</button>
       <button class="tab-btn" data-tab="tab-teams">Teams</button>
       <button class="tab-btn" data-tab="tab-schedule">Schedule</button>
       <button class="tab-btn" data-tab="tab-bracket">Playoff Bracket</button>
@@ -36,7 +36,7 @@
       <button class="format-btn" id="format-btn">🏆 Playoff Format</button>
     </div>
 
-    <section id="tab-rankings" class="tab-content active">
+    <section id="tab-rankings" class="tab-content">
       <div id="poll-list" class="poll-list"></div>
       <p class="poll-source">
         Way-too-early Top 25, spring update —
@@ -44,7 +44,7 @@
       </p>
     </section>
 
-    <section id="tab-index" class="tab-content">
+    <section id="tab-index" class="tab-content active">
       <div class="stub-card"><p>Loading the index…</p></div>
     </section>
 
@@ -70,6 +70,13 @@
     </section>
 
     <a href="../index.html" class="back-link">← Back to Sports Hub</a>
+  </div>
+
+  <div class="modal-overlay" id="team-modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <button class="modal-close" id="team-close" aria-label="Close">✕</button>
+      <div id="team-modal-body"></div>
+    </div>
   </div>
 
   <div class="modal-overlay" id="format-modal" hidden>

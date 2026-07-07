@@ -712,6 +712,136 @@ body {
   font-size: 0.8rem;
 }
 
+.index-row {
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.index-row:hover {
+  border-color: var(--gold-dim);
+  background: rgba(242, 196, 100, 0.06);
+}
+
+/* Team schedule modal */
+.team-modal-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 4px;
+  padding-right: 36px;
+}
+
+.team-modal-head img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+
+.team-modal-head h2 {
+  font-family: 'Alfa Slab One', 'Rockwell', serif;
+  font-size: 1.3rem;
+  color: var(--gold);
+  text-shadow: 0 0 12px rgba(242, 196, 100, 0.35);
+  margin: 0;
+  padding: 0;
+}
+
+.team-modal-sub {
+  color: rgba(245, 233, 208, 0.6);
+  font-size: 0.82rem;
+  margin-top: 2px;
+}
+
+.team-proj-record {
+  text-align: center;
+  margin: 14px 0;
+  font-family: 'Oswald', 'Outfit', sans-serif;
+  letter-spacing: 2px;
+  font-size: 0.85rem;
+  color: var(--cream);
+}
+
+.team-proj-record strong {
+  color: var(--gold);
+  font-size: 1.1rem;
+}
+
+.sched-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sched-row {
+  display: grid;
+  grid-template-columns: 44px 1fr 58px 52px;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 0.83rem;
+}
+
+.sched-date {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.72rem;
+}
+
+.sched-opp {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.sched-opp img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.sched-opp span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sched-at {
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 400;
+  font-size: 0.72rem;
+}
+
+.sched-opp-rank {
+  color: var(--gold);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.sched-edge {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.78rem;
+}
+
+.prob-chip {
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.75rem;
+  border-radius: 8px;
+  padding: 3px 0;
+}
+
+.prob-strong { background: rgba(46, 204, 113, 0.18); color: #7ddf8f; }
+.prob-lean   { background: rgba(242, 196, 100, 0.15); color: var(--gold); }
+.prob-toss   { background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.7); }
+.prob-dog    { background: rgba(224, 112, 126, 0.15); color: #e0707e; }
+
 @media (max-width: 560px) {
   .conf-strength-row {
     grid-template-columns: 20px 1fr 50px;
