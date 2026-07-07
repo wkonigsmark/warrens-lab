@@ -137,7 +137,8 @@
       <table class="lab-table" id="lab-table"></table>
     </div>
     <div class="index-section-title" style="margin-top: 30px;">Blueprint · Building the Final Index
-      <span>internal playbook — Phase 2, nothing here is implemented yet</span></div>
+      <span>v1 is wired up with the boring starting weights — steps 0–4 &amp; 6 live in
+      api/build_power_index.py; step 5 (backtest) still open</span></div>
     <div class="index-explainer">
       <div class="explainer-section">
         <h4>Step 0 — What each ingredient actually measures</h4>
@@ -190,6 +191,16 @@
         hate a team the market loves? Each disagreement is either an insight or a bug; the
         backtest usually tells you which. In season, track weekly picks against the spread —
         the only honest scoreboard.</p>
+        <p><strong>Result (run 2026-07-07, api/backtest_composite.py):</strong> scored 136
+        teams on July-2025-knowable inputs vs actual 2025 SRS. Results base alone r=0.765
+        (MAE 5.7) · composite alone r=0.726 (MAE 6.1) · <strong>v1 50/50 blend r=0.772,
+        MAE 5.58 — beats both parents</strong>. Blend sweep is flat from 20–60% composite
+        (nominal best 30%, r=0.776); 50/50 kept — the gap is inside one-season noise.
+        Biggest misses: Texas Tech, Utah, and Indiana (all underrated — breakout seasons no
+        offseason signal saw), UMass and Sam Houston (overrated). Duke backtested #56 while
+        winning the ACC — strength indexes don't predict conference-title anomalies, which is
+        exactly why the field-selection layer is a separate problem. Full detail in
+        data/backtest-2025.json.</p>
       </div>
       <div class="explainer-section">
         <h4>Step 6 — Ship and version</h4>
@@ -202,9 +213,9 @@
       </div>
     </div>
 
-    <a href="index.html" class="back-link">← Back to Viva CFP</a>
   </div>
   <script src="data-lab.js"></script>
+  <script src="nav.js" data-root="."></script>
 </body>
 
 </html>

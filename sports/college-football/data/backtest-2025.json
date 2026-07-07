@@ -1,0 +1,148 @@
+{
+ "ranAt": "2026-07-07",
+ "design": "July-2025-knowable inputs only; SP+ = 2024 final (same lag as prod); scored vs actual 2025 SRS",
+ "teamsScored": 136,
+ "baseOnly": {
+  "pearson": 0.765,
+  "spearman": 0.769,
+  "mae": 5.71
+ },
+ "compositeOnly": {
+  "pearson": 0.726,
+  "spearman": 0.749,
+  "mae": 6.06
+ },
+ "v1Blend50_50": {
+  "pearson": 0.772,
+  "spearman": 0.785,
+  "mae": 5.58
+ },
+ "blendSweep": {
+  "0.0": {
+   "pearson": 0.765,
+   "spearman": 0.769,
+   "mae": 5.71
+  },
+  "0.1": {
+   "pearson": 0.771,
+   "spearman": 0.774,
+   "mae": 5.63
+  },
+  "0.2": {
+   "pearson": 0.774,
+   "spearman": 0.779,
+   "mae": 5.6
+  },
+  "0.3": {
+   "pearson": 0.776,
+   "spearman": 0.784,
+   "mae": 5.58
+  },
+  "0.4": {
+   "pearson": 0.775,
+   "spearman": 0.782,
+   "mae": 5.57
+  },
+  "0.5": {
+   "pearson": 0.772,
+   "spearman": 0.785,
+   "mae": 5.58
+  },
+  "0.6": {
+   "pearson": 0.767,
+   "spearman": 0.783,
+   "mae": 5.62
+  },
+  "0.7": {
+   "pearson": 0.76,
+   "spearman": 0.776,
+   "mae": 5.69
+  },
+  "0.8": {
+   "pearson": 0.75,
+   "spearman": 0.77,
+   "mae": 5.78
+  },
+  "0.9": {
+   "pearson": 0.739,
+   "spearman": 0.762,
+   "mae": 5.92
+  },
+  "1.0": {
+   "pearson": 0.726,
+   "spearman": 0.749,
+   "mae": 6.06
+  }
+ },
+ "bestBlendByPearson": "0.3",
+ "callouts": {
+  "Duke": {
+   "predictedRank": 56,
+   "actualSrsRank": 40,
+   "predicted": 1.9,
+   "actualSrs": 6.4
+  },
+  "Miami": {
+   "predictedRank": 15,
+   "actualSrsRank": 5,
+   "predicted": 10.5,
+   "actualSrs": 21.9
+  },
+  "Notre Dame": {
+   "predictedRank": 3,
+   "actualSrsRank": 3,
+   "predicted": 17.2,
+   "actualSrs": 24.2
+  },
+  "Indiana": {
+   "predictedRank": 17,
+   "actualSrsRank": 1,
+   "predicted": 10.3,
+   "actualSrs": 26.8
+  },
+  "Vanderbilt": {
+   "predictedRank": 33,
+   "actualSrsRank": 11,
+   "predicted": 7.0,
+   "actualSrs": 15.8
+  }
+ },
+ "biggestMisses": [
+  {
+   "team": "Texas Tech",
+   "predicted": 3.6,
+   "actual": 22.3,
+   "missBy": -18.8
+  },
+  {
+   "team": "Massachusetts",
+   "predicted": -11.5,
+   "actual": -30.1,
+   "missBy": 18.6
+  },
+  {
+   "team": "Utah",
+   "predicted": 1.2,
+   "actual": 19.0,
+   "missBy": -17.8
+  },
+  {
+   "team": "Sam Houston",
+   "predicted": -5.9,
+   "actual": -23.1,
+   "missBy": 17.2
+  },
+  {
+   "team": "Indiana",
+   "predicted": 10.3,
+   "actual": 26.8,
+   "missBy": -16.5
+  },
+  {
+   "team": "North Texas",
+   "predicted": -6.4,
+   "actual": 9.3,
+   "missBy": -15.7
+  }
+ ]
+}

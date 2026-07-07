@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Index · Blueprint Deck · Viva CFP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,700&family=Alfa+Slab+One&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body { overflow: hidden; }
+
+    .deck { height: calc(100vh - 58px); position: relative; }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 6vh 8vw;
+      text-align: center;
+    }
+
+    .slide.active { display: flex; animation: fadeIn 0.35s ease-out; }
+
+    .slide-kicker {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--neon-red);
+      margin-bottom: 14px;
+      text-shadow: 0 0 10px rgba(255, 77, 94, 0.5);
+    }
+
+    .slide h1 {
+      font-family: 'Alfa Slab One', serif;
+      font-size: clamp(1.6rem, 4.5vw, 3.2rem);
+      color: var(--gold);
+      text-shadow: 0 0 18px rgba(242, 196, 100, 0.45), 0 4px 0 rgba(0,0,0,0.5);
+      line-height: 1.15;
+      margin-bottom: 18px;
+    }
+
+    .slide-viva {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      color: var(--neon-red);
+      text-shadow: 0 0 12px rgba(255, 77, 94, 0.7);
+    }
+
+    .slide-body {
+      max-width: 760px;
+      font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+      color: rgba(245, 233, 208, 0.88);
+      line-height: 1.6;
+    }
+
+    .slide-body p + p { margin-top: 12px; }
+
+    .big-stat {
+      font-family: 'Alfa Slab One', serif;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(242, 196, 100, 0.5);
+      margin: 10px 0 4px;
+    }
+
+    .stat-caption {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(245, 233, 208, 0.5);
+    }
+
+    .card-row {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 22px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .deck-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-top: 3px solid var(--gold-dim);
+      border-radius: 14px;
+      padding: 16px 18px;
+      flex: 1;
+      min-width: 200px;
+      max-width: 280px;
+      text-align: left;
+    }
+
+    .deck-card h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .deck-card p {
+      font-size: 0.85rem;
+      color: rgba(245, 233, 208, 0.75);
+      line-height: 1.5;
+    }
+
+    .deck-card .num {
+      font-family: 'Alfa Slab One', serif;
+      font-size: 1.5rem;
+      color: var(--cream);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .deck-table {
+      border-collapse: collapse;
+      margin: 18px auto 0;
+      font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+    }
+
+    .deck-table th, .deck-table td {
+      padding: 8px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .deck-table th {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .deck-table td { color: rgba(245, 233, 208, 0.85); text-align: right; font-variant-numeric: tabular-nums; }
+    .deck-table td:first-child { text-align: left; }
+    .deck-table tr.hero td { color: var(--gold); font-weight: 800; }
+
+    .formula {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(1rem, 2.4vw, 1.6rem);
+      letter-spacing: 1px;
+      color: var(--cream);
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--gold-dim);
+      border-radius: 14px;
+      padding: 16px 26px;
+      margin: 18px 0;
+      box-shadow: 0 0 24px rgba(242, 196, 100, 0.12);
+    }
+
+    .formula .gold { color: var(--gold); }
+    .formula .red { color: var(--neon-red); }
+
+    .deck-nav {
+      position: fixed;
+      bottom: 18px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .deck-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(242, 196, 100, 0.25);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .deck-dot.active {
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(242, 196, 100, 0.8);
+    }
+
+    .deck-hint {
+      position: fixed;
+      bottom: 16px;
+      right: 20px;
+      font-size: 0.7rem;
+      color: rgba(245, 233, 208, 0.35);
+      letter-spacing: 1px;
+    }
+
+    .deck-home {
+      position: fixed;
+      top: 16px;
+      left: 20px;
+      color: rgba(245, 233, 208, 0.4);
+      text-decoration: none;
+      font-size: 0.8rem;
+      z-index: 10;
+    }
+
+    .deck-home:hover { color: var(--gold); }
+
+    .slide-num {
+      position: fixed;
+      top: 28px;
+      right: 74px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      color: rgba(245, 233, 208, 0.35);
+    }
+
+    ul.deck-list {
+      text-align: left;
+      max-width: 700px;
+      margin-top: 14px;
+      list-style: none;
+    }
+
+    ul.deck-list li {
+      padding: 9px 0 9px 30px;
+      position: relative;
+      font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+      color: rgba(245, 233, 208, 0.85);
+      line-height: 1.5;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    ul.deck-list li::before {
+      content: '★';
+      position: absolute;
+      left: 4px;
+      color: var(--gold-dim);
+      font-size: 0.8rem;
+    }
+
+    ul.deck-list li strong { color: var(--cream); }
+
+    @media print {
+      body { overflow: visible; background: white !important; }
+      .deck { height: auto; }
+      .slide {
+        position: static;
+        display: flex !important;
+        page-break-after: always;
+        min-height: 90vh;
+      }
+      .deck-nav, .deck-hint, .deck-home, .slide-num { display: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="slide-num" id="slide-num"></div>
+
+  <div class="deck" id="deck">
+
+    <!-- 1 · Title -->
+    <section class="slide active">
+      <div class="slide-viva">Viva</div>
+      <h1>THE INDEX</h1>
+      <div class="slide-kicker">Methodology · Backtest · Roadmap</div>
+      <div class="slide-body">
+        <p>One number per team. Built from evidence, validated against history,
+        designed to get smarter every week of the 2026 season.</p>
+      </div>
+    </section>
+
+    <!-- 2 · The problem -->
+    <section class="slide">
+      <div class="slide-kicker">The Problem</div>
+      <h1>Polls are opinions.<br>We need a price.</h1>
+      <div class="slide-body">
+        <p>Preseason polls are vibes with numbers attached — no stated method, no error bars,
+        no way to settle a disagreement. The Index replaces them with a transparent formula
+        where every rating can be traced to its inputs, and every input can be challenged.</p>
+      </div>
+    </section>
+
+    <!-- 3 · The currency -->
+    <section class="slide">
+      <div class="slide-kicker">The Currency</div>
+      <h1>Every rating is a betting line</h1>
+      <div class="slide-body">
+        <p>A team's number means: how many points better (or worse) than the average
+        college team. Subtract any two numbers and you've got the spread.</p>
+      </div>
+      <div class="formula">Georgia <span class="gold">+17.7</span> &nbsp;vs&nbsp; Alabama <span class="gold">+14.3</span>
+        &nbsp;→&nbsp; <span class="red">Georgia by 3½</span></div>
+      <div class="stat-caption">playing at home is worth about a field goal</div>
+    </section>
+
+    <!-- 4 · Ingredient 1 -->
+    <section class="slide">
+      <div class="slide-kicker">Ingredient One</div>
+      <h1>Start with the scoreboard</h1>
+      <div class="slide-body">
+        <p>Half the rating is simply what happened last season — every game, every score,
+        adjusted for <em>who</em> you played. Beating a great team counts extra.
+        Beating a cupcake barely counts.</p>
+      </div>
+      <div class="card-row">
+        <div class="deck-card"><h3>No style points</h3><p>Past 28 points, a blowout stops counting. Running up the score buys nothing.</p></div>
+        <div class="deck-card"><h3>Cupcakes discounted</h3><p>Wins over lower-division schools barely move the needle.</p></div>
+        <div class="deck-card"><h3>Company you keep</h3><p>Every team gets nudged toward its conference's level — a star in a weak league cools off a little, and vice versa.</p></div>
+      </div>
+    </section>
+
+    <!-- 5 · Ingredient 2 -->
+    <section class="slide">
+      <div class="slide-kicker">Ingredient Two</div>
+      <h1>Five offseason clues</h1>
+      <div class="slide-body">
+        <p>The other half is what changed since January. Each clue is graded on a curve
+        against all 138 teams, then they're mixed — the bigger the weight, the louder
+        its voice.</p>
+      </div>
+      <table class="deck-table">
+        <tr><th>Clue</th><th>Voice</th><th>The question it answers</th></tr>
+        <tr><td>SP+ rating</td><td>35%</td><td>how good is this team right now?</td></tr>
+        <tr><td>Returning production</td><td>20%</td><td>how much of last year's team is back?</td></tr>
+        <tr><td>Recruiting (247)</td><td>20%</td><td>how much raw talent is in the building?</td></tr>
+        <tr><td>Transfer portal</td><td>15%</td><td>did they win or lose the offseason?</td></tr>
+        <tr><td>NFL draft picks</td><td>10%</td><td>does this program turn players into pros?</td></tr>
+      </table>
+    </section>
+
+    <!-- 6 · The blend -->
+    <section class="slide">
+      <div class="slide-kicker">The Recipe</div>
+      <h1>Index v1</h1>
+      <div class="formula"><span class="gold">half</span> last season's scoreboard &nbsp;+&nbsp; <span class="gold">half</span> the offseason clues</div>
+      <div class="slide-body">
+        <p>That's the whole formula. The ESPN poll doesn't count for anything anymore —
+        it's shown only as a ★ so you can see where we disagree with the pollsters.
+        Every number on the board comes from the recipe, and every dial sits in one
+        place where changing it takes one line.</p>
+      </div>
+    </section>
+
+    <!-- 7 · Backtest -->
+    <section class="slide">
+      <div class="slide-kicker">The Proof</div>
+      <h1>The time-machine test</h1>
+      <div class="slide-body">
+        <p>We wound the clock back to July 2025, built the index using only what anyone
+        could have known that day, and checked its predictions against how the season
+        actually played out — all 136 teams.</p>
+      </div>
+      <table class="deck-table">
+        <tr><th>Recipe</th><th>Average miss per team</th></tr>
+        <tr><td>Scoreboard alone</td><td>5.7 points</td></tr>
+        <tr><td>Offseason clues alone</td><td>6.1 points</td></tr>
+        <tr class="hero"><td>Half and half (v1)</td><td>5.6 points</td></tr>
+      </table>
+      <div class="stat-caption" style="margin-top:14px">the mix beats both of its ingredients — each half knows something the other doesn't</div>
+    </section>
+
+    <!-- 8 · Limits -->
+    <section class="slide">
+      <div class="slide-kicker">Honest Limits</div>
+      <h1>What it can't do</h1>
+      <ul class="deck-list">
+        <li><strong>Trophies are won on Saturdays.</strong> Duke rated #56 in July — and won the
+        ACC anyway. They were still ranked too low to make the playoff, and that opened the door
+        for JMU <em>and</em> Tulane to both crash the field. No rating predicts a championship game.</li>
+        <li><strong>Breakouts blindside everyone.</strong> Texas Tech, Utah, and Indiana blew past
+        their July numbers by 16–19 points. Nobody saw it — not us, not Vegas, not the polls.</li>
+        <li><strong>A preseason number is a starting guess, not a verdict.</strong> The plan has
+        always been to let real games take over — that's the roadmap.</li>
+      </ul>
+    </section>
+
+    <!-- 9 · Roadmap: data -->
+    <section class="slide">
+      <div class="slide-kicker">Roadmap · This Summer</div>
+      <h1>Fresher ingredients land soon</h1>
+      <ul class="deck-list">
+        <li><strong>Right now, three of the five clues are last year's numbers</strong> — the 2026
+        versions simply haven't been published yet.</li>
+        <li><strong>2026 SP+ projections</strong> arrive in August; <strong>the 2026 recruiting
+        class</strong> and <strong>returning-production figures</strong> follow close behind.</li>
+        <li><strong>The day each one publishes, it swaps in</strong> — and if a source is slow,
+        we can paste the numbers in by hand.</li>
+        <li><strong>One command refreshes everything</strong> — data, ratings, bracket.</li>
+      </ul>
+    </section>
+
+    <!-- 10 · Roadmap: in-season -->
+    <section class="slide">
+      <div class="slide-kicker">Roadmap · September Onward</div>
+      <h1>Real games take the wheel</h1>
+      <ul class="deck-list">
+        <li><strong>The preseason guess fades out.</strong> Every week of actual 2026 football
+        counts a little more, and the July numbers count a little less — by mid-October the
+        index is almost entirely what's happening on the field.</li>
+        <li><strong>Rebuilt every Sunday.</strong> Pull the weekend's scores, re-rate all 138
+        teams, reseed the bracket.</li>
+        <li><strong>Check ourselves against Vegas.</strong> Each week, compare our lines to the
+        real betting lines — the only referee that never lies.</li>
+      </ul>
+    </section>
+
+    <!-- 11 · Roadmap: new signals -->
+    <section class="slide">
+      <div class="slide-kicker">Roadmap · Earn Your Seat</div>
+      <h1>New clues must prove they help</h1>
+      <ul class="deck-list">
+        <li><strong>The house rule:</strong> every new clue takes the time-machine test first.
+        If it doesn't make predictions better, it's decoration, not an ingredient.</li>
+        <li><strong>AP & committee polls</strong> — once they start publishing, they audition.</li>
+        <li><strong>Betting markets</strong> — what the world thinks, expressed in dollars.</li>
+        <li><strong>Conference-race simulation</strong> — the Duke lesson: predict who <em>wins the
+        league</em>, not just who's best in it.</li>
+        <li><strong>Play the season 10,000 times</strong> — championship odds for every team,
+        like a real Vegas futures board.</li>
+      </ul>
+    </section>
+
+    <!-- 12 · Close -->
+    <section class="slide">
+      <div class="slide-viva">Viva</div>
+      <h1>House Rules</h1>
+      <ul class="deck-list">
+        <li>Source data never gets edited — we can always rebuild from scratch.</li>
+        <li>All the dials live in one place; changing one takes one line.</li>
+        <li>No hand-tuning teams we happen to like. If a rating looks wrong, fix the recipe, not the team.</li>
+        <li>Nothing ships unless the time-machine test says it's better.</li>
+      </ul>
+      <div class="stat-caption" style="margin-top:22px">Twelve Teams · One Index · One Champion</div>
+    </section>
+
+  </div>
+
+  <div class="deck-nav" id="deck-nav"></div>
+  <div class="deck-hint">← → keys · click to advance</div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const nav = document.getElementById('deck-nav');
+    let current = 0;
+
+    slides.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'deck-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', `Slide ${i + 1}`);
+      dot.addEventListener('click', e => { e.stopPropagation(); go(i); });
+      nav.appendChild(dot);
+    });
+
+    function go(i) {
+      current = Math.max(0, Math.min(slides.length - 1, i));
+      slides.forEach((s, j) => s.classList.toggle('active', j === current));
+      [...nav.children].forEach((d, j) => d.classList.toggle('active', j === current));
+      document.getElementById('slide-num').textContent = `${current + 1} / ${slides.length}`;
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') go(current + 1);
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(current - 1);
+      if (e.key === 'Home') go(0);
+      if (e.key === 'End') go(slides.length - 1);
+    });
+
+    document.getElementById('deck').addEventListener('click', e => {
+      // left third goes back, rest advances
+      go(e.clientX < window.innerWidth / 3 ? current - 1 : current + 1);
+    });
+
+    go(0);
+  </script>
+  <script src="../nav.js" data-root=".."></script>
+</body>
+
+</html>

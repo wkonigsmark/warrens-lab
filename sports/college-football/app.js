@@ -12,16 +12,26 @@ function renderPoll() {
   `).join('');
 }
 
+// Tabs are hash-routed (#index, #top25, …) and driven by the shared header (nav.js)
+const TAB_ROUTES = {
+  index: 'tab-index',
+  top25: 'tab-rankings',
+  teams: 'tab-teams',
+  schedule: 'tab-schedule',
+  bracket: 'tab-bracket',
+  learn: 'tab-learn',
+};
+
+function routeTab() {
+  const key = location.hash.replace('#', '') || 'index';
+  const id = TAB_ROUTES[key] || 'tab-index';
+  document.querySelectorAll('.tab-content').forEach(c =>
+    c.classList.toggle('active', c.id === id));
+}
+
 function initTabs() {
-  const buttons = document.querySelectorAll('.tab-btn');
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      buttons.forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(btn.dataset.tab).classList.add('active');
-    });
-  });
+  window.addEventListener('hashchange', routeTab);
+  routeTab();
 }
 
 // --- Schedule (reads data/games-<year>.json produced by api/fetch_games.py) ---
@@ -335,10 +345,12 @@ const INDEX_EXPLAINER = `
       <li><strong>Regress toward the conference</strong> — 65% the team's own number,
       35% its 2026 conference average. Rosters churn every winter, but the league you
       play in says a lot about where you'll land.</li>
-      <li><strong>Poll blend for the Top 25</strong> — teams in ESPN's way-too-early
-      poll (★) get averaged 50/50 with a poll-implied score (#1 ≈ +26 down to
-      #25 ≈ +12), folding in what the market knows about portal moves and
-      returning QBs that pure 2025 math can't see.</li>
+      <li><strong>Blend in the offseason composite (v1)</strong> — the final rating is
+      50% that results base, 50% an offseason composite built from five normalized
+      signals: SP+ 35%, returning production 20%, recruiting 20%, portal net 15%,
+      draft capital 10% (each a z-score, standardized, × 9 points per σ — see the
+      Data Lab for the raw ingredients). This replaces the old ESPN-poll blend,
+      which folds in roster knowledge the 2025 math can't see.</li>
     </ol>
   </div>
   <div class="explainer-section">
@@ -357,8 +369,9 @@ const INDEX_EXPLAINER = `
   </div>
   <div class="explainer-section">
     <h4>★ #n — the poll cross-reference</h4>
-    <p>The team's rank in ESPN's way-too-early Top 25. It doubles as an honesty flag:
-    those 25 ratings carry the poll blend, the other 113 are pure formula.</p>
+    <p>The team's rank in ESPN's way-too-early Top 25 — display-only in v1, kept so
+    you can spot where this index and the pollsters disagree. Every rating is now
+    pure formula.</p>
   </div>
 `;
 

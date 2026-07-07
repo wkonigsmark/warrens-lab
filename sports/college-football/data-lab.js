@@ -9,8 +9,14 @@ const SOURCES = [
   { key: 'sp-plus', label: 'SP+', fmt: v => (v > 0 ? '+' : '') + v.toFixed(1) },
 ];
 
+// computed columns from power-index-2026.json (v1 wiring)
+const EXTRA_COLS = [
+  { key: 'composite', label: 'Composite', sub: 'z × 9 pts', fmt: v => (v > 0 ? '+' : '') + v.toFixed(1) },
+  { key: 'index-v1', label: 'Index v1', sub: 'final rating', fmt: v => (v > 0 ? '+' : '') + v.toFixed(1) },
+];
+
 let ROWS = [];
-let sortCol = 'sp-plus';
+let sortCol = 'index-v1';
 let sortDir = -1;
 
 function zClass(z) {
@@ -20,8 +26,9 @@ function zClass(z) {
 }
 
 async function boot() {
-  const [teamsDb, ...normalized] = await Promise.all([
+  const [teamsDb, powerIndex, ...normalized] = await Promise.all([
     fetch('data/teams-db.json').then(r => r.json()),
+    fetch('data/power-index-2026.json').then(r => r.ok ? r.json() : null),
     ...SOURCES.map(s => fetch(`data/normalized/${s.key}.json`).then(r => r.ok ? r.json() : null)),
   ]);
 
@@ -35,9 +42,14 @@ async function boot() {
     bySource[s.key] = new Map(d.teams.map(t => [t.team, t]));
   });
 
+  const indexByTeam = new Map((powerIndex?.teams || []).map(t => [t.school, t]));
   ROWS = fbs.map(t => {
     const row = { team: t.school, conf: t.conference, logo: (t.logos || [])[0] };
     for (const s of SOURCES) row[s.key] = bySource[s.key]?.get(t.school) || null;
+    const idx = indexByTeam.get(t.school);
+    row['composite'] = idx?.compositePts != null
+      ? { value: idx.compositePts, zscore: idx.compositeZ } : null;
+    row['index-v1'] = idx ? { value: idx.rating, zscore: null } : null;
     return row;
   });
 
@@ -48,7 +60,8 @@ async function boot() {
       .join(' · ') +
     '<br>2026-cycle recruiting, SP+ projections, and returning production aren\'t published in CFBD yet — ' +
     '2025 figures are standing in (see data/README.md for manual-override paths). ' +
-    'Draft capital "—" = zero picks in the window, a real signal. Portal net is computed from player-level data, not 247/On3\'s editorial board.';
+    'Draft capital zero-pick schools now enter at 0 (Phase-2 policy). Portal net is computed from player-level data, not 247/On3\'s editorial board.' +
+    (powerIndex ? `<br><strong>v1 wired up:</strong> Composite = weighted z (SP+ 35 / RetProd 20 / Recruiting 20 / Portal 15 / Draft 10), standardized, × ${powerIndex.zToPoints} pts. Index v1 = ${Math.round((1 - powerIndex.offseasonBlend) * 100)}% results base + ${Math.round(powerIndex.offseasonBlend * 100)}% Composite. Knobs live in api/build_power_index.py.` : '');
 
   render();
 }
@@ -74,20 +87,23 @@ function render() {
       ${label}${arrow(col)}${sub ? `<span class="sub">${sub}</span>` : ''}
     </th>`;
 
+  const dataCols = [...SOURCES.map(s => ({ ...s, sub: (s.sub ? s.sub + ' · ' : '') + 'raw · z' })), ...EXTRA_COLS];
   document.getElementById('lab-table').innerHTML = `
     <tr>
       ${th('team', 'Team')}
       ${th('conf', 'Conf')}
-      ${SOURCES.map(s => th(s.key, s.label, (s.sub ? s.sub + ' · ' : '') + 'raw · z')).join('')}
+      ${dataCols.map(c => th(c.key, c.label, c.sub)).join('')}
     </tr>
     ${rows.map(r => `
       <tr>
         <td class="team-cell">${r.logo ? `<img src="${r.logo}" alt="" loading="lazy">` : ''}${r.team}</td>
         <td class="conf-cell">${r.conf}</td>
-        ${SOURCES.map(s => {
-          const cell = r[s.key];
+        ${dataCols.map(c => {
+          const cell = r[c.key];
           if (!cell) return '<td class="missing">—</td>';
-          return `<td>${s.fmt(cell.value)}<span class="z ${zClass(cell.zscore)}">${cell.zscore > 0 ? '+' : ''}${cell.zscore.toFixed(1)}σ</span></td>`;
+          const z = cell.zscore != null
+            ? `<span class="z ${zClass(cell.zscore)}">${cell.zscore > 0 ? '+' : ''}${cell.zscore.toFixed(1)}σ</span>` : '';
+          return `<td>${c.fmt(cell.value)}${z}</td>`;
         }).join('')}
       </tr>
     `).join('')}

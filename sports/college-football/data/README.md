@@ -85,8 +85,28 @@ sources you copy out by hand.
 
 <!-- PULL-STATUS:END -->
 
-## Phase boundaries
+## Phase 2 status — v1 composite wired up
 
-Explicitly **not** built yet (by design): composite/blended scores, weighting
-schemes, any formula combining sources. Phase 2 decides those after reviewing
-this data in the Data Lab.
+`api/build_power_index.py` now blends the normalized sources into the index:
+
+- **Composite** = weighted z per team (SP+ 0.35, returning production 0.20,
+  recruiting 0.20, portal net 0.15, draft capital 0.10), weights renormalized
+  when a source is missing a team, then **standardized across FBS** (the raw
+  weighted average has σ < 1 and would compress the point-spread scale) and
+  converted at 9 points per σ.
+- **Index v1** = 50% results base (2025 SRS regressed 35% to 2026 conference
+  strength) + 50% composite. The ESPN poll blend is retired to display-only;
+  `ratingV0` is kept in the output for comparison.
+- Data policy: draft-capital zero-pick FBS schools enter at value 0
+  (`zeroFillFbs` in `normalize_sources.py`).
+- All knobs live in the constants block at the top of `build_power_index.py`.
+
+**Step 5 backtest — done** (`api/backtest_composite.py`, results in
+`backtest-2025.json`): July-2025-knowable inputs scored against actual 2025
+SRS across 136 teams. Base only r=0.765 / MAE 5.71 · composite only r=0.726 /
+6.06 · **v1 50/50 blend r=0.772 / 5.58 — beats both**. The blend sweep is flat
+from 20–60% composite (nominal best 30%); 50/50 retained as within one-season
+noise. Caveats: SP+ input was the prior-year final (mirroring the current
+stand-in config), and this validates team-strength prediction only — playoff
+*selection* anomalies (Duke won the 2025 ACC while backtesting #56) are a
+different problem.

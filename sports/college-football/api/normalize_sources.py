@@ -41,6 +41,9 @@ SOURCES = {
     "draft-capital": {
         "stat": "draft capital, 2021–2025 (Σ 257 − pick)",
         "files": ["draft-capital/by-school-2021-2025.json"],
+        # Phase-2 data policy: absence of draft capital is real information,
+        # so FBS schools with zero picks enter the z-pool at 0, not as missing
+        "zeroFillFbs": True,
     },
     "sp-plus": {
         "stat": "SP+ overall rating",
@@ -89,7 +92,7 @@ def build_resolver():
     return resolve, fbs
 
 
-def normalize_source(key, cfg, resolve):
+def normalize_source(key, cfg, resolve, fbs):
     raw_file = next((RAW / f for f in cfg["files"] if (RAW / f).exists()), None)
     if raw_file is None:
         print(f"⚠️  {key}: no raw file found — skipped")
@@ -105,6 +108,12 @@ def normalize_source(key, cfg, resolve):
             matched[school] = row  # later duplicates overwrite; sources are per-team
         else:
             unmatched.append(row["team"])
+
+    zero_filled = 0
+    if cfg.get("zeroFillFbs"):
+        for school in fbs - set(matched):
+            matched[school] = {"team": school, "value": 0, "rank": None, "raw": {}}
+            zero_filled += 1
 
     values = [r["value"] for r in matched.values()]
     mean = statistics.fmean(values)
@@ -133,16 +142,20 @@ def normalize_source(key, cfg, resolve):
         "teams": teams,
         "unmatched": sorted(set(unmatched)),
     }
+    if zero_filled:
+        out["policy"] = f"{zero_filled} FBS schools with no data included at value 0"
     OUT.mkdir(exist_ok=True)
     (OUT / f"{key}.json").write_text(json.dumps(out, indent=1))
     tail = f", {len(set(unmatched))} unmatched non-FBS/unknown" if unmatched else ""
+    if zero_filled:
+        tail += f", {zero_filled} zero-filled"
     print(f"✅ {key}: {n} FBS teams normalized (season {payload['season']}){tail}")
 
 
 def main():
-    resolve, _ = build_resolver()
+    resolve, fbs = build_resolver()
     for key, cfg in SOURCES.items():
-        normalize_source(key, cfg, resolve)
+        normalize_source(key, cfg, resolve, fbs)
     # revenue share: constant passthrough, no z-scores
     src = RAW / "revenue-share" / "2026.json"
     if src.exists():
