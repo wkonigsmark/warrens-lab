@@ -1526,7 +1526,7 @@
                 <tr>
                   <th style="width:50px;">#</th>
                   <th>Bracket</th>
-                  <th style="width:56px;text-align:center;" title="Best possible finish, simulated across every remaining outcome">Outlook</th>
+                  <th id="ko-th-outlook" style="width:56px;text-align:center;cursor:pointer;user-select:none;" title="Best possible finish, simulated across every remaining outcome — click to sort" onclick="window.setKoSort('outlook')">Outlook</th>
                   <th id="ko-th-points" style="text-align:center;cursor:pointer;user-select:none;" onclick="window.setKoSort('earned')">Points ↓</th>
                   <th id="ko-th-max" style="text-align:center;cursor:pointer;user-select:none;" onclick="window.setKoSort('max')">Max</th>
                   <th style="text-align:center;">Remaining Games <span style="font-weight:600;color:var(--wc-muted);text-transform:none;">(QF → SF → 3rd → Final)</span></th>
@@ -3116,7 +3116,7 @@
       let koEntries = [];
       let koChampFilter = null;
       let koMatchFilter = null; // team picked to win the current match
-      let koSortCol = 'earned'; // 'earned' | 'max'
+      let koSortCol = 'earned'; // 'earned' | 'max' | 'outlook'
       let koSortDir = 'desc';
 
       // True when an official result has been entered for this match number.
@@ -3231,6 +3231,18 @@
         if (st.canTop2) return `<span class="ko-outlook-badge ko-outlook-silver" title="Can still finish 2nd">2</span>`;
         if (st.canTop3) return `<span class="ko-outlook-badge ko-outlook-bronze" title="Can still finish 3rd">3</span>`;
         return `<span class="ko-outlook-badge ko-outlook-out" title="Mathematically eliminated from the money">✕</span>`;
+      }
+
+      // Numeric value for sorting the Outlook column — higher is better, so
+      // "desc" (the default direction, same as Points) shows gold-outlook entries first.
+      function outlookSortValue(name, pathResult) {
+        if (!pathResult || pathResult.tooMany) return -1;
+        const st = pathResult.stats.get(name);
+        if (!st) return -1;
+        if (st.canWin) return 4;
+        if (st.canTop2) return 3;
+        if (st.canTop3) return 2;
+        return 1;
       }
 
       // Calculate points for a bracket based on correct picks.
@@ -3421,16 +3433,24 @@
 
         // Update sort indicators on column headers
         const arrow = dir => dir === 'desc' ? ' ↓' : ' ↑';
+        const thOutlook = document.getElementById('ko-th-outlook');
         const thPts = document.getElementById('ko-th-points');
         const thMax = document.getElementById('ko-th-max');
+        if (thOutlook) thOutlook.textContent = 'Outlook' + (koSortCol === 'outlook' ? arrow(koSortDir) : '');
         if (thPts) thPts.textContent = 'Points' + (koSortCol === 'earned' ? arrow(koSortDir) : '');
         if (thMax) thMax.textContent = 'Max' + (koSortCol === 'max' ? arrow(koSortDir) : '');
+
+        // Best-possible-finish outlook badge — reuses the Path to Victory scenario
+        // engine, cached so repeated renders (search/sort) don't recompute it.
+        // Computed here (before scoring/sorting) so it can also drive the Outlook sort.
+        const pathResult = getPathToVictoryResult();
 
         // Score all entries
         const allScoredEntries = koEntries.map(e => {
           const picks = e.bracket_picks || {};
           const { earned, max, maxPossible } = calculateKoPoints(picks, eliminated);
-          return { entry: e, picks, earned, max, maxPossible };
+          const outlookValue = outlookSortValue(e.bracket_name, pathResult);
+          return { entry: e, picks, earned, max, maxPossible, outlookValue };
         });
 
         // Assign universal pool ranks — always by earned desc, max as tiebreaker (never affected by display sort)
@@ -3444,6 +3464,7 @@
         // Apply display sort (independent of pool ranking)
         const sortD = koSortDir === 'desc' ? -1 : 1;
         allScoredEntries.sort((a, b) => {
+          if (koSortCol === 'outlook') return sortD * (a.outlookValue - b.outlookValue) || (b.earned - a.earned);
           if (koSortCol === 'max') return sortD * (a.max - b.max) || (b.earned - a.earned);
           return sortD * (a.earned - b.earned) || (b.max - a.max);
         });
@@ -3462,10 +3483,6 @@
           const done = actualMatches.filter(m => matchNums.includes(m.matchNumber) && m.status === 'completed').length;
           return sum + done * pts;
         }, 0);
-
-        // Best-possible-finish outlook badge — reuses the Path to Victory scenario
-        // engine, cached so repeated renders (search/sort) don't recompute it.
-        const pathResult = getPathToVictoryResult();
 
         // Render rows with ranking
         const rows = sortedEntries

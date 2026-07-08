@@ -60,7 +60,13 @@
         <div id="ants-apples-keypad">
           <div id="ants-apples-keypad-header">
             <div id="ants-keypad-equation">&nbsp;</div>
-            <button class="btn secondary" id="ants-esc-btn" style="padding:4px 10px;font-size:0.8rem;">ESC</button>
+            <button id="ants-keypad-help-btn" type="button" title="Show me with ants and apples!">✋</button>
+            <div id="ants-keypad-header-right">
+              <button class="btn secondary" id="ants-esc-btn" style="padding:4px 10px;font-size:0.8rem;">ESC</button>
+            </div>
+          </div>
+          <div id="ants-keypad-helper-panel">
+            <div id="ants-keypad-helper-hint">Count it out, then tap your answer below! 👇</div>
           </div>
           <div id="ants-apples-keypad-display"></div>
           <div id="ants-apples-keypad-grid"></div>
@@ -425,12 +431,17 @@
 
       const eq = document.getElementById('ants-keypad-equation');
       if (eq) eq.textContent = equation || '\u00A0';
-      
+
+      // \u270B helper only makes sense for game tiles, and never in Master Mode
+      const helpBtn = document.getElementById('ants-keypad-help-btn');
+      if (helpBtn) helpBtn.style.display = (activeTileEl && showHelper) ? 'inline-flex' : 'none';
+
       updateKeypadDisplay();
       document.getElementById('ants-apples-keypad-backdrop').style.display = 'flex';
     }
 
     function hideKeypad() {
+      closeKeypadHelper();
       document.getElementById('ants-apples-keypad-backdrop').style.display = 'none';
       activeTileEl = null;
       activeInputEl = null;
@@ -438,6 +449,40 @@
       updateKeypadDisplay();
       const eq = document.getElementById('ants-keypad-equation');
       if (eq) eq.textContent = '\u00A0';
+    }
+
+    /* ---------- In-keypad \u270B helper ---------- */
+
+    function toggleKeypadHelper() {
+      const panel = document.getElementById('ants-keypad-helper-panel');
+      if (panel && panel.style.display === 'block') {
+        closeKeypadHelper();
+      } else {
+        openKeypadHelper();
+      }
+    }
+
+    function openKeypadHelper() {
+      const panel = document.getElementById('ants-keypad-helper-panel');
+      const visual = document.getElementById('ants-helper-visual');
+      if (!panel || !visual) return;
+      // Borrow the live helper visual; it goes home when the panel closes
+      panel.insertBefore(visual, panel.firstChild);
+      panel.style.display = 'block';
+      const btn = document.getElementById('ants-keypad-help-btn');
+      if (btn) btn.classList.add('active');
+    }
+
+    function closeKeypadHelper() {
+      const panel = document.getElementById('ants-keypad-helper-panel');
+      const visual = document.getElementById('ants-helper-visual');
+      const home = document.getElementById('ants-helper');
+      if (panel && visual && home && panel.contains(visual)) {
+        home.appendChild(visual);
+      }
+      if (panel) panel.style.display = 'none';
+      const btn = document.getElementById('ants-keypad-help-btn');
+      if (btn) btn.classList.remove('active');
     }
 
     function appendDigit(d) {
@@ -773,6 +818,8 @@
       });
 
       document.getElementById('ants-esc-btn').addEventListener('click', hideKeypad);
+
+      document.getElementById('ants-keypad-help-btn').addEventListener('click', toggleKeypadHelper);
 
       document.getElementById('ants-apples-keypad-backdrop').addEventListener('click', (e) => {
         if (e.target.id === 'ants-apples-keypad-backdrop') {

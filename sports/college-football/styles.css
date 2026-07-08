@@ -1699,6 +1699,136 @@ body {
   border-color: var(--gold-dim);
 }
 
+/* Season Sim */
+.chaos-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: -6px 0 18px;
+  flex-wrap: wrap;
+}
+
+.chaos-row label {
+  font-family: 'Oswald', 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.chaos-row input[type=range] {
+  width: 220px;
+  accent-color: var(--neon-red);
+}
+
+.chaos-val {
+  font-weight: 800;
+  color: var(--neon-red);
+  font-size: 0.9rem;
+  min-width: 44px;
+}
+
+.sim-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.sim-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.sim-card h4 {
+  font-family: 'Oswald', 'Outfit', sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(245, 233, 208, 0.5);
+  margin-bottom: 7px;
+}
+
+.sim-card-team {
+  font-weight: 800;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sim-card-team img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.sim-card-val {
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.sim-running {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--gold);
+  font-weight: 700;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.fate-wrap {
+  width: min(1100px, 100vw - 32px);
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 10px;
+}
+
+.fate-svg {
+  width: 100%;
+  display: block;
+}
+
+.ff-grid {
+  stroke: rgba(255, 255, 255, 0.06);
+}
+
+.ff-tick {
+  fill: rgba(245, 233, 208, 0.4);
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+}
+
+.ff-axis {
+  fill: var(--gold);
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.ff-trail {
+  fill: none;
+  stroke: rgba(242, 196, 100, 0.25);
+  stroke-dasharray: 3 5;
+}
+
+.ff-marker:hover rect {
+  stroke: var(--gold);
+  stroke-width: 2.5;
+}
+
+.sim-table td, .sim-table th {
+  text-align: center;
+}
+
 /* Coming soon placeholders */
 .stub-card {
   background: var(--glass-bg);

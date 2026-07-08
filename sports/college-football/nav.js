@@ -10,6 +10,7 @@
     ['teams', 'Teams'],
     ['schedule', 'Schedule'],
     ['bracket', 'Playoff Bracket'],
+    ['simulate', 'Season Sim'],
     ['learn', 'Learn'],
   ];
   const PAGES = [

@@ -28,6 +28,7 @@ const TAB_ROUTES = {
   teams: 'tab-teams',
   schedule: 'tab-schedule',
   bracket: 'tab-bracket',
+  simulate: 'tab-simulate',
   learn: 'tab-learn',
 };
 
