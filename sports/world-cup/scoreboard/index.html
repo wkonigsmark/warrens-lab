@@ -855,6 +855,94 @@
       font-size: 0.75rem;
     }
 
+    /* Tiebreak meters — live penalty-shootout and goals-scored trackers */
+    .ko-tiebreak-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 640px) {
+      .ko-tiebreak-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ko-tiebreak-card {
+      border: 1px solid var(--wc-line);
+      border-radius: 10px;
+      background: linear-gradient(180deg, var(--wc-panel-strong), var(--wc-panel));
+      padding: 16px 18px 22px;
+    }
+
+    .ko-tiebreak-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .ko-tiebreak-title {
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--wc-muted);
+      white-space: nowrap;
+    }
+
+    .ko-tiebreak-value {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: var(--wc-ink);
+      line-height: 1;
+    }
+
+    .ko-tiebreak-sub {
+      font-size: 0.75rem;
+      color: var(--wc-muted);
+      margin-top: 5px;
+      line-height: 1.4;
+    }
+
+    .ko-tiebreak-bar-track {
+      position: relative;
+      height: 10px;
+      border-radius: 99px;
+      background: rgba(247, 244, 235, 0.08);
+      margin-top: 16px;
+    }
+
+    .ko-tiebreak-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #3a8c5c, #4fb37a);
+      transition: width 0.3s ease;
+    }
+
+    .ko-tiebreak-marker {
+      position: absolute;
+      top: -4px;
+      width: 2px;
+      height: 18px;
+      background: var(--wc-gold);
+    }
+
+    .ko-tiebreak-marker::after {
+      content: attr(data-label);
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.56rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      color: var(--wc-gold);
+      white-space: nowrap;
+    }
+
     /* Mobile KO Pool — polished card layout */
     @media (max-width: 768px) {
       #panel-ko-pool .wc-table-wrap { overflow-x: visible; }
@@ -1425,6 +1513,7 @@
             <div class="wc-stat"><strong id="ko-payout-2nd">$--</strong><span>🥈 2nd</span></div>
             <div class="wc-stat"><strong id="ko-payout-3rd">$--</strong><span>🥉 3rd</span></div>
           </div>
+          <div id="ko-tiebreak-meters"></div>
           <div id="ko-champion-split"></div>
           <div id="ko-match-split"></div>
           <div style="margin-bottom:16px;">
@@ -3245,6 +3334,63 @@
         return (picks[key] || []).find(t => t === t1 || t === t2) || null;
       }
 
+      // Live tiebreaker meters: actual penalty-shootout count and total KO goals
+      // scored so far, versus the pool's average guess on each tiebreaker field.
+      function renderTiebreakMeters() {
+        const el = document.getElementById('ko-tiebreak-meters');
+        if (!el) return;
+
+        const koMatches = actualMatches.filter(m => m.matchNumber >= 73 && m.matchNumber <= 104);
+        const totalKoGames = koMatches.length || 32;
+        const played = koMatches.filter(m => m.status === 'completed');
+
+        const shootouts = played.filter(m => m.shootoutWinnerId).length;
+        const totalGoals = played.reduce((sum, m) => sum + (m.homeScore || 0) + (m.awayScore || 0), 0);
+        const avgGoals = played.length ? totalGoals / played.length : 0;
+        const trajectory = avgGoals * totalKoGames;
+
+        const penaltyPicks = koEntries.map(e => e.penalty_games_pick).filter(v => v != null && !Number.isNaN(Number(v)));
+        const goalPicks = koEntries.map(e => e.ko_total_goals_pick).filter(v => v != null && !Number.isNaN(Number(v)));
+        const avgPenaltyPick = penaltyPicks.length ? penaltyPicks.reduce((a, b) => a + Number(b), 0) / penaltyPicks.length : null;
+        const avgGoalPick = goalPicks.length ? goalPicks.reduce((a, b) => a + Number(b), 0) / goalPicks.length : null;
+
+        const penaltyPct = Math.min(100, (shootouts / totalKoGames) * 100);
+        const penaltyPickPct = avgPenaltyPick != null ? Math.min(100, (avgPenaltyPick / totalKoGames) * 100) : null;
+
+        const goalsMax = Math.max(trajectory, avgGoalPick || 0, totalGoals, 30) * 1.15;
+        const goalsPct = goalsMax ? Math.min(100, (totalGoals / goalsMax) * 100) : 0;
+        const goalPickPct = avgGoalPick != null && goalsMax ? Math.min(100, (avgGoalPick / goalsMax) * 100) : null;
+
+        el.innerHTML = `
+          <div class="ko-tiebreak-grid">
+            <div class="ko-tiebreak-card">
+              <div class="ko-tiebreak-head">
+                <span class="ko-tiebreak-title">🥅 Penalty Shootouts</span>
+                <span style="font-size:0.68rem;color:var(--wc-muted);">${played.length}/${totalKoGames} KO games played</span>
+              </div>
+              <div class="ko-tiebreak-value">${shootouts}</div>
+              <div class="ko-tiebreak-sub">${played.length ? Math.round(shootouts / played.length * 100) : 0}% of games so far decided on penalties${avgPenaltyPick != null ? ` · pool avg guess: <strong style="color:var(--wc-ink);">${avgPenaltyPick.toFixed(1)}</strong>` : ''}</div>
+              <div class="ko-tiebreak-bar-track">
+                <div class="ko-tiebreak-bar-fill" style="width:${penaltyPct}%;"></div>
+                ${penaltyPickPct != null ? `<div class="ko-tiebreak-marker" style="left:${penaltyPickPct}%;" data-label="Pool avg"></div>` : ''}
+              </div>
+            </div>
+            <div class="ko-tiebreak-card">
+              <div class="ko-tiebreak-head">
+                <span class="ko-tiebreak-title">⚽ Goals Scored</span>
+                <span style="font-size:0.68rem;color:var(--wc-muted);">${played.length}/${totalKoGames} KO games played</span>
+              </div>
+              <div class="ko-tiebreak-value">${totalGoals}</div>
+              <div class="ko-tiebreak-sub">${avgGoals.toFixed(2)} goals/game · trending to <strong style="color:var(--wc-ink);">~${Math.round(trajectory)}</strong> total${avgGoalPick != null ? ` · pool avg guess: <strong style="color:var(--wc-ink);">${avgGoalPick.toFixed(1)}</strong>` : ''}</div>
+              <div class="ko-tiebreak-bar-track">
+                <div class="ko-tiebreak-bar-fill" style="width:${goalsPct}%;"></div>
+                ${goalPickPct != null ? `<div class="ko-tiebreak-marker" style="left:${goalPickPct}%;" data-label="Pool avg"></div>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
       // Render the KO Pool table from the already-fetched entries. Safe to call
       // repeatedly — it recomputes the current (result-driven) match each time.
       function renderKoPool() {
@@ -3252,6 +3398,7 @@
         if (!tbody) return;
         updateNextMatchHeader();
 
+        renderTiebreakMeters();
         renderChampionSplitBar();
         renderMatchSplitBar();
 
@@ -3698,6 +3845,45 @@
         return { slotT1, slotT2, winner, liveCount: bitIdx };
       }
 
+      // Points a bracket would earn under a given scenario's match winners.
+      // Hoisted to module scope so both the exhaustive search (computePathToVictory)
+      // and one-off scenario lookups (the Path modal's podium) can share it.
+      function pointsForScenario(picks, winnerByMatchNum) {
+        let earned = 0;
+        for (const { key, koRound, pts, single } of KO_ROUND_SCORING) {
+          const teams = single ? (picks[key] ? [picks[key]] : []) : (picks[key] || []);
+          const matchNums = KO_ROUND_MATCH_NUMS[koRound] || [];
+          for (const teamId of teams) {
+            if (matchNums.some(mn => winnerByMatchNum[mn] === teamId)) earned += pts;
+          }
+        }
+        return earned;
+      }
+
+      // Competition ranking (1224-style): ties share the same rank number.
+      function rankEntries(totals) {
+        const sorted = [...totals].sort((a, b) => b.pts - a.pts);
+        let rank = 1;
+        const out = [];
+        for (let i = 0; i < sorted.length; i++) {
+          if (i > 0 && sorted[i].pts !== sorted[i - 1].pts) rank = i + 1;
+          out.push({ ...sorted[i], rank });
+        }
+        return out;
+      }
+
+      // Full ranked leaderboard for one specific hypothetical scenario (a fixed
+      // set of remaining-match winners) — used to show "the podium" for the
+      // scenario that gets a given entry to its best possible finish.
+      function computeScenarioLeaderboard(sortedKO, bits) {
+        const seqToMatchNum = new Map(sortedKO.map(m => [m.seq, m.matchNumber]));
+        const { winner } = resolveScenario(sortedKO, bits);
+        const winnerByMatchNum = {};
+        for (const [seq, w] of Object.entries(winner)) winnerByMatchNum[seqToMatchNum.get(Number(seq))] = w;
+        const totals = koEntries.map(e => ({ name: e.bracket_name, pts: pointsForScenario(e.bracket_picks || {}, winnerByMatchNum) }));
+        return rankEntries(totals);
+      }
+
       function computePathToVictory() {
         const sortedKO = [...knockoutSchedule].sort((a, b) => a.seq - b.seq);
         const seqToMatchNum = new Map(sortedKO.map(m => [m.seq, m.matchNumber]));
@@ -3713,30 +3899,6 @@
           entry: e,
           picks: e.bracket_picks || {},
         }));
-
-        const rounds = KO_ROUND_SCORING;
-        function pointsForScenario(picks, winnerByMatchNum) {
-          let earned = 0;
-          for (const { key, koRound, pts, single } of rounds) {
-            const teams = single ? (picks[key] ? [picks[key]] : []) : (picks[key] || []);
-            const matchNums = KO_ROUND_MATCH_NUMS[koRound] || [];
-            for (const teamId of teams) {
-              if (matchNums.some(mn => winnerByMatchNum[mn] === teamId)) earned += pts;
-            }
-          }
-          return earned;
-        }
-
-        function rankEntries(totals) {
-          const sorted = [...totals].sort((a, b) => b.pts - a.pts);
-          let rank = 1;
-          const out = [];
-          for (let i = 0; i < sorted.length; i++) {
-            if (i > 0 && sorted[i].pts !== sorted[i - 1].pts) rank = i + 1;
-            out.push({ ...sorted[i], rank });
-          }
-          return out;
-        }
 
         const stats = new Map(baseline.map(b => [b.entry.bracket_name, {
           name: b.entry.bracket_name,
@@ -3911,10 +4073,40 @@
           ? parts.map(p => `<li style="margin-bottom:6px;"><span style="color:var(--wc-muted);">${ROUND_LABEL[p.round]}:</span> <strong style="color:var(--wc-ink);">${koTeamDisplay(p.winner)}</strong> wins</li>`).join('')
           : `<li style="color:var(--wc-muted);">All remaining results are already locked in.</li>`;
 
+        // The podium that results from this exact scenario — shows who else
+        // finishes top-3 alongside this bracket, and flags any ties.
+        const leaderboard = computeScenarioLeaderboard(result.sortedKO, st.bestBits);
+        const podium = leaderboard.filter(r => r.rank <= 3);
+        const byRank = {};
+        podium.forEach(r => { (byRank[r.rank] = byRank[r.rank] || []).push(r); });
+        const ORDINAL = { 1: '1st', 2: '2nd', 3: '3rd' };
+        const MEDAL = { 1: '🥇', 2: '🥈', 3: '🥉' };
+
+        const podiumRowsHtml = podium.map(r => {
+          const tied = byRank[r.rank].length > 1;
+          const isThisEntry = r.name === name;
+          return `<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid rgba(247,244,235,0.06);${isThisEntry ? 'background:rgba(244,201,93,0.08);border-radius:6px;padding-left:8px;padding-right:8px;' : ''}">
+            <span style="display:flex;align-items:center;gap:8px;min-width:0;">
+              <span style="font-size:1rem;flex-shrink:0;">${MEDAL[r.rank]}</span>
+              <span style="font-weight:${isThisEntry ? '900' : '700'};color:${isThisEntry ? 'var(--wc-gold)' : 'var(--wc-ink)'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.name}</span>
+              ${tied ? `<span style="flex-shrink:0;font-size:0.6rem;font-weight:900;color:#ff8a8a;background:rgba(255,93,93,0.12);border:1px solid rgba(255,93,93,0.3);border-radius:4px;padding:2px 6px;letter-spacing:0.03em;">TIE</span>` : ''}
+            </span>
+            <span style="font-weight:900;color:var(--wc-muted);flex-shrink:0;">${r.pts} pts</span>
+          </div>`;
+        }).join('');
+
+        const tieNotes = Object.entries(byRank)
+          .filter(([, group]) => group.length > 1)
+          .map(([rank, group]) => `${group.length}-way tie for ${ORDINAL[rank]}`)
+          .join(' · ');
+
         content.innerHTML = `
           <p style="font-size:0.95rem;margin:0 0 16px;">${headline}</p>
           <p style="font-size:0.75rem;color:var(--wc-muted);text-transform:uppercase;font-weight:800;letter-spacing:0.05em;margin:0 0 8px;">Requires this outcome:</p>
           <ul style="list-style:none;padding:0;margin:0 0 4px;font-size:0.9rem;">${stepsHtml}</ul>
+          <p style="font-size:0.75rem;color:var(--wc-muted);text-transform:uppercase;font-weight:800;letter-spacing:0.05em;margin:20px 0 8px;border-top:1px solid var(--wc-line);padding-top:16px;">Podium in this scenario:</p>
+          <div>${podiumRowsHtml}</div>
+          ${tieNotes ? `<p style="font-size:0.72rem;color:#ff8a8a;margin:10px 0 0;">⚠️ ${tieNotes} — payout would be split per pool rules.</p>` : ''}
         `;
         modal.style.display = 'block';
       }
