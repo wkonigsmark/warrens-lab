@@ -5,7 +5,7 @@
 (function () {
   const root = (document.currentScript.dataset.root || '.').replace(/\/$/, '');
   const SECTIONS = [
-    ['index', 'The Index'],
+    ['index', 'W²-Index'],
     ['top25', 'ESPN Top 25'],
     ['teams', 'Teams'],
     ['schedule', 'Schedule'],
@@ -14,6 +14,7 @@
   ];
   const PAGES = [
     ['🧪', 'Data Lab', `${root}/data-lab.html`],
+    ['⚖️', 'Weight Lab', `${root}/data-lab.html#weight-lab`],
     ['🎞️', 'Blueprint Deck', `${root}/blueprint/index.html`],
     ['🏟️', 'Sports Hub', `${root}/../index.html`],
   ];
@@ -110,8 +111,10 @@
   panel.className = 'cfb-nav-panel';
   const here = location.pathname.replace(/\/$/, '');
   panel.innerHTML = PAGES.map(([icon, label, href]) => {
-    const target = new URL(href, location.href).pathname.replace(/\/$/, '');
-    const current = here === target || here + '/index.html' === target;
+    const u = new URL(href, location.href);
+    const target = u.pathname.replace(/\/$/, '');
+    const samePath = here === target || here + '/index.html' === target;
+    const current = samePath && (u.hash || '') === location.hash;
     return `<a href="${href}" class="${current ? 'current' : ''}">${icon} ${label}</a>`;
   }).join('');
 

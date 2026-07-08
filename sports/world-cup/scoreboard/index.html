@@ -362,6 +362,35 @@
       background: var(--wc-panel);
     }
 
+    .wc-path-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .wc-path-table th {
+      background: var(--wc-panel-strong);
+      color: var(--wc-muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--wc-line);
+    }
+
+    .wc-path-table td {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--wc-line);
+      vertical-align: middle;
+      transition: background 0.15s ease;
+    }
+
+    .wc-path-table tbody tr:hover td {
+      background: var(--wc-panel);
+    }
+
     @media (max-width: 768px) {
       .scoreboard-toolbar {
         flex-direction: column;
@@ -479,6 +508,51 @@
         color: var(--wc-gold);
         font-weight: 700;
         font-size: 0.65rem;
+        text-transform: uppercase;
+      }
+
+      /* Path to Victory table — 5 cols (Status/Bracket/Points/Best Rank/Details),
+         intentionally separate from .leaderboard-table's 8-col mobile card rules. */
+      .wc-path-table {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .wc-path-table thead { display: none; }
+      .wc-path-table tbody { display: contents; }
+
+      .wc-path-table tbody tr {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--wc-line);
+        border-radius: 10px;
+        padding: 12px;
+      }
+
+      .wc-path-table tbody tr td { padding: 0 !important; border: none !important; }
+      .wc-path-table tbody tr td:nth-child(1) { order: 1; }
+      .wc-path-table tbody tr td:nth-child(2) { order: 2; flex: 1 1 auto; min-width: 120px; }
+      .wc-path-table tbody tr td:nth-child(3) { order: 4; }
+      .wc-path-table tbody tr td:nth-child(4) { order: 5; }
+      .wc-path-table tbody tr td:nth-child(5) { order: 6; margin-left: auto; }
+
+      .wc-path-table tbody tr td:nth-child(3)::before {
+        content: "Pts ";
+        color: var(--wc-muted);
+        font-weight: 700;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+      }
+
+      .wc-path-table tbody tr td:nth-child(4)::before {
+        content: "Best: #";
+        color: var(--wc-muted);
+        font-weight: 700;
+        font-size: 0.7rem;
         text-transform: uppercase;
       }
 
@@ -662,6 +736,125 @@
       .flag-emoji { display: inline; font-size: 1.5rem; line-height: 1; vertical-align: middle; }
     }
 
+    /* Compact "remaining games" flag-chip row (KO Pool table) */
+    .ko-remaining-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      flex-wrap: nowrap;
+    }
+
+    .ko-chip-divider {
+      width: 1px;
+      height: 16px;
+      background: rgba(247, 244, 235, 0.15);
+      margin: 0 4px;
+      flex-shrink: 0;
+    }
+
+    .ko-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(247, 244, 235, 0.18);
+      background: rgba(255, 255, 255, 0.04);
+      flex-shrink: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .ko-chip .flag-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50% !important;
+      margin: 0 !important;
+    }
+
+    .ko-chip .flag-emoji {
+      font-size: 0.85rem;
+    }
+
+    .ko-chip-correct {
+      border-color: #f4c95d;
+      box-shadow: 0 0 0 1.5px rgba(244, 201, 93, 0.4);
+    }
+
+    .ko-chip-wrong {
+      opacity: 0.3;
+      filter: grayscale(0.7);
+    }
+
+    /* 3rd-place pick is intentionally de-emphasized — it's a side branch, not the road to the final */
+    .ko-chip-faded {
+      opacity: 0.55;
+    }
+
+    .ko-chip-faded.ko-chip-correct {
+      opacity: 0.85;
+    }
+
+    .ko-chip-champion {
+      border-width: 2px;
+      border-color: rgba(244, 201, 93, 0.6);
+    }
+
+    .ko-chip-champion.ko-chip-correct {
+      border-color: #f4c95d;
+      box-shadow: 0 0 0 2px rgba(244, 201, 93, 0.5);
+    }
+
+    .ko-chip-tbd {
+      color: rgba(247, 244, 235, 0.3);
+      font-size: 0.65rem;
+      border-style: dashed;
+    }
+
+    /* Outlook badge — best possible finish, simulated across every remaining outcome */
+    .ko-outlook-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      font-weight: 900;
+      font-size: 0.85rem;
+      border: 1.5px solid transparent;
+      line-height: 1;
+    }
+
+    .ko-outlook-gold {
+      background: rgba(244, 201, 93, 0.18);
+      color: #f4c95d;
+      border-color: #f4c95d;
+    }
+
+    .ko-outlook-silver {
+      background: rgba(210, 210, 220, 0.14);
+      color: #dcdcdc;
+      border-color: rgba(220, 220, 220, 0.6);
+    }
+
+    .ko-outlook-bronze {
+      background: rgba(205, 127, 50, 0.16);
+      color: #e0a06e;
+      border-color: rgba(205, 127, 50, 0.6);
+    }
+
+    .ko-outlook-out {
+      background: rgba(255, 93, 93, 0.12);
+      color: #ff6b6b;
+      border-color: rgba(255, 93, 93, 0.5);
+    }
+
+    .ko-outlook-unknown {
+      color: var(--wc-muted);
+      font-size: 0.75rem;
+    }
+
     /* Mobile KO Pool — polished card layout */
     @media (max-width: 768px) {
       #panel-ko-pool .wc-table-wrap { overflow-x: visible; }
@@ -671,8 +864,8 @@
 
       #panel-ko-pool .wc-table tr {
         display: grid;
-        grid-template-columns: 40px 1fr auto;
-        grid-template-rows: auto auto auto auto;
+        grid-template-columns: 40px 1fr auto auto;
+        grid-template-rows: auto auto auto;
         background: var(--wc-panel);
         border: 1px solid var(--wc-line);
         border-radius: 10px;
@@ -683,7 +876,7 @@
 
       /* Rank */
       #panel-ko-pool .wc-table td:nth-child(1) {
-        grid-column: 1; grid-row: 1 / 5;
+        grid-column: 1; grid-row: 1 / 4;
         display: flex; align-items: center; justify-content: center;
         background: rgba(244,201,93,0.08);
         border-right: 1px solid var(--wc-line);
@@ -694,76 +887,47 @@
       #panel-ko-pool .wc-table td:nth-child(2) {
         grid-column: 2; grid-row: 1;
         display: flex; align-items: center;
-        padding: 10px 10px 0;
+        padding: 10px 8px 0 10px;
         font-weight: 900; font-size: 0.9rem; color: var(--wc-ink);
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
 
-      /* Points */
+      /* Outlook badge */
       #panel-ko-pool .wc-table td:nth-child(3) {
         grid-column: 3; grid-row: 1;
+        display: flex; align-items: center; justify-content: center;
+        padding: 8px 4px 0;
+      }
+      #panel-ko-pool .wc-table td:nth-child(3) .ko-outlook-badge { width: 22px; height: 22px; font-size: 0.75rem; }
+
+      /* Points */
+      #panel-ko-pool .wc-table td:nth-child(4) {
+        grid-column: 4; grid-row: 1;
         display: flex; align-items: center;
         padding: 10px 12px 0;
         font-weight: 900; font-size: 0.8rem; color: var(--wc-gold);
       }
 
       /* Max column — hide on mobile (baked into card elsewhere) */
-      #panel-ko-pool .wc-table td:nth-child(4) { display: none; }
+      #panel-ko-pool .wc-table td:nth-child(5) { display: none; }
 
-      /* Next match — prominent row (col 5 after Max insertion) */
-      #panel-ko-pool .wc-table td:nth-child(5) {
-        grid-column: 2; grid-row: 2;
-        display: flex; align-items: center; gap: 6px;
-        padding: 8px 10px 6px;
-        border-top: 1px solid rgba(247,244,235,0.07);
-      }
-      #panel-ko-pool .wc-table td:nth-child(5)::before {
-        content: 'NEXT';
-        font-size: 0.48rem; font-weight: 900; letter-spacing: 0.1em;
-        color: rgba(247,244,235,0.35); white-space: nowrap;
-        margin-right: 2px;
-      }
-      #panel-ko-pool .wc-table td:nth-child(5) .flag-emoji { font-size: 1.5rem; }
-      #panel-ko-pool .wc-table td:nth-child(5) strong { font-size: 0.85rem; color: var(--wc-ink); }
-
-      /* Following match — smaller third row (col 6) */
+      /* Remaining games — full-width flag-chip row */
       #panel-ko-pool .wc-table td:nth-child(6) {
-        grid-column: 2; grid-row: 3;
-        display: flex; align-items: center; gap: 5px;
-        padding: 4px 10px 10px;
-        font-size: 0.6rem; color: var(--wc-muted);
-      }
-      #panel-ko-pool .wc-table td:nth-child(6)::before {
-        content: '→';
-        font-size: 0.55rem; color: rgba(247,244,235,0.25);
-      }
-      #panel-ko-pool .wc-table td:nth-child(6) .flag-emoji { font-size: 1rem; }
-      #panel-ko-pool .wc-table td:nth-child(6) strong { font-size: 0.7rem; color: rgba(247,244,235,0.6); }
-
-      /* Champ — stacked right column rows 2+3 (col 7) */
-      #panel-ko-pool .wc-table td:nth-child(7) {
-        grid-column: 3; grid-row: 2 / 4;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        padding: 6px 10px;
+        grid-column: 1 / -1; grid-row: 2;
+        display: flex; align-items: center; justify-content: center;
+        padding: 8px 10px;
         border-top: 1px solid rgba(247,244,235,0.07);
-        border-left: 1px solid var(--wc-line);
-        gap: 2px; text-align: center;
       }
-      #panel-ko-pool .wc-table td:nth-child(7)::before {
-        content: '🏆';
-        font-size: 0.75rem;
-      }
-      #panel-ko-pool .wc-table td:nth-child(7) .flag-emoji { font-size: 1.4rem; }
-      #panel-ko-pool .wc-table td:nth-child(7) strong { font-size: 0.65rem; color: var(--wc-gold); }
+      #panel-ko-pool .wc-table td:nth-child(6) .ko-remaining-row { gap: 4px; }
+      #panel-ko-pool .wc-table td:nth-child(6) .ko-chip { width: 22px; height: 22px; }
 
-      /* My Picks button — full-width row at bottom (col 8) */
-      #panel-ko-pool .wc-table td:nth-child(8) {
-        grid-column: 2 / 4; grid-row: 4;
+      /* My Picks button — full-width row at bottom */
+      #panel-ko-pool .wc-table td:nth-child(7) {
+        grid-column: 1 / -1; grid-row: 3;
         display: flex; align-items: center; justify-content: center;
         padding: 6px 12px 10px;
-        border-top: 1px solid rgba(247,244,235,0.07);
       }
-      #panel-ko-pool .wc-table td:nth-child(8) button {
+      #panel-ko-pool .wc-table td:nth-child(7) button {
         width: 100%; font-size: 0.72rem; font-weight: 700;
         padding: 7px 12px; border-radius: 6px;
         border: 1px solid var(--wc-gold); background: rgba(244,201,93,0.08);
@@ -1183,6 +1347,7 @@
       <button class="sim-tab-btn" data-tab="ko-match-center">⚽ KO Match Center</button>
       <button class="sim-tab-btn" data-tab="ko-bracket">🗺️ Bracket</button>
       <button class="sim-tab-btn" data-tab="ko-schedule">📅 Fixtures</button>
+      <button class="sim-tab-btn" data-tab="ko-path">🧭 Path to Victory</button>
     </nav>
 
     <!-- Tab Panels Container -->
@@ -1272,11 +1437,10 @@
                 <tr>
                   <th style="width:50px;">#</th>
                   <th>Bracket</th>
+                  <th style="width:56px;text-align:center;" title="Best possible finish, simulated across every remaining outcome">Outlook</th>
                   <th id="ko-th-points" style="text-align:center;cursor:pointer;user-select:none;" onclick="window.setKoSort('earned')">Points ↓</th>
                   <th id="ko-th-max" style="text-align:center;cursor:pointer;user-select:none;" onclick="window.setKoSort('max')">Max</th>
-                  <th style="text-align:center;">Next Match</th>
-                  <th style="text-align:center;">Following Match</th>
-                  <th style="text-align:center;">Champion</th>
+                  <th style="text-align:center;">Remaining Games <span style="font-weight:600;color:var(--wc-muted);text-transform:none;">(QF → SF → 3rd → Final)</span></th>
                   <th style="width:100px;text-align:center;">Action</th>
                 </tr>
               </thead>
@@ -1392,6 +1556,26 @@
       <div class="sim-view-panel" id="panel-ko-schedule">
         <p style="color:var(--wc-muted);font-size:0.85rem;margin:0 0 14px;">Remaining knockout fixtures · updates as results are confirmed.</p>
         <div id="ko-schedule-vis"></div>
+      </div>
+
+      <!-- Path to Victory tab -->
+      <div class="sim-view-panel" id="panel-ko-path">
+        <p style="color:var(--wc-muted);font-size:0.85rem;margin:0 0 14px;">Every remaining game outcome, simulated exhaustively — who can still realistically win, place, or is already mathematically out.</p>
+        <div id="ko-path-vis">Loading…</div>
+      </div>
+
+      <!-- Path Detail Modal -->
+      <div id="ko-path-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:1000;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;box-sizing:border-box;">
+        <div style="background:var(--wc-bg);border:1px solid var(--wc-line);border-radius:12px;max-width:640px;margin:0 auto;padding:24px 20px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <h2 id="ko-path-bracket-name" style="margin:0;color:var(--wc-ink);font-size:1.2rem;">Path to Victory</h2>
+            <button id="ko-path-close" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--wc-muted);">✕</button>
+          </div>
+          <div id="ko-path-content"></div>
+          <div style="display:flex;justify-content:center;padding-top:16px;">
+            <button id="ko-path-close-btn" class="wc-button" style="background:var(--wc-line);color:var(--wc-muted);">Close</button>
+          </div>
+        </div>
       </div>
 
       <!-- My Picks Modal -->
@@ -2873,14 +3057,10 @@
       }
 
       // Update the KO Pool "Next Match" column header.
-      function updateNextMatchHeader() {
-        const current = getCurrentMatch();
-        const koTable = document.getElementById("ko-entry-table")?.closest("table");
-        if (koTable) {
-          const headers = koTable.querySelectorAll("th");
-          if (headers[4]) headers[4].textContent = matchLabel(current);
-        }
-      }
+      // No-op kept for existing call sites — the KO Pool header is now static
+      // ("Remaining Games") since every entrant's full remaining picks are
+      // shown at once instead of just the single current/following match.
+      function updateNextMatchHeader() {}
 
       // Convert a 2-letter country code to its flag emoji.
       function teamFlagEmoji(teamId) {
@@ -2902,6 +3082,66 @@
         const code = teamId.substring(0, 3).toUpperCase();
         const emoji = teamFlagEmoji(teamId);
         return `<img class="flag-img" src="${flagUrl}" alt="${teamId}" style="height:32px;width:auto;margin-right:8px;vertical-align:middle;border-radius:2px;" loading="lazy" onerror="this.style.display='none'"><span class="flag-emoji">${emoji}</span><strong>${code}</strong>`;
+      }
+
+      // A single small round flag chip for the compact "remaining games" row.
+      // opts.status: 'correct' | 'wrong' | undefined (undecided). opts.faded / opts.champion add visual emphasis.
+      function koFlagChip(teamId, opts = {}) {
+        if (!teamId) {
+          return `<span class="ko-chip ko-chip-tbd" title="TBD">–</span>`;
+        }
+        const team = teamsById[teamId];
+        const cc = teamId === 'ENG' ? 'gb-eng' : (teamId === 'SCO' ? 'gb-sct' : (team?.countryCode?.toLowerCase() || teamId.toLowerCase()));
+        const flagUrl = `https://flagcdn.com/w40/${cc}.png`;
+        const emoji = teamFlagEmoji(teamId);
+        let cls = 'ko-chip';
+        if (opts.status === 'correct') cls += ' ko-chip-correct';
+        if (opts.status === 'wrong') cls += ' ko-chip-wrong';
+        if (opts.faded) cls += ' ko-chip-faded';
+        if (opts.champion) cls += ' ko-chip-champion';
+        return `<span class="${cls}" title="${teamId}${opts.roundLabel ? ' · ' + opts.roundLabel : ''}">`
+          + `<img class="flag-img" src="${flagUrl}" alt="${teamId}" loading="lazy" onerror="this.style.display='none'">`
+          + `<span class="flag-emoji">${emoji}</span>`
+          + `</span>`;
+      }
+
+      // Compact row of the 8 remaining KO picks: QF ×4 → SF ×2 → 3rd place → Champion.
+      // Picks are stored in fixed bracket-quadrant order, so positional mapping is reliable.
+      function koRemainingGamesRow(picks) {
+        const qfMatches = knockoutSchedule.filter(m => m.round === 'QF').sort((a, b) => a.seq - b.seq);
+        const sfMatches = knockoutSchedule.filter(m => m.round === 'SF').sort((a, b) => a.seq - b.seq);
+        const thirdMatch = knockoutSchedule.find(m => m.round === '3P');
+        const finalMatch = knockoutSchedule.find(m => m.round === 'F');
+
+        function chipFor(teamId, matchNumber, extraOpts) {
+          const result = matchNumber != null ? actualMatches.find(r => r.matchNumber === matchNumber) : null;
+          const isDone = result?.status === 'completed';
+          const opts = { ...extraOpts };
+          if (isDone && teamId) opts.status = (result.winnerId === teamId) ? 'correct' : 'wrong';
+          return koFlagChip(teamId, opts);
+        }
+
+        const qfChips = qfMatches.map((m, i) => chipFor((picks.qf || [])[i] || null, m.matchNumber, { roundLabel: 'QF' })).join('');
+        const sfChips = sfMatches.map((m, i) => chipFor((picks.sf || [])[i] || null, m.matchNumber, { roundLabel: 'SF' })).join('');
+        const thirdChip = chipFor(picks.third || null, thirdMatch?.matchNumber, { faded: true, roundLabel: '3rd Place' });
+        const finalChip = chipFor(picks.final || null, finalMatch?.matchNumber, { champion: true, roundLabel: 'Champion' });
+
+        const divider = '<span class="ko-chip-divider"></span>';
+        return `<div class="ko-remaining-row">${qfChips}${divider}${sfChips}${divider}${thirdChip}${finalChip}</div>`;
+      }
+
+      // Small badge showing an entry's best possible finish, from the Path to
+      // Victory scenario engine: gold 1 / silver 2 / bronze 3 / red ✕ (out of the money).
+      function bestOutcomeBadge(name, pathResult) {
+        if (!pathResult || pathResult.tooMany) {
+          return `<span class="ko-outlook-unknown" title="Too many games remain to calculate">–</span>`;
+        }
+        const st = pathResult.stats.get(name);
+        if (!st) return `<span class="ko-outlook-unknown">–</span>`;
+        if (st.canWin)  return `<span class="ko-outlook-badge ko-outlook-gold" title="Can still win it all">1</span>`;
+        if (st.canTop2) return `<span class="ko-outlook-badge ko-outlook-silver" title="Can still finish 2nd">2</span>`;
+        if (st.canTop3) return `<span class="ko-outlook-badge ko-outlook-bronze" title="Can still finish 3rd">3</span>`;
+        return `<span class="ko-outlook-badge ko-outlook-out" title="Mathematically eliminated from the money">✕</span>`;
       }
 
       // Calculate points for a bracket based on correct picks.
@@ -3023,10 +3263,9 @@
         // Get search filter value
         const searchTerm = document.getElementById("ko-search")?.value?.toLowerCase() || "";
 
-        // Current and following match sequences
+        // Current match sequence (used by the "click a team to filter" match-split bar)
         const current = getCurrentMatch();
         const currentSeq = current.seq;
-        const followingSeq = currentSeq + 1;
 
         // Compute eliminated set once for this render pass; zero wIndex so
         // eliminated teams don't inflate projected scores in rankings.
@@ -3077,25 +3316,22 @@
           return sum + done * pts;
         }, 0);
 
-        // Compute actual contestants for each match once (result-driven, no personal picks)
-        const actualSim = buildBracketSim({ r32: [], final: null });
+        // Best-possible-finish outlook badge — reuses the Path to Victory scenario
+        // engine, cached so repeated renders (search/sort) don't recompute it.
+        const pathResult = getPathToVictoryResult();
 
         // Render rows with ranking
         const rows = sortedEntries
           .map((item) => {
             const { entry, picks, earned, max, rank } = item;
-            const currentPick = getPickForSeq(picks, currentSeq, actualSim);
-            const followingPick = getPickForSeq(picks, followingSeq, actualSim);
-            const champ = picks.final || "—";
 
             return `<tr>
               <td style="font-weight:900;color:${rank <= 3 ? 'var(--wc-gold)' : 'var(--wc-muted)'};font-size:0.85rem;">${rank}</td>
               <td><strong>${entry.bracket_name}</strong></td>
+              <td style="text-align:center;">${bestOutcomeBadge(entry.bracket_name, pathResult)}</td>
               <td style="text-align:center;font-weight:bold;"><strong>${earned}</strong>/${inPlay}</td>
               <td style="text-align:center;color:var(--wc-muted);font-size:0.85rem;">${max}</td>
-              <td style="text-align:center;font-weight:bold;">${koTeamDisplay(currentPick)}</td>
-              <td style="text-align:center;">${koTeamDisplay(followingPick)}</td>
-              <td style="text-align:center;font-weight:bold;">${koTeamDisplay(champ)}</td>
+              <td style="text-align:center;">${koRemainingGamesRow(picks)}</td>
               <td style="text-align:center;">
                 <button class="ko-my-picks-btn" data-bracket-name="${entry.bracket_name}" style="padding:6px 12px;font-size:0.75rem;border:1px solid var(--wc-gold);background:var(--wc-panel);color:var(--wc-gold);border-radius:4px;cursor:pointer;font-weight:700;">My Picks</button>
               </td>
@@ -3398,6 +3634,292 @@
         return { simWinner, simLoser, simActT1, simActT2 };
       }
 
+      // ── Path to Victory ──────────────────────────────────────────
+      // Exhaustively enumerates every mathematically possible outcome of the
+      // remaining (undecided) KO matches and determines, for each entry,
+      // whether ANY self-consistent combination of results lets it finish
+      // 1st / top-2 / top-3. Generic across tournament stage — the number of
+      // "live" bits shrinks automatically as more results are confirmed.
+
+      const MAX_PATH_SCENARIOS = 16384; // 2^14 — stays well under a second in-browser
+
+      // Resolve every seq's contestants + winner for one hypothetical scenario.
+      // `bits[i]` (0 or 1) picks between the two contestants of the i-th
+      // still-undecided match, visited in seq order. Already-completed
+      // matches use their real result and consume no bit.
+      function resolveScenario(sortedKO, bits) {
+        const slotT1 = {}, slotT2 = {}, winner = {};
+        let bitIdx = 0;
+        for (const match of sortedKO) {
+          const result = actualMatches.find(r => r.matchNumber === match.matchNumber);
+          const isDone = result?.status === 'completed';
+          let t1, t2;
+          if (match.round === 'R32') {
+            t1 = match.team1; t2 = match.team2;
+          } else if (match.round === '3P') {
+            const sfSeqs = sortedKO.filter(m => m.round === 'SF').map(m => m.seq).sort((a, b) => a - b);
+            const loserOf = s => { const w = winner[s]; if (!w) return null; return w === slotT1[s] ? slotT2[s] : slotT1[s]; };
+            t1 = loserOf(sfSeqs[0]); t2 = loserOf(sfSeqs[1]);
+          } else if (match.round === 'F') {
+            const sfSeqs = sortedKO.filter(m => m.round === 'SF').map(m => m.seq).sort((a, b) => a - b);
+            t1 = winner[sfSeqs[0]] || null; t2 = winner[sfSeqs[1]] || null;
+          } else if (match.teamsKnown) {
+            t1 = match.team1; t2 = match.team2;
+          } else {
+            const PREV_ROUND = { R16: 'R32', QF: 'R16', SF: 'QF' };
+            const prevSeqs = new Set(sortedKO.filter(m => m.round === PREV_ROUND[match.round]).map(m => m.seq));
+            const t1Pool = match.team1.split('|'), t2Pool = match.team2.split('|');
+            let a = null, b = null;
+            for (const seqStr of Object.keys(winner)) {
+              const sn = Number(seqStr);
+              if (!prevSeqs.has(sn)) continue;
+              const w = winner[sn];
+              if (!a && t1Pool.includes(w)) a = w;
+              if (!b && t2Pool.includes(w)) b = w;
+            }
+            t1 = a; t2 = b;
+          }
+          slotT1[match.seq] = t1; slotT2[match.seq] = t2;
+
+          let w = null;
+          if (isDone) {
+            w = result.winnerId;
+          } else if (t1 && t2) {
+            w = bits[bitIdx] === 0 ? t1 : t2;
+            bitIdx++;
+          } else if (t1 && !t2) {
+            w = t1;
+          }
+          if (w) winner[match.seq] = w;
+        }
+        return { slotT1, slotT2, winner, liveCount: bitIdx };
+      }
+
+      function computePathToVictory() {
+        const sortedKO = [...knockoutSchedule].sort((a, b) => a.seq - b.seq);
+        const seqToMatchNum = new Map(sortedKO.map(m => [m.seq, m.matchNumber]));
+
+        // How many undecided matches (both contestants known, not yet completed)?
+        const probe = resolveScenario(sortedKO, []);
+        const liveCount = probe.liveCount;
+        if (Math.pow(2, liveCount) > MAX_PATH_SCENARIOS) {
+          return { tooMany: true, liveCount };
+        }
+
+        const baseline = koEntries.map(e => ({
+          entry: e,
+          picks: e.bracket_picks || {},
+        }));
+
+        const rounds = KO_ROUND_SCORING;
+        function pointsForScenario(picks, winnerByMatchNum) {
+          let earned = 0;
+          for (const { key, koRound, pts, single } of rounds) {
+            const teams = single ? (picks[key] ? [picks[key]] : []) : (picks[key] || []);
+            const matchNums = KO_ROUND_MATCH_NUMS[koRound] || [];
+            for (const teamId of teams) {
+              if (matchNums.some(mn => winnerByMatchNum[mn] === teamId)) earned += pts;
+            }
+          }
+          return earned;
+        }
+
+        function rankEntries(totals) {
+          const sorted = [...totals].sort((a, b) => b.pts - a.pts);
+          let rank = 1;
+          const out = [];
+          for (let i = 0; i < sorted.length; i++) {
+            if (i > 0 && sorted[i].pts !== sorted[i - 1].pts) rank = i + 1;
+            out.push({ ...sorted[i], rank });
+          }
+          return out;
+        }
+
+        const stats = new Map(baseline.map(b => [b.entry.bracket_name, {
+          name: b.entry.bracket_name,
+          bestRank: Infinity, worstRank: -Infinity,
+          canWin: false, canTop2: false, canTop3: false,
+          bestBits: null, bestPts: -Infinity,
+        }]));
+
+        const total = Math.pow(2, liveCount);
+        for (let s = 0; s < total; s++) {
+          const bits = [];
+          for (let i = 0; i < liveCount; i++) bits.push((s >> i) & 1);
+          const { winner } = resolveScenario(sortedKO, bits);
+          const winnerByMatchNum = {};
+          for (const [seq, w] of Object.entries(winner)) winnerByMatchNum[seqToMatchNum.get(Number(seq))] = w;
+
+          const totals = baseline.map(b => ({ name: b.entry.bracket_name, pts: pointsForScenario(b.picks, winnerByMatchNum) }));
+          const ranked = rankEntries(totals);
+
+          for (const r of ranked) {
+            const st = stats.get(r.name);
+            if (r.rank < st.bestRank) { st.bestRank = r.rank; st.bestBits = bits; st.bestPts = r.pts; }
+            if (r.rank > st.worstRank) st.worstRank = r.rank;
+            if (r.rank === 1) st.canWin = true;
+            if (r.rank <= 2) st.canTop2 = true;
+            if (r.rank <= 3) st.canTop3 = true;
+          }
+        }
+
+        return { tooMany: false, liveCount, stats, sortedKO, seqToMatchNum };
+      }
+
+      // Cache — recomputed only when the tab is opened or results change while it's active.
+      let pathToVictoryCache = null;
+
+      // Compute-and-cache, but never lock in a "tooMany" snapshot: that can happen
+      // transiently if this runs before official results have finished loading
+      // (e.g. the very first render), and we want the next call to retry rather
+      // than get stuck showing "–" forever.
+      function getPathToVictoryResult() {
+        if (pathToVictoryCache) return pathToVictoryCache;
+        const result = computePathToVictory();
+        if (!result.tooMany) pathToVictoryCache = result;
+        return result;
+      }
+
+      function describePathScenario(sortedKO, bits) {
+        const { winner } = resolveScenario(sortedKO, bits);
+        const parts = [];
+        for (const match of sortedKO) {
+          if (KO_ROUND_MATCH_NUMS['R32']?.includes(match.matchNumber)) continue;
+          if (KO_ROUND_MATCH_NUMS['R16']?.includes(match.matchNumber)) continue;
+          const result = actualMatches.find(r => r.matchNumber === match.matchNumber);
+          if (result?.status === 'completed') continue; // only describe the hypothetical part
+          const w = winner[match.seq];
+          if (!w) continue;
+          const roundLabel = { QF: 'QF', SF: 'SF', '3P': '3rd place', F: 'Champion' }[match.round] || match.round;
+          parts.push({ round: match.round, label: roundLabel, winner: w, matchNumber: match.matchNumber });
+        }
+        return parts;
+      }
+
+      function renderPathToVictory() {
+        const vis = document.getElementById('ko-path-vis');
+        if (!vis) return;
+        if (!koEntries.length) { vis.innerHTML = '<p style="color:var(--wc-muted);">Loading entries…</p>'; return; }
+
+        const result = getPathToVictoryResult();
+
+        if (result.tooMany) {
+          vis.innerHTML = `<p style="color:var(--wc-muted);font-size:0.85rem;">
+            Too many games remain undecided (${result.liveCount}) to run an exhaustive simulation in-browser.
+            Check back once fewer games remain — this becomes exact once we're deeper into the knockout rounds.
+          </p>`;
+          return;
+        }
+
+        const { stats, sortedKO } = result;
+        const all = [...stats.values()];
+        const canWinCount = all.filter(e => e.canWin).length;
+        const canTop3Count = all.filter(e => e.canTop3).length;
+        const eliminatedCount = all.length - canTop3Count;
+
+        function statusBadge(st) {
+          if (st.canWin)  return `<span style="background:rgba(244,201,93,0.16);color:var(--wc-gold);border:1px solid rgba(244,201,93,0.4);border-radius:5px;padding:3px 9px;font-size:0.68rem;font-weight:800;white-space:nowrap;">🏆 Can Win</span>`;
+          if (st.canTop2) return `<span style="background:rgba(192,192,192,0.14);color:#dcdcdc;border:1px solid rgba(220,220,220,0.35);border-radius:5px;padding:3px 9px;font-size:0.68rem;font-weight:800;white-space:nowrap;">🥈 Top 2</span>`;
+          if (st.canTop3) return `<span style="background:rgba(205,127,50,0.16);color:#e0a06e;border:1px solid rgba(205,127,50,0.4);border-radius:5px;padding:3px 9px;font-size:0.68rem;font-weight:800;white-space:nowrap;">🥉 Top 3</span>`;
+          return `<span style="background:rgba(255,93,93,0.12);color:#ff8a8a;border:1px solid rgba(255,93,93,0.3);border-radius:5px;padding:3px 9px;font-size:0.68rem;font-weight:800;white-space:nowrap;">❌ Eliminated</span>`;
+        }
+
+        // Sort: alive-for-1st first, then alive-for-top2, then alive-for-top3, then eliminated;
+        // within each group by best rank then current pool rank.
+        const koRanked = [...koEntries].map(e => {
+          const picks = e.bracket_picks || {};
+          const eliminated = getKoEliminatedTeams();
+          const { earned } = calculateKoPoints(picks, eliminated);
+          return { name: e.bracket_name, earned };
+        }).sort((a, b) => b.earned - a.earned);
+        const earnedByName = new Map(koRanked.map(r => [r.name, r.earned]));
+
+        const groupRank = st => st.canWin ? 0 : st.canTop2 ? 1 : st.canTop3 ? 2 : 3;
+        const sortedStats = all.sort((a, b) => groupRank(a) - groupRank(b) || a.bestRank - b.bestRank || (earnedByName.get(b.name) - earnedByName.get(a.name)));
+
+        const rows = sortedStats.map(st => {
+          const earned = earnedByName.get(st.name) || 0;
+          return `<tr>
+            <td style="padding:8px 10px;">${statusBadge(st)}</td>
+            <td style="padding:8px 10px;"><strong>${st.name}</strong></td>
+            <td style="padding:8px 10px;text-align:center;font-weight:700;">${earned}</td>
+            <td style="padding:8px 10px;text-align:center;color:var(--wc-muted);">${st.bestRank === Infinity ? '—' : st.bestRank}</td>
+            <td style="padding:8px 10px;text-align:center;">
+              <button class="ko-path-view-btn" data-name="${st.name.replace(/"/g, '&quot;')}" style="padding:5px 11px;font-size:0.72rem;border:1px solid var(--wc-gold);background:var(--wc-panel);color:var(--wc-gold);border-radius:4px;cursor:pointer;font-weight:700;">View Path</button>
+            </td>
+          </tr>`;
+        }).join('');
+
+        vis.innerHTML = `
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">
+            <div class="wc-stat" style="border-color:rgba(244,201,93,0.4);background:rgba(244,201,93,0.06);"><strong style="color:var(--wc-gold);">${canWinCount}</strong><span>Can still win it all</span></div>
+            <div class="wc-stat"><strong>${canTop3Count}</strong><span>Have a path to money</span></div>
+            <div class="wc-stat"><strong style="color:#ff8a8a;">${eliminatedCount}</strong><span>Mathematically out</span></div>
+          </div>
+          <div class="leaderboard-table-wrap">
+            <table class="wc-path-table">
+              <thead>
+                <tr>
+                  <th>Status</th>
+                  <th>Bracket</th>
+                  <th style="text-align:center;">Points</th>
+                  <th style="text-align:center;">Best Rank</th>
+                  <th style="text-align:center;">Details</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+
+        vis.querySelectorAll('.ko-path-view-btn').forEach(btn => {
+          btn.addEventListener('click', () => showPathModal(btn.dataset.name, result));
+        });
+      }
+
+      function showPathModal(name, result) {
+        const st = result.stats.get(name);
+        if (!st) return;
+        const title = document.getElementById('ko-path-bracket-name');
+        const content = document.getElementById('ko-path-content');
+        const modal = document.getElementById('ko-path-modal');
+        title.textContent = `${name}'s Path`;
+
+        if (!st.bestBits) {
+          content.innerHTML = `<p style="color:var(--wc-muted);">No remaining scenario improves this bracket's position — every game left to play is already accounted for.</p>`;
+          modal.style.display = 'block';
+          return;
+        }
+
+        const headline = st.canWin
+          ? `Can still finish <strong style="color:var(--wc-gold);">1st place</strong> 🏆`
+          : st.canTop2
+          ? `Can still finish <strong style="color:#dcdcdc;">2nd place</strong> (best case)`
+          : st.canTop3
+          ? `Can still finish <strong style="color:#e0a06e;">3rd place</strong> (best case)`
+          : `Best possible finish: <strong style="color:#ff8a8a;">rank ${st.bestRank}</strong> — mathematically out of the money`;
+
+        const parts = describePathScenario(result.sortedKO, st.bestBits);
+        const ROUND_ORDER = { QF: 0, SF: 1, '3P': 2, F: 3 };
+        parts.sort((a, b) => ROUND_ORDER[a.round] - ROUND_ORDER[b.round]);
+        const ROUND_LABEL = { QF: 'Quarterfinal', SF: 'Semifinal', '3P': '3rd Place', F: 'Final (Champion)' };
+
+        const stepsHtml = parts.length
+          ? parts.map(p => `<li style="margin-bottom:6px;"><span style="color:var(--wc-muted);">${ROUND_LABEL[p.round]}:</span> <strong style="color:var(--wc-ink);">${koTeamDisplay(p.winner)}</strong> wins</li>`).join('')
+          : `<li style="color:var(--wc-muted);">All remaining results are already locked in.</li>`;
+
+        content.innerHTML = `
+          <p style="font-size:0.95rem;margin:0 0 16px;">${headline}</p>
+          <p style="font-size:0.75rem;color:var(--wc-muted);text-transform:uppercase;font-weight:800;letter-spacing:0.05em;margin:0 0 8px;">Requires this outcome:</p>
+          <ul style="list-style:none;padding:0;margin:0 0 4px;font-size:0.9rem;">${stepsHtml}</ul>
+        `;
+        modal.style.display = 'block';
+      }
+
+      function closePathModal() {
+        document.getElementById('ko-path-modal').style.display = 'none';
+      }
+
       window.setKoChampFilter = function(teamId) {
         koChampFilter = (koChampFilter === teamId) ? null : teamId;
         renderKoPool();
@@ -3659,7 +4181,9 @@
       // Modal close handlers
       document.getElementById("ko-picks-close").addEventListener("click", closePicksModal);
       document.getElementById("ko-picks-close-btn").addEventListener("click", closePicksModal);
-      document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePicksModal(); });
+      document.getElementById("ko-path-close").addEventListener("click", closePathModal);
+      document.getElementById("ko-path-close-btn").addEventListener("click", closePathModal);
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closePicksModal(); closePathModal(); } });
 
       document.getElementById("ko-picks-download").addEventListener("click", downloadMyPicksBracket);
 
@@ -3682,6 +4206,14 @@
             renderKoBracket();
           } else if (btn.dataset.tab === "ko-schedule") {
             renderSchedule();
+          } else if (btn.dataset.tab === "ko-path") {
+            pathToVictoryCache = null; // always recompute fresh when the tab is opened
+            if (koLoaded) {
+              renderPathToVictory();
+            } else {
+              document.getElementById('ko-path-vis').innerHTML = 'Loading…';
+              loadKoEntries().then(renderPathToVictory);
+            }
           } else if (btn.dataset.tab === "ko-match-center") {
             const unlock = () => {
               // Always refresh official results before displaying the form,
@@ -4156,8 +4688,12 @@
       // Initialize
       // Let refreshOfficialResults re-render the KO Pool table when results change.
       koRerenderHook = () => {
+        // Clear BEFORE re-rendering so renderKoPool's Outlook badges pick up
+        // fresh data — not the (possibly incomplete-data) previous snapshot.
+        pathToVictoryCache = null;
         renderKoPool(); renderKoBracket(); renderSchedule();
         if(_bracketView==='circle') renderCircleBracket();
+        if (document.getElementById('panel-ko-path')?.classList.contains('active')) renderPathToVictory();
       };
       loadWIndexFeed();
       // KO Pool is the default active tab — load its entries immediately

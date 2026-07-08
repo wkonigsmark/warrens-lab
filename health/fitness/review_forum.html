@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workout Review Forum | Multi-AI Debate</title>
+  <meta name="description" content="A multi-AI debate forum for reviewing and improving workout program designs. Compare feedback from Antigravity, ChatGPT, and Claude.">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#0a0a0a;--surface:#111;--card:#181818;--card-hover:#1e1e1e;
+      --border:#272727;--border-light:#333;
+      --accent:#f97316;--accent-dim:rgba(249,115,22,.12);
+      --gold:#fbbf24;--gold-dim:rgba(251,191,36,.1);
+      --green:#4ade80;--green-dim:rgba(74,222,128,.12);
+      --red:#f87171;--red-dim:rgba(248,113,113,.1);
+      --blue:#60a5fa;--blue-dim:rgba(96,165,250,.1);
+      --teal:#2dd4bf;--teal-dim:rgba(45,212,191,.12);
+      --purple:#a78bfa;--purple-dim:rgba(167,139,250,.1);
+      --text:#f0f0f0;--muted:#555;--muted-light:#888;
+      --radius:12px;--radius-sm:8px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:'Outfit',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar{width:6px;height:6px}
+    ::-webkit-scrollbar-track{background:var(--bg)}
+    ::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px}
+    ::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+
+    /* ── HEADER ── */
+    .app-header{
+      background:var(--surface);border-bottom:1px solid var(--border);
+      padding:14px 20px;display:flex;align-items:center;gap:14px;
+      position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);
+      background:rgba(17,17,17,.85);
+    }
+    .brand{flex-shrink:0}
+    .brand-super{font-size:.56rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted-light);font-weight:800}
+    .brand-title{font-size:1.05rem;font-weight:900;letter-spacing:-.01em}
+    .brand-title span{color:var(--accent)}
+    .brand-title .brand-forum{color:var(--purple)}
+    .header-stats{display:flex;gap:16px;margin-left:auto}
+    .header-stat{text-align:center}
+    .header-stat-val{font-size:1.1rem;font-weight:900;color:var(--accent)}
+    .header-stat-label{font-size:.55rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-light);font-weight:700}
+    .header-actions{display:flex;gap:8px;margin-left:16px}
+
+    /* ── BUTTONS ── */
+    .btn{
+      background:var(--card);border:1px solid var(--border);color:var(--muted-light);
+      padding:7px 14px;border-radius:var(--radius-sm);font-family:inherit;
+      font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s;
+      display:inline-flex;align-items:center;gap:5px;
+    }
+    .btn:hover{background:var(--card-hover);border-color:var(--accent);color:var(--accent)}
+    .btn-primary{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+    .btn-primary:hover{background:var(--accent);color:#0a0a0a}
+    .btn-green{background:var(--green-dim);border-color:rgba(74,222,128,.3);color:var(--green)}
+    .btn-green:hover{background:var(--green);color:#0a0a0a}
+    .btn-red{background:var(--red-dim);border-color:rgba(248,113,113,.3);color:var(--red)}
+    .btn-red:hover{background:var(--red);color:#0a0a0a}
+    .btn-gold{background:var(--gold-dim);border-color:rgba(251,191,36,.3);color:var(--gold)}
+    .btn-gold:hover{background:var(--gold);color:#0a0a0a}
+    .btn-sm{padding:5px 10px;font-size:.65rem}
+    .btn-icon{padding:6px 8px;font-size:.85rem}
+
+    /* ── LAYOUT ── */
+    .container{max-width:1100px;margin:0 auto;padding:16px}
+    .grid-main{display:grid;grid-template-columns:320px 1fr;gap:16px;align-items:start}
+    @media(max-width:800px){.grid-main{grid-template-columns:1fr}}
+
+    /* ── SIDEBAR ── */
+    .sidebar{position:sticky;top:70px}
+    .sidebar-section{
+      background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+      padding:16px;margin-bottom:12px;
+    }
+    .sidebar-title{
+      font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+      color:var(--muted-light);margin-bottom:12px;display:flex;align-items:center;gap:6px;
+    }
+    .workout-list{display:flex;flex-direction:column;gap:4px}
+    .workout-item{
+      padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;
+      transition:all .2s;border:1px solid transparent;display:flex;align-items:center;gap:10px;
+    }
+    .workout-item:hover{background:var(--card-hover);border-color:var(--border-light)}
+    .workout-item.active{background:var(--accent-dim);border-color:var(--accent)}
+    .workout-item.active .wi-name{color:var(--accent)}
+    .wi-emoji{font-size:1.1rem;flex-shrink:0}
+    .wi-info{flex:1;min-width:0}
+    .wi-name{font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .wi-meta{font-size:.6rem;color:var(--muted-light);font-weight:600;margin-top:1px}
+    .wi-badge{
+      font-size:.55rem;font-weight:800;padding:2px 6px;border-radius:4px;text-transform:uppercase;
+      letter-spacing:.04em;flex-shrink:0;
+    }
+    .wi-badge.has-reviews{background:var(--accent-dim);color:var(--accent)}
+    .wi-badge.no-reviews{background:var(--card);color:var(--muted)}
+
+    /* Mode filter */
+    .mode-filter{display:flex;gap:4px;margin-bottom:12px}
+    .mode-filter-btn{
+      flex:1;padding:6px;border-radius:var(--radius-sm);border:1px solid var(--border);
+      background:var(--card);color:var(--muted-light);font-family:inherit;
+      font-size:.65rem;font-weight:800;cursor:pointer;transition:all .2s;text-align:center;
+    }
+    .mode-filter-btn:hover{border-color:var(--border-light);color:var(--text)}
+    .mode-filter-btn.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+    .mode-filter-btn.active.cal{border-color:var(--blue);background:var(--blue-dim);color:var(--blue)}
+    .mode-filter-btn.active.tri{border-color:var(--teal);background:var(--teal-dim);color:var(--teal)}
+
+    /* ── MAIN CONTENT ── */
+    .main-panel{min-width:0}
+
+    /* Workout Viewer */
+    .workout-viewer{
+      background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+      padding:18px;margin-bottom:14px;
+    }
+    .wv-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    .wv-icon{font-size:1.8rem}
+    .wv-title{font-size:1.2rem;font-weight:900}
+    .wv-mode-badge{
+      font-size:.6rem;font-weight:800;padding:3px 8px;border-radius:6px;
+      text-transform:uppercase;letter-spacing:.06em;margin-left:auto;
+    }
+    .wv-mode-badge.dumbbell{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(249,115,22,.25)}
+    .wv-mode-badge.calisthenics{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(96,165,250,.25)}
+    .wv-mode-badge.cardio{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(45,212,191,.25)}
+    .wv-readonly{
+      display:inline-flex;align-items:center;gap:4px;font-size:.58rem;font-weight:700;
+      color:var(--muted);background:var(--surface);padding:3px 8px;border-radius:5px;
+      border:1px solid var(--border);margin-left:8px;
+    }
+    .wv-sections{display:flex;flex-direction:column;gap:10px}
+    .wv-section{
+      background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+      overflow:hidden;
+    }
+    .wv-section-header{
+      padding:10px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;
+      transition:background .2s;
+    }
+    .wv-section-header:hover{background:var(--card-hover)}
+    .wv-section-emoji{font-size:1rem}
+    .wv-section-name{font-size:.78rem;font-weight:800;flex:1}
+    .wv-section-meta{font-size:.6rem;color:var(--muted-light);font-weight:600}
+    .wv-section-chevron{color:var(--muted);font-size:.7rem;transition:transform .2s}
+    .wv-section.open .wv-section-chevron{transform:rotate(90deg)}
+    .wv-exercises{padding:0 14px 12px;display:none}
+    .wv-section.open .wv-exercises{display:block}
+    .wv-exercise{
+      padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;
+      font-size:.74rem;
+    }
+    .wv-exercise:last-child{border-bottom:none}
+    .wv-ex-name{font-weight:700;flex:1}
+    .wv-ex-detail{color:var(--muted-light);font-weight:500}
+    .wv-ex-sets{
+      font-size:.6rem;font-weight:800;color:var(--accent);background:var(--accent-dim);
+      padding:2px 6px;border-radius:4px;
+    }
+    .wv-ex-muscles{display:flex;gap:3px;flex-wrap:wrap}
+    .wv-muscle-tag{
+      font-size:.52rem;font-weight:700;padding:2px 5px;border-radius:3px;
+      background:var(--card);color:var(--muted-light);border:1px solid var(--border);
+      text-transform:uppercase;letter-spacing:.03em;
+    }
+
+    /* Cardio viewer */
+    .wv-cardio-info{padding:14px}
+    .wv-cardio-stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+    .wv-cardio-stat{
+      background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+      padding:8px 12px;flex:1;min-width:100px;
+    }
+    .wv-cardio-stat-label{font-size:.55rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+    .wv-cardio-stat-val{font-size:.85rem;font-weight:800;margin-top:2px}
+    .wv-cardio-desc{
+      font-size:.76rem;color:var(--muted-light);line-height:1.6;
+      padding:12px 14px;background:var(--surface);border-radius:var(--radius-sm);
+      border-left:3px solid var(--teal);margin-bottom:12px;
+    }
+    .wv-cardio-focuses{display:flex;flex-direction:column;gap:6px}
+    .wv-cardio-focus{display:flex;gap:8px;font-size:.74rem;color:var(--muted-light);align-items:flex-start}
+    .wv-cardio-focus-icon{font-size:.9rem;flex-shrink:0}
+
+    /* ── REVIEW TABS ── */
+    .reviews-panel{
+      background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+      overflow:hidden;margin-bottom:14px;
+    }
+    .reviews-header{
+      padding:14px 18px;display:flex;align-items:center;gap:12px;
+      border-bottom:1px solid var(--border);
+    }
+    .reviews-title{font-size:.82rem;font-weight:800;flex:1}
+    .reviews-count{
+      font-size:.6rem;font-weight:800;background:var(--accent-dim);color:var(--accent);
+      padding:2px 7px;border-radius:10px;
+    }
+    .reviewer-tabs{display:flex;gap:0;border-bottom:1px solid var(--border)}
+    .reviewer-tab{
+      flex:1;padding:10px 14px;text-align:center;cursor:pointer;transition:all .2s;
+      border-bottom:2px solid transparent;
+    }
+    .reviewer-tab:hover{background:var(--card-hover)}
+    .reviewer-tab.active{border-bottom-color:var(--accent);background:var(--accent-dim)}
+    .reviewer-tab-name{font-size:.72rem;font-weight:800}
+    .reviewer-tab-count{font-size:.58rem;color:var(--muted-light);font-weight:600;margin-top:2px}
+    .reviewer-tab.antigravity .reviewer-tab-name{color:var(--purple)}
+    .reviewer-tab.antigravity.active{border-bottom-color:var(--purple);background:var(--purple-dim)}
+    .reviewer-tab.chatgpt .reviewer-tab-name{color:var(--green)}
+    .reviewer-tab.chatgpt.active{border-bottom-color:var(--green);background:var(--green-dim)}
+    .reviewer-tab.claude .reviewer-tab-name{color:var(--gold)}
+    .reviewer-tab.claude.active{border-bottom-color:var(--gold);background:var(--gold-dim)}
+    .reviewer-tab.consensus .reviewer-tab-name{color:var(--teal)}
+    .reviewer-tab.consensus.active{border-bottom-color:var(--teal);background:var(--teal-dim)}
+
+    /* Review content */
+    .review-content{padding:16px 18px}
+    .review-empty{
+      text-align:center;padding:40px 20px;color:var(--muted);
+    }
+    .review-empty-icon{font-size:2rem;margin-bottom:8px}
+    .review-empty-text{font-size:.82rem;font-weight:600;margin-bottom:4px}
+    .review-empty-sub{font-size:.68rem;color:var(--muted)}
+
+    /* Review cards */
+    .review-card{
+      background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+      margin-bottom:10px;overflow:hidden;transition:border-color .2s;
+    }
+    .review-card:hover{border-color:var(--border-light)}
+    .review-card.severity-endorse{border-left:3px solid var(--green)}
+    .review-card.severity-suggestion{border-left:3px solid var(--gold)}
+    .review-card.severity-concern{border-left:3px solid var(--red)}
+    .rc-header{padding:12px 14px;display:flex;align-items:flex-start;gap:10px}
+    .rc-severity{
+      font-size:.58rem;font-weight:800;padding:3px 7px;border-radius:5px;
+      text-transform:uppercase;letter-spacing:.05em;flex-shrink:0;margin-top:1px;
+    }
+    .rc-severity.endorse{background:var(--green-dim);color:var(--green)}
+    .rc-severity.suggestion{background:var(--gold-dim);color:var(--gold)}
+    .rc-severity.concern{background:var(--red-dim);color:var(--red)}
+    .rc-title{font-size:.82rem;font-weight:800;flex:1;line-height:1.4}
+    .rc-body{padding:0 14px 12px;font-size:.74rem;color:var(--muted-light);line-height:1.7}
+    .rc-exercises{
+      margin:8px 0;display:flex;flex-wrap:wrap;gap:4px;
+    }
+    .rc-exercise-tag{
+      font-size:.58rem;font-weight:700;padding:2px 6px;border-radius:4px;
+      background:var(--card);color:var(--text);border:1px solid var(--border);
+    }
+    .rc-footer{
+      padding:10px 14px;border-top:1px solid var(--border);
+      display:flex;align-items:center;gap:8px;
+    }
+    .rc-decision{display:flex;gap:4px}
+    .rc-decision-btn{
+      padding:4px 10px;border-radius:5px;border:1px solid var(--border);
+      background:var(--card);color:var(--muted-light);font-family:inherit;
+      font-size:.6rem;font-weight:800;cursor:pointer;transition:all .2s;
+      text-transform:uppercase;letter-spacing:.04em;
+    }
+    .rc-decision-btn:hover{color:var(--text);border-color:var(--border-light)}
+    .rc-decision-btn.accepted{background:var(--green-dim);border-color:var(--green);color:var(--green)}
+    .rc-decision-btn.rejected{background:var(--red-dim);border-color:var(--red);color:var(--red)}
+    .rc-decision-btn.deferred{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+    .rc-timestamp{font-size:.58rem;color:var(--muted);margin-left:auto;font-weight:600}
+
+    /* Debate thread */
+    .rc-thread-toggle{
+      font-size:.62rem;font-weight:700;color:var(--blue);cursor:pointer;
+      padding:6px 14px;display:flex;align-items:center;gap:4px;transition:color .2s;
+    }
+    .rc-thread-toggle:hover{color:var(--text)}
+    .rc-thread{display:none;padding:0 14px 12px}
+    .rc-thread.open{display:block}
+    .thread-msg{
+      padding:10px 12px;border-radius:var(--radius-sm);margin-bottom:6px;
+      font-size:.72rem;line-height:1.6;
+    }
+    .thread-msg.from-antigravity{background:var(--purple-dim);border:1px solid rgba(167,139,250,.15)}
+    .thread-msg.from-chatgpt{background:var(--green-dim);border:1px solid rgba(74,222,128,.15)}
+    .thread-msg.from-claude{background:var(--gold-dim);border:1px solid rgba(251,191,36,.15)}
+    .thread-msg.from-user{background:var(--accent-dim);border:1px solid rgba(249,115,22,.15)}
+    .thread-msg-source{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+    .thread-msg-text{color:var(--muted-light)}
+    .thread-input-row{display:flex;gap:6px;margin-top:8px}
+    .thread-input{
+      flex:1;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);
+      color:var(--text);font-family:inherit;font-size:.72rem;padding:8px 10px;resize:vertical;
+      min-height:60px;
+    }
+    .thread-input:focus{outline:none;border-color:var(--accent)}
+    .thread-source-select{
+      background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);
+      color:var(--text);font-family:inherit;font-size:.65rem;font-weight:700;
+      padding:6px 8px;width:120px;
+    }
+    .thread-source-select:focus{outline:none;border-color:var(--accent)}
+
+    /* ── ADD REVIEW FORM ── */
+    .add-review{
+      background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+      padding:18px;margin-bottom:14px;
+    }
+    .add-review-title{
+      font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+      color:var(--muted-light);margin-bottom:14px;display:flex;align-items:center;gap:6px;
+    }
+    .form-row{display:flex;gap:10px;margin-bottom:10px}
+    .form-group{flex:1;display:flex;flex-direction:column;gap:4px}
+    .form-label{font-size:.6rem;font-weight:800;color:var(--muted-light);text-transform:uppercase;letter-spacing:.06em}
+    .form-input,.form-select,.form-textarea{
+      background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+      color:var(--text);font-family:inherit;font-size:.76rem;padding:8px 10px;
+    }
+    .form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:var(--accent)}
+    .form-textarea{resize:vertical;min-height:80px;line-height:1.6}
+
+    /* ── DECISION LOG ── */
+    .decision-log{
+      background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+      padding:18px;margin-bottom:14px;
+    }
+    .dl-title{
+      font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+      color:var(--muted-light);margin-bottom:14px;display:flex;align-items:center;gap:6px;
+    }
+    .dl-item{
+      display:flex;align-items:center;gap:10px;padding:8px 0;
+      border-bottom:1px solid var(--border);font-size:.72rem;
+    }
+    .dl-item:last-child{border-bottom:none}
+    .dl-status{
+      font-size:.55rem;font-weight:800;padding:3px 7px;border-radius:5px;
+      text-transform:uppercase;letter-spacing:.04em;flex-shrink:0;
+    }
+    .dl-status.accepted{background:var(--green-dim);color:var(--green)}
+    .dl-status.rejected{background:var(--red-dim);color:var(--red)}
+    .dl-status.deferred{background:var(--gold-dim);color:var(--gold)}
+    .dl-text{flex:1;font-weight:600}
+    .dl-source{font-size:.58rem;color:var(--muted);font-weight:700}
+    .dl-date{font-size:.58rem;color:var(--muted)}
+
+    /* ── CHANGE QUEUE ── */
+    .change-queue{
+      background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+      padding:18px;margin-bottom:14px;
+    }
+    .cq-title{
+      font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+      color:var(--muted-light);margin-bottom:14px;display:flex;align-items:center;gap:6px;
+    }
+    .cq-empty{font-size:.74rem;color:var(--muted);padding:20px 0;text-align:center}
+    .cq-item{
+      padding:12px;background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--radius-sm);margin-bottom:8px;
+    }
+    .cq-item-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+    .cq-item-workout{font-size:.68rem;font-weight:800;color:var(--accent)}
+    .cq-item-source{font-size:.55rem;font-weight:700;color:var(--muted);text-transform:uppercase}
+    .cq-item-text{font-size:.72rem;color:var(--muted-light);line-height:1.5}
+
+    /* ── PROMPT GENERATOR ── */
+    .prompt-gen{
+      background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+      padding:18px;margin-bottom:14px;
+    }
+    .prompt-gen-title{
+      font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+      color:var(--muted-light);margin-bottom:14px;display:flex;align-items:center;gap:6px;
+    }
+    .prompt-output{
+      background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+      padding:12px;font-size:.7rem;color:var(--muted-light);line-height:1.7;
+      max-height:300px;overflow-y:auto;white-space:pre-wrap;font-family:'Outfit',sans-serif;
+    }
+
+    /* ── TOAST ── */
+    .toast{
+      position:fixed;bottom:20px;right:20px;background:var(--card);border:1px solid var(--accent);
+      border-radius:var(--radius-sm);padding:10px 16px;font-size:.74rem;font-weight:700;
+      color:var(--accent);z-index:200;transform:translateY(80px);opacity:0;
+      transition:all .3s ease;pointer-events:none;
+    }
+    .toast.visible{transform:translateY(0);opacity:1}
+
+    /* ── MODAL ── */
+    .modal-overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:150;
+      display:none;align-items:center;justify-content:center;padding:20px;
+    }
+    .modal-overlay.open{display:flex}
+    .modal{
+      background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+      padding:24px;max-width:600px;width:100%;max-height:80vh;overflow-y:auto;
+    }
+    .modal-title{font-size:1rem;font-weight:900;margin-bottom:16px}
+    .modal-close{
+      position:absolute;top:16px;right:16px;background:none;border:none;
+      color:var(--muted);font-size:1.2rem;cursor:pointer;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in{animation:fadeIn .3s ease}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .pulse{animation:pulse 2s ease infinite}
+  </style>
+</head>
+<body>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header class="app-header">
+  <div class="brand">
+    <div class="brand-super">Fitness Lab</div>
+    <div class="brand-title">Workout <span>Review</span> <span class="brand-forum">Forum</span></div>
+  </div>
+  <div class="header-stats">
+    <div class="header-stat">
+      <div class="header-stat-val" id="statReviews">0</div>
+      <div class="header-stat-label">Reviews</div>
+    </div>
+    <div class="header-stat">
+      <div class="header-stat-val" id="statDecisions">0</div>
+      <div class="header-stat-label">Decisions</div>
+    </div>
+    <div class="header-stat">
+      <div class="header-stat-val" id="statQueued">0</div>
+      <div class="header-stat-label">Queued</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-sm" onclick="exportData()" title="Export all data">📤 Export</button>
+    <button class="btn btn-sm" onclick="document.getElementById('importFile').click()" title="Import data">📥 Import</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+    <button class="btn btn-sm btn-red" onclick="clearAllData()" title="Clear all reviews">🗑️ Clear</button>
+  </div>
+</header>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="container">
+  <div class="grid-main">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">📋 Workout Programs</div>
+        <div class="mode-filter">
+          <button class="mode-filter-btn active" onclick="filterMode('all',this)">All</button>
+          <button class="mode-filter-btn" onclick="filterMode('dumbbell',this)">🏋️ DB</button>
+          <button class="mode-filter-btn" onclick="filterMode('calisthenics',this)">🤸 BW</button>
+          <button class="mode-filter-btn" onclick="filterMode('cardio',this)">🏃 Cardio</button>
+        </div>
+        <div class="workout-list" id="workoutList"></div>
+      </div>
+
+      <!-- Prompt Generator -->
+      <div class="sidebar-section">
+        <div class="sidebar-title">🤖 AI Prompt Generator</div>
+        <p style="font-size:.68rem;color:var(--muted-light);margin-bottom:10px;line-height:1.5">
+          Copy this prompt into ChatGPT or Claude to get their review of the selected workout.
+        </p>
+        <button class="btn btn-primary btn-sm" onclick="generatePrompt()" style="width:100%;justify-content:center;margin-bottom:10px">
+          ✨ Generate Prompt
+        </button>
+        <div class="prompt-output" id="promptOutput" style="display:none"></div>
+        <button class="btn btn-sm" id="copyPromptBtn" onclick="copyPrompt()" style="display:none;width:100%;justify-content:center;margin-top:6px">
+          📋 Copy to Clipboard
+        </button>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="sidebar-section">
+        <div class="sidebar-title">📊 Consensus Summary</div>
+        <div id="consensusSummary" style="font-size:.72rem;color:var(--muted-light);line-height:1.6">
+          Select a workout to see consensus across AI reviewers.
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── MAIN PANEL ── -->
+    <div class="main-panel">
+      <!-- Workout Viewer -->
+      <div class="workout-viewer" id="workoutViewer">
+        <div style="text-align:center;padding:40px 20px;color:var(--muted)">
+          <div style="font-size:2.2rem;margin-bottom:8px">🏋️</div>
+          <div style="font-size:.88rem;font-weight:700">Select a workout</div>
+          <div style="font-size:.7rem;margin-top:4px">Choose a program from the sidebar to begin reviewing</div>
+        </div>
+      </div>
+
+      <!-- Reviews Panel -->
+      <div class="reviews-panel" id="reviewsPanel" style="display:none">
+        <div class="reviews-header">
+          <div class="reviews-title">💬 AI Reviews</div>
+          <div class="reviews-count" id="reviewsCountBadge">0</div>
+        </div>
+        <div class="reviewer-tabs">
+          <div class="reviewer-tab antigravity active" onclick="switchReviewTab('antigravity',this)">
+            <div class="reviewer-tab-name">🚀 Antigravity</div>
+            <div class="reviewer-tab-count" id="tabCountAntigravity">0 reviews</div>
+          </div>
+          <div class="reviewer-tab chatgpt" onclick="switchReviewTab('chatgpt',this)">
+            <div class="reviewer-tab-name">💚 ChatGPT</div>
+            <div class="reviewer-tab-count" id="tabCountChatgpt">0 reviews</div>
+          </div>
+          <div class="reviewer-tab claude" onclick="switchReviewTab('claude',this)">
+            <div class="reviewer-tab-name">🟡 Claude</div>
+            <div class="reviewer-tab-count" id="tabCountClaude">0 reviews</div>
+          </div>
+          <div class="reviewer-tab consensus" onclick="switchReviewTab('consensus',this)">
+            <div class="reviewer-tab-name">🤝 Consensus</div>
+            <div class="reviewer-tab-count" id="tabCountConsensus">—</div>
+          </div>
+        </div>
+        <div class="review-content" id="reviewContent"></div>
+      </div>
+
+      <!-- Add Review Form -->
+      <div class="add-review" id="addReviewForm" style="display:none">
+        <div class="add-review-title">➕ Add Review</div>
+        <div class="form-row">
+          <div class="form-group">
+            <div class="form-label">Source</div>
+            <select class="form-select" id="reviewSource">
+              <option value="antigravity">🚀 Antigravity</option>
+              <option value="chatgpt">💚 ChatGPT</option>
+              <option value="claude">🟡 Claude</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <div class="form-label">Severity</div>
+            <select class="form-select" id="reviewSeverity">
+              <option value="endorse">🟢 Endorsement</option>
+              <option value="suggestion">🟡 Suggestion</option>
+              <option value="concern">🔴 Concern</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:10px">
+          <div class="form-label">Title</div>
+          <input class="form-input" id="reviewTitle" placeholder="Brief summary of the feedback point">
+        </div>
+        <div class="form-group" style="margin-bottom:10px">
+          <div class="form-label">Detail</div>
+          <textarea class="form-textarea" id="reviewBody" placeholder="Full explanation, rationale, evidence, and any recommended changes..."></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom:14px">
+          <div class="form-label">Affected Exercises (comma separated, optional)</div>
+          <input class="form-input" id="reviewExercises" placeholder="e.g. DB Lateral Raise, Arnold Press">
+        </div>
+        <button class="btn btn-primary" onclick="submitReview()" style="width:100%;justify-content:center">
+          💾 Save Review
+        </button>
+      </div>
+
+      <!-- Decision Log -->
+      <div class="decision-log" id="decisionLog" style="display:none">
+        <div class="dl-title">📋 Decision Log</div>
+        <div id="decisionLogContent"></div>
+      </div>
+
+      <!-- Change Queue -->
+      <div class="change-queue" id="changeQueue" style="display:none">
+        <div class="cq-title">🔧 Approved Change Queue</div>
+        <div id="changeQueueContent"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  WORKOUT DATA (read-only snapshot from the main fitness app)
+// ═══════════════════════════════════════════════════════════════════
+const WORKOUTS_DATA = {
+  'full-body-core': {
+    title:'Full-Body Core Focus', mode:'dumbbell', emoji:'⚡', totalSets:31,
+    schedule:'Fri (Dumbbell Plan) / Fri (Triathlon Plan)',
+    sections:[
+      { name:'Warm-Up', emoji:'🔥', meta:'5 min · no equipment', exercises:[
+        { name:'Bodyweight Squats', detail:'15 reps', sets:1, muscles:['Quads','Glutes'] },
+        { name:'Arm Circles + Torso Twists', detail:'10 each direction', sets:1, muscles:['Shoulders','Core'] },
+        { name:'Cat-Cow / Back Extensions', detail:'10 reps', sets:1, muscles:['Spine','Core'] },
+      ]},
+      { name:'Main Strength Block', emoji:'💪', meta:'3 rounds · 60-90s rest', exercises:[
+        { name:'Goblet Squats', detail:'12 reps', sets:3, muscles:['Quads','Glutes','Core'] },
+        { name:'Dumbbell Row', detail:'10-12 reps each side', sets:3, muscles:['Back','Biceps'] },
+        { name:'Floor Press / Overhead Press', detail:'10-12 reps', sets:3, muscles:['Chest','Shoulders','Triceps'] },
+        { name:'Romanian Deadlift', detail:'12 reps', sets:3, muscles:['Hamstrings','Glutes','Lower Back'] },
+        { name:'Walking Lunges', detail:'10 reps each leg', sets:3, muscles:['Quads','Glutes'] },
+      ]},
+      { name:'Core Finisher', emoji:'🎯', meta:'2 rounds', exercises:[
+        { name:'Weighted Russian Twists', detail:'15 each side', sets:2, muscles:['Obliques','Core'] },
+        { name:'Dumbbell Deadbug', detail:'10 each side', sets:2, muscles:['Core','Stability'] },
+        { name:'Plank Hold', detail:'30-45 sec', sets:2, muscles:['Core','Shoulders'] },
+        { name:'Standing Side Bends', detail:'12 each side', sets:2, muscles:['Obliques'] },
+        { name:'Bicycle Crunches', detail:'20 total', sets:2, muscles:['Core','Obliques'] },
+      ]},
+      { name:'Cool-Down', emoji:'🧘', meta:'5 min', exercises:[
+        { name:"Child's Pose / Cat-Cow", detail:'Hold & breathe', sets:1, muscles:['Spine','Hips'] },
+        { name:'Seated Spinal Twist', detail:'Both sides', sets:1, muscles:['Back','Spine'] },
+        { name:'Standing Forward Fold', detail:'Hold 30 sec', sets:1, muscles:['Hamstrings','Calves'] },
+      ]},
+    ]
+  },
+  'db-push': {
+    title:'DB Push Power', mode:'dumbbell', emoji:'💪', totalSets:31,
+    schedule:'Mon (Dumbbell Plan) / Wed (Triathlon Plan)',
+    sections:[
+      { name:'Warm-Up', emoji:'🔥', meta:'5 min', exercises:[
+        { name:'Arm Circles', detail:'10 each direction', sets:1, muscles:['Shoulders'] },
+        { name:'Push-Up (activation)', detail:'10 easy reps', sets:1, muscles:['Chest','Triceps'] },
+        { name:'Shoulder Rolls', detail:'10 each direction', sets:1, muscles:['Shoulders'] },
+      ]},
+      { name:'Push Block', emoji:'💪', meta:'3 rounds · 60-90s rest', exercises:[
+        { name:'DB Floor Press', detail:'12 reps', sets:3, muscles:['Chest','Triceps','Shoulders'] },
+        { name:'DB Overhead Press', detail:'10-12 reps', sets:3, muscles:['Shoulders','Triceps','Core'] },
+        { name:'DB Lateral Raise', detail:'12-15 reps', sets:3, muscles:['Shoulders','Lateral Delts'] },
+        { name:'DB Arnold Press', detail:'10-12 reps', sets:3, muscles:['Shoulders','Triceps'] },
+        { name:'DB Tricep Kickback', detail:'12 reps each arm', sets:3, muscles:['Triceps'] },
+      ]},
+      { name:'Core Finisher', emoji:'🎯', meta:'2 rounds', exercises:[
+        { name:'DB Russian Twist', detail:'15 each side', sets:2, muscles:['Obliques','Core'] },
+        { name:'Plank Hold', detail:'45 sec', sets:2, muscles:['Core','Shoulders'] },
+        { name:'Mountain Climbers', detail:'20 total', sets:2, muscles:['Core','Hip Flexors'] },
+        { name:'Bicycle Crunches', detail:'20 total', sets:2, muscles:['Core','Obliques'] },
+        { name:'Side Plank', detail:'30 sec each side', sets:2, muscles:['Obliques'] },
+      ]},
+      { name:'Cool-Down', emoji:'🧘', meta:'5 min', exercises:[
+        { name:"Child's Pose", detail:'Hold 45 sec', sets:1, muscles:['Spine','Hips'] },
+        { name:'Chest Doorframe Stretch', detail:'30 sec each side', sets:1, muscles:['Chest','Shoulders'] },
+        { name:'Tricep Overhead Stretch', detail:'30 sec each arm', sets:1, muscles:['Triceps'] },
+      ]},
+    ]
+  },
+  'db-lower': {
+    title:'DB Lower Body', mode:'dumbbell', emoji:'🦵', totalSets:31,
+    schedule:'Tue (Dumbbell Plan) / Mon (Triathlon Plan)',
+    sections:[
+      { name:'Warm-Up', emoji:'🔥', meta:'5 min', exercises:[
+        { name:'Leg Swings', detail:'10 each leg fwd/back', sets:1, muscles:['Hamstrings','Hip Flexors'] },
+        { name:'Hip Circles', detail:'10 each direction', sets:1, muscles:['Hips','Glutes'] },
+        { name:'Bodyweight Squats', detail:'15 slow reps', sets:1, muscles:['Quads','Glutes'] },
+      ]},
+      { name:'Lower Body Block', emoji:'🦵', meta:'3 rounds · 60-90s rest', exercises:[
+        { name:'Goblet Squat', detail:'12 reps', sets:3, muscles:['Quads','Glutes','Core'] },
+        { name:'Romanian Deadlift', detail:'12 reps', sets:3, muscles:['Hamstrings','Glutes','Lower Back','Core'] },
+        { name:'Walking Lunges', detail:'10 each leg', sets:3, muscles:['Quads','Glutes','Core'] },
+        { name:'DB Step-Up', detail:'10 each leg', sets:3, muscles:['Quads','Glutes','Core'] },
+        { name:'DB Hip Thrust', detail:'15 reps', sets:3, muscles:['Glutes','Hamstrings'] },
+      ]},
+      { name:'Core Finisher', emoji:'🎯', meta:'2 rounds', exercises:[
+        { name:'Dead Bug', detail:'10 each side', sets:2, muscles:['Core'] },
+        { name:'Bird Dog', detail:'10 each side', sets:2, muscles:['Core','Lower Back'] },
+        { name:'V-Up', detail:'15 reps', sets:2, muscles:['Core','Hip Flexors'] },
+        { name:'DB Russian Twist', detail:'15 each side', sets:2, muscles:['Obliques'] },
+        { name:'Side Plank', detail:'30 sec each side', sets:2, muscles:['Obliques'] },
+      ]},
+      { name:'Cool-Down', emoji:'🧘', meta:'5 min', exercises:[
+        { name:'Seated Forward Fold', detail:'Hold 45 sec', sets:1, muscles:['Hamstrings','Spine'] },
+        { name:'Pigeon Pose', detail:'45 sec each side', sets:1, muscles:['Hips','Glutes'] },
+        { name:'Standing Quad Stretch', detail:'30 sec each leg', sets:1, muscles:['Quads','Hip Flexors'] },
+      ]},
+    ]
+  },
+  'db-pull': {
+    title:'DB Pull & Back', mode:'dumbbell', emoji:'🔙', totalSets:31,
+    schedule:'Thu (Dumbbell Plan)',
+    sections:[
+      { name:'Warm-Up', emoji:'🔥', meta:'5 min', exercises:[
+        { name:'Cat-Cow', detail:'10 slow reps', sets:1, muscles:['Spine','Core'] },
+        { name:'Arm Circles', detail:'10 each direction', sets:1, muscles:['Shoulders'] },
+        { name:'Thoracic Rotation', detail:'10 each side', sets:1, muscles:['Upper Back','Spine'] },
+      ]},
+      { name:'Pull Block', emoji:'🔙', meta:'3 rounds · 60-90s rest', exercises:[
+        { name:'DB Single-Arm Row', detail:'12 reps each side', sets:3, muscles:['Back','Lats','Biceps','Core'] },
+        { name:'DB Rear Delt Fly', detail:'15 reps', sets:3, muscles:['Rear Delts','Upper Back'] },
+        { name:'DB Bicep Curl', detail:'12 reps', sets:3, muscles:['Biceps'] },
+        { name:'DB Hammer Curl', detail:'12 reps', sets:3, muscles:['Biceps','Brachialis'] },
+        { name:'DB Bent-Over Row', detail:'12 reps', sets:3, muscles:['Back','Lats','Biceps','Core'] },
+      ]},
+      { name:'Core Finisher', emoji:'🎯', meta:'2 rounds', exercises:[
+        { name:'Dead Bug', detail:'10 each side', sets:2, muscles:['Core'] },
+        { name:'Hollow Body Hold', detail:'30 sec', sets:2, muscles:['Core'] },
+        { name:'Plank Hold', detail:'45 sec', sets:2, muscles:['Core','Shoulders'] },
+        { name:'Bicycle Crunches', detail:'20 total', sets:2, muscles:['Core','Obliques'] },
+        { name:'Side Plank', detail:'30 sec each side', sets:2, muscles:['Obliques'] },
+      ]},
+      { name:'Cool-Down', emoji:'🧘', meta:'5 min', exercises:[
+        { name:"Child's Pose", detail:'Hold 45 sec', sets:1, muscles:['Hips','Spine'] },
+        { name:'Cat-Cow Flow', detail:'10 slow reps', sets:1, muscles:['Spine'] },
+        { name:'Lying Spinal Twist', detail:'45 sec each side', sets:1, muscles:['Spine','Back'] },
+      ]},
+    ]
+  },
+  'db-upper': {
+    title:'DB Upper Burn', mode:'dumbbell', emoji:'🏋️', totalSets:31,
+    schedule:'Sat (Dumbbell Plan)',
+    sections:[
+      { name:'Warm-Up', emoji:'🔥', meta:'5 min', exercises:[
+        { name:'Arm Circles', detail:'10 each direction', sets:1, muscles:['Shoulders'] },
+        { name:'Shoulder Pass-Throughs', detail:'10 slow reps', sets:1, muscles:['Shoulders','Chest'] },
+        { name:'Cat-Cow', detail:'10 reps', sets:1, muscles:['Spine','Core'] },
+      ]},
+      { name:'Upper Body Block', emoji:'🏋️', meta:'3 rounds · lighter / higher rep', exercises:[
+        { name:'DB Lateral Raise', detail:'15-20 reps (light)', sets:3, muscles:['Lateral Delts','Shoulders'] },
+        { name:'DB Front Raise', detail:'12-15 reps', sets:3, muscles:['Front Delts','Shoulders'] },
+        { name:'DB Arnold Press', detail:'12 reps', sets:3, muscles:['Shoulders','Triceps'] },
+        { name:'DB Upright Row', detail:'12 reps', sets:3, muscles:['Shoulders','Traps','Biceps'] },
+        { name:'DB Floor Fly', detail:'12-15 reps', sets:3, muscles:['Chest','Shoulders'] },
+      ]},
+      { name:'Core Finisher', emoji:'🎯', meta:'2 rounds', exercises:[
+        { name:'DB Russian Twist', detail:'15 each side', sets:2, muscles:['Obliques'] },
+        { name:'Plank Hold', detail:'45 sec', sets:2, muscles:['Core'] },
+        { name:'Dead Bug', detail:'10 each side', sets:2, muscles:['Core'] },
+        { name:'V-Up', detail:'15 reps', sets:2, muscles:['Core','Hip Flexors'] },
+        { name:'Mountain Climbers', detail:'20 total', sets:2, muscles:['Core','Hip Flexors'] },
+      ]},
+      { name:'Cool-Down', emoji:'🧘', meta:'5 min', exercises:[
+        { name:"Child's Pose", detail:'Hold 45 sec', sets:1, muscles:['Hips','Spine'] },
+        { name:'Chest / Pec Stretch', detail:'30 sec each side', sets:1, muscles:['Chest','Shoulders'] },
+        { name:'Tricep Overhead Stretch', detail:'30 sec each arm', sets:1, muscles:['Triceps'] },
+      ]},
+    ]
+  },
+  'push': {
+    title:'Push Power', mode:'calisthenics', emoji:'💪', totalSets:31,
+    schedule:'Mon (Calisthenics Plan)',
+    sections:[
+      { name:'Warm-Up', emoji:'🔥', meta:'5 min · no equipment', exercises:[
+        { name:'Arm Circles', detail:'10 forward, 10 back', sets:1, muscles:['Shoulders'] },
+        { name:'Shoulder Rolls + Neck Rolls', detail:'10 each direction', sets:1, muscles:['Shoulders','Neck'] },
+        { name:'Cat-Cow', detail:'10 slow reps', sets:1, muscles:['Spine','Core'] },
+      ]},
+      { name:'Push Block', emoji:'💪', meta:'3 rounds · 60s rest', exercises:[
+        { name:'Push-Up', detail:'15 reps', sets:3, muscles:['Chest','Triceps','Shoulders'] },
+        { name:'Pike Push-Up', detail:'10-12 reps', sets:3, muscles:['Shoulders','Triceps'] },
+        { name:'Wide Push-Up', detail:'12 reps', sets:3, muscles:['Chest','Shoulders'] },
+        { name:'Diamond Push-Up', detail:'8-10 reps', sets:3, muscles:['Triceps','Chest'] },
+        { name:'Bench / Chair Dip', detail:'12-15 reps', sets:3, muscles:['Triceps','Chest','Shoulders'] },
+      ]},
+      { name:'Core Finisher', emoji:'🎯', meta:'2 rounds', exercises:[
+        { name:'Plank Hold', detail:'45 sec', sets:2, muscles:['Core','Shoulders'] },
+        { name:'Hollow Body Hold', detail:'30 sec', sets:2, muscles:['Core'] },
+        { name:'Mountain Climbers', detail:'20 total', sets:2, muscles:['Core','Hip Flexors'] },
+        { name:'Bicycle Crunches', detail:'20 total', sets:2, muscles:['Obliques','Core'] },
+        { name:'Side Plank', detail:'30 sec each side', sets:2, muscles:['Obliques','Shoulders'] },
+      ]},
+      { name:'Cool-Down', emoji:'🧘', meta:'5 min', exercises:[
+        { name:"Child's Pose", detail:'Hold 30 sec', sets:1, muscles:['Spine','Hips'] },
+        { name:'Chest Doorframe Stretch', detail:'30 sec each side', sets:1, muscles:['Chest','Shoulders'] },
+        { name:'Tricep Overhead Stretch', detail:'30 sec each arm', sets:1, muscles:['Triceps'] },
+      ]},
+    ]
+  },
+  'legs': {
+    title:'Legs & Glutes', mode:'calisthenics', emoji:'🦵', totalSets:31,
+    schedule:'Tue (Calisthenics Plan)',
+    sections:[
+      { name:'Warm-Up', emoji:'🔥', meta:'5 min · no equipment', exercises:[
+        { name:'Leg Swings', detail:'10 forward/back each leg', sets:1, muscles:['Hamstrings','Hip Flexors'] },
+        { name:'Hip Circles', detail:'10 each direction', sets:1, muscles:['Hips','Glutes'] },
+        { name:'Bodyweight Squats', detail:'15 slow reps', sets:1, muscles:['Quads','Glutes'] },
+      ]},
+      { name:'Legs Block', emoji:'🦵', meta:'3 rounds · 60-90s rest', exercises:[
+        { name:'Bodyweight Squat', detail:'20 reps', sets:3, muscles:['Quads','Glutes','Hamstrings'] },
+        { name:'Reverse Lunge', detail:'12 reps each leg', sets:3, muscles:['Quads','Glutes'] },
+        { name:'Jump Squat', detail:'10 reps', sets:3, muscles:['Quads','Glutes','Power'] },
+        { name:'Glute Bridge', detail:'20 reps', sets:3, muscles:['Glutes','Hamstrings'] },
+        { name:'Lateral Lunge', detail:'12 each side', sets:3, muscles:['Quads','Glutes','Adductors'] },
+      ]},
+      { name:'Core Finisher', emoji:'🎯', meta:'2 rounds', exercises:[
+        { name:'Dead Bug', detail:'10 each side', sets:2, muscles:['Core'] },
+        { name:'Bird Dog', detail:'10 each side', sets:2, muscles:['Core','Lower Back'] },
+        { name:'Russian Twist', detail:'15 each side', sets:2, muscles:['Obliques','Core'] },
+        { name:'V-Up', detail:'15 reps', sets:2, muscles:['Core','Hip Flexors'] },
+        { name:'Side Plank', detail:'30 sec each side', sets:2, muscles:['Obliques','Shoulders'] },
+      ]},
+      { name:'Cool-Down', emoji:'🧘', meta:'5 min', exercises:[
+        { name:'Seated Forward Fold', detail:'Hold 45 sec', sets:1, muscles:['Hamstrings','Spine'] },
+        { name:'Pigeon Pose', detail:'45 sec each side', sets:1, muscles:['Hips','Glutes'] },
+        { name:'Standing Quad Stretch', detail:'30 sec each leg', sets:1, muscles:['Quads','Hip Flexors'] },
+      ]},
+    ]
+  },
+  'pull': {
+    title:'Pull & Back', mode:'calisthenics', emoji:'🔙', totalSets:31,
+    schedule:'Thu (Calisthenics Plan)',
+    sections:[
+      { name:'Warm-Up', emoji:'🔥', meta:'5 min · no equipment', exercises:[
+        { name:'Cat-Cow', detail:'10 slow reps', sets:1, muscles:['Spine','Core'] },
+        { name:'Arm Circles', detail:'10 each direction', sets:1, muscles:['Shoulders'] },
+        { name:'Thoracic Rotation', detail:'10 each side', sets:1, muscles:['Upper Back','Spine'] },
+      ]},
+      { name:'Pull Block', emoji:'🔙', meta:'3 rounds · 60-90s rest', exercises:[
+        { name:'Inverted Row (table/bar)', detail:'10-12 reps', sets:3, muscles:['Back','Lats','Biceps'] },
+        { name:'Superman Hold', detail:'15 reps (2 sec hold)', sets:3, muscles:['Lower Back','Glutes','Upper Back'] },
+        { name:'Bird Dog', detail:'12 each side', sets:3, muscles:['Lower Back','Core'] },
+        { name:'Good Morning (bodyweight)', detail:'15 reps', sets:3, muscles:['Hamstrings','Lower Back','Glutes'] },
+        { name:'Bear Crawl', detail:'20 steps', sets:3, muscles:['Core','Shoulders','Quads'] },
+      ]},
+      { name:'Core Finisher', emoji:'🎯', meta:'2 rounds', exercises:[
+        { name:'Dead Bug', detail:'10 each side', sets:2, muscles:['Core'] },
+        { name:'Hollow Body Hold', detail:'30 sec', sets:2, muscles:['Core'] },
+        { name:'Plank Hold', detail:'45 sec', sets:2, muscles:['Core','Shoulders'] },
+        { name:'Bicycle Crunches', detail:'20 total', sets:2, muscles:['Core','Obliques'] },
+        { name:'Side Plank', detail:'30 sec each side', sets:2, muscles:['Obliques'] },
+      ]},
+      { name:'Cool-Down', emoji:'🧘', meta:'5 min', exercises:[
+        { name:"Child's Pose", detail:'Hold 45 sec', sets:1, muscles:['Hips','Spine'] },
+        { name:'Cat-Cow Flow', detail:'10 slow reps', sets:1, muscles:['Spine','Core'] },
+        { name:'Lying Spinal Twist', detail:'45 sec each side', sets:1, muscles:['Spine','Back'] },
+      ]},
+    ]
+  },
+  'circuit': {
+    title:'Full Body Circuit', mode:'calisthenics', emoji:'⚡', totalSets:31,
+    schedule:'Fri (Calisthenics Plan)',
+    sections:[
+      { name:'Warm-Up', emoji:'🔥', meta:'5 min · get the heart rate up', exercises:[
+        { name:'Jumping Jacks', detail:'30 reps', sets:1, muscles:['Full Body'] },
+        { name:'Arm Circles + Leg Swings', detail:'10 each', sets:1, muscles:['Shoulders','Hips'] },
+        { name:'Bodyweight Squats', detail:'15 reps', sets:1, muscles:['Quads','Glutes'] },
+      ]},
+      { name:'Full Body Circuit', emoji:'⚡', meta:'3 rounds · 30-45s rest between rounds', exercises:[
+        { name:'Burpees', detail:'10 reps', sets:3, muscles:['Full Body'] },
+        { name:'Push-Up', detail:'15 reps', sets:3, muscles:['Chest','Triceps','Shoulders'] },
+        { name:'Jump Squat', detail:'12 reps', sets:3, muscles:['Quads','Glutes'] },
+        { name:'Mountain Climbers', detail:'20 total', sets:3, muscles:['Core','Hip Flexors'] },
+        { name:'Reverse Lunge', detail:'12 each leg', sets:3, muscles:['Quads','Glutes'] },
+      ]},
+      { name:'Core Finisher', emoji:'🎯', meta:'2 rounds', exercises:[
+        { name:'Plank Hold', detail:'45 sec', sets:2, muscles:['Core'] },
+        { name:'Russian Twist', detail:'15 each side', sets:2, muscles:['Obliques'] },
+        { name:'Bicycle Crunches', detail:'20 total', sets:2, muscles:['Core','Obliques'] },
+        { name:'Hollow Body Hold', detail:'30 sec', sets:2, muscles:['Core'] },
+        { name:'Side Plank', detail:'30 sec each side', sets:2, muscles:['Obliques'] },
+      ]},
+      { name:'Cool-Down', emoji:'🧘', meta:'5 min', exercises:[
+        { name:"Child's Pose", detail:'Hold 45 sec', sets:1, muscles:['Hips','Spine'] },
+        { name:'Seated Forward Fold', detail:'Hold 45 sec', sets:1, muscles:['Hamstrings'] },
+        { name:'Hip Flexor Stretch', detail:'45 sec each side', sets:1, muscles:['Hip Flexors'] },
+      ]},
+    ]
+  },
+  'upper': {
+    title:'Upper Body Burn', mode:'calisthenics', emoji:'🏋️', totalSets:31,
+    schedule:'Sat (Calisthenics Plan)',
+    sections:[
+      { name:'Warm-Up', emoji:'🔥', meta:'5 min · no equipment', exercises:[
+        { name:'Arm Circles', detail:'10 each direction', sets:1, muscles:['Shoulders'] },
+        { name:'Shoulder Pass-Throughs', detail:'10 slow reps', sets:1, muscles:['Shoulders','Chest'] },
+        { name:'Cat-Cow', detail:'10 reps', sets:1, muscles:['Spine','Core'] },
+      ]},
+      { name:'Upper Body Block', emoji:'🏋️', meta:'3 rounds · 60s rest', exercises:[
+        { name:'Push-Up', detail:'15 reps', sets:3, muscles:['Chest','Triceps','Shoulders'] },
+        { name:'Wide Push-Up', detail:'12 reps', sets:3, muscles:['Chest','Shoulders'] },
+        { name:'Diamond Push-Up', detail:'8-10 reps', sets:3, muscles:['Triceps','Chest'] },
+        { name:'Pike Push-Up', detail:'12 reps', sets:3, muscles:['Shoulders','Triceps'] },
+        { name:'Bench / Chair Dip', detail:'15 reps', sets:3, muscles:['Triceps','Chest'] },
+      ]},
+      { name:'Core Finisher', emoji:'🎯', meta:'2 rounds', exercises:[
+        { name:'Plank Hold', detail:'45 sec', sets:2, muscles:['Core','Shoulders'] },
+        { name:'Dead Bug', detail:'10 each side', sets:2, muscles:['Core'] },
+        { name:'V-Up', detail:'15 reps', sets:2, muscles:['Core','Hip Flexors'] },
+        { name:'Russian Twist', detail:'15 each side', sets:2, muscles:['Obliques'] },
+        { name:'Mountain Climbers', detail:'20 total', sets:2, muscles:['Core','Hip Flexors'] },
+      ]},
+      { name:'Cool-Down', emoji:'🧘', meta:'5 min', exercises:[
+        { name:"Child's Pose", detail:'Hold 45 sec', sets:1, muscles:['Hips','Spine'] },
+        { name:'Chest / Pec Stretch', detail:'30 sec each side', sets:1, muscles:['Chest','Shoulders'] },
+        { name:'Tricep Overhead Stretch', detail:'30 sec each arm', sets:1, muscles:['Triceps'] },
+      ]},
+    ]
+  },
+  'run-easy': {
+    title:'Zone 2 Easy Run', mode:'cardio', emoji:'🏃', totalSets:1,
+    schedule:'Tue (Triathlon Plan)',
+    cardio:{ target:'30–40 min', zone:'Zone 2', zoneName:'Easy Aerobic', hr:'120–145 bpm', rpe:'4–5 / 10' },
+    description:'The aerobic foundation of every triathlon plan. At this pace your body learns to burn fat efficiently and builds the mitochondrial density needed for race-day endurance.',
+    focuses:[
+      { icon:'👃', text:'Nose breathing preferred — if forced to mouth breathe, slow down' },
+      { icon:'💬', text:'Conversational pace — you should be able to say full sentences' },
+      { icon:'🛣️', text:'Flat to gently rolling terrain works best for Zone 2' },
+      { icon:'🚶', text:'Run/walk intervals are totally fine at this stage — no ego' },
+      { icon:'📱', text:'Log on Strava for GPS, pace, and HR data' },
+    ],
+    sections:[]
+  },
+  'swim-easy': {
+    title:'Swim Technique Session', mode:'cardio', emoji:'🏊', totalSets:1,
+    schedule:'Thu (Triathlon Plan)',
+    cardio:{ target:'20–30 min', zone:'Zone 2', zoneName:'Technique Focus', hr:'Low intensity', rpe:'3–5 / 10' },
+    description:'Swim technique is the highest-leverage improvement in triathlon. Poor form in the water costs exponentially more energy than poor form on the bike or run.',
+    focuses:[
+      { icon:'🔄', text:'Body rotation on each stroke — you swim on your side, not flat' },
+      { icon:'👋', text:'High elbow catch — reach long, elbow stays high as you pull through' },
+      { icon:'🌬️', text:'Bilateral breathing every 3 strokes — builds balance and redundancy' },
+      { icon:'🦵', text:'Relaxed kick from the hip — ankles loose, not splashing huge' },
+      { icon:'⏸️', text:'Rest 20s between lengths — quality over quantity' },
+    ],
+    sections:[]
+  },
+  'bike-long': {
+    title:'Long Zone 2 Ride', mode:'cardio', emoji:'🚴', totalSets:1,
+    schedule:'Sat (Triathlon Plan)',
+    cardio:{ target:'45–75 min', zone:'Zone 2', zoneName:'Aerobic Base', hr:'120–145 bpm', rpe:'4–5 / 10' },
+    description:'Your weekly long ride builds the cycling-specific endurance that\'s the backbone of triathlon performance. The bike leg is where most race time is spent.',
+    focuses:[
+      { icon:'⚙️', text:'Cadence 80–90 rpm — spin, don\'t grind big gears' },
+      { icon:'💬', text:'Conversational effort — hold a conversation' },
+      { icon:'🛣️', text:'Flat to rolling terrain; save big climbs for build phase' },
+      { icon:'💧', text:'Drink 500ml per hour — sip every 15 min' },
+      { icon:'🏃', text:'Optional brick: 10 min easy run off the bike' },
+    ],
+    sections:[]
+  },
+};
+
+// ═══════════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════════
+const STORAGE_KEY = 'workout_review_forum';
+let appState = loadState();
+let currentWorkoutId = null;
+let currentReviewer = 'antigravity';
+let currentModeFilter = 'all';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return { reviews: {}, decisions: {}, threads: {} };
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+  updateHeaderStats();
+}
+
+function getReviews(workoutId, source) {
+  if (!appState.reviews[workoutId]) return [];
+  if (source) return (appState.reviews[workoutId] || []).filter(r => r.source === source);
+  return appState.reviews[workoutId] || [];
+}
+
+function getAllReviews() {
+  let total = 0;
+  for (const wid in appState.reviews) total += appState.reviews[wid].length;
+  return total;
+}
+
+function getAllDecisions() {
+  let total = 0;
+  for (const wid in appState.decisions) total += Object.keys(appState.decisions[wid]).length;
+  return total;
+}
+
+function getAcceptedChanges() {
+  let items = [];
+  for (const wid in appState.decisions) {
+    for (const rid in appState.decisions[wid]) {
+      if (appState.decisions[wid][rid].status === 'accepted') {
+        const review = (appState.reviews[wid]||[]).find(r => r.id === rid);
+        if (review) items.push({ workoutId: wid, review, decision: appState.decisions[wid][rid] });
+      }
+    }
+  }
+  return items;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  WORKOUT LIST
+// ═══════════════════════════════════════════════════════════════════
+function buildWorkoutList() {
+  const list = document.getElementById('workoutList');
+  list.innerHTML = '';
+  for (const [id, w] of Object.entries(WORKOUTS_DATA)) {
+    if (currentModeFilter !== 'all' && w.mode !== currentModeFilter) continue;
+    const count = getReviews(id).length;
+    const item = document.createElement('div');
+    item.className = `workout-item${currentWorkoutId === id ? ' active' : ''}`;
+    item.onclick = () => selectWorkout(id);
+    item.innerHTML = `
+      <div class="wi-emoji">${w.emoji}</div>
+      <div class="wi-info">
+        <div class="wi-name">${w.title}</div>
+        <div class="wi-meta">${w.mode} · ${w.totalSets} sets · ${w.schedule.split('(')[0].trim()}</div>
+      </div>
+      <div class="wi-badge ${count > 0 ? 'has-reviews' : 'no-reviews'}">${count > 0 ? count : '—'}</div>
+    `;
+    list.appendChild(item);
+  }
+}
+
+function filterMode(mode, btn) {
+  currentModeFilter = mode;
+  document.querySelectorAll('.mode-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (mode === 'calisthenics') btn.classList.add('cal');
+  else if (mode === 'cardio') btn.classList.add('tri');
+  else btn.classList.remove('cal','tri');
+  buildWorkoutList();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  SELECT WORKOUT
+// ═══════════════════════════════════════════════════════════════════
+function selectWorkout(id) {
+  currentWorkoutId = id;
+  const w = WORKOUTS_DATA[id];
+  buildWorkoutList();
+  renderWorkoutViewer(w);
+  renderReviews();
+  renderDecisionLog();
+  renderChangeQueue();
+  renderConsensusSummary();
+  document.getElementById('reviewsPanel').style.display = '';
+  document.getElementById('addReviewForm').style.display = '';
+  document.getElementById('decisionLog').style.display = '';
+  document.getElementById('changeQueue').style.display = '';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  WORKOUT VIEWER (read-only)
+// ═══════════════════════════════════════════════════════════════════
+function renderWorkoutViewer(w) {
+  const v = document.getElementById('workoutViewer');
+  const modeClass = w.mode === 'dumbbell' ? 'dumbbell' : w.mode === 'calisthenics' ? 'calisthenics' : 'cardio';
+
+  let html = `
+    <div class="wv-header">
+      <div class="wv-icon">${w.emoji}</div>
+      <div>
+        <div class="wv-title">${w.title}</div>
+        <div style="font-size:.65rem;color:var(--muted-light);margin-top:2px">${w.schedule}</div>
+      </div>
+      <div class="wv-mode-badge ${modeClass}">${w.mode}</div>
+      <div class="wv-readonly">🔒 Read-Only</div>
+    </div>
+  `;
+
+  if (w.cardio) {
+    html += `
+      <div class="wv-cardio-info">
+        <div class="wv-cardio-stats">
+          <div class="wv-cardio-stat"><div class="wv-cardio-stat-label">Target</div><div class="wv-cardio-stat-val">${w.cardio.target}</div></div>
+          <div class="wv-cardio-stat"><div class="wv-cardio-stat-label">Zone</div><div class="wv-cardio-stat-val">${w.cardio.zone}</div></div>
+          <div class="wv-cardio-stat"><div class="wv-cardio-stat-label">Heart Rate</div><div class="wv-cardio-stat-val">${w.cardio.hr}</div></div>
+          <div class="wv-cardio-stat"><div class="wv-cardio-stat-label">RPE</div><div class="wv-cardio-stat-val">${w.cardio.rpe}</div></div>
+        </div>
+        <div class="wv-cardio-desc">${w.description}</div>
+        <div class="wv-cardio-focuses">${(w.focuses||[]).map(f => `
+          <div class="wv-cardio-focus"><div class="wv-cardio-focus-icon">${f.icon}</div><div>${f.text}</div></div>
+        `).join('')}</div>
+      </div>
+    `;
+  }
+
+  if (w.sections && w.sections.length) {
+    html += '<div class="wv-sections">';
+    w.sections.forEach((sec, i) => {
+      const isStrength = sec.name.includes('Block') || sec.name.includes('Strength') || sec.name.includes('Circuit');
+      html += `
+        <div class="wv-section${isStrength ? ' open' : ''}" data-section="${i}">
+          <div class="wv-section-header" onclick="toggleSection(this)">
+            <div class="wv-section-emoji">${sec.emoji}</div>
+            <div class="wv-section-name">${sec.name}</div>
+            <div class="wv-section-meta">${sec.meta}</div>
+            <div class="wv-section-chevron">▶</div>
+          </div>
+          <div class="wv-exercises">
+            ${sec.exercises.map(ex => `
+              <div class="wv-exercise">
+                <div class="wv-ex-name">${ex.name}</div>
+                <div class="wv-ex-detail">${ex.detail}</div>
+                <div class="wv-ex-sets">${ex.sets}×</div>
+                <div class="wv-ex-muscles">${ex.muscles.map(m => `<span class="wv-muscle-tag">${m}</span>`).join('')}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    });
+    html += '</div>';
+  }
+
+  v.innerHTML = html;
+}
+
+function toggleSection(header) {
+  header.parentElement.classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  REVIEWS
+// ═══════════════════════════════════════════════════════════════════
+function switchReviewTab(source, tab) {
+  currentReviewer = source;
+  document.querySelectorAll('.reviewer-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  renderReviews();
+}
+
+function renderReviews() {
+  if (!currentWorkoutId) return;
+  const content = document.getElementById('reviewContent');
+  const allReviews = getReviews(currentWorkoutId);
+
+  // Update tab counts
+  ['antigravity','chatgpt','claude'].forEach(src => {
+    const c = getReviews(currentWorkoutId, src).length;
+    document.getElementById(`tabCount${src.charAt(0).toUpperCase()+src.slice(1)}`).textContent = `${c} review${c!==1?'s':''}`;
+  });
+  document.getElementById('tabCountConsensus').textContent = '—';
+  document.getElementById('reviewsCountBadge').textContent = allReviews.length;
+
+  let reviews;
+  if (currentReviewer === 'consensus') {
+    renderConsensusView(content);
+    return;
+  } else {
+    reviews = getReviews(currentWorkoutId, currentReviewer);
+  }
+
+  if (!reviews.length) {
+    content.innerHTML = `
+      <div class="review-empty fade-in">
+        <div class="review-empty-icon">📝</div>
+        <div class="review-empty-text">No reviews from ${currentReviewer} yet</div>
+        <div class="review-empty-sub">Use the form below to add one, or generate a prompt to get feedback</div>
+      </div>
+    `;
+    return;
+  }
+
+  content.innerHTML = reviews.map(r => renderReviewCard(r)).join('');
+}
+
+function renderReviewCard(r) {
+  const decision = appState.decisions[currentWorkoutId]?.[r.id];
+  const threads = appState.threads[r.id] || [];
+  const sourceColors = { antigravity:'var(--purple)', chatgpt:'var(--green)', claude:'var(--gold)' };
+
+  return `
+    <div class="review-card severity-${r.severity} fade-in" id="review-${r.id}">
+      <div class="rc-header">
+        <div class="rc-severity ${r.severity}">${r.severity === 'endorse' ? '🟢 Endorse' : r.severity === 'suggestion' ? '🟡 Suggest' : '🔴 Concern'}</div>
+        <div class="rc-title">${r.title}</div>
+      </div>
+      <div class="rc-body">
+        ${r.body}
+        ${r.exercises && r.exercises.length ? `<div class="rc-exercises">${r.exercises.map(e => `<span class="rc-exercise-tag">${e}</span>`).join('')}</div>` : ''}
+      </div>
+      <div class="rc-footer">
+        <div class="rc-decision">
+          <button class="rc-decision-btn${decision?.status==='accepted'?' accepted':''}" onclick="setDecision('${r.id}','accepted')">✅ Accept</button>
+          <button class="rc-decision-btn${decision?.status==='rejected'?' rejected':''}" onclick="setDecision('${r.id}','rejected')">❌ Reject</button>
+          <button class="rc-decision-btn${decision?.status==='deferred'?' deferred':''}" onclick="setDecision('${r.id}','deferred')">⏸️ Defer</button>
+        </div>
+        <div class="rc-timestamp">${r.source} · ${new Date(r.timestamp).toLocaleDateString()}</div>
+      </div>
+      <div class="rc-thread-toggle" onclick="toggleThread('${r.id}')">
+        💬 Thread (${threads.length} message${threads.length!==1?'s':''}) ▸
+      </div>
+      <div class="rc-thread" id="thread-${r.id}">
+        ${threads.map(t => `
+          <div class="thread-msg from-${t.source}">
+            <div class="thread-msg-source" style="color:${sourceColors[t.source]||'var(--accent)'}">${t.source}</div>
+            <div class="thread-msg-text">${t.text}</div>
+          </div>
+        `).join('')}
+        <div class="thread-input-row">
+          <select class="thread-source-select" id="threadSource-${r.id}">
+            <option value="antigravity">🚀 Antigravity</option>
+            <option value="chatgpt">💚 ChatGPT</option>
+            <option value="claude">🟡 Claude</option>
+            <option value="user">👤 Me</option>
+          </select>
+          <textarea class="thread-input" id="threadInput-${r.id}" placeholder="Add to the debate..."></textarea>
+          <button class="btn btn-primary btn-sm" onclick="addThreadMsg('${r.id}')" style="align-self:flex-end">Send</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderConsensusView(content) {
+  const allReviews = getReviews(currentWorkoutId);
+  if (!allReviews.length) {
+    content.innerHTML = `
+      <div class="review-empty fade-in">
+        <div class="review-empty-icon">🤝</div>
+        <div class="review-empty-text">No reviews yet for consensus</div>
+        <div class="review-empty-sub">Add reviews from multiple AIs to see where they agree</div>
+      </div>
+    `;
+    return;
+  }
+
+  // Group by severity
+  const concerns = allReviews.filter(r => r.severity === 'concern');
+  const suggestions = allReviews.filter(r => r.severity === 'suggestion');
+  const endorsements = allReviews.filter(r => r.severity === 'endorse');
+  const sources = [...new Set(allReviews.map(r => r.source))];
+
+  let html = `<div class="fade-in" style="padding:4px 0">`;
+  html += `<div style="font-size:.7rem;color:var(--muted-light);margin-bottom:14px">
+    Reviewing input from: <strong style="color:var(--text)">${sources.join(', ')}</strong> 
+    (${allReviews.length} total reviews)
+  </div>`;
+
+  if (concerns.length) {
+    html += `<div style="font-size:.68rem;font-weight:800;color:var(--red);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">🔴 Concerns (${concerns.length})</div>`;
+    html += concerns.map(r => `
+      <div style="padding:8px 12px;background:var(--red-dim);border:1px solid rgba(248,113,113,.15);border-radius:8px;margin-bottom:6px;font-size:.72rem">
+        <strong style="color:var(--text)">${r.title}</strong>
+        <span style="color:var(--muted);font-size:.6rem;margin-left:6px">${r.source}</span>
+      </div>
+    `).join('');
+  }
+  if (suggestions.length) {
+    html += `<div style="font-size:.68rem;font-weight:800;color:var(--gold);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.06em">🟡 Suggestions (${suggestions.length})</div>`;
+    html += suggestions.map(r => `
+      <div style="padding:8px 12px;background:var(--gold-dim);border:1px solid rgba(251,191,36,.15);border-radius:8px;margin-bottom:6px;font-size:.72rem">
+        <strong style="color:var(--text)">${r.title}</strong>
+        <span style="color:var(--muted);font-size:.6rem;margin-left:6px">${r.source}</span>
+      </div>
+    `).join('');
+  }
+  if (endorsements.length) {
+    html += `<div style="font-size:.68rem;font-weight:800;color:var(--green);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.06em">🟢 Endorsements (${endorsements.length})</div>`;
+    html += endorsements.map(r => `
+      <div style="padding:8px 12px;background:var(--green-dim);border:1px solid rgba(74,222,128,.15);border-radius:8px;margin-bottom:6px;font-size:.72rem">
+        <strong style="color:var(--text)">${r.title}</strong>
+        <span style="color:var(--muted);font-size:.6rem;margin-left:6px">${r.source}</span>
+      </div>
+    `).join('');
+  }
+  html += '</div>';
+  content.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  ACTIONS
+// ═══════════════════════════════════════════════════════════════════
+function submitReview() {
+  if (!currentWorkoutId) { toast('Select a workout first'); return; }
+  const title = document.getElementById('reviewTitle').value.trim();
+  const body = document.getElementById('reviewBody').value.trim();
+  if (!title || !body) { toast('Title and detail are required'); return; }
+
+  const review = {
+    id: 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+    source: document.getElementById('reviewSource').value,
+    severity: document.getElementById('reviewSeverity').value,
+    title,
+    body,
+    exercises: document.getElementById('reviewExercises').value.split(',').map(s=>s.trim()).filter(Boolean),
+    timestamp: new Date().toISOString(),
+  };
+
+  if (!appState.reviews[currentWorkoutId]) appState.reviews[currentWorkoutId] = [];
+  appState.reviews[currentWorkoutId].push(review);
+  saveState();
+
+  document.getElementById('reviewTitle').value = '';
+  document.getElementById('reviewBody').value = '';
+  document.getElementById('reviewExercises').value = '';
+  renderReviews();
+  buildWorkoutList();
+  renderConsensusSummary();
+  toast('Review saved ✓');
+}
+
+function setDecision(reviewId, status) {
+  if (!appState.decisions[currentWorkoutId]) appState.decisions[currentWorkoutId] = {};
+  appState.decisions[currentWorkoutId][reviewId] = {
+    status,
+    timestamp: new Date().toISOString()
+  };
+  saveState();
+  renderReviews();
+  renderDecisionLog();
+  renderChangeQueue();
+  toast(`Marked as ${status}`);
+}
+
+function toggleThread(reviewId) {
+  const thread = document.getElementById(`thread-${reviewId}`);
+  thread.classList.toggle('open');
+}
+
+function addThreadMsg(reviewId) {
+  const source = document.getElementById(`threadSource-${reviewId}`).value;
+  const text = document.getElementById(`threadInput-${reviewId}`).value.trim();
+  if (!text) return;
+  if (!appState.threads[reviewId]) appState.threads[reviewId] = [];
+  appState.threads[reviewId].push({ source, text, timestamp: new Date().toISOString() });
+  saveState();
+  document.getElementById(`threadInput-${reviewId}`).value = '';
+  renderReviews();
+  toast('Reply added');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  DECISION LOG
+// ═══════════════════════════════════════════════════════════════════
+function renderDecisionLog() {
+  const container = document.getElementById('decisionLogContent');
+  const decisions = appState.decisions[currentWorkoutId] || {};
+  const entries = Object.entries(decisions);
+  if (!entries.length) {
+    container.innerHTML = '<div style="font-size:.72rem;color:var(--muted);text-align:center;padding:16px">No decisions yet</div>';
+    return;
+  }
+  container.innerHTML = entries.map(([rid, d]) => {
+    const review = (appState.reviews[currentWorkoutId]||[]).find(r => r.id === rid);
+    if (!review) return '';
+    return `
+      <div class="dl-item">
+        <div class="dl-status ${d.status}">${d.status}</div>
+        <div class="dl-text">${review.title}</div>
+        <div class="dl-source">${review.source}</div>
+        <div class="dl-date">${new Date(d.timestamp).toLocaleDateString()}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  CHANGE QUEUE
+// ═══════════════════════════════════════════════════════════════════
+function renderChangeQueue() {
+  const container = document.getElementById('changeQueueContent');
+  const accepted = getAcceptedChanges().filter(c => c.workoutId === currentWorkoutId);
+  if (!accepted.length) {
+    container.innerHTML = '<div class="cq-empty">No approved changes yet. Accept review items to build your change queue.</div>';
+    return;
+  }
+  container.innerHTML = accepted.map(c => `
+    <div class="cq-item">
+      <div class="cq-item-header">
+        <div class="cq-item-workout">${WORKOUTS_DATA[c.workoutId]?.title || c.workoutId}</div>
+        <div class="cq-item-source">from ${c.review.source}</div>
+      </div>
+      <div class="cq-item-text">${c.review.body}</div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  CONSENSUS SUMMARY
+// ═══════════════════════════════════════════════════════════════════
+function renderConsensusSummary() {
+  const el = document.getElementById('consensusSummary');
+  if (!currentWorkoutId) {
+    el.innerHTML = 'Select a workout to see consensus.';
+    return;
+  }
+  const reviews = getReviews(currentWorkoutId);
+  if (!reviews.length) {
+    el.innerHTML = 'No reviews yet for this workout.';
+    return;
+  }
+  const sources = [...new Set(reviews.map(r => r.source))];
+  const concerns = reviews.filter(r => r.severity === 'concern').length;
+  const suggestions = reviews.filter(r => r.severity === 'suggestion').length;
+  const endorsements = reviews.filter(r => r.severity === 'endorse').length;
+  el.innerHTML = `
+    <div style="margin-bottom:8px"><strong>${sources.length}</strong> AI${sources.length!==1?'s':''} reviewed</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div style="background:var(--red-dim);padding:4px 8px;border-radius:6px;font-size:.65rem;font-weight:700;color:var(--red)">🔴 ${concerns} concern${concerns!==1?'s':''}</div>
+      <div style="background:var(--gold-dim);padding:4px 8px;border-radius:6px;font-size:.65rem;font-weight:700;color:var(--gold)">🟡 ${suggestions} suggestion${suggestions!==1?'s':''}</div>
+      <div style="background:var(--green-dim);padding:4px 8px;border-radius:6px;font-size:.65rem;font-weight:700;color:var(--green)">🟢 ${endorsements} endorsement${endorsements!==1?'s':''}</div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  PROMPT GENERATOR
+// ═══════════════════════════════════════════════════════════════════
+function generatePrompt() {
+  if (!currentWorkoutId) { toast('Select a workout first'); return; }
+  const w = WORKOUTS_DATA[currentWorkoutId];
+  let exerciseList = '';
+  if (w.sections && w.sections.length) {
+    w.sections.forEach(sec => {
+      exerciseList += `\n${sec.emoji} ${sec.name} (${sec.meta}):\n`;
+      sec.exercises.forEach(ex => {
+        exerciseList += `  - ${ex.name}: ${ex.detail} × ${ex.sets} set(s) → [${ex.muscles.join(', ')}]\n`;
+      });
+    });
+  } else if (w.cardio) {
+    exerciseList = `\nCardio session: ${w.cardio.target}, ${w.cardio.zone} (${w.cardio.hr})\n${w.description}\n`;
+    if (w.focuses) exerciseList += w.focuses.map(f => `  ${f.icon} ${f.text}`).join('\n');
+  }
+
+  // Check for existing reviews to include
+  const existingReviews = getReviews(currentWorkoutId);
+  let existingSection = '';
+  if (existingReviews.length) {
+    existingSection = `\n\n--- EXISTING REVIEWS FROM OTHER AIs ---\n`;
+    existingReviews.forEach(r => {
+      existingSection += `\n[${r.source.toUpperCase()} — ${r.severity}] ${r.title}\n${r.body}\n`;
+    });
+    existingSection += `\nPlease respond to or build on these reviews where relevant.\n`;
+  }
+
+  const prompt = `I'm building a workout tracking app and want your expert review of this workout program. Please analyze it for:
+
+1. Exercise selection (appropriate for the goals?)
+2. Volume & intensity (too much/little? balanced across muscle groups?)
+3. Recovery considerations (given the weekly schedule)
+4. Movement pattern balance (push vs pull, bilateral vs unilateral)
+5. Progression potential (can this program grow with the user?)
+6. Any safety concerns or red flags
+
+WORKOUT: ${w.title}
+Mode: ${w.mode}
+Schedule: ${w.schedule}
+Total Sets: ${w.totalSets}
+${exerciseList}${existingSection}
+
+Please format your response as a list of review points, each tagged with:
+- 🟢 ENDORSE: Things that are correct and should stay
+- 🟡 SUGGEST: Things that could be improved
+- 🔴 CONCERN: Potential problems that should be addressed
+
+For each point, include:
+- A short title (one line)
+- A detailed explanation
+- Which specific exercises are affected (if any)`;
+
+  document.getElementById('promptOutput').style.display = '';
+  document.getElementById('promptOutput').textContent = prompt;
+  document.getElementById('copyPromptBtn').style.display = '';
+}
+
+function copyPrompt() {
+  const text = document.getElementById('promptOutput').textContent;
+  navigator.clipboard.writeText(text).then(() => toast('Prompt copied to clipboard ✓'));
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  IMPORT / EXPORT
+// ═══════════════════════════════════════════════════════════════════
+function exportData() {
+  const blob = new Blob([JSON.stringify(appState, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `workout-reviews-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Data exported ✓');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      // Merge with existing
+      if (data.reviews) {
+        for (const wid in data.reviews) {
+          if (!appState.reviews[wid]) appState.reviews[wid] = [];
+          const existingIds = new Set(appState.reviews[wid].map(r => r.id));
+          data.reviews[wid].forEach(r => {
+            if (!existingIds.has(r.id)) appState.reviews[wid].push(r);
+          });
+        }
+      }
+      if (data.decisions) {
+        for (const wid in data.decisions) {
+          if (!appState.decisions[wid]) appState.decisions[wid] = {};
+          Object.assign(appState.decisions[wid], data.decisions[wid]);
+        }
+      }
+      if (data.threads) {
+        for (const rid in data.threads) {
+          if (!appState.threads[rid]) appState.threads[rid] = [];
+          const existingTs = new Set(appState.threads[rid].map(t => t.timestamp));
+          data.threads[rid].forEach(t => {
+            if (!existingTs.has(t.timestamp)) appState.threads[rid].push(t);
+          });
+        }
+      }
+      saveState();
+      if (currentWorkoutId) selectWorkout(currentWorkoutId);
+      else buildWorkoutList();
+      toast('Data imported ✓');
+    } catch(err) {
+      toast('Import error: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function clearAllData() {
+  if (!confirm('Clear ALL reviews, decisions, and threads? This cannot be undone.')) return;
+  appState = { reviews: {}, decisions: {}, threads: {} };
+  saveState();
+  if (currentWorkoutId) selectWorkout(currentWorkoutId);
+  else buildWorkoutList();
+  toast('All data cleared');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  HEADER STATS
+// ═══════════════════════════════════════════════════════════════════
+function updateHeaderStats() {
+  document.getElementById('statReviews').textContent = getAllReviews();
+  document.getElementById('statDecisions').textContent = getAllDecisions();
+  document.getElementById('statQueued').textContent = getAcceptedChanges().length;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════════════════
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('visible');
+  setTimeout(() => t.classList.remove('visible'), 2500);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  SEED ANTIGRAVITY REVIEW
+// ═══════════════════════════════════════════════════════════════════
+function seedAntigravityReview() {
+  if (getAllReviews() > 0) return; // Don't re-seed
+
+  const ts = new Date().toISOString();
+  const reviews = {
+    'db-push': [
+      { id:'seed_dbpush_1', source:'antigravity', severity:'endorse', title:'Solid push exercise selection', body:'Floor Press, OHP, Lateral Raise, Arnold Press, Tricep Kickback — this is a well-rounded push day that hits all three heads of the delts plus chest and triceps. The order is logical: compound-first, isolation-last.', exercises:['DB Floor Press','DB Overhead Press','DB Arnold Press'], timestamp:ts },
+      { id:'seed_dbpush_2', source:'antigravity', severity:'suggestion', title:'Arnold Press + Lateral Raise duplication with Saturday', body:'Both DB Push (Mon) and DB Upper Burn (Sat) include Lateral Raise and Arnold Press. That\'s shoulders getting hammered with only 5 days between identical exercises. Consider replacing one of these on Saturday with a rear delt or row movement to balance push/pull.', exercises:['DB Lateral Raise','DB Arnold Press'], timestamp:ts },
+    ],
+    'db-lower': [
+      { id:'seed_dblower_1', source:'antigravity', severity:'endorse', title:'Excellent compound-heavy lower body day', body:'Goblet Squat → RDL → Walking Lunges → Step-Up → Hip Thrust is a textbook lower body sequence. Hits quads, hamstrings, glutes, and calves through multiple planes. The hip-dominant (RDL, Hip Thrust) and knee-dominant (Squat, Step-Up, Lunge) balance is good.', exercises:['Goblet Squat','Romanian Deadlift','Walking Lunges','DB Step-Up','DB Hip Thrust'], timestamp:ts },
+    ],
+    'db-pull': [
+      { id:'seed_dbpull_1', source:'antigravity', severity:'endorse', title:'Good back & bicep isolation', body:'Single-arm row + bent-over row gives great lat volume. Rear delt fly is a smart inclusion that many programs miss. Hammer curl for brachialis is a good detail.', exercises:['DB Single-Arm Row','DB Bent-Over Row','DB Rear Delt Fly','DB Hammer Curl'], timestamp:ts },
+    ],
+    'db-upper': [
+      { id:'seed_dbupper_1', source:'antigravity', severity:'concern', title:'Labeled "Upper Body" but has zero pull exercises', body:'Saturday\'s Upper Burn includes: Lateral Raise, Front Raise, Arnold Press, Upright Row, Floor Fly. All 5 are anterior-chain push movements. There are zero rows, rear delt movements, or back exercises. This creates a significant push/pull imbalance over the training week — push volume far exceeds pull volume. A balanced "upper body" day should include at least 2 pulling movements (e.g., DB Row, Rear Delt Fly).', exercises:['DB Lateral Raise','DB Front Raise','DB Arnold Press','DB Upright Row','DB Floor Fly'], timestamp:ts },
+      { id:'seed_dbupper_2', source:'antigravity', severity:'suggestion', title:'Upright Row has shoulder impingement risk', body:'DB Upright Row is controversial — it internally rotates the shoulder under load, which can compress the supraspinatus tendon. For most people, a high pull or face pull is safer and equally effective for upper traps and delts.', exercises:['DB Upright Row'], timestamp:ts },
+    ],
+    'full-body-core': [
+      { id:'seed_fbc_1', source:'antigravity', severity:'suggestion', title:'Named "Core Focus" but core section is the smallest', body:'The "Core Finisher" has 5 exercises at 2 sets each — same as every other workout. Despite the name "Full-Body Core Focus," there\'s nothing extra for core here. Consider adding a dedicated core circuit (e.g., Pallof press progression, dead bug variations, ab wheel) or increasing core sets to 3 rounds to justify the name.', exercises:[], timestamp:ts },
+    ],
+    'pull': [
+      { id:'seed_pull_1', source:'antigravity', severity:'concern', title:'Calisthenics "Pull Day" has almost no pulling', body:'Of the 5 strength exercises, only Inverted Row is a genuine pull movement. Superman Hold, Bird Dog, Good Morning, and Bear Crawl are all posterior chain or stability work — not pulls. Without a pull-up bar, this day should be renamed "Posterior Chain & Stability" or restructured to include more horizontal pull alternatives (towel rows, doorframe rows, band pull-aparts).', exercises:['Inverted Row','Superman Hold','Bird Dog','Good Morning','Bear Crawl'], timestamp:ts },
+    ],
+    'upper': [
+      { id:'seed_upper_1', source:'antigravity', severity:'concern', title:'Calisthenics Upper Burn is 100% push — same issue as dumbbell mode', body:'Push-Up, Wide Push-Up, Diamond Push-Up, Pike Push-Up, Bench Dip — all 5 are pushing movements. Zero pulling. Combined with Monday\'s Push Power day, the chest/shoulders/triceps are getting worked twice in a week with heavy volume, while the back gets almost nothing. This will create posture issues (rounded shoulders) over time. Add inverted rows, towel rows, or doorframe pulls.', exercises:['Push-Up','Wide Push-Up','Diamond Push-Up','Pike Push-Up','Bench / Chair Dip'], timestamp:ts },
+    ],
+  };
+
+  // Also add cross-cutting reviews
+  const crossCutting = [
+    { id:'seed_cross_1', source:'antigravity', severity:'suggestion', title:'Core finishers are copy-pasted across all sessions', body:'Nearly every workout uses the same 5 core exercises (Russian Twist, Dead Bug, Plank, Bicycle Crunch, Side Plank, V-Up) in the same order. This will plateau quickly and become monotonous. Consider creating 3 different core circuits (A/B/C) and rotating them weekly. E.g., Circuit A: anti-extension focus (dead bug, hollow body, plank). Circuit B: rotation focus (Russian twist, bicycle, woodchop). Circuit C: anti-lateral flexion (side plank, suitcase carry, Pallof press).', exercises:[], timestamp:ts },
+    { id:'seed_cross_2', source:'antigravity', severity:'suggestion', title:'All sessions are exactly 31 total sets — artificially uniform', body:'Every single workout across all modes has exactly 31 total sets. A heavy compound lower-body day (Goblet Squat, RDL, Lunges) doesn\'t need the same volume as a higher-rep isolation burn day. Consider scaling: Lower body compound days: 25-28 sets. Upper burn/isolation days: 20-24 sets. Full body: 28-31 sets. This matches how volume should correlate with intensity.', exercises:[], timestamp:ts },
+  ];
+
+  // Apply cross-cutting to relevant workouts
+  for (const wid of Object.keys(WORKOUTS_DATA)) {
+    if (wid.startsWith('run-') || wid.startsWith('swim-') || wid.startsWith('bike-')) continue;
+    if (!reviews[wid]) reviews[wid] = [];
+  }
+
+  // Seed into state
+  for (const [wid, revs] of Object.entries(reviews)) {
+    if (!appState.reviews[wid]) appState.reviews[wid] = [];
+    revs.forEach(r => appState.reviews[wid].push(r));
+  }
+
+  // Add the cross-cutting to full-body-core (representative workout)
+  crossCutting.forEach(r => {
+    if (!appState.reviews['full-body-core']) appState.reviews['full-body-core'] = [];
+    appState.reviews['full-body-core'].push(r);
+  });
+
+  saveState();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════════
+seedAntigravityReview();
+buildWorkoutList();
+updateHeaderStats();
+</script>
+</body>
+</html>

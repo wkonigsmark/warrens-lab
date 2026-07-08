@@ -1,15 +1,24 @@
 const SEASON = 2026;
 let GAMES_2026 = null;
 
+// ESPN Top 25 tiles mirror the W²-Index rows: team colors, logos, and the
+// W² rank as the cross-reference (the inverse of the ★ badge on the index)
 function renderPoll() {
   const list = document.getElementById('poll-list');
-  list.innerHTML = TOP_25.map(t => `
-    <div class="poll-row">
-      <div class="poll-rank">${t.rank}</div>
-      <div class="poll-team">${t.team}</div>
-      <div class="poll-conf">${t.conf}</div>
-    </div>
-  `).join('');
+  const byName = INDEX_DATA ? new Map(INDEX_DATA.teams.map(t => [t.school, t])) : null;
+  list.innerHTML = TOP_25.map(t => {
+    const idx = byName?.get(t.team);
+    const conf = CONF_ACRO[t.conf] || t.conf;
+    return `
+      <div class="poll-tile" style="--team-color:${idx?.color || 'var(--gold-dim)'}">
+        <span class="poll-tile-rank">${t.rank}</span>
+        ${idx?.logo ? `<img class="poll-tile-logo" src="${idx.logo}" alt="" loading="lazy">` : ''}
+        <span class="poll-tile-team">${t.team}</span>
+        <span class="poll-tile-conf">${conf}</span>
+        ${idx ? `<span class="poll-tile-w2">W² #${idx.rank}</span>` : ''}
+      </div>
+    `;
+  }).join('');
 }
 
 // Tabs are hash-routed (#index, #top25, …) and driven by the shared header (nav.js)
@@ -34,62 +43,201 @@ function initTabs() {
   routeTab();
 }
 
-// --- Schedule (reads data/games-<year>.json produced by api/fetch_games.py) ---
+// --- Schedule: matchups rated by quality + closeness + playoff impact ---
+// Marquee score (0–100) = avg W² rating of both teams, minus half the spread
+// (mismatches are boring), plus a contender bonus for top-12/top-25 teams.
 
-const RANKED = new Map(TOP_25.map(t => [t.team, t.rank]));
+let W2_BY_NAME = null;
 
-function teamLabel(name) {
-  const rank = RANKED.get(name);
-  return rank ? `<span class="rank-badge">#${rank}</span> ${name}` : name;
+function gameMetrics(g) {
+  const home = W2_BY_NAME.get(g.homeTeam);
+  const away = W2_BY_NAME.get(g.awayTeam);
+  const rHome = home ? home.rating : INDEX_DATA.fcsPoolRating;
+  const rAway = away ? away.rating : INDEX_DATA.fcsPoolRating;
+  const edgeHome = rHome - rAway + (g.neutralSite ? 0 : HOME_EDGE);
+  const spread = Math.abs(edgeHome);
+  const favName = edgeHome >= 0 ? g.homeTeam : g.awayTeam;
+  const favProb = 1 / (1 + Math.pow(10, -spread / 15));
+  const bonus = t => !t ? 0 : t.rank <= 12 ? 3 : t.rank <= 25 ? 1.5 : 0;
+  const marquee = (rHome + rAway) / 2 - spread / 2 + bonus(home) + bonus(away);
+  const score = Math.max(0, Math.min(100, Math.round((marquee + 25) * 2)));
+  return { home, away, spread, favName, favProb, score };
 }
 
-function gameRow(g) {
+function mprClass(score) {
+  if (score >= 80) return 'mpr-hot';
+  if (score >= 65) return 'mpr-good';
+  if (score >= 50) return 'mpr-mid';
+  return 'mpr-low';
+}
+
+function schedTeam(name, idx) {
+  const logo = idx?.logo ? `<img src="${idx.logo}" alt="" loading="lazy">` : '';
+  const rank = idx ? `<span class="game-rank">#${idx.rank}</span>` : '<span class="game-rank dim">FCS</span>';
+  return `<span class="game-team">${logo}${rank} ${name}</span>`;
+}
+
+function gameCard(g) {
+  const m = gameMetrics(g);
   const date = g.date
     ? new Date(g.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
     : 'TBD';
-  const score = g.completed
-    ? `<span class="game-score">${g.awayPoints}–${g.homePoints}</span>`
-    : `<span class="game-date">${date}</span>`;
   const at = g.neutralSite ? 'vs' : 'at';
   return `
-    <div class="game-row">
-      <div class="game-teams">${teamLabel(g.awayTeam)} <span class="game-at">${at}</span> ${teamLabel(g.homeTeam)}</div>
-      ${score}
+    <div class="game-card">
+      <div class="mpr-chip ${mprClass(m.score)}" title="Marquee score: matchup quality 0–100">${m.score}</div>
+      <div class="game-info">
+        <div class="game-line">
+          ${schedTeam(g.awayTeam, m.away)}
+          <span class="game-at">${at}</span>
+          ${schedTeam(g.homeTeam, m.home)}
+        </div>
+        <div class="game-sub">Wk ${g.week} · ${date}${g.neutralSite ? ' · neutral site' : ''}
+          · ${m.favName} by ${m.spread.toFixed(1)} · ${Math.round(m.favProb * 100)}%</div>
+      </div>
     </div>
+  `;
+}
+
+const ALL_SEASON_CAP = 75;
+
+// week radar: per-week concentration of quality games + that week's peak game
+function weekRadar(games, weeks) {
+  const stats = weeks.map(w => {
+    const ms = games.filter(g => g.week === w).map(gameMetrics);
+    const quality = ms.filter(m => m.score >= 65).length;
+    const flips = ms.filter(m => m.spread < 3 &&
+      (m.home?.rank || 999) <= 40 && (m.away?.rank || 999) <= 40).length;
+    const max = Math.max(0, ...ms.map(m => m.score));
+    return { week: w, quality, flips, max };
+  });
+  const peak = Math.max(...stats.map(s => s.quality), 1);
+  const best = stats.reduce((a, b) => (b.quality > a.quality ? b : a));
+  return `
+    <div class="week-radar" id="week-radar">
+      ${stats.map(s => `
+        <button class="wr-col" data-week="${s.week}"
+          title="Week ${s.week}: ${s.quality} marquee game${s.quality === 1 ? '' : 's'} (65+) · ${s.flips} ranked coin-flip${s.flips === 1 ? '' : 's'} (<3 pts) · best game ${s.max}">
+          ${s === best ? '<span class="wr-crown">★</span>' : ''}
+          <span class="wr-max ${mprClass(s.max)}">${s.max}</span>
+          <span class="wr-track"><span class="wr-bar" style="height:${Math.max(6, (s.quality / peak) * 100)}%"></span></span>
+          <span class="wr-week">${s.week}</span>
+        </button>
+      `).join('')}
+    </div>
+    <p class="wr-legend">bar = marquee games that week (65+) · number = the week's best game
+      · ★ = most loaded week · click a week to jump</p>
   `;
 }
 
 function renderSchedule(games) {
   const container = document.getElementById('tab-schedule');
   const weeks = [...new Set(games.map(g => g.week))].sort((a, b) => a - b);
+  const confs = [...new Set(INDEX_DATA.teams.map(t => t.conference))]
+    .filter(c => c !== 'FBS Independents').sort();
 
   container.innerHTML = `
+    ${weekRadar(games, weeks)}
     <div class="schedule-controls">
       <select id="week-select" class="week-select">
+        <option value="all">All season</option>
         ${weeks.map(w => `<option value="${w}">Week ${w}</option>`).join('')}
       </select>
-      <label class="ranked-toggle">
-        <input type="checkbox" id="ranked-only" checked> Top 25 only
-      </label>
+      <select id="conf-filter" class="week-select">
+        <option value="">All conferences</option>
+        ${confs.map(c => `<option value="${c}">${c}</option>`).join('')}
+      </select>
+      <select id="rank-filter" class="week-select">
+        <option value="">Any teams</option>
+        <option value="one25">One team top 25</option>
+        <option value="both25">Both top 25</option>
+        <option value="both12">Both top 12</option>
+      </select>
+      <select id="spread-filter" class="week-select">
+        <option value="">Any spread</option>
+        <option value="1">Under 1 · pick'em</option>
+        <option value="3">Under 3</option>
+        <option value="7">Under 7 · one score</option>
+      </select>
+      <select id="sort-select" class="week-select">
+        <option value="marquee">Best matchups first</option>
+        <option value="tight">Tightest spread first</option>
+        <option value="time">Kickoff order</option>
+      </select>
     </div>
-    <div id="schedule-list" class="poll-list"></div>
+    <div class="teams-count" id="sched-count"></div>
+    <div id="schedule-list" class="sched-cards"></div>
+    <p class="index-footnote">Marquee score = how good both teams are, minus the mismatch,
+      plus a bump when playoff contenders collide · spread & win% from W²-Index ratings</p>
   `;
 
   function draw() {
-    const week = Number(document.getElementById('week-select').value);
-    const rankedOnly = document.getElementById('ranked-only').checked;
-    let shown = games.filter(g => g.week === week);
-    if (rankedOnly) {
-      shown = shown.filter(g => RANKED.has(g.homeTeam) || RANKED.has(g.awayTeam));
+    const week = document.getElementById('week-select').value;
+    const conf = document.getElementById('conf-filter').value;
+    const rankF = document.getElementById('rank-filter').value;
+    const spreadF = document.getElementById('spread-filter').value;
+    const sort = document.getElementById('sort-select').value;
+    const allSeason = week === 'all';
+
+    let pool = allSeason ? games : games.filter(g => g.week === Number(week));
+    let shown = pool.map(g => ({ g, m: gameMetrics(g) }));
+
+    if (conf) {
+      shown = shown.filter(({ m }) =>
+        m.home?.conference === conf || m.away?.conference === conf);
     }
+    if (rankF) {
+      shown = shown.filter(({ m }) => {
+        const hr = m.home?.rank || 999, ar = m.away?.rank || 999;
+        if (rankF === 'one25') return hr <= 25 || ar <= 25;
+        if (rankF === 'both25') return hr <= 25 && ar <= 25;
+        return hr <= 12 && ar <= 12;
+      });
+    }
+    if (spreadF) {
+      shown = shown.filter(({ m }) => m.spread < Number(spreadF));
+    }
+
+    if (sort === 'tight') {
+      shown.sort((a, b) => a.m.spread - b.m.spread);
+    } else if (sort === 'marquee' || allSeason && sort !== 'time') {
+      shown.sort((a, b) => b.m.score - a.m.score);
+    } else {
+      shown.sort((a, b) => String(a.g.date).localeCompare(String(b.g.date)));
+    }
+
+    const total = shown.length;
+    let note = `${total} game${total === 1 ? '' : 's'}`;
+    if (allSeason && total > ALL_SEASON_CAP) {
+      shown = shown.slice(0, ALL_SEASON_CAP);
+      note = `top ${ALL_SEASON_CAP} of ${total} matching games, season-wide`;
+    }
+    document.getElementById('sched-count').textContent = note;
     document.getElementById('schedule-list').innerHTML =
-      shown.map(gameRow).join('') ||
+      shown.map(({ g }) => gameCard(g)).join('') ||
       '<div class="stub-card"><p>No games match this filter.</p></div>';
+
+    document.querySelectorAll('.wr-col').forEach(col =>
+      col.classList.toggle('wr-active', col.dataset.week === week));
   }
 
-  document.getElementById('week-select').addEventListener('change', draw);
-  document.getElementById('ranked-only').addEventListener('change', draw);
+  ['week-select', 'conf-filter', 'rank-filter', 'spread-filter', 'sort-select']
+    .forEach(id => document.getElementById(id).addEventListener('change', draw));
+  document.getElementById('week-radar').addEventListener('click', e => {
+    const col = e.target.closest('.wr-col');
+    if (!col) return;
+    const sel = document.getElementById('week-select');
+    sel.value = sel.value === col.dataset.week ? 'all' : col.dataset.week;
+    draw();
+  });
   draw();
+}
+
+function maybeRenderSchedule() {
+  if (GAMES_2026 && INDEX_DATA) {
+    W2_BY_NAME = new Map(INDEX_DATA.teams.map(t => [t.school, t]));
+    renderSchedule(GAMES_2026);
+  }
 }
 
 async function loadSchedule() {
@@ -98,7 +246,7 @@ async function loadSchedule() {
     if (!res.ok) throw new Error(res.status);
     const { games } = await res.json();
     GAMES_2026 = games;
-    renderSchedule(games);
+    maybeRenderSchedule();
   } catch {
     document.getElementById('tab-schedule').innerHTML = `
       <div class="stub-card">
@@ -246,7 +394,7 @@ const CONF_ACRO = {
   'SEC': 'SEC', 'Big Ten': 'B10', 'Big 12': 'B12', 'ACC': 'ACC',
   'Pac-12': 'P12', 'American Athletic': 'AAC', 'Sun Belt': 'SBC',
   'Mountain West': 'MW', 'Conference USA': 'CUSA', 'Mid-American': 'MAC',
-  'FBS Independents': 'IND', 'Ind': 'IND',
+  'FBS Independents': 'IND', 'Ind': 'IND', 'Independent': 'IND',
 };
 
 let INDEX_DATA = null;
@@ -257,6 +405,8 @@ async function loadPowerIndex() {
     if (!res.ok) throw new Error(res.status);
     INDEX_DATA = await res.json();
     renderIndexUI(INDEX_DATA);
+    renderPoll();            // add W² cross-references to the ESPN tiles
+    maybeRenderSchedule();   // schedule ratings need W² ratings
   } catch {
     document.getElementById('tab-index').innerHTML = `
       <div class="stub-card">
@@ -377,23 +527,45 @@ const INDEX_EXPLAINER = `
 
 function renderIndexUI(data) {
   document.getElementById('tab-index').innerHTML = `
-    <div class="index-section-title">The Index · 1–${data.teams.length}
+    <div class="index-section-title">The W²-Index · 1–${data.teams.length}
       <span>projected 2026 · click a team for its schedule</span>
       <button class="info-toggle" id="index-info-btn" aria-expanded="false"
-        title="How the Index works">?</button>
+        title="How the W²-Index works">?</button>
     </div>
     <div class="index-explainer" id="index-explainer" hidden>${INDEX_EXPLAINER}</div>
+    <div class="w2-controls">
+      <input type="search" id="w2-search" class="team-search"
+        placeholder="Search team or conference…">
+      <span class="teams-count" id="w2-count"></span>
+    </div>
     <div class="index-list-head">
       <span>#</span><span></span><span>Team</span><span>Conf</span>
       <span title="Projected 2026 strength vs an average FBS team — rating gaps read like point spreads">Rating</span>
       <span title="2025 results: avg margin adjusted for opponent strength, capped at ±28">'25 SRS</span>
       <span title="Average projected rating of 2026 opponents — higher = harder schedule">'26 SoS</span>
     </div>
-    <div class="index-list">${data.teams.map(indexTeamRow).join('')}</div>
+    <div class="index-list"></div>
     ${confStrengthTable(data)}
     ${confMatrix(data)}
     <p class="index-footnote">${data.note}</p>
   `;
+
+  const searchEl = document.getElementById('w2-search');
+  function drawW2List() {
+    const q = searchEl.value.trim().toLowerCase();
+    const teams = !q ? data.teams : data.teams.filter(t =>
+      t.school.toLowerCase().includes(q) ||
+      t.conference.toLowerCase().includes(q) ||
+      (CONF_ACRO[t.conference] || '').toLowerCase() === q);
+    document.querySelector('#tab-index .index-list').innerHTML =
+      teams.map(indexTeamRow).join('') ||
+      '<div class="stub-card"><p>No teams match.</p></div>';
+    document.getElementById('w2-count').textContent =
+      q ? `${teams.length} team${teams.length === 1 ? '' : 's'}` : '';
+  }
+  searchEl.addEventListener('input', drawW2List);
+  drawW2List();
+
   document.querySelector('#tab-index .index-list').addEventListener('click', e => {
     const row = e.target.closest('.index-row');
     if (row) openTeamModal(row.dataset.school);
@@ -465,7 +637,7 @@ function openTeamModal(school) {
       <div>
         <h2>${team.school}</h2>
         <div class="team-modal-sub">
-          Index #${team.rank} · ${CONF_ACRO[team.conference] || team.conference}
+          W² #${team.rank} · ${CONF_ACRO[team.conference] || team.conference}
           · ${(team.rating > 0 ? '+' : '') + team.rating.toFixed(1)}
           ${team.pollRank ? ` · ★ ESPN #${team.pollRank}` : ''}
         </div>
@@ -509,6 +681,7 @@ function teamChip(t, { winner = false, prob = null, upset = false, loser = false
   if (!t) return '<div class="chip chip-tbd">TBD</div>';
   return `
     <div class="chip ${winner ? 'chip-win' : ''} ${loser ? 'chip-loser' : ''}"
+      title="${t.seed} ${t.school}"
       style="--team-color:${t.color || 'var(--gold-dim)'}">
       <span class="chip-seed">${t.seed}</span>
       ${t.logo ? `<img class="chip-logo" src="${t.logo}" alt="" loading="lazy">` : ''}
@@ -589,7 +762,7 @@ function renderBracket(data) {
     <div class="sim-controls">
       <button class="format-btn" id="sim-btn">🎲 Run It Back</button>
       <button class="format-btn" id="format-btn">🏆 Playoff Format</button>
-      <span class="sim-note">field locked from The Index · results re-rolled every sim</span>
+      <span class="sim-note">field locked from the W²-Index · results re-rolled every sim</span>
     </div>
     <div id="bracket-live"></div>
     <div class="bid-summary">
@@ -599,14 +772,14 @@ function renderBracket(data) {
       </div>
       <div class="bid-group">
         <h4>G6 auto bid</h4>
-        <p>${g6.seed ?? ''} ${g6.school} (${CONF_ACRO[g6.conference] || g6.conference}, index #${g6.rank})</p>
+        <p>${g6.seed ?? ''} ${g6.school} (${CONF_ACRO[g6.conference] || g6.conference}, W² #${g6.rank})</p>
       </div>
       <div class="bid-group">
         <h4>At-large</h4>
         <p>${seeds.slice(4).filter(t => t.school !== g6.school).map(t => `${t.seed} ${t.school}`).join(' · ')}</p>
       </div>
     </div>
-    <p class="index-footnote">Field & seeds are deterministic from The Index: highest-rated team per P4 conference = presumptive champ (bye), top Group of 6 team gets the auto bid, next 7 by rating at-large. Game results are simulated — each game is a weighted coin flip on the rating-gap win probability, so underdogs really do win sometimes. % shown is the winner's pre-game chance.</p>
+    <p class="index-footnote">Field & seeds are deterministic from the W²-Index: highest-rated team per P4 conference = presumptive champ (bye), top Group of 6 team gets the auto bid, next 7 by rating at-large. Game results are simulated — each game is a weighted coin flip on the rating-gap win probability, so underdogs really do win sometimes. % shown is the winner's pre-game chance.</p>
   `;
   document.getElementById('sim-btn').addEventListener('click', runBracketSim);
   runBracketSim();
