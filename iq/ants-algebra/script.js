@@ -12,6 +12,7 @@
         <div class="header-left">
           <a class="pill-btn" href="../ants-apples/index.html" title="Back to Ants & Apples">← Ants & Apples</a>
           <a class="pill-btn primary" href="../index.html" title="IQ Toolkit">IQ</a>
+          <button id="help-btn" class="pill-btn help" type="button" title="How to play">? Help</button>
           <button id="music-toggle-btn" class="pill-btn music" type="button" title="Toggle background music">Music: On</button>
           <button id="print-worksheet-btn" class="pill-btn print" type="button" title="Print a worksheet for the current mode">Print Worksheet</button>
         </div>
@@ -87,6 +88,96 @@
           Best: <span class="accent" id="best">0</span>
         </div>
       </main>
+
+      <!-- Help overlay -->
+      <div id="help-backdrop">
+        <div id="help-dialog">
+          <div id="help-dialog-header">
+            <span id="help-dialog-title">How Algebra Works 🐜</span>
+            <button id="help-close-x" type="button" aria-label="Close">✕</button>
+          </div>
+
+          <!-- Tab bar -->
+          <div id="help-tabs">
+            <button class="help-tab active" data-tab="solve">Solve <em>x</em></button>
+            <button class="help-tab" data-tab="chain">Chains</button>
+            <button class="help-tab" data-tab="chainx">Chains &amp; <em>x</em></button>
+          </div>
+
+          <!-- Solve x panel -->
+          <div class="help-panel active" id="help-panel-solve">
+            <div class="help-hero"><em>x</em></div>
+            <p class="help-intro"><strong><em>x</em> is a mystery number</strong> hiding in the equation. Your job is to figure out what it is!</p>
+            <div class="help-think">
+              <div class="help-think-label">Think of it like a balance scale ⚖️</div>
+              <div class="help-think-body">Both sides of the <strong>=</strong> sign must weigh the same. Figure out what number makes it balance!</div>
+            </div>
+            <div class="help-example">
+              <div class="help-example-eq">3 + <em>x</em> = 7</div>
+              <div class="help-steps">
+                <div class="help-step">🤔 <span>"3 plus <strong>what</strong> equals 7?"</span></div>
+                <div class="help-step">🧮 <span>Count up from 3 to 7 — that's <strong>4 steps</strong>.</span></div>
+                <div class="help-step">✅ <span><em>x</em> = <strong>4</strong></span></div>
+              </div>
+            </div>
+            <div class="help-tip">💡 <strong>Tip:</strong> Cover the <em>x</em> with your finger and think "what number fits here?"</div>
+          </div>
+
+          <!-- Chains panel -->
+          <div class="help-panel" id="help-panel-chain">
+            <div class="help-hero">🔗</div>
+            <p class="help-intro"><strong>Chains</strong> are problems with lots of numbers linked together. Work through them <strong>one step at a time</strong>, left to right.</p>
+            <div class="help-example">
+              <div class="help-example-label">Simple chain:</div>
+              <div class="help-example-eq">4 + 3 − 2 =</div>
+              <div class="help-steps">
+                <div class="help-step">① <span>4 + 3 = <strong>7</strong></span></div>
+                <div class="help-step">② <span>7 − 2 = <strong>5</strong></span></div>
+                <div class="help-step">✅ <span>Answer: <strong>5</strong></span></div>
+              </div>
+            </div>
+            <div class="help-example">
+              <div class="help-example-label">Complex chain (with parentheses):</div>
+              <div class="help-example-eq">8 + (6 ÷ 2) =</div>
+              <div class="help-steps">
+                <div class="help-step">① <span>Do the <strong>( ) part first</strong>: 6 ÷ 2 = <strong>3</strong></span></div>
+                <div class="help-step">② <span>8 + 3 = <strong>11</strong></span></div>
+                <div class="help-step">✅ <span>Answer: <strong>11</strong></span></div>
+              </div>
+            </div>
+            <div class="help-tip">💡 <strong>Tip:</strong> See parentheses ( )? Always solve what's inside them first!</div>
+          </div>
+
+          <!-- Chains & X panel -->
+          <div class="help-panel" id="help-panel-chainx">
+            <div class="help-hero">🔗<em>x</em></div>
+            <p class="help-intro">Now <em>x</em> is <strong>hiding inside a chain</strong>. Solve the numbers you can see, then figure out what <em>x</em> must be to make it balance.</p>
+            <div class="help-example">
+              <div class="help-example-label">Simple Chains & <em>x</em>:</div>
+              <div class="help-example-eq">5 + <em>x</em> − 2 = 7</div>
+              <div class="help-steps">
+                <div class="help-step">① <span>Ignore <em>x</em> for now. What does 5 − 2 equal? <strong>3</strong></span></div>
+                <div class="help-step">② <span>So <em>x</em> + 3 must equal 7. What's <em>x</em>?</span></div>
+                <div class="help-step">✅ <span><em>x</em> = <strong>4</strong></span></div>
+              </div>
+            </div>
+            <div class="help-example">
+              <div class="help-example-label">Complex Chains & <em>x</em>:</div>
+              <div class="help-example-eq">10 + (3 × <em>x</em>) = 19</div>
+              <div class="help-steps">
+                <div class="help-step">① <span>19 − 10 = <strong>9</strong>, so the ( ) part must equal 9</span></div>
+                <div class="help-step">② <span>3 × <em>x</em> = 9 → <em>x</em> = <strong>3</strong></span></div>
+                <div class="help-step">✅ <span><em>x</em> = <strong>3</strong></span></div>
+              </div>
+            </div>
+            <div class="help-tip">💡 <strong>Tip:</strong> Work backwards from the answer — peel away the numbers you know!</div>
+          </div>
+
+          <div id="help-actions">
+            <button id="help-close-btn" type="button">Got it — let's go! 🐜</button>
+          </div>
+        </div>
+      </div>
     `;
 
     // ---- Shared state ----
@@ -426,6 +517,30 @@
     document.getElementById('check-btn').addEventListener('click', checkAnswer);
     document.getElementById('next-btn').addEventListener('click', newProblem);
     document.getElementById('print-worksheet-btn').addEventListener('click', printWorksheet);
+
+    // ---- Help overlay ----
+    const helpBackdrop = document.getElementById('help-backdrop');
+    document.getElementById('help-btn').addEventListener('click', () => {
+      helpBackdrop.style.display = 'flex';
+    });
+    document.getElementById('help-close-btn').addEventListener('click', () => {
+      helpBackdrop.style.display = 'none';
+    });
+    document.getElementById('help-close-x').addEventListener('click', () => {
+      helpBackdrop.style.display = 'none';
+    });
+    helpBackdrop.addEventListener('click', (e) => {
+      if (e.target === helpBackdrop) helpBackdrop.style.display = 'none';
+    });
+    // Help dialog tabs
+    document.querySelectorAll('.help-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.help-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.help-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('help-panel-' + tab.dataset.tab).classList.add('active');
+      });
+    });
 
     document.getElementById('keypad').addEventListener('click', (e) => {
       const target = e.target.closest('.key');
