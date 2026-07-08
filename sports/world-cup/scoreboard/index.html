@@ -3333,7 +3333,10 @@
               <td style="text-align:center;color:var(--wc-muted);font-size:0.85rem;">${max}</td>
               <td style="text-align:center;">${koRemainingGamesRow(picks)}</td>
               <td style="text-align:center;">
-                <button class="ko-my-picks-btn" data-bracket-name="${entry.bracket_name}" style="padding:6px 12px;font-size:0.75rem;border:1px solid var(--wc-gold);background:var(--wc-panel);color:var(--wc-gold);border-radius:4px;cursor:pointer;font-weight:700;">My Picks</button>
+                <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
+                  <button class="ko-my-picks-btn" data-bracket-name="${entry.bracket_name}" style="padding:6px 10px;font-size:0.75rem;border:1px solid var(--wc-gold);background:var(--wc-panel);color:var(--wc-gold);border-radius:4px;cursor:pointer;font-weight:700;">Picks</button>
+                  <button class="ko-outcome-path-btn" data-bracket-name="${entry.bracket_name}" style="padding:6px 10px;font-size:0.75rem;border:1px solid rgba(244,201,93,0.4);background:rgba(244,201,93,0.06);color:var(--wc-gold);border-radius:4px;cursor:pointer;font-weight:700;">Path</button>
+                </div>
               </td>
             </tr>`;
           }).join("");
@@ -4187,11 +4190,19 @@
 
       document.getElementById("ko-picks-download").addEventListener("click", downloadMyPicksBracket);
 
-      // "My Picks" button click handler
+      // "Picks" / "Path" button click handlers
       document.addEventListener("click", (e) => {
         if (e.target.classList.contains("ko-my-picks-btn")) {
           const bracketName = e.target.getAttribute("data-bracket-name");
           showMyPicksModal(bracketName);
+        } else if (e.target.classList.contains("ko-outcome-path-btn")) {
+          const bracketName = e.target.getAttribute("data-bracket-name");
+          const pathResult = getPathToVictoryResult();
+          if (pathResult.tooMany) {
+            window.alert("Too many games remain undecided to calculate a path yet — check back once fewer games remain.");
+          } else {
+            showPathModal(bracketName, pathResult);
+          }
         }
       });
 
