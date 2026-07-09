@@ -49,6 +49,8 @@ function initTabs() {
 // (mismatches are boring), plus a contender bonus for top-12/top-25 teams.
 
 let W2_BY_NAME = null;
+let MARKET_BY_ID = new Map();   // game id -> {marketSpread (home persp.), overUnder, books}
+let MARKET_BOOKS = '';          // human list of books seen, for the footnote
 
 function gameMetrics(g) {
   const home = W2_BY_NAME.get(g.homeTeam);
@@ -62,7 +64,38 @@ function gameMetrics(g) {
   const bonus = t => !t ? 0 : t.rank <= 12 ? 3 : t.rank <= 25 ? 1.5 : 0;
   const marquee = (rHome + rAway) / 2 - spread / 2 + bonus(home) + bonus(away);
   const score = Math.max(0, Math.min(100, Math.round((marquee + 25) * 2)));
-  return { home, away, spread, favName, favProb, score };
+  return { home, away, spread, favName, favProb, score, edgeHome };
+}
+
+// compare our projected spread to the market line (edge = where we disagree)
+function marketEdge(g, m) {
+  const mk = MARKET_BY_ID.get(g.id);
+  if (!mk || mk.marketSpread == null) return null;
+  const mktHomeMargin = -mk.marketSpread;         // + = home favored (flip CFBD sign)
+  // Guard against CFBD's occasional neutral-site home/away mislabel: if model and
+  // market strongly favor OPPOSITE teams it's a data artifact, not a real edge.
+  if (Math.sign(m.edgeHome) !== Math.sign(mktHomeMargin) &&
+      Math.abs(m.edgeHome) >= 10 && Math.abs(mktHomeMargin) >= 10) return null;
+  const mktFav = mktHomeMargin >= 0 ? g.homeTeam : g.awayTeam;
+  const mktMargin = Math.abs(mktHomeMargin);
+  const edge = m.edgeHome - mktHomeMargin;         // + = we favor home more than market
+  return {
+    mktFav, mktMargin,
+    edgeTeam: edge >= 0 ? g.homeTeam : g.awayTeam,
+    edgeAbs: Math.abs(edge),
+    // Edge is only meaningful when the market sees a competitive game. On blowouts
+    // our margin-capped ratings under-project the spread, so the "edge" there is a
+    // modeling artifact, not real disagreement — flag those as unreliable.
+    reliable: mktMargin <= 14,
+    books: mk.books.map(b => b.book),
+    overUnder: mk.overUnder,
+  };
+}
+
+function edgeClass(v) {
+  if (v >= 3) return 'edge-strong';
+  if (v >= 1.5) return 'edge-mid';
+  return 'edge-low';
 }
 
 function mprClass(score) {
@@ -84,6 +117,18 @@ function gameCard(g) {
     ? new Date(g.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
     : 'TBD';
   const at = g.neutralSite ? 'vs' : 'at';
+  const mk = marketEdge(g, m);
+  const marketLine = mk
+    ? `<div class="game-market">📊 Market: <strong>${mk.mktFav} −${mk.mktMargin.toFixed(1)}</strong>
+        <span class="game-books">${mk.books.join(', ')}</span>${mk.reliable
+          ? ` · model likes <strong>${mk.edgeTeam}</strong> by ${mk.edgeAbs.toFixed(1)}`
+          : ''}</div>`
+    : '';
+  const edgeChip = mk && mk.reliable
+    ? `<div class="edge-chip ${edgeClass(mk.edgeAbs)}"
+        title="Model favors ${mk.edgeTeam} by ${mk.edgeAbs.toFixed(1)} pts more than the market">
+        <span class="edge-num">${mk.edgeAbs.toFixed(1)}</span><span class="edge-lbl">edge</span></div>`
+    : '';
   return `
     <div class="game-card">
       <div class="mpr-chip ${mprClass(m.score)}" title="Marquee score: matchup quality 0–100">${m.score}</div>
@@ -94,8 +139,10 @@ function gameCard(g) {
           ${schedTeam(g.homeTeam, m.home)}
         </div>
         <div class="game-sub">Wk ${g.week} · ${date}${g.neutralSite ? ' · neutral site' : ''}
-          · ${m.favName} by ${m.spread.toFixed(1)} · ${Math.round(m.favProb * 100)}%</div>
+          · model: ${m.favName} by ${m.spread.toFixed(1)} · ${Math.round(m.favProb * 100)}%</div>
+        ${marketLine}
       </div>
+      ${edgeChip}
     </div>
   `;
 }
@@ -160,16 +207,26 @@ function renderSchedule(games) {
         <option value="3">Under 3</option>
         <option value="7">Under 7 · one score</option>
       </select>
+      <select id="line-filter" class="week-select">
+        <option value="">Any game</option>
+        <option value="has">Has a betting line</option>
+      </select>
       <select id="sort-select" class="week-select">
         <option value="marquee">Best matchups first</option>
         <option value="tight">Tightest spread first</option>
+        <option value="edge">Biggest edge vs market</option>
         <option value="time">Kickoff order</option>
       </select>
     </div>
     <div class="teams-count" id="sched-count"></div>
     <div id="schedule-list" class="sched-cards"></div>
     <p class="index-footnote">Marquee score = how good both teams are, minus the mismatch,
-      plus a bump when playoff contenders collide · spread & win% from W²-Index ratings</p>
+      plus a bump when playoff contenders collide · spread & win% from W²-Index ratings.
+      Market lines (median of ${MARKET_BOOKS || 'multiple books'}) shown where posted —
+      "edge" is how many more points the model favors a side than Vegas does, and is only
+      shown on games the market sees as competitive (on blowouts our margin-capped ratings
+      under-project the spread, so that gap isn't a real edge). ${MARKET_BY_ID.size} of
+      ${games.length} games have a line so far (books post most closer to kickoff).</p>
   `;
 
   function draw() {
@@ -177,11 +234,13 @@ function renderSchedule(games) {
     const conf = document.getElementById('conf-filter').value;
     const rankF = document.getElementById('rank-filter').value;
     const spreadF = document.getElementById('spread-filter').value;
+    const lineF = document.getElementById('line-filter').value;
     const sort = document.getElementById('sort-select').value;
     const allSeason = week === 'all';
 
     let pool = allSeason ? games : games.filter(g => g.week === Number(week));
-    let shown = pool.map(g => ({ g, m: gameMetrics(g) }));
+    let shown = pool.map(g => ({ g, m: gameMetrics(g), mk: null }));
+    shown.forEach(row => { row.mk = marketEdge(row.g, row.m); });
 
     if (conf) {
       shown = shown.filter(({ m }) =>
@@ -198,9 +257,15 @@ function renderSchedule(games) {
     if (spreadF) {
       shown = shown.filter(({ m }) => m.spread < Number(spreadF));
     }
+    if (lineF === 'has') {
+      shown = shown.filter(({ mk }) => mk);
+    }
 
     if (sort === 'tight') {
       shown.sort((a, b) => a.m.spread - b.m.spread);
+    } else if (sort === 'edge') {
+      const ev = mk => (mk && mk.reliable ? mk.edgeAbs : -1);
+      shown.sort((a, b) => ev(b.mk) - ev(a.mk));
     } else if (sort === 'marquee' || allSeason && sort !== 'time') {
       shown.sort((a, b) => b.m.score - a.m.score);
     } else {
@@ -222,7 +287,7 @@ function renderSchedule(games) {
       col.classList.toggle('wr-active', col.dataset.week === week));
   }
 
-  ['week-select', 'conf-filter', 'rank-filter', 'spread-filter', 'sort-select']
+  ['week-select', 'conf-filter', 'rank-filter', 'spread-filter', 'line-filter', 'sort-select']
     .forEach(id => document.getElementById(id).addEventListener('change', draw));
   document.getElementById('week-radar').addEventListener('click', e => {
     const col = e.target.closest('.wr-col');
@@ -241,9 +306,19 @@ function maybeRenderSchedule() {
   }
 }
 
+async function loadLines() {
+  try {
+    const res = await fetch(`data/lines-${SEASON}.json`);
+    if (!res.ok) return;
+    const { games } = await res.json();
+    MARKET_BY_ID = new Map(games.map(g => [g.id, g]));
+    MARKET_BOOKS = [...new Set(games.flatMap(g => g.books.map(b => b.book)))].sort().join(', ');
+  } catch { /* lines are optional — schedule still works without them */ }
+}
+
 async function loadSchedule() {
   try {
-    const res = await fetch(`data/games-${SEASON}.json`);
+    const [res] = await Promise.all([fetch(`data/games-${SEASON}.json`), loadLines()]);
     if (!res.ok) throw new Error(res.status);
     const { games } = await res.json();
     GAMES_2026 = games;
@@ -693,27 +768,66 @@ function teamChip(t, { winner = false, prob = null, upset = false, loser = false
   `;
 }
 
-function matchupCard(a, b, winner) {
-  const pWinner = winner === a ? winProb(a, b) : winProb(b, a);
-  const upset = pWinner < 0.5;
+function matchupCard(a, b, winner, chaos = 0) {
+  const loser = winner === a ? b : a;
+  const pRaw = winProb(winner, loser);           // true rating-gap probability
+  const pShown = (1 - chaos) * pRaw + 0.5 * chaos; // blended toward a coin flip
+  const upset = pRaw < 0.5;                        // winner was the true underdog
   const chips = [a, b].map(t =>
     teamChip(t, {
       winner: t === winner,
       loser: t !== winner,
-      prob: t === winner ? pWinner : null,
+      prob: t === winner ? pShown : null,
       upset: t === winner && upset,
     }));
   return `<div class="matchup">${chips.join('')}</div>`;
 }
 
-let BRACKET_FIELD = null;
+let BRACKET_DATA = null;
 let SIM_COUNT = 0;
 
+function bracketChaosNote(v) {
+  return v === 0 ? 'pure chalk — favorites always win'
+    : v <= 30 ? 'favorites mostly hold'
+    : v <= 60 ? 'upsets are live'
+    : v < 100 ? 'madness brewing' : 'anything can happen';
+}
+
+// field from a simulated season at this chaos (chalk fallback until sim.js loads)
+function getBracketField(chaos) {
+  if (window.VivaSeasonSim) return window.VivaSeasonSim.simulateOneSeason(chaos);
+  return buildPlayoffField((BRACKET_DATA || INDEX_DATA).teams);
+}
+
+function bracketPlay(chaos) {
+  return (a, b) => {
+    const p = (1 - chaos) * winProb(a, b) + 0.5 * chaos;
+    if (chaos <= 0) return p >= 0.5 ? a : b;   // pure chalk = favorite always wins
+    return Math.random() < p ? a : b;
+  };
+}
+
+function bidSummaryHTML(seeds, g6) {
+  return `
+    <div class="bid-group">
+      <h4>Byes · seeds 1–4</h4>
+      <p>${seeds.slice(0, 4).map(t => `${t.seed} ${t.school}`).join(' · ')}</p>
+    </div>
+    <div class="bid-group">
+      <h4>Group of 6 auto bid</h4>
+      <p>${g6 && g6.school ? `${g6.seed ?? ''} ${g6.school} (${CONF_ACRO[g6.conference] || g6.conference}, W² #${g6.rank})` : '—'}</p>
+    </div>
+    <div class="bid-group">
+      <h4>Seeds 5–12</h4>
+      <p>${seeds.slice(4).map(t => `${t.seed} ${t.school}`).join(' · ')}</p>
+    </div>`;
+}
+
 function runBracketSim() {
-  const { seeds, g6 } = BRACKET_FIELD;
+  const chaos = Number(document.getElementById('bracket-chaos').value) / 100;
+  const { seeds, g6 } = getBracketField(chaos);
   const s = n => seeds[n - 1];
-  // stochastic: weighted coin flip on the rating-gap win probability
-  const play = (a, b) => (Math.random() < winProb(a, b) ? a : b);
+  const play = bracketPlay(chaos);
   SIM_COUNT++;
 
   // Real CFP pairings: QFs are 1v(8/9), 4v(5/12), 2v(7/10), 3v(6/11)
@@ -730,19 +844,19 @@ function runBracketSim() {
       <div class="bracket">
         <div class="bracket-col">
           <div class="round-title">First Round<span>on campus</span></div>
-          ${r1.map(([a, b], i) => matchupCard(a, b, r1w[i])).join('')}
+          ${r1.map(([a, b], i) => matchupCard(a, b, r1w[i], chaos)).join('')}
         </div>
         <div class="bracket-col">
           <div class="round-title">Quarterfinals<span>bowl sites</span></div>
-          ${qf.map(([a, b], i) => matchupCard(a, b, qfw[i])).join('')}
+          ${qf.map(([a, b], i) => matchupCard(a, b, qfw[i], chaos)).join('')}
         </div>
         <div class="bracket-col">
           <div class="round-title">Semifinals<span>bowl sites</span></div>
-          ${sf.map(([a, b], i) => matchupCard(a, b, sfw[i])).join('')}
+          ${sf.map(([a, b], i) => matchupCard(a, b, sfw[i], chaos)).join('')}
         </div>
         <div class="bracket-col bracket-col-final">
           <div class="round-title">Natty<span>Las Vegas · Jan 25 '27</span></div>
-          ${matchupCard(sfw[0], sfw[1], champ)}
+          ${matchupCard(sfw[0], sfw[1], champ, chaos)}
           <div class="champ-card">
             <div class="champ-label">🎰 Sim #${SIM_COUNT} Champion</div>
             <div class="champ-team" style="--team-color:${champ.color || 'var(--gold)'}">
@@ -754,37 +868,49 @@ function runBracketSim() {
       </div>
     </div>
   `;
+  document.getElementById('bracket-bids').innerHTML = bidSummaryHTML(seeds, g6);
 }
 
 function renderBracket(data) {
-  BRACKET_FIELD = buildPlayoffField(data.teams);
-  const { seeds, g6 } = BRACKET_FIELD;
+  BRACKET_DATA = data;
   document.getElementById('tab-bracket').innerHTML = `
+    <div class="index-section-title">Playoff Bracket
+      <span>slide the chaos and re-roll to simulate a fresh 12-team field, then play it out</span></div>
+    <div class="chaos-row">
+      <span class="chaos-end">🖍️ Chalk</span>
+      <input type="range" id="bracket-chaos" min="0" max="100" step="5" value="25" aria-label="Chaos level">
+      <span class="chaos-end">Chaos 🌪️</span>
+      <span class="chaos-val" id="bracket-chaos-val">25%</span>
+      <span class="sim-note" id="bracket-chaos-note">favorites mostly hold</span>
+    </div>
     <div class="sim-controls">
-      <button class="format-btn" id="sim-btn">🎲 Run It Back</button>
+      <button class="format-btn" id="sim-btn">🎲 Re-roll Playoff</button>
       <button class="format-btn" id="format-btn">🏆 Playoff Format</button>
-      <span class="sim-note">field locked from the W²-Index · results re-rolled every sim</span>
     </div>
     <div id="bracket-live"></div>
-    <div class="bid-summary">
-      <div class="bid-group">
-        <h4>P4 Champs · byes</h4>
-        <p>${seeds.slice(0, 4).map(t => `${t.seed} ${t.school}`).join(' · ')}</p>
-      </div>
-      <div class="bid-group">
-        <h4>G6 auto bid</h4>
-        <p>${g6.seed ?? ''} ${g6.school} (${CONF_ACRO[g6.conference] || g6.conference}, W² #${g6.rank})</p>
-      </div>
-      <div class="bid-group">
-        <h4>At-large</h4>
-        <p>${seeds.slice(4).filter(t => t.school !== g6.school).map(t => `${t.seed} ${t.school}`).join(' · ')}</p>
-      </div>
-    </div>
-    <p class="index-footnote">Field & seeds are deterministic from the W²-Index: highest-rated team per P4 conference = presumptive champ (bye), top Group of 6 team gets the auto bid, next 7 by rating at-large. Game results are simulated — each game is a weighted coin flip on the rating-gap win probability, so underdogs really do win sometimes. % shown is the winner's pre-game chance.</p>
+    <div class="bid-summary" id="bracket-bids"></div>
+    <p class="index-footnote">The 12-team field is generated by simulating a full season at the chosen chaos
+      level — at pure chalk it's the expected field (highest-rated P4 champ per conference gets a bye, top
+      Group of 6 auto-bids, next 7 by committee rank), and cranking chaos lets upset conference champions
+      crash the bracket. Games are then played at the same chaos: each is a rating-gap coin flip blended
+      toward 50/50. % is the winner's pre-game chance.</p>
   `;
+  const chaosEl = document.getElementById('bracket-chaos');
+  chaosEl.addEventListener('input', () => {
+    const v = Number(chaosEl.value);
+    document.getElementById('bracket-chaos-val').textContent = `${v}%`;
+    document.getElementById('bracket-chaos-note').textContent = bracketChaosNote(v);
+  });
+  chaosEl.addEventListener('change', runBracketSim);
   document.getElementById('sim-btn').addEventListener('click', runBracketSim);
   runBracketSim();
 }
+
+// once the season simulator finishes loading, refresh the bracket so its field
+// comes from a real simulated season rather than the chalk fallback
+window.addEventListener('viva-sim-ready', () => {
+  if (document.getElementById('bracket-live')) runBracketSim();
+});
 
 async function loadBracket() {
   try {

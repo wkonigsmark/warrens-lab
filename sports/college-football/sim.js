@@ -47,6 +47,10 @@
           TEAMS[h].conference !== 'FBS Independents';
         return { h, a, week: g.week, conf, neutral: !!g.neutralSite };
       }).filter(Boolean);
+      // expose a single-season simulator so the Playoff Bracket can populate
+      // its field from a simulated season at any chaos level
+      window.VivaSeasonSim = { simulateOneSeason };
+      window.dispatchEvent(new Event('viva-sim-ready'));
       renderShell();
       // run lazily the first time the tab is opened
       const maybeRun = () => {
@@ -166,6 +170,79 @@
     return agg;
   }
 
+  // Single simulated season → the 12-team playoff field, seeded, for the bracket.
+  // chaos 0 is deterministic (favorites always win) so the field == the expected
+  // "chalk" field; higher chaos lets upset conference champions crash in.
+  function simulateOneSeason(chaos, cutoff = 99) {
+    const n = TEAMS.length;
+    const games = GAMES.filter(g => g.week <= cutoff);
+    const flip = p => (chaos <= 0 ? p >= 0.5 : Math.random() < p);
+
+    const played = new Int16Array(n), sosSum = new Float64Array(n);
+    for (const g of games) {
+      if (g.h >= 0) { played[g.h]++; sosSum[g.h] += g.a >= 0 ? TEAMS[g.a].rating : FCS_RATING; }
+      if (g.a >= 0) { played[g.a]++; sosSum[g.a] += g.h >= 0 ? TEAMS[g.h].rating : FCS_RATING; }
+    }
+    const staticScore = new Float64Array(n);
+    for (let i = 0; i < n; i++) {
+      const sos = played[i] ? sosSum[i] / played[i] : 0;
+      staticScore[i] = TEAMS[i].rating / 10 + sos / 20;
+    }
+
+    const wins = new Int16Array(n), losses = new Int16Array(n);
+    const cw = new Int16Array(n), cl = new Int16Array(n);
+    for (const g of games) {
+      const rh = g.h >= 0 ? TEAMS[g.h].rating : FCS_RATING;
+      const ra = g.a >= 0 ? TEAMS[g.a].rating : FCS_RATING;
+      const p = (1 - chaos) * winProb(rh - ra + (g.neutral ? 0 : HFA)) + 0.5 * chaos;
+      const homeWins = flip(p);
+      if (g.h >= 0) { homeWins ? wins[g.h]++ : losses[g.h]++; if (g.conf) homeWins ? cw[g.h]++ : cl[g.h]++; }
+      if (g.a >= 0) { homeWins ? losses[g.a]++ : wins[g.a]++; if (g.conf) homeWins ? cl[g.a]++ : cw[g.a]++; }
+    }
+
+    const order = [...Array(n).keys()].sort((x, y) =>
+      (wins[y] - losses[y] + staticScore[y]) - (wins[x] - losses[x] + staticScore[x]));
+    const rankOf = new Int16Array(n);
+    order.forEach((i, r) => rankOf[i] = r + 1);
+
+    // conference champions (division winners meet where divisions exist, else top two)
+    const champs = {};
+    for (const [conf, members] of Object.entries(CONF_MEMBERS)) {
+      const sorted = [...members].sort((x, y) => {
+        const px = cw[x] + cl[x] ? cw[x] / (cw[x] + cl[x]) : 0;
+        const py = cw[y] + cl[y] ? cw[y] / (cw[y] + cl[y]) : 0;
+        if (py !== px) return py - px;
+        return rankOf[x] - rankOf[y];
+      });
+      const divisions = [...new Set(sorted.map(i => TEAMS[i].division).filter(Boolean))];
+      let t1, t2;
+      if (divisions.length >= 2) {
+        t1 = sorted.find(i => TEAMS[i].division === divisions[0]);
+        t2 = sorted.find(i => TEAMS[i].division === divisions[1]);
+      } else { [t1, t2] = sorted; }
+      if (t2 == null) { champs[conf] = t1; continue; }
+      const p1 = (1 - chaos) * winProb(TEAMS[t1].rating - TEAMS[t2].rating) + 0.5 * chaos;
+      champs[conf] = flip(p1) ? t1 : t2;
+    }
+
+    const P4 = ['SEC', 'Big Ten', 'Big 12', 'ACC'];
+    const byes = P4.map(c => champs[c]).filter(i => i != null).sort((a, b) => rankOf[a] - rankOf[b]);
+    const g6idx = order.find(i => TEAMS[i].confTier === 'group6');
+    const taken = new Set([...byes, g6idx]);
+    const atLarge = [];
+    for (const i of order) { if (atLarge.length >= 7) break; if (!taken.has(i)) atLarge.push(i); }
+    const five12 = [...atLarge, g6idx].sort((a, b) => rankOf[a] - rankOf[b]);
+    const seedIdx = [...byes, ...five12];
+    const wrap = i => ({ ...TEAMS[i] });
+    const seeds = seedIdx.map((i, k) => ({ seed: k + 1, ...TEAMS[i] }));
+    return {
+      seeds,
+      byes: byes.map(wrap),
+      g6: { seed: seedIdx.indexOf(g6idx) + 1, ...TEAMS[g6idx] },
+      atLarge: atLarge.map(wrap),
+    };
+  }
+
   // --- UI ---
 
   const TERMINALS = {
@@ -195,8 +272,9 @@
         <button class="format-btn" id="sim-reroll">🎲 Re-roll</button>
       </div>
       <div class="chaos-row">
-        <label for="sim-chaos">🌪️ Chaos</label>
-        <input type="range" id="sim-chaos" min="0" max="100" step="5" value="25">
+        <span class="chaos-end">🖍️ Chalk</span>
+        <input type="range" id="sim-chaos" min="0" max="100" step="5" value="25" aria-label="Chaos level">
+        <span class="chaos-end">Chaos 🌪️</span>
         <span class="chaos-val" id="sim-chaos-val">25%</span>
         <span class="sim-note" id="sim-chaos-note">favorites mostly hold</span>
       </div>
@@ -344,10 +422,13 @@
         ${pts.map(({ r, x, y }) => `
           <g class="ff-marker">
             <title>${r.t.school} · rating ${r.t.rating > 0 ? '+' : ''}${r.t.rating} · ${(r.p * 100).toFixed(1)}% · proj ${r.avgW.toFixed(1)}–${r.avgL.toFixed(1)}</title>
+            <rect x="${x - size / 2 - 1.5}" y="${y - size / 2 - 1.5}" width="${size + 3}" height="${size + 3}" rx="8"
+              fill="${r.t.color || '#a97e2f'}"/>
             <rect x="${x - size / 2}" y="${y - size / 2}" width="${size}" height="${size}" rx="7"
-              fill="rgba(10,4,6,0.85)" stroke="${r.t.color || '#a97e2f'}" stroke-width="1.5"/>
+              fill="#f6f1e6"/>
             ${r.t.logo ? `<image href="${r.t.logo}" x="${x - size / 2 + 3}" y="${y - size / 2 + 3}"
-              width="${size - 6}" height="${size - 6}"/>` : ''}
+              width="${size - 6}" height="${size - 6}" preserveAspectRatio="xMidYMid meet"/>`
+              : `<text x="${x}" y="${y + 4}" text-anchor="middle" font-size="11" font-weight="800" fill="${r.t.color || '#333'}">${(CONF_ACRO[r.t.conference] || '?').slice(0, 3)}</text>`}
           </g>`).join('')}
         <text x="${(L + W - R) / 2}" y="${H - 8}" class="ff-axis" text-anchor="middle">W²-INDEX STRENGTH</text>
         <text x="16" y="${(T + H - B) / 2}" class="ff-axis" text-anchor="middle"
