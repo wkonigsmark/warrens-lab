@@ -29,8 +29,8 @@ from pathlib import Path
 
 import requests
 
-from build_power_index import (CARRYOVER_W, COMPOSITE_WEIGHTS, Z_TO_POINTS,
-                               fetch_season_results, srs_from_games)
+from build_power_index import (CARRYOVER_W, COMPOSITE_WEIGHTS, OFFSEASON_BLEND,
+                               Z_TO_POINTS, fetch_season_results, srs_from_games)
 from fetch_games import load_api_key
 from normalize_sources import build_resolver
 
@@ -128,17 +128,17 @@ def spearman(xs, ys):
     return pearson(ranks(xs), ranks(ys))
 
 
-def main():
-    api_key = load_api_key()
+def build_preseason_2025(api_key):
+    """Reconstruct the W² index exactly as it would have looked in July 2025,
+    using only preseason-knowable inputs. Returns the per-team v1 ratings plus
+    the building blocks and the actual 2025 season (results + SRS answer key).
+    Shared by the backtest and Biff's Almanac so both test the identical model."""
     resolve, fbs = build_resolver()
-
-    print("Backtest: July-2025 index vs actual 2025 results")
     games24 = fetch_season_results(api_key, 2024)
     games25 = fetch_season_results(api_key, 2025)
     srs24 = srs_from_games(games24)
     srs25 = srs_from_games(games25)   # the answer key
 
-    # 2025 FBS teams + conference membership (known preseason)
     members = defaultdict(set)
     fbs25 = set()
     for g in games25:
@@ -151,14 +151,12 @@ def main():
                      for c, ts in members.items()}
     team_conf = {t: c for c, ts in members.items() for t in ts}
 
-    # results base as of July 2025
     base = {}
     for t in fbs25:
         conf_avg = conf_strength.get(team_conf.get(t), -8.0)
         base[t] = (CARRYOVER_W * srs24[t] + (1 - CARRYOVER_W) * conf_avg
                    if t in srs24 else conf_avg)
 
-    # offseason composite as of July 2025 (same weights, same standardization)
     raw_values = source_values_2025(api_key)
     z_by_source = {}
     for key, vals in raw_values.items():
@@ -184,6 +182,24 @@ def main():
     have = {t: v for t, v in raw_cz.items() if v is not None}
     std_cz = zscores(have)
     comp_pts = {t: Z_TO_POINTS * z for t, z in std_cz.items()}
+
+    ratings = {}
+    for t in fbs25:
+        ratings[t] = ((1 - OFFSEASON_BLEND) * base[t] + OFFSEASON_BLEND * comp_pts[t]
+                      if t in comp_pts else base[t])
+
+    return {"ratings": ratings, "base": base, "comp_pts": comp_pts,
+            "srs25": srs25, "fbs25": fbs25, "games25": games25,
+            "team_conf": {t: team_conf.get(t) for t in fbs25}}
+
+
+def main():
+    api_key = load_api_key()
+    pre = build_preseason_2025(api_key)
+    base, comp_pts = pre["base"], pre["comp_pts"]
+    srs25, fbs25 = pre["srs25"], pre["fbs25"]
+
+    print("Backtest: July-2025 index vs actual 2025 results")
 
     # evaluation set: teams with a real 2025 result
     eval_teams = sorted(t for t in fbs25 if t in srs25 and t in base)

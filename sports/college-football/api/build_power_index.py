@@ -79,6 +79,7 @@ def fetch_season_results(api_key, year):
                     "awayConf": pick(g, "awayConference", "away_conference"),
                     "awayPoints": pick(g, "awayPoints", "away_points"),
                     "awayClass": pick(g, "awayClassification", "away_classification"),
+                    "neutralSite": pick(g, "neutralSite", "neutral_site"),
                     "completed": g.get("completed"),
                 }
             )

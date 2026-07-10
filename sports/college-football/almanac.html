@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biff's Almanac</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Alfa+Slab+One&family=Oswald:wght@400;600&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .biff-hero { text-align: center; padding: 26px 20px 4px; }
+    .biff-hero .kick {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      color: var(--neon-red); font-size: 1.1rem;
+      text-shadow: 0 0 10px rgba(255,77,94,0.6);
+    }
+    .biff-hero h1 {
+      font-family: 'Alfa Slab One', serif; font-size: 2.1rem; color: var(--gold);
+      text-shadow: 0 0 16px rgba(242,196,100,0.45); letter-spacing: 1px; margin: 2px 0 6px;
+    }
+    .biff-hero p { color: rgba(245,233,208,0.55); font-size: 0.86rem; max-width: 640px; margin: 0 auto; }
+
+    .biff-caveat {
+      max-width: 900px; margin: 14px auto; padding: 10px 16px;
+      background: rgba(224,112,126,0.07); border: 1px dashed rgba(224,112,126,0.4);
+      border-radius: 12px; font-size: 0.76rem; color: rgba(245,233,208,0.7); line-height: 1.55;
+    }
+
+    .verdict-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px; margin-bottom: 8px;
+    }
+    .verdict-card {
+      background: var(--glass-bg); border: 1px solid var(--glass-border);
+      border-top: 3px solid var(--gold-dim); border-radius: 12px; padding: 14px; text-align: center;
+    }
+    .verdict-card .big { font-family: 'Alfa Slab One', serif; font-size: 1.7rem; color: var(--cream); }
+    .verdict-card .big.good { color: #7ddf8f; } .verdict-card .big.bad { color: #e0707e; }
+    .verdict-card .lbl {
+      font-family: 'Oswald', sans-serif; font-size: 0.62rem; letter-spacing: 1.5px;
+      text-transform: uppercase; color: rgba(245,233,208,0.5); margin-top: 4px;
+    }
+
+    .biff-list { list-style: none; }
+    .biff-list li {
+      padding: 10px 0 10px 26px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05);
+      color: rgba(245,233,208,0.85); font-size: 0.9rem; line-height: 1.5;
+    }
+    .biff-list li::before { content: '▸'; position: absolute; left: 4px; color: var(--gold); }
+    .biff-list.tune li::before { content: '🔧'; font-size: 0.8rem; }
+    .biff-list strong { color: var(--cream); }
+
+    .bias-row { display: grid; grid-template-columns: 130px 1fr 60px; align-items: center; gap: 10px; padding: 4px 0; font-size: 0.82rem; }
+    .bias-name { font-weight: 700; }
+    .bias-track { height: 16px; background: rgba(0,0,0,0.3); border-radius: 8px; position: relative; overflow: hidden; }
+    .bias-track .mid { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.2); }
+    .bias-fill { position: absolute; top: 2px; bottom: 2px; border-radius: 6px; }
+    .bias-over { background: linear-gradient(90deg, transparent, #e0707e); }
+    .bias-under { background: linear-gradient(270deg, transparent, #7ddf8f); }
+    .bias-val { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+
+    .biff-lock-veil {
+      position: fixed; inset: 0; z-index: 9000; display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(ellipse at 50% 30%, #2a1015, #0a0406 70%);
+    }
+    .biff-lock {
+      text-align: center; max-width: 340px; padding: 30px 26px;
+      background: linear-gradient(160deg, #1d0e11, #14090b);
+      border: 2px solid var(--gold-dim); border-radius: 18px;
+      box-shadow: inset 0 0 0 1px rgba(242,196,100,0.25), 0 20px 60px rgba(0,0,0,0.7);
+    }
+    .biff-lock .icon { font-size: 2.4rem; }
+    .biff-lock h2 { font-family: 'Alfa Slab One', serif; color: var(--gold); font-size: 1.3rem; margin: 8px 0 4px; }
+    .biff-lock p { color: rgba(245,233,208,0.55); font-size: 0.78rem; margin-bottom: 16px; }
+    .biff-lock input {
+      width: 100%; text-align: center; letter-spacing: 8px; font-size: 1.3rem; font-weight: 800;
+      background: rgba(0,0,0,0.4); border: 1px solid var(--gold-dim); border-radius: 10px;
+      color: var(--cream); padding: 12px; margin-bottom: 12px;
+    }
+    .biff-lock button {
+      width: 100%; background: var(--accent); color: white; border: none; border-radius: 10px;
+      padding: 12px; font-weight: 800; font-family: 'Oswald', sans-serif; letter-spacing: 2px;
+      text-transform: uppercase; cursor: pointer;
+    }
+    .biff-lock .err { color: #e0707e; font-size: 0.75rem; height: 16px; margin-top: 8px; }
+    .biff-hidden { display: none !important; }
+  </style>
+</head>
+
+<body>
+  <div class="biff-lock-veil" id="lock-veil">
+    <div class="biff-lock">
+      <div class="icon">📓⚡</div>
+      <h2>Biff's Almanac</h2>
+      <p>Restricted. Sports results from the future.<br>Enter the access code.</p>
+      <input type="password" id="pin-input" inputmode="numeric" maxlength="8" placeholder="••••" autofocus>
+      <button id="pin-go">Unlock</button>
+      <div class="err" id="pin-err"></div>
+    </div>
+  </div>
+
+  <div class="container biff-hidden" id="almanac-root">
+    <div class="biff-hero">
+      <div class="kick">Gray's Sports Almanac, but make it math</div>
+      <h1>📓 Biff's Almanac</h1>
+      <p>How the W²-Index spreads performed against the actual spreads — where the model
+        gets priced wrong, and where the value hides.</p>
+    </div>
+    <div id="almanac-body"></div>
+    <a href="index.html" class="back-link">← back to Viva CFP</a>
+  </div>
+
+  <script src="almanac.js"></script>
+  <script src="nav.js" data-root="."></script>
+</body>
+
+</html>
