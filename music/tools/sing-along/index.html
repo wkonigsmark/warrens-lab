@@ -63,6 +63,7 @@
       <div class="game-head">
         <button id="play" class="btn btn-play">▶ Play</button>
         <button id="hear-start" class="btn btn-ghost" title="Hear the note you start on">🔊 Start note</button>
+        <button id="print" class="btn btn-ghost" title="Print this song as xylophone sheet music with letters">🖨 Print</button>
         <div class="hud"><span class="hud-label">Score</span><span id="score-hud" class="hud-score">—</span></div>
       </div>
       <div class="stage">
@@ -80,6 +81,9 @@
       </div>
       <p class="hint">Keep the <strong>dot</strong> on each note as it reaches the orange line. The bar fills green while you’re in tune. 🎶</p>
     </section>
+
+    <!-- Printable manuscript (hidden until print) -->
+    <div id="manuscript" class="manuscript"></div>
   </main>
 
   <!-- Guided range check: sing lowest + highest, get an octave suggestion -->

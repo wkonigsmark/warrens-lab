@@ -1,0 +1,26 @@
+{
+ "generatedAt": "2026-07-10",
+ "fitOn": "2025 full season (evaluation used weeks 1\u20137 train / 8+ test)",
+ "model": "homeMargin = b*(w2Home - w2Away) + h*isHome  (h=0 on neutral, no intercept)",
+ "b": 1.122,
+ "h": 3.688,
+ "eval": {
+  "trainWeeks": "1-7",
+  "testWeeks": "8+",
+  "rawMae": 14.45,
+  "calMae": 14.67,
+  "mktMae": 11.97,
+  "atsRaw": {
+   "w": 144,
+   "l": 159,
+   "winPct": 47.5,
+   "roi": -9.3
+  },
+  "atsCal": {
+   "w": 143,
+   "l": 162,
+   "winPct": 46.9,
+   "roi": -10.5
+  }
+ }
+}

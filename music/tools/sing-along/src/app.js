@@ -10,6 +10,7 @@ import {
 } from './song.js';
 import { getStoredRange, setStoredRange } from '../../_shared/range.js';
 import { PATH_SONGS, getProgress, isUnlocked, recordResult, firstUnclearedIndex, PASS_PCT } from './library.js';
+import { renderScore } from '../composer/src/notation.js';
 
 const els = {
     songTitle: document.getElementById('song-title'),
@@ -37,7 +38,9 @@ const els = {
     rangeStatus: document.getElementById('range-status'),
     play: document.getElementById('play'),
     hearStart: document.getElementById('hear-start'),
+    print: document.getElementById('print'),
     canvas: document.getElementById('highway'),
+    manuscript: document.getElementById('manuscript'),
     scoreHud: document.getElementById('score-hud'),
     countIn: document.getElementById('count-in'),
     results: document.getElementById('results'),
@@ -78,6 +81,7 @@ let currentPathIndex = -1;           // index into PATH_SONGS, or -1 for a custo
 
 let audioCtx = null, analyser = null, stream = null, buf = null;
 let rafId = null, playStart = 0, prevBeat = -Infinity, playing = false, lastCountBeep = null;
+let toneUntil = 0;   // performance.now() until which our own reference tone is sounding
 
 // --- Song setup -----------------------------------------------------------
 // The singer's manual octave/key nudge, kept as an offset FROM the auto-fit so it
@@ -111,7 +115,7 @@ function rebuild() {
     els.transposeReadout.textContent = transpose === 0 ? '0' : `${transpose > 0 ? '+' : ''}${transpose}`;
     els.hearStart.textContent = `🔊 Start note: ${midiToName(startMidiOf())}`;
     updateFitReadout();
-    drawFrame(0, null, null, false);   // static preview
+    drawPreview();   // idle song-map (tap notes to hear them)
 }
 
 // Always-visible readout of where the song currently sits, plus the singer's
@@ -178,12 +182,15 @@ function stop() {
     els.play.textContent = '▶ Play';
     els.play.classList.remove('playing');
     els.countIn.hidden = true;
+    toneUntil = 0;
+    drawPreview();   // back to the tappable idle song-map
 }
 
 function loop() {
     if (!playing) return;
+    const now = performance.now();
     const bps = song.bpm / 60;
-    const songBeat = ((performance.now() - playStart) / 1000) * bps - COUNTIN_BEATS;
+    const songBeat = ((now - playStart) / 1000) * bps - COUNTIN_BEATS;
 
     // Detect the singer's pitch EVERY frame — including the count-in — so they can
     // pre-tune to the starting note before the song begins.
@@ -196,16 +203,24 @@ function loop() {
 
     let active = null, tuned = false;
     if (songBeat < 0) {
-        // count-in: show 4..1 and sing the STARTING PITCH each beat. The dot shows
-        // live, turning green when you're already sitting on the start note.
+        // count-in: show 4..1 and play the STARTING PITCH each beat as a reference.
         const n = Math.ceil(-songBeat);
         els.countIn.hidden = false;
         els.countIn.textContent = n;
-        if (lastCountBeep !== n) { tone(audioCtx, midiToFreq(startMidiOf()), 0.5, 0.32); lastCountBeep = n; }
-        tuned = liveMidi != null && inTune(liveMidi, startMidiOf(), TOL);
+        if (lastCountBeep !== n) { playRef(midiToFreq(startMidiOf()), 0.5, 0.32); lastCountBeep = n; }
     } else {
         els.countIn.hidden = true;
-        if (lastCountBeep !== 'go') { tone(audioCtx, midiToFreq(startMidiOf()), 0.35, 0.3); lastCountBeep = 'go'; }
+        if (lastCountBeep !== 'go') { playRef(midiToFreq(startMidiOf()), 0.35, 0.3); lastCountBeep = 'go'; }
+    }
+
+    // The reference tone bleeds from the speakers into the mic, where it would read
+    // as a false "on-key" (even in silence). Ignore the mic while our own tone is
+    // sounding (+ a short decay) so the dot and score reflect the singer only.
+    if (now < toneUntil) liveMidi = null;
+
+    if (songBeat < 0) {
+        tuned = liveMidi != null && inTune(liveMidi, startMidiOf(), TOL);
+    } else {
         const dBeat = Math.max(0, songBeat - Math.max(0, prevBeat));
         ({ active, tuned } = scoreStep(songBeat, dBeat, liveMidi));
         els.scoreHud.textContent = runningLabel(songBeat);
@@ -261,7 +276,17 @@ function endGame() {
 function renderPath() {
     const progress = getProgress();
     els.songPath.innerHTML = '';
+    let lastStage = null;
     PATH_SONGS.forEach((s, i) => {
+        // Stage divider: a little labelled chip before the first song of each stage,
+        // so the ladder reads as the 5-stage Kodály curriculum, not one long strip.
+        if (s.stage != null && s.stage !== lastStage) {
+            lastStage = s.stage;
+            const div = document.createElement('div');
+            div.className = 'path-stage';
+            div.innerHTML = `<div class="stage-num">Stage ${s.stage}</div><div class="stage-skill">${s.skill || ''}</div>`;
+            els.songPath.appendChild(div);
+        }
         const unlocked = isUnlocked(i, progress);
         const cleared = progress.cleared.includes(s.id);
         const best = progress.best[s.id];
@@ -327,12 +352,22 @@ function tone(ctx, freq, dur = 0.5, vol = 0.3) {
     oscs.forEach((o) => { o.start(now); o.stop(stopAt); });
 }
 
-// Preview the starting pitch any time (spins up a short-lived AudioContext).
-function previewStartNote() {
+// Play a reference tone during the game AND mark the mic untrustworthy until it
+// decays. The tone bleeds from the speakers into the mic; without this gate it
+// scores as a false "on-key" through the count-in and on the first note.
+function playRef(freq, dur, vol) {
+    tone(audioCtx, freq, dur, vol);
+    toneUntil = performance.now() + dur * 1000 + 90;   // + a little room decay
+}
+
+// Sound a single pitch any time, on its own short-lived AudioContext. Used by the
+// "hear start note" button and by tapping a note on the highway to hear it.
+function previewTone(midi, dur = 1.2, vol = 0.32) {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const play = () => { tone(ctx, midiToFreq(startMidiOf()), 1.3, 0.32); setTimeout(() => ctx.close(), 1700); };
+    const play = () => { tone(ctx, midiToFreq(midi), dur, vol); setTimeout(() => ctx.close(), dur * 1000 + 400); };
     ctx.resume().then(play).catch(play);   // resume first — contexts can start suspended
 }
+function previewStartNote() { previewTone(startMidiOf(), 1.3); }
 
 // --- Rendering ------------------------------------------------------------
 function drawFrame(songBeat, liveMidi, active, tuned) {
@@ -401,6 +436,70 @@ function roundRect(x, y, w, h, r) {
     g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
     g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
 }
+
+// Idle "song map": the whole song laid flat across the canvas (not scrolling), so
+// every note is visible and tappable. Tapping a note plays its pitch to match —
+// a practice aid before you hit Play. Records each note's rect for hit-testing.
+let previewRects = [];
+function drawPreview() {
+    previewRects = [];
+    const W = els.canvas.width, H = els.canvas.height;
+    g.clearRect(0, 0, W, H);
+    g.fillStyle = '#fbfcff'; g.fillRect(0, 0, W, H);
+    if (!playNotes.length) return;
+
+    const padL = 54, padR = 20, span = Math.max(1, songEnd);
+    const xOfBeat = (b) => padL + (b / span) * (W - padL - padR);
+    const wOfDur = (d) => (d / span) * (W - padL - padR);
+
+    // pitch lanes + C labels (same visual language as the live highway)
+    g.textBaseline = 'middle';
+    for (let m = Math.ceil(loMidi); m <= Math.floor(hiMidi); m++) {
+        const y = yOf(m); const isC = m % 12 === 0;
+        g.strokeStyle = isC ? '#e2e7f3' : '#f2f4fb'; g.lineWidth = 1;
+        g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke();
+        if (isC) { g.fillStyle = '#aab2c4'; g.font = '10px Outfit, sans-serif'; g.fillText(midiToName(m), 6, y); }
+    }
+    // starting-pitch guide
+    const sm = startMidiOf(), sy = yOf(sm);
+    g.strokeStyle = '#f5b301'; g.setLineDash([6, 4]); g.lineWidth = 1.5;
+    g.beginPath(); g.moveTo(0, sy); g.lineTo(W, sy); g.stroke(); g.setLineDash([]);
+
+    const laneH = Math.max(10, (H - 2 * PAD_Y) / (hiMidi - loMidi) * 1.6);
+    for (const n of playNotes) {
+        const x = xOfBeat(n.start), w = Math.max(7, wOfDur(n.durBeats) - 2);
+        const y = yOf(n.midi) - laneH / 2;
+        g.globalAlpha = 0.9; roundRect(x, y, w, laneH, 6); g.fillStyle = colorForMidi(n.midi); g.fill();
+        g.globalAlpha = 1;
+        if (n.lyric) {
+            const lx = x + w / 2, ly = y - 7;
+            g.font = 'bold 12px Outfit, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+            g.lineWidth = 3; g.strokeStyle = '#fff'; g.strokeText(n.lyric, lx, ly);
+            g.fillStyle = '#1f2430'; g.fillText(n.lyric, lx, ly); g.textAlign = 'left';
+        }
+        previewRects.push({ x, y, w, h: laneH, midi: n.midi });
+    }
+    // affordance hint
+    g.fillStyle = '#8a93a6'; g.font = '11px Outfit, sans-serif'; g.textBaseline = 'alphabetic';
+    g.fillText('🔊 tap any note to hear it — then try to match it', padL, H - 9);
+}
+
+// Briefly outline a tapped note, then restore the plain map.
+function flashPreviewNote(r) {
+    g.strokeStyle = '#1f2430'; g.lineWidth = 2.5; roundRect(r.x, r.y, r.w, r.h, 6); g.stroke();
+    clearTimeout(flashPreviewNote._t);
+    flashPreviewNote._t = setTimeout(drawPreview, 280);
+}
+
+// Tap a note on the idle song-map to hear its pitch.
+els.canvas.addEventListener('click', (e) => {
+    if (playing || !previewRects.length) return;
+    const rect = els.canvas.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) * (els.canvas.width / rect.width);
+    const my = (e.clientY - rect.top) * (els.canvas.height / rect.height);
+    const hit = previewRects.find((r) => mx >= r.x - 2 && mx <= r.x + r.w + 2 && my >= r.y - 5 && my <= r.y + r.h + 5);
+    if (hit) { previewTone(hit.midi); flashPreviewNote(hit); }
+});
 
 // --- Controls -------------------------------------------------------------
 // Nudging the key updates the remembered offset-from-auto-fit, so it sticks to the
@@ -546,8 +645,37 @@ els.loadSong.addEventListener('click', () => {
     renderPath();
 });
 
+// Print the current song as a xylophone staff with letters in the note heads.
+// Reuses the Composer's renderScore so the notation is identical.
+function printSong() {
+    if (!playNotes.length) return;
+    const title = song.title || 'Song';
+    const bpb = 4;  // standard 4/4
+    const bars = Math.ceil(songEnd / bpb);
+
+    // Convert playNotes (MIDI + name) back to Composer format {start, durBeats, pitch}.
+    const notesForScore = playNotes.map((n) => ({
+        start: n.start, durBeats: n.durBeats, pitch: n.name,
+    }));
+
+    // Render the staff with colored notes and letters visible.
+    const score = renderScore(
+        { bars, notes: notesForScore },
+        { colored: true, showLetters: true, clef: 'treble', beatsPerBar: bpb },
+    );
+
+    els.manuscript.innerHTML =
+        `<h2 class="ms-title">${title} — Xylophone</h2>` +
+        `<p class="ms-by">Play along with Sing-Along</p>` +
+        `<div class="ms-score">${score}</div>`;
+
+    window.print();
+    els.manuscript.innerHTML = '';  // clear after print dialog closes
+}
+
 els.play.addEventListener('click', () => (playing ? stop() : start()));
 els.hearStart.addEventListener('click', previewStartNote);
+els.print.addEventListener('click', printSong);
 els.again.addEventListener('click', () => { els.results.hidden = true; start(); });
 els.nextSong.addEventListener('click', () => {
     if (currentPathIndex >= 0 && currentPathIndex < PATH_SONGS.length - 1) loadPathSong(currentPathIndex + 1);

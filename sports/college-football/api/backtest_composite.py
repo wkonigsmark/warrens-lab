@@ -128,15 +128,19 @@ def spearman(xs, ys):
     return pearson(ranks(xs), ranks(ys))
 
 
-def build_preseason_2025(api_key):
+def build_preseason_2025(api_key, srs_cap=None):
     """Reconstruct the W² index exactly as it would have looked in July 2025,
     using only preseason-knowable inputs. Returns the per-team v1 ratings plus
     the building blocks and the actual 2025 season (results + SRS answer key).
-    Shared by the backtest and Biff's Almanac so both test the identical model."""
+    Shared by the backtest and Biff's Almanac so both test the identical model.
+
+    `srs_cap` overrides the margin cap on the 2024 results base — used to test
+    whether a looser cap sharpens spread-setting without touching the default
+    strength ratings."""
     resolve, fbs = build_resolver()
     games24 = fetch_season_results(api_key, 2024)
     games25 = fetch_season_results(api_key, 2025)
-    srs24 = srs_from_games(games24)
+    srs24 = srs_from_games(games24) if srs_cap is None else srs_from_games(games24, srs_cap)
     srs25 = srs_from_games(games25)   # the answer key
 
     members = defaultdict(set)

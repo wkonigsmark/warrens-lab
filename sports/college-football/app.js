@@ -1,6 +1,15 @@
 const SEASON = 2026;
 let GAMES_2026 = null;
 
+// Spread head (fitted by api/calibrate_spreads.py, data/spread-cal.json): converts
+// a W²-Index rating gap into a real-margin spread. Keeps the margin cap intact for
+// strength/ranking while undoing its spread compression + using the fitted home field.
+// Falls back to the raw gap + 2.5 if the calibration file hasn't loaded.
+let SPREAD_CAL = { b: 1, h: 2.5 };
+function calibratedMargin(gap, isHome) {
+  return SPREAD_CAL.b * gap + SPREAD_CAL.h * isHome;
+}
+
 // ESPN Top 25 tiles mirror the W²-Index rows: team colors, logos, and the
 // W² rank as the cross-reference (the inverse of the ★ badge on the index)
 function renderPoll() {
@@ -57,7 +66,7 @@ function gameMetrics(g) {
   const away = W2_BY_NAME.get(g.awayTeam);
   const rHome = home ? home.rating : INDEX_DATA.fcsPoolRating;
   const rAway = away ? away.rating : INDEX_DATA.fcsPoolRating;
-  const edgeHome = rHome - rAway + (g.neutralSite ? 0 : HOME_EDGE);
+  const edgeHome = calibratedMargin(rHome - rAway, g.neutralSite ? 0 : 1);
   const spread = Math.abs(edgeHome);
   const favName = edgeHome >= 0 ? g.homeTeam : g.awayTeam;
   const favProb = 1 / (1 + Math.pow(10, -spread / 15));
@@ -83,10 +92,11 @@ function marketEdge(g, m) {
     mktFav, mktMargin,
     edgeTeam: edge >= 0 ? g.homeTeam : g.awayTeam,
     edgeAbs: Math.abs(edge),
-    // Edge is only meaningful when the market sees a competitive game. On blowouts
-    // our margin-capped ratings under-project the spread, so the "edge" there is a
-    // modeling artifact, not real disagreement — flag those as unreliable.
-    reliable: mktMargin <= 14,
+    // The calibrated spread head extended the reliable range (was ≤14 pre-cal),
+    // but on the market's most extreme lines our preseason ratings still can't
+    // match (projection error), so edges there are margin-of-victory noise, not
+    // real disagreement. Gate at 21 — real pick disagreements still show.
+    reliable: mktMargin <= 21,
     books: mk.books.map(b => b.book),
     overUnder: mk.overUnder,
   };
@@ -221,12 +231,12 @@ function renderSchedule(games) {
     <div class="teams-count" id="sched-count"></div>
     <div id="schedule-list" class="sched-cards"></div>
     <p class="index-footnote">Marquee score = how good both teams are, minus the mismatch,
-      plus a bump when playoff contenders collide · spread & win% from W²-Index ratings.
-      Market lines (median of ${MARKET_BOOKS || 'multiple books'}) shown where posted —
-      "edge" is how many more points the model favors a side than Vegas does, and is only
-      shown on games the market sees as competitive (on blowouts our margin-capped ratings
-      under-project the spread, so that gap isn't a real edge). ${MARKET_BY_ID.size} of
-      ${games.length} games have a line so far (books post most closer to kickoff).</p>
+      plus a bump when playoff contenders collide. Model spreads use the calibrated spread
+      head (rating gap ×${SPREAD_CAL.b} + ${SPREAD_CAL.h} home field), fit on 2025 to undo the
+      margin-cap compression. Market lines (median of ${MARKET_BOOKS || 'multiple books'})
+      shown where posted — "edge" is how many more points the model favors a side than Vegas
+      does. ${MARKET_BY_ID.size} of ${games.length} games have a line so far (books post most
+      closer to kickoff).</p>
   `;
 
   function draw() {
@@ -316,9 +326,19 @@ async function loadLines() {
   } catch { /* lines are optional — schedule still works without them */ }
 }
 
+async function loadSpreadCal() {
+  try {
+    const res = await fetch('data/spread-cal.json');
+    if (!res.ok) return;
+    const c = await res.json();
+    SPREAD_CAL = { b: c.b, h: c.h };
+  } catch { /* fall back to the raw gap + 2.5 default */ }
+}
+
 async function loadSchedule() {
   try {
-    const [res] = await Promise.all([fetch(`data/games-${SEASON}.json`), loadLines()]);
+    const [res] = await Promise.all([
+      fetch(`data/games-${SEASON}.json`), loadLines(), loadSpreadCal()]);
     if (!res.ok) throw new Error(res.status);
     const { games } = await res.json();
     GAMES_2026 = games;

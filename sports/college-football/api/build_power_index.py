@@ -88,14 +88,16 @@ def fetch_season_results(api_key, year):
     return games
 
 
-def srs_from_games(games):
-    """Margin-capped iterative SRS; non-FBS opponents pooled as one 'FCS' team."""
+def srs_from_games(games, cap=MARGIN_CAP):
+    """Margin-capped iterative SRS; non-FBS opponents pooled as one 'FCS' team.
+    `cap` is exposed so a looser cap can be used for spread-setting while the
+    default (28) still governs strength/ranking."""
     playable = [g for g in games if g["completed"] and g["homePoints"] is not None]
     results = defaultdict(list)
     for g in playable:
         home = g["homeTeam"] if g["homeClass"] == "fbs" else "FCS"
         away = g["awayTeam"] if g["awayClass"] == "fbs" else "FCS"
-        margin = max(-MARGIN_CAP, min(MARGIN_CAP, g["homePoints"] - g["awayPoints"]))
+        margin = max(-cap, min(cap, g["homePoints"] - g["awayPoints"]))
         results[home].append((margin, away))
         results[away].append((-margin, home))
 

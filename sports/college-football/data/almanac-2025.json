@@ -1,41 +1,42 @@
 {
  "season": 2025,
  "generatedAt": "2026-07-10",
- "ratingBasis": "preseason July-2025 W\u00b2 (no in-season updates)",
+ "ratingBasis": "preseason July-2025 W\u00b2, spreads via the fitted spread head",
+ "spreadModel": "calibrated: margin = 1.122\u00b7gap + 3.688\u00b7home",
  "caveat": "Proof-of-concept on 2025 using static preseason ratings \u2014 the market sharpens week to week, so late-season edges partly reflect projection staleness, not just pricing. The robust biases (margin cap, home field, conference) are the real, exploitable vulnerabilities. 2026 fills in weekly.",
  "scorecard": {
   "games": 762,
-  "w2Mae": 13.92,
+  "w2Mae": 13.79,
   "mktMae": 11.84,
-  "w2CloserPct": 38.8,
+  "w2CloserPct": 40.2,
   "ats": {
    "all": {
-    "w": 350,
-    "l": 369,
-    "p": 13,
-    "winPct": 48.7,
-    "roi": -7.1
+    "w": 352,
+    "l": 367,
+    "p": 16,
+    "winPct": 49.0,
+    "roi": -6.5
    },
    "e1": {
-    "w": 333,
-    "l": 348,
-    "p": 12,
+    "w": 337,
+    "l": 351,
+    "p": 13,
+    "winPct": 49.0,
+    "roi": -6.5
+   },
+   "e3": {
+    "w": 252,
+    "l": 263,
+    "p": 10,
     "winPct": 48.9,
     "roi": -6.6
    },
-   "e3": {
-    "w": 262,
-    "l": 278,
-    "p": 10,
-    "winPct": 48.5,
-    "roi": -7.4
-   },
    "e6": {
-    "w": 186,
-    "l": 174,
+    "w": 177,
+    "l": 178,
     "p": 6,
-    "winPct": 51.7,
-    "roi": -1.4
+    "winPct": 49.9,
+    "roi": -4.8
    }
   }
  },
@@ -43,192 +44,190 @@
   {
    "conf": "FBS Independents",
    "n": 23,
-   "avgErr": -5.41
+   "avgErr": -4.02
   },
   {
    "conf": "Pac-12",
    "n": 22,
-   "avgErr": 3.68
-  },
-  {
-   "conf": "Mid-American",
-   "n": 145,
-   "avgErr": 2.5
+   "avgErr": 3.29
   },
   {
    "conf": "Sun Belt",
    "n": 156,
-   "avgErr": 2.33
+   "avgErr": 2.1
   },
   {
-   "conf": "SEC",
-   "n": 179,
-   "avgErr": -1.52
+   "conf": "Mid-American",
+   "n": 145,
+   "avgErr": 2.06
   },
   {
    "conf": "Big Ten",
    "n": 204,
-   "avgErr": -1.43
+   "avgErr": -1.1
   },
   {
-   "conf": "Conference USA",
-   "n": 135,
-   "avgErr": 1.01
-  },
-  {
-   "conf": "Big 12",
+   "conf": "SEC",
    "n": 179,
-   "avgErr": -0.77
+   "avgErr": -0.96
   },
   {
    "conf": "Mountain West",
    "n": 134,
-   "avgErr": -0.65
+   "avgErr": -0.91
   },
   {
    "conf": "American Athletic",
    "n": 157,
-   "avgErr": -0.58
+   "avgErr": -0.81
+  },
+  {
+   "conf": "Big 12",
+   "n": 179,
+   "avgErr": -0.62
+  },
+  {
+   "conf": "Conference USA",
+   "n": 135,
+   "avgErr": 0.52
   },
   {
    "conf": "ACC",
    "n": 190,
-   "avgErr": 0.32
+   "avgErr": 0.42
   }
  ],
  "homeBias": {
-  "home": -1.28,
-  "away": 1.28
+  "home": 0.04,
+  "away": -0.04
  },
  "spreadTiers": [
   {
    "tier": "pick'em (0\u20133)",
    "n": 109,
-   "w2Mae": 12.1,
+   "w2Mae": 12.4,
    "mktMae": 11.5,
-   "favVsMarket": -1.3
+   "favVsMarket": -1.2
   },
   {
    "tier": "3\u20137",
    "n": 221,
-   "w2Mae": 13.6,
+   "w2Mae": 13.8,
    "mktMae": 12.1,
-   "favVsMarket": -2.5
+   "favVsMarket": -2.1
   },
   {
    "tier": "7\u201314",
    "n": 213,
-   "w2Mae": 13.1,
+   "w2Mae": 13.2,
    "mktMae": 11.8,
-   "favVsMarket": -4.7
+   "favVsMarket": -4.0
   },
   {
    "tier": "14\u201321",
    "n": 110,
-   "w2Mae": 14.4,
+   "w2Mae": 14.0,
    "mktMae": 12.0,
-   "favVsMarket": -8.7
+   "favVsMarket": -7.4
   },
   {
    "tier": "blowout (21+)",
    "n": 109,
-   "w2Mae": 17.5,
+   "w2Mae": 16.1,
    "mktMae": 11.6,
-   "favVsMarket": -12.4
+   "favVsMarket": -9.9
   }
  ],
  "confAts": [
   {
    "conf": "Conference USA",
-   "w": 22,
-   "l": 32,
+   "w": 20,
+   "l": 27,
    "p": 0,
-   "winPct": 40.7,
-   "roi": -22.2
+   "winPct": 42.6,
+   "roi": -18.8
+  },
+  {
+   "conf": "Big 12",
+   "w": 27,
+   "l": 33,
+   "p": 0,
+   "winPct": 45.0,
+   "roi": -14.1
+  },
+  {
+   "conf": "American Athletic",
+   "w": 23,
+   "l": 28,
+   "p": 0,
+   "winPct": 45.1,
+   "roi": -13.9
+  },
+  {
+   "conf": "ACC",
+   "w": 28,
+   "l": 34,
+   "p": 0,
+   "winPct": 45.2,
+   "roi": -13.8
   },
   {
    "conf": "Pac-12",
    "w": 5,
-   "l": 7,
+   "l": 6,
    "p": 0,
-   "winPct": 41.7,
-   "roi": -20.5
-  },
-  {
-   "conf": "SEC",
-   "w": 19,
-   "l": 24,
-   "p": 0,
-   "winPct": 44.2,
-   "roi": -15.6
-  },
-  {
-   "conf": "Big 12",
-   "w": 29,
-   "l": 35,
-   "p": 0,
-   "winPct": 45.3,
-   "roi": -13.5
-  },
-  {
-   "conf": "ACC",
-   "w": 31,
-   "l": 35,
-   "p": 0,
-   "winPct": 47.0,
-   "roi": -10.3
+   "winPct": 45.5,
+   "roi": -13.2
   },
   {
    "conf": "Mid-American",
-   "w": 29,
-   "l": 31,
+   "w": 28,
+   "l": 32,
    "p": 0,
-   "winPct": 48.3,
-   "roi": -7.7
+   "winPct": 46.7,
+   "roi": -10.9
   },
   {
    "conf": "Mountain West",
-   "w": 24,
-   "l": 25,
+   "w": 22,
+   "l": 24,
    "p": 0,
-   "winPct": 49.0,
-   "roi": -6.5
+   "winPct": 47.8,
+   "roi": -8.7
   },
   {
-   "conf": "American Athletic",
-   "w": 28,
-   "l": 27,
+   "conf": "SEC",
+   "w": 22,
+   "l": 20,
    "p": 0,
-   "winPct": 50.9,
-   "roi": -2.8
-  },
-  {
-   "conf": "Sun Belt",
-   "w": 36,
-   "l": 34,
-   "p": 0,
-   "winPct": 51.4,
-   "roi": -1.8
+   "winPct": 52.4,
+   "roi": 0.0
   },
   {
    "conf": "Big Ten",
-   "w": 35,
-   "l": 27,
+   "w": 34,
+   "l": 28,
    "p": 0,
-   "winPct": 56.5,
-   "roi": 7.8
+   "winPct": 54.8,
+   "roi": 4.7
+  },
+  {
+   "conf": "Sun Belt",
+   "w": 37,
+   "l": 30,
+   "p": 0,
+   "winPct": 55.2,
+   "roi": 5.4
   }
  ],
  "insights": [
-  "Across 762 games, the W\u00b2 line missed the final margin by 13.92 pts on average vs the market's 11.84. W\u00b2 was the closer number in 38.8% of games.",
-  "Betting every game where W\u00b2 disagreed with the close by 3+ pts went 262\u2013278 ATS (48.5%, -7.4% ROI at -110) \u2014 the model got picked off on its disagreements. (Break-even is 52.4%.)",
-  "W\u00b2 underrates home teams by 1.28 pts/game against the result.",
-  "Biggest conference bias: W\u00b2 underrated FBS Independents by 5.41 pts/game (23 team-games) \u2014 fade them against the number.",
-  "On blowout lines (21+), W\u00b2 priced the favorite 12.4 pts BELOW the market (109 games) \u2014 the \u00b128 margin cap softening big spreads."
+  "Across 762 games, the W\u00b2 line missed the final margin by 13.79 pts on average vs the market's 11.84. W\u00b2 was the closer number in 40.2% of games.",
+  "Betting every game where W\u00b2 disagreed with the close by 3+ pts went 252\u2013263 ATS (48.9%, -6.6% ROI at -110) \u2014 the model got picked off on its disagreements. (Break-even is 52.4%.)",
+  "Biggest conference bias: W\u00b2 underrated FBS Independents by 4.02 pts/game (23 team-games) \u2014 fade them against the number.",
+  "On blowout lines (21+), W\u00b2 still priced the favorite 9.9 pts below the market (post-calibration) across 109 games. Tested: raising the margin cap does NOT fix this \u2014 the residual is preseason projection error (we didn't know the elites would be THIS good), not the cap. Keep the cap at 28 for clean strength."
  ],
  "tuning": [
-  "Home-field: W\u00b2's home error is -1.28. The HFA constant is 2.5 \u2014 nudge it up in build_power_index.py.",
-  "Conference strength: FBS Independents ran -5.41 \u2014 its members' regression target looks miscalibrated.",
-  "Margin cap: raise MARGIN_CAP (currently 28) or add a blowout adjustment so W\u00b2 stops leaving points on the board with heavy favorites."
+  "Conference strength: FBS Independents ran -4.02 \u2014 its members' regression target looks miscalibrated.",
+  "Blowouts: the residual is projection error, not the cap (experiment_cap.py confirms looser caps don't help). The real lever is in-season rating updates, not a preseason knob."
  ]
 }

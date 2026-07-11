@@ -92,6 +92,15 @@ def main():
     ranks = {t: i + 1 for i, (t, _) in
              enumerate(sorted(ratings.items(), key=lambda kv: -kv[1]))}
 
+    # spread head (deployed by calibrate_spreads.py) — convert rating gap → margin.
+    # Falls back to the raw gap + fixed HFA if not yet fitted.
+    cal_path = DATA_DIR / "spread-cal.json"
+    cal = json.loads(cal_path.read_text()) if cal_path.exists() else None
+    def w2_home_margin(gap, is_home):
+        if cal:
+            return cal["b"] * gap + cal["h"] * is_home
+        return gap + HFA * is_home
+
     rows = []
     for g in games:
         if not g["completed"] or g["homePoints"] is None:
@@ -104,7 +113,8 @@ def main():
         spread = lines.get((g["week"], home, away))
         if spread is None:
             continue
-        w2_home = ratings[home] - ratings[away] + (0 if g["neutralSite"] else HFA)
+        w2_home = w2_home_margin(ratings[home] - ratings[away],
+                                 0 if g["neutralSite"] else 1)
         mkt_home = -spread                       # + = home favored
         act_home = g["homePoints"] - g["awayPoints"]
         rows.append({
@@ -230,17 +240,23 @@ def main():
             "regression target looks miscalibrated.")
     blow = next((t for t in tier_stats if t["tier"].startswith("blowout")), None)
     if blow and blow["favVsMarket"] <= -3:
+        capped = " (post-calibration)" if cal else ""
         insights.append(
-            f"On blowout lines (21+), W² priced the favorite {abs(blow['favVsMarket'])} pts "
-            f"BELOW the market ({blow['n']} games) — the ±28 margin cap softening big spreads.")
+            f"On blowout lines (21+), W² still priced the favorite {abs(blow['favVsMarket'])} pts "
+            f"below the market{capped} across {blow['n']} games. Tested: raising the margin cap "
+            "does NOT fix this — the residual is preseason projection error (we didn't know the "
+            "elites would be THIS good), not the cap. Keep the cap at 28 for clean strength.")
         tuning.append(
-            "Margin cap: raise MARGIN_CAP (currently 28) or add a blowout adjustment so W² "
-            "stops leaving points on the board with heavy favorites.")
+            "Blowouts: the residual is projection error, not the cap (experiment_cap.py confirms "
+            "looser caps don't help). The real lever is in-season rating updates, not a preseason knob.")
 
     out = {
         "season": year,
         "generatedAt": date.today().isoformat(),
-        "ratingBasis": "preseason July-2025 W² (no in-season updates)",
+        "ratingBasis": ("preseason July-2025 W², spreads via the fitted spread head"
+                        if cal else "preseason July-2025 W², raw rating gap + fixed HFA"),
+        "spreadModel": (f"calibrated: margin = {cal['b']}·gap + {cal['h']}·home"
+                        if cal else "raw: margin = gap + 2.5·home"),
         "caveat": ("Proof-of-concept on 2025 using static preseason ratings — the market "
                    "sharpens week to week, so late-season edges partly reflect projection "
                    "staleness, not just pricing. The robust biases (margin cap, home field, "
