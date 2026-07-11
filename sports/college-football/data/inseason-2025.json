@@ -1,0 +1,160 @@
+{
+ "season": 2025,
+ "generatedAt": "2026-07-10",
+ "priorStrengthWeeks": 4.0,
+ "model": "rating = shrink(preseason prior, in-season SRS); spread via spread head",
+ "weeks": [
+  {
+   "week": 1,
+   "games": 94,
+   "priorWeight": 1.0,
+   "w2Mae": 13.67,
+   "mktMae": 12.32,
+   "atsW": 16,
+   "atsL": 16
+  },
+  {
+   "week": 2,
+   "games": 50,
+   "priorWeight": 0.8,
+   "w2Mae": 12.67,
+   "mktMae": 11.04,
+   "atsW": 20,
+   "atsL": 14
+  },
+  {
+   "week": 3,
+   "games": 47,
+   "priorWeight": 0.67,
+   "w2Mae": 14.71,
+   "mktMae": 13.13,
+   "atsW": 18,
+   "atsL": 16
+  },
+  {
+   "week": 4,
+   "games": 50,
+   "priorWeight": 0.57,
+   "w2Mae": 12.05,
+   "mktMae": 12.07,
+   "atsW": 18,
+   "atsL": 11
+  },
+  {
+   "week": 5,
+   "games": 51,
+   "priorWeight": 0.5,
+   "w2Mae": 10.65,
+   "mktMae": 9.06,
+   "atsW": 19,
+   "atsL": 18
+  },
+  {
+   "week": 6,
+   "games": 50,
+   "priorWeight": 0.44,
+   "w2Mae": 11.71,
+   "mktMae": 10.48,
+   "atsW": 19,
+   "atsL": 14
+  },
+  {
+   "week": 7,
+   "games": 56,
+   "priorWeight": 0.4,
+   "w2Mae": 14.28,
+   "mktMae": 13.66,
+   "atsW": 16,
+   "atsL": 16
+  },
+  {
+   "week": 8,
+   "games": 59,
+   "priorWeight": 0.36,
+   "w2Mae": 12.85,
+   "mktMae": 12.12,
+   "atsW": 18,
+   "atsL": 20
+  },
+  {
+   "week": 9,
+   "games": 53,
+   "priorWeight": 0.33,
+   "w2Mae": 11.76,
+   "mktMae": 11.21,
+   "atsW": 15,
+   "atsL": 12
+  },
+  {
+   "week": 10,
+   "games": 52,
+   "priorWeight": 0.31,
+   "w2Mae": 13.83,
+   "mktMae": 12.87,
+   "atsW": 6,
+   "atsL": 11
+  },
+  {
+   "week": 11,
+   "games": 51,
+   "priorWeight": 0.29,
+   "w2Mae": 11.73,
+   "mktMae": 10.92,
+   "atsW": 10,
+   "atsL": 9
+  },
+  {
+   "week": 12,
+   "games": 58,
+   "priorWeight": 0.27,
+   "w2Mae": 11.38,
+   "mktMae": 12.03,
+   "atsW": 16,
+   "atsL": 8
+  },
+  {
+   "week": 13,
+   "games": 60,
+   "priorWeight": 0.25,
+   "w2Mae": 12.56,
+   "mktMae": 12.28,
+   "atsW": 12,
+   "atsL": 11
+  },
+  {
+   "week": 14,
+   "games": 67,
+   "priorWeight": 0.24,
+   "w2Mae": 12.46,
+   "mktMae": 12.57,
+   "atsW": 17,
+   "atsL": 11
+  },
+  {
+   "week": 15,
+   "games": 9,
+   "priorWeight": 0.22,
+   "w2Mae": 11.31,
+   "mktMae": 10.28,
+   "atsW": 0,
+   "atsL": 2
+  },
+  {
+   "week": 16,
+   "games": 1,
+   "priorWeight": 0.21,
+   "w2Mae": 2.78,
+   "mktMae": 5.0,
+   "atsW": 0,
+   "atsL": 0
+  }
+ ],
+ "summary": {
+  "atsW": 220,
+  "atsL": 189,
+  "atsPct": 53.8,
+  "earlyW2Mae": 13.28,
+  "lateW2Mae": 11.18,
+  "lateMktMae": 11.03
+ }
+}

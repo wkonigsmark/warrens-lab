@@ -1756,6 +1756,60 @@ body {
   border-color: var(--gold-dim);
 }
 
+/* Season Sim — team projection card (click a Fate Field marker) */
+.scard { border-top: 4px solid var(--team-color); }
+
+.scard-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding-right: 30px;
+}
+
+.scard-head img { width: 46px; height: 46px; object-fit: contain; flex-shrink: 0; }
+.scard-head h2 { font-family: 'Alfa Slab One', 'Rockwell', serif; font-size: 1.25rem; color: var(--gold); }
+.scard-sub { color: rgba(245, 233, 208, 0.6); font-size: 0.78rem; margin-top: 2px; }
+
+.scard-rank {
+  margin-left: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.scard-rank span {
+  font-family: 'Oswald', 'Outfit', sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(245, 233, 208, 0.45);
+}
+.scard-rank strong { font-family: 'Alfa Slab One', 'Rockwell', serif; font-size: 1.5rem; color: var(--cream); }
+
+.scard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.scard-stat {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 9px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.scard-stat span {
+  font-family: 'Oswald', 'Outfit', sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(245, 233, 208, 0.5);
+}
+.scard-stat strong { font-size: 0.95rem; color: var(--cream); }
+
 /* Season Sim */
 .chaos-row {
   display: flex;
@@ -1956,7 +2010,8 @@ body {
   inset: 0;
   background: rgba(10, 4, 6, 0.8);
   backdrop-filter: blur(6px);
-  z-index: 2000;
+  /* above the sticky site header (z 4000) so the modal + its ✕ are never occluded */
+  z-index: 5000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1991,16 +2046,23 @@ body {
 
 .modal-close {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 32px;
-  height: 32px;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--glass-border);
-  color: rgba(255, 255, 255, 0.7);
+  background: rgba(30, 14, 17, 0.92);
+  border: 1px solid var(--gold-dim);
+  color: var(--cream);
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  z-index: 3;
+}
+
+@media (max-width: 640px) {
+  /* top-align on phones so a tall modal's ✕ clears the header instead of centering under it */
+  .modal-overlay { align-items: flex-start; padding: 12px; }
+  .modal-card { max-height: calc(100vh - 24px); }
 }
 
 .modal-close:hover {

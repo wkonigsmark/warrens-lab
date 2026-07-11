@@ -80,9 +80,10 @@
       if (g.a >= 0) { played[g.a]++; sosSum[g.a] += g.h >= 0 ? TEAMS[g.h].rating : FCS_RATING; }
     }
     const staticScore = new Float64Array(n);   // rating/10 + SoS/20 (constant per sim)
+    const sos = new Float64Array(n);           // avg opponent rating (projected SoS)
     for (let i = 0; i < n; i++) {
-      const sos = played[i] ? sosSum[i] / played[i] : 0;
-      staticScore[i] = TEAMS[i].rating / 10 + sos / 20;
+      sos[i] = played[i] ? sosSum[i] / played[i] : 0;
+      staticScore[i] = TEAMS[i].rating / 10 + sos[i] / 20;
     }
     // pre-blend chaos into per-game home win probability
     const pHome = games.map(g => {
@@ -99,7 +100,8 @@
       titleGame: new Int32Array(n), playoff: new Int32Array(n),
       top12: new Int32Array(n), top25: new Int32Array(n),
       rankSum: new Float64Array(n), rankSq: new Float64Array(n),
-      played,
+      confWins: new Float64Array(n), confLoss: new Float64Array(n),
+      played, sos,
     };
     const wins = new Int16Array(n), losses = new Int16Array(n);
     const cw = new Int16Array(n), cl = new Int16Array(n);
@@ -113,7 +115,11 @@
         if (g.h >= 0) { homeWins ? wins[g.h]++ : losses[g.h]++; if (g.conf) homeWins ? cw[g.h]++ : cl[g.h]++; }
         if (g.a >= 0) { homeWins ? losses[g.a]++ : wins[g.a]++; if (g.conf) homeWins ? cl[g.a]++ : cw[g.a]++; }
       }
-      for (let i = 0; i < n; i++) agg.wins[i] += wins[i];
+      for (let i = 0; i < n; i++) {
+        agg.wins[i] += wins[i];
+        agg.confWins[i] += cw[i];
+        agg.confLoss[i] += cl[i];
+      }
 
       // conference championships
       const champs = {};
@@ -301,7 +307,59 @@
         v < 100 ? 'madness brewing' : 'anything can happen';
     });
     chaos.addEventListener('change', runAndRender);
+    document.getElementById('fate-field').addEventListener('click', e => {
+      const m = e.target.closest('.ff-marker');
+      if (m && m.dataset.team) openSimCard(m.dataset.team);
+    });
     syncTerminals();
+  }
+
+  function ordinal(x) {
+    const r = Math.round(x);
+    const s = ['th', 'st', 'nd', 'rd'], v = r % 100;
+    return r + (s[(v - 20) % 10] || s[v] || s[0]);
+  }
+
+  function openSimCard(school) {
+    const r = LAST_ROWS.get(school);
+    if (!r) return;
+    let ov = document.getElementById('sim-card-overlay');
+    if (!ov) {
+      ov = document.createElement('div');
+      ov.id = 'sim-card-overlay';
+      ov.className = 'modal-overlay';
+      ov.addEventListener('click', e => { if (e.target === ov) ov.hidden = true; });
+      document.body.appendChild(ov);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') ov.hidden = true; });
+    }
+    const t = r.t;
+    const stat = (label, val) => `<div class="scard-stat"><span>${label}</span><strong>${val}</strong></div>`;
+    const sign = v => (v > 0 ? '+' : '') + v.toFixed(1);
+    ov.innerHTML = `
+      <div class="modal-card scard" style="--team-color:${t.color || 'var(--gold-dim)'}">
+        <button class="modal-close" aria-label="Close" onclick="this.closest('.modal-overlay').hidden=true">✕</button>
+        <div class="scard-head">
+          ${t.logo ? `<img src="${t.logo}" alt="">` : ''}
+          <div>
+            <h2>${t.school}</h2>
+            <div class="scard-sub">${t.conference} · W²-Index #${t.rank} · rating ${sign(t.rating)}</div>
+          </div>
+          <div class="scard-rank"><span>proj. rank</span><strong>#${r.projSeed}</strong></div>
+        </div>
+        <div class="scard-grid">
+          ${stat('Projected record', `${r.avgW.toFixed(1)}–${r.avgL.toFixed(1)}`)}
+          ${stat('Conference record', `${r.confW.toFixed(1)}–${r.confL.toFixed(1)}`)}
+          ${stat('Conference finish', `${ordinal(r.confStand)} in ${CONF_ACRO[t.conference] || t.conference}`)}
+          ${stat('Strength of schedule', `${sign(r.sos)} avg opp`)}
+          ${stat('Avg sim finish', `${ordinal(r.projRank)}`)}
+          ${stat('Playoff', `${Math.round(r.playoff * 100)}%`)}
+          ${stat('Conf title', `${Math.round(r.champ * 100)}%`)}
+          ${stat('Top 25 finish', `${Math.round(r.top25 * 100)}%`)}
+        </div>
+        <p class="index-footnote" style="margin-top:12px">Projected over ${N_SIMS.toLocaleString()} simulated
+          seasons at the current chaos setting.</p>
+      </div>`;
+    ov.hidden = false;
   }
 
   function syncTerminals() {
@@ -313,7 +371,8 @@
     sel.innerHTML = opts.map(k => `<option value="${k}">${TERMINALS[k]}</option>`).join('');
   }
 
-  let LAST = null;   // last aggregates
+  let LAST = null;        // last aggregates
+  let LAST_ROWS = new Map();   // school -> projection row (for the click-through card)
 
   function runAndRender() {
     const status = document.getElementById('sim-cards');
@@ -346,10 +405,35 @@
       const mean = agg.rankSum[i] / N_SIMS;
       const sd = Math.sqrt(Math.max(0, agg.rankSq[i] / N_SIMS - mean * mean));
       return { i, t, p: pOf(i), avgW, avgL: g - avgW, games: g, rankSd: sd,
+               projRank: mean, sos: agg.sos[i],
+               confW: agg.confWins[i] / N_SIMS, confL: agg.confLoss[i] / N_SIMS,
                champ: agg.confChamp[i] / N_SIMS, title: agg.titleGame[i] / N_SIMS,
                playoff: agg.playoff[i] / N_SIMS, top12: agg.top12[i] / N_SIMS,
                top25: agg.top25[i] / N_SIMS };
     }).sort((a, b) => b.p - a.p);
+    // peer-ordering projected rank across ALL FBS teams (stable, intuitive —
+    // the mean sim finish is right-skewed by disaster runs, so we rank teams by it)
+    const projOrder = TEAMS.map((t, i) => ({ school: t.school, mean: agg.rankSum[i] / N_SIMS }))
+      .sort((a, b) => a.mean - b.mean);
+    const projSeed = new Map(projOrder.map((o, k) => [o.school, k + 1]));
+    // projected conference standings: order each conference by AVERAGE conf wins
+    // (not the noisy mean of per-sim standings, which buried the clear favorites)
+    const byConf = {};
+    TEAMS.forEach((t, i) => {
+      if (t.conference === 'FBS Independents') return;
+      (byConf[t.conference] = byConf[t.conference] || []).push(
+        { school: t.school, cw: agg.confWins[i] / N_SIMS, rating: t.rating });
+    });
+    const confRank = new Map();
+    for (const arr of Object.values(byConf)) {
+      arr.sort((a, b) => b.cw - a.cw || b.rating - a.rating);
+      arr.forEach((o, k) => confRank.set(o.school, k + 1));
+    }
+    rows.forEach(r => {
+      r.projSeed = projSeed.get(r.t.school);
+      r.confStand = confRank.get(r.t.school);
+    });
+    LAST_ROWS = new Map(rows.map(r => [r.t.school, r]));
 
     // insight cards
     const best = rows[0];
@@ -413,6 +497,15 @@
 
     document.getElementById('fate-field').innerHTML = `
       <svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" class="fate-svg">
+        <defs>
+          <linearGradient id="ffPlot" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#241c20"/><stop offset="1" stop-color="#181215"/>
+          </linearGradient>
+          <filter id="ffGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="0" stdDeviation="2.2" flood-color="#f7f2e8" flood-opacity="0.95"/>
+          </filter>
+        </defs>
+        <rect x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}" rx="10" fill="url(#ffPlot)"/>
         ${yTicks.map(p => `
           <line x1="${L}" x2="${W - R}" y1="${Y(p)}" y2="${Y(p)}" class="ff-grid"/>
           <text x="${L - 8}" y="${Y(p) + 4}" class="ff-tick" text-anchor="end">${Math.round(p * 100)}%</text>`).join('')}
@@ -420,15 +513,13 @@
           <text x="${X(v)}" y="${H - B + 22}" class="ff-tick" text-anchor="middle">${v > 0 ? '+' : ''}${v.toFixed(0)}</text>`).join('')}
         <polyline points="${trail}" class="ff-trail"/>
         ${pts.map(({ r, x, y }) => `
-          <g class="ff-marker">
-            <title>${r.t.school} · rating ${r.t.rating > 0 ? '+' : ''}${r.t.rating} · ${(r.p * 100).toFixed(1)}% · proj ${r.avgW.toFixed(1)}–${r.avgL.toFixed(1)}</title>
-            <rect x="${x - size / 2 - 1.5}" y="${y - size / 2 - 1.5}" width="${size + 3}" height="${size + 3}" rx="8"
-              fill="${r.t.color || '#a97e2f'}"/>
-            <rect x="${x - size / 2}" y="${y - size / 2}" width="${size}" height="${size}" rx="7"
-              fill="#f6f1e6"/>
-            ${r.t.logo ? `<image href="${r.t.logo}" x="${x - size / 2 + 3}" y="${y - size / 2 + 3}"
-              width="${size - 6}" height="${size - 6}" preserveAspectRatio="xMidYMid meet"/>`
-              : `<text x="${x}" y="${y + 4}" text-anchor="middle" font-size="11" font-weight="800" fill="${r.t.color || '#333'}">${(CONF_ACRO[r.t.conference] || '?').slice(0, 3)}</text>`}
+          <g class="ff-marker" data-team="${r.t.school.replace(/"/g, '&quot;')}" style="cursor:pointer">
+            <title>${r.t.school} · click for the full projection</title>
+            <rect x="${x - size / 2 - 4}" y="${y - size / 2 - 4}" width="${size + 8}" height="${size + 8}"
+              fill="transparent"/>
+            ${r.t.logo ? `<image href="${r.t.logo}" x="${x - size / 2}" y="${y - size / 2}"
+              width="${size}" height="${size}" preserveAspectRatio="xMidYMid meet" filter="url(#ffGlow)"/>`
+              : `<text x="${x}" y="${y + 4}" text-anchor="middle" font-size="11" font-weight="800" fill="#f7f2e8" filter="url(#ffGlow)">${(CONF_ACRO[r.t.conference] || '?').slice(0, 3)}</text>`}
           </g>`).join('')}
         <text x="${(L + W - R) / 2}" y="${H - 8}" class="ff-axis" text-anchor="middle">W²-INDEX STRENGTH</text>
         <text x="16" y="${(T + H - B) / 2}" class="ff-axis" text-anchor="middle"

@@ -702,8 +702,9 @@ function openTeamModal(school) {
     const oppName = isHome ? g.awayTeam : g.homeTeam;
     const opp = byName.get(oppName);
     const oppRating = opp ? opp.rating : INDEX_DATA.fcsPoolRating;
-    const hfa = g.neutralSite ? 0 : (isHome ? HOME_EDGE : -HOME_EDGE);
-    const edge = team.rating - oppRating + hfa;
+    // calibrated spread head from this team's perspective (+home / −away / 0 neutral)
+    const homeSign = g.neutralSite ? 0 : (isHome ? 1 : -1);
+    const edge = SPREAD_CAL.b * (team.rating - oppRating) + SPREAD_CAL.h * homeSign;
     const p = 1 / (1 + Math.pow(10, -edge / 15));
     probSum += p;
     const date = g.date
@@ -743,7 +744,7 @@ function openTeamModal(school) {
     <div class="sched-list">
       ${rows.join('') || '<div class="stub-card"><p>No 2026 games on the books yet.</p></div>'}
     </div>
-    <p class="index-footnote">Edge = rating gap ±${HOME_EDGE} home field (≈ point spread) · % = win probability</p>
+    <p class="index-footnote">Edge = calibrated spread (rating gap ×${SPREAD_CAL.b} ${SPREAD_CAL.h >= 0 ? '+' : ''}${SPREAD_CAL.h} home field) · % = win probability</p>
   `;
   document.getElementById('team-modal').hidden = false;
 }

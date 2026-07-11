@@ -35,7 +35,7 @@ const pct = v => (v == null ? '—' : `${v}%`);
 const signed = v => (v > 0 ? '+' : '') + v;
 
 async function loadAlmanac() {
-  let data;
+  let data, inseason = null;
   try {
     const res = await fetch('data/almanac-2025.json');
     if (!res.ok) throw new Error();
@@ -45,7 +45,50 @@ async function loadAlmanac() {
       '<div class="stub-card"><h3>No almanac yet</h3><p>Run <code>python3 api/build_almanac.py</code>.</p></div>';
     return;
   }
-  render(data);
+  try {
+    const r = await fetch('data/inseason-2025.json');
+    if (r.ok) inseason = await r.json();
+  } catch { /* optional */ }
+  render(data, inseason);
+}
+
+function inSeasonChart(ins) {
+  const wks = ins.weeks.filter(w => w.week <= 14 && w.mktMae != null);
+  const W = 720, H = 240, L = 40, R = 16, T = 16, B = 32;
+  const xs = wks.map(w => w.week);
+  const xMin = Math.min(...xs), xMax = Math.max(...xs);
+  const yMin = 8, yMax = 15;
+  const X = w => L + ((w - xMin) / (xMax - xMin)) * (W - L - R);
+  const Y = v => H - B - ((v - yMin) / (yMax - yMin)) * (H - T - B);
+  const line = (key, cls) => `<polyline class="${cls}" points="${
+    wks.map(w => `${X(w.week).toFixed(0)},${Y(w[key]).toFixed(1)}`).join(' ')}"/>`;
+  const dots = (key, cls) => wks.map(w =>
+    `<circle class="${cls}" cx="${X(w.week).toFixed(0)}" cy="${Y(w[key]).toFixed(1)}" r="3"/>`).join('');
+  const s = ins.summary;
+  return `
+    <div class="index-section-title">The In-Season Process
+      <span>does weekly rating updates close the gap to Vegas? (replayed on 2025)</span></div>
+    <div class="verdict-grid" style="margin-bottom:10px">
+      <div class="verdict-card"><div class="big bad">${s.earlyW2Mae}</div><div class="lbl">W² miss · weeks 1–4</div></div>
+      <div class="verdict-card"><div class="big good">${s.lateW2Mae}</div><div class="lbl">W² miss · weeks 8+</div></div>
+      <div class="verdict-card"><div class="big">${s.lateMktMae}</div><div class="lbl">market miss · weeks 8+</div></div>
+      <div class="verdict-card"><div class="big ${s.atsPct >= 52.4 ? 'good' : 'bad'}">${s.atsPct}%</div><div class="lbl">ATS on 3+ edges</div></div>
+    </div>
+    <div class="fate-wrap" style="max-width:760px">
+      <svg viewBox="0 0 ${W} ${H}" class="fate-svg is-chart">
+        ${[9, 11, 13, 15].map(v => `<line class="ff-grid" x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}"/>
+          <text class="ff-tick" x="${L - 6}" y="${Y(v) + 4}" text-anchor="end">${v}</text>`).join('')}
+        ${wks.filter((_, i) => i % 2 === 0).map(w => `<text class="ff-tick" x="${X(w.week)}" y="${H - B + 18}" text-anchor="middle">wk ${w.week}</text>`).join('')}
+        ${line('mktMae', 'is-mkt')} ${dots('mktMae', 'is-mkt-dot')}
+        ${line('w2Mae', 'is-w2')} ${dots('w2Mae', 'is-w2-dot')}
+      </svg>
+    </div>
+    <p class="index-footnote"><span style="color:var(--gold)">━ W² (in-season)</span> vs
+      <span style="color:rgba(245,233,208,0.6)">━ market</span>. The prior fades as results
+      accumulate (${ins.priorStrengthWeeks}-week prior strength); by mid-season W² tracks the
+      closing line. ATS climbs from the static preseason model's ~48% to ${s.atsPct}% —
+      directionally real, though ${s.atsW + s.atsL} plays isn't a statistically bankable edge yet.
+      The takeaway: <strong>run weekly rating updates in 2026.</strong></p>`;
 }
 
 function verdictCards(s) {
@@ -122,7 +165,7 @@ function spreadTierTable(tiers) {
       relative to the market. Big negatives on long lines expose the margin cap softening blowouts.</p>`;
 }
 
-function render(data) {
+function render(data, inseason) {
   const s = data.scorecard;
   document.getElementById('almanac-body').innerHTML = `
     <div class="biff-caveat">⚠️ ${data.caveat} <em>Basis: ${data.ratingBasis}. Season ${data.season},
@@ -130,6 +173,7 @@ function render(data) {
 
     <div class="index-section-title">The Verdict <span>W² line vs the closing number vs reality</span></div>
     ${verdictCards(s)}
+    ${inseason ? inSeasonChart(inseason) : ''}
 
     <div class="index-section-title">Takeaways <span>what the numbers are shouting</span></div>
     <ul class="biff-list">${data.insights.map(i => `<li>${i}</li>`).join('')}</ul>
