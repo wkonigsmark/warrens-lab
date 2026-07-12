@@ -340,6 +340,41 @@
     .rest-label b{color:var(--text)}
     .rest-skip{font-size:.58rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 
+    /* ── INSIGHTS MODAL ── */
+    .ins-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+    .ins-overlay.open{opacity:1;pointer-events:all}
+    .ins-overlay::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(6px)}
+    .ins-modal{position:relative;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;background:var(--surface);border-radius:22px 22px 0 0;padding-bottom:36px;transform:translateY(100%);transition:transform .32s cubic-bezier(.32,1,.6,1)}
+    .ins-overlay.open .ins-modal{transform:translateY(0)}
+    .ins-drag{width:36px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:10px auto 4px}
+    .ins-hd{position:sticky;top:0;background:var(--surface);border-bottom:1px solid var(--border);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;z-index:2}
+    .ins-title{font-size:.88rem;font-weight:900}
+    .ins-close{background:rgba(255,255,255,.07);border:none;color:var(--muted-light);cursor:pointer;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700}
+    .ins-close:hover{background:rgba(255,255,255,.14)}
+    .ins-sec{padding:16px 18px 0}
+    .ins-sec-hd{font-size:.58rem;text-transform:uppercase;letter-spacing:.12em;font-weight:900;color:var(--muted-light);margin-bottom:10px}
+    .ins-tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .ins-tile{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:11px 13px}
+    .ins-tile-val{font-size:1.3rem;font-weight:900;color:var(--text);line-height:1.1}
+    .ins-tile-lbl{font-size:.58rem;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:var(--muted-light);margin-top:3px}
+    .ins-tile-sub{font-size:.6rem;color:var(--muted);margin-top:2px}
+    .ins-charts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .ins-chart-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 11px 7px}
+    .ins-chart-name{font-size:.66rem;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ins-chart-delta{font-size:.58rem;font-weight:700;margin-bottom:5px}
+    .ins-hm-row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+    .ins-hm-lbl{font-size:.6rem;color:var(--muted-light);width:72px;flex-shrink:0;text-transform:capitalize;text-align:right}
+    .ins-hm-cells{display:flex;gap:2px;flex:1}
+    .ins-hm-cell{flex:1;height:15px;border-radius:3px;cursor:default}
+    .ins-hm-now{font-size:.6rem;font-weight:800;width:34px;flex-shrink:0;text-align:left}
+    .ins-cal{display:flex;gap:2px}
+    .ins-cal-col{display:flex;flex-direction:column;gap:2px;flex:1}
+    .ins-cal-cell{aspect-ratio:1;border-radius:3px;cursor:default}
+    .ins-legend{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}
+    .ins-leg-item{display:flex;align-items:center;gap:5px;font-size:.6rem;color:var(--muted-light);font-weight:600}
+    .ins-leg-sw{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+    .ins-tip{position:fixed;z-index:600;background:#222;border:1px solid rgba(255,255,255,.15);color:var(--text);font-size:.64rem;font-weight:600;padding:5px 9px;border-radius:7px;pointer-events:none;display:none;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.5)}
+
     /* ── NUTRITION / PANEL ── */
     .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:17px 15px;margin-bottom:10px}
     .panel-hd{font-size:.67rem;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:var(--muted-light);margin-bottom:13px;display:flex;align-items:center;gap:8px}
@@ -503,7 +538,7 @@
 
     <!-- HISTORY -->
     <div class="panel" id="historyPanel">
-      <div class="panel-hd"><span>Session History</span><button onclick="openPlanner()" style="background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);color:var(--accent);padding:4px 11px;border-radius:20px;font-family:inherit;font-size:.65rem;font-weight:800;cursor:pointer;letter-spacing:.02em">🗓 Plan</button></div>
+      <div class="panel-hd"><span>Session History</span><div style="display:flex;gap:6px"><button onclick="openInsights()" style="background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.3);color:var(--teal);padding:4px 11px;border-radius:20px;font-family:inherit;font-size:.65rem;font-weight:800;cursor:pointer;letter-spacing:.02em">📊 Insights</button><button onclick="openPlanner()" style="background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);color:var(--accent);padding:4px 11px;border-radius:20px;font-family:inherit;font-size:.65rem;font-weight:800;cursor:pointer;letter-spacing:.02em">🗓 Plan</button></div></div>
       <div id="historyList"><div class="history-empty">Loading…</div></div>
     </div>
 
@@ -2239,6 +2274,168 @@ function closePlanner() {
 }
 
 // ═══════════════════════════════════════════════════════
+//  INSIGHTS
+// ═══════════════════════════════════════════════════════
+const INS_STRENGTH = '#d95926', INS_CARDIO = '#199e70';
+const INS_RAMP = ['#241811','#4f2815','#83401b','#b85321','#e86a35']; // sequential orange, dark→bright
+
+function closeInsights() { document.getElementById('insOverlay').classList.remove('open'); }
+
+function insLineSVG(pts, color) {
+  const w=220, h=80, px=6, py=12, lblW=32;
+  const xs=pts.map(p=>p.t), ys=pts.map(p=>p.y);
+  const x0=Math.min(...xs), x1=Math.max(...xs);
+  const y0=Math.min(...ys), y1=Math.max(...ys);
+  const xr=(x1-x0)||1, yr=(y1-y0)||1;
+  const X=t=>px+(t-x0)/xr*(w-px*2-lblW);
+  const Y=v=>h-py-(v-y0)/yr*(h-py*2);
+  const path=pts.map((p,i)=>`${i?'L':'M'}${X(p.t).toFixed(1)},${Y(p.y).toFixed(1)}`).join('');
+  const last=pts[pts.length-1];
+  const dots=pts.map(p=>`<circle cx="${X(p.t).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="3.5" fill="${color}" data-tip="${p.tip}"/>`).join('');
+  return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;display:block">
+    <line x1="${px}" y1="${h-py}" x2="${w-px-lblW}" y2="${h-py}" stroke="#2c2c2a" stroke-width="1"/>
+    <path d="${path}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    ${dots}
+    <text x="${(X(last.t)+7).toFixed(1)}" y="${(Y(last.y)+3.5).toFixed(1)}" fill="#f0f0f0" font-size="11" font-weight="700" font-family="inherit">${last.y}</text>
+  </svg>`;
+}
+
+async function openInsights() {
+  const overlay=document.getElementById('insOverlay');
+  const body=document.getElementById('insBody');
+  body.innerHTML='<div style="padding:32px;text-align:center;color:var(--muted-light);font-size:.78rem">Crunching your data…</div>';
+  overlay.classList.add('open');
+  try {
+    const cutoff70=new Date(Date.now()-70*86400000).toISOString();
+    const [stravaActs,{data:sessions}]=await Promise.all([
+      fetchStravaActivities(70),
+      sb.from('workout_sessions').select('id,workout_name,started_at,duration_seconds').eq('user_id','warren').gt('sets_completed',0).gte('started_at',cutoff70).order('started_at',{ascending:true})
+    ]);
+    const sessById={}; (sessions||[]).forEach(s=>sessById[s.id]=s);
+    const {data:logs}=(sessions||[]).length
+      ? await sb.from('exercise_logs').select('session_id,exercise_name,muscle_groups,sets_completed,weight_lbs').in('session_id',(sessions||[]).map(s=>s.id)).gt('sets_completed',0)
+      : {data:[]};
+
+    const now=Date.now(), day30=now-30*86400000;
+    const calDay=d=>new Date(d).toLocaleDateString('en-CA');
+
+    // ── Stat tiles (last 30 days) ──
+    const s30=(sessions||[]).filter(s=>new Date(s.started_at).getTime()>=day30);
+    const strava30=stravaActs.filter(a=>new Date(a.started_at).getTime()>=day30);
+    const s30ids=new Set(s30.map(s=>s.id));
+    const sets30=(logs||[]).filter(l=>s30ids.has(l.session_id)).reduce((a,l)=>a+l.sets_completed,0);
+    const durs=s30.filter(s=>s.duration_seconds>0);
+    const avgDur=durs.length?Math.round(durs.reduce((a,s)=>a+s.duration_seconds,0)/durs.length/60):0;
+    // Week streak: consecutive weeks (ending this week) with ≥2 activities
+    const weekOf=t=>{const d=new Date(t);const day=(d.getDay()+6)%7;d.setHours(0,0,0,0);d.setDate(d.getDate()-day);return d.getTime()};
+    const actWeeks={};
+    (sessions||[]).forEach(s=>{const w=weekOf(s.started_at);actWeeks[w]=(actWeeks[w]||0)+1});
+    stravaActs.forEach(a=>{const w=weekOf(a.started_at);actWeeks[w]=(actWeeks[w]||0)+1});
+    let streak=0, wk=weekOf(now);
+    while((actWeeks[wk]||0)>=2){streak++;wk-=7*86400000;}
+
+    const tilesHtml=`<div class="ins-tiles">
+      <div class="ins-tile"><div class="ins-tile-val">${s30.length+strava30.length}</div><div class="ins-tile-lbl">Sessions · 30d</div><div class="ins-tile-sub">${s30.length} strength · ${strava30.length} cardio</div></div>
+      <div class="ins-tile"><div class="ins-tile-val">${sets30}</div><div class="ins-tile-lbl">Sets Completed · 30d</div><div class="ins-tile-sub">across ${s30.length} strength sessions</div></div>
+      <div class="ins-tile"><div class="ins-tile-val">${streak} wk${streak===1?'':'s'}</div><div class="ins-tile-lbl">Streak</div><div class="ins-tile-sub">weeks with 2+ workouts</div></div>
+      <div class="ins-tile"><div class="ins-tile-val">${avgDur}m</div><div class="ins-tile-lbl">Avg Session</div><div class="ins-tile-sub">strength sessions, 30d</div></div>
+    </div>`;
+
+    // ── Strength curves: top 6 exercises by data points ──
+    const byEx={};
+    (logs||[]).forEach(l=>{
+      if(!(l.weight_lbs>0)) return;
+      const s=sessById[l.session_id]; if(!s) return;
+      const k=l.exercise_name;
+      if(!byEx[k]) byEx[k]={};
+      const t=new Date(s.started_at).getTime();
+      byEx[k][t]=Math.max(byEx[k][t]||0, parseFloat(l.weight_lbs));
+    });
+    const curves=Object.entries(byEx)
+      .map(([name,m])=>({name, pts:Object.entries(m).map(([t,y])=>({t:+t, y,
+        tip:`${name}: ${y} lbs · ${new Date(+t).toLocaleDateString('en-US',{month:'short',day:'numeric'})}`}))
+        .sort((a,b)=>a.t-b.t)}))
+      .filter(c=>c.pts.length>=2)
+      .sort((a,b)=>b.pts.length-a.pts.length).slice(0,6);
+    const curvesHtml=curves.length?`<div class="ins-charts">${curves.map(c=>{
+      const first=c.pts[0].y, lastY=c.pts[c.pts.length-1].y, d=lastY-first;
+      const dTxt=d>0?`▲ +${d} lbs`:d<0?`▼ ${d} lbs`:'— flat';
+      const dCol=d>0?'#0ca30c':d<0?'#e66767':'var(--muted-light)';
+      return `<div class="ins-chart-card">
+        <div class="ins-chart-name">${c.name}</div>
+        <div class="ins-chart-delta" style="color:${dCol}">${dTxt} since ${new Date(c.pts[0].t).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
+        ${insLineSVG(c.pts, INS_STRENGTH)}
+      </div>`;}).join('')}</div>`
+      :'<div style="font-size:.68rem;color:var(--muted)">Log a few more weighted sessions to see progression curves.</div>';
+
+    // ── Muscle volume heatmap: 12 muscles × 8 weeks ──
+    const nWeeks=8, thisWk=weekOf(now);
+    const weeks=Array.from({length:nWeeks},(_,i)=>thisWk-(nWeeks-1-i)*7*86400000);
+    const vol={}; Object.keys(RECOVERY_H).forEach(m=>vol[m]=new Array(nWeeks).fill(0));
+    (logs||[]).forEach(l=>{
+      const s=sessById[l.session_id]; if(!s) return;
+      const wi=weeks.indexOf(weekOf(s.started_at)); if(wi<0) return;
+      canonMuscles(l.muscle_groups).forEach(m=>{ if(vol[m]) vol[m][wi]+=l.sets_completed; });
+    });
+    const bucket=v=>v<=0?null:v<5?0:v<10?1:v<15?2:v<20?3:4;
+    const hmHtml=Object.keys(RECOVERY_H).map(m=>{
+      const cells=vol[m].map((v,i)=>{
+        const b=bucket(v);
+        const bg=b===null?'rgba(255,255,255,.04)':INS_RAMP[b];
+        const wkLbl=new Date(weeks[i]).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+        return `<div class="ins-hm-cell" style="background:${bg}" data-tip="${m} — wk of ${wkLbl}: ${v} sets"></div>`;
+      }).join('');
+      const cur=vol[m][nWeeks-1];
+      const inBand=cur>=10&&cur<=20;
+      return `<div class="ins-hm-row"><div class="ins-hm-lbl">${m}</div><div class="ins-hm-cells">${cells}</div><div class="ins-hm-now" style="color:${cur===0?'var(--muted)':inBand?'#0ca30c':'var(--text)'}">${cur}${inBand?' ✓':''}</div></div>`;
+    }).join('');
+    const hmLegend=`<div class="ins-legend">
+      <span class="ins-leg-item">sets/wk:</span>
+      ${INS_RAMP.map((c,i)=>`<span class="ins-leg-item"><span class="ins-leg-sw" style="background:${c}"></span>${['1-4','5-9','10-14','15-19','20+'][i]}</span>`).join('')}
+      <span class="ins-leg-item" style="color:#0ca30c">✓ = in 10-20 target</span>
+    </div>`;
+
+    // ── Consistency calendar: 10 weeks × 7 days ──
+    const nCal=10, calWeeks=Array.from({length:nCal},(_,i)=>weekOf(now)-(nCal-1-i)*7*86400000);
+    const dayState={};
+    (sessions||[]).forEach(s=>{const k=calDay(s.started_at);dayState[k]=dayState[k]==='cardio'||dayState[k]==='both'?'both':'strength';});
+    stravaActs.forEach(a=>{const k=calDay(a.started_at);dayState[k]=dayState[k]==='strength'||dayState[k]==='both'?'both':'cardio';});
+    const calHtml=`<div class="ins-cal">${calWeeks.map(w=>{
+      return `<div class="ins-cal-col">${Array.from({length:7},(_,d)=>{
+        const t=w+d*86400000;
+        if(t>now) return `<div class="ins-cal-cell" style="background:transparent"></div>`;
+        const k=calDay(t), st=dayState[k];
+        const bg=st==='strength'?INS_STRENGTH:st==='cardio'?INS_CARDIO:st==='both'?`linear-gradient(135deg,${INS_STRENGTH} 50%,${INS_CARDIO} 50%)`:'rgba(255,255,255,.05)';
+        const lbl=new Date(t).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+        return `<div class="ins-cal-cell" style="background:${bg}" data-tip="${lbl}: ${st||'rest'}"></div>`;
+      }).join('')}</div>`;}).join('')}</div>
+    <div class="ins-legend">
+      <span class="ins-leg-item"><span class="ins-leg-sw" style="background:${INS_STRENGTH}"></span>Strength</span>
+      <span class="ins-leg-item"><span class="ins-leg-sw" style="background:${INS_CARDIO}"></span>Cardio</span>
+      <span class="ins-leg-item"><span class="ins-leg-sw" style="background:linear-gradient(135deg,${INS_STRENGTH} 50%,${INS_CARDIO} 50%)"></span>Both</span>
+    </div>`;
+
+    body.innerHTML=`
+      <div class="ins-sec">${tilesHtml}</div>
+      <div class="ins-sec"><div class="ins-sec-hd">Strength Progression — lbs over time</div>${curvesHtml}</div>
+      <div class="ins-sec"><div class="ins-sec-hd">Weekly Volume by Muscle — sets/week, last 8 wks</div>${hmHtml}${hmLegend}</div>
+      <div class="ins-sec"><div class="ins-sec-hd">Consistency — last 10 weeks</div>${calHtml}</div>`;
+  } catch(e) {
+    body.innerHTML='<div style="padding:24px;color:var(--muted-light);font-size:.78rem">Could not load insights data.</div>';
+  }
+}
+
+// Shared tooltip for [data-tip] elements (insights charts)
+document.addEventListener('mousemove',e=>{
+  const tip=document.getElementById('insTip'); if(!tip) return;
+  const t=e.target.closest('[data-tip]');
+  if(t){ tip.textContent=t.dataset.tip; tip.style.display='block';
+    tip.style.left=Math.min(e.clientX+12,window.innerWidth-tip.offsetWidth-8)+'px';
+    tip.style.top=(e.clientY-30)+'px';
+  } else tip.style.display='none';
+});
+
+// ═══════════════════════════════════════════════════════
 //  SMART BUILD
 // ═══════════════════════════════════════════════════════
 
@@ -2512,6 +2709,19 @@ async function openPlanner() {
   }
 }
 </script>
+
+<!-- INSIGHTS MODAL -->
+<div class="ins-overlay" id="insOverlay" onclick="if(event.target===this)closeInsights()">
+  <div class="ins-modal">
+    <div class="ins-drag"></div>
+    <div class="ins-hd">
+      <span class="ins-title">📊 Training Insights</span>
+      <button class="ins-close" onclick="closeInsights()">✕</button>
+    </div>
+    <div id="insBody"></div>
+  </div>
+</div>
+<div class="ins-tip" id="insTip"></div>
 
 <!-- REST TIMER -->
 <div class="rest-timer" id="restTimer" onclick="dismissRestTimer()">
