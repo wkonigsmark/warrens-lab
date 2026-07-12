@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react'
 import { getSessions, clearSessions } from '../../lib/sessions'
 import { USERS } from '../../lib/users'
+import { ANGLE_TOPIC_DEFS, TIER_DEFS, LEVELS } from '../../lib/angleQuiz'
+import AnglesPrintPack from './AnglesPrintPack'
 
 const PIN = '2019'
 
@@ -59,12 +61,220 @@ export default function AdminView() {
   }
 
   return (
-    <Dashboard
+    <AdminDashboard
       sessions={sessions}
       activeUser={activeUser}
       onSwitchUser={switchUser}
       onClear={() => { clearSessions(activeUser); setSessions([]) }}
     />
+  )
+}
+
+function AdminDashboard({ sessions, activeUser, onSwitchUser, onClear }) {
+  const [view, setView] = useState('cockpit')
+  const [printUser, setPrintUser] = useState(null)
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-5xl mx-auto px-4 py-8">
+        <div className="no-print flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-extrabold text-gray-800">📐 Ants & Angles — Admin</h1>
+        </div>
+        {!printUser && (
+          <div className="no-print flex gap-2 mb-8">
+            {[
+              { id: 'cockpit', label: '👨‍👩‍👧 Parent View' },
+              { id: 'student', label: '📊 Student Detail' },
+            ].map(v => (
+              <button
+                key={v.id}
+                onClick={() => setView(v.id)}
+                className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all ${
+                  view === v.id
+                    ? 'bg-indigo-600 text-white shadow-md'
+                    : 'bg-white text-gray-500 hover:bg-gray-100 shadow-sm'
+                }`}
+              >
+                {v.label}
+              </button>
+            ))}
+          </div>
+        )}
+        {printUser
+          ? <AnglesPrintPack userId={printUser} onClose={() => setPrintUser(null)} />
+          : view === 'cockpit'
+            ? <CockpitView onPrint={setPrintUser} />
+            : <Dashboard sessions={sessions} activeUser={activeUser} onSwitchUser={onSwitchUser} onClear={onClear} />
+        }
+      </div>
+    </div>
+  )
+}
+
+function CockpitView({ onPrint }) {
+  const allPassed = useMemo(() => {
+    const map = {}
+    for (const u of USERS) {
+      map[u.id] = new Set(getSessions(u.id).filter(s => s.passed).map(s => s.levelId))
+    }
+    return map
+  }, [])
+
+  const TIERED_COUNT = ANGLE_TOPIC_DEFS.length * TIER_DEFS.length  // 28
+
+  const totals = USERS.map(u => ({
+    ...u,
+    tieredPassed: ANGLE_TOPIC_DEFS.flatMap(t =>
+      TIER_DEFS.map(tier => allPassed[u.id].has(`${t.id}-${tier.id}`))
+    ).filter(Boolean).length,
+  }))
+
+  const bonusLevels = LEVELS.filter(l => !l.tiered)
+
+  return (
+    <div>
+      {/* Summary strip */}
+      <div className="grid grid-cols-3 gap-4 mb-8">
+        {totals.map(u => {
+          const pct = Math.round((u.tieredPassed / TIERED_COUNT) * 100)
+          return (
+            <div key={u.id} className="bg-white rounded-2xl shadow p-5 text-center">
+              <div className="text-3xl mb-1">{u.emoji}</div>
+              <div className="font-extrabold text-gray-800 text-lg">{u.name}</div>
+              <div className="text-2xl font-extrabold mt-2" style={{ color: u.color }}>
+                {u.tieredPassed}<span className="text-gray-300 text-base font-normal"> / {TIERED_COUNT}</span>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-2 mt-2 overflow-hidden">
+                <div className="h-2 rounded-full" style={{ width: `${pct}%`, backgroundColor: u.color }} />
+              </div>
+              <div className="text-xs text-gray-400 mt-1">{pct}% of core tiers</div>
+              <button
+                onClick={() => onPrint(u.id)}
+                className="mt-3 w-full px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-200 hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-600 text-gray-500 transition-colors"
+              >
+                🖨 Print Pack
+              </button>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Mastery grid — core topics */}
+      <div className="bg-white rounded-2xl shadow mb-8 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100">
+          <h2 className="font-bold text-gray-700">Core Topics — Mastery Grid</h2>
+          <p className="text-xs text-gray-400 mt-0.5">Rows = topics · columns = tiers · filled = passed</p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[580px]">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="text-left px-5 py-3 text-gray-500 font-semibold text-xs uppercase tracking-wide w-44">Topic</th>
+                {TIER_DEFS.map(tier => (
+                  <th key={tier.id} className="text-center py-3 text-gray-400 font-semibold text-xs uppercase tracking-wide" style={{ width: '19%' }}>
+                    {tier.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {ANGLE_TOPIC_DEFS.map(topic => (
+                <tr key={topic.id} className="hover:bg-gray-50/50">
+                  <td className="px-5 py-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-8 rounded-full flex-shrink-0" style={{ backgroundColor: topic.accent }} />
+                      <span className="font-semibold text-gray-700 text-xs leading-tight">{topic.title}</span>
+                    </div>
+                  </td>
+                  {TIER_DEFS.map(tier => {
+                    const levelId = `${topic.id}-${tier.id}`
+                    return (
+                      <td key={tier.id} className="py-3 px-2">
+                        <div className="flex justify-center gap-1.5">
+                          {USERS.map(u => {
+                            const passed = allPassed[u.id].has(levelId)
+                            return (
+                              <div
+                                key={u.id}
+                                title={`${u.name}: ${passed ? '✓ Passed' : '○ Not yet'}`}
+                                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                                  passed ? 'text-white shadow-sm' : 'bg-gray-100 text-gray-300'
+                                }`}
+                                style={passed ? { backgroundColor: u.color } : {}}
+                              >
+                                {u.emoji}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </td>
+                    )
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {/* Legend */}
+        <div className="px-5 py-3 border-t border-gray-100 flex flex-wrap gap-4">
+          {USERS.map(u => (
+            <div key={u.id} className="flex items-center gap-2 text-xs text-gray-500">
+              <div className="w-5 h-5 rounded-full text-[10px] flex items-center justify-center text-white font-bold" style={{ backgroundColor: u.color }}>
+                {u.emoji}
+              </div>
+              {u.name}
+            </div>
+          ))}
+          <div className="flex items-center gap-1.5 text-xs text-gray-400">
+            <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center text-[10px] text-gray-300">○</div>
+            Not yet
+          </div>
+        </div>
+      </div>
+
+      {/* Bonus topics */}
+      {bonusLevels.length > 0 && (
+        <div className="bg-white rounded-2xl shadow overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100">
+            <h2 className="font-bold text-gray-700">Bonus Topics</h2>
+          </div>
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="text-left px-5 py-3 text-gray-500 font-semibold text-xs uppercase tracking-wide">Level</th>
+                {USERS.map(u => (
+                  <th key={u.id} className="text-center px-4 py-3 text-gray-400 font-semibold text-xs uppercase">
+                    {u.emoji} {u.name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {bonusLevels.map(lvl => (
+                <tr key={lvl.id} className="hover:bg-gray-50/50">
+                  <td className="px-5 py-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-6 rounded-full" style={{ backgroundColor: lvl.accent }} />
+                      <span className="text-xs font-semibold text-gray-700">{lvl.title}</span>
+                    </div>
+                  </td>
+                  {USERS.map(u => {
+                    const passed = allPassed[u.id].has(lvl.id)
+                    return (
+                      <td key={u.id} className="text-center px-4 py-3">
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${passed ? 'bg-green-100 text-green-700' : 'text-gray-300'}`}>
+                          {passed ? '✓' : '○'}
+                        </span>
+                      </td>
+                    )
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -95,11 +305,10 @@ function Dashboard({ sessions, activeUser, onSwitchUser, onClear }) {
   const recent = [...sessions].reverse().slice(0, 100)
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-8">
+    <div>
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-extrabold text-gray-800">📐 Ants & Angles — Progress</h1>
+          <div />
           <div className="text-right">
             {!confirmClear
               ? <button onClick={() => setConfirmClear(true)} className="text-xs text-gray-300 hover:text-red-400">Clear {activeUserObj?.name}'s data</button>
@@ -269,7 +478,6 @@ function Dashboard({ sessions, activeUser, onSwitchUser, onClear }) {
             </table>
           </div>
         </>}
-      </div>
     </div>
   )
 }

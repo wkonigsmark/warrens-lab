@@ -2,13 +2,17 @@ import { useState } from 'react'
 import Banner from './components/Banner'
 import UserPicker from './components/UserPicker'
 import AxesQuizMode from './components/AxesQuizMode'
+import AxesAdminView from './components/AxesAdminView'
 import WorksheetMode from './components/WorksheetMode'
 import Chart from './components/Chart'
 import Controls from './components/Controls'
 import Calculations from './components/Calculations'
 import { getStoredUser, storeUser, clearStoredUser } from './lib/users'
 
+const isAdmin = new URLSearchParams(window.location.search).has('admin')
+
 export default function App() {
+  if (isAdmin) return <AxesAdminView />
   return <AppShell />
 }
 
@@ -39,7 +43,7 @@ function AppContent({ user, onSwitchUser }) {
         {/* Tab bar */}
         <div className="no-print mb-5 flex flex-wrap justify-center gap-2">
           {[
-            { id: 'quiz',      label: '📚 Quiz',       grad: 'from-green-500 to-emerald-600' },
+            { id: 'quiz',      label: '📊 Progress',   grad: 'from-green-500 to-emerald-600' },
             { id: 'explore',   label: '🧭 Explore',    grad: 'from-indigo-500 to-purple-600' },
             { id: 'worksheet', label: '🖨 Worksheets', grad: 'from-amber-500 to-orange-600' },
           ].map((m) => (

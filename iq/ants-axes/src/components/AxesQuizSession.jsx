@@ -6,24 +6,24 @@ import { saveSession } from '../lib/sessions'
 
 const FEEDBACK_MS = 1100
 
-export default function AxesQuizSession({ user, topic, onBack, onDone }) {
+export default function AxesQuizSession({ user, level, onBack, onDone }) {
   const questions = useMemo(() => {
     const qs = []
     const seen = new Set()
     let tries = 0
     while (qs.length < SESSION_COUNT && tries < 200) {
-      const q = topic.generate()
+      const q = level.generate()
       const key = JSON.stringify(q.choices) + q.correctIndex
       if (!seen.has(key)) { seen.add(key); qs.push(q) }
       tries++
     }
     return qs
-  }, [topic])
+  }, [level])
 
-  const [qi, setQi]         = useState(0)
+  const [qi, setQi]          = useState(0)
   const [answers, setAnswers] = useState([])
-  const [picked, setPicked]  = useState(null)   // index chosen
-  const [phase, setPhase]    = useState('asking') // 'asking' | 'feedback' | 'done'
+  const [picked, setPicked]   = useState(null)
+  const [phase, setPhase]     = useState('asking') // 'asking' | 'feedback' | 'done'
 
   const q = questions[qi]
 
@@ -42,18 +42,19 @@ export default function AxesQuizSession({ user, topic, onBack, onDone }) {
         setPicked(null)
         setPhase('asking')
       } else {
-        // Save session
         const score = next.filter(a => a.correct).length
         saveSession({
           id: Date.now(),
           ts: new Date().toISOString(),
           toolId: 'ants-axes',
           userId: user,
-          topicId: topic.id,
-          topicTitle: topic.title,
+          levelId: level.id,
+          levelTitle: level.title,
+          tierLabel: level.tierLabel,
+          topicId: level.topicId,
           score,
           count: SESSION_COUNT,
-          passed: score >= Math.ceil(SESSION_COUNT * 0.8),
+          passed: score >= level.passBar,
         }, user)
         setPhase('done')
       }
@@ -62,35 +63,45 @@ export default function AxesQuizSession({ user, topic, onBack, onDone }) {
 
   if (phase === 'done') {
     const score = answers.filter(a => a.correct).length
+    const passed = score >= level.passBar
     const pct = Math.round((score / SESSION_COUNT) * 100)
     const perfect = score === SESSION_COUNT
+
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
         <motion.div
           className="w-full max-w-sm bg-white rounded-3xl shadow-xl p-8 text-center"
           initial={{ scale: 0.85, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
         >
-          <div className="text-5xl mb-3">{perfect ? '🏆' : score >= 4 ? '🌟' : score >= 3 ? '👍' : '💪'}</div>
+          <div className="text-5xl mb-3">{perfect ? '🏆' : passed ? '🌟' : score >= 3 ? '👍' : '💪'}</div>
           <h2 className="text-2xl font-extrabold text-gray-800 mb-1">
-            {perfect ? 'Perfect!' : score >= 4 ? 'Great job!' : score >= 3 ? 'Good effort!' : 'Keep going!'}
+            {perfect ? 'Perfect!' : passed ? 'Passed!' : score >= 3 ? 'Good effort!' : 'Keep going!'}
           </h2>
-          <p className="text-gray-400 text-sm mb-6">{topic.title}</p>
+          <p className="text-sm text-gray-400 mb-1">{level.emoji} {level.title}</p>
+          <p className="text-xs font-bold uppercase tracking-wide mb-5" style={{ color: level.accent }}>
+            {level.tierLabel}
+          </p>
 
-          <div className="flex items-end justify-center gap-1 mb-4">
+          <div className="flex items-end justify-center gap-1 mb-3">
             <span className="text-5xl font-extrabold text-gray-800">{score}</span>
             <span className="text-2xl text-gray-300 mb-1">/ {SESSION_COUNT}</span>
           </div>
 
-          <div className="w-full bg-gray-100 rounded-full h-3 mb-6 overflow-hidden">
+          {passed && (
+            <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full mb-4">
+              ✓ Tier cleared — next tier unlocked!
+            </div>
+          )}
+
+          <div className="w-full bg-gray-100 rounded-full h-3 mb-5 overflow-hidden">
             <motion.div
               className="h-3 rounded-full"
-              style={{ backgroundColor: topic.accent }}
+              style={{ backgroundColor: level.accent }}
               initial={{ width: 0 }}
               animate={{ width: `${pct}%`, transition: { duration: 0.6, ease: 'easeOut' } }}
             />
           </div>
 
-          {/* Per-Q row */}
           <div className="flex justify-center gap-2 mb-8">
             {answers.map((a, i) => (
               <div key={i}
@@ -105,15 +116,15 @@ export default function AxesQuizSession({ user, topic, onBack, onDone }) {
             <button
               onClick={onDone}
               className="w-full py-3 rounded-xl font-bold text-white text-lg hover:opacity-90 active:scale-95 transition-all"
-              style={{ backgroundColor: topic.accent }}
+              style={{ backgroundColor: level.accent }}
             >
-              Play Again
+              {passed ? 'Next Tier →' : 'Try Again'}
             </button>
             <button
               onClick={onBack}
               className="w-full py-3 rounded-xl font-bold text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors"
             >
-              Change Topic
+              ← View Progress
             </button>
           </div>
         </motion.div>
@@ -130,10 +141,16 @@ export default function AxesQuizSession({ user, topic, onBack, onDone }) {
         <button onClick={onBack} className="text-gray-400 font-bold text-sm px-2 py-1 hover:text-gray-600">
           ← Back
         </button>
-        <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">{topic.title}</span>
+        <div className="text-center">
+          <span className="text-xs font-bold text-gray-600">{level.title}</span>
+          <span className="mx-1.5 text-gray-200">·</span>
+          <span className="text-xs font-bold uppercase tracking-wide" style={{ color: level.accent }}>
+            {level.tierLabel}
+          </span>
+        </div>
         <span
           className="text-xs font-extrabold text-white px-2.5 py-1 rounded-full"
-          style={{ backgroundColor: topic.accent }}
+          style={{ backgroundColor: level.accent }}
         >
           {qi + 1} / {SESSION_COUNT}
         </span>
@@ -143,7 +160,7 @@ export default function AxesQuizSession({ user, topic, onBack, onDone }) {
       <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
         <div
           className="h-1.5 rounded-full transition-all duration-300"
-          style={{ width: `${(qi / SESSION_COUNT) * 100}%`, backgroundColor: topic.accent }}
+          style={{ width: `${(qi / SESSION_COUNT) * 100}%`, backgroundColor: level.accent }}
         />
       </div>
 
@@ -174,9 +191,9 @@ export default function AxesQuizSession({ user, topic, onBack, onDone }) {
 
           let bg = 'bg-white border-2 border-gray-200 text-gray-700'
           if (phase === 'feedback') {
-            if (isCorrect)      bg = 'bg-emerald-400 border-emerald-400 text-white'
-            else if (isPicked)  bg = 'bg-red-400 border-red-400 text-white'
-            else                bg = 'bg-white border-2 border-gray-100 text-gray-300'
+            if (isCorrect)     bg = 'bg-emerald-400 border-emerald-400 text-white'
+            else if (isPicked) bg = 'bg-red-400 border-red-400 text-white'
+            else               bg = 'bg-white border-2 border-gray-100 text-gray-300'
           }
 
           return (

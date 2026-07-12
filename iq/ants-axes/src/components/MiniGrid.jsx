@@ -56,12 +56,6 @@ export default function MiniGrid({ points = [], drawLine = false, highlightYAxis
     )
   }
 
-  // Axis label "0" at origin
-  labels.push(
-    <text key="l0" x={gridLeft - 4} y={gridBot + 14}
-      textAnchor="end" fontSize="9" fill="#9ca3af">0</text>
-  )
-
   // Extended line through two points (clipped to grid)
   let extendedLine = null
   if (drawLine && points.length >= 2) {
