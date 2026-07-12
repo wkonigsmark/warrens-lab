@@ -14,6 +14,7 @@
     ['learn', 'Learn'],
   ];
   const PAGES = [
+    ['🏠', 'Home (demo)', `${root}/home.html`],
     ['🧪', 'Data Lab', `${root}/data-lab.html`],
     ['⚖️', 'Weight Lab', `${root}/data-lab.html#weight-lab`],
     ['🎞️', 'Blueprint Deck', `${root}/blueprint/index.html`],

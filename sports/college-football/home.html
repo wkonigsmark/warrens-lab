@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viva CFP · Home (demo)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Alfa+Slab+One&family=Playfair+Display:ital,wght@1,700&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .home-hero {
+      text-align: center;
+      padding: 22px 16px 6px;
+    }
+    .home-hero .viva {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      color: var(--neon-red); font-size: 1.3rem; text-shadow: 0 0 10px rgba(255,77,94,.6);
+    }
+    .home-hero h1 {
+      font-family: 'Alfa Slab One', serif; font-size: 2rem; color: var(--gold);
+      text-shadow: 0 0 16px rgba(242,196,100,.45); letter-spacing: 1px; line-height: 1;
+    }
+    .home-hero p { color: rgba(245,233,208,.5); font-size: .78rem; margin-top: 6px; }
+
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 12px;
+      max-width: 1080px;
+      margin: 14px auto 40px;
+      padding: 0 12px;
+      grid-auto-flow: dense;
+    }
+    .bento .span2 { grid-column: span 2; }
+    @media (max-width: 680px) { .bento { grid-template-columns: 1fr; } .bento .span2 { grid-column: span 1; } }
+
+    .tile {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 14px 15px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .tile-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px; gap: 8px;
+    }
+    .tile-head h2 {
+      font-family: 'Oswald', sans-serif; font-size: .82rem; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--gold);
+      display: flex; align-items: center; gap: 7px;
+    }
+    .tile-open {
+      font-size: .66rem; letter-spacing: .5px; text-transform: uppercase;
+      color: rgba(245,233,208,.5); text-decoration: none; white-space: nowrap;
+      border: 1px solid var(--glass-border); border-radius: 20px; padding: 3px 9px;
+    }
+    .tile-open:hover { color: var(--gold); border-color: var(--gold-dim); }
+
+    .mini-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,.05);
+      font-size: .85rem;
+    }
+    .mini-row:last-child { border-bottom: none; }
+    .mini-rank { width: 20px; text-align: right; font-weight: 800; font-size: .72rem; color: rgba(255,255,255,.4); flex-shrink: 0; }
+    .mini-logo { width: 20px; height: 20px; object-fit: contain; flex-shrink: 0; }
+    .mini-name { flex: 1; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mini-val { font-weight: 800; color: var(--gold); font-size: .8rem; white-space: nowrap; }
+    .mini-sub { color: rgba(255,255,255,.4); font-size: .72rem; }
+    .mini-conf { color: rgba(255,255,255,.35); font-size: .66rem; letter-spacing: 1px; }
+
+    .chip-strip { display: flex; flex-wrap: wrap; gap: 5px; }
+    .seed-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(0,0,0,.25); border: 1px solid var(--glass-border);
+      border-left: 3px solid var(--tc); border-radius: 8px; padding: 4px 7px; font-size: .72rem; font-weight: 700;
+    }
+    .seed-chip img { width: 15px; height: 15px; object-fit: contain; }
+    .seed-chip .s { color: rgba(255,255,255,.45); font-size: .64rem; }
+    .seed-chip.bye { border-color: var(--gold); }
+
+    .edge-pill { text-align: right; font-weight: 800; font-size: .76rem; border-radius: 7px; padding: 2px 6px; }
+    .e-hi { background: rgba(46,204,113,.18); color: #7ddf8f; }
+    .e-mid { background: rgba(242,196,100,.14); color: var(--gold); }
+
+    .news-item { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+    .news-item:last-child { border-bottom: none; }
+    .news-badge { font-family:'Oswald',sans-serif; font-size:.56rem; letter-spacing:1px; padding:2px 7px; border-radius:20px; color:#14090b; font-weight:600; }
+    .nb-binding { background:#2ecc71; } .nb-pressure { background: var(--gold); } .nb-pending { background:#e08b3c; }
+    .news-title { font-size: .82rem; font-weight: 700; color: var(--cream); margin-top: 4px; }
+    .news-date { color: rgba(255,255,255,.4); font-size: .68rem; }
+
+    .conf-block { margin-bottom: 8px; }
+    .conf-label { font-family:'Oswald',sans-serif; font-size:.62rem; letter-spacing:1.5px; text-transform:uppercase; color: var(--neon-red); margin-bottom: 3px; }
+  </style>
+</head>
+
+<body>
+  <div class="home-hero">
+    <div class="viva">Viva</div>
+    <h1>CFP HOME</h1>
+    <p>demo dashboard · tap any tile to open the full view</p>
+  </div>
+  <div class="bento" id="bento">
+    <div class="tile"><p class="mini-sub">Loading the season…</p></div>
+  </div>
+
+  <script src="data/governance.js"></script>
+  <script src="home.js"></script>
+  <script src="nav.js" data-root="."></script>
+</body>
+
+</html>

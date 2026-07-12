@@ -1,10 +1,14 @@
 import { useState } from 'react'
+import AdminView from './components/admin/AdminView'
+import UserPicker from './components/UserPicker'
 import Banner from './components/Banner'
+import { getStoredUser, storeUser, clearStoredUser } from './lib/users'
 import AngleStage from './components/AngleStage'
 import AngleReadout from './components/AngleReadout'
 import AngleControls from './components/AngleControls'
 import QuizMode from './components/quiz/QuizMode'
 import WorksheetMode from './components/worksheet/WorksheetMode'
+import ProgressMode from './components/progress/ProgressMode'
 import TriangleStage from './components/TriangleStage'
 import TriangleReadout from './components/TriangleReadout'
 import TriangleControls, { DEFAULT_TRIANGLE } from './components/TriangleControls'
@@ -22,8 +26,6 @@ import { pythagorasStory } from './components/stories/PythagorasStory'
 import ExploreNav from './components/ExploreNav'
 import Glossary from './components/Glossary'
 
-// Topic tabs — Angles & Triangles are built; the rest are the roadmap
-// (polygons & area, circles & Pi, volume). Unbuilt ones show a placeholder.
 const TOPICS = [
   { id: 'angles', label: 'Angles', emoji: '📐', ready: true },
   { id: 'triangles', label: 'Triangles', emoji: '🔺', ready: true },
@@ -31,24 +33,49 @@ const TOPICS = [
   { id: 'circles', label: 'Circles & Pi', emoji: '⭕', ready: true },
 ]
 
-export default function App() {
-  const [mode, setMode] = useState('explore') // 'explore' | 'quiz' | 'worksheet'
-  const [topic, setTopic] = useState('angles')
-  const [angle, setAngle] = useState(45)
-  const [snap, setSnap] = useState(0)
-  const [triangle, setTriangle] = useState(DEFAULT_TRIANGLE)
-  const [triSnap, setTriSnap] = useState(true)
-  const [triSquares, setTriSquares] = useState(false)
-  const [polygon, setPolygon] = useState(DEFAULT_POLYGON)
-  const [polySnap, setPolySnap] = useState(true)
-  const [polySquares, setPolySquares] = useState(false)
-  const [radius, setRadius] = useState(3)
-  const [unroll, setUnroll] = useState(false)
-  const [story, setStory] = useState(null) // active StoryModal content, or null
-  const [storyFocus, setStoryFocus] = useState(null) // { mode, target } set when navigating from a story
-  const [wholeOnly, setWholeOnly] = useState(true) // universal: only whole-number answers
+const isAdmin = new URLSearchParams(window.location.search).has('admin')
 
-  // Navigate from an Explore panel directly to the matching quiz or worksheet.
+export default function App() {
+  if (isAdmin) return <AdminView />
+  return <AppShell />
+}
+
+// Handles user selection — no other hooks here so conditional return is safe.
+function AppShell() {
+  const [user, setUser] = useState(() => getStoredUser())
+  const selectUser = (id) => { storeUser(id); setUser(id) }
+  const switchUser  = ()  => { clearStoredUser(); setUser(null) }
+
+  if (!user) return <UserPicker onSelect={selectUser} />
+  return <AppContent key={user} user={user} onSwitchUser={switchUser} />
+}
+
+// All game state lives here, mounted fresh per user (key={user} on AppShell's render).
+function AppContent({ user, onSwitchUser }) {
+  const [mode, setMode]           = useState('quiz')
+  const [quizStartLevel, setQuizStartLevel] = useState(null)
+  const [quizJumpCount, setQuizJumpCount]   = useState(0)
+
+  const playFromProgress = (levelId) => {
+    setQuizStartLevel(levelId)
+    setQuizJumpCount(c => c + 1)
+    setMode('quiz')
+  }
+  const [topic, setTopic]         = useState('angles')
+  const [angle, setAngle]         = useState(45)
+  const [snap, setSnap]           = useState(0)
+  const [triangle, setTriangle]   = useState(DEFAULT_TRIANGLE)
+  const [triSnap, setTriSnap]     = useState(true)
+  const [triSquares, setTriSquares] = useState(false)
+  const [polygon, setPolygon]     = useState(DEFAULT_POLYGON)
+  const [polySnap, setPolySnap]   = useState(true)
+  const [polySquares, setPolySquares] = useState(false)
+  const [radius, setRadius]       = useState(3)
+  const [unroll, setUnroll]       = useState(false)
+  const [story, setStory]         = useState(null)
+  const [storyFocus, setStoryFocus] = useState(null)
+  const [wholeOnly, setWholeOnly] = useState(true)
+
   const goTo = (targetMode, target) => {
     setMode(targetMode)
     setStoryFocus({ mode: targetMode, target })
@@ -56,15 +83,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-indigo-100">
-      <Banner />
+      <Banner user={user} onSwitchUser={onSwitchUser} />
 
       <div className="max-w-6xl mx-auto px-4 py-6">
-        {/* Mode switch */}
         <div className="no-print mb-5 flex flex-wrap justify-center gap-2">
           {[
-            { id: 'explore', label: '🧭 Explore', grad: 'from-indigo-500 to-purple-600' },
-            { id: 'quiz', label: '📚 Quiz', grad: 'from-green-500 to-emerald-600' },
-            { id: 'worksheet', label: '🖨 Worksheets', grad: 'from-amber-500 to-orange-600' },
+            { id: 'explore',  label: '🧭 Explore',    grad: 'from-indigo-500 to-purple-600' },
+            { id: 'quiz',     label: '📚 Quiz',        grad: 'from-green-500 to-emerald-600' },
+            { id: 'progress', label: '🏅 My Progress', grad: 'from-violet-500 to-purple-600' },
+            { id: 'worksheet',label: '🖨 Worksheets',  grad: 'from-amber-500 to-orange-600' },
           ].map((m) => (
             <button
               key={m.id}
@@ -78,24 +105,20 @@ export default function App() {
           ))}
         </div>
 
-        {/* Topic tabs — only relevant while exploring */}
         {mode === 'explore' && (
-        <div className="mb-6 flex flex-wrap justify-center gap-2">
-          {TOPICS.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setTopic(t.id)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                topic === t.id
-                  ? 'bg-white shadow text-indigo-600'
-                  : 'bg-white/50 text-gray-500 hover:bg-white/80'
-              }`}
-            >
-              {t.emoji} {t.label}
-              {!t.ready && <span className="ml-1 text-[10px] text-gray-300">soon</span>}
-            </button>
-          ))}
-        </div>
+          <div className="mb-6 flex flex-wrap justify-center gap-2">
+            {TOPICS.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => setTopic(t.id)}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                  topic === t.id ? 'bg-white shadow text-indigo-600' : 'bg-white/50 text-gray-500 hover:bg-white/80'
+                }`}
+              >
+                {t.emoji} {t.label}
+              </button>
+            ))}
+          </div>
         )}
 
         {mode === 'explore' && topic === 'angles' && (
@@ -103,10 +126,7 @@ export default function App() {
             <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-start justify-between gap-3 mb-1">
                 <h2 className="text-xl font-bold text-gray-800">Angle Explorer</h2>
-                <button
-                  onClick={() => setStory(degreesStory)}
-                  className="flex-shrink-0 text-sm font-bold text-white bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-2 rounded-lg hover:shadow-lg transition-shadow"
-                >
+                <button onClick={() => setStory(degreesStory)} className="flex-shrink-0 text-sm font-bold text-white bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-2 rounded-lg hover:shadow-lg transition-shadow">
                   📜 Why 360°?
                 </button>
               </div>
@@ -126,10 +146,7 @@ export default function App() {
             <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-start justify-between gap-3 mb-1">
                 <h2 className="text-xl font-bold text-gray-800">Triangle Explorer</h2>
-                <button
-                  onClick={() => setStory(pythagorasStory)}
-                  className="flex-shrink-0 text-sm font-bold text-white bg-gradient-to-r from-violet-600 to-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-shadow"
-                >
+                <button onClick={() => setStory(pythagorasStory)} className="flex-shrink-0 text-sm font-bold text-white bg-gradient-to-r from-violet-600 to-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-shadow">
                   📜 Pythagoras Story
                 </button>
               </div>
@@ -154,13 +171,7 @@ export default function App() {
             </div>
             <div className="lg:col-span-1 flex flex-col gap-4">
               <PolygonReadout vertices={polygon} />
-              <PolygonControls
-                onPreset={setPolygon}
-                snap={polySnap}
-                onSnapChange={setPolySnap}
-                showSquares={polySquares}
-                onSquaresChange={setPolySquares}
-              />
+              <PolygonControls onPreset={setPolygon} snap={polySnap} onSnapChange={setPolySnap} showSquares={polySquares} onSquaresChange={setPolySquares} />
             </div>
           </div>
         )}
@@ -170,10 +181,7 @@ export default function App() {
             <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
               <div className="flex items-start justify-between gap-3 mb-1">
                 <h2 className="text-xl font-bold text-gray-800">Circle Explorer</h2>
-                <button
-                  onClick={() => setStory(piStory)}
-                  className="flex-shrink-0 text-sm font-bold text-white bg-gradient-to-r from-violet-500 to-indigo-600 px-4 py-2 rounded-lg hover:shadow-lg transition-shadow"
-                >
+                <button onClick={() => setStory(piStory)} className="flex-shrink-0 text-sm font-bold text-white bg-gradient-to-r from-violet-500 to-indigo-600 px-4 py-2 rounded-lg hover:shadow-lg transition-shadow">
                   📜 The Story of π
                 </button>
               </div>
@@ -190,16 +198,39 @@ export default function App() {
         )}
 
         {mode === 'explore' && ['angles', 'triangles', 'area', 'circles'].includes(topic) && (
-          <div className="mt-6">
-            <Glossary topic={topic} />
-          </div>
+          <div className="mt-6"><Glossary topic={topic} /></div>
         )}
 
         {mode === 'explore' && !['angles', 'triangles', 'area', 'circles'].includes(topic) && <Placeholder topic={topic} />}
 
-        {mode === 'quiz' && <QuizMode wholeOnly={wholeOnly} onWholeChange={setWholeOnly} focusCategory={storyFocus?.mode === 'quiz' ? storyFocus.target : null} onFocusConsumed={() => setStoryFocus(null)} />}
+        {mode === 'quiz' && (
+          <QuizMode
+            key={quizJumpCount}
+            user={user}
+            wholeOnly={wholeOnly}
+            onWholeChange={setWholeOnly}
+            startLevel={quizStartLevel}
+            focusCategory={storyFocus?.mode === 'quiz' ? storyFocus.target : null}
+            onFocusConsumed={() => setStoryFocus(null)}
+          />
+        )}
 
-        {mode === 'worksheet' && <WorksheetMode wholeOnly={wholeOnly} onWholeChange={setWholeOnly} focusTopicId={storyFocus?.mode === 'worksheet' ? storyFocus.target : null} onFocusConsumed={() => setStoryFocus(null)} />}
+        {mode === 'progress' && (
+          <ProgressMode
+            user={user}
+            wholeOnly={wholeOnly}
+            onPlay={playFromProgress}
+          />
+        )}
+
+        {mode === 'worksheet' && (
+          <WorksheetMode
+            wholeOnly={wholeOnly}
+            onWholeChange={setWholeOnly}
+            focusTopicId={storyFocus?.mode === 'worksheet' ? storyFocus.target : null}
+            onFocusConsumed={() => setStoryFocus(null)}
+          />
+        )}
       </div>
 
       <StoryModal
@@ -219,18 +250,9 @@ export default function App() {
 function Placeholder({ topic }) {
   const t = TOPICS.find((x) => x.id === topic)
   return (
-    <ComingSoon
-      title={`${t.emoji} ${t.label}`}
-      body="This topic is on the roadmap. Angles is the working playground today — the same drag-to-explore engine will power this next."
-    />
-  )
-}
-
-function ComingSoon({ title, body }) {
-  return (
     <div className="bg-white/70 rounded-2xl shadow p-10 text-center max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold text-gray-700 mb-2">{title}</h2>
-      <p className="text-gray-500">{body}</p>
+      <h2 className="text-2xl font-bold text-gray-700 mb-2">{t.emoji} {t.label}</h2>
+      <p className="text-gray-500">This topic is on the roadmap. Angles is the working playground today.</p>
     </div>
   )
 }
