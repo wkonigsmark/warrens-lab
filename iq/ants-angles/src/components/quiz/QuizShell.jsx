@@ -82,10 +82,11 @@ export default function QuizShell({ user, level, onBack, onAdvance, nextLevelTit
     const wTimes   = winsorize(rawTimes)
     const avgMs    = rawTimes.length ? Math.round(wTimes.reduce((s, t) => s + t, 0) / wTimes.length) : 0
     const avgMsRaw = rawTimes.length ? Math.round(rawTimes.reduce((s, t) => s + t, 0) / rawTimes.length) : 0
-    const speedOk  = !level.speedMs || avgMs <= level.speedMs
-    const fullPass = score >= level.passBar && speedOk
     const hintTotal   = answers.reduce((s, a) => s + (a.hintCount || 0), 0)
     const hintTotalMs = answers.reduce((s, a) => s + (a.hintMs   || 0), 0)
+    const speedOk  = !level.speedMs || avgMs <= level.speedMs
+    const hintsOk  = level.maxHints == null || hintTotal <= level.maxHints
+    const fullPass = score >= level.passBar && speedOk && hintsOk
 
     if (fullPass) playLevelUp()
     saveSession({
@@ -170,11 +171,12 @@ export default function QuizShell({ user, level, onBack, onAdvance, nextLevelTit
     const wTimes   = winsorize(rawTimes)
     const avgMs    = rawTimes.length ? Math.round(wTimes.reduce((s, t) => s + t, 0) / wTimes.length) : 0
     const avgMsRaw = rawTimes.length ? Math.round(rawTimes.reduce((s, t) => s + t, 0) / rawTimes.length) : 0
+    const hintTotal = answers.reduce((s, a) => s + (a.hintCount || 0), 0)
     const speedOk   = !level.speedMs || avgMs <= level.speedMs
-    const fullPass  = score >= level.passBar && speedOk
+    const hintsOk   = level.maxHints == null || hintTotal <= level.maxHints
+    const fullPass  = score >= level.passBar && speedOk && hintsOk
     const isMaster  = level.tierId === 'master'
     const anyWinsorized = wTimes.some((t, i) => t !== rawTimes[i])
-    const hintTotal = answers.reduce((s, a) => s + (a.hintCount || 0), 0)
 
     // ── Level Up / Topic Mastered ──────────────────────────────────────
     if (fullPass && onAdvance) {
@@ -280,6 +282,37 @@ export default function QuizShell({ user, level, onBack, onAdvance, nextLevelTit
       )
     }
 
+    // ── Hint gate failed (score & speed fine, too many hints) ───────────
+    if (score >= level.passBar && speedOk && !hintsOk) {
+      return (
+        <div className="max-w-xl mx-auto">
+          <motion.div
+            className="bg-white rounded-2xl shadow-lg p-10 text-center"
+            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+          >
+            <div className="text-5xl mb-2">💡</div>
+            <h1 className="text-3xl font-bold text-gray-800 mb-1">So Close — Too Many Hints!</h1>
+            <div className="text-6xl font-extrabold my-3" style={{ color: level.accent }}>{score}/{COUNT}</div>
+            <p className="text-gray-600 mb-1">Great score! Now show you can do it on your own.</p>
+            <p className="text-sm text-gray-400 mb-4">
+              Hints used: <span className="font-bold text-amber-500">{hintTotal}</span>
+              {' '}— this level allows {level.maxHints === 0 ? 'none' : `up to ${level.maxHints}`}
+            </p>
+            <ResultGrid questions={questions} answers={answers} wTimes={wTimes} />
+            <div className="space-y-3 mt-6">
+              <button onClick={reset} className="w-full text-white font-bold py-3 rounded-xl hover:shadow-lg"
+                style={{ backgroundColor: level.accent }}>
+                Try Again
+              </button>
+              <button onClick={onBack} className="w-full text-gray-400 text-sm py-1 hover:text-gray-600">
+                ⚙ Change Level
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )
+    }
+
     // ── Keep practicing ────────────────────────────────────────────────
     const pct     = score / COUNT
     const msg     = pct === 1 ? 'Perfect! 🌟' : pct >= 0.8 ? 'Almost there! 🚀' : pct >= 0.6 ? 'Good work! 👍' : pct >= 0.4 ? 'Nice try! 🙂' : 'Keep practicing! 💪'
@@ -349,9 +382,11 @@ export default function QuizShell({ user, level, onBack, onAdvance, nextLevelTit
             backgroundColor: level.accent,
           }} />
         </div>
-        {level.speedMs && (
+        {(level.speedMs || level.maxHints != null) && (
           <p className="text-xs text-gray-400 mt-1 text-right">
-            Master: 10/10 in under {level.speedMs / 1000}s avg
+            {level.tierLabel ?? 'Pass'}: {level.passBar}/{COUNT}
+            {level.speedMs ? ` · under ${level.speedMs / 1000}s avg` : ''}
+            {level.maxHints != null ? (level.maxHints === 0 ? ' · no hints' : ` · max ${level.maxHints} hint${level.maxHints === 1 ? '' : 's'}`) : ''}
           </p>
         )}
       </div>

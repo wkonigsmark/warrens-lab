@@ -3588,24 +3588,31 @@
         document.getElementById("ko-nav-prev").style.opacity = seq <= minSeq ? '0.3' : '1';
         document.getElementById("ko-nav-next").style.opacity = seq >= maxSeq ? '0.3' : '1';
 
+        // Resolve the actual team IDs for this slot — the static schedule only
+        // knows real teams outright for rounds that were seeded ahead of time;
+        // everything after that (SF/3P/F) is chased through real results.
+        const resolved = resolveKoMatchTeams(current);
+        const team1Id = resolved.team1;
+        const team2Id = resolved.team2;
+
         // Match header
         document.getElementById("ko-match-number").textContent = current.matchNumber;
         document.getElementById("ko-match-round").textContent = ROUND_LABELS[current.round] || current.round;
-        document.getElementById("ko-match-title").textContent = current.teamsKnown
-          ? `${current.team1} vs ${current.team2}`
+        document.getElementById("ko-match-title").textContent = (team1Id && team2Id)
+          ? `${team1Id} vs ${team2Id}`
           : (ROUND_LABELS[current.round] || current.round) + " #" + current.matchNumber;
 
         // Teams
-        const team1 = teamsById[current.team1];
-        const team2 = teamsById[current.team2];
+        const team1 = teamsById[team1Id];
+        const team2 = teamsById[team2Id];
         const flag1 = team1 ? `https://flagcdn.com/w80/${team1.id === 'ENG' ? 'gb-eng' : team1.countryCode.toLowerCase()}.png` : '';
         const flag2 = team2 ? `https://flagcdn.com/w80/${team2.id === 'ENG' ? 'gb-eng' : team2.countryCode.toLowerCase()}.png` : '';
-        document.getElementById("ko-team1-name").textContent = current.team1 || "TBD";
-        document.getElementById("ko-team2-name").textContent = current.team2 || "TBD";
+        document.getElementById("ko-team1-name").textContent = team1Id || "TBD";
+        document.getElementById("ko-team2-name").textContent = team2Id || "TBD";
         document.getElementById("ko-team1-flag").innerHTML = flag1 ? `<img src="${flag1}" style="width:32px;height:auto;border-radius:2px;">` : '🏁';
         document.getElementById("ko-team2-flag").innerHTML = flag2 ? `<img src="${flag2}" style="width:32px;height:auto;border-radius:2px;">` : '🏁';
-        document.getElementById("ko-penalty-team1-label").textContent = `${current.team1 || "Team 1"} wins shootout`;
-        document.getElementById("ko-penalty-team2-label").textContent = `${current.team2 || "Team 2"} wins shootout`;
+        document.getElementById("ko-penalty-team1-label").textContent = `${team1Id || "Team 1"} wins shootout`;
+        document.getElementById("ko-penalty-team2-label").textContent = `${team2Id || "Team 2"} wins shootout`;
 
         // If this match already has a result, pre-fill and show a badge
         const badge = document.getElementById("ko-result-badge");
@@ -3638,7 +3645,7 @@
           if (isPens) {
             const winner = existing.shootoutWinnerId;
             document.querySelectorAll('input[name="ko-penalty-winner"]').forEach(r => {
-              const teamId = r.value === "team1" ? current.team1 : current.team2;
+              const teamId = r.value === "team1" ? team1Id : team2Id;
               r.checked = teamId === winner;
             });
           } else {
@@ -3665,6 +3672,11 @@
         const current = koMatchBySeq(koDisplayedSeq);
         if (!current) { alert("No match loaded"); return; }
 
+        // Resolve actual team IDs — never write the raw "still possible" pipe-list
+        // placeholder to the database as a winner_id.
+        const { team1: team1Id, team2: team2Id } = resolveKoMatchTeams(current);
+        if (!team1Id || !team2Id) { alert("Both teams for this match aren't decided yet — check back once the earlier round finishes."); return; }
+
         const score1 = parseInt(document.getElementById("ko-score-team1").value);
         const score2 = parseInt(document.getElementById("ko-score-team2").value);
         if (isNaN(score1) || isNaN(score2)) { alert("Please enter both scores."); return; }
@@ -3675,10 +3687,10 @@
         if (isPenalties) {
           const penaltyWinner = document.querySelector('input[name="ko-penalty-winner"]:checked');
           if (!penaltyWinner) { alert("Please select who won the penalty shootout."); return; }
-          winnerId = penaltyWinner.value === "team1" ? current.team1 : current.team2;
+          winnerId = penaltyWinner.value === "team1" ? team1Id : team2Id;
         } else {
           if (score1 === score2) { alert("Scores are tied — tick 'Decided by penalties' and pick the winner."); return; }
-          winnerId = score1 > score2 ? current.team1 : current.team2;
+          winnerId = score1 > score2 ? team1Id : team2Id;
         }
 
         try {
@@ -3813,6 +3825,33 @@
           }
         });
         return { simWinner, simLoser, simActT1, simActT2 };
+      }
+
+      // Resolve a knockoutSchedule entry's actual team1/team2 team IDs. Static
+      // schedule data leaves SF/3P/F as `teamsKnown: false` with a pipe-separated
+      // list of every team that could still reach that slot (seeded before the
+      // tournament started) — this chases through completed results to find the
+      // single real team, once it's decided.
+      function resolveKoMatchTeams(match) {
+        if (match.teamsKnown) return { team1: match.team1, team2: match.team2 };
+
+        // 3rd place / Final depend on both semifinals being genuinely decided.
+        // buildBracketSim has a "assume team1 wins" fallback for matches with no
+        // real result yet — that exists for the Path-to-Victory sandbox and must
+        // NOT leak in here, or an unplayed SF would produce a fake 3P/Final matchup.
+        if (match.round === '3P' || match.round === 'F') {
+          const sfMatches = knockoutSchedule.filter(m => m.round === 'SF').sort((a, b) => a.seq - b.seq);
+          const sfResolved = sfMatches.map(m => ({ match: m, ...resolveKoMatchTeams(m), result: actualMatches.find(r => r.matchNumber === m.matchNumber && r.status === 'completed') }));
+          if (sfResolved.some(sf => !sf.result)) return { team1: null, team2: null };
+          const winners = sfResolved.map(sf => sf.result.winnerId);
+          const losers = sfResolved.map(sf => sf.result.winnerId === sf.team1 ? sf.team2 : sf.team1);
+          return match.round === '3P'
+            ? { team1: losers[0] || null, team2: losers[1] || null }
+            : { team1: winners[0] || null, team2: winners[1] || null };
+        }
+
+        const sim = buildBracketSim({ r32: [], final: null });
+        return { team1: sim.simActT1[match.seq] || null, team2: sim.simActT2[match.seq] || null };
       }
 
       // ── Path to Victory ──────────────────────────────────────────

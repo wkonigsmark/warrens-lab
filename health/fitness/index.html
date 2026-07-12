@@ -212,6 +212,7 @@
     .weight-suggest{font-size:.48rem;font-weight:800;letter-spacing:.03em;padding:2px 5px;border-radius:5px;white-space:nowrap;display:none;cursor:default}
     .weight-suggest.up{display:block;color:var(--green);background:var(--green-dim);border:1px solid rgba(74,222,128,.2)}
     .weight-suggest.hold{display:block;color:var(--muted-light);background:var(--surface);border:1px solid var(--border)}
+    .weight-suggest.plateau{display:block;color:var(--gold);background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3)}
 
     /* ── SUBMIT ── */
     .submit-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px 16px;margin-bottom:10px}
@@ -325,6 +326,19 @@
     .smart-build-btn:hover{opacity:.9}
     .smart-build-btn:disabled{opacity:.35;cursor:not-allowed}
     .smart-tag{display:inline-flex;align-items:center;gap:5px;font-size:.56rem;font-weight:900;padding:3px 8px;border-radius:20px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.35);color:#fbbf24;vertical-align:middle;margin-left:6px}
+
+    /* ── REST TIMER ── */
+    .rest-timer{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);z-index:400;display:flex;align-items:center;gap:10px;background:#1c1c1c;border:1px solid rgba(249,115,22,.4);border-radius:30px;padding:10px 18px;box-shadow:0 10px 30px rgba(0,0,0,.6);cursor:pointer;user-select:none;transition:transform .3s cubic-bezier(.32,1,.6,1),opacity .3s;opacity:0;pointer-events:none}
+    .rest-timer.show{transform:translateX(-50%) translateY(0);opacity:1;pointer-events:all}
+    .rest-timer.done-flash{border-color:#22c55e;background:rgba(34,197,94,.12)}
+    .rest-ring{position:relative;width:34px;height:34px;flex-shrink:0}
+    .rest-ring svg{width:34px;height:34px;transform:rotate(-90deg)}
+    .rest-ring-track{fill:none;stroke:rgba(255,255,255,.1);stroke-width:3}
+    .rest-ring-fill{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-dasharray:88;transition:stroke-dashoffset 1s linear}
+    .rest-secs{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:900;color:var(--text)}
+    .rest-label{font-size:.68rem;font-weight:800;color:var(--muted-light);letter-spacing:.04em}
+    .rest-label b{color:var(--text)}
+    .rest-skip{font-size:.58rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 
     /* ── NUTRITION / PANEL ── */
     .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:17px 15px;margin-bottom:10px}
@@ -559,11 +573,28 @@ const RECOVERY_H = {
   chest:60, shoulders:48, triceps:48, back:60, biceps:48, lats:60,
   quads:72, hamstrings:72, glutes:72, calves:48, core:36, obliques:36,
 };
+// Display tags → the 12 tracked recovery keys. Tags mapping to null are
+// mobility/nonspecific and intentionally excluded from recovery tracking.
+const MUSCLE_CANON = {
+  'lateral delts':'shoulders', 'front delts':'shoulders', 'rear delts':'shoulders',
+  'traps':'back', 'upper back':'back', 'lower back':'back', 'rhomboids':'back',
+  'brachialis':'biceps', 'soleus':'calves', 'stability':'core',
+  'spine':null, 'hips':null, 'hip flexors':null, 'full body':null,
+};
+function canonMuscles(names) {
+  const out = new Set();
+  (names||[]).forEach(n => {
+    const k = (n||'').toLowerCase();
+    if(k in RECOVERY_H) out.add(k);
+    else if(k in MUSCLE_CANON) { if(MUSCLE_CANON[k]) out.add(MUSCLE_CANON[k]); }
+  });
+  return [...out];
+}
 const DB_REC_MUSCLES = {
   'db-push':        ['chest','shoulders','triceps','core'],
   'db-lower':       ['quads','hamstrings','glutes','calves','core'],
   'db-pull':        ['back','lats','biceps','core'],
-  'db-upper':       ['chest','back','lats','shoulders','biceps','triceps','core'],
+  'db-upper':       ['chest','lats','shoulders','biceps','triceps','core'],
   'full-body-core': ['chest','back','lats','shoulders','quads','glutes','hamstrings','core'],
 };
 const DB_REC_NAMES = {
@@ -805,10 +836,10 @@ const WORKOUTS = {
       ]},
       { id:'strength', name:'Main Strength Block', emoji:'💪', meta:'3 rounds · 60-90s rest', weighted:true, exercises:[
         { id:'s1', name:'Goblet Squats',             detail:'12 reps (dumbbell at chest)', sets:3, muscles:[['lower','Quads'],['lower','Glutes'],['core','Core']], tip:'Chest tall, knees track over toes', video_url:'https://www.youtube.com/watch?v=MeIiIdhvXT4' },
-        { id:'s2', name:'Dumbbell Row',              detail:'10-12 reps each side',        sets:3, muscles:[['back','Back'],['upper','Biceps']],                  tip:'Drive elbow to ceiling, not the weight', video_url:'https://www.youtube.com/watch?v=pYcpY20QaE8' },
+        { id:'s2', name:'Dumbbell Row',              detail:'10-12 reps each side',        sets:3, muscles:[['back','Back'],['back','Lats'],['upper','Biceps']],   tip:'Drive elbow to ceiling, not the weight', video_url:'https://www.youtube.com/watch?v=pYcpY20QaE8' },
         { id:'s3', name:'Floor Press / Overhead Press', detail:'10-12 reps',              sets:3, muscles:[['upper','Chest'],['upper','Shoulders'],['upper','Triceps']], tip:null, video_url:'https://www.youtube.com/watch?v=uUGDRwge4F8' },
         { id:'s4', name:'Romanian Deadlift',         detail:'12 reps',                    sets:3, muscles:[['lower','Hamstrings'],['lower','Glutes'],['back','Lower Back']], tip:'Hinge at hips, soft bend in knees, bar stays close', video_url:'https://www.youtube.com/watch?v=jEy_czb3RKA' },
-        { id:'s5', name:'Walking Lunges',            detail:'10 reps each leg',           sets:3, muscles:[['lower','Quads'],['lower','Glutes']],                 tip:null, video_url:'https://www.youtube.com/watch?v=L8fvypPrzzs' },
+        { id:'s5', name:'DB Pullover',               detail:'12 reps',                    sets:3, muscles:[['back','Lats'],['upper','Chest'],['core','Core']],     tip:'Arms nearly straight, big stretch behind head — lats do the pulling back', video_url:'https://www.youtube.com/watch?v=FK4rHfPuKbM' },
       ]},
       { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds · your focus today', weighted:true, exercises:[
         { id:'c1', name:'Weighted Russian Twists',   detail:'15 each side',  sets:2, muscles:[['core','Obliques'],['core','Core']],     tip:'Focus on rotation, not speed', video_url:'https://www.youtube.com/watch?v=wkD8rjkodUI' },
@@ -869,7 +900,7 @@ const WORKOUTS = {
         { id:'s1', name:'Goblet Squat',           detail:'12 reps',              sets:3, muscles:[['lower','Quads'],['lower','Glutes'],['core','Core']], tip:'Chest tall, DB at sternum — squat deep, drive through heels', video_url:'https://www.youtube.com/watch?v=MeIiIdhvXT4' },
         { id:'s2', name:'Romanian Deadlift',      detail:'12 reps',              sets:3, muscles:[['lower','Hamstrings'],['lower','Glutes'],['back','Lower Back'],['core','Core']], tip:'Hinge at hips, soft knee bend — feel the stretch in hamstrings', video_url:'https://www.youtube.com/watch?v=jEy_czb3RKA' },
         { id:'s3', name:'Walking Lunges',         detail:'10 each leg',          sets:3, muscles:[['lower','Quads'],['lower','Glutes'],['core','Core']], tip:'Front shin stays vertical — rear knee drops toward floor', video_url:'https://www.youtube.com/watch?v=L8fvypPrzzs' },
-        { id:'s4', name:'DB Step-Up (chair/step)',detail:'10 each leg',          sets:3, muscles:[['lower','Quads'],['lower','Glutes'],['core','Core']], tip:'Drive through the heel of the working leg — don\'t push off the floor', video_url:'https://www.youtube.com/watch?v=dQqApCGd5Ss' },
+        { id:'s4', name:'DB Calf Raise',          detail:'15-20 reps (slow tempo)', sets:3, muscles:[['lower','Calves']], tip:'Full range — pause at the top, heel all the way down. 3-sec negative', video_url:'https://www.youtube.com/watch?v=c5Kv6-fnTj8' },
         { id:'s5', name:'DB Hip Thrust',          detail:'15 reps',              sets:3, muscles:[['lower','Glutes'],['lower','Hamstrings']], tip:'Shoulders on a surface, DB on hips — drive through heels, squeeze at top', video_url:'https://www.youtube.com/watch?v=wPM8icPu6H8' },
       ]},
       { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds', weighted:true, exercises:[
@@ -929,7 +960,7 @@ const WORKOUTS = {
       ]},
       { id:'strength', name:'Upper Body Block', emoji:'🏋️', meta:'3 rounds · lighter / higher rep', weighted:true, exercises:[
         { id:'s1', name:'DB Lateral Raise',       detail:'15-20 reps (light)',   sets:3, muscles:[['upper','Lateral Delts'],['upper','Shoulders']], tip:'Slightly lighter than usual — focus on the squeeze at the top', video_url:'https://www.youtube.com/watch?v=3VcKaXpzqRo' },
-        { id:'s2', name:'DB Front Raise',         detail:'12-15 reps',           sets:3, muscles:[['upper','Front Delts'],['upper','Shoulders']], tip:'Arms parallel to floor at top — controlled descent', video_url:'https://www.youtube.com/results?search_query=dumbbell+front+raise+form+tutorial' },
+        { id:'s2', name:'DB Pullover',            detail:'12-15 reps',           sets:3, muscles:[['back','Lats'],['upper','Chest']], tip:'Arms nearly straight, deep stretch behind head — pull with the lats', video_url:'https://www.youtube.com/watch?v=FK4rHfPuKbM' },
         { id:'s3', name:'DB Arnold Press',        detail:'12 reps',              sets:3, muscles:[['upper','Shoulders'],['upper','Triceps']], tip:'Palms face you at the bottom, rotate out as you press', video_url:'https://www.youtube.com/watch?v=vj2w851ZHRM' },
         { id:'s4', name:'DB Upright Row',         detail:'12 reps',              sets:3, muscles:[['upper','Shoulders'],['upper','Traps'],['upper','Biceps']], tip:'Lead with elbows — pull to chin level, not higher', video_url:'https://www.youtube.com/watch?v=amCU-ziHITM' },
         { id:'s5', name:'DB Floor Fly',           detail:'12-15 reps',           sets:3, muscles:[['upper','Chest'],['upper','Shoulders']], tip:'Wide arc — slight bend in elbows, lower until arms near floor', video_url:'https://www.youtube.com/watch?v=eozdVDA78K0' },
@@ -1217,6 +1248,7 @@ function loadWorkout(id) {
   if (WORKOUT.mode === 'cardio') { buildCardioSession(); } else { buildSections(); }
   updateProgress();
   populateLastWeights();
+  dismissRestTimer();
   clearInterval(timerInterval); timerInterval = null;
   if (state.startMs && !state.endMs) startTimer();
   if (state.endMs) {
@@ -1371,7 +1403,7 @@ async function syncExerciseLog(exId) {
       const {data}=await sb.from('exercise_logs').insert({
         session_id:sessionId, exercise_id:exId, exercise_name:ex.name, section:sec.id,
         sets_completed:done, total_sets:ex.sets,
-        muscle_groups:ex.muscles.map(([,n])=>n.toLowerCase()), weight_lbs:weight,
+        muscle_groups:canonMuscles(ex.muscles.map(([,n])=>n)), weight_lbs:weight,
       }).select().single();
       if(data){ state.logIds[exId]=data.id; saveState(); }
     }
@@ -1390,58 +1422,86 @@ async function syncSession() {
   }).eq('id',state.supabaseSessionId);
 }
 
+// Find a different exercise hitting the same primary muscle — used for plateau-busting
+function findAlternative(ex) {
+  const pool = currentMode === 'calisthenics' ? SMART_POOL_BW : SMART_POOL;
+  for(const [,label] of ex.muscles) {
+    const key = label.toLowerCase();
+    const candidates = (pool[key]||[]).filter(p => p.name !== ex.name);
+    if(candidates.length) return candidates[Math.floor(Math.random()*candidates.length)];
+  }
+  return null;
+}
+
+function deloadWeight(w) { return Math.max(2.5, Math.round((w*0.9)/2.5)*2.5); }
+
 async function populateLastWeights() {
   if(WORKOUT.mode === 'cardio') return;
   try {
-    // Fetch last 5 logs per exercise (weight + completion status for progression logic)
     const {data} = await sb.from('exercise_logs')
-      .select('exercise_id,weight_lbs,sets_completed,total_sets,created_at')
+      .select('exercise_id,exercise_name,weight_lbs,sets_completed,total_sets,created_at')
       .not('weight_lbs','is',null)
       .gt('weight_lbs',0)
       .order('created_at',{ascending:false})
       .limit(500);
     if(!data) return;
 
-    // Build per-exercise history: [most recent, ...older]
+    // Key history by exercise NAME, not id — ids like 's1' are reused across
+    // different workouts, so id-keyed history mixes unrelated exercises
     const history = {};
     data.forEach(row => {
-      if(!history[row.exercise_id]) history[row.exercise_id] = [];
-      if(history[row.exercise_id].length < 5) history[row.exercise_id].push(row);
+      const k = (row.exercise_name||'').toLowerCase();
+      if(!history[k]) history[k] = [];
+      if(history[k].length < 6) history[k].push(row);
     });
 
-    Object.entries(history).forEach(([exId, logs]) => {
-      const input = document.querySelector(`.weight-input[data-ex="${exId}"]`);
-      if(!input) return;
+    WORKOUT.sections.filter(s=>s.weighted).forEach(sec => sec.exercises.forEach(ex => {
+      const input = document.querySelector(`.weight-input[data-ex="${ex.id}"]`);
+      const chip = document.getElementById(`ws-${ex.id}`);
+      if(!input || !chip) return;
+      const logs = history[ex.name.toLowerCase()];
+
+      if(!logs || !logs.length) {
+        chip.textContent = '★ New — find your working weight';
+        chip.className = 'weight-suggest hold';
+        chip.title = 'Pick a weight where the last 2 reps of each set are hard but clean';
+        return;
+      }
+
       const last = logs[0];
       const lastWeight = parseFloat(last.weight_lbs);
-
-      // Pre-fill if not already set from today's session
-      if(!state.weights[exId]) {
-        state.weights[exId] = lastWeight;
+      if(!state.weights[ex.id]) {
+        state.weights[ex.id] = lastWeight;
         if(!input.value) input.value = lastWeight;
       }
 
-      // Progressive overload suggestion
-      const chip = document.getElementById(`ws-${exId}`);
-      if(!chip) return;
       const lastCompleted = last.sets_completed >= last.total_sets;
-      // Check if 2 consecutive sessions were also completed at same or higher weight
-      const twoInARow = logs.length >= 2 && logs[1].sets_completed >= logs[1].total_sets;
-      if(lastCompleted && twoInARow) {
-        const suggest = Math.round((lastWeight + 2.5) * 4) / 4; // nearest 0.25
-        chip.textContent = `▲ Try ${suggest} lbs`;
+      const twoFullAtWeight = logs.length >= 2 &&
+        logs.slice(0,2).every(l => parseFloat(l.weight_lbs) === lastWeight && l.sets_completed >= l.total_sets);
+      let sameWeightStreak = 0;
+      for(const l of logs){ if(parseFloat(l.weight_lbs) === lastWeight) sameWeightStreak++; else break; }
+
+      if(twoFullAtWeight) {
+        const suggest = Math.round((lastWeight + 2.5) * 4) / 4;
+        chip.textContent = sameWeightStreak >= 4 ? `▲ Overdue — try ${suggest} lbs` : `▲ Try ${suggest} lbs`;
         chip.className = 'weight-suggest up';
-        chip.title = `You crushed all sets at ${lastWeight} lbs twice — time to level up`;
+        chip.title = `All sets completed twice at ${lastWeight} lbs — add weight and drop back to the bottom of the rep range`;
+      } else if(sameWeightStreak >= 4) {
+        const alt = findAlternative(ex);
+        chip.textContent = `⚠ Plateau at ${lastWeight} lbs`;
+        chip.className = 'weight-suggest plateau';
+        chip.title = `${sameWeightStreak} sessions stuck at ${lastWeight} lbs. Break it: deload to ${deloadWeight(lastWeight)} lbs for a week and rebuild` +
+          (alt ? `, or swap in ${alt.name} (${alt.detail}) for 2-3 weeks` : '');
       } else if(lastCompleted) {
-        chip.textContent = `✓ ${lastWeight} lbs last time`;
-        chip.className = 'weight-suggest hold';
-        chip.title = 'Complete all sets again to unlock the +2.5 suggestion';
+        chip.textContent = `➕ Add 1-2 reps @ ${lastWeight} lbs`;
+        chip.className = 'weight-suggest up';
+        chip.title = `Completed last time — push toward the top of the rep range. One more full session at ${lastWeight} lbs unlocks the weight bump`;
       } else {
         chip.textContent = `↺ ${lastWeight} lbs last time`;
         chip.className = 'weight-suggest hold';
-        chip.title = 'Aim to complete all sets before increasing weight';
+        chip.title = 'Aim to complete all sets before adding reps or weight';
       }
-    });
+    }));
   } catch(e){}
 }
 
@@ -1645,10 +1705,51 @@ function toggleDot(el) {
   document.getElementById('row-'+exId).classList.toggle('row-done',newVal>=ex.sets);
   const sec=getExSection(exId); if(sec) updateSectionProgress(sec.id);
   updateProgress();
+  // Newly-completed set in a weighted block → start the rest countdown
+  if(idx>=current && sec?.weighted && getDone()<getTotal()) {
+    startRestTimer(sec.id.includes('core') ? 60 : 90);
+  }
   clearTimeout(toggleDot._debounce[exId]);
   toggleDot._debounce[exId]=setTimeout(()=>syncExerciseLog(exId),1200);
 }
 toggleDot._debounce={};
+
+// ═══════════════════════════════════════════════════════
+//  REST TIMER
+// ═══════════════════════════════════════════════════════
+let restInterval=null;
+function startRestTimer(seconds) {
+  const el=document.getElementById('restTimer');
+  const ring=document.getElementById('restRingFill');
+  clearInterval(restInterval);
+  el.classList.remove('done-flash');
+  let remaining=seconds;
+  const circ=88;
+  const render=()=>{
+    document.getElementById('restSecs').textContent=remaining;
+    document.getElementById('restLabelSecs').textContent=remaining+'s';
+    ring.style.strokeDashoffset=circ-(circ*remaining/seconds);
+  };
+  render();
+  el.classList.add('show');
+  restInterval=setInterval(()=>{
+    remaining--;
+    if(remaining<=0){
+      clearInterval(restInterval); restInterval=null;
+      document.getElementById('restSecs').textContent='GO';
+      document.getElementById('restLabelSecs').textContent='GO!';
+      el.classList.add('done-flash');
+      if(navigator.vibrate) navigator.vibrate([120,60,120]);
+      setTimeout(()=>{ el.classList.remove('show','done-flash'); },2200);
+      return;
+    }
+    render();
+  },1000);
+}
+function dismissRestTimer() {
+  clearInterval(restInterval); restInterval=null;
+  document.getElementById('restTimer').classList.remove('show','done-flash');
+}
 
 function toggleSection(id){ document.getElementById('sec-'+id).classList.toggle('collapsed'); }
 
@@ -1854,7 +1955,8 @@ function buildMuscleTimeline(sessions, logsBySess, stravaActs) {
   const last = {};
   sessions.forEach(s => {
     const dt = new Date(s.started_at);
-    (logsBySess[s.id]||[]).forEach(m => { if(!last[m]||dt>last[m]) last[m]=dt; });
+    // Canonicalize so legacy tags ('lower back', 'traps', 'rear delts'…) count
+    canonMuscles(logsBySess[s.id]).forEach(m => { if(!last[m]||dt>last[m]) last[m]=dt; });
   });
   stravaActs.forEach(a => {
     const dt = new Date(a.started_at);
@@ -2410,6 +2512,16 @@ async function openPlanner() {
   }
 }
 </script>
+
+<!-- REST TIMER -->
+<div class="rest-timer" id="restTimer" onclick="dismissRestTimer()">
+  <div class="rest-ring">
+    <svg viewBox="0 0 34 34"><circle class="rest-ring-track" cx="17" cy="17" r="14"/><circle class="rest-ring-fill" id="restRingFill" cx="17" cy="17" r="14"/></svg>
+    <span class="rest-secs" id="restSecs">90</span>
+  </div>
+  <span class="rest-label">Rest — next set in <b id="restLabelSecs">90s</b></span>
+  <span class="rest-skip">tap to skip</span>
+</div>
 
 <!-- SMART BUILD MODAL -->
 <div class="smart-overlay" id="smartOverlay" onclick="if(event.target===this)closeSmartBuilder()">

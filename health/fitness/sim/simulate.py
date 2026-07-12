@@ -103,7 +103,7 @@ WORKOUTS = {
     'db-upper': {
         'name': 'DB Upper Body',
         'type': 'dumbbell',
-        'primary_muscles': ['chest', 'back', 'lats', 'shoulders', 'biceps', 'triceps', 'core'],
+        'primary_muscles': ['chest', 'lats', 'shoulders', 'biceps', 'triceps', 'core'],
         'exercises': [
             {'id': 'db-chest-press-u',    'name': 'DB Chest Press',       'sets': 3, 'base_weight': 35.0},
             {'id': 'db-bent-row-u',       'name': 'Bent-Over Row',        'sets': 3, 'base_weight': 35.0},

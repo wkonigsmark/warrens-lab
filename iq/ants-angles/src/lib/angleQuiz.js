@@ -193,6 +193,53 @@ function genPartnerMaster() {
   return supplementQ(angle)
 }
 
+// ── Topic: Number Bonds — the arithmetic engine behind every angle rule ──
+// Same families as the worksheet warm-ups (9·18·36 and 90·180·360).
+// Intro    — bonds of 9 & 18 (single-digit facts)
+// Practice — bonds of 36 & 90 (round tens)
+// Competent — bonds of 90 & 180 (multiples of 5)
+// Master   — bonds of 180 & 360, non-round values (forces real column subtraction)
+
+function bondQ(target, known, form) {
+  const answer = target - known
+  const tokens = form === 'subtract'
+    ? [target, '−', known, '=', '?']
+    : [known, '+', '?', '=', target]
+  return {
+    type: 'number', figure: 'bonds', tokens, tolerance: 0,
+    promptTitle: 'Find the missing number.',
+    promptText:  `Number bonds of ${target}.`,
+    hint: form === 'subtract' ? `${known} + ? = ${target}` : `${target} − ${known} = ?`,
+    answer,
+    formatAnswer: `${answer}`, formatGuess: (g) => `${g}`,
+  }
+}
+
+function genBondsIntro() {
+  const target = pick([9, 9, 18])
+  const known  = target === 9 ? randInt(1, 8) : randStep(2, 16, 2)
+  return bondQ(target, known, pick(['missing-addend', 'subtract']))
+}
+
+function genBondsPractice() {
+  const target = pick([36, 90, 90])
+  const known  = target === 36 ? randStep(2, 34, 2) : randStep(10, 80, 10)
+  return bondQ(target, known, pick(['missing-addend', 'subtract']))
+}
+
+function genBondsCompetent() {
+  const target = pick([90, 180, 180])
+  const known  = target === 90 ? randStep(5, 85, 5) : randStep(5, 175, 5)
+  return bondQ(target, known, pick(['missing-addend', 'subtract']))
+}
+
+function genBondsMaster() {
+  const target = pick([180, 360, 360])
+  let known
+  do { known = randInt(21, target - 21) } while (known % 10 === 0)
+  return bondQ(target, known, pick(['missing-addend', 'subtract', 'subtract']))
+}
+
 // ── Topic 4: Missing Angle on a Line ─────────────────────────────────────
 // Intro    — the six "landmark" values (30, 45, 60, 90, 120, 150)
 // Practice — multiples of 10°
@@ -316,11 +363,19 @@ function genTriangleMaster() {
 
 // ── Tier definitions ──────────────────────────────────────────────────────
 
+// ── MASTERY BAR — the tuning knobs ────────────────────────────────────────
+// A session passes only if ALL THREE gates clear:
+//   passBar — correct answers required
+//   speedMs — winsorized avg ms per question must be under this (null = no gate)
+//   maxHints — hints allowed per session before the pass is void (null = unlimited)
+// Deliberately brutal right now: we're probing for the difficulty inflection
+// point. Tune these four rows to move the bar; everything downstream
+// (quiz gates, result screens, cockpit, tier tracks) follows automatically.
 export const TIER_DEFS = [
-  { id: 'intro',     label: 'Intro',     count: 5,  passBar: 4,  speedMs: null },
-  { id: 'practice',  label: 'Practice',  count: 8,  passBar: 6,  speedMs: null },
-  { id: 'competent', label: 'Competent', count: 10, passBar: 9,  speedMs: null },
-  { id: 'master',    label: 'Master',    count: 10, passBar: 10, speedMs: 4000 },
+  { id: 'intro',     label: 'Intro',     count: 5,  passBar: 4,  speedMs: null,  maxHints: null },
+  { id: 'practice',  label: 'Practice',  count: 8,  passBar: 7,  speedMs: 10000, maxHints: 2 },
+  { id: 'competent', label: 'Competent', count: 10, passBar: 9,  speedMs: 7000,  maxHints: 1 },
+  { id: 'master',    label: 'Master',    count: 10, passBar: 10, speedMs: 4000,  maxHints: 0 },
 ]
 
 // ── Topic definitions — one entry per concept, 4 generators per tier ──────
@@ -337,6 +392,12 @@ export const ANGLE_TOPIC_DEFS = [
     blurb: 'Read the protractor and find the measure in degrees.',
     accent: '#3b82f6',
     generates: [genReadIntro, genReadPractice, genReadCompetent, genReadMaster],
+  },
+  {
+    id: 'number-bonds', title: 'Number Bonds', category: 'Angles',
+    blurb: 'Fast facts for 9·18·36 and 90·180·360 — the engine behind every angle rule.',
+    accent: '#f97316',
+    generates: [genBondsIntro, genBondsPractice, genBondsCompetent, genBondsMaster],
   },
   {
     id: 'complement-supplement', title: 'Complement & Supplement', category: 'Angles',
@@ -386,16 +447,17 @@ const TIERED_ANGLE_LEVELS = ANGLE_TOPIC_DEFS.flatMap((topic) =>
     count: tier.count,
     passBar: tier.passBar,
     speedMs: tier.speedMs,
+    maxHints: tier.maxHints,
     generate: topic.generates[tierIndex],
     tiered: true,
   }))
 )
 
 const TRIANGLE_LEVELS_WRAPPED = TRIANGLE_LEVELS.map((l) => ({
-  ...l, count: 5, passBar: 4, speedMs: null, tiered: false,
+  ...l, count: 5, passBar: 4, speedMs: null, maxHints: null, tiered: false,
 }))
 const CIRCLE_LEVELS_WRAPPED = CIRCLE_LEVELS.map((l) => ({
-  ...l, count: 5, passBar: 4, speedMs: null, tiered: false,
+  ...l, count: 5, passBar: 4, speedMs: null, maxHints: null, tiered: false,
 }))
 
 export const LEVELS = [

@@ -31,7 +31,7 @@ WORKOUT_MUSCLES = {
     'db-push':       ['chest', 'shoulders', 'triceps', 'core'],
     'db-lower':      ['quads', 'hamstrings', 'glutes', 'calves', 'core'],
     'db-pull':       ['back', 'lats', 'biceps', 'core'],
-    'db-upper':      ['chest', 'back', 'lats', 'shoulders', 'biceps', 'triceps', 'core'],
+    'db-upper':      ['chest', 'lats', 'shoulders', 'biceps', 'triceps', 'core'],
     'full-body-core':['chest', 'back', 'lats', 'shoulders', 'quads', 'glutes', 'hamstrings', 'core'],
 }
 
