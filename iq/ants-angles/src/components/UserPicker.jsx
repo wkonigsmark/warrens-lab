@@ -1,4 +1,4 @@
-import { USERS } from '../lib/users'
+import { USERS, GUEST } from '../lib/users'
 
 export default function UserPicker({ onSelect }) {
   return (
@@ -26,6 +26,14 @@ export default function UserPicker({ onSelect }) {
             {u.name}
           </button>
         ))}
+
+        <button
+          onClick={() => onSelect(GUEST.id)}
+          className="flex items-center justify-center gap-3 w-full font-bold text-lg py-4 px-8 rounded-2xl border-2 border-dashed border-gray-300 text-gray-500 bg-white/60 hover:bg-white hover:border-gray-400 active:scale-95 transition-all"
+        >
+          <span className="text-2xl">{GUEST.emoji}</span>
+          Play as Guest
+        </button>
       </div>
     </div>
   )

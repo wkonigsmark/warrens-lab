@@ -110,7 +110,7 @@ function triangleQ(angles) {
 // Competent — heavier Straight + Reflex, any valid angle
 // Master   — near-boundary angles that require careful visual discrimination
 
-function genNameIntro() {
+export function genNameIntro() {
   const type = pick(['Acute', 'Acute', 'Acute', 'Right', 'Obtuse', 'Obtuse', 'Obtuse'])
   const angle = type === 'Acute'  ? pick([30, 45, 60])
               : type === 'Right'  ? 90

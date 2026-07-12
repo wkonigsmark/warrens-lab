@@ -15,6 +15,7 @@
   ];
   const PAGES = [
     ['🏠', 'Home (demo)', `${root}/home.html`],
+    ['⏳', 'Time Machine', `${root}/time-machine.html`],
     ['🧪', 'Data Lab', `${root}/data-lab.html`],
     ['⚖️', 'Weight Lab', `${root}/data-lab.html#weight-lab`],
     ['🎞️', 'Blueprint Deck', `${root}/blueprint/index.html`],

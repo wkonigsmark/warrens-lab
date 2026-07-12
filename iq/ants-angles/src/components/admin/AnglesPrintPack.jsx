@@ -184,9 +184,19 @@ export default function AnglesPrintPack({ userId, onClose }) {
                 <div className="flex-shrink-0" style={{ width: '46%' }}>
                   <p className="font-bold" style={{ fontSize: '15pt' }}>#{qi + 1}</p>
                   <p className="text-gray-800 my-1.5" style={{ fontSize: '10pt' }}>{q.promptTitle}</p>
-                  <p style={{ fontSize: '12pt' }}>
-                    Answer: <Blank width="1.1in" />
-                  </p>
+                  {q.type === 'choice' ? (
+                    <div className="flex flex-wrap gap-1.5 mt-1">
+                      {q.choices.map((c) => (
+                        <span key={c} className="border border-gray-500 rounded-full px-2 py-0.5 font-semibold" style={{ fontSize: '9.5pt' }}>
+                          {c}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p style={{ fontSize: '12pt' }}>
+                      Answer: <Blank width="1.1in" />
+                    </p>
+                  )}
                 </div>
               </div>
             ))}

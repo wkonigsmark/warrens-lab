@@ -1,6 +1,6 @@
 // Worksheet topics reuse the Quiz Mode generators (single source of truth for
 // problem data) and add a printable rules reminder for "mentor" mode.
-import { GENERATORS } from './angleQuiz'
+import { GENERATORS, genNameIntro } from './angleQuiz'
 import { CIRCLE_GENERATORS } from './circleQuiz'
 import { TRIANGLE_GENERATORS } from './triangleQuiz'
 import { generateWhole } from './wholeNumbers'
@@ -57,7 +57,22 @@ function genBondsSimple() {
 
 const genBondsAngle = makeBondGenerator([90, 180, 360], 5)
 
+// Day-1 basics: name the angle by sight, circle the answer. Uses the Intro-tier
+// quiz generator (Acute/Right/Obtuse only, canonical angles) and narrows the
+// printed choices to that trio so young kids circle among 3, not 5.
+function genNameWorksheet() {
+  const q = genNameIntro()
+  return { ...q, choices: ['Acute', 'Right', 'Obtuse'] }
+}
+
 export const TOPICS = [
+  {
+    id: 'name',
+    title: 'Name the Angle',
+    instructions: 'Look at each angle and circle what kind it is.',
+    rules: 'Acute is smaller than 90°.  •  Right is exactly 90° (square corner).  •  Obtuse is bigger than 90°.',
+    gen: genNameWorksheet,
+  },
   {
     id: 'partner',
     title: 'Complement & Supplement',

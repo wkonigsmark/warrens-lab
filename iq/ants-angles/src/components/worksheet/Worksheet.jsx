@@ -81,7 +81,17 @@ export default function Worksheet({ topic, mode, onBack, wholeOnly = false }) {
                   <div className="flex-shrink-0" style={{ width: '46%' }}>
                     <p className="font-bold" style={{ fontSize: '16pt' }}>#{idx + 1}</p>
                     <p className="text-gray-800 my-2" style={{ fontSize: '11pt' }}>{q.promptTitle}</p>
-                    <p style={{ fontSize: '13pt' }}>Answer: <Blank width="1.1in" /></p>
+                    {q.type === 'choice' ? (
+                      <div className="flex flex-wrap gap-2 mt-1">
+                        {q.choices.map((c) => (
+                          <span key={c} className="border border-gray-500 rounded-full px-3 py-1 font-semibold" style={{ fontSize: '12pt' }}>
+                            {c}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <p style={{ fontSize: '13pt' }}>Answer: <Blank width="1.1in" /></p>
+                    )}
                   </div>
                 </div>
               ))}

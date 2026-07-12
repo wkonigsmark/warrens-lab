@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Machine · Viva CFP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Alfa+Slab+One&family=Playfair+Display:ital,wght@1,700&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .tm-hero { text-align: center; padding: 24px 16px 4px; }
+    .tm-hero .viva { font-family:'Playfair Display',serif; font-style:italic; color:var(--neon-red); font-size:1.15rem; text-shadow:0 0 10px rgba(255,77,94,.6); }
+    .tm-hero h1 { font-family:'Alfa Slab One',serif; font-size:2rem; color:var(--gold); text-shadow:0 0 16px rgba(242,196,100,.45); letter-spacing:1px; line-height:1; }
+    .tm-hero p { color:rgba(245,233,208,.55); font-size:.82rem; margin:6px auto 0; max-width:640px; }
+
+    .tm-wrap { max-width:1060px; margin:0 auto 40px; padding:0 14px; }
+
+    .tm-scrub {
+      background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:14px;
+      padding:14px 18px; margin:16px 0; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+    }
+    .tm-scrub .lbl { font-family:'Oswald',sans-serif; letter-spacing:2px; text-transform:uppercase; color:var(--gold); font-size:.8rem; white-space:nowrap; }
+    .tm-scrub input[type=range] { flex:1; min-width:200px; accent-color:var(--neon-red); }
+    .tm-when { font-family:'Alfa Slab One',serif; color:var(--cream); font-size:1rem; min-width:130px; text-align:right; }
+
+    .tm-chartwrap {
+      background:linear-gradient(180deg,#241c20,#181215); border:1px solid var(--glass-border);
+      border-radius:16px; padding:8px; overflow:hidden;
+    }
+    .tm-svg { width:100%; display:block; }
+    .tmg { stroke:rgba(255,255,255,.06); }
+    .tmt { fill:rgba(245,233,208,.4); font-family:'Outfit',sans-serif; font-size:12px; }
+    .tm-axis { fill:var(--gold); font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:2px; }
+    .tm-now { stroke:var(--neon-red); stroke-width:1.5; stroke-dasharray:4 4; }
+    .tm-nowlbl { fill:var(--neon-red); font-family:'Oswald',sans-serif; font-size:11px; font-weight:600; }
+    .tm-100 { stroke:rgba(245,233,208,.35); stroke-width:1; stroke-dasharray:2 4; }
+
+    .tm-cols { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px; }
+    @media (max-width:720px){ .tm-cols { grid-template-columns:1fr; } }
+
+    .tm-panel { background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:14px; padding:14px; }
+    .tm-panel h3 { font-family:'Oswald',sans-serif; font-size:.72rem; letter-spacing:2px; text-transform:uppercase; color:var(--neon-red); margin-bottom:4px; }
+    .tm-panel .sub { color:rgba(245,233,208,.45); font-size:.7rem; margin-bottom:8px; }
+
+    .lb-row {
+      display:grid; grid-template-columns:20px 20px 1fr auto auto; align-items:center; gap:8px;
+      padding:5px 6px; border-radius:8px; cursor:pointer; font-size:.84rem; border-bottom:1px solid rgba(255,255,255,.04);
+    }
+    .lb-row:hover { background:rgba(242,196,100,.06); }
+    .lb-row.on { background:rgba(242,196,100,.1); }
+    .lb-dot { width:10px; height:10px; border-radius:50%; }
+    .lb-logo { width:20px; height:20px; object-fit:contain; }
+    .lb-name { font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .lb-vals { font-variant-numeric:tabular-nums; color:rgba(245,233,208,.7); font-size:.78rem; }
+    .lb-swing { font-weight:800; font-size:.82rem; }
+    .sw-down { color:#e0707e; } .sw-up { color:#7ddf8f; }
+
+    .rk-row { display:grid; grid-template-columns:22px 20px 1fr auto auto; align-items:center; gap:8px; padding:4px 4px; font-size:.82rem; border-bottom:1px solid rgba(255,255,255,.04); }
+    .rk-rank { text-align:right; font-weight:800; color:rgba(255,255,255,.4); font-size:.72rem; }
+    .rk-rec { color:rgba(245,233,208,.55); font-size:.74rem; }
+    .rk-rating { font-weight:800; color:var(--gold); font-size:.78rem; }
+  </style>
+</head>
+
+<body>
+  <div class="tm-hero">
+    <div class="viva">Viva</div>
+    <h1>⏳ TIME MACHINE</h1>
+    <p>Replay 2025 week by week. Every team's schedule is re-priced with what its opponents
+      turned out to be — watch the brutal-on-paper slates deflate.</p>
+  </div>
+  <div class="tm-wrap" id="tm-root">
+    <div class="tm-panel"><p class="sub">Loading the season…</p></div>
+  </div>
+
+  <script src="time-machine.js"></script>
+  <script src="nav.js" data-root="."></script>
+</body>
+
+</html>
