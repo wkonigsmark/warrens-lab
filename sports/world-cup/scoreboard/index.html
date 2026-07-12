@@ -746,9 +746,9 @@
 
     .ko-chip-divider {
       width: 1px;
-      height: 16px;
+      height: 22px;
       background: rgba(247, 244, 235, 0.15);
-      margin: 0 4px;
+      margin: 0 5px;
       flex-shrink: 0;
     }
 
@@ -756,10 +756,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 20px;
-      height: 20px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      border: 1.5px solid rgba(247, 244, 235, 0.18);
+      border: 2px solid rgba(247, 244, 235, 0.18);
       background: rgba(255, 255, 255, 0.04);
       flex-shrink: 0;
       transition: opacity 0.15s ease;
@@ -774,7 +774,7 @@
     }
 
     .ko-chip .flag-emoji {
-      font-size: 0.85rem;
+      font-size: 1.2rem;
     }
 
     .ko-chip-correct {
@@ -1006,8 +1006,9 @@
         padding: 8px 10px;
         border-top: 1px solid rgba(247,244,235,0.07);
       }
-      #panel-ko-pool .wc-table td:nth-child(6) .ko-remaining-row { gap: 4px; }
-      #panel-ko-pool .wc-table td:nth-child(6) .ko-chip { width: 22px; height: 22px; }
+      #panel-ko-pool .wc-table td:nth-child(6) .ko-remaining-row { gap: 5px; }
+      #panel-ko-pool .wc-table td:nth-child(6) .ko-chip { width: 32px; height: 32px; }
+      #panel-ko-pool .wc-table td:nth-child(6) .ko-chip .flag-emoji { font-size: 1.3rem; }
 
       /* My Picks button — full-width row at bottom */
       #panel-ko-pool .wc-table td:nth-child(7) {
@@ -3202,21 +3203,34 @@
         const thirdMatch = knockoutSchedule.find(m => m.round === '3P');
         const finalMatch = knockoutSchedule.find(m => m.round === 'F');
 
+        function isDone(matchNumber) {
+          return actualMatches.find(r => r.matchNumber === matchNumber)?.status === 'completed';
+        }
+
         function chipFor(teamId, matchNumber, extraOpts) {
           const result = matchNumber != null ? actualMatches.find(r => r.matchNumber === matchNumber) : null;
-          const isDone = result?.status === 'completed';
           const opts = { ...extraOpts };
-          if (isDone && teamId) opts.status = (result.winnerId === teamId) ? 'correct' : 'wrong';
+          if (result?.status === 'completed' && teamId) opts.status = (result.winnerId === teamId) ? 'correct' : 'wrong';
           return koFlagChip(teamId, opts);
         }
 
-        const qfChips = qfMatches.map((m, i) => chipFor((picks.qf || [])[i] || null, m.matchNumber, { roundLabel: 'QF' })).join('');
-        const sfChips = sfMatches.map((m, i) => chipFor((picks.sf || [])[i] || null, m.matchNumber, { roundLabel: 'SF' })).join('');
+        // Once every match in a round is decided, drop that round's chips —
+        // keeps the row focused on whatever's still actually in play.
+        const roundFullyDecided = matches => matches.length > 0 && matches.every(m => isDone(m.matchNumber));
+
+        const groups = [];
+        if (!roundFullyDecided(qfMatches)) {
+          groups.push(qfMatches.map((m, i) => chipFor((picks.qf || [])[i] || null, m.matchNumber, { roundLabel: 'QF' })).join(''));
+        }
+        if (!roundFullyDecided(sfMatches)) {
+          groups.push(sfMatches.map((m, i) => chipFor((picks.sf || [])[i] || null, m.matchNumber, { roundLabel: 'SF' })).join(''));
+        }
         const thirdChip = chipFor(picks.third || null, thirdMatch?.matchNumber, { faded: true, roundLabel: '3rd Place' });
         const finalChip = chipFor(picks.final || null, finalMatch?.matchNumber, { champion: true, roundLabel: 'Champion' });
+        groups.push(thirdChip + finalChip);
 
         const divider = '<span class="ko-chip-divider"></span>';
-        return `<div class="ko-remaining-row">${qfChips}${divider}${sfChips}${divider}${thirdChip}${finalChip}</div>`;
+        return `<div class="ko-remaining-row">${groups.join(divider)}</div>`;
       }
 
       // Small badge showing an entry's best possible finish, from the Path to
