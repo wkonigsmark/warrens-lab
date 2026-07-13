@@ -54,12 +54,15 @@ export default function QuestionFigure({ q, reveal = false, bw = false }) {
     case 'rightTriangle':
       return <RightTriangleFigure a={q.a} b={q.b} labelA={q.labelA} labelB={q.labelB} labelC={q.labelC} bw={bw} />
     default:
-      // 'protractor' — on worksheets we hide the tick scale for a cleaner figure.
+      // 'protractor' — on worksheets we normally hide the tick scale for a
+      // cleaner figure, UNLESS the question needs it to be readable
+      // (q.showProtractor: true — e.g. Read the Angle, where the scale IS
+      // the question).
       return (
         <AngleStage
           angle={q.angle}
           interactive={false}
-          showProtractor={!bw}
+          showProtractor={q.showProtractor ?? !bw}
           showLabel={q.showLabel || reveal}
           bw={bw}
         />

@@ -35,9 +35,12 @@ function nameQ(type, angle) {
   }
 }
 
-function readQ(angle) {
+export function readQ(angle) {
   return {
-    type: 'number', figure: 'protractor', angle, showLabel: false, tolerance: 3,
+    // showProtractor: true forces the scale/ticks to render even in print
+    // (bw) mode — unlike other protractor questions, reading a degree value
+    // is impossible without the scale visible.
+    type: 'number', figure: 'protractor', angle, showLabel: false, showProtractor: true, tolerance: 3,
     promptTitle: 'How many degrees is this angle?',
     promptText:  'Read it off the protractor.',
     unit: '°', answer: angle,
@@ -118,7 +121,7 @@ export function genNameIntro() {
   return nameQ(type, angle)
 }
 
-function genNamePractice() {
+export function genNamePractice() {
   const type  = pick(['Acute', 'Acute', 'Right', 'Obtuse', 'Obtuse', 'Straight', 'Reflex'])
   const angle = angleOfType(type)
   return nameQ(type, angle)

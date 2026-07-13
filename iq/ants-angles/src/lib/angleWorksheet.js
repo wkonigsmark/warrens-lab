@@ -1,9 +1,10 @@
 // Worksheet topics reuse the Quiz Mode generators (single source of truth for
 // problem data) and add a printable rules reminder for "mentor" mode.
-import { GENERATORS, genNameIntro } from './angleQuiz'
+import { GENERATORS, genNamePractice, readQ } from './angleQuiz'
 import { CIRCLE_GENERATORS } from './circleQuiz'
 import { TRIANGLE_GENERATORS } from './triangleQuiz'
 import { generateWhole } from './wholeNumbers'
+import { makeChoices } from './choices'
 
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)]
 const randMultiple = (min, max, step) =>
@@ -57,12 +58,16 @@ function genBondsSimple() {
 
 const genBondsAngle = makeBondGenerator([90, 180, 360], 5)
 
-// Day-1 basics: name the angle by sight, circle the answer. Uses the Intro-tier
-// quiz generator (Acute/Right/Obtuse only, canonical angles) and narrows the
-// printed choices to that trio so young kids circle among 3, not 5.
-function genNameWorksheet() {
-  const q = genNameIntro()
-  return { ...q, choices: ['Acute', 'Right', 'Obtuse'] }
+// Read the Angle, worksheet form: same rapid-fire multiple-choice shape as
+// Name the Angle, but the choices are 4 plausible degree readings (mirrors
+// the quiz's numeric multiple-choice via the shared makeChoices helper).
+// Own pool (10° steps, 10–170 → 17 distinct values) rather than reusing a
+// quiz tier — the Practice tier's 15° steps only span 11 values, one short
+// of a full 12-problem sheet.
+function genReadWorksheet() {
+  const q = readQ(randMultiple(10, 170, 10))
+  const choices = makeChoices(q.answer, { count: 4, min: 0, max: 180 })
+  return { ...q, choices: choices.map((c) => `${c}°`) }
 }
 
 export const TOPICS = [
@@ -70,8 +75,20 @@ export const TOPICS = [
     id: 'name',
     title: 'Name the Angle',
     instructions: 'Look at each angle and circle what kind it is.',
-    rules: 'Acute is smaller than 90°.  •  Right is exactly 90° (square corner).  •  Obtuse is bigger than 90°.',
-    gen: genNameWorksheet,
+    rules: 'Acute < 90°  •  Right = 90° (square corner)  •  Obtuse is between 90° and 180°  •  Straight = 180°  •  Reflex is bigger than 180°.',
+    kind: 'choice',
+    count: 12,
+    gen: genNamePractice,
+  },
+  {
+    id: 'read',
+    title: 'Read the Angle',
+    instructions: 'Read each protractor and circle the correct measure.',
+    rules: 'Line up the 0° ray, then read where the other ray crosses the scale.',
+    kind: 'choice',
+    count: 12,
+    cols: 3, // needs a bigger figure than Name the Angle — the scale/numbers must stay legible
+    gen: genReadWorksheet,
   },
   {
     id: 'partner',

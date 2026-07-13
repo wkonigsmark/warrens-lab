@@ -87,14 +87,18 @@ export default function AngleStage({
       className={`w-full h-auto max-w-[520px] mx-auto touch-none select-none ${interactive ? 'cursor-pointer' : ''}`}
       onClick={interactive ? handleStageClick : undefined}
     >
-      {/* Protractor backdrop */}
+      {/* Protractor backdrop. On screen, muted blue-gray ticks read fine at
+          any size; printed (bw), that same light gray goes nearly invisible
+          once the figure is scaled down onto a worksheet — so bw gets dark,
+          high-contrast ticks/numbers and a bigger font, not just the same
+          palette shrunk down. */}
       {showProtractor && (
         <g>
-          <circle cx={CX} cy={CY} r={RAY_LEN + 8} fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1.5" />
+          <circle cx={CX} cy={CY} r={RAY_LEN + 8} fill={bw ? '#fff' : '#f8fafc'} stroke={bw ? '#000' : '#e2e8f0'} strokeWidth={bw ? 2 : 1.5} />
           {Array.from({ length: 72 }).map((_, i) => {
             const deg = i * 5
             const major = deg % 30 === 0
-            const inner = degreesToVector(deg, RAY_LEN + (major ? -6 : 0))
+            const inner = degreesToVector(deg, RAY_LEN + (major ? -10 : -3))
             const outer = degreesToVector(deg, RAY_LEN + 8)
             return (
               <line
@@ -103,14 +107,14 @@ export default function AngleStage({
                 y1={CY + inner.y}
                 x2={CX + outer.x}
                 y2={CY + outer.y}
-                stroke={major ? '#94a3b8' : '#cbd5e1'}
-                strokeWidth={major ? 1.5 : 1}
+                stroke={bw ? (major ? '#000' : '#4b5563') : (major ? '#94a3b8' : '#cbd5e1')}
+                strokeWidth={bw ? (major ? 3 : 2) : (major ? 1.5 : 1)}
               />
             )
           })}
           {Array.from({ length: 12 }).map((_, i) => {
             const deg = i * 30
-            const v = degreesToVector(deg, RAY_LEN + 24)
+            const v = degreesToVector(deg, RAY_LEN + (bw ? 26 : 24))
             return (
               <text
                 key={deg}
@@ -118,9 +122,9 @@ export default function AngleStage({
                 y={CY + v.y}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fontSize="13"
-                fill="#94a3b8"
-                fontWeight="500"
+                fontSize={bw ? 22 : 13}
+                fill={bw ? '#000' : '#94a3b8'}
+                fontWeight={bw ? 700 : 500}
               >
                 {deg}
               </text>

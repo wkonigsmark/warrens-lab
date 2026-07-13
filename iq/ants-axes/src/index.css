@@ -18,8 +18,9 @@ body {
 
 /* Print styles for worksheets */
 @media print {
+  /* No `size:` here on purpose — declaring it locks the orientation and hides
+     the Portrait/Landscape choice in the browser's print dialog. */
   @page {
-    size: letter landscape;
     margin: 0.4in;
   }
 

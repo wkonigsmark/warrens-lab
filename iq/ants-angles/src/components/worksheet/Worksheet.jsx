@@ -11,6 +11,9 @@ export default function Worksheet({ topic, mode, onBack, wholeOnly = false }) {
   const [seed, setSeed] = useState(0)
   const [showKey, setShowKey] = useState(false)
   const isArithmetic = topic.kind === 'arithmetic'
+  const isChoice     = topic.kind === 'choice'
+  const cols = topic.cols || 4
+  const figureMaxWidth = cols === 3 ? '2.6in' : cols === 2 ? '3.4in' : '1.5in'
   const count = topic.count || 6
   const problems = useMemo(() => buildProblems(topic, count, wholeOnly), [topic, seed, count, wholeOnly])
 
@@ -68,6 +71,28 @@ export default function Worksheet({ topic, mode, onBack, wholeOnly = false }) {
                         : <span key={i}>{tok}</span>
                     )}
                   </span>
+                </div>
+              ))}
+            </div>
+          ) : isChoice ? (
+            /* Rapid-fire multiple choice: dense grid, circle a word. Column count
+               is topic-tunable — Name the Angle is pure shape ID (4 tight cols is
+               fine), but Read the Angle needs a bigger figure so the protractor
+               scale stays legible on paper (fewer, larger cols). */
+            <div className={`grid gap-2 ${cols === 3 ? 'grid-cols-3' : cols === 2 ? 'grid-cols-2' : 'grid-cols-4'}`}>
+              {problems.map((q, idx) => (
+                <div key={idx} className="worksheet-problem border border-gray-400 rounded p-1.5 flex flex-col items-center">
+                  <p className="font-bold self-start leading-none" style={{ fontSize: cols >= 3 ? '13pt' : '11pt' }}>#{idx + 1}</p>
+                  <div className="w-full" style={{ maxWidth: figureMaxWidth }}>
+                    <QuestionFigure q={q} bw />
+                  </div>
+                  <div className="flex flex-wrap justify-center gap-1 mt-1">
+                    {q.choices.map((c) => (
+                      <span key={c} className="border border-gray-500 rounded-full px-1.5 font-semibold leading-snug" style={{ fontSize: cols >= 3 ? '10pt' : '8pt' }}>
+                        {c}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
