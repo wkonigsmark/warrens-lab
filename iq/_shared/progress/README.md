@@ -6,9 +6,10 @@ into an outbox and syncs it to Supabase whenever the network allows.
 
 Wired so far: **Ants & Angles**, **Ants & Algebra 2** (tool_id
 `ants-algebra-v2` — its local payload still says `ants-algebra` internally,
-harmless, the outbox row's `tool_id` is what matters), **Ants & Axes**. The
-cross-tool report lives in **Ants & Assessment** (`?admin`), which reads
-Supabase directly — see "Cross-tool report" below.
+harmless, the outbox row's `tool_id` is what matters), **Ants & Axes**,
+**Ants & Apples** (vanilla JS, see "Non-Vite tools" below). The cross-tool
+report lives in **Ants & Assessment** (`?admin`), which reads Supabase
+directly — see "Cross-tool report" below.
 
 ## One-time Supabase setup (dashboard)
 
@@ -77,11 +78,27 @@ Every tool already writes a human-readable `levelTitle`/`tierLabel`/
 `toolCatalog.js`'s `describeSession(row)` needs no per-level mapping —
 it just reads those fields back out of `payload` for display.
 
+## Non-Vite tools (no bundler)
+
+A tool with no build step (plain HTML/CSS/JS, like Ants & Apples) can't
+`import` across `../_shared/` at runtime — that path won't exist once the
+tool is deployed on its own. Instead: vendor a copy of `config.js`,
+`client.js`, `auth.js`, `queue.js` into the tool's own directory (e.g.
+`iq/ants-apples/progress/`), plus a `roster.js` (same id/name/emoji/color
+list as every other tool's `users.js`, no PINs). Load the tool's main script
+as `<script type="module">` so it can `import` the vendored files, and build
+a plain-DOM picker/PIN screen (see `iq/ants-apples/gate.js`) instead of
+`PinGate.jsx`. Keep vendored copies in sync by hand if the canonical
+versions change — there's no build step to do it for you.
+
 ## Cross-tool report
 
 `ants-assessment`'s `ProgressAdminView` (`?admin`) queries
 `progress_sessions` directly via `selectSessions()`, groups by student
-(local `roster.js` — id/name/emoji/color only, no PINs) then by tool (via
-`TOOL_CATALOG`), and shows per-tool totals plus a session table. It's
+(live roster from `selectRoster()` — the `student_roster` view, id/name/
+emoji/color only, no PINs) then by tool (via `TOOL_CATALOG`), and shows
+per-tool totals plus a session table. Every roster entry shows up even with
+zero sessions ("No sessions yet"), and adding a row to `students` in
+Supabase makes a new kid appear here with no code change. It's
 by-tool, not folded into Assessment's own 6 competencies — some tools
 (e.g. Axes' coordinate geometry) don't map onto any of those cleanly.

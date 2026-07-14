@@ -25,6 +25,12 @@ export const TOOL_CATALOG = {
     color: '#3b82f6',
     url: 'https://warrens-lab.vercel.app/iq/ants-axes/',
   },
+  'ants-apples': {
+    name: 'Ants & Apples',
+    emoji: '🍎',
+    color: '#ef4444',
+    url: 'https://warrens-lab.vercel.app/iq/ants-apples/',
+  },
 }
 
 export function getToolInfo(toolId) {

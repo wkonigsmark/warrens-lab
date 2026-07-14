@@ -1478,6 +1478,19 @@ function findAlternative(ex) {
 
 function deloadWeight(w) { return Math.max(2.5, Math.round((w*0.9)/2.5)*2.5); }
 
+// Normalize an exercise name so weight memory follows the MOVEMENT, not the
+// routine's naming. Strips equipment prefixes ("DB"/"Dumbbell") and punctuation
+// so "Hammer Curl" and "DB Hammer Curl" share one history — but keeps distinct
+// movements (Overhead vs Arnold Press, Standing vs floor Calf Raise) separate.
+function normalizeExerciseName(name) {
+  return (name||'').toLowerCase()
+    .replace(/\bdumbbell\b/g,'')
+    .replace(/\bdb\b/g,'')
+    .replace(/\(.*?\)/g,'')       // drop parentheticals like "(bw)"
+    .replace(/[^a-z0-9 ]/g,' ')   // punctuation → space
+    .replace(/\s+/g,' ').trim();
+}
+
 async function populateLastWeights() {
   if(WORKOUT.mode === 'cardio') return;
   try {
@@ -1493,7 +1506,7 @@ async function populateLastWeights() {
     // different workouts, so id-keyed history mixes unrelated exercises
     const history = {};
     data.forEach(row => {
-      const k = (row.exercise_name||'').toLowerCase();
+      const k = normalizeExerciseName(row.exercise_name);
       if(!history[k]) history[k] = [];
       if(history[k].length < 6) history[k].push(row);
     });
@@ -1502,7 +1515,7 @@ async function populateLastWeights() {
       const input = document.querySelector(`.weight-input[data-ex="${ex.id}"]`);
       const chip = document.getElementById(`ws-${ex.id}`);
       if(!input || !chip) return;
-      const logs = history[ex.name.toLowerCase()];
+      const logs = history[normalizeExerciseName(ex.name)];
 
       if(!logs || !logs.length) {
         chip.textContent = '★ New — find your working weight';
@@ -1513,9 +1526,12 @@ async function populateLastWeights() {
 
       const last = logs[0];
       const lastWeight = parseFloat(last.weight_lbs);
-      if(!state.weights[ex.id]) {
+      // Seed the box from the most-recent logged weight for this movement.
+      // Only defer to a stored value once THIS session is in progress, so a
+      // stale carry-over can never hide your current working weight on a fresh load.
+      if(!state.startMs || !state.weights[ex.id]) {
         state.weights[ex.id] = lastWeight;
-        if(!input.value) input.value = lastWeight;
+        input.value = lastWeight;
       }
 
       const lastCompleted = last.sets_completed >= last.total_sets;

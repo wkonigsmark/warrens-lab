@@ -1,3 +1,8 @@
+import { initProgressGate } from './gate.js';
+import { enqueueSession } from './progress/queue.js';
+import { clearStoredUser, getUser, loadRoster } from './progress/roster.js';
+import { signOut } from './progress/auth.js';
+
 (function () {
   function initAntsApples() {
     const root = document.getElementById('ants-apples-root');
@@ -15,6 +20,7 @@
           <button id="ants-master-toggle" type="button">Master Mode</button>
           <button id="ants-help-btn" type="button">Learn</button>
         </div>
+        <div class="header-right" id="ants-user-badge"></div>
       </header>
       <main>
         <div id="ants-game-view">
@@ -203,6 +209,11 @@
     let currentStreak = 0;
     let bestStreak = 0;
 
+    /* Progress tracking (Supabase sync) */
+    let currentUserId = null;
+    let runAnswers = [];   // per-tile { row, col, a, b, correct, attempts, ms } for this run
+    let runStartMs = null;
+
     /* Music state */
     const musicEl = document.getElementById('ants-music');
     let musicEnabled = true;
@@ -251,7 +262,31 @@
     buildHelperControls();
     hookButtons();
     configureGrid(3, 3);      // default 3×3, 3 levels
-    openSizeDialog(true);     // show picker on first load
+
+    function updateUserBadge(userId) {
+      const badge = document.getElementById('ants-user-badge');
+      if (!badge) return;
+      const person = getUser(userId);
+      badge.innerHTML = `${person?.emoji ?? ''} ${person?.name ?? ''} <button id="ants-switch-user-btn" type="button">switch user</button>`;
+      const btn = document.getElementById('ants-switch-user-btn');
+      if (btn) btn.addEventListener('click', () => {
+        clearStoredUser();
+        signOut();
+        location.reload();
+      });
+    }
+
+    initProgressGate({
+      onReady: (userId) => {
+        currentUserId = userId;
+        updateUserBadge(userId);
+        openSizeDialog(true); // show picker on first load, now that identity is confirmed
+      },
+      onExpire: () => {
+        // Idle window lapsed — the gate re-shows itself; nothing else to do
+        // here, the in-progress grid state is untouched underneath.
+      },
+    });
 
     // Keyboard shortcuts (ESC to close keypad, Enter to submit)
     document.addEventListener('keydown', onKeyDown);
@@ -382,6 +417,8 @@
         tile.className = 'tile inactive';
         tile.dataset.active = 'false';
         tile.dataset.status = 'inactive';
+        delete tile.dataset.startMs;
+        delete tile.dataset.attempts;
       });
 
       const tileArray = [...tiles];
@@ -557,6 +594,15 @@
         if (currentStreak > bestStreak) bestStreak = currentStreak;
         updateStreakDisplay();
 
+        // Record this tile's outcome: attempts = prior wrong tries + this
+        // final correct one; ms spans from first look to now (retries included).
+        const priorWrong = parseInt(activeTileEl.dataset.attempts || '0', 10);
+        const startMs = parseInt(activeTileEl.dataset.startMs || String(Date.now()), 10);
+        runAnswers.push({
+          row: rowIdx + 1, col: colIdx + 1, a, b,
+          correct: true, attempts: priorWrong + 1, ms: Date.now() - startMs,
+        });
+
         hideKeypad();
 
         if (isLevelComplete()) {
@@ -579,6 +625,7 @@
         // Reset streak on miss
         currentStreak = 0;
         updateStreakDisplay();
+        activeTileEl.dataset.attempts = String(parseInt(activeTileEl.dataset.attempts || '0', 10) + 1);
 
         hideKeypad();
       }
@@ -933,6 +980,9 @@
         configureGrid(size, levelCount);
         closeSizeDialog();
 
+        runAnswers = [];
+        runStartMs = Date.now();
+
         // Start music after user hits "Start" (if enabled)
         if (musicEnabled) {
           playMusic();
@@ -966,6 +1016,8 @@
         currentLevel = 1;
         resetTimerAndStreak();
         setupLevel(currentLevel);
+        runAnswers = [];
+        runStartMs = Date.now();
         setMessage(`New game on a ${gridSize} × ${gridSize} grid. Levels: ${MAX_LEVEL}. Mode: ${opLabel()}.`);
       }
 
@@ -1046,6 +1098,10 @@
 
       // Start timer on first valid tile click
       startTimerIfNeeded();
+
+      // First time this tile's keypad opens in this run, mark when the
+      // clock starts for it (persists across retries until resolved).
+      if (!tile.dataset.startMs) tile.dataset.startMs = String(Date.now());
 
       activeTileEl = tile;
       if (status === 'incorrect') {
@@ -1322,6 +1378,36 @@
           'learning_aids': showHelper
         });
       }
+
+      saveRunSession();
+    }
+
+    function saveRunSession() {
+      if (!currentUserId || !runAnswers.length) return;
+      const firstTryCorrect = runAnswers.filter(a => a.attempts === 1).length;
+      const avgMs = Math.round(runAnswers.reduce((sum, a) => sum + a.ms, 0) / runAnswers.length);
+      enqueueSession('ants-apples', currentUserId, {
+        id: Date.now(),
+        ts: new Date().toISOString(),
+        toolId: 'ants-apples',
+        userId: currentUserId,
+        levelId: `${operation}-${gridSize}x${gridSize}`,
+        levelTitle: `${opLabel()} ${gridSize}×${gridSize}`,
+        topicId: operation,
+        tierLabel: showHelper ? 'Helper' : 'Master Mode',
+        score: firstTryCorrect,
+        count: runAnswers.length,
+        passed: true,
+        gridSize,
+        operation,
+        levelCount: MAX_LEVEL,
+        masterMode: !showHelper,
+        elapsedSeconds,
+        bestStreak,
+        ms: runStartMs ? Date.now() - runStartMs : null,
+        avgMs,
+        answers: runAnswers,
+      });
     }
 
     function hideWinOverlay() {
@@ -1565,9 +1651,14 @@
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAntsApples);
-  } else {
-    initAntsApples();
+  async function boot() {
+    await loadRoster(); // populates TRACKED_USERS before gate.js needs it
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAntsApples);
+    } else {
+      initAntsApples();
+    }
   }
+
+  boot();
 })();

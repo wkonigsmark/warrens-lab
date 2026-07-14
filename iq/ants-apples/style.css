@@ -27,6 +27,7 @@
 
 #ants-apples-root header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   margin-bottom: 8px;
@@ -39,6 +40,25 @@
   justify-content: center;
   gap: 6px;
   align-items: center;
+}
+
+#ants-apples-root .header-right {
+  width: 100%;
+  text-align: center;
+  font-size: 0.78rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+#ants-apples-root .header-right button {
+  border: none;
+  background: none;
+  color: #5b6bd6;
+  text-decoration: underline;
+  font-size: 0.78rem;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
 }
 
 #ants-apples-root .status {
@@ -766,5 +786,128 @@
 .ghost {
   opacity: 0.25;
   filter: grayscale(1);
+}
+
+/* Progress gate: "who's playing?" + PIN overlay, sits above everything */
+#ants-progress-gate {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10002;
+}
+
+#ants-gate-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px 22px;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  color: #222;
+  text-align: center;
+}
+
+#ants-gate-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+#ants-gate-subtitle {
+  font-size: 0.85rem;
+  color: #888;
+  margin-bottom: 16px;
+}
+
+#ants-gate-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.ants-gate-user-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 10px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.ants-gate-user-btn:active {
+  transform: scale(0.96);
+}
+
+.ants-gate-emoji {
+  font-size: 1.4rem;
+}
+
+.ants-gate-emoji-big {
+  font-size: 2.4rem;
+  margin-bottom: 4px;
+}
+
+#ants-gate-guest-btn {
+  width: 100%;
+  border: 2px dashed #ccc;
+  border-radius: 14px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.03);
+  color: #888;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#ants-gate-pin-input {
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 1.5rem;
+  letter-spacing: 6px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+#ants-gate-error {
+  color: #e05252;
+  font-size: 0.85rem;
+  min-height: 1.2em;
+  margin-bottom: 6px;
+}
+
+#ants-gate-go-btn {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  background: #5b6bd6;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.05rem;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+#ants-gate-go-btn:disabled {
+  opacity: 0.6;
+}
+
+#ants-gate-not-you-btn {
+  border: none;
+  background: none;
+  color: #999;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
 }
 

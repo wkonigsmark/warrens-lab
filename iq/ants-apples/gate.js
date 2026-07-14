@@ -2,7 +2,8 @@
 // since Ants & Apples has no React/build step. Same behavior: pick a name,
 // enter a PIN (Guest skips silently), re-prompt if the idle window lapses.
 import { TRACKED_USERS, GUEST, getStoredUser, storeUser, clearStoredUser, getUser } from './progress/roster.js'
-import { isConfigured, getVerifiedUser, verifyPin, signOut } from './progress/auth.js'
+import { getVerifiedUser, verifyPin, signOut } from './progress/auth.js'
+import { isConfigured } from './progress/client.js'
 
 const RECHECK_MS = 15_000
 

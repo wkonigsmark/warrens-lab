@@ -1,17 +1,42 @@
-// Same roster as every other /iq tool's src/lib/users.js (id/name/emoji/color
-// only — PINs never live client-side, they're checked via the verify_pin RPC).
-export const USERS = [
-  { id: 'ballard',  name: 'Ballard',   emoji: '🦁', color: '#6366f1' },
-  { id: 'elle',     name: 'Elle',      emoji: '🌸', color: '#ec4899' },
-  { id: 'edie',     name: 'Edie',      emoji: '⭐', color: '#f59e0b' },
-  { id: 'ruby-l',   name: 'Ruby L.',   emoji: '💎', color: '#ef4444' },
-  { id: 'winnie-l', name: 'Winnie L.', emoji: '🐻', color: '#0d9488' },
-  { id: 'elle-s',   name: 'Elle S.',   emoji: '🦋', color: '#8b5cf6' },
-]
+// Vendored copy of iq/_shared/progress/roster.js, merged with the local
+// session-storage helpers (getStoredUser etc.) since this tool doesn't
+// split files the same way as the React apps. See config.js for why vendored.
+import { selectRoster } from './client.js'
 
-export const GUEST = { id: 'guest', name: 'Guest', emoji: '🎈', color: '#64748b' }
+const CACHE_KEY = 'iq-progress-roster-cache'
+const FETCH_TIMEOUT_MS = 4000
 
-export const TRACKED_USERS = [...USERS, GUEST]
+function readCache() {
+  try { return JSON.parse(localStorage.getItem(CACHE_KEY)) || [] } catch { return [] }
+}
+function writeCache(roster) {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify(roster)) } catch {}
+}
+
+// Populated by loadRoster() before the game boots (see script.js) — gate.js
+// reads these directly. Add a row to `students` in Supabase and it shows up
+// here with no code change.
+export let USERS = []
+export let GUEST = { id: 'guest', name: 'Guest', emoji: '🎈', color: '#64748b' }
+export let TRACKED_USERS = []
+
+export async function loadRoster() {
+  let roster
+  try {
+    roster = await Promise.race([
+      selectRoster(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('roster fetch timed out')), FETCH_TIMEOUT_MS)),
+    ])
+    if (roster?.length) writeCache(roster)
+    else roster = readCache()
+  } catch {
+    roster = readCache()
+  }
+  const guest = roster.find((u) => u.id === 'guest')
+  if (guest) GUEST = guest
+  USERS = roster.filter((u) => u.id !== 'guest')
+  TRACKED_USERS = [...USERS, GUEST]
+}
 
 const USER_KEY = 'ants-apples-user'
 
@@ -28,5 +53,5 @@ export function clearStoredUser() {
 }
 
 export function getUser(id) {
-  return TRACKED_USERS.find(u => u.id === id) ?? null
+  return TRACKED_USERS.find((u) => u.id === id) ?? null
 }

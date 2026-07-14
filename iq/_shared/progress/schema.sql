@@ -44,6 +44,15 @@ alter table progress_sessions enable row level security;
 -- No policies on `students` = anon is fully locked out (default deny).
 revoke all on students from anon;
 
+-- Public roster view — id/name/emoji/color only, never the pin column.
+-- Lets the admin console (and any tool's user picker) list every active
+-- student live from the database instead of a hardcoded array: add a row
+-- to `students` and it shows up everywhere automatically, no code change.
+create or replace view public.student_roster as
+  select id, name, emoji, color from students where active;
+
+grant select on public.student_roster to anon;
+
 drop policy if exists anon_insert_progress on progress_sessions;
 create policy anon_insert_progress on progress_sessions
   for insert to anon with check (true);

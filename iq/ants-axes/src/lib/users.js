@@ -1,19 +1,23 @@
-export const USERS = [
-  { id: 'ballard',  name: 'Ballard',   emoji: '🦁', color: '#6366f1' },
-  { id: 'elle',     name: 'Elle',      emoji: '🌸', color: '#ec4899' },
-  { id: 'edie',     name: 'Edie',      emoji: '⭐', color: '#f59e0b' },
-  { id: 'ruby-l',   name: 'Ruby L.',   emoji: '💎', color: '#ef4444' },
-  { id: 'winnie-l', name: 'Winnie L.', emoji: '🐻', color: '#0d9488' },
-  { id: 'elle-s',   name: 'Elle S.',   emoji: '🦋', color: '#8b5cf6' },
-]
+import { fetchRoster } from '../../../_shared/progress/index.js'
 
-// Guest stays out of USERS (it's a shared scratch profile, not a kid),
-// but IS tracked: admin/cockpit views iterate TRACKED_USERS so guest play
-// shows up alongside everyone else. Sessions key: '...-sessions-guest'.
-export const GUEST = { id: 'guest', name: 'Guest', emoji: '🎈', color: '#64748b' }
+// Populated by loadRoster() before the app renders (see main.jsx) — every
+// existing consumer (UserPicker, PinGate, Banner, AxesQuizMode,
+// AxesAdminView, AxesPrintPack) keeps reading these exactly as before. Live
+// ES module bindings mean reassigning them here updates every importer.
+export let USERS = []
+export let GUEST = { id: 'guest', name: 'Guest', emoji: '🎈', color: '#64748b' }
+export let TRACKED_USERS = []
 
-// Everyone the admin/cockpit views track — named profiles plus Guest.
-export const TRACKED_USERS = [...USERS, GUEST]
+// Fetches the live roster from Supabase (student_roster view) and populates
+// USERS/GUEST/TRACKED_USERS. Falls back to the last cached roster (or an
+// empty list) if the network is unavailable — see _shared/progress/roster.js.
+export async function loadRoster() {
+  const roster = await fetchRoster()
+  const guest = roster.find((u) => u.id === 'guest')
+  if (guest) GUEST = guest
+  USERS = roster.filter((u) => u.id !== 'guest')
+  TRACKED_USERS = [...USERS, GUEST]
+}
 
 const USER_KEY = 'ants-axes-user'
 
@@ -30,5 +34,5 @@ export function clearStoredUser() {
 }
 
 export function getUser(id) {
-  return TRACKED_USERS.find(u => u.id === id) ?? null
+  return TRACKED_USERS.find((u) => u.id === id) ?? null
 }

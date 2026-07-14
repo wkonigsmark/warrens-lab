@@ -9,7 +9,8 @@
 //        startAutoFlush()
 //        backfillFromLocal(TOOL_ID, TRACKED_USERS.map(u => u.id), getSessions)
 //   Plus a PIN gate after the user picker (see README).
-export { isConfigured, selectSessions } from './client.js'
+export { isConfigured, selectSessions, selectRoster } from './client.js'
 export { verifyPin, getVerifiedUser, touchSession, signOut, isOfflineSession } from './auth.js'
 export { enqueueSession, flush, startAutoFlush, backfillFromLocal } from './queue.js'
 export { TOOL_CATALOG, getToolInfo, describeSession } from './toolCatalog.js'
+export { fetchRoster } from './roster.js'

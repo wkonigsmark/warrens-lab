@@ -36,3 +36,9 @@ export const insertSessions = (rows) =>
 
 export const selectSessions = (query = 'order=ts.desc&limit=200') =>
   req(`/rest/v1/progress_sessions?${query}`)
+
+// Live roster (id/name/emoji/color) from the `student_roster` view — never
+// the pin column. Add a row to `students` in Supabase and it shows up here
+// automatically, no code change needed.
+export const selectRoster = () =>
+  req('/rest/v1/student_roster?select=*&order=name.asc')
