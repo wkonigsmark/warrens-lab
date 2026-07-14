@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { TOPICS, TIER_DEFS, LEVELS, RUNGS } from '../lib/algebraQuiz'
 import { getSessions, clearSessions } from '../lib/sessions'
-import { USERS } from '../lib/users'
+import { TRACKED_USERS } from '../lib/users'
 
 const PIN = '2019'
 
@@ -59,8 +59,8 @@ export default function AlgebraAdminView() {
 
 function AdminDashboard() {
   const [view, setView] = useState('cockpit')
-  const [activeUser, setActiveUser] = useState(USERS[0].id)
-  const [sessions, setSessions] = useState(() => getSessions(USERS[0].id))
+  const [activeUser, setActiveUser] = useState(TRACKED_USERS[0].id)
+  const [sessions, setSessions] = useState(() => getSessions(TRACKED_USERS[0].id))
   const [confirmClear, setConfirmClear] = useState(false)
 
   const switchUser = (id) => {
@@ -75,7 +75,7 @@ function AdminDashboard() {
     setConfirmClear(false)
   }
 
-  const activeUserObj = USERS.find(u => u.id === activeUser)
+  const activeUserObj = TRACKED_USERS.find(u => u.id === activeUser)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -97,7 +97,7 @@ function AdminDashboard() {
           )}
         </div>
 
-        <div className="flex gap-2 mb-8">
+        <div className="flex flex-wrap gap-2 mb-8">
           {[
             { id: 'cockpit', label: '👨‍👩‍👧 Parent View' },
             { id: 'student', label: '📊 Student Detail' },
@@ -130,13 +130,13 @@ function AdminDashboard() {
 function CockpitView() {
   const allPassed = useMemo(() => {
     const map = {}
-    for (const u of USERS) {
+    for (const u of TRACKED_USERS) {
       map[u.id] = new Set(getSessions(u.id).filter(s => s.passed).map(s => s.levelId))
     }
     return map
   }, [])
 
-  const totals = USERS.map(u => ({
+  const totals = TRACKED_USERS.map(u => ({
     ...u,
     count: LEVELS.filter(l => allPassed[u.id].has(l.id)).length,
     sessions: getSessions(u.id).length,
@@ -145,7 +145,7 @@ function CockpitView() {
   return (
     <div>
       {/* Summary strip */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-4 gap-4 mb-8">
         {totals.map(u => {
           const pct = Math.round((u.count / LEVELS.length) * 100)
           return (
@@ -196,14 +196,14 @@ function CockpitView() {
                     const levelId = `${topic.id}-${tier.id}`
                     return (
                       <td key={tier.id} className="py-3 px-2">
-                        <div className="flex justify-center gap-1.5">
-                          {USERS.map(u => {
+                        <div className="flex flex-wrap justify-center gap-1">
+                          {TRACKED_USERS.map(u => {
                             const passed = allPassed[u.id].has(levelId)
                             return (
                               <div
                                 key={u.id}
                                 title={`${u.name}: ${passed ? '✓ Summited' : '○ Not yet'}`}
-                                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                                className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                                   passed ? 'text-white shadow-sm' : 'bg-gray-100 text-gray-300'
                                 }`}
                                 style={passed ? { backgroundColor: u.color } : {}}
@@ -224,7 +224,7 @@ function CockpitView() {
 
         {/* Legend */}
         <div className="px-5 py-3 border-t border-gray-100 flex flex-wrap gap-4">
-          {USERS.map(u => (
+          {TRACKED_USERS.map(u => (
             <div key={u.id} className="flex items-center gap-2 text-xs text-gray-500">
               <div className="w-5 h-5 rounded-full text-[10px] flex items-center justify-center text-white font-bold" style={{ backgroundColor: u.color }}>
                 {u.emoji}
@@ -273,8 +273,8 @@ function StudentView({ sessions, activeUser, onSwitchUser }) {
   return (
     <div>
       {/* User tabs */}
-      <div className="flex gap-2 mb-6">
-        {USERS.map(u => (
+      <div className="flex flex-wrap gap-2 mb-6">
+        {TRACKED_USERS.map(u => (
           <button
             key={u.id}
             onClick={() => onSwitchUser(u.id)}

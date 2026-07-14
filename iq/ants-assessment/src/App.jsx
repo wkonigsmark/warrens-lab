@@ -3,12 +3,20 @@ import Banner from './components/Banner'
 import StartScreen from './components/StartScreen'
 import AdaptiveRunner from './components/adaptive/AdaptiveRunner'
 import AdaptiveResults from './components/adaptive/AdaptiveResults'
+import ProgressAdminView from './components/admin/ProgressAdminView'
 import { loadConfig, saveConfig } from './lib/config'
+
+const isAdmin = new URLSearchParams(window.location.search).has('admin')
+
+export default function App() {
+  if (isAdmin) return <ProgressAdminView />
+  return <AppShell />
+}
 
 // Three-stage flow: pick topics → run the adaptive ladder → see the report.
 // Config (the calibration knobs) lives here so the start screen can tune it and
 // the runner consumes it; it's persisted to localStorage on every change.
-export default function App() {
+function AppShell() {
   const [stage, setStage] = useState('start') // 'start' | 'running' | 'results'
   const [competencyIds, setCompetencyIds] = useState([])
   const [session, setSession] = useState([])

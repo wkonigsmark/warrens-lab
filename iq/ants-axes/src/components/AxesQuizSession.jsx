@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import MiniGrid from './MiniGrid'
 import { SESSION_COUNT } from '../lib/axesQuiz'
@@ -24,6 +24,9 @@ export default function AxesQuizSession({ user, level, onBack, onDone }) {
   const [answers, setAnswers] = useState([])
   const [picked, setPicked]   = useState(null)
   const [phase, setPhase]     = useState('asking') // 'asking' | 'feedback' | 'done'
+  const qStartRef = useRef(Date.now())
+
+  useEffect(() => { qStartRef.current = Date.now() }, [qi])
 
   const q = questions[qi]
 
@@ -33,7 +36,8 @@ export default function AxesQuizSession({ user, level, onBack, onDone }) {
     setPhase('feedback')
 
     const correct = choiceIdx === q.correctIndex
-    const next = [...answers, { correct, picked: choiceIdx }]
+    const ms = Date.now() - qStartRef.current
+    const next = [...answers, { correct, picked: choiceIdx, ms }]
     setAnswers(next)
 
     setTimeout(() => {
@@ -43,6 +47,7 @@ export default function AxesQuizSession({ user, level, onBack, onDone }) {
         setPhase('asking')
       } else {
         const score = next.filter(a => a.correct).length
+        const avgMs = Math.round(next.reduce((sum, a) => sum + a.ms, 0) / next.length)
         saveSession({
           id: Date.now(),
           ts: new Date().toISOString(),
@@ -55,6 +60,8 @@ export default function AxesQuizSession({ user, level, onBack, onDone }) {
           score,
           count: SESSION_COUNT,
           passed: score >= level.passBar,
+          avgMs,
+          answers: next.map((a, i) => ({ q: i + 1, correct: a.correct, ms: a.ms })),
         }, user)
         setPhase('done')
       }

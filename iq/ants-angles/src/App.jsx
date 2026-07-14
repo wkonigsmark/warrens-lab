@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import AdminView from './components/admin/AdminView'
 import UserPicker from './components/UserPicker'
+import PinGate from './components/PinGate'
 import Banner from './components/Banner'
 import { getStoredUser, storeUser, clearStoredUser } from './lib/users'
+import { signOut } from '../../_shared/progress/index.js'
 import AngleStage from './components/AngleStage'
 import AngleReadout from './components/AngleReadout'
 import AngleControls from './components/AngleControls'
@@ -44,10 +46,14 @@ export default function App() {
 function AppShell() {
   const [user, setUser] = useState(() => getStoredUser())
   const selectUser = (id) => { storeUser(id); setUser(id) }
-  const switchUser  = ()  => { clearStoredUser(); setUser(null) }
+  const switchUser  = ()  => { clearStoredUser(); signOut(); setUser(null) }
 
   if (!user) return <UserPicker onSelect={selectUser} />
-  return <AppContent key={user} user={user} onSwitchUser={switchUser} />
+  return (
+    <PinGate key={user} user={user} onCancel={switchUser}>
+      <AppContent user={user} onSwitchUser={switchUser} />
+    </PinGate>
+  )
 }
 
 // All game state lives here, mounted fresh per user (key={user} on AppShell's render).

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { ANGLE_TOPIC_DEFS, TIER_DEFS } from '../../lib/angleQuiz'
 import { generateWhole } from '../../lib/wholeNumbers'
 import { getSessions } from '../../lib/sessions'
-import { USERS } from '../../lib/users'
+import { TRACKED_USERS } from '../../lib/users'
 import QuestionFigure from '../QuestionFigure'
 
 const Q_PER_PAGE = 6
@@ -31,7 +31,7 @@ function computeTopicInfos(passedIds) {
 }
 
 export default function AnglesPrintPack({ userId, onClose }) {
-  const user = USERS.find(u => u.id === userId)
+  const user = TRACKED_USERS.find(u => u.id === userId)
 
   const initPassedIds = useMemo(
     () => new Set(getSessions(userId).filter(s => s.passed).map(s => s.levelId)),

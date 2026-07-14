@@ -340,6 +340,13 @@
     .rest-label b{color:var(--text)}
     .rest-skip{font-size:.58rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 
+    /* ── EXERCISE HOLD TIMER CHIP ── */
+    .ex-timer-btn{display:inline-flex;align-items:center;justify-content:center;gap:3px;margin-top:6px;font-family:inherit;font-size:.6rem;font-weight:800;letter-spacing:.02em;padding:4px 11px;border-radius:20px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.35);color:var(--teal);cursor:pointer;min-width:70px;transition:background .15s,border-color .15s,color .15s;-webkit-user-select:none;user-select:none}
+    .ex-timer-btn:hover{background:rgba(45,212,191,.2)}
+    .ex-timer-btn.running{border-color:var(--teal);color:var(--text)}
+    .ex-timer-btn.done{border-color:#22c55e;background:rgba(34,197,94,.2)!important;color:#4ade80;animation:timerDonePulse .5s ease}
+    @keyframes timerDonePulse{0%{transform:scale(1)}45%{transform:scale(1.12)}100%{transform:scale(1)}}
+
     /* ── INSIGHTS MODAL ── */
     .ins-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
     .ins-overlay.open{opacity:1;pointer-events:all}
@@ -1662,11 +1669,14 @@ function buildSections() {
       const videoBtn=ex.video_url?`<a class="ex-video-btn" href="${ex.video_url}" target="_blank" rel="noopener noreferrer">▶ Form</a>`:'';
       const currentWeight=state.weights[ex.id]||'';
       const weightBlock=sec.weighted?`<div class="weight-wrap"><input type="number" class="weight-input" data-ex="${ex.id}" value="${currentWeight}" placeholder="lbs" min="1" max="300" step="2.5" onchange="onWeightChange(this)"><div class="weight-unit">lbs</div><div class="weight-suggest" id="ws-${ex.id}"></div></div>`:'';
+      const holdSecs=parseExerciseDuration(ex.detail);
+      const timerBtn=holdSecs?`<button class="ex-timer-btn" onclick="startExerciseTimer(${holdSecs},this)">⏱ ${holdSecs}s</button>`:'';
       const rowDone=done>=ex.sets;
       return `<div class="exercise-row${rowDone?' row-done':''}" id="row-${ex.id}">
         <div class="exercise-info">
           <div class="ex-name">${ex.name}${videoBtn}</div>
           <div class="ex-detail">${ex.detail}</div>${tip}
+          ${timerBtn}
           <div class="muscles">${muscles}</div>
         </div>
         <div class="exercise-right">
@@ -1784,6 +1794,73 @@ function startRestTimer(seconds) {
 function dismissRestTimer() {
   clearInterval(restInterval); restInterval=null;
   document.getElementById('restTimer').classList.remove('show','done-flash');
+}
+
+// ═══════════════════════════════════════════════════════
+//  EXERCISE HOLD TIMER (planks, stretches, timed holds)
+// ═══════════════════════════════════════════════════════
+// Pull a hold duration out of the detail string. Skips rep-based work
+// ("12 reps, 2 sec hold" → null) so only true timed holds get a timer.
+function parseExerciseDuration(detail) {
+  if(!detail || /\brep/i.test(detail)) return null;
+  const m = detail.match(/(\d+)\s*(?:[-–]\s*(\d+))?\s*sec/i);
+  if(!m) return null;
+  return parseInt(m[2] || m[1]);   // upper bound of a range = the full target
+}
+
+let _chimeCtx=null;
+function unlockAudio() {
+  try {
+    if(!_chimeCtx) _chimeCtx = new (window.AudioContext||window.webkitAudioContext)();
+    if(_chimeCtx.state==='suspended') _chimeCtx.resume();
+  } catch(e){}
+}
+function playChime() {
+  try {
+    if(!_chimeCtx) return;
+    const ctx=_chimeCtx, now=ctx.currentTime;
+    // Gentle two-note bell: E5 → B5, soft attack, long decay
+    [{f:659.25,t:0},{f:987.77,t:0.14}].forEach(({f,t})=>{
+      const osc=ctx.createOscillator(), gain=ctx.createGain();
+      osc.type='sine'; osc.frequency.value=f;
+      gain.gain.setValueAtTime(0.0001, now+t);
+      gain.gain.exponentialRampToValueAtTime(0.25, now+t+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now+t+1.1);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(now+t); osc.stop(now+t+1.15);
+    });
+  } catch(e){}
+}
+
+function startExerciseTimer(seconds, btn) {
+  unlockAudio();                       // unlock inside the click gesture
+  if(btn._holdInt) {                   // second tap cancels
+    clearInterval(btn._holdInt); btn._holdInt=null;
+    btn.className='ex-timer-btn'; btn.style.background='';
+    btn.textContent=`⏱ ${seconds}s`;
+    return;
+  }
+  let remaining=seconds;
+  btn.classList.add('running');
+  const render=()=>{
+    const pct=Math.round((seconds-remaining)/seconds*100);
+    btn.textContent=`⏳ ${remaining}s`;
+    btn.style.background=`linear-gradient(to right, rgba(45,212,191,.4) ${pct}%, rgba(45,212,191,.08) ${pct}%)`;
+  };
+  render();
+  btn._holdInt=setInterval(()=>{
+    remaining--;
+    if(remaining<=0){
+      clearInterval(btn._holdInt); btn._holdInt=null;
+      btn.classList.remove('running'); btn.classList.add('done');
+      btn.style.background=''; btn.textContent='✓ Done';
+      playChime();
+      if(navigator.vibrate) navigator.vibrate([120,60,120]);
+      setTimeout(()=>{ btn.classList.remove('done'); btn.textContent=`⏱ ${seconds}s`; },1900);
+      return;
+    }
+    render();
+  },1000);
 }
 
 function toggleSection(id){ document.getElementById('sec-'+id).classList.toggle('collapsed'); }

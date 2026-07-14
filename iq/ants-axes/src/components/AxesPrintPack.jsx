@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { TOPICS, TIER_DEFS } from '../lib/axesQuiz'
 import { getSessions } from '../lib/sessions'
-import { USERS } from '../lib/users'
+import { TRACKED_USERS } from '../lib/users'
 import MiniGrid from './MiniGrid'
 
 const Q_PER_PAGE = 8
@@ -44,7 +44,7 @@ function computeTopicInfos(passedIds) {
 }
 
 export default function AxesPrintPack({ userId, onClose }) {
-  const user = USERS.find(u => u.id === userId)
+  const user = TRACKED_USERS.find(u => u.id === userId)
 
   const initPassedIds = useMemo(
     () => new Set(getSessions(userId).filter(s => s.passed).map(s => s.levelId)),

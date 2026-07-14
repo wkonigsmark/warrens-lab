@@ -1,3 +1,6 @@
+import { enqueueSession } from '../../../_shared/progress/index.js'
+
+const TOOL_ID = 'ants-axes'
 const key = (user) => `ants-axes-sessions-${user}`
 
 export function saveSession(session, user) {
@@ -9,6 +12,7 @@ export function saveSession(session, user) {
     all.splice(0, 20)
     localStorage.setItem(key(user), JSON.stringify(all))
   }
+  enqueueSession(TOOL_ID, user, session)
 }
 
 export function getSessions(user) {

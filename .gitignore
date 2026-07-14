@@ -180,6 +180,11 @@ sports/world-cup/admin/.env*
 !sports/world-cup/admin/.env.example
 sports/world-cup/admin/backups/
 
+# iq-progress — secret key only (future admin console); the client
+# publishable-key config.js is meant to be committed, like World Cup's above
+iq/_shared/progress/admin/.env*
+!iq/_shared/progress/admin/.env.example
+
 # Ants & Artistry — image-processing artifacts (regenerated locally, not for repo)
 games/ants-artistry/assets/img-processing/raw-img/_processed/
 games/ants-artistry/assets/img-processing/finished-img/

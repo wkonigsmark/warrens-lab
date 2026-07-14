@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { getSessions, clearSessions } from '../../lib/sessions'
-import { USERS } from '../../lib/users'
+import { TRACKED_USERS } from '../../lib/users'
 import { ANGLE_TOPIC_DEFS, TIER_DEFS, LEVELS } from '../../lib/angleQuiz'
 import AnglesPrintPack from './AnglesPrintPack'
 
@@ -20,8 +20,8 @@ export default function AdminView() {
   const [pin, setPin]         = useState('')
   const [unlocked, setUnlock]   = useState(false)
   const [err, setErr]           = useState(false)
-  const [activeUser, setActiveUser] = useState(USERS[0].id)
-  const [sessions, setSessions] = useState(() => getSessions(USERS[0].id))
+  const [activeUser, setActiveUser] = useState(TRACKED_USERS[0].id)
+  const [sessions, setSessions] = useState(() => getSessions(TRACKED_USERS[0].id))
 
   const handlePin = (e) => {
     e.preventDefault()
@@ -114,7 +114,7 @@ function AdminDashboard({ sessions, activeUser, onSwitchUser, onClear }) {
 function CockpitView({ onPrint }) {
   const allPassed = useMemo(() => {
     const map = {}
-    for (const u of USERS) {
+    for (const u of TRACKED_USERS) {
       map[u.id] = new Set(getSessions(u.id).filter(s => s.passed).map(s => s.levelId))
     }
     return map
@@ -122,7 +122,7 @@ function CockpitView({ onPrint }) {
 
   const TIERED_COUNT = ANGLE_TOPIC_DEFS.length * TIER_DEFS.length  // 28
 
-  const totals = USERS.map(u => ({
+  const totals = TRACKED_USERS.map(u => ({
     ...u,
     tieredPassed: ANGLE_TOPIC_DEFS.flatMap(t =>
       TIER_DEFS.map(tier => allPassed[u.id].has(`${t.id}-${tier.id}`))
@@ -134,7 +134,7 @@ function CockpitView({ onPrint }) {
   return (
     <div>
       {/* Summary strip */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-4 gap-4 mb-8">
         {totals.map(u => {
           const pct = Math.round((u.tieredPassed / TIERED_COUNT) * 100)
           return (
@@ -190,14 +190,14 @@ function CockpitView({ onPrint }) {
                     const levelId = `${topic.id}-${tier.id}`
                     return (
                       <td key={tier.id} className="py-3 px-2">
-                        <div className="flex justify-center gap-1.5">
-                          {USERS.map(u => {
+                        <div className="flex flex-wrap justify-center gap-1">
+                          {TRACKED_USERS.map(u => {
                             const passed = allPassed[u.id].has(levelId)
                             return (
                               <div
                                 key={u.id}
                                 title={`${u.name}: ${passed ? '✓ Passed' : '○ Not yet'}`}
-                                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                                className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
                                   passed ? 'text-white shadow-sm' : 'bg-gray-100 text-gray-300'
                                 }`}
                                 style={passed ? { backgroundColor: u.color } : {}}
@@ -217,7 +217,7 @@ function CockpitView({ onPrint }) {
         </div>
         {/* Legend */}
         <div className="px-5 py-3 border-t border-gray-100 flex flex-wrap gap-4">
-          {USERS.map(u => (
+          {TRACKED_USERS.map(u => (
             <div key={u.id} className="flex items-center gap-2 text-xs text-gray-500">
               <div className="w-5 h-5 rounded-full text-[10px] flex items-center justify-center text-white font-bold" style={{ backgroundColor: u.color }}>
                 {u.emoji}
@@ -242,7 +242,7 @@ function CockpitView({ onPrint }) {
             <thead className="bg-gray-50">
               <tr>
                 <th className="text-left px-5 py-3 text-gray-500 font-semibold text-xs uppercase tracking-wide">Level</th>
-                {USERS.map(u => (
+                {TRACKED_USERS.map(u => (
                   <th key={u.id} className="text-center px-4 py-3 text-gray-400 font-semibold text-xs uppercase">
                     {u.emoji} {u.name}
                   </th>
@@ -258,7 +258,7 @@ function CockpitView({ onPrint }) {
                       <span className="text-xs font-semibold text-gray-700">{lvl.title}</span>
                     </div>
                   </td>
-                  {USERS.map(u => {
+                  {TRACKED_USERS.map(u => {
                     const passed = allPassed[u.id].has(lvl.id)
                     return (
                       <td key={u.id} className="text-center px-4 py-3">
@@ -280,7 +280,7 @@ function CockpitView({ onPrint }) {
 
 function Dashboard({ sessions, activeUser, onSwitchUser, onClear }) {
   const [confirmClear, setConfirmClear] = useState(false)
-  const activeUserObj = USERS.find(u => u.id === activeUser)
+  const activeUserObj = TRACKED_USERS.find(u => u.id === activeUser)
 
   const byLevel = useMemo(() => {
     const map = {}
@@ -321,8 +321,8 @@ function Dashboard({ sessions, activeUser, onSwitchUser, onClear }) {
         </div>
 
         {/* User tabs */}
-        <div className="flex gap-2 mb-8">
-          {USERS.map(u => (
+        <div className="flex flex-wrap gap-2 mb-8">
+          {TRACKED_USERS.map(u => (
             <button
               key={u.id}
               onClick={() => onSwitchUser(u.id)}

@@ -6,6 +6,7 @@ export default defineConfig({
   server: {
     port: 9007,
     strictPort: true,
-    open: true
+    open: true,
+    fs: { allow: ['..'] } // lets the dev server serve ../_shared/progress
   }
 })

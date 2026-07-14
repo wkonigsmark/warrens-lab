@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Banner from './components/Banner'
 import UserPicker from './components/UserPicker'
+import PinGate from './components/PinGate'
 import AxesQuizMode from './components/AxesQuizMode'
 import AxesAdminView from './components/AxesAdminView'
 import WorksheetMode from './components/WorksheetMode'
@@ -8,6 +9,7 @@ import Chart from './components/Chart'
 import Controls from './components/Controls'
 import Calculations from './components/Calculations'
 import { getStoredUser, storeUser, clearStoredUser } from './lib/users'
+import { signOut } from '../../_shared/progress/index.js'
 
 const isAdmin = new URLSearchParams(window.location.search).has('admin')
 
@@ -19,10 +21,14 @@ export default function App() {
 function AppShell() {
   const [user, setUser] = useState(() => getStoredUser())
   const selectUser = (id) => { storeUser(id); setUser(id) }
-  const switchUser  = ()  => { clearStoredUser(); setUser(null) }
+  const switchUser  = ()  => { clearStoredUser(); signOut(); setUser(null) }
 
   if (!user) return <UserPicker onSelect={selectUser} />
-  return <AppContent key={user} user={user} onSwitchUser={switchUser} />
+  return (
+    <PinGate key={user} user={user} onCancel={switchUser}>
+      <AppContent user={user} onSwitchUser={switchUser} />
+    </PinGate>
+  )
 }
 
 function AppContent({ user, onSwitchUser }) {

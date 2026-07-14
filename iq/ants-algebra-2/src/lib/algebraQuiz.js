@@ -109,6 +109,81 @@ function genMulDiv(tier) {
   }
 }
 
+// ── Classic Mode — traditional problems, no scale (scale: null) ─────────────
+// The four tiers retrace the ORIGINAL Ants & Algebra game's modes:
+//   Intro     — one-step add/sub equations (original "Solve x" + / −)
+//   Practice  — all four ops one-step (original "Solve x" full)
+//   Competent — Chains: multi-term arithmetic, find the result
+//   Master    — Chains & X: x hiding inside a chain
+// Questions with no `x` end in "= ?" and the answer is the chain result.
+
+function genClassic(tier) {
+  if (tier === 0) {
+    if (Math.random() < 0.5) {
+      const a = rand(1, 9), x = rand(1, 9)
+      return {
+        equation: `${a} + x = ${a + x}`, scale: null, transformed: null,
+        answer: x, ...makeChoices(x, [a + x + a]),
+      }
+    }
+    const x = rand(1, 9), b = rand(1, 9)
+    return {
+      equation: `${x + b} − x = ${b}`, scale: null, transformed: null,
+      answer: x, ...makeChoices(x, [x + b + b]),
+    }
+  }
+
+  if (tier === 1) {
+    const form = pick(['add', 'sub', 'mul', 'div'])
+    if (form === 'add') {
+      const a = rand(2, 12), x = rand(2, 12)
+      return { equation: `${a} + x = ${a + x}`, scale: null, transformed: null, answer: x, ...makeChoices(x, [a + x + a]) }
+    }
+    if (form === 'sub') {
+      const x = rand(2, 10), b = rand(2, 10)
+      return { equation: `${x + b} − x = ${b}`, scale: null, transformed: null, answer: x, ...makeChoices(x, [x + 2 * b]) }
+    }
+    if (form === 'mul') {
+      const a = rand(2, 6), x = rand(2, 9)
+      return { equation: `${a}x = ${a * x}`, scale: null, transformed: null, answer: x, ...makeChoices(x, [a * x - a, a]) }
+    }
+    const x = rand(2, 6), b = rand(2, 6)
+    return { equation: `${b * x} ÷ x = ${b}`, scale: null, transformed: null, answer: x, ...makeChoices(x, [b, b * x - b]) }
+  }
+
+  if (tier === 2) {
+    // Chains: 3–4 terms, + and −, kept non-negative at every step
+    const len = pick([3, 3, 4])
+    let result = rand(2, 10)
+    let eq = String(result)
+    for (let i = 1; i < len; i++) {
+      const plus = Math.random() < 0.55
+      let term = rand(1, 8)
+      if (!plus && term >= result) term = Math.max(1, Math.floor(result / 2))
+      result += plus ? term : -term
+      eq += ` ${plus ? '+' : '−'} ${term}`
+    }
+    return {
+      equation: `${eq} = ?`, scale: null, transformed: null,
+      answer: result, ...makeChoices(result),
+    }
+  }
+
+  // Master — Chains & X: a op1 x op2 b = result
+  for (let tries = 0; tries < 40; tries++) {
+    const o1 = pick(['+', '−']), o2 = pick(['+', '−'])
+    const a = rand(5, 14), b = rand(1, 8), x = rand(1, 8)
+    const v1 = o1 === '+' ? a + x : a - x
+    const result = o2 === '+' ? v1 + b : v1 - b
+    if (v1 < 0 || result < 0) continue
+    return {
+      equation: `${a} ${o1} x ${o2} ${b} = ${result}`, scale: null, transformed: null,
+      answer: x, ...makeChoices(x, [], true),
+    }
+  }
+  return genClassic(0) // safety fallback
+}
+
 // ── Tiers & topics ───────────────────────────────────────────────────────────
 
 // The Climb: reach the top rung to clear the tier. Each tier allows a shrinking
@@ -139,6 +214,14 @@ export const TOPICS = [
     accent: '#ec4899',
     emoji: '📦',
     generate: (tier) => genMulDiv(tier),
+  },
+  {
+    id: 'classic-mix',
+    title: 'Classic Mode',
+    blurb: 'Old-school problems on the chalkboard — solve x, chains, and chains & x',
+    accent: '#10b981',
+    emoji: '🧮',
+    generate: (tier) => genClassic(tier),
   },
 ]
 

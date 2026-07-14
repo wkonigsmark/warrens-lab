@@ -1,6 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import BalanceScale from './BalanceScale'
+import ClassicBoard from './ClassicBoard'
 import Climb from './Climb'
 import { RUNGS } from '../lib/algebraQuiz'
 import { saveSession } from '../lib/sessions'
@@ -41,13 +42,19 @@ export default function ClimbSession({ user, level, onBack, onDone }) {
   const [phase, setPhase] = useState('asking')     // asking | tipped | correct | reveal | summit | fell
   const [wrongTaps, setWrongTaps] = useState([])   // disabled choice values this question
   const [qCount, setQCount] = useState(1)
+  const [answers, setAnswers] = useState([])       // per-question timing/outcome
   const timerRef = useRef(null)
   const startRef = useRef(Date.now())
+  const qStartRef = useRef(Date.now())             // when the current question first appeared
 
   const q = useMemo(() => level.generate(), [level, qSeed])
   useEffect(() => () => clearTimeout(timerRef.current), [])
+  useEffect(() => { qStartRef.current = Date.now() }, [qSeed])
 
-  const finishRun = (summited, finalRung, finalMisses, finalWobbles, questions) => {
+  const finishRun = (summited, finalRung, finalMisses, finalWobbles, questions, finalAnswers) => {
+    const avgMs = finalAnswers.length
+      ? Math.round(finalAnswers.reduce((sum, a) => sum + a.ms, 0) / finalAnswers.length)
+      : null
     saveSession({
       id: Date.now(),
       ts: new Date().toISOString(),
@@ -64,6 +71,8 @@ export default function ClimbSession({ user, level, onBack, onDone }) {
       score: finalRung,
       passed: summited,
       ms: Date.now() - startRef.current,
+      avgMs,
+      answers: finalAnswers,
     }, user)
   }
 
@@ -82,13 +91,16 @@ export default function ClimbSession({ user, level, onBack, onDone }) {
     if (value === q.answer) {
       const newRung = rung + 1
       const wobbled = wrongTaps.length > 0
+      const ms = Date.now() - qStartRef.current
+      const newAnswers = [...answers, { q: qCount, correct: true, wobbled, ms }]
+      setAnswers(newAnswers)
       if (wobbled) setWobbles(w => w + 1)
       setPhase('correct')
       if (newRung >= RUNGS) {
         playSummit()
         setRung(newRung)
         timerRef.current = setTimeout(() => {
-          finishRun(true, newRung, misses, wobbles + (wobbled ? 1 : 0), qCount)
+          finishRun(true, newRung, misses, wobbles + (wobbled ? 1 : 0), qCount, newAnswers)
           setPhase('summit')
         }, 900)
       } else {
@@ -112,12 +124,15 @@ export default function ClimbSession({ user, level, onBack, onDone }) {
 
     // Second wrong tap → miss
     const newMisses = misses + 1
+    const ms = Date.now() - qStartRef.current
+    const newAnswers = [...answers, { q: qCount, correct: false, wobbled: true, ms }]
+    setAnswers(newAnswers)
     setWrongTaps(t => [...t, value])
     setMisses(newMisses)
     setPhase('reveal')
     if (newMisses > level.missBudget) {
       timerRef.current = setTimeout(() => {
-        finishRun(false, rung, newMisses, wobbles, qCount)
+        finishRun(false, rung, newMisses, wobbles, qCount, newAnswers)
         setPhase('fell')
       }, 1500)
     } else {
@@ -187,14 +202,21 @@ export default function ClimbSession({ user, level, onBack, onDone }) {
   }
 
   // ── Question screen ────────────────────────────────────────────────────────
+  const isClassic = q.scale == null
+  const unknownLabel = q.equation.includes('x') ? 'x' : '?'
+  const guessTooBig = guess != null && (
+    isClassic ? guess > q.answer : q.scale.constant + q.scale.xCount * guess > q.scale.total
+  )
   const caption =
-    phase === 'correct' ? { text: '⚖️ Balanced! Climb on, little ant!', cls: 'text-green-600' }
-    : phase === 'reveal' ? { text: `The answer was x = ${q.answer}`, cls: 'text-red-500' }
+    phase === 'correct' ? { text: isClassic ? '✏️ Nailed it! Climb on, little ant!' : '⚖️ Balanced! Climb on, little ant!', cls: 'text-green-600' }
+    : phase === 'reveal' ? { text: `The answer was ${unknownLabel} = ${q.answer}`, cls: 'text-red-500' }
     : phase === 'tipped' ? (
-        guess != null && (q.scale.constant + q.scale.xCount * guess > q.scale.total)
-          ? { text: '⬇️ Too heavy — try a smaller number', cls: 'text-amber-600' }
-          : { text: '⬆️ Too light — try a bigger number', cls: 'text-amber-600' }
+        guessTooBig
+          ? { text: isClassic ? '🔽 Too big — try a smaller number' : '⬇️ Too heavy — try a smaller number', cls: 'text-amber-600' }
+          : { text: isClassic ? '🔼 Too small — try a bigger number' : '⬆️ Too light — try a bigger number', cls: 'text-amber-600' }
       )
+    : isClassic
+      ? { text: 'What number goes in the box?', cls: 'text-gray-400' }
     : q.transformed
       ? { text: `Same scale, rebalanced: ${q.transformed}`, cls: 'text-gray-400' }
       : { text: 'Which weight balances the scale?', cls: 'text-gray-400' }
@@ -221,21 +243,31 @@ export default function ClimbSession({ user, level, onBack, onDone }) {
         >
           {phase === 'correct' && <ConfettiPuff />}
 
-          <div className="text-center text-3xl font-extrabold text-gray-800 mb-1 font-mono">
-            {q.equation.split('x').map((part, i, arr) => (
-              <span key={i}>
-                {part}
-                {i < arr.length - 1 && <span style={{ color: '#b45309' }}>x</span>}
-              </span>
-            ))}
-          </div>
+          {!isClassic && (
+            <div className="text-center text-3xl font-extrabold text-gray-800 mb-1 font-mono">
+              {q.equation.split('x').map((part, i, arr) => (
+                <span key={i}>
+                  {part}
+                  {i < arr.length - 1 && <span style={{ color: '#b45309' }}>x</span>}
+                </span>
+              ))}
+            </div>
+          )}
           <p className={`text-center text-sm font-semibold mb-2 min-h-[20px] ${caption.cls}`}>{caption.text}</p>
 
-          <BalanceScale
-            scale={q.scale}
-            guess={phase === 'reveal' ? null : guess}
-            reveal={phase === 'reveal' ? q.answer : null}
-          />
+          {isClassic ? (
+            <ClassicBoard
+              equation={q.equation}
+              guess={phase === 'reveal' ? null : guess}
+              reveal={phase === 'reveal' ? q.answer : null}
+            />
+          ) : (
+            <BalanceScale
+              scale={q.scale}
+              guess={phase === 'reveal' ? null : guess}
+              reveal={phase === 'reveal' ? q.answer : null}
+            />
+          )}
 
           {/* Choice tiles */}
           <div className="grid grid-cols-4 gap-2 mt-4">
