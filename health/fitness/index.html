@@ -637,7 +637,7 @@ const DB_REC_MUSCLES = {
   'db-lower':       ['quads','hamstrings','glutes','calves','core'],
   'db-pull':        ['back','lats','biceps','core'],
   'db-upper':       ['chest','lats','shoulders','biceps','triceps','core'],
-  'full-body-core': ['chest','back','lats','shoulders','quads','glutes','hamstrings','core'],
+  'full-body-core': ['chest','back','lats','shoulders','triceps','biceps','quads','glutes','hamstrings','calves','core','obliques'],
 };
 const DB_REC_NAMES = {
   'db-push':'DB Push Day','db-lower':'DB Lower Body','db-pull':'DB Pull & Back',
@@ -869,7 +869,7 @@ const TRIATHLON_PLAN = [
 const WORKOUTS = {
   // ── EXISTING DUMBBELL WORKOUT ───────────────────────
   'full-body-core': {
-    title:'Full-Body Core Focus', mode:'dumbbell', totalSets:31,
+    title:'Full-Body Core Focus', mode:'dumbbell', totalSets:34,
     sections:[
       { id:'warmup', name:'Warm-Up', emoji:'🔥', meta:'5 min · no equipment', weighted:false, exercises:[
         { id:'w1', name:'Bodyweight Squats',        detail:'15 reps',             sets:1, muscles:[['lower','Quads'],['lower','Glutes']],       tip:null, video_url:'https://www.youtube.com/watch?v=aclHkVaku9U' },
@@ -882,6 +882,7 @@ const WORKOUTS = {
         { id:'s3', name:'Floor Press / Overhead Press', detail:'10-12 reps',              sets:3, muscles:[['upper','Chest'],['upper','Shoulders'],['upper','Triceps']], tip:null, video_url:'https://www.youtube.com/watch?v=uUGDRwge4F8' },
         { id:'s4', name:'Romanian Deadlift',         detail:'12 reps',                    sets:3, muscles:[['lower','Hamstrings'],['lower','Glutes'],['back','Lower Back']], tip:'Hinge at hips, soft bend in knees, bar stays close', video_url:'https://www.youtube.com/watch?v=jEy_czb3RKA' },
         { id:'s5', name:'DB Pullover',               detail:'12 reps',                    sets:3, muscles:[['back','Lats'],['upper','Chest'],['core','Core']],     tip:'Arms nearly straight, big stretch behind head — lats do the pulling back', video_url:'https://www.youtube.com/watch?v=FK4rHfPuKbM' },
+        { id:'s6', name:'Standing DB Calf Raise',    detail:'18 reps (slow, full range)', sets:3, muscles:[['lower','Calves']], tip:'Rise all the way onto your toes, pause 1s at the top, then lower heels below level for the stretch', video_url:'https://www.youtube.com/watch?v=c5Kv6-fnTj8' },
       ]},
       { id:'core', name:'Core Finisher', emoji:'🎯', meta:'2 rounds · your focus today', weighted:true, exercises:[
         { id:'c1', name:'Weighted Russian Twists',   detail:'15 each side',  sets:2, muscles:[['core','Obliques'],['core','Core']],     tip:'Focus on rotation, not speed', video_url:'https://www.youtube.com/watch?v=wkD8rjkodUI' },
