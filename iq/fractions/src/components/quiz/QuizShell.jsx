@@ -2,14 +2,13 @@ import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import FractionFigure from '../FractionFigure'
 import Frac from '../Frac'
-import { isCorrect } from '../../lib/fractionQuiz'
-
-const COUNT = 5
+import { isCorrect, COUNT } from '../../lib/fractionQuiz'
+import { saveSession } from '../../lib/sessions'
 
 // Drives one quiz level end-to-end: rolls fresh questions on mount, shows the
 // figure + answer UI, gives instant feedback, tracks score, shows results.
 // Levels differ only by their pure generate() (see fractionQuiz.js).
-export default function QuizShell({ level, onBack }) {
+export default function QuizShell({ level, user, onBack }) {
   const [seed, setSeed] = useState(0)
   const [index, setIndex] = useState(0)
   const [phase, setPhase] = useState('asking') // 'asking' | 'feedback' | 'done'
@@ -42,7 +41,27 @@ export default function QuizShell({ level, onBack }) {
   }
 
   const next = () => {
-    if (isLast) { setPhase('done'); return }
+    if (isLast) {
+      if (user) {
+        const finalScore = answers.filter((a) => a.correct).length
+        saveSession({
+          id: Date.now(),
+          ts: new Date().toISOString(),
+          toolId: 'ants-fractions',
+          userId: user,
+          levelId: level.id,
+          levelTitle: level.title,
+          topicId: level.topicId,
+          tierId: level.tierId,
+          tierLabel: level.tierLabel,
+          score: finalScore,
+          count: COUNT,
+          passed: finalScore >= level.passBar,
+        }, user)
+      }
+      setPhase('done')
+      return
+    }
     setIndex((i) => i + 1); setValue(''); setFrac({ num: '', den: '' }); setPhase('asking')
   }
 
@@ -65,12 +84,22 @@ export default function QuizShell({ level, onBack }) {
     }
 
     const messages = ['Keep practicing! 💪', 'Nice start! 🙂', 'Good work! 👍', 'Great job! 🌟', 'Almost perfect! 🚀', 'Perfect score! 🏆']
+    const passed = score >= level.passBar
     return (
       <div className="max-w-2xl mx-auto">
         <motion.div className="bg-white rounded-2xl shadow-lg p-10 text-center" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Quiz Complete!</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-1">Quiz Complete!</h1>
+          <p className="text-sm text-gray-400 mb-2">
+            {level.title} · <span className="font-bold" style={{ color: level.accent }}>{level.tierLabel}</span>
+          </p>
           <div className="text-6xl font-extrabold my-4" style={{ color: level.accent }}>{score}/{COUNT}</div>
-          <p className="text-lg text-gray-600 mb-8">{messages[score]}</p>
+          <p className="text-lg text-gray-600 mb-2">{messages[score]}</p>
+          {passed && (
+            <p className="inline-block text-sm font-bold text-emerald-600 bg-emerald-50 rounded-full px-3 py-1 mb-6">
+              ✓ Tier cleared — next tier unlocked!
+            </p>
+          )}
+          {!passed && <div className="mb-6" />}
 
           <div className="space-y-2 mb-8 text-left">
             {questions.map((qq, i) => (
@@ -102,7 +131,12 @@ export default function QuizShell({ level, onBack }) {
     <div className="max-w-5xl mx-auto">
       <div className="mb-6">
         <div className="flex justify-between items-center mb-3">
-          <h1 className="text-2xl font-bold text-gray-800">Level {level.id}: {level.title}</h1>
+          <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            {level.title}
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: level.accent }}>
+              {level.tierLabel}
+            </span>
+          </h1>
           <span className="text-white px-3 py-1.5 rounded-lg font-bold text-sm" style={{ backgroundColor: level.accent }}>
             {index + 1} / {COUNT}
           </span>

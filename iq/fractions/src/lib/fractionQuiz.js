@@ -1,11 +1,17 @@
 // Pure question generators for Quiz Mode. Each level's generate() returns a
 // plain question object the QuizShell knows how to render + grade. Framework-
-// free on purpose, so the worksheet builder reuses the exact same problems.
+// free on purpose, so the worksheet builder can reuse the same primitives.
 //
 // Question shape (fields used depend on `type`):
 //   type:    'choice' | 'number' | 'fraction'
 //   fig:     data for <FractionFigure> ({ kind:'pie'|'compare'|'add', ... })
 //   choices, answer, formatAnswer, formatGuess, promptTitle, promptText, hint, unit
+//
+// Levels are topics × tiers (Intro/Practice/Competent/Master), built via the
+// shared buildTieredLevels() helper — see _shared/quizLevels.js. Each topic's
+// generate(tierIndex) decides what scales per tier (denominator range,
+// whether sums can cross a whole, unit vs. non-unit fractions, etc).
+import { buildTieredLevels } from '../../../_shared/quizLevels.js'
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)]
@@ -14,13 +20,21 @@ const range = (n) => Array.from({ length: n }, (_, i) => i)
 // Kid-friendly denominators (avoid 7 — hard to read, hard to draw evenly).
 const DENS = [2, 3, 4, 5, 6, 8]
 
-// Level 1 — Name the Fraction (look at a shaded pie, pick the fraction) -----
-function genName() {
-  const den = pick(DENS)
+export const TIER_DEFS = [
+  { id: 'intro', label: 'Intro', passBar: 4 },
+  { id: 'practice', label: 'Practice', passBar: 4 },
+  { id: 'competent', label: 'Competent', passBar: 5 },
+  { id: 'master', label: 'Master', passBar: 5 },
+]
+export const COUNT = 5
+
+// ── Topic 1 — Name the Fraction (look at a shaded pie, pick the fraction) ──
+const NAME_DENS = [[2, 3, 4], [2, 3, 4, 5, 6], [4, 5, 6, 8], [6, 8, 10, 12]]
+function genName(tier) {
+  const den = pick(NAME_DENS[tier])
   const num = randInt(1, den - 1)
   const answer = `${num}/${den}`
 
-  // Distractors: same pie, believable misreads.
   const cands = new Set([answer])
   if (num + 1 <= den) cands.add(`${num + 1}/${den}`)
   if (num - 1 >= 1) cands.add(`${num - 1}/${den}`)
@@ -41,9 +55,9 @@ function genName() {
   }
 }
 
-// Level 2 — Build the Fraction (type the top and bottom numbers) -----------
-function genBuild() {
-  const den = pick(DENS)
+// ── Topic 2 — Build the Fraction (type the top and bottom numbers) ────────
+function genBuild(tier) {
+  const den = pick(NAME_DENS[tier])
   const num = randInt(1, den - 1)
   return {
     type: 'fraction',
@@ -57,9 +71,15 @@ function genBuild() {
   }
 }
 
-// Level 3 — Which is Bigger? (compare two pies) ----------------------------
-function genCompare() {
-  const variant = pick(['sameDen', 'sameDen', 'unit'])
+// ── Topic 3 — Which is Bigger? (compare two pies) ──────────────────────────
+const CROSS_PAIRS = [[2, 3], [3, 4], [2, 5], [3, 5], [4, 5], [5, 6], [3, 8], [5, 8]]
+function genCompare(tier) {
+  const variant =
+    tier === 0 ? 'sameDen' :
+    tier === 1 ? pick(['sameDen', 'unit']) :
+    tier === 2 ? pick(['unit', 'cross']) :
+    pick(['cross', 'cross', 'unit'])
+
   let a, b
   if (variant === 'sameDen') {
     const den = pick([3, 4, 5, 6, 8])
@@ -68,11 +88,16 @@ function genCompare() {
     while (n2 === n1) n2 = randInt(1, den - 1)
     a = { num: n1, den }
     b = { num: n2, den }
-  } else {
-    // Unit fractions: 1/d — the smaller bottom number is the bigger piece.
+  } else if (variant === 'unit') {
     const ds = shuffle([...DENS]).slice(0, 2)
     a = { num: 1, den: ds[0] }
     b = { num: 1, den: ds[1] }
+  } else {
+    const [d1, d2] = pick(CROSS_PAIRS)
+    a = { num: randInt(1, d1 - 1), den: d1 }
+    b = { num: randInt(1, d2 - 1), den: d2 }
+    let guard = 0
+    while (a.num / a.den === b.num / b.den && guard++ < 20) b = { num: randInt(1, d2 - 1), den: d2 }
   }
   const va = a.num / a.den
   const vb = b.num / b.den
@@ -85,7 +110,7 @@ function genCompare() {
     promptText:
       variant === 'unit'
         ? 'More pieces in the whole means each piece is smaller.'
-        : 'Same size pieces — so more shaded pieces is more pie.',
+        : 'Look carefully — the pieces are different sizes.',
     choices: shuffle([`${a.num}/${a.den}`, `${b.num}/${b.den}`]),
     answer,
     formatAnswer: answer,
@@ -93,9 +118,9 @@ function genCompare() {
   }
 }
 
-// Level 4 — Fill the Whole (how many more pieces to make 1 whole?) ---------
-function genFillWhole() {
-  const den = pick(DENS)
+// ── Topic 4 — Fill the Whole (how many more pieces to make 1 whole?) ──────
+function genFillWhole(tier) {
+  const den = pick(NAME_DENS[tier])
   const num = randInt(1, den - 1)
   const missing = den - num
   return {
@@ -111,11 +136,13 @@ function genFillWhole() {
   }
 }
 
-// Level 5 — Add Fractions, same bottom number ------------------------------
-function genAddSame() {
-  const den = pick([3, 4, 5, 6, 8])
-  const a = randInt(1, den - 2)
-  const b = randInt(1, den - a) // keep the sum ≤ den (stay within one pie)
+// ── Topic 5 — Add Fractions, same bottom number ────────────────────────────
+const ADD_SUB_DENS = [[3, 4, 5], [3, 4, 5, 6, 8], [4, 5, 6, 8], [6, 8, 10, 12]]
+function genAddSame(tier) {
+  const den = pick(ADD_SUB_DENS[tier])
+  const allowOverflow = tier >= 2 // higher tiers: sum can exceed the denominator
+  const a = randInt(1, den - 1)
+  const b = allowOverflow ? randInt(1, den - 1) : randInt(1, Math.max(1, den - a))
   return {
     type: 'number',
     fig: { kind: 'add', a: { num: a, den }, b: { num: b, den }, den },
@@ -129,16 +156,41 @@ function genAddSame() {
   }
 }
 
-// Level 6 — Equivalent Fractions (same amount, different numbers) ----------
-function genEquivalent() {
-  const den = pick([2, 3, 4])
+// ── Topic 6 — Equivalent Fractions (same amount, different numbers) ───────
+const EQUIV_SPEC = [
+  { dens: [2, 3, 4], fs: [2] },
+  { dens: [2, 3, 4, 5], fs: [2, 3] },
+  { dens: [3, 4, 5, 6], fs: [2, 3, 4] },
+  { dens: [4, 5, 6, 8], fs: [2, 3, 4] },
+]
+function genEquivalent(tier) {
+  const spec = EQUIV_SPEC[tier]
+  const den = pick(spec.dens)
   const num = randInt(1, den - 1)
-  const f = pick([2, 3])
+  const f = pick(spec.fs)
   const eqNum = num * f
   const eqDen = den * f
-  const answer = `${eqNum}/${eqDen}`
+  const reduceDirection = tier >= 2 && Math.random() < 0.4
 
-  // Distractors share the bigger bottom number but shade the wrong amount.
+  if (reduceDirection) {
+    const answer = `${num}/${den}`
+    const cands = new Set([answer, `${eqNum}/${eqDen}`])
+    if (num + 1 <= den) cands.add(`${num + 1}/${den}`)
+    if (num - 1 >= 1) cands.add(`${num - 1}/${den}`)
+    const choices = shuffle([answer, ...[...cands].filter((c) => c !== answer)].slice(0, 3))
+    return {
+      type: 'choice',
+      fig: { kind: 'pie', parts: eqDen, shaded: eqNum },
+      promptTitle: `Which fraction is the SIMPLEST form of ${eqNum}/${eqDen}?`,
+      promptText: 'Equivalent fractions cover the same amount of pie.',
+      choices,
+      answer,
+      formatAnswer: `${answer} ( = ${eqNum}/${eqDen})`,
+      formatGuess: (g) => g ?? '—',
+    }
+  }
+
+  const answer = `${eqNum}/${eqDen}`
   const cands = new Set([answer])
   if (eqNum + 1 <= eqDen) cands.add(`${eqNum + 1}/${eqDen}`)
   if (eqNum - 1 >= 1) cands.add(`${eqNum - 1}/${eqDen}`)
@@ -157,9 +209,9 @@ function genEquivalent() {
   }
 }
 
-// Level 7 — Subtract Fractions, same bottom number -------------------------
-function genSubtractSame() {
-  const den = pick([3, 4, 5, 6, 8])
+// ── Topic 7 — Subtract Fractions, same bottom number ──────────────────────
+function genSubtractSame(tier) {
+  const den = pick(ADD_SUB_DENS[tier])
   const a = randInt(2, den)
   const b = randInt(1, a - 1)
   return {
@@ -175,16 +227,17 @@ function genSubtractSame() {
   }
 }
 
-// Level 8 — Fraction of a Number (split a group, take some) ----------------
-const GROUP_TOTALS = [4, 6, 8, 9, 10, 12]
-const divisorsInRange = (n) =>
-  Array.from({ length: n }, (_, i) => i + 1).filter((d) => d > 1 && d <= 6 && n % d === 0)
+// ── Topic 8 — Fraction of a Number (split a group, take some) ─────────────
+const GROUP_TOTALS_BY_TIER = [[4, 6, 8], [6, 8, 10, 12], [8, 10, 12, 15], [10, 12, 15, 18, 20]]
+const divisorsInRange = (n, maxD) =>
+  Array.from({ length: n }, (_, i) => i + 1).filter((d) => d > 1 && d <= maxD && n % d === 0)
 
-function genFractionOf() {
-  const total = pick(GROUP_TOTALS)
-  const dens = divisorsInRange(total)
-  const den = pick(dens)
-  const num = randInt(1, den)
+function genFractionOf(tier) {
+  const total = pick(GROUP_TOTALS_BY_TIER[tier])
+  const dens = divisorsInRange(total, tier === 3 ? 8 : 6)
+  const den = pick(dens.length ? dens : [2])
+  const forceUnit = tier <= 1
+  const num = forceUnit ? 1 : randInt(1, den)
   const groupSize = total / den
   return {
     type: 'number',
@@ -206,13 +259,15 @@ const simplify = (n, d) => {
   return { num: n / g, den: d / g }
 }
 
-// Level 9 — Improper & Mixed Numbers (both directions) ---------------------
+// ── Topic 9 — Improper & Mixed Numbers (both directions) ──────────────────
 const mixedStr = (w, r, d) => `${w} ${r}/${d}`
+const MIXED_WHOLES = [[1], [1, 2], [2, 3], [3, 4]]
+const MIXED_DENS = [[3, 4], [3, 4, 5, 6], [4, 5, 6, 8], [6, 8, 10]]
 
-function genImproperMixed() {
+function genImproperMixed(tier) {
   const dir = Math.random() < 0.5 ? 'toMixed' : 'toImproper'
-  const den = dir === 'toMixed' ? pick([3, 4, 5, 6]) : pick([2, 3, 4, 5, 6])
-  const whole = pick([1, 2])
+  const den = pick(MIXED_DENS[tier])
+  const whole = pick(MIXED_WHOLES[tier])
   const rem = randInt(1, den - 1)
   const num = whole * den + rem
 
@@ -249,12 +304,16 @@ function genImproperMixed() {
   }
 }
 
-// Level 10 — Multiplying Fractions (area model visual) ----------------------
-function genMultiply() {
-  const num1 = randInt(1, 3)
-  const den1 = pick([2, 3, 4])
-  const num2 = randInt(1, 3)
-  const den2 = pick([2, 3, 4])
+// ── Topic 10 — Multiplying Fractions (area model visual) ──────────────────
+const MULT_DENS = [[2, 3], [2, 3, 4], [2, 3, 4], [3, 4, 6]]
+function genMultiply(tier) {
+  const denPool = MULT_DENS[tier]
+  const forceUnit1 = tier === 0
+  const forceUnit2 = tier <= 1
+  const den1 = pick(denPool)
+  const den2 = pick(denPool)
+  const num1 = forceUnit1 ? 1 : randInt(1, den1 - 1)
+  const num2 = forceUnit2 ? 1 : randInt(1, den2 - 1)
 
   const prodNum = num1 * num2
   const prodDen = den1 * den2
@@ -272,36 +331,24 @@ function genMultiply() {
   }
 }
 
-// Level registry -----------------------------------------------------------
-export const LEVELS = [
-  { id: 1, title: 'Name the Fraction', blurb: 'Look at the shaded pie and pick the fraction.', accent: '#22c55e', generate: genName },
-  { id: 2, title: 'Build the Fraction', blurb: 'Write the top and bottom numbers yourself.', accent: '#3b82f6', generate: genBuild },
-  { id: 3, title: 'Which is Bigger?', blurb: 'Compare two pies and choose the larger fraction.', accent: '#8b5cf6', generate: genCompare },
-  { id: 4, title: 'Fill the Whole', blurb: 'How many more pieces make one whole pie?', accent: '#f59e0b', generate: genFillWhole },
-  { id: 5, title: 'Add Fractions', blurb: 'Add two fractions with the same bottom number.', accent: '#0ea5e9', generate: genAddSame },
-  { id: 6, title: 'Equivalent Fractions', blurb: 'Spot the fraction that shows the same amount.', accent: '#ec4899', generate: genEquivalent },
-  { id: 7, title: 'Subtract Fractions', blurb: 'Subtract two fractions with the same bottom number.', accent: '#14b8a6', generate: genSubtractSame },
-  { id: 8, title: 'Fraction of a Number', blurb: 'Split a group into equal parts and take some.', accent: '#f97316', generate: genFractionOf },
-  { id: 9, title: 'Improper & Mixed Numbers', blurb: 'Swap between improper fractions and mixed numbers.', accent: '#6366f1', generate: genImproperMixed },
-  { id: 10, title: 'Multiplying Fractions', blurb: 'Multiply two fractions and simplify the answer.', accent: '#d946ef', generate: genMultiply },
+// ── Topic registry + level bank ─────────────────────────────────────────────
+export const TOPICS = [
+  { id: 'name', title: 'Name the Fraction', blurb: 'Look at the shaded pie and pick the fraction.', accent: '#22c55e', emoji: '🥧', generate: genName },
+  { id: 'build', title: 'Build the Fraction', blurb: 'Write the top and bottom numbers yourself.', accent: '#3b82f6', emoji: '✏️', generate: genBuild },
+  { id: 'compare', title: 'Which is Bigger?', blurb: 'Compare two pies and choose the larger fraction.', accent: '#8b5cf6', emoji: '⚖️', generate: genCompare },
+  { id: 'fill-whole', title: 'Fill the Whole', blurb: 'How many more pieces make one whole pie?', accent: '#f59e0b', emoji: '🍕', generate: genFillWhole },
+  { id: 'add-same', title: 'Add Fractions', blurb: 'Add two fractions with the same bottom number.', accent: '#0ea5e9', emoji: '➕', generate: genAddSame },
+  { id: 'equivalent', title: 'Equivalent Fractions', blurb: 'Spot the fraction that shows the same amount.', accent: '#ec4899', emoji: '🟰', generate: genEquivalent },
+  { id: 'subtract-same', title: 'Subtract Fractions', blurb: 'Subtract two fractions with the same bottom number.', accent: '#14b8a6', emoji: '➖', generate: genSubtractSame },
+  { id: 'fraction-of', title: 'Fraction of a Number', blurb: 'Split a group into equal parts and take some.', accent: '#f97316', emoji: '🔢', generate: genFractionOf },
+  { id: 'improper-mixed', title: 'Improper & Mixed Numbers', blurb: 'Swap between improper fractions and mixed numbers.', accent: '#6366f1', emoji: '🔄', generate: genImproperMixed },
+  { id: 'multiply', title: 'Multiplying Fractions', blurb: 'Multiply two fractions and simplify the answer.', accent: '#d946ef', emoji: '✖️', generate: genMultiply },
 ]
+
+export const LEVELS = buildTieredLevels(TOPICS, TIER_DEFS)
 
 export function getLevel(id) {
   return LEVELS.find((l) => l.id === id)
-}
-
-// Generators keyed for reuse by the worksheet builder.
-export const GENERATORS = {
-  name: genName,
-  build: genBuild,
-  compare: genCompare,
-  fillWhole: genFillWhole,
-  addSame: genAddSame,
-  equivalent: genEquivalent,
-  subtractSame: genSubtractSame,
-  fractionOf: genFractionOf,
-  improperMixed: genImproperMixed,
-  multiply: genMultiply,
 }
 
 // Grade a single answer for any level type.

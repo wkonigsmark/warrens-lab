@@ -31,6 +31,12 @@ export const TOOL_CATALOG = {
     color: '#ef4444',
     url: 'https://warrens-lab.vercel.app/iq/ants-apples/',
   },
+  'ants-fractions': {
+    name: 'Ants & Fractions',
+    emoji: '🥧',
+    color: '#f59e0b',
+    url: 'https://ants-fractions.vercel.app/',
+  },
 }
 
 export function getToolInfo(toolId) {

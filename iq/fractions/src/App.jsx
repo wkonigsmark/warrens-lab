@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import Banner from './components/Banner'
+import UserPicker from './components/UserPicker'
+import PinGate from './components/PinGate'
 import Lesson from './components/Lesson'
 import Lesson2 from './components/Lesson2'
 import Lesson3 from './components/Lesson3'
@@ -9,6 +11,8 @@ import Lesson6 from './components/Lesson6'
 import QuizMode from './components/quiz/QuizMode'
 import WorksheetMode from './components/worksheet/WorksheetMode'
 import PlayMode from './components/play/PlayMode'
+import { getStoredUser, storeUser, clearStoredUser } from './lib/users'
+import { signOut } from '../../_shared/progress/index.js'
 
 // Same shell as the rest of the Ants & ___ family — all four modes built.
 const MODES = [
@@ -19,11 +23,24 @@ const MODES = [
 ]
 
 export default function App() {
+  const [user, setUser] = useState(() => getStoredUser())
+  const selectUser = (id) => { storeUser(id); setUser(id) }
+  const switchUser = () => { clearStoredUser(); signOut(); setUser(null) }
+
+  if (!user) return <UserPicker onSelect={selectUser} />
+  return (
+    <PinGate key={user} user={user} onCancel={switchUser}>
+      <AppContent user={user} onSwitchUser={switchUser} />
+    </PinGate>
+  )
+}
+
+function AppContent({ user, onSwitchUser }) {
   const [mode, setMode] = useState('learn')
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-rose-100">
-      <Banner />
+      <Banner user={user} onSwitchUser={onSwitchUser} />
 
       <div className="max-w-6xl mx-auto px-4 py-6">
         <div className="no-print mb-4 flex flex-wrap justify-center gap-2">
@@ -43,7 +60,7 @@ export default function App() {
 
         {mode === 'learn' && <LearnMode onGoToMode={setMode} />}
         {mode === 'play' && <PlayMode />}
-        {mode === 'quiz' && <QuizMode />}
+        {mode === 'quiz' && <QuizMode user={user} />}
         {mode === 'worksheet' && <WorksheetMode />}
       </div>
     </div>
