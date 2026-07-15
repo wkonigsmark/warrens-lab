@@ -9,20 +9,30 @@ import Lesson4 from './components/Lesson4'
 import Lesson5 from './components/Lesson5'
 import Lesson6 from './components/Lesson6'
 import QuizMode from './components/quiz/QuizMode'
+import ProgressMode from './components/progress/ProgressMode'
 import WorksheetMode from './components/worksheet/WorksheetMode'
 import PlayMode from './components/play/PlayMode'
+import AdminView from './components/admin/AdminView'
 import { getStoredUser, storeUser, clearStoredUser } from './lib/users'
 import { signOut } from '../../_shared/progress/index.js'
 
-// Same shell as the rest of the Ants & ___ family — all four modes built.
+const isAdmin = new URLSearchParams(window.location.search).has('admin')
+
+// Same shell as the rest of the Ants & ___ family — all five modes built.
 const MODES = [
   { id: 'learn', label: '📖 Learn', grad: 'from-amber-500 to-orange-600', ready: true },
   { id: 'play', label: '🧭 Play', grad: 'from-pink-500 to-rose-600', ready: true },
   { id: 'quiz', label: '📚 Quiz', grad: 'from-green-500 to-emerald-600', ready: true },
+  { id: 'progress', label: '🏅 My Progress', grad: 'from-violet-500 to-purple-600', ready: true },
   { id: 'worksheet', label: '🖨 Worksheets', grad: 'from-indigo-500 to-purple-600', ready: true },
 ]
 
 export default function App() {
+  if (isAdmin) return <AdminView />
+  return <UserShell />
+}
+
+function UserShell() {
   const [user, setUser] = useState(() => getStoredUser())
   const selectUser = (id) => { storeUser(id); setUser(id) }
   const switchUser = () => { clearStoredUser(); signOut(); setUser(null) }
@@ -37,6 +47,15 @@ export default function App() {
 
 function AppContent({ user, onSwitchUser }) {
   const [mode, setMode] = useState('learn')
+  const [quizStartLevel, setQuizStartLevel] = useState(null)
+  const [quizJumpCount, setQuizJumpCount] = useState(0)
+
+  // "Play →" from My Progress jumps straight into that tier in Quiz.
+  const playFromProgress = (levelId) => {
+    setQuizStartLevel(levelId)
+    setQuizJumpCount((c) => c + 1)
+    setMode('quiz')
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-rose-100">
@@ -60,7 +79,8 @@ function AppContent({ user, onSwitchUser }) {
 
         {mode === 'learn' && <LearnMode onGoToMode={setMode} />}
         {mode === 'play' && <PlayMode />}
-        {mode === 'quiz' && <QuizMode user={user} />}
+        {mode === 'quiz' && <QuizMode key={quizJumpCount} user={user} startLevel={quizStartLevel} />}
+        {mode === 'progress' && <ProgressMode user={user} onPlay={playFromProgress} />}
         {mode === 'worksheet' && <WorksheetMode />}
       </div>
     </div>

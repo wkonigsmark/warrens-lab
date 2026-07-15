@@ -27,6 +27,15 @@ export default function Banner({ user, onSwitchUser }) {
           alt="Ants & Fractions — pies, pizzas and pieces of a whole"
           className="h-44 w-auto object-contain mx-auto rounded-2xl shadow-sm"
         />
+
+        <a
+          href="/?admin"
+          target="_blank"
+          rel="noreferrer"
+          className="absolute right-0 top-1/2 -translate-y-1/2 text-[11px] text-gray-300 hover:text-amber-600 transition-colors"
+        >
+          📊 Admin
+        </a>
       </div>
     </div>
   )

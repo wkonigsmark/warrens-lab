@@ -48,6 +48,7 @@ function genName(tier) {
     fig: { kind: 'pie', parts: den, shaded: num },
     promptTitle: 'What fraction is shaded?',
     promptText: 'Count the shaded pieces, then count all the pieces.',
+    hint: `${num} shaded out of ${den} total pieces → ${num}/${den}.`,
     choices,
     answer,
     formatAnswer: answer,
@@ -111,6 +112,12 @@ function genCompare(tier) {
       variant === 'unit'
         ? 'More pieces in the whole means each piece is smaller.'
         : 'Look carefully — the pieces are different sizes.',
+    hint:
+      variant === 'sameDen'
+        ? `Same bottom number (${a.den}) — just compare the top numbers: ${a.num} vs ${b.num}.`
+        : variant === 'unit'
+        ? `Both have 1 piece shaded — fewer total pieces (${Math.min(a.den, b.den)}) means bigger slices.`
+        : `Picture each pie, or find a common bottom number for ${a.den} and ${b.den}.`,
     choices: shuffle([`${a.num}/${a.den}`, `${b.num}/${b.den}`]),
     answer,
     formatAnswer: answer,
@@ -183,6 +190,7 @@ function genEquivalent(tier) {
       fig: { kind: 'pie', parts: eqDen, shaded: eqNum },
       promptTitle: `Which fraction is the SIMPLEST form of ${eqNum}/${eqDen}?`,
       promptText: 'Equivalent fractions cover the same amount of pie.',
+      hint: `${eqNum}/${eqDen} ÷ ${f} on top and bottom = ${num}/${den}.`,
       choices,
       answer,
       formatAnswer: `${answer} ( = ${eqNum}/${eqDen})`,
@@ -202,6 +210,7 @@ function genEquivalent(tier) {
     fig: { kind: 'pie', parts: den, shaded: num },
     promptTitle: `Which fraction is the SAME amount as ${num}/${den}?`,
     promptText: 'Equivalent fractions cover the same amount of pie.',
+    hint: `${num}/${den} × ${f} on top and bottom = ${eqNum}/${eqDen}.`,
     choices,
     answer,
     formatAnswer: `${answer} ( = ${num}/${den})`,
@@ -359,7 +368,7 @@ export function isCorrect(q, value) {
     // Compare simplified forms — so 2/6 and 1/3 are both correct.
     // This rewards the counting process (2/6) and doesn't trap kids before simplification is taught.
     const guessSimp = simplify(Number(value?.num || 0), Number(value?.den || 1))
-    const answerSimp = q.answer
+    const answerSimp = simplify(q.answer.num, q.answer.den)
     return guessSimp.num === answerSimp.num && guessSimp.den === answerSimp.den
   }
   return false

@@ -22,6 +22,37 @@ svg {
   user-select: none;
 }
 
+/* Quiz feedback animations (mirrors Ants & Angles) */
+@keyframes confettiDot {
+  0%   { transform: translate(-50%, -50%); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))); opacity: 0; }
+}
+
+/* Countdown bar that drains during the auto-advance delay */
+@keyframes shrinkBar {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+
+/* Correct card: quick scale-pulse with green glow ring */
+@keyframes quizPuff {
+  0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0.55); }
+  45%  { box-shadow: 0 0 0 14px rgba(34,197,94,0.22); }
+  100% { box-shadow: 0 0 0 26px rgba(34,197,94,0); }
+}
+.quiz-puff { animation: quizPuff 0.55s ease-out both; }
+
+/* Wrong card: horizontal shake */
+@keyframes quizShake {
+  0%, 100% { transform: translateX(0); }
+  15%       { transform: translateX(-9px); }
+  30%       { transform: translateX(9px); }
+  50%       { transform: translateX(-6px); }
+  70%       { transform: translateX(6px); }
+  85%       { transform: translateX(-3px); }
+}
+.quiz-shake { animation: quizShake 0.42s ease-in-out both; }
+
 /* Print pipeline for worksheets (mirrors the Ants & Angles family) */
 @media print {
   @page {
