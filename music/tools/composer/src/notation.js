@@ -87,12 +87,70 @@ function renderNote(n, localBeat, { colored, showLetters, staffShift, topStep, b
     return svg;
 }
 
+// A chord: several notes sharing one start + duration. Heads render like single
+// notes but share ONE stem (spanning the outer heads); adjacent seconds sit on
+// the opposite side of the stem, as in real engraving.
+function renderChord(group, localBeat, { colored, showLetters, staffShift, topStep, baseTop }) {
+    const durBeats = group[0].durBeats;
+    const cx = xOfBeat(localBeat) + (durBeats * BEAT_W) / 2;
+    const rx = GAP * 0.66, ry = GAP * 0.5;
+    const open = durBeats >= 2;
+    const hasStem = durBeats < 4;
+    const midY = baseTop + 2 * GAP;
+    const ink = '#1f2430';
+
+    // Low→high on the staff; cy shrinks as the step rises.
+    const items = group
+        .map((n) => ({ n, step: diatonicStep(n.pitch) + staffShift * 7 }))
+        .sort((a, b) => a.step - b.step)
+        .map((it) => ({ ...it, cy: yOf(it.step, topStep, baseTop) }));
+    const meanY = items.reduce((s, it) => s + it.cy, 0) / items.length;
+    const up = meanY >= midY;
+
+    let svg = '';
+    const ledgers = new Set();
+    for (const it of items) for (const s of ledgerSteps(it.step, topStep)) ledgers.add(s);
+    for (const s of ledgers) {
+        const y = yOf(s, topStep, baseTop);
+        svg += `<line x1="${cx - rx - 5}" y1="${y}" x2="${cx + rx + 5}" y2="${y}" stroke="#b6bccb" stroke-width="1.4"/>`;
+    }
+
+    let prevStep = null, side = 0;
+    for (const it of items) {
+        side = (prevStep !== null && it.step - prevStep === 1) ? 1 - side : 0;
+        prevStep = it.step;
+        const hx = cx + (side ? (up ? 1 : -1) * (2 * rx - 1.5) : 0);
+        const sharp = isSharp(it.n.pitch);
+        const fill = colored ? (sharp ? BLACK_KEY_COLOR : NOTE_COLORS[letterOf(it.n.pitch)]) : ink;
+        if (sharp) {
+            svg += `<text x="${hx - rx - 7}" y="${it.cy}" font-size="${GAP * 1.5}" text-anchor="middle" dominant-baseline="central" fill="${fill}" font-family="serif">♯</text>`;
+        }
+        const noteAttrs = `data-note-pitch="${it.n.pitch}" data-note-start="${it.n.start}"`;
+        svg += open
+            ? `<ellipse ${noteAttrs} cx="${hx}" cy="${it.cy}" rx="${rx}" ry="${ry}" fill="#fff" stroke="${fill}" stroke-width="2.4"/>`
+            : `<ellipse ${noteAttrs} cx="${hx}" cy="${it.cy}" rx="${rx}" ry="${ry}" fill="${fill}"/>`;
+        if (showLetters) {
+            const letterColor = open ? fill : '#fff';
+            svg += `<text x="${hx}" y="${it.cy}" font-size="${GAP * 0.82}" font-weight="800" text-anchor="middle" dominant-baseline="central" fill="${letterColor}" font-family="'Outfit', sans-serif" style="pointer-events:none">${letterOf(it.n.pitch)}</text>`;
+        }
+    }
+    if (hasStem) {
+        const sx = up ? cx + rx - 0.5 : cx - rx + 0.5;
+        const lowY = items[0].cy;                    // lowest note (largest y)
+        const highY = items[items.length - 1].cy;    // highest note (smallest y)
+        const y1 = up ? lowY : highY;
+        const y2 = up ? highY - GAP * 3 : lowY + GAP * 3;
+        svg += `<line x1="${sx}" y1="${y1}" x2="${sx}" y2="${y2}" stroke="${ink}" stroke-width="2.2"/>`;
+    }
+    return svg;
+}
+
 // One staff line ("system") covering `barsThis` bars starting at `startBeat`.
 function renderSystem(opts) {
     const {
         barsThis, startBeat, baseTop, clefCfg, notes, width,
         colored, showLetters, staffShift, isFirst, isLast, playheadBeat,
-        beatsPerBar = 4, timeSignature = '4/4',
+        beatsPerBar = 4, timeSignature = '4/4', chords = null,
     } = opts;
     const topStep = clefCfg.topStep;
     const sysBeats = barsThis * beatsPerBar;
@@ -124,11 +182,28 @@ function renderSystem(opts) {
         svg += `<text x="${tsX}" y="${baseTop + 1.7 * GAP}" font-size="${GAP * 1.5}" font-weight="700" fill="#1f2430" font-family="serif">${numerator}</text>`
              + `<text x="${tsX}" y="${baseTop + 3.5 * GAP}" font-size="${GAP * 1.5}" font-weight="700" fill="#1f2430" font-family="serif">${denominator}</text>`;
     }
-    // notes that fall in this system
+    // chord symbols above the staff (e.g. "Am", "E7", "B°") at their beat
+    if (chords) {
+        for (const c of chords) {
+            if (c.beat >= startBeat && c.beat < startBeat + sysBeats) {
+                svg += `<text x="${xOfBeat(c.beat - startBeat) + 6}" y="${baseTop - 16}" font-size="${GAP * 1.1}" font-weight="800" fill="#1f2430" font-family="'Outfit', sans-serif">${c.symbol}</text>`;
+            }
+        }
+    }
+    // notes that fall in this system — notes sharing a start + duration are a chord
+    const groups = new Map();
     for (const n of notes) {
         if (n.start >= startBeat && n.start < startBeat + sysBeats) {
-            svg += renderNote(n, n.start - startBeat, { colored, showLetters, staffShift, topStep, baseTop });
+            const key = `${n.start}:${n.durBeats}`;
+            if (!groups.has(key)) groups.set(key, []);
+            groups.get(key).push(n);
         }
+    }
+    for (const group of groups.values()) {
+        const localBeat = group[0].start - startBeat;
+        svg += group.length === 1
+            ? renderNote(group[0], localBeat, { colored, showLetters, staffShift, topStep, baseTop })
+            : renderChord(group, localBeat, { colored, showLetters, staffShift, topStep, baseTop });
     }
     // playhead (single-line / on-screen use)
     if (playheadBeat != null && playheadBeat >= startBeat && playheadBeat < startBeat + sysBeats) {
@@ -140,7 +215,7 @@ function renderSystem(opts) {
 
 export function renderScore(
     { bars, notes },
-    { colored = false, playheadBeat = null, showLetters = false, staffShift = 0, clef = 'treble', barsPerSystem = null, beatsPerBar = 4, timeSignature = '4/4' } = {},
+    { colored = false, playheadBeat = null, showLetters = false, staffShift = 0, clef = 'treble', barsPerSystem = null, beatsPerBar = 4, timeSignature = '4/4', chords = null } = {},
 ) {
     const clefCfg = CLEFS[clef] || CLEFS.treble;
     const perSys = (barsPerSystem && barsPerSystem > 0) ? Math.min(barsPerSystem, bars) : bars;
@@ -160,7 +235,7 @@ export function renderScore(
             isFirst: s === 0,
             isLast: s === systemsCount - 1,
             playheadBeat,
-            beatsPerBar, timeSignature,
+            beatsPerBar, timeSignature, chords,
         });
     }
     return `<svg class="score" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">${body}</svg>`;

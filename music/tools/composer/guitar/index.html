@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guitar Lesson · Composer</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="guitar.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🎸</span>
+      <div>
+        <h1>Guitar Lesson <span class="beta-badge">BETA</span></h1>
+        <p class="tagline">Eight bars in A minor — scales, an eerie twist, walking roots, and your first strum-&amp;-walk piece.</p>
+      </div>
+    </div>
+    <a class="btn btn-ghost back-link" href="../index.html">← Composer</a>
+  </header>
+
+  <main>
+    <section class="controls" aria-label="Lesson controls">
+      <div class="control">
+        <label>Key</label>
+        <select id="key-select"></select>
+      </div>
+
+      <div class="control">
+        <label>Instrument</label>
+        <select id="instrument-select"></select>
+      </div>
+
+      <div class="control">
+        <label>Tempo <span id="tempo-readout">80</span></label>
+        <input id="tempo" type="range" min="50" max="140" step="2" value="80">
+      </div>
+
+      <div class="control">
+        <label>Metronome</label>
+        <button id="metronome-toggle" class="toggle" type="button" aria-pressed="false">🥁 Click</button>
+      </div>
+
+      <div class="control">
+        <label>Mentor mode</label>
+        <button id="letters-toggle" class="toggle" type="button" aria-pressed="false">🔤 Letters</button>
+      </div>
+
+      <div class="control">
+        <label>Chord names</label>
+        <button id="chords-toggle" class="toggle on" type="button" aria-pressed="true">🎼 Names</button>
+      </div>
+    </section>
+
+    <div id="lesson-sections"></div>
+
+    <section class="library print-panel" aria-label="Print worksheet">
+      <div class="library-head">
+        <h2 class="library-title">🖨 Print worksheet</h2>
+        <p class="library-sub">Pick the pages, then print. Letters-in-noteheads, chord names, key, and instrument
+          above all carry into the printout — B&amp;W by default, colour if you like.</p>
+      </div>
+      <div id="print-checks" class="print-checks"></div>
+      <div class="gl-actions">
+        <label class="print-check"><input id="print-color" type="checkbox"> 🎨 Colour print</label>
+        <button id="print" class="btn btn-ghost">🖨 Print</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Print-only manuscript: a clean worksheet for the page. -->
+  <section id="manuscript" class="manuscript" aria-hidden="true"></section>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

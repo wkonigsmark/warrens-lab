@@ -1,0 +1,24 @@
+/* guitar.css — Guitar Lesson page additions on top of the composer stylesheet. */
+
+.topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.back-link { text-decoration: none; display: inline-flex; align-items: center; white-space: nowrap; margin-top: 6px; }
+
+.gl-section { margin-top: 18px; }
+.gl-story { margin: 4px 0 14px; max-width: 72ch; color: var(--muted, #555); line-height: 1.55; }
+.gl-story strong { color: var(--ink, #1f2430); }
+
+.score-scroll { overflow-x: auto; padding-bottom: 6px; }
+.score-scroll svg { display: block; }
+
+.gl-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+.gl-note { font-size: 13px; color: var(--muted, #777); font-style: italic; }
+
+.toggle.on { color: var(--ink, #1f2430); border-color: var(--accent, #ff8a3d); }
+
+.print-panel { margin-top: 26px; }
+.print-checks { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 6px 0 12px; }
+.print-check { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; cursor: pointer; }
+.print-check input { accent-color: var(--accent, #ff8a3d); }
+
+/* Worksheet: staves scale to the page width. */
+.manuscript .ms-score svg { max-width: 100%; height: auto; }
