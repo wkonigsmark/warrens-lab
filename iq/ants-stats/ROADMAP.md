@@ -36,6 +36,7 @@ Topic mastery = all 5 tiers cleared. Overall progress = tiers cleared / 15.
 - Inline SVG charts (dotplot, histogram, boxplot, scatter)
 - Supabase progress wiring (local-first outbox → `progress_sessions`, tool_id `ants-stats`)
 - Gated 5-tier climb per topic, auto-advancing questions, per-tier miss budgets + speed gates on the top tiers
+- **📘 Key Ideas** concept-check gate (per-topic `keyIdeas`): topics that introduce brand-new derived measures teach + lightly quiz the definitions (picture + plain words, forgiving) BEFORE the tier ladder unlocks. Live for **Numerical Summaries** (Quartiles, IQR, Standard Deviation). Generic mechanism — Relationships (r, regression, residuals) is a natural next candidate.
 - Admin cockpit: **Class View** (Tier Mastery Grid, topics × tiers) + **Skill Diagnostic** (computation vs interpretation, per unit, with gap flag) + run log
 
 ## v2 — next

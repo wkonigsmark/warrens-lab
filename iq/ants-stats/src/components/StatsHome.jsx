@@ -9,7 +9,8 @@ import { getUser } from '../lib/users'
 function passedTiersByUnit(sessions) {
   const map = {}
   for (const s of sessions) {
-    if (!s.passed || s.tier == null) continue
+    // Only real tier climbs (1–5) count — not concept/vocab warm-ups (tier 0).
+    if (!s.passed || !(s.tier >= 1)) continue
     ;(map[s.topicId] ??= new Set()).add(s.tier)
   }
   return map
@@ -17,8 +18,9 @@ function passedTiersByUnit(sessions) {
 
 // Gated ladder for one unit: cleared tiers, the current (next) tier unlocked,
 // the rest locked. Same progression feel as the younger Ants games.
-function TierTrack({ accent, passed, onPlay }) {
-  const currentTier = TIER_DEFS.find((t) => !passed.has(t.tier))?.tier ?? null
+function TierTrack({ accent, passed, onPlay, conceptGated }) {
+  // While the key-ideas check is pending, every tier is locked (no "current").
+  const currentTier = conceptGated ? null : (TIER_DEFS.find((t) => !passed.has(t.tier))?.tier ?? null)
   return (
     <div className="flex items-center mt-3">
       {TIER_DEFS.map((t, i) => {
@@ -46,11 +48,15 @@ function TierTrack({ accent, passed, onPlay }) {
   )
 }
 
-export default function StatsHome({ user, onClimb, onLearn, onCheckpoint, onVocab, refreshKey }) {
+export default function StatsHome({ user, onClimb, onLearn, onCheckpoint, onVocab, onConcept, refreshKey }) {
   const userObj = getUser(user)
   const sessions = useMemo(() => getSessions(user), [user, refreshKey])
   const passed = useMemo(() => passedTiersByUnit(sessions), [sessions])
   const vocabDone = useMemo(() => sessions.some((s) => s.kind === 'vocab'), [sessions])
+  const conceptDone = useMemo(() => {
+    const s = new Set(sessions.filter((x) => x.kind === 'concept').map((x) => x.topicId))
+    return (topicId) => s.has(topicId)
+  }, [sessions])
 
   const totalTiers = TOPICS.length * TIER_MAX
   const clearedTiers = TOPICS.reduce((sum, t) => sum + (passed[t.id]?.size ?? 0), 0)
@@ -102,6 +108,9 @@ export default function StatsHome({ user, onClimb, onLearn, onCheckpoint, onVoca
         {TOPICS.map((topic, i) => {
           const p = passed[topic.id] ?? new Set()
           const mastered = p.size >= TIER_MAX
+          // Topics that introduce brand-new derived measures gate their tiers
+          // behind a "Key Ideas" warm-up so the concepts are taught first.
+          const gated = !!topic.keyIdeas && !conceptDone(topic.id)
           return (
             <motion.div
               key={topic.id}
@@ -122,18 +131,29 @@ export default function StatsHome({ user, onClimb, onLearn, onCheckpoint, onVoca
                 </div>
                 <div className="flex flex-col gap-2 items-stretch">
                   <button
-                    onClick={() => onClimb(topic.id)}
+                    onClick={() => (gated ? onConcept(topic.id) : onClimb(topic.id))}
                     className="text-white font-bold px-5 py-2.5 rounded-xl hover:shadow-lg active:scale-95 transition-all whitespace-nowrap"
                     style={{ backgroundColor: topic.accent }}
                   >
-                    {mastered ? 'Replay ↻' : p.size ? 'Climb →' : 'Start →'}
+                    {gated ? '📘 Key Ideas →' : mastered ? 'Replay ↻' : p.size ? 'Climb →' : 'Start →'}
                   </button>
+                  {topic.keyIdeas && !gated && (
+                    <button onClick={() => onConcept(topic.id)} className="text-xs font-semibold text-gray-400 hover:text-gray-600">
+                      📘 Key ideas ✓
+                    </button>
+                  )}
                   <button onClick={() => onLearn(topic.id)} className="text-xs font-semibold text-gray-400 hover:text-gray-600">
                     📖 Learn
                   </button>
                 </div>
               </div>
-              <TierTrack accent={topic.accent} passed={p} onPlay={(tier) => onClimb(topic.id, tier)} />
+              {gated && (
+                <div className="mt-3 flex items-center gap-2 text-xs font-semibold rounded-xl px-3 py-2"
+                  style={{ backgroundColor: `${topic.accent}14`, color: topic.accent }}>
+                  📘 Meet the key ideas first — IQR &amp; standard deviation — then the tiers open.
+                </div>
+              )}
+              <TierTrack accent={topic.accent} passed={p} conceptGated={gated} onPlay={(tier) => onClimb(topic.id, tier)} />
             </motion.div>
           )
         })}

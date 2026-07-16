@@ -4,6 +4,7 @@ import UserPicker from './components/UserPicker'
 import PinGate from './components/PinGate'
 import StatsHome from './components/StatsHome'
 import VocabLab from './components/VocabLab'
+import ConceptCheck from './components/ConceptCheck'
 import TopicView from './components/TopicView'
 import TierRun from './components/TierRun'
 import Checkpoint from './components/Checkpoint'
@@ -42,7 +43,7 @@ function AppShell() {
 
 // The first tier a student hasn't cleared for a unit (gated entry point).
 function currentTierFor(user, topicId) {
-  const passed = new Set(getSessions(user).filter((s) => s.passed && s.topicId === topicId).map((s) => s.tier))
+  const passed = new Set(getSessions(user).filter((s) => s.passed && s.topicId === topicId && s.tier >= 1).map((s) => s.tier))
   return TIER_DEFS.find((t) => !passed.has(t.tier))?.tier ?? TIER_DEFS[TIER_DEFS.length - 1].tier
 }
 
@@ -59,6 +60,16 @@ function StatsRouter({ user }) {
 
   if (view.type === 'vocab') {
     return <VocabLab user={user} onExit={home} />
+  }
+  if (view.type === 'concept') {
+    return (
+      <ConceptCheck
+        user={user}
+        topic={getTopic(view.topicId)}
+        onExit={home}
+        onDone={() => climb(view.topicId)}
+      />
+    )
   }
   if (view.type === 'learn') {
     return <TopicView topic={getTopic(view.topicId)} onExit={home} />
@@ -84,6 +95,7 @@ function StatsRouter({ user }) {
       refreshKey={refreshKey}
       onClimb={climb}
       onVocab={() => setView({ type: 'vocab' })}
+      onConcept={(topicId) => setView({ type: 'concept', topicId })}
       onLearn={(topicId) => setView({ type: 'learn', topicId })}
       onCheckpoint={(id) => setView({ type: 'checkpoint', id })}
     />

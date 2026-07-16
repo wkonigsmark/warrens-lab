@@ -10,7 +10,7 @@ import {
 } from './song.js';
 import { getStoredRange, setStoredRange } from '../../_shared/range.js';
 import { PATH_SONGS, getProgress, isUnlocked, recordResult, firstUnclearedIndex, PASS_PCT } from './library.js';
-import { renderScore } from '../composer/src/notation.js';
+import { renderScore } from '../../composer/src/notation.js';
 
 const els = {
     songTitle: document.getElementById('song-title'),

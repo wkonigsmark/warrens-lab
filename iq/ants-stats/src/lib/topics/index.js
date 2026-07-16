@@ -117,6 +117,50 @@ export const TOPICS = [
         answer: 'Mean rises by 5; standard deviation (and IQR, range) stays the same.',
       },
     ],
+    // Concepts this topic quizzes that DON'T appear in earlier topics — taught
+    // and lightly quizzed (definition-level, no arithmetic) before the tier
+    // ladder unlocks, so IQR & standard deviation are never sprung cold.
+    keyIdeas: [
+      {
+        id: 'quartiles', term: 'Quartiles (Q1 & Q3)', emoji: '📏', color: '#8b5cf6',
+        teach: `Line up the data smallest → biggest, then chop it into 4 equal groups. The cut ¼ of the way up is Q1 (first quartile); the cut ¾ of the way up is Q3 (third quartile). The middle cut is just the median. On a boxplot, the box goes from Q1 to Q3.`,
+        visual: { type: 'boxplot', min: 4, q1: 6, median: 9, q3: 14, max: 18 },
+        questions: [
+          { prompt: 'Quartiles chop the sorted data into how many equal groups?',
+            choices: ['4', '2', '3', '10'], correctIndex: 0,
+            explain: 'Quart = four (like a quarter). Q1, the median, and Q3 make the three cuts that create 4 groups.' },
+          { prompt: 'Which is true?', choices: ['Q3 is always ≥ Q1', 'Q1 is always ≥ Q3', 'Q1 and Q3 are always equal'], correctIndex: 0,
+            explain: 'Q3 sits ¾ of the way up and Q1 sits ¼ of the way up, so Q3 is never below Q1.' },
+        ],
+      },
+      {
+        id: 'iqr', term: 'IQR — Interquartile Range', emoji: '📦', color: '#0ea5e9',
+        teach: `The IQR is just Q3 − Q1 — the width of the box on a boxplot. It measures how spread out the MIDDLE HALF (middle 50%) of the data is. Because it only uses Q1 and Q3, it ignores the very smallest and biggest values, so a wild outlier can't budge it. That's what makes it "resistant."`,
+        visual: { type: 'boxplot', min: 4, q1: 6, median: 9, q3: 14, max: 18 },
+        questions: [
+          { prompt: 'The IQR measures the spread of the …', choices: ['middle 50% of the data', 'whole data set including outliers', 'single biggest value', 'average'], correctIndex: 0,
+            explain: 'IQR = Q3 − Q1 = the width of the middle half of the data.' },
+          { prompt: 'IQR = Q3 − ___', choices: ['Q1', 'the median', 'the minimum', 'the mean'], correctIndex: 0,
+            explain: 'IQR = Q3 − Q1. It only needs the two quartiles.' },
+          { prompt: 'Does the IQR use the very biggest and smallest values?', choices: ['No — only Q1 and Q3', 'Yes — every value'], correctIndex: 0,
+            explain: 'It ignores the extremes, so one outlier can\'t change it. That\'s why IQR is called "resistant."' },
+        ],
+      },
+      {
+        id: 'stdev', term: 'Standard Deviation', emoji: '📐', color: '#f59e0b',
+        teach: `Standard deviation measures the TYPICAL distance each value sits away from the mean. Dots bunched tightly around the mean → small standard deviation. Dots spread far from the mean → big standard deviation. It's a measure of SPREAD — it tells you nothing about the center.`,
+        visual: { type: 'dotplots', groups: [
+          { label: 'Small SD — bunched near the mean', values: [4, 5, 5, 5, 6] },
+          { label: 'Big SD — spread far out', values: [1, 3, 5, 7, 9] },
+        ] },
+        questions: [
+          { prompt: 'A BIGGER standard deviation means the data is …', choices: ['more spread out', 'more bunched together', 'higher on average', 'always skewed'], correctIndex: 0,
+            explain: 'Bigger standard deviation = values sit farther from the mean = more spread.' },
+          { prompt: 'Does standard deviation tell you the CENTER of the data?', choices: ['No — it measures spread', 'Yes — it is the average'], correctIndex: 0,
+            explain: 'It measures typical distance from the mean (spread). The mean or median tells you the center.' },
+        ],
+      },
+    ],
   },
   {
     id: 'relationships',

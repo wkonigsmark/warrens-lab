@@ -8,7 +8,7 @@ const PIN = '2019'
 const fmt = (ts) => new Date(ts).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
 
 const passedTiers = (sessions, topicId) =>
-  new Set(sessions.filter((s) => s.passed && s.topicId === topicId).map((s) => s.tier))
+  new Set(sessions.filter((s) => s.passed && s.topicId === topicId && s.tier >= 1).map((s) => s.tier))
 
 // Aggregate accuracy for one skill on one topic across ALL of a student's runs.
 function skillAgg(sessions, topicId, skillId) {
