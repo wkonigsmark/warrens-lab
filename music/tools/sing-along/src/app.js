@@ -37,8 +37,10 @@ const els = {
     rangeRedo: document.getElementById('range-redo'),
     rangeStatus: document.getElementById('range-status'),
     play: document.getElementById('play'),
+    practice: document.getElementById('practice'),
     hearStart: document.getElementById('hear-start'),
     print: document.getElementById('print'),
+    hint: document.getElementById('hint'),
     canvas: document.getElementById('highway'),
     manuscript: document.getElementById('manuscript'),
     scoreHud: document.getElementById('score-hud'),
@@ -52,10 +54,12 @@ const els = {
     songPath: document.getElementById('song-path'),
 };
 const g = els.canvas.getContext('2d');
+const HINT_DEFAULT = els.hint.innerHTML;   // restored when leaving practice mode
 
 // --- Tunables -------------------------------------------------------------
 const COUNTIN_BEATS = 4;
 const TOL = 1.5;          // in-tune tolerance in semitones (generous-but-honest)
+const PRACTICE_HOLD_MS = 450;   // hold a note in-tune this long to "find" it (no tempo)
 const PX_PER_BEAT = 80;
 const NOW_X = 140;
 const PAD_Y = 28;
@@ -83,6 +87,12 @@ let audioCtx = null, analyser = null, stream = null, buf = null;
 let rafId = null, playStart = 0, prevBeat = -Infinity, playing = false, lastCountBeep = null;
 let toneUntil = 0;   // performance.now() until which our own reference tone is sounding
 
+// --- Practice mode (no tempo) ---------------------------------------------
+let practicing = false, practiceComplete = false;
+let practiceIdx = 0, practiceHold = 0, practiceLast = 0;
+let seq = [];        // notes laid out in singing order = the practice sequence
+let puffs = [];      // visual celebration particles (no audio)
+
 // --- Song setup -----------------------------------------------------------
 // The singer's manual octave/key nudge, kept as an offset FROM the auto-fit so it
 // carries to the next song (and across reloads) — set it once, sing the whole path.
@@ -97,6 +107,7 @@ function fitForSinger(notes) {
 }
 
 function loadSong(s, { autofit = true } = {}) {
+    if (practicing) stopPractice();   // a new song invalidates the practice sequence
     song = s;
     transpose = autofit ? fitForSinger(s.notes) + manualShift : 0;
     rebuild();
@@ -144,23 +155,43 @@ function scoreStep(songBeat, dBeat, liveMidi) {
     return { active, tuned };
 }
 
-// --- Play loop ------------------------------------------------------------
-async function start() {
+// --- Mic pipeline (shared by the timed game + practice mode) ---------------
+async function initMic() {
     try {
         stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
     } catch (err) {
         els.pasteStatus.textContent = `Microphone needed to sing: ${err.message}`;
-        return;
+        return false;
     }
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    // Created after an await → may start suspended; resume so the count-in sounds.
-    await audioCtx.resume().catch(() => {});
+    await audioCtx.resume().catch(() => {});   // created after an await → may be suspended
     const src = audioCtx.createMediaStreamSource(stream);
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 2048;
     buf = new Float32Array(analyser.fftSize);
     src.connect(analyser);
+    return true;
+}
 
+function teardownMic() {
+    if (stream) stream.getTracks().forEach((t) => t.stop());
+    if (audioCtx) audioCtx.close();
+    audioCtx = analyser = stream = null;
+    toneUntil = 0;
+}
+
+// One pitch read from the mic → MIDI (or null if no clear pitch this frame).
+function detectLive() {
+    if (!analyser) return null;
+    analyser.getFloatTimeDomainData(buf);
+    const res = detectPitch(buf, audioCtx.sampleRate);
+    return res ? freqToMidi(res.freq) : null;
+}
+
+// --- Timed game loop ------------------------------------------------------
+async function start() {
+    if (practicing) stopPractice();
+    if (!(await initMic())) return;
     resetScores();
     els.scoreHud.textContent = '0/0';
     els.results.hidden = true;
@@ -176,13 +207,10 @@ async function start() {
 function stop() {
     playing = false;
     if (rafId) cancelAnimationFrame(rafId);
-    if (stream) stream.getTracks().forEach((t) => t.stop());
-    if (audioCtx) audioCtx.close();
-    audioCtx = analyser = stream = null;
+    teardownMic();
     els.play.textContent = '▶ Play';
     els.play.classList.remove('playing');
     els.countIn.hidden = true;
-    toneUntil = 0;
     drawPreview();   // back to the tappable idle song-map
 }
 
@@ -194,12 +222,7 @@ function loop() {
 
     // Detect the singer's pitch EVERY frame — including the count-in — so they can
     // pre-tune to the starting note before the song begins.
-    let liveMidi = null;
-    if (analyser) {
-        analyser.getFloatTimeDomainData(buf);
-        const res = detectPitch(buf, audioCtx.sampleRate);
-        if (res) liveMidi = freqToMidi(res.freq);
-    }
+    let liveMidi = detectLive();
 
     let active = null, tuned = false;
     if (songBeat < 0) {
@@ -366,6 +389,8 @@ function previewTone(midi, dur = 1.2, vol = 0.32) {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const play = () => { tone(ctx, midiToFreq(midi), dur, vol); setTimeout(() => ctx.close(), dur * 1000 + 400); };
     ctx.resume().then(play).catch(play);   // resume first — contexts can start suspended
+    // gate the game/practice mic so this tap-to-hear tone doesn't bleed in as a "hit"
+    toneUntil = performance.now() + dur * 1000 + 90;
 }
 function previewStartNote() { previewTone(startMidiOf(), 1.3); }
 
@@ -437,22 +462,11 @@ function roundRect(x, y, w, h, r) {
     g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
 }
 
-// Idle "song map": the whole song laid flat across the canvas (not scrolling), so
-// every note is visible and tappable. Tapping a note plays its pitch to match —
-// a practice aid before you hit Play. Records each note's rect for hit-testing.
-let previewRects = [];
-function drawPreview() {
-    previewRects = [];
+// Shared flat-view background: pitch lanes + C labels + the gold "start note" guide.
+function drawStaffBg() {
     const W = els.canvas.width, H = els.canvas.height;
     g.clearRect(0, 0, W, H);
     g.fillStyle = '#fbfcff'; g.fillRect(0, 0, W, H);
-    if (!playNotes.length) return;
-
-    const padL = 54, padR = 20, span = Math.max(1, songEnd);
-    const xOfBeat = (b) => padL + (b / span) * (W - padL - padR);
-    const wOfDur = (d) => (d / span) * (W - padL - padR);
-
-    // pitch lanes + C labels (same visual language as the live highway)
     g.textBaseline = 'middle';
     for (let m = Math.ceil(loMidi); m <= Math.floor(hiMidi); m++) {
         const y = yOf(m); const isC = m % 12 === 0;
@@ -460,28 +474,47 @@ function drawPreview() {
         g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke();
         if (isC) { g.fillStyle = '#aab2c4'; g.font = '10px Outfit, sans-serif'; g.fillText(midiToName(m), 6, y); }
     }
-    // starting-pitch guide
-    const sm = startMidiOf(), sy = yOf(sm);
+    const sy = yOf(startMidiOf());
     g.strokeStyle = '#f5b301'; g.setLineDash([6, 4]); g.lineWidth = 1.5;
     g.beginPath(); g.moveTo(0, sy); g.lineTo(W, sy); g.stroke(); g.setLineDash([]);
+}
 
+// Flat layout of every note across the width (no scrolling) — shared geometry for
+// the idle song-map and practice mode. Returns [{ note, x, y, w, h }].
+function layoutNotes() {
+    const W = els.canvas.width, H = els.canvas.height;
+    const padL = 54, padR = 20, span = Math.max(1, songEnd);
     const laneH = Math.max(10, (H - 2 * PAD_Y) / (hiMidi - loMidi) * 1.6);
-    for (const n of playNotes) {
-        const x = xOfBeat(n.start), w = Math.max(7, wOfDur(n.durBeats) - 2);
-        const y = yOf(n.midi) - laneH / 2;
-        g.globalAlpha = 0.9; roundRect(x, y, w, laneH, 6); g.fillStyle = colorForMidi(n.midi); g.fill();
+    return playNotes.map((n) => ({
+        note: n,
+        x: padL + (n.start / span) * (W - padL - padR),
+        y: yOf(n.midi) - laneH / 2,
+        w: Math.max(7, (n.durBeats / span) * (W - padL - padR) - 2),
+        h: laneH,
+    }));
+}
+
+// Idle "song map": the whole song laid flat, every note visible and tappable.
+// Tapping a note plays its pitch to match. Records rects for hit-testing.
+let previewRects = [];
+function drawPreview() {
+    drawStaffBg();
+    previewRects = [];
+    if (!playNotes.length) return;
+    for (const it of layoutNotes()) {
+        const n = it.note;
+        g.globalAlpha = 0.9; roundRect(it.x, it.y, it.w, it.h, 6); g.fillStyle = colorForMidi(n.midi); g.fill();
         g.globalAlpha = 1;
         if (n.lyric) {
-            const lx = x + w / 2, ly = y - 7;
+            const lx = it.x + it.w / 2, ly = it.y - 7;
             g.font = 'bold 12px Outfit, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
             g.lineWidth = 3; g.strokeStyle = '#fff'; g.strokeText(n.lyric, lx, ly);
             g.fillStyle = '#1f2430'; g.fillText(n.lyric, lx, ly); g.textAlign = 'left';
         }
-        previewRects.push({ x, y, w, h: laneH, midi: n.midi });
+        previewRects.push({ x: it.x, y: it.y, w: it.w, h: it.h, midi: n.midi });
     }
-    // affordance hint
     g.fillStyle = '#8a93a6'; g.font = '11px Outfit, sans-serif'; g.textBaseline = 'alphabetic';
-    g.fillText('🔊 tap any note to hear it — then try to match it', padL, H - 9);
+    g.fillText('🔊 tap any note to hear it — then try to match it', 54, els.canvas.height - 9);
 }
 
 // Briefly outline a tapped note, then restore the plain map.
@@ -491,20 +524,163 @@ function flashPreviewNote(r) {
     flashPreviewNote._t = setTimeout(drawPreview, 280);
 }
 
-// Tap a note on the idle song-map to hear its pitch.
+// Tap a note on the song-map (idle OR practice) to hear its pitch.
 els.canvas.addEventListener('click', (e) => {
     if (playing || !previewRects.length) return;
     const rect = els.canvas.getBoundingClientRect();
     const mx = (e.clientX - rect.left) * (els.canvas.width / rect.width);
     const my = (e.clientY - rect.top) * (els.canvas.height / rect.height);
     const hit = previewRects.find((r) => mx >= r.x - 2 && mx <= r.x + r.w + 2 && my >= r.y - 5 && my <= r.y + r.h + 5);
-    if (hit) { previewTone(hit.midi); flashPreviewNote(hit); }
+    if (!hit) return;
+    previewTone(hit.midi);
+    if (!practicing) flashPreviewNote(hit);   // practiceLoop owns the canvas during practice
 });
+
+// --- Practice mode: self-paced, no tempo ----------------------------------
+// Open a song, sing the glowing note, hold it in tune until it "pops" (visual
+// puff, no audio), which unlocks the next note. No clock, no fail — pure
+// pitch-finding. Remediation for "I just can't find the note" frustration.
+async function startPractice() {
+    if (practicing) { stopPractice(); return; }
+    if (playing) stop();
+    if (!playNotes.length) return;
+    if (!(await initMic())) return;
+    seq = layoutNotes();                 // {note,x,y,w,h} in singing order
+    practicing = true; practiceComplete = false;
+    practiceIdx = 0; practiceHold = 0; practiceLast = performance.now();
+    puffs = [];
+    els.results.hidden = true;
+    els.countIn.hidden = true;
+    els.practice.textContent = '■ Stop practice';
+    els.practice.classList.add('active');
+    els.scoreHud.textContent = `0/${seq.length}`;
+    els.hint.innerHTML = '🐢 <strong>Practice mode</strong> — sing the glowing note and hold it to pop it. No clock, no pressure!';
+    practiceLoop();
+}
+
+function stopPractice() {
+    practicing = false;
+    if (rafId) cancelAnimationFrame(rafId);
+    teardownMic();
+    els.practice.textContent = '🐢 Practice';
+    els.practice.classList.remove('active');
+    els.scoreHud.textContent = '—';
+    els.hint.innerHTML = HINT_DEFAULT;
+    drawPreview();
+}
+
+function practiceLoop() {
+    if (!practicing) return;
+    const now = performance.now();
+    const dt = Math.min(80, now - practiceLast);
+    practiceLast = now;
+
+    let live = detectLive();
+    if (now < toneUntil) live = null;   // ignore our own tap-to-hear tone bleeding in
+
+    const cur = seq[practiceIdx] || null;
+    let onTarget = false;
+    if (cur && live != null && inTune(live, cur.note.midi, TOL)) {
+        onTarget = true;
+        practiceHold += dt;
+        if (practiceHold >= PRACTICE_HOLD_MS) {   // held long enough → found it!
+            spawnPuff(cur);
+            practiceIdx++; practiceHold = 0;
+            els.scoreHud.textContent = `${practiceIdx}/${seq.length}`;
+            if (practiceIdx >= seq.length) finishPractice();
+        }
+    } else {
+        practiceHold = Math.max(0, practiceHold - dt * 1.4);   // forgiving decay, not a hard reset
+    }
+
+    updatePuffs(dt);
+    drawPractice(live, onTarget);
+    if (practicing) rafId = requestAnimationFrame(practiceLoop);
+}
+
+function finishPractice() {
+    practiceComplete = true;
+    els.hint.innerHTML = '🎉 <strong>You found every note!</strong> Press ▶ Play to try it with the music.';
+    seq.forEach((it, i) => setTimeout(() => { if (practiceComplete) spawnPuff(it); }, i * 80));
+    setTimeout(() => { if (practicing) stopPractice(); }, 2200);
+}
+
+// --- Visual puff (celebration particles, no audio) ------------------------
+function spawnPuff(it) {
+    const cx = it.x + it.w / 2, cy = it.y + it.h / 2, col = colorForMidi(it.note.midi);
+    for (let i = 0; i < 16; i++) {
+        const a = (Math.PI * 2 * i) / 16 + Math.random() * 0.5;
+        const sp = 1.6 + Math.random() * 2.6;
+        puffs.push({ x: cx, y: cy, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 0.6, life: 1, col });
+    }
+}
+function updatePuffs(dt) {
+    const k = dt / 16.7;
+    for (const p of puffs) { p.x += p.vx * k; p.y += p.vy * k; p.vy += 0.07 * k; p.life -= 0.022 * k; }
+    puffs = puffs.filter((p) => p.life > 0);
+}
+function drawPuffs() {
+    for (const p of puffs) {
+        g.globalAlpha = Math.max(0, p.life);
+        g.fillStyle = p.col;
+        g.beginPath(); g.arc(p.x, p.y, 2.5 + 3 * (1 - p.life), 0, Math.PI * 2); g.fill();
+    }
+    g.globalAlpha = 1;
+}
+
+function drawPractice(live, onTarget) {
+    drawStaffBg();
+    const t = performance.now() / 1000;
+    seq.forEach((it, i) => {
+        const n = it.note;
+        const done = i < practiceIdx;
+        const current = i === practiceIdx && !practiceComplete;
+        // base bar: done = green, current = full colour, upcoming = dimmed/locked
+        g.globalAlpha = done ? 1 : (current ? 1 : 0.28);
+        roundRect(it.x, it.y, it.w, it.h, 6);
+        g.fillStyle = done ? '#2e9e5b' : colorForMidi(n.midi); g.fill();
+        g.globalAlpha = 1;
+        if (current) {
+            // "charging" fill grows left→right as you hold the note in tune
+            const frac = Math.min(1, practiceHold / PRACTICE_HOLD_MS);
+            if (frac > 0) { g.fillStyle = '#2e9e5b'; roundRect(it.x, it.y, it.w * frac, it.h, 6); g.fill(); }
+            // pulsing target outline
+            g.strokeStyle = onTarget ? '#2e9e5b' : '#ff8a3d';
+            g.lineWidth = 2.5 + 0.8 * Math.sin(t * 6);
+            roundRect(it.x - 2, it.y - 2, it.w + 4, it.h + 4, 8); g.stroke();
+        }
+        if (n.lyric) {
+            const lx = it.x + it.w / 2, ly = it.y - 7;
+            g.font = `bold ${current ? 14 : 12}px Outfit, sans-serif`;
+            g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+            g.lineWidth = 3; g.strokeStyle = '#fff'; g.strokeText(n.lyric, lx, ly);
+            g.fillStyle = current ? '#1f2430' : (done ? '#2e9e5b' : '#8a93a6'); g.fillText(n.lyric, lx, ly);
+            g.textAlign = 'left';
+        }
+    });
+
+    // live pitch dot in the current note's column, so you raise/lower to its line
+    const cur = seq[practiceIdx];
+    if (live != null && cur && live >= loMidi && live <= hiMidi) {
+        const cx = cur.x + cur.w / 2;
+        g.fillStyle = onTarget ? '#2e9e5b' : '#5b8cff';
+        g.beginPath(); g.arc(cx, yOf(live), onTarget ? 11 : 8, 0, Math.PI * 2); g.fill();
+        g.strokeStyle = '#fff'; g.lineWidth = 2; g.stroke();
+        if (!onTarget) {
+            const up = live < cur.note.midi;
+            g.fillStyle = '#5b8cff'; g.font = 'bold 12px Outfit, sans-serif'; g.textAlign = 'center';
+            g.fillText(up ? '▲ higher' : '▼ lower', cx, yOf(live) + (up ? -16 : 22));
+            g.textAlign = 'left';
+        }
+    }
+    drawPuffs();
+}
 
 // --- Controls -------------------------------------------------------------
 // Nudging the key updates the remembered offset-from-auto-fit, so it sticks to the
 // next song too (and persists across reloads).
 const setTranspose = (delta) => {
+    if (practicing) stopPractice();   // changing the key re-pitches the sequence
     transpose += delta;
     manualShift = transpose - fitForSinger(song.notes);
     saveManualShift();
@@ -515,6 +691,7 @@ els.octUp.addEventListener('click', () => setTranspose(12));
 els.semiDown.addEventListener('click', () => setTranspose(-1));
 els.semiUp.addEventListener('click', () => setTranspose(1));
 els.autoFit.addEventListener('click', () => {   // Auto-fit clears the manual nudge
+    if (practicing) stopPractice();
     manualShift = 0; saveManualShift();
     transpose = fitForSinger(song.notes);
     rebuild();
@@ -674,6 +851,7 @@ function printSong() {
 }
 
 els.play.addEventListener('click', () => (playing ? stop() : start()));
+els.practice.addEventListener('click', startPractice);
 els.hearStart.addEventListener('click', previewStartNote);
 els.print.addEventListener('click', printSong);
 els.again.addEventListener('click', () => { els.results.hidden = true; start(); });

@@ -98,6 +98,7 @@ main { padding: 18px 24px 48px; max-width: 1000px; }
 
 .stage { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
 #highway { display: block; width: 100%; height: auto; background: #fbfcff; cursor: pointer; }
+#practice.active { background: #fff3e9; color: #d9661f; border-color: #ff8a3d; font-weight: 800; }
 
 .manuscript { display: none; }
 .ms-title { margin: 0 0 3px; font-size: 22px; font-weight: 800; text-align: center; }
