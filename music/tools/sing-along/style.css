@@ -1,4 +1,5 @@
-/* Sing-Along — bright game theme (Composer family). */
+/* Sing-Along — bright game theme (Composer family). Mobile-first: the highway
+   is the hero; secondary controls live in collapsible drawers. */
 :root {
   --ink: #1f2430; --muted: #6b7280; --line: #e3e7f1;
   --accent: #ff8a3d; --accent-2: #5b8cff; --good: #2e9e5b;
@@ -9,34 +10,112 @@ body {
   margin: 0; font-family: 'Outfit', system-ui, sans-serif; color: var(--ink);
   background: linear-gradient(160deg, #fbfcff 0%, #eef2ff 55%, #fdf0e8 100%); min-height: 100vh;
 }
-.topbar { padding: 22px 24px 6px; }
-.brand { display: flex; align-items: center; gap: 14px; }
-.logo { font-size: 34px; background: #fff; padding: 8px 12px; border-radius: 16px; box-shadow: 0 4px 14px rgba(31,36,48,0.08); }
-h1 { margin: 0; font-size: 26px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-.tagline { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
-.beta-badge { font-size: 11px; font-weight: 800; letter-spacing: 0.6px; color: #fff; background: var(--accent); padding: 3px 9px; border-radius: 999px; }
 
-main { padding: 18px 24px 48px; max-width: 1000px; }
-.panel { background: #fff; border-radius: 18px; padding: 20px; margin-bottom: 18px; box-shadow: 0 6px 22px rgba(31,36,48,0.07); }
+/* --- Header (compact) --------------------------------------------------- */
+.topbar { display: flex; align-items: center; gap: 10px; padding: 12px 16px 4px; }
+.logo { font-size: 26px; background: #fff; padding: 6px 9px; border-radius: 13px; box-shadow: 0 4px 14px rgba(31,36,48,0.08); }
+h1 { margin: 0; font-size: 22px; font-weight: 800; }
+.tagline { margin: 0 0 0 auto; color: var(--muted); font-size: 13px; }
 
+main { padding: 10px 14px 40px; max-width: 860px; margin: 0 auto; }
+.panel { background: #fff; border-radius: 18px; padding: 16px; margin-bottom: 14px; box-shadow: 0 6px 22px rgba(31,36,48,0.07); }
+
+/* --- Buttons ------------------------------------------------------------ */
 .btn { font: inherit; font-weight: 700; border: 1px solid var(--line); background: #fff; color: var(--ink); padding: 10px 16px; border-radius: 11px; cursor: pointer; transition: all 0.12s ease; }
 .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-.btn-play { background: var(--accent); color: #fff; border-color: var(--accent); font-size: 16px; padding: 12px 26px; }
+.btn-play { background: var(--accent); color: #fff; border-color: var(--accent); font-size: 16px; padding: 12px 24px; }
 .btn-play:hover { filter: brightness(1.05); }
 .btn-play.playing { background: #e64a4a; border-color: #e64a4a; }
+.btn-icon { padding: 10px 13px; font-size: 17px; line-height: 1; }
+#practice.active { background: #fff3e9; color: #d9661f; border-color: #ff8a3d; font-weight: 800; }
 
-/* song bar */
-.song-bar { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
-.game-panel .song-bar { margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
-.song-id { display: flex; flex-direction: column; }
-.song-label { font-size: 11px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); }
-.song-name { font-size: 20px; font-weight: 800; }
+/* --- Now playing -------------------------------------------------------- */
+.now-row { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.song-name { font-size: 21px; font-weight: 800; }
 .fit-readout { font-size: 12px; font-weight: 700; color: var(--accent-2); }
 
+/* --- The highway (hero) ------------------------------------------------- */
+.stage { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); height: 340px; }
+#highway { display: block; width: 100%; height: 100%; background: #fbfcff; cursor: pointer; touch-action: manipulation; }
+
+/* --- Primary action bar ------------------------------------------------- */
+.action-bar { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+.action-bar .btn-play { flex: 1 1 auto; }
+.hud { margin-left: auto; }
+.hud-score { font-size: 26px; font-weight: 800; color: var(--good); font-variant-numeric: tabular-nums; min-width: 52px; display: inline-block; text-align: right; }
+
+.hint { margin: 10px 2px 0; color: var(--muted); font-size: 13px; }
+.hint strong { color: var(--accent); }
+
+/* --- Collapsible drawers (Tune & tools, Song Path) ---------------------- */
+.drawer { background: #fff; border-radius: 16px; margin-bottom: 14px; box-shadow: 0 6px 22px rgba(31,36,48,0.07); overflow: hidden; }
+.tools-panel { margin-top: 14px; box-shadow: none; border: 1px solid var(--line); }
+.drawer > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 13px 16px; font-weight: 800; font-size: 15px; user-select: none; }
+.drawer > summary::-webkit-details-marker { display: none; }
+.chev { margin-left: auto; color: var(--muted); transition: transform 0.15s ease; }
+.rs-cur + .chev { margin-left: 10px; }
+.drawer[open] > summary .chev { transform: rotate(180deg); }
+.rs-title { flex: 0 0 auto; }
+.rs-cur { margin-left: auto; color: var(--accent-2); font-weight: 700; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.drawer-body { padding: 0 16px 16px; }
+
+/* --- Tune & tools content ----------------------------------------------- */
+.transpose { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.t-label { font-size: 11px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); margin-right: 2px; }
+.t-btn { font: inherit; font-weight: 700; font-size: 13px; border: 1px solid var(--line); background: #fff; color: var(--ink); padding: 8px 11px; border-radius: 9px; cursor: pointer; }
+.t-btn:hover { border-color: var(--accent-2); color: var(--accent-2); }
+.t-auto { background: #f0f4ff; }
+.t-readout { min-width: 26px; text-align: center; font-weight: 800; font-variant-numeric: tabular-nums; }
+.tools-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.paste-area { margin-top: 12px; }
+.paste-area textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font-family: Monaco, monospace; font-size: 12px; resize: vertical; }
+.paste-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+.paste-status { font-size: 13px; color: var(--muted); }
+
+/* --- Song path (inside its drawer) -------------------------------------- */
+.path-sub { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+.song-path { display: flex; gap: 10px; overflow-x: auto; padding: 2px 2px 8px; -webkit-overflow-scrolling: touch; }
+.path-stop {
+  flex: 0 0 auto; min-width: 120px; border: 1px solid var(--line); border-radius: 14px;
+  padding: 10px 12px; background: #fff; cursor: pointer; text-align: center; transition: all 0.12s ease;
+}
+.path-stop:hover:not(.locked) { transform: translateY(-2px); border-color: var(--accent-2); }
+.path-stop.locked { opacity: 0.5; cursor: default; }
+.path-stop.current { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(255,138,61,0.25); }
+.path-stop.cleared { border-color: var(--good); background: #f0faf4; }
+.stop-icon { font-size: 20px; }
+.stop-title { font-weight: 800; font-size: 13px; margin-top: 2px; }
+.stop-state { font-size: 11px; color: var(--muted); margin-top: 3px; min-height: 15px; }
+.stop-state.pass { color: var(--good); font-weight: 700; }
+
+/* Stage divider chips — group the ladder into the 5 Kodály stages. */
+.path-stage {
+  flex: 0 0 auto; align-self: center; display: flex; flex-direction: column; justify-content: center;
+  text-align: center; padding: 0 6px; border-left: 2px dashed var(--line); margin-left: 2px;
+}
+.path-stage:first-child { border-left: none; }
+.stage-num { font-size: 11px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent-2); }
+.stage-skill { font-size: 12px; font-weight: 700; color: var(--muted); margin-top: 2px; white-space: nowrap; }
+
+/* --- Count-in + results overlays --------------------------------------- */
+.count-in {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 110px; font-weight: 800; color: var(--accent); background: rgba(255,255,255,0.55);
+  pointer-events: none;
+}
+.results {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; background: rgba(255,255,255,0.92); text-align: center; padding: 16px;
+}
+.result-stars { font-size: 52px; color: #f5b301; letter-spacing: 6px; }
+.result-pct { font-size: 42px; font-weight: 800; color: var(--good); }
+.result-msg { margin: 4px 0 14px; font-size: 15px; color: var(--ink); max-width: 460px; }
+.result-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
 /* --- Range-check modal -------------------------------------------------- */
-.modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 16px; }
 .modal-overlay { position: absolute; inset: 0; background: rgba(31,36,48,0.4); }
-.modal-card { position: relative; background: #fff; border-radius: 18px; padding: 28px; width: 90%; max-width: 440px; box-shadow: 0 12px 40px rgba(0,0,0,0.2); text-align: center; }
+.modal-card { position: relative; background: #fff; border-radius: 18px; padding: 26px; width: 100%; max-width: 440px; box-shadow: 0 12px 40px rgba(0,0,0,0.2); text-align: center; }
 .modal-x { position: absolute; top: 14px; right: 16px; border: none; background: none; font-size: 20px; color: #999; cursor: pointer; }
 .modal-card h2 { margin: 0 0 6px; font-size: 22px; font-weight: 800; }
 #range-instr { margin: 0 0 18px; color: var(--muted); font-size: 15px; }
@@ -49,62 +128,12 @@ main { padding: 18px 24px 48px; max-width: 1000px; }
 .range-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .range-status { margin: 14px 0 0; font-size: 13px; color: var(--muted); min-height: 18px; }
 .range-status.error { color: #c0392b; }
-.transpose { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; }
-.t-label { font-size: 11px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
-.t-btn { font: inherit; font-weight: 700; font-size: 13px; border: 1px solid var(--line); background: #fff; color: var(--ink); padding: 7px 10px; border-radius: 9px; cursor: pointer; }
-.t-btn:hover { border-color: var(--accent-2); color: var(--accent-2); }
-.t-auto { background: #f0f4ff; }
-.t-readout { min-width: 26px; text-align: center; font-weight: 800; font-variant-numeric: tabular-nums; }
 
-.paste-area { margin-top: 14px; }
-.paste-area textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font-family: Monaco, monospace; font-size: 12px; resize: vertical; }
-.paste-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
-.paste-status { font-size: 13px; color: var(--muted); }
-
-/* song path */
-.path-head { margin-bottom: 12px; }
-.path-title { margin: 0; font-size: 18px; font-weight: 800; }
-.path-sub { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
-.song-path { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 8px; }
-.path-stop {
-  flex: 0 0 auto; min-width: 138px; border: 1px solid var(--line); border-radius: 14px;
-  padding: 12px 14px; background: #fff; cursor: pointer; text-align: center; transition: all 0.12s ease;
-}
-.path-stop:hover:not(.locked) { transform: translateY(-2px); border-color: var(--accent-2); }
-.path-stop.locked { opacity: 0.5; cursor: default; }
-.path-stop.current { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(255,138,61,0.25); }
-.path-stop.cleared { border-color: var(--good); background: #f0faf4; }
-.stop-icon { font-size: 22px; }
-.stop-title { font-weight: 800; font-size: 14px; margin-top: 2px; }
-.stop-state { font-size: 12px; color: var(--muted); margin-top: 4px; min-height: 16px; }
-.stop-state.pass { color: var(--good); font-weight: 700; }
-
-/* Stage divider chips — group the ladder into the 5 Kodály stages. */
-.path-stage {
-  flex: 0 0 auto; align-self: center; display: flex; flex-direction: column; justify-content: center;
-  text-align: center; padding: 0 6px; border-left: 2px dashed var(--line); margin-left: 2px;
-}
-.path-stage:first-child { border-left: none; }
-.stage-num { font-size: 11px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent-2); }
-.stage-skill { font-size: 12px; font-weight: 700; color: var(--muted); margin-top: 2px; white-space: nowrap; }
-
-.result-actions { display: flex; gap: 10px; justify-content: center; }
-
-/* game */
-.game-head { display: flex; align-items: center; gap: 18px; margin-bottom: 14px; }
-.hud { margin-left: auto; display: flex; align-items: baseline; gap: 8px; }
-.hud-label { font-size: 12px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); }
-.hud-score { font-size: 30px; font-weight: 800; color: var(--good); font-variant-numeric: tabular-nums; min-width: 64px; }
-
-.stage { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
-#highway { display: block; width: 100%; height: auto; background: #fbfcff; cursor: pointer; }
-#practice.active { background: #fff3e9; color: #d9661f; border-color: #ff8a3d; font-weight: 800; }
-
+/* --- Print (xylophone manuscript) -------------------------------------- */
 .manuscript { display: none; }
 .ms-title { margin: 0 0 3px; font-size: 22px; font-weight: 800; text-align: center; }
 .ms-by { margin: 0 0 12px; text-align: center; color: #555; font-size: 12px; }
 .ms-score svg { width: 100%; height: auto; }
-
 @media print {
   body { margin: 0; padding: 0; }
   main { display: none; }
@@ -113,19 +142,20 @@ main { padding: 18px 24px 48px; max-width: 1000px; }
   .ms-score svg { width: 100%; height: auto; }
 }
 
-.count-in {
-  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  font-size: 120px; font-weight: 800; color: var(--accent); background: rgba(255,255,255,0.55);
-  pointer-events: none;
+/* --- Mobile: give the highway most of the screen ------------------------ */
+@media (max-width: 640px) {
+  .topbar { padding: 10px 14px 2px; }
+  .tagline { display: none; }
+  main { padding: 8px 10px 32px; }
+  .panel { padding: 12px; border-radius: 16px; }
+  .stage { height: 56vh; min-height: 300px; }
+  .btn-play { padding: 13px 20px; }
+  .now-row { margin-bottom: 8px; }
+  .song-name { font-size: 19px; }
 }
 
-.results {
-  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 8px; background: rgba(255,255,255,0.92); text-align: center;
+/* --- Larger phones/tablets: roomier highway ----------------------------- */
+@media (min-width: 641px) {
+  .stage { height: 380px; }
+  .action-bar .btn-play { flex: 0 0 auto; }   /* full-width Play is a mobile thing */
 }
-.result-stars { font-size: 56px; color: #f5b301; letter-spacing: 6px; }
-.result-pct { font-size: 46px; font-weight: 800; color: var(--good); }
-.result-msg { margin: 4px 0 14px; font-size: 16px; color: var(--ink); max-width: 460px; }
-
-.hint { margin: 14px 2px 0; color: var(--muted); font-size: 14px; }
-.hint strong { color: var(--accent); }

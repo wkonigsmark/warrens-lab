@@ -52,9 +52,26 @@ const els = {
     again: document.getElementById('again'),
     nextSong: document.getElementById('next-song'),
     songPath: document.getElementById('song-path'),
+    pathDetails: document.getElementById('path-details'),
+    pathCurrent: document.getElementById('path-current'),
 };
 const g = els.canvas.getContext('2d');
 const HINT_DEFAULT = els.hint.innerHTML;   // restored when leaving practice mode
+
+// Logical canvas size in CSS pixels. The backing store is sized to the displayed
+// box × devicePixelRatio (retina-crisp); all drawing works in these CSS units so
+// the highway scales to any screen — tall on mobile, wide on desktop.
+let CW = 900, CH = 380;
+function resizeCanvas() {
+    const rect = els.canvas.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;   // not laid out yet / printing
+    const dpr = window.devicePixelRatio || 1;
+    els.canvas.width = Math.round(rect.width * dpr);
+    els.canvas.height = Math.round(rect.height * dpr);
+    CW = rect.width; CH = rect.height;
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);       // draw in CSS pixels
+    if (!playing && !practicing) drawPreview(); // live loops redraw themselves next frame
+}
 
 // --- Tunables -------------------------------------------------------------
 const COUNTIN_BEATS = 4;
@@ -124,7 +141,8 @@ function rebuild() {
     hiMidi = Math.max(...midis) + 3;
     songEnd = Math.max(...playNotes.map((n) => n.start + n.durBeats));
     els.transposeReadout.textContent = transpose === 0 ? '0' : `${transpose > 0 ? '+' : ''}${transpose}`;
-    els.hearStart.textContent = `🔊 Start note: ${midiToName(startMidiOf())}`;
+    // compact icon button; the start note's name lives on the highway's gold line
+    els.hearStart.title = `Hear the starting note (${midiToName(startMidiOf())})`;
     updateFitReadout();
     drawPreview();   // idle song-map (tap notes to hear them)
 }
@@ -140,7 +158,7 @@ function updateFitReadout() {
         : sits;
 }
 
-const yOf = (m) => PAD_Y + (hiMidi - m) / (hiMidi - loMidi) * (els.canvas.height - 2 * PAD_Y);
+const yOf = (m) => PAD_Y + (hiMidi - m) / (hiMidi - loMidi) * (CH - 2 * PAD_Y);
 
 // --- Scoring (shared by the live loop and tests) --------------------------
 function resetScores() { playNotes.forEach((n) => { n.hitBeats = 0; }); }
@@ -160,7 +178,8 @@ async function initMic() {
     try {
         stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
     } catch (err) {
-        els.pasteStatus.textContent = `Microphone needed to sing: ${err.message}`;
+        // Show it in the always-visible hint (pasteStatus is tucked in a drawer).
+        els.hint.innerHTML = `🎤 <strong>Microphone needed to sing.</strong> Allow mic access, then tap ▶ Play.`;
         return false;
     }
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -192,6 +211,7 @@ function detectLive() {
 async function start() {
     if (practicing) stopPractice();
     if (!(await initMic())) return;
+    els.hint.innerHTML = HINT_DEFAULT;   // clear any prior "mic needed" message
     resetScores();
     els.scoreHud.textContent = '0/0';
     els.results.hidden = true;
@@ -322,6 +342,15 @@ function renderPath() {
         if (unlocked) stop.addEventListener('click', () => loadPathSong(i));
         els.songPath.appendChild(stop);
     });
+    // Reflect the current song in the drawer summary (so it reads well collapsed).
+    if (els.pathCurrent) {
+        if (currentPathIndex >= 0) {
+            const s = PATH_SONGS[currentPathIndex];
+            els.pathCurrent.textContent = `${s.title} · Stage ${s.stage}`;
+        } else {
+            els.pathCurrent.textContent = (song && song.title) || '';
+        }
+    }
 }
 
 function loadPathSong(i) {
@@ -396,7 +425,7 @@ function previewStartNote() { previewTone(startMidiOf(), 1.3); }
 
 // --- Rendering ------------------------------------------------------------
 function drawFrame(songBeat, liveMidi, active, tuned) {
-    const W = els.canvas.width, H = els.canvas.height;
+    const W = CW, H = CH;
     g.clearRect(0, 0, W, H);
     g.fillStyle = '#fbfcff'; g.fillRect(0, 0, W, H);
 
@@ -417,7 +446,7 @@ function drawFrame(songBeat, liveMidi, active, tuned) {
     g.fillText(`start · ${midiToName(sm)}`, W - 92, sy - 8);
 
     // upcoming + current notes (scroll: x = nowX + (start - songBeat)*pxPerBeat)
-    const laneH = Math.max(10, (els.canvas.height - 2 * PAD_Y) / (hiMidi - loMidi) * 1.6);
+    const laneH = Math.max(10, (CH - 2 * PAD_Y) / (hiMidi - loMidi) * 1.6);
     for (const n of playNotes) {
         const x = NOW_X + (n.start - songBeat) * PX_PER_BEAT;
         const w = n.durBeats * PX_PER_BEAT;
@@ -464,7 +493,7 @@ function roundRect(x, y, w, h, r) {
 
 // Shared flat-view background: pitch lanes + C labels + the gold "start note" guide.
 function drawStaffBg() {
-    const W = els.canvas.width, H = els.canvas.height;
+    const W = CW, H = CH;
     g.clearRect(0, 0, W, H);
     g.fillStyle = '#fbfcff'; g.fillRect(0, 0, W, H);
     g.textBaseline = 'middle';
@@ -474,15 +503,17 @@ function drawStaffBg() {
         g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke();
         if (isC) { g.fillStyle = '#aab2c4'; g.font = '10px Outfit, sans-serif'; g.fillText(midiToName(m), 6, y); }
     }
-    const sy = yOf(startMidiOf());
+    const sm = startMidiOf(), sy = yOf(sm);
     g.strokeStyle = '#f5b301'; g.setLineDash([6, 4]); g.lineWidth = 1.5;
     g.beginPath(); g.moveTo(0, sy); g.lineTo(W, sy); g.stroke(); g.setLineDash([]);
+    g.fillStyle = '#b88600'; g.font = 'bold 10px Outfit, sans-serif'; g.textAlign = 'right'; g.textBaseline = 'alphabetic';
+    g.fillText(`start · ${midiToName(sm)}`, W - 8, sy - 6); g.textAlign = 'left';
 }
 
 // Flat layout of every note across the width (no scrolling) — shared geometry for
 // the idle song-map and practice mode. Returns [{ note, x, y, w, h }].
 function layoutNotes() {
-    const W = els.canvas.width, H = els.canvas.height;
+    const W = CW, H = CH;
     const padL = 54, padR = 20, span = Math.max(1, songEnd);
     const laneH = Math.max(10, (H - 2 * PAD_Y) / (hiMidi - loMidi) * 1.6);
     return playNotes.map((n) => ({
@@ -514,7 +545,7 @@ function drawPreview() {
         previewRects.push({ x: it.x, y: it.y, w: it.w, h: it.h, midi: n.midi });
     }
     g.fillStyle = '#8a93a6'; g.font = '11px Outfit, sans-serif'; g.textBaseline = 'alphabetic';
-    g.fillText('🔊 tap any note to hear it — then try to match it', 54, els.canvas.height - 9);
+    g.fillText('🔊 tap any note to hear it — then try to match it', 54, CH - 9);
 }
 
 // Briefly outline a tapped note, then restore the plain map.
@@ -528,8 +559,8 @@ function flashPreviewNote(r) {
 els.canvas.addEventListener('click', (e) => {
     if (playing || !previewRects.length) return;
     const rect = els.canvas.getBoundingClientRect();
-    const mx = (e.clientX - rect.left) * (els.canvas.width / rect.width);
-    const my = (e.clientY - rect.top) * (els.canvas.height / rect.height);
+    const mx = e.clientX - rect.left;   // CSS px == our logical draw units
+    const my = e.clientY - rect.top;
     const hit = previewRects.find((r) => mx >= r.x - 2 && mx <= r.x + r.w + 2 && my >= r.y - 5 && my <= r.y + r.h + 5);
     if (!hit) return;
     previewTone(hit.midi);
@@ -584,7 +615,7 @@ function practiceLoop() {
         onTarget = true;
         practiceHold += dt;
         if (practiceHold >= PRACTICE_HOLD_MS) {   // held long enough → found it!
-            spawnPuff(cur);
+            spawnPuff(cur.note);
             practiceIdx++; practiceHold = 0;
             els.scoreHud.textContent = `${practiceIdx}/${seq.length}`;
             if (practiceIdx >= seq.length) finishPractice();
@@ -601,13 +632,17 @@ function practiceLoop() {
 function finishPractice() {
     practiceComplete = true;
     els.hint.innerHTML = '🎉 <strong>You found every note!</strong> Press ▶ Play to try it with the music.';
-    seq.forEach((it, i) => setTimeout(() => { if (practiceComplete) spawnPuff(it); }, i * 80));
+    seq.forEach((it, i) => setTimeout(() => { if (practiceComplete) spawnPuff(it.note); }, i * 80));
     setTimeout(() => { if (practicing) stopPractice(); }, 2200);
 }
 
 // --- Visual puff (celebration particles, no audio) ------------------------
-function spawnPuff(it) {
-    const cx = it.x + it.w / 2, cy = it.y + it.h / 2, col = colorForMidi(it.note.midi);
+// Position is looked up from the CURRENT layout so puffs land right even after
+// the canvas has been resized (e.g. phone rotation) mid-practice.
+function spawnPuff(note) {
+    const it = layoutNotes().find((l) => l.note === note);
+    if (!it) return;
+    const cx = it.x + it.w / 2, cy = it.y + it.h / 2, col = colorForMidi(note.midi);
     for (let i = 0; i < 16; i++) {
         const a = (Math.PI * 2 * i) / 16 + Math.random() * 0.5;
         const sp = 1.6 + Math.random() * 2.6;
@@ -631,7 +666,8 @@ function drawPuffs() {
 function drawPractice(live, onTarget) {
     drawStaffBg();
     const t = performance.now() / 1000;
-    seq.forEach((it, i) => {
+    const L = layoutNotes();   // fresh geometry each frame → resize-proof
+    L.forEach((it, i) => {
         const n = it.note;
         const done = i < practiceIdx;
         const current = i === practiceIdx && !practiceComplete;
@@ -660,7 +696,7 @@ function drawPractice(live, onTarget) {
     });
 
     // live pitch dot in the current note's column, so you raise/lower to its line
-    const cur = seq[practiceIdx];
+    const cur = L[practiceIdx];
     if (live != null && cur && live >= loMidi && live <= hiMidi) {
         const cx = cur.x + cur.w / 2;
         g.fillStyle = onTarget ? '#2e9e5b' : '#5b8cff';
@@ -879,6 +915,13 @@ function loadIncomingOrDefault() {
     loadPathSong(firstUnclearedIndex());
 }
 
+// Keep the highway crisp and correctly sized on load, resize, and rotation.
+window.addEventListener('resize', resizeCanvas);
+window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 120));
+
 // init
 loadIncomingOrDefault();
 renderPath();
+// Song-path drawer starts open on desktop, collapsed on phones (highway first).
+if (els.pathDetails) els.pathDetails.open = window.matchMedia('(min-width: 641px)').matches;
+resizeCanvas();   // size the backing store to the laid-out box, then redraw
