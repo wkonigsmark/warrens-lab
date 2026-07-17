@@ -6,13 +6,21 @@
 -- PINs live ONLY here. The anon key gets no read access to this table;
 -- clients verify via the verify_pin() RPC below.
 create table if not exists students (
-  id     text primary key,          -- matches TRACKED_USERS ids ('ruby-l', ...)
-  name   text not null,
-  emoji  text,
-  color  text,
-  pin    text not null,
-  active boolean not null default true
+  id        text primary key,       -- matches TRACKED_USERS ids ('ruby-l', ...)
+  name      text not null,
+  emoji     text,
+  color     text,
+  birthdate date,                    -- optional; the roster view exposes only the
+                                     -- derived age, never the raw birthdate
+  gender    text,                    -- optional, free-form & nullable (inclusive)
+  pin       text not null,
+  active    boolean not null default true
 );
+
+-- Upgrade existing installs (the `create table if not exists` above is a no-op
+-- once the table exists, so add any newer columns explicitly & idempotently).
+alter table students add column if not exists birthdate date;
+alter table students add column if not exists gender    text;
 
 -- ── Progress events ───────────────────────────────────────────────────────
 -- One row per completed quiz/climb session. `payload` keeps the full client
@@ -44,12 +52,17 @@ alter table progress_sessions enable row level security;
 -- No policies on `students` = anon is fully locked out (default deny).
 revoke all on students from anon;
 
--- Public roster view — id/name/emoji/color only, never the pin column.
--- Lets the admin console (and any tool's user picker) list every active
--- student live from the database instead of a hardcoded array: add a row
--- to `students` and it shows up everywhere automatically, no code change.
+-- Public roster view — never the pin or the raw birthdate. Exposes the derived
+-- age (always current, computed from birthdate) plus gender. Lets the admin
+-- console (and any tool's user picker) list every active student live from the
+-- database instead of a hardcoded array: add a row to `students` and it shows up
+-- everywhere automatically, no code change.
 create or replace view public.student_roster as
-  select id, name, emoji, color from students where active;
+  select
+    id, name, emoji, color,
+    extract(year from age(birthdate))::int as age,   -- whole years, recomputed live
+    gender
+  from students where active;
 
 grant select on public.student_roster to anon;
 

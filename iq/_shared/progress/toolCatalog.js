@@ -43,6 +43,12 @@ export const TOOL_CATALOG = {
     color: '#0ea5e9',
     url: 'https://warrens-lab.vercel.app/iq/ants-stats/',
   },
+  'ants-assessment': {
+    name: 'Ants & Assessment',
+    emoji: '🐜',
+    color: '#10b981',
+    url: 'https://warrens-lab.vercel.app/iq/ants-assessment/',
+  },
 }
 
 export function getToolInfo(toolId) {

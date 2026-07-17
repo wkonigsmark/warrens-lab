@@ -59,6 +59,42 @@ topics). Build green.
 *Open tuning Q (now Warren's to calibrate with real kids):* depth vs. length —
 defaults run ~5–10 Qs/topic. The Calibrate panel is the dial.
 
+## Curriculum Journey — v1 (done)
+A 🗺️ Curriculum Journey button on the start screen opens a new tab (`?journey`,
+same pattern as `?admin`) showing `CurriculumJourney` — a gently-sequential
+vertical ladder of the Math tools in difficulty order (Apples → Fractions → 0→1 →
+Exponents → Algebra → Algebra 2 → Angles → Axes → Stats). Triple-duty: link tree
+(each station opens its tool), dev board (🟢 Live / 🚧 In development badges), and
+checklist (per-tool Done toggle, progress bar, persisted to localStorage). The
+order + statuses + URLs live in one array, `src/lib/curriculum.js` — reorder there.
+
+Redesigned to a **compact macro view** (fits one panel): small numbered tiles in a
+4-col grid instead of big rows, plus an **"Arrange by" control** — Path (difficulty
+ladder, numbered), Strand (Number/Algebra/Geometry/Data domains), Status (Live vs
+In development). Tiles reflow between arrangements via framer-motion `layout`. Each
+tool now carries a `strand` dimension; `arrange(mode)` in curriculum.js returns
+ordered groups — add more keys/arrangements to slice it more ways.
+Backlog: reorder to taste; add non-math subjects later; tie the checklist into the
+`_shared/progress` tracking; auto-derive "explored" from real assessment results;
+more arrangements (e.g. by grade/age band).
+
+## Progress tracking — wired in (done)
+Ants & Assessment is now a first-class **tracked tool** in the shared iq-progress
+system (previously it was only the `?admin` reader/motherbrain). Mirrors the
+ants-angles reference wiring:
+- **Roster user-picker + PIN gate** before every check-up (`UserPicker` + `PinGate`,
+  live roster from Supabase `student_roster`, Guest is PIN-free). Banner shows the
+  signed-in kid + a Switch link. Admin (`?admin`) and Journey (`?journey`) stay
+  ungated.
+- **One row per competency** (Warren's choice): `lib/sessions.js` `recordRun(user,
+  finished, config)` builds a session row per topic (unique `id`, shared `runId`,
+  `topicId`/`levelTitle`/`tierLabel`/`score`/`total` + full trace in payload),
+  writes local-first, then `enqueueSession('ants-assessment', …)` each.
+- `main.jsx` boots via `loadRoster()` → `startAutoFlush()` + `backfillFromLocal`.
+- Registered `ants-assessment` in the shared `TOOL_CATALOG`.
+- Verified end-to-end: Guest run → 1 arithmetic row local + outbox drained →
+  confirmed in Supabase (verified:true, "Level 7.2 · Times tables to 5×5 / Harder").
+
 ## Next up
 - **Resource report** — (competency, tier) → curated worksheet deep-links for
   parents/teachers; needs sibling worksheets to be deep-linkable by difficulty

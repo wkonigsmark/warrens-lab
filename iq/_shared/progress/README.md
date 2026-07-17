@@ -95,8 +95,9 @@ versions change — there's no build step to do it for you.
 
 `ants-assessment`'s `ProgressAdminView` (`?admin`) queries
 `progress_sessions` directly via `selectSessions()`, groups by student
-(live roster from `selectRoster()` — the `student_roster` view, id/name/
-emoji/color only, no PINs) then by tool (via `TOOL_CATALOG`), and shows
+(live roster from `selectRoster()` — the `student_roster` view: id/name/
+emoji/color plus derived `age` and `gender`, never the pin or raw birthdate)
+then by tool (via `TOOL_CATALOG`), and shows
 per-tool totals plus a session table. Every roster entry shows up even with
 zero sessions ("No sessions yet"), and adding a row to `students` in
 Supabase makes a new kid appear here with no code change. It's

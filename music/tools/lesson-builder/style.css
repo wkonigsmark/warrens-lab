@@ -1,0 +1,101 @@
+/* Lesson Builder — clean screen UI + a print-first lesson document. */
+:root {
+  --ink: #1f2430; --muted: #6b7280; --line: #e3e7f1;
+  --accent: #ff8a3d; --accent-2: #5b8cff; --good: #2e9e5b; --root: #c0392b;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; font-family: 'Outfit', system-ui, sans-serif; color: var(--ink);
+  background: linear-gradient(160deg, #fbfcff 0%, #eef2ff 55%, #fdf0e8 100%);
+}
+
+.topbar { padding: 20px 24px 6px; }
+.brand { display: flex; align-items: center; gap: 14px; }
+.logo { font-size: 32px; background: #fff; padding: 8px 12px; border-radius: 16px; box-shadow: 0 4px 14px rgba(31,36,48,0.08); }
+.topbar h1 { margin: 0; font-size: 24px; font-weight: 800; }
+.tagline { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+
+.controls { max-width: 940px; margin: 8px auto 0; padding: 16px 24px; }
+.ctl-label { display: block; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+.ctl-label span { color: var(--muted); font-weight: 400; }
+#prog-input { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 12px; font: 14px/1.6 Monaco, monospace; resize: vertical; }
+.ctl-row { display: flex; align-items: center; gap: 14px; margin-top: 12px; flex-wrap: wrap; }
+.ctl-row label { font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+select { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 9px; background: #fff; }
+.btn { font: inherit; font-weight: 700; border: 1px solid var(--line); background: #fff; padding: 9px 16px; border-radius: 10px; cursor: pointer; }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* --- The lesson document ------------------------------------------------ */
+.lesson { max-width: 940px; margin: 10px auto 60px; padding: 0 24px; }
+.empty { color: var(--muted); padding: 30px; text-align: center; }
+.lesson-head { text-align: center; margin: 10px 0 22px; }
+.lesson-head h1 { margin: 0; font-size: 30px; font-weight: 800; }
+.subtitle { margin: 4px 0 0; color: var(--muted); }
+.subtitle strong { color: var(--ink); }
+
+.lz { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; margin-bottom: 18px; box-shadow: 0 6px 22px rgba(31,36,48,0.05); }
+.lz h2 { margin: 0 0 14px; font-size: 19px; font-weight: 800; }
+.say { color: var(--muted); font-size: 13.5px; margin: 12px 0 0; }
+.notes-row { font-weight: 700; font-size: 16px; letter-spacing: 1px; margin: 0; color: var(--accent-2); }
+
+/* Changes grid */
+.changes-line { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.chg { flex: 1 1 0; min-width: 84px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 6px; text-align: center; background: #fbfcff; }
+.chg-sym { display: block; font-weight: 800; font-size: 15px; }
+.chg-fn { display: block; font-size: 11px; color: var(--accent-2); font-weight: 700; margin-top: 2px; }
+
+/* Scale maps + staff notation */
+.map { overflow-x: auto; margin-top: 12px; }
+.scale-map { width: 100%; min-width: 520px; height: auto; }
+.staff-wrap { overflow-x: auto; margin-top: 10px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 6px 4px; }
+.staff { height: auto; display: block; }
+.home .staff-wrap { max-width: 560px; }
+
+/* Walking lines */
+.walks { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.walk { border: 1px solid var(--line); border-radius: 12px; padding: 6px 10px; background: #fbfcff; break-inside: avoid; }
+.walk .staff-wrap { border: none; margin-top: 0; }
+@media (max-width: 720px) { .walks { grid-template-columns: 1fr; } }
+
+/* Chord cards */
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.card { display: flex; gap: 14px; border: 1px solid var(--line); border-radius: 14px; padding: 12px; background: #fbfcff; break-inside: avoid; }
+.card-dia { flex: 0 0 96px; text-align: center; }
+.chord-dia { width: 96px; height: auto; }
+.card-tones { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 2px; }
+.card-body { flex: 1; min-width: 0; }
+.card-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.card-sym { font-size: 18px; font-weight: 800; }
+.card-fn { font-size: 13px; font-weight: 700; color: var(--accent-2); }
+.tag { font-size: 10px; font-weight: 800; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; }
+.tag.in { background: #eaf7ef; color: var(--good); }
+.tag.out { background: #fdeee4; color: #d9661f; }
+.primary { border-left: 3px solid var(--accent); padding-left: 10px; margin-bottom: 10px; }
+.p-lead, .c-lead { display: inline-block; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+.p-name { font-weight: 800; font-size: 15px; margin-left: 6px; }
+.p-notes { display: block; font-size: 12px; color: var(--accent-2); font-weight: 600; letter-spacing: 0.5px; margin-top: 2px; }
+.p-why { margin: 4px 0 0; font-size: 12.5px; color: #444; }
+.colors { border-top: 1px dashed var(--line); padding-top: 8px; }
+.opt { margin-top: 6px; }
+.opt-name { font-weight: 700; font-size: 13px; }
+.opt-mood { font-size: 11px; color: #d9661f; font-style: italic; margin-left: 6px; }
+.opt-notes { display: block; font-size: 11px; color: var(--muted); letter-spacing: 0.5px; }
+.opt-why { display: block; font-size: 12px; color: #555; margin-top: 1px; }
+
+/* Scale-shape appendix */
+.shapes { display: flex; flex-direction: column; gap: 16px; }
+.shape { break-inside: avoid; }
+.shape h3 { margin: 0 0 4px; font-size: 15px; font-weight: 800; }
+.shape-notes { font-weight: 600; font-size: 12px; color: var(--accent-2); letter-spacing: 0.5px; margin-left: 8px; }
+
+@media (max-width: 720px) { .cards { grid-template-columns: 1fr; } }
+
+/* --- Print -------------------------------------------------------------- */
+@media print {
+  body { background: #fff; }
+  .no-print { display: none !important; }
+  .lesson { max-width: none; margin: 0; padding: 0; }
+  .lz { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; page-break-inside: avoid; }
+  .card { background: #fff; }
+  .cards { grid-template-columns: 1fr 1fr; }
+}

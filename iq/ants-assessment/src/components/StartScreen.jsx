@@ -28,12 +28,20 @@ export default function StartScreen({ onStart, config, onConfigChange }) {
         <p className="text-gray-500 mt-1">
           Tap a topic to switch it on or off. Each topic adapts — it finds the right level for the student.
         </p>
-        <button
-          onClick={() => setShowCalibrate((s) => !s)}
-          className="mt-3 text-xs font-bold text-cyan-700 bg-cyan-50 hover:bg-cyan-100 px-3 py-1.5 rounded-full"
-        >
-          🔧 {showCalibrate ? 'Hide' : 'Calibrate'}
-        </button>
+        <div className="mt-3 flex items-center justify-center gap-2">
+          <button
+            onClick={() => setShowCalibrate((s) => !s)}
+            className="text-xs font-bold text-cyan-700 bg-cyan-50 hover:bg-cyan-100 px-3 py-1.5 rounded-full"
+          >
+            🔧 {showCalibrate ? 'Hide' : 'Calibrate'}
+          </button>
+          <button
+            onClick={() => window.open(window.location.pathname + '?journey', '_blank')}
+            className="text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-full"
+          >
+            🗺️ Curriculum Journey
+          </button>
+        </div>
       </motion.div>
 
       {showCalibrate && <CalibrationPanel config={config} onChange={onConfigChange} />}
