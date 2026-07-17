@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Odyssey Storybook Tool</title>
+    <meta
+      name="description"
+      content="A working outline and story planning tool for a kid-readable Odyssey retelling."
+    >
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="The Odyssey Storybook home">
+        <span class="brand-mark">O</span>
+        <span>
+          <strong>The Odyssey</strong>
+          <small>storybook tool</small>
+        </span>
+      </a>
+      <nav class="topnav" aria-label="Page sections">
+        <a href="#outline">Outline</a>
+        <a href="#journey">Journey</a>
+        <a href="#glossary-preview">Glossary</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Working draft for ages 4-10</p>
+          <h1>A modular Odyssey outline for bedtime adventure.</h1>
+          <p>
+            Start with the table of contents, open each scene, and use the filters
+            to test pacing, scariness, map buckets, and glossary coverage as the
+            story grows.
+          </p>
+        </div>
+        <div class="hero-panel" aria-label="Project status">
+          <div>
+            <span class="metric" id="scene-count">22</span>
+            <span class="metric-label">story scenes</span>
+          </div>
+          <div>
+            <span class="metric">5</span>
+            <span class="metric-label">scariness levels</span>
+          </div>
+          <div>
+            <span class="metric">4</span>
+            <span class="metric-label">map buckets</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace" id="outline" aria-labelledby="outline-title">
+        <aside class="controls" aria-label="Story controls">
+          <div class="control-group">
+            <label for="scene-search">Search scenes</label>
+            <input id="scene-search" type="search" placeholder="Cyclops, Ithaca, Athena">
+          </div>
+
+          <div class="control-group">
+            <label for="scariness-filter">Max scariness</label>
+            <input id="scariness-filter" type="range" min="1" max="5" value="5">
+            <output id="scariness-output" for="scariness-filter">5</output>
+          </div>
+
+          <div class="control-group">
+            <label for="bucket-filter">Location bucket</label>
+            <select id="bucket-filter">
+              <option value="all">All buckets</option>
+            </select>
+          </div>
+
+          <div class="control-actions">
+            <button id="reset-filters" type="button">Reset</button>
+          </div>
+        </aside>
+
+        <section class="outline-shell" aria-labelledby="outline-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Table of contents</p>
+              <h2 id="outline-title">Story Outline</h2>
+            </div>
+            <span class="result-count" id="result-count"></span>
+          </div>
+
+          <div class="outline-layout">
+            <ol class="scene-list" id="scene-list" aria-label="Story scenes"></ol>
+            <article class="scene-detail" id="scene-detail" aria-live="polite"></article>
+          </div>
+        </section>
+      </section>
+
+      <section class="journey" id="journey" aria-labelledby="journey-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Map groundwork</p>
+            <h2 id="journey-title">Journey Sequence</h2>
+          </div>
+          <p class="section-note">A simple node path for now; later this can become mythic, geographic, or parent-note map modes.</p>
+        </div>
+        <div class="journey-strip" id="journey-strip" aria-label="Journey locations"></div>
+      </section>
+
+      <section class="glossary-preview" id="glossary-preview" aria-labelledby="glossary-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Glossary seed</p>
+            <h2 id="glossary-title">Recurring People, Places, and Ideas</h2>
+          </div>
+        </div>
+        <div class="glossary-grid" id="glossary-grid"></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

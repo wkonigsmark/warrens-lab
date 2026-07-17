@@ -1,0 +1,358 @@
+{
+  "project": {
+    "title": "The Odyssey Storybook",
+    "audienceAges": "4-10",
+    "tone": ["bedtime-readable", "adventurous", "mythic", "modern-simple"],
+    "violenceGuidance": "Allow suspense and scary moments, avoid gore.",
+    "structure": "Modular scenes for iterative web story cards."
+  },
+  "mapBuckets": [
+    "known place",
+    "mythic place",
+    "mythic/possible real place",
+    "spiritual place",
+    "uncertain route"
+  ],
+  "scenes": [
+    {
+      "id": "trouble-in-ithaca",
+      "order": 1,
+      "title": "Trouble in Ithaca",
+      "summary": "Penelope and Telemachus struggle while suitors crowd Odysseus' palace.",
+      "locationNode": "ithaca-palace",
+      "locationBucket": "known place",
+      "characters": ["Penelope", "Telemachus", "Athena", "the suitors"],
+      "scarinessLevel": 1,
+      "themes": ["waiting", "growing up", "disorder at home"]
+    },
+    {
+      "id": "athena-sends-telemachus",
+      "order": 2,
+      "title": "Athena Sends Telemachus Out",
+      "summary": "Athena gives Telemachus courage and urges him to search for news of his father.",
+      "locationNode": "ithaca-palace",
+      "locationBucket": "known place",
+      "characters": ["Athena", "Telemachus", "Penelope", "the suitors"],
+      "scarinessLevel": 1,
+      "themes": ["courage", "guidance", "disguise"]
+    },
+    {
+      "id": "telemachus-visits-nestor",
+      "order": 3,
+      "title": "Telemachus Visits Nestor",
+      "summary": "Telemachus visits Pylos and hears memories of the Greek heroes after Troy.",
+      "locationNode": "pylos",
+      "locationBucket": "known place",
+      "characters": ["Telemachus", "Athena", "Nestor", "Pisistratus"],
+      "scarinessLevel": 1,
+      "themes": ["memory", "hospitality", "learning"]
+    },
+    {
+      "id": "telemachus-visits-sparta",
+      "order": 4,
+      "title": "Telemachus Visits Menelaus and Helen",
+      "summary": "In Sparta, Telemachus learns that Odysseus may still be alive.",
+      "locationNode": "sparta",
+      "locationBucket": "known place",
+      "characters": ["Telemachus", "Menelaus", "Helen", "Pisistratus", "the suitors"],
+      "scarinessLevel": 2,
+      "themes": ["hope", "old stories", "danger at home"]
+    },
+    {
+      "id": "odysseus-on-ogygia",
+      "order": 5,
+      "title": "Odysseus on Calypso's Island",
+      "summary": "Odysseus longs for home on Calypso's island until the gods order his release.",
+      "locationNode": "ogygia",
+      "locationBucket": "mythic place",
+      "characters": ["Odysseus", "Calypso", "Hermes", "Athena", "Zeus"],
+      "scarinessLevel": 1,
+      "themes": ["homesickness", "temptation", "freedom"]
+    },
+    {
+      "id": "storm-and-scheria",
+      "order": 6,
+      "title": "The Storm and the Phaeacian Shore",
+      "summary": "Poseidon wrecks Odysseus' raft, but Odysseus survives and reaches Scheria.",
+      "locationNode": "scheria-shore",
+      "locationBucket": "mythic place",
+      "characters": ["Odysseus", "Poseidon", "Ino", "Athena"],
+      "scarinessLevel": 3,
+      "themes": ["survival", "divine anger", "endurance"]
+    },
+    {
+      "id": "phaeacian-court",
+      "order": 7,
+      "title": "Nausicaa and the Phaeacian Court",
+      "summary": "Nausicaa and the Phaeacians welcome Odysseus, who begins to reveal his grief.",
+      "locationNode": "scheria-palace",
+      "locationBucket": "mythic place",
+      "characters": ["Odysseus", "Nausicaa", "Alcinous", "Arete", "Demodocus"],
+      "scarinessLevel": 1,
+      "themes": ["hospitality", "grief", "identity"]
+    },
+    {
+      "id": "lotus-eaters",
+      "order": 8,
+      "title": "The Lotus-Eaters",
+      "summary": "Some sailors eat lotus flowers and forget they ever wanted to go home.",
+      "locationNode": "lotus-eaters",
+      "locationBucket": "mythic place",
+      "characters": ["Odysseus", "Odysseus' crew"],
+      "scarinessLevel": 2,
+      "themes": ["forgetfulness", "temptation", "home"]
+    },
+    {
+      "id": "cyclops-cave",
+      "order": 9,
+      "title": "The Cyclops' Cave",
+      "summary": "Odysseus tricks Polyphemus and escapes, but pride brings Poseidon's curse.",
+      "locationNode": "cyclops-island",
+      "locationBucket": "mythic place",
+      "characters": ["Odysseus", "Polyphemus", "Odysseus' crew", "Poseidon"],
+      "scarinessLevel": 4,
+      "themes": ["cleverness", "pride", "consequences"]
+    },
+    {
+      "id": "bag-of-winds",
+      "order": 10,
+      "title": "Aeolus and the Bag of Winds",
+      "summary": "The crew opens Aeolus' wind bag just as Ithaca is nearly in sight.",
+      "locationNode": "aeolia",
+      "locationBucket": "mythic place",
+      "characters": ["Odysseus", "Aeolus", "Odysseus' crew"],
+      "scarinessLevel": 2,
+      "themes": ["mistrust", "exhaustion", "bad timing"]
+    },
+    {
+      "id": "laestrygonians",
+      "order": 11,
+      "title": "The Laestrygonians",
+      "summary": "Giant Laestrygonians attack, and only Odysseus' ship escapes.",
+      "locationNode": "laestrygonians",
+      "locationBucket": "mythic place",
+      "characters": ["Odysseus", "Odysseus' crew", "Laestrygonians"],
+      "scarinessLevel": 4,
+      "themes": ["sudden danger", "loss", "survival"]
+    },
+    {
+      "id": "circes-island",
+      "order": 12,
+      "title": "Circe's Island",
+      "summary": "Circe transforms some men, then becomes an uneasy helper to Odysseus.",
+      "locationNode": "aeaea",
+      "locationBucket": "mythic place",
+      "characters": ["Odysseus", "Circe", "Hermes", "Eurylochus", "Odysseus' crew"],
+      "scarinessLevel": 3,
+      "themes": ["magic", "temptation", "leadership"]
+    },
+    {
+      "id": "underworld",
+      "order": 13,
+      "title": "The Underworld",
+      "summary": "Odysseus visits the dead and receives a warning from Tiresias.",
+      "locationNode": "underworld",
+      "locationBucket": "spiritual place",
+      "characters": ["Odysseus", "Tiresias", "Anticleia", "Achilles", "Agamemnon"],
+      "scarinessLevel": 4,
+      "themes": ["grief", "prophecy", "memory"]
+    },
+    {
+      "id": "sirens-scylla-charybdis",
+      "order": 14,
+      "title": "Sirens, Scylla, and Charybdis",
+      "summary": "Odysseus faces the Sirens' song and the terrible passage between monster and whirlpool.",
+      "locationNode": "scylla-charybdis",
+      "locationBucket": "mythic/possible real place",
+      "characters": ["Odysseus", "Odysseus' crew", "Sirens", "Scylla", "Charybdis"],
+      "scarinessLevel": 4,
+      "themes": ["impossible choices", "self-control", "leadership costs"]
+    },
+    {
+      "id": "cattle-of-the-sun",
+      "order": 15,
+      "title": "The Cattle of the Sun",
+      "summary": "The hungry crew disobeys the warning and harms Helios' sacred cattle.",
+      "locationNode": "thrinacia",
+      "locationBucket": "mythic/possible real place",
+      "characters": ["Odysseus", "Odysseus' crew", "Helios", "Zeus"],
+      "scarinessLevel": 4,
+      "themes": ["hunger", "warning", "divine justice"]
+    },
+    {
+      "id": "home-in-disguise",
+      "order": 16,
+      "title": "Home to Ithaca in Disguise",
+      "summary": "Odysseus returns to Ithaca disguised as an old beggar and visits Eumaeus.",
+      "locationNode": "ithaca-eumaeus-hut",
+      "locationBucket": "known place",
+      "characters": ["Odysseus", "Athena", "Eumaeus"],
+      "scarinessLevel": 1,
+      "themes": ["disguise", "patience", "testing loyalty"]
+    },
+    {
+      "id": "father-and-son",
+      "order": 17,
+      "title": "Father and Son",
+      "summary": "Odysseus reveals himself to Telemachus, and they plan together.",
+      "locationNode": "ithaca-eumaeus-hut",
+      "locationBucket": "known place",
+      "characters": ["Odysseus", "Telemachus", "Athena", "Eumaeus"],
+      "scarinessLevel": 2,
+      "themes": ["reunion", "trust", "planning"]
+    },
+    {
+      "id": "beggar-in-palace",
+      "order": 18,
+      "title": "The Beggar in the Palace",
+      "summary": "Odysseus enters his palace in disguise and sees the suitors' behavior.",
+      "locationNode": "ithaca-palace",
+      "locationBucket": "known place",
+      "characters": ["Odysseus", "Penelope", "Telemachus", "Argos", "Eurycleia", "the suitors"],
+      "scarinessLevel": 2,
+      "themes": ["patience", "recognition", "self-control"]
+    },
+    {
+      "id": "bow-contest",
+      "order": 19,
+      "title": "The Bow Contest",
+      "summary": "Penelope sets the contest of Odysseus' bow, and the disguised Odysseus succeeds.",
+      "locationNode": "ithaca-palace",
+      "locationBucket": "known place",
+      "characters": ["Penelope", "Odysseus", "Telemachus", "the suitors", "Eumaeus", "Philoetius"],
+      "scarinessLevel": 3,
+      "themes": ["identity", "skill", "justice approaching"]
+    },
+    {
+      "id": "reckoning",
+      "order": 20,
+      "title": "The Reckoning",
+      "summary": "Odysseus reveals himself and defeats the suitors with help from loyal allies.",
+      "locationNode": "ithaca-palace",
+      "locationBucket": "known place",
+      "characters": ["Odysseus", "Telemachus", "Athena", "the suitors", "Eumaeus", "Philoetius", "Eurycleia"],
+      "scarinessLevel": 5,
+      "themes": ["justice", "revenge", "consequences"]
+    },
+    {
+      "id": "penelopes-test",
+      "order": 21,
+      "title": "Penelope's Test",
+      "summary": "Penelope tests Odysseus with the secret of their olive-tree bed.",
+      "locationNode": "ithaca-palace",
+      "locationBucket": "known place",
+      "characters": ["Odysseus", "Penelope", "Eurycleia"],
+      "scarinessLevel": 1,
+      "themes": ["trust", "intelligence", "home"]
+    },
+    {
+      "id": "peace-in-ithaca",
+      "order": 22,
+      "title": "Peace in Ithaca",
+      "summary": "After one last threat of violence, Athena helps restore peace in Ithaca.",
+      "locationNode": "ithaca-countryside",
+      "locationBucket": "known place",
+      "characters": ["Odysseus", "Penelope", "Telemachus", "Laertes", "Athena", "Zeus"],
+      "scarinessLevel": 2,
+      "themes": ["peace", "family", "restoration"]
+    }
+  ],
+  "locationNodes": [
+    {
+      "id": "ithaca-palace",
+      "label": "Ithaca Palace",
+      "bucket": "known place",
+      "parentGeographyNote": "Modern Ithaca is real, though ancient Ithaca debates exist."
+    },
+    {
+      "id": "pylos",
+      "label": "Pylos",
+      "bucket": "known place",
+      "parentGeographyNote": "Usually associated with Pylos in the southwest Peloponnese."
+    },
+    {
+      "id": "sparta",
+      "label": "Sparta",
+      "bucket": "known place",
+      "parentGeographyNote": "A real ancient region and city-state in the Peloponnese."
+    },
+    {
+      "id": "ogygia",
+      "label": "Ogygia",
+      "bucket": "mythic place",
+      "parentGeographyNote": "Many proposals exist; best kept mythic in the base map."
+    },
+    {
+      "id": "scheria-shore",
+      "label": "Scheria Shore",
+      "bucket": "mythic place",
+      "parentGeographyNote": "Sometimes linked with Corfu, but uncertain."
+    },
+    {
+      "id": "scheria-palace",
+      "label": "Phaeacian Palace",
+      "bucket": "mythic place",
+      "parentGeographyNote": "A mythic court of ideal hospitality."
+    },
+    {
+      "id": "lotus-eaters",
+      "label": "Land of the Lotus-Eaters",
+      "bucket": "mythic place",
+      "parentGeographyNote": "Ancient and modern identifications vary widely."
+    },
+    {
+      "id": "cyclops-island",
+      "label": "Island of the Cyclopes",
+      "bucket": "mythic place",
+      "parentGeographyNote": "Keep mythic unless later map mode explores theories."
+    },
+    {
+      "id": "aeolia",
+      "label": "Aeolia",
+      "bucket": "mythic place",
+      "parentGeographyNote": "Often impossible to place with certainty."
+    },
+    {
+      "id": "laestrygonians",
+      "label": "Land of the Laestrygonians",
+      "bucket": "mythic place",
+      "parentGeographyNote": "Some later identifications exist, but mythic works best."
+    },
+    {
+      "id": "aeaea",
+      "label": "Aeaea",
+      "bucket": "mythic place",
+      "parentGeographyNote": "Later traditions connect it with Italy, but uncertain."
+    },
+    {
+      "id": "underworld",
+      "label": "The Underworld",
+      "bucket": "spiritual place",
+      "parentGeographyNote": "Not a normal geographic stop."
+    },
+    {
+      "id": "scylla-charybdis",
+      "label": "Scylla and Charybdis",
+      "bucket": "mythic/possible real place",
+      "parentGeographyNote": "Often associated with the Strait of Messina."
+    },
+    {
+      "id": "thrinacia",
+      "label": "Thrinacia",
+      "bucket": "mythic/possible real place",
+      "parentGeographyNote": "Often associated by later readers with Sicily."
+    },
+    {
+      "id": "ithaca-eumaeus-hut",
+      "label": "Eumaeus' Hut",
+      "bucket": "known place",
+      "parentGeographyNote": "Local placement can be stylized within Ithaca."
+    },
+    {
+      "id": "ithaca-countryside",
+      "label": "Ithaca Countryside",
+      "bucket": "known place",
+      "parentGeographyNote": "Useful for Laertes and the ending."
+    }
+  ]
+}
