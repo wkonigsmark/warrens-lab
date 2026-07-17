@@ -71,6 +71,34 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 - Odysseus' ship should be visibly caught between two bad choices.
 - This is a level 4 danger scene: intense peril is fine, but avoid blood and gore.
 
+### Helios / Sacred Cattle Scenes
+
+- Helios can be represented through the sun itself: bright, watchful, angry, and divine.
+- The cattle should feel sacred or marked, not ordinary livestock.
+- Odysseus should read as warning or trying to stop the crew, while the crew looks hungry, desperate, and morally lost.
+- This scene may be visually darker; keep the focus on disobedience and consequence, not graphic slaughter.
+
+### Calypso / Ogygia Scenes
+
+- Ogygia should feel beautiful, lush, fragrant, and almost too perfect.
+- Calypso should be tender and powerful, not a simple villain.
+- Odysseus should look emotionally elsewhere: toward the sea, home, Penelope, and mortal life.
+- The image should hold both comfort and captivity.
+
+### Ithaca Palace / Penelope And Telemachus Scenes
+
+- The palace should feel beautiful but disorderly when the suitors are present.
+- Penelope's loom is an important symbol of intelligence, patience, and delay.
+- Telemachus should look young, watchful, and frustrated rather than fully powerful yet.
+- Suitors can be loud, wasteful, and careless in the background without becoming cartoon villains.
+
+### Poseidon / Raft Wreck Scenes
+
+- Poseidon may appear in the storm clouds or waves as a divine presence.
+- Odysseus should look exhausted but still fighting to survive.
+- Raft wreckage, dark clouds, lightning, cliffs, and a visible shore can all help tell the survival beat.
+- If a whirlpool-like shape appears, treat it as storm drama for this scene unless the route node is explicitly Scylla/Charybdis.
+
 ### Athena
 
 - Tall goddess in white and gold.
@@ -124,6 +152,14 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 | `tiresias-odysseus-underworld-bw` | `assets/tiresias-odysseus-underworld-bw.png` | black-and-white | 1122x1402 | `underworld` | Line-art companion for the Underworld scene. |
 | `scylla-charybdis-color` | `assets/scylla-charybdis-color.png` | color | 1672x941 | `sirens-scylla-charybdis` | Primary Scylla/Charybdis reference; wide impossible-choice composition. |
 | `scylla-charybdis-bw` | `assets/scylla-charybdis-bw.png` | black-and-white | 1672x941 | `sirens-scylla-charybdis` | Line-art companion for the Scylla and Charybdis passage. |
+| `odysseus-helios-cattle-color` | `assets/odysseus-helios-cattle-color.png` | color | 1122x1402 | `cattle-of-the-sun` | Primary Cattle of the Sun reference; Helios' anger and the crew's disobedience. |
+| `odysseus-helios-cattle-bw` | `assets/odysseus-helios-cattle-bw.png` | black-and-white | 1122x1402 | `cattle-of-the-sun` | Line-art companion for the Cattle of the Sun scene. |
+| `odysseus-calypso-color` | `assets/odysseus-calypso-color.png` | color | 1122x1402 | `odysseus-on-ogygia` | Primary Calypso/Ogygia reference; lush beauty with Odysseus longing away. |
+| `odysseus-calypso-bw` | `assets/odysseus-calypso-bw.png` | black-and-white | 1122x1402 | `odysseus-on-ogygia` | Line-art companion for the Calypso/Ogygia scene. |
+| `penelope-telemachus-color` | `assets/penelope-telemachus-color.png` | color | 1086x1448 | `trouble-in-ithaca` | Primary Trouble in Ithaca reference; Penelope at the loom, Telemachus worried, suitors feasting behind them. |
+| `penelope-telemachus-bw` | `assets/penelope-telemachus-bw.png` | black-and-white | 1086x1448 | `trouble-in-ithaca` | Line-art companion for the Trouble in Ithaca scene. |
+| `odysseus-poseidon-raft-wreck-charybdis-color` | `assets/odysseus-poseidon-raft-wreck-charybdis-color.png` | color | 1122x1402 | `storm-and-scheria` | Primary storm/Scheria reference; Poseidon's storm wrecks the raft as Odysseus struggles toward shore. |
+| `odysseus-poseidon-raft-wreck-charybdis-bw` | `assets/odysseus-poseidon-raft-wreck-charybdis-bw.png` | black-and-white | 1122x1402 | `storm-and-scheria` | Line-art companion for the storm and Phaeacian shore scene. |
 | `odysseus-athena-color` | `assets/odysseus-athena-color.png` | color | 1086x1448 | `athena-sends-telemachus`, `home-in-disguise` | Strong Athena reference; Odysseus seated by sea. |
 | `odysseus-athena-bw` | `assets/odysseus-athena-bw.png` | black-and-white | 1086x1448 | `athena-sends-telemachus`, `home-in-disguise` | Line-art companion. |
 | `odysseus-circe-hermes-color` | `assets/odysseus-circe-hermes-color.png` | color | 1122x1402 | `circes-island` | Main Circe/Hermes/Odysseus reference. |

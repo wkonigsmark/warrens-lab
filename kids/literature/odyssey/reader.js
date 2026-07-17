@@ -1,0 +1,216 @@
+const readerState = {
+  data: null,
+  details: { sceneDetails: {} },
+  assets: [],
+  scenes: [],
+  currentIndex: 0
+};
+
+const readerElements = {
+  shell: document.querySelector("#reader-shell"),
+  count: document.querySelector("#reader-count"),
+  prev: document.querySelector("#prev-scene"),
+  next: document.querySelector("#next-scene"),
+  tocButton: document.querySelector("#toc-button"),
+  tocPanel: document.querySelector("#toc-panel"),
+  tocClose: document.querySelector("#toc-close"),
+  tocList: document.querySelector("#toc-list")
+};
+
+async function fetchJson(path, fallback) {
+  try {
+    const response = await fetch(path);
+    if (!response.ok) {
+      return fallback;
+    }
+    return response.json();
+  } catch (error) {
+    return fallback;
+  }
+}
+
+function buildSceneOrder(data) {
+  const scenesById = new Map(data.scenes.map((scene) => [scene.id, scene]));
+  return data.storyOutlineOrder
+    .map((entry) => {
+      const scene = scenesById.get(entry.sceneId);
+      if (!scene) {
+        return null;
+      }
+      return {
+        ...scene,
+        outlinePosition: entry.position,
+        timelineNote: entry.timelineNote
+      };
+    })
+    .filter(Boolean);
+}
+
+function getPrimaryArt(sceneId) {
+  return readerState.assets.find((asset) => asset.variant === "color" && asset.sceneIds.includes(sceneId))
+    ?? readerState.assets.find((asset) => asset.sceneIds.includes(sceneId));
+}
+
+function renderReader() {
+  const scene = readerState.scenes[readerState.currentIndex];
+  if (!scene) {
+    readerElements.shell.innerHTML = `
+      <section class="loading-card">
+        <p>No scenes are available yet.</p>
+      </section>
+    `;
+    return;
+  }
+
+  const art = getPrimaryArt(scene.id);
+  const readSummary = readerState.details.sceneDetails[scene.id] ?? scene.summary;
+  const total = readerState.scenes.length;
+
+  document.title = `${scene.outlinePosition}. ${scene.title} - Odyssey Reader`;
+  readerElements.count.textContent = `${scene.outlinePosition} of ${total}`;
+  readerElements.prev.disabled = readerState.currentIndex === 0;
+  readerElements.next.disabled = readerState.currentIndex === total - 1;
+
+  readerElements.shell.innerHTML = `
+    <article class="reader-card">
+      ${renderArt(art)}
+      <div class="scene-body">
+        <p class="eyebrow">Scene ${scene.outlinePosition} of ${total}</p>
+        <h1>${escapeHtml(scene.title)}</h1>
+        <p class="short-summary">${escapeHtml(scene.summary)}</p>
+        <p class="read-summary">${escapeHtml(readSummary)}</p>
+        <div class="scene-meta">
+          <span class="tag scary">Scariness ${scene.scarinessLevel}/5</span>
+          <span class="tag">${escapeHtml(scene.locationBucket)}</span>
+          <span class="tag">${escapeHtml(scene.timelineNote)}</span>
+        </div>
+      </div>
+    </article>
+  `;
+
+  renderToc();
+  window.location.hash = `scene-${scene.outlinePosition}`;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function renderArt(art) {
+  if (!art) {
+    return `<div class="scene-art empty">Art needed</div>`;
+  }
+
+  return `
+    <figure class="scene-art">
+      <img src="${escapeAttribute(art.file)}" alt="${escapeAttribute(art.alt)}">
+    </figure>
+  `;
+}
+
+function renderToc() {
+  readerElements.tocList.innerHTML = readerState.scenes
+    .map(
+      (scene, index) => `
+        <li>
+          <button type="button" data-index="${index}" aria-current="${index === readerState.currentIndex ? "true" : "false"}">
+            <b>${scene.outlinePosition}</b>
+            <span>
+              <b>${escapeHtml(scene.title)}</b>
+              <span>${escapeHtml(scene.locationBucket)}</span>
+            </span>
+          </button>
+        </li>
+      `
+    )
+    .join("");
+
+  readerElements.tocList.querySelectorAll("button").forEach((button) => {
+    button.addEventListener("click", () => {
+      readerState.currentIndex = Number(button.dataset.index);
+      closeToc();
+      renderReader();
+    });
+  });
+}
+
+function goToOffset(offset) {
+  const nextIndex = readerState.currentIndex + offset;
+  if (nextIndex < 0 || nextIndex >= readerState.scenes.length) {
+    return;
+  }
+  readerState.currentIndex = nextIndex;
+  renderReader();
+}
+
+function openToc() {
+  readerElements.tocPanel.hidden = false;
+  readerElements.tocButton.setAttribute("aria-expanded", "true");
+}
+
+function closeToc() {
+  readerElements.tocPanel.hidden = true;
+  readerElements.tocButton.setAttribute("aria-expanded", "false");
+}
+
+function hydrateIndexFromHash() {
+  const match = window.location.hash.match(/scene-(\d+)/);
+  if (!match) {
+    return;
+  }
+
+  const position = Number(match[1]);
+  const foundIndex = readerState.scenes.findIndex((scene) => scene.outlinePosition === position);
+  if (foundIndex >= 0) {
+    readerState.currentIndex = foundIndex;
+  }
+}
+
+function bindEvents() {
+  readerElements.prev.addEventListener("click", () => goToOffset(-1));
+  readerElements.next.addEventListener("click", () => goToOffset(1));
+  readerElements.tocButton.addEventListener("click", () => {
+    if (readerElements.tocPanel.hidden) {
+      openToc();
+    } else {
+      closeToc();
+    }
+  });
+  readerElements.tocClose.addEventListener("click", closeToc);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+      goToOffset(-1);
+    }
+    if (event.key === "ArrowRight") {
+      goToOffset(1);
+    }
+    if (event.key === "Escape") {
+      closeToc();
+    }
+  });
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function escapeAttribute(value) {
+  return escapeHtml(value).replaceAll("`", "&#096;");
+}
+
+Promise.all([
+  fetchJson("story-data.json", { scenes: [], storyOutlineOrder: [] }),
+  fetchJson("story-details.json", { sceneDetails: {} }),
+  fetchJson("assets-index.json", { assets: [] })
+]).then(([data, details, assetIndex]) => {
+  readerState.data = data;
+  readerState.details = details;
+  readerState.assets = assetIndex.assets ?? [];
+  readerState.scenes = buildSceneOrder(data);
+  hydrateIndexFromHash();
+  bindEvents();
+  renderReader();
+});

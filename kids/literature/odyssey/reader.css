@@ -1,0 +1,319 @@
+:root {
+  --ink: #211c18;
+  --muted: #6f675e;
+  --paper: #f7f2e8;
+  --paper-strong: #fffaf0;
+  --line: #ddd0bd;
+  --sea: #236b73;
+  --sea-dark: #164b52;
+  --clay: #a84e35;
+  --shadow: 0 18px 44px rgba(39, 31, 20, 0.14);
+  color-scheme: light;
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font: inherit;
+}
+
+.reader-top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 72px 1fr 72px;
+  gap: 8px;
+  align-items: center;
+  min-height: 58px;
+  padding: max(8px, env(safe-area-inset-top)) 12px 8px;
+  border-bottom: 1px solid rgba(33, 28, 24, 0.12);
+  background: rgba(247, 242, 232, 0.94);
+  backdrop-filter: blur(14px);
+}
+
+.reader-top a,
+.reader-top button,
+.toc-head button,
+.reader-nav button {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper-strong);
+  color: var(--ink);
+  cursor: pointer;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 780;
+  text-decoration: none;
+}
+
+.reader-top a,
+.reader-top button {
+  display: inline-grid;
+  place-items: center;
+  padding: 8px;
+  font-size: 0.83rem;
+}
+
+.reader-top div {
+  min-width: 0;
+  text-align: center;
+}
+
+.reader-top strong,
+.reader-top span {
+  display: block;
+}
+
+.reader-top strong {
+  font-size: 1rem;
+  line-height: 1.1;
+}
+
+.reader-top span {
+  margin-top: 2px;
+  color: var(--muted);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.78rem;
+}
+
+.reader-shell {
+  width: min(760px, 100%);
+  margin: 0 auto;
+  padding: 18px 14px 112px;
+  outline: none;
+}
+
+.reader-card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-strong);
+  box-shadow: var(--shadow);
+}
+
+.scene-art {
+  margin: 0;
+  background: #fffdf7;
+}
+
+.scene-art img {
+  display: block;
+  width: 100%;
+  max-height: 54vh;
+  object-fit: contain;
+}
+
+.scene-art.empty {
+  display: grid;
+  min-height: 240px;
+  place-items: center;
+  background: linear-gradient(140deg, rgba(35, 107, 115, 0.12), rgba(168, 78, 53, 0.12));
+  color: var(--sea-dark);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 800;
+}
+
+.scene-body {
+  padding: 18px 16px 20px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--clay);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 10vw, 3.4rem);
+  line-height: 0.98;
+}
+
+.short-summary {
+  margin: 14px 0 0;
+  color: #4c443b;
+  font-size: 1.08rem;
+  line-height: 1.52;
+}
+
+.read-summary {
+  margin: 18px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: #342e29;
+  font-size: 1.12rem;
+  line-height: 1.68;
+}
+
+.scene-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 10px;
+  border: 1px solid rgba(33, 28, 24, 0.12);
+  border-radius: 999px;
+  background: rgba(35, 107, 115, 0.12);
+  color: var(--sea-dark);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 780;
+}
+
+.tag.scary {
+  background: rgba(168, 78, 53, 0.12);
+  color: var(--clay);
+}
+
+.reader-nav {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 10px 12px max(12px, env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(33, 28, 24, 0.12);
+  background: rgba(247, 242, 232, 0.94);
+  backdrop-filter: blur(14px);
+}
+
+.reader-nav button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 56px;
+  font-size: 1rem;
+}
+
+.reader-nav span {
+  font-size: 2rem;
+  line-height: 0.7;
+}
+
+.reader-nav button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.toc-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow: auto;
+  padding: max(14px, env(safe-area-inset-top)) 14px max(24px, env(safe-area-inset-bottom));
+  background: rgba(247, 242, 232, 0.98);
+}
+
+.toc-head {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 0 12px;
+  background: rgba(247, 242, 232, 0.98);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.toc-head button {
+  padding: 8px 12px;
+}
+
+#toc-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#toc-list button {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 10px;
+  width: 100%;
+  min-height: 62px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper-strong);
+  color: var(--ink);
+  text-align: left;
+}
+
+#toc-list button[aria-current="true"] {
+  border-color: var(--sea);
+  box-shadow: 0 10px 24px rgba(35, 107, 115, 0.12);
+}
+
+#toc-list b,
+#toc-list span {
+  display: block;
+}
+
+#toc-list b {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.92rem;
+}
+
+#toc-list span {
+  color: var(--muted);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.78rem;
+}
+
+.loading-card {
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-strong);
+  color: var(--muted);
+}
+
+@media (min-width: 780px) {
+  .reader-top {
+    grid-template-columns: 120px 1fr 120px;
+    padding-inline: 24px;
+  }
+
+  .reader-shell {
+    padding-top: 28px;
+  }
+
+  .reader-nav {
+    right: calc((100% - min(760px, 100%)) / 2);
+    left: calc((100% - min(760px, 100%)) / 2);
+    border-right: 1px solid rgba(33, 28, 24, 0.12);
+    border-left: 1px solid rgba(33, 28, 24, 0.12);
+  }
+}

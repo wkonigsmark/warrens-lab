@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Odyssey Reader</title>
+    <meta
+      name="description"
+      content="Mobile reader view for testing the Odyssey story outline with kids."
+    >
+    <link rel="stylesheet" href="reader.css">
+  </head>
+  <body>
+    <header class="reader-top">
+      <a href="index.html" aria-label="Back to outline">Outline</a>
+      <div>
+        <strong>The Odyssey</strong>
+        <span id="reader-count">Loading...</span>
+      </div>
+      <button id="toc-button" type="button" aria-expanded="false" aria-controls="toc-panel">Scenes</button>
+    </header>
+
+    <aside class="toc-panel" id="toc-panel" hidden>
+      <div class="toc-head">
+        <strong>Jump To Scene</strong>
+        <button id="toc-close" type="button">Close</button>
+      </div>
+      <ol id="toc-list"></ol>
+    </aside>
+
+    <main class="reader-shell" id="reader-shell" tabindex="-1" aria-live="polite">
+      <section class="loading-card">
+        <p>Loading the journey...</p>
+      </section>
+    </main>
+
+    <nav class="reader-nav" aria-label="Scene navigation">
+      <button id="prev-scene" type="button" aria-label="Previous scene">
+        <span aria-hidden="true">‹</span>
+        <b>Back</b>
+      </button>
+      <button id="next-scene" type="button" aria-label="Next scene">
+        <b>Next</b>
+        <span aria-hidden="true">›</span>
+      </button>
+    </nav>
+
+    <script src="reader.js"></script>
+  </body>
+</html>
