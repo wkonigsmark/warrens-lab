@@ -1,5 +1,6 @@
 const state = {
   data: null,
+  assets: [],
   selectedSceneId: null,
   search: "",
   maxScariness: 5,
@@ -35,6 +36,7 @@ const fallbackGlossary = [
 
 const elements = {
   sceneCount: document.querySelector("#scene-count"),
+  assetCount: document.querySelector("#asset-count"),
   sceneList: document.querySelector("#scene-list"),
   sceneDetail: document.querySelector("#scene-detail"),
   search: document.querySelector("#scene-search"),
@@ -62,6 +64,18 @@ async function loadStoryData() {
       </div>
     `;
     throw error;
+  }
+}
+
+async function loadAssetsIndex() {
+  try {
+    const response = await fetch("assets-index.json");
+    if (!response.ok) {
+      return { assets: [] };
+    }
+    return response.json();
+  } catch (error) {
+    return { assets: [] };
   }
 }
 
@@ -103,7 +117,7 @@ function initControls() {
 }
 
 function getFilteredScenes() {
-  return state.data.scenes.filter((scene) => {
+  return getStoryOutlineScenes().filter((scene) => {
     const searchTarget = [
       scene.title,
       scene.summary,
@@ -123,6 +137,27 @@ function getFilteredScenes() {
   });
 }
 
+function getStoryOutlineScenes() {
+  if (!state.data.storyOutlineOrder) {
+    return [...state.data.scenes].sort((a, b) => a.order - b.order);
+  }
+
+  const scenesById = new Map(state.data.scenes.map((scene) => [scene.id, scene]));
+  return state.data.storyOutlineOrder
+    .map((entry) => {
+      const scene = scenesById.get(entry.sceneId);
+      if (!scene) {
+        return null;
+      }
+      return {
+        ...scene,
+        outlinePosition: entry.position,
+        timelineNote: entry.timelineNote
+      };
+    })
+    .filter(Boolean);
+}
+
 function selectScene(sceneId) {
   state.selectedSceneId = sceneId;
   render();
@@ -131,13 +166,13 @@ function selectScene(sceneId) {
 function render() {
   const scenes = getFilteredScenes();
   if (!scenes.some((scene) => scene.id === state.selectedSceneId)) {
-    state.selectedSceneId = scenes[0]?.id ?? state.data.scenes[0].id;
+    state.selectedSceneId = scenes[0]?.id ?? getStoryOutlineScenes()[0].id;
   }
 
   renderSceneList(scenes);
   renderSceneDetail(state.data.scenes.find((scene) => scene.id === state.selectedSceneId));
   renderJourney();
-  elements.resultCount.textContent = `${scenes.length} of ${state.data.scenes.length} scenes shown`;
+  elements.resultCount.textContent = `${scenes.length} of ${state.data.scenes.length} scenes shown in chronology`;
 }
 
 function renderSceneList(scenes) {
@@ -152,6 +187,7 @@ function renderSceneList(scenes) {
   }
 
   scenes.forEach((scene) => {
+    const art = getPrimarySceneArt(scene.id);
     const item = document.createElement("li");
     const button = document.createElement("button");
     button.className = "scene-button";
@@ -159,11 +195,12 @@ function renderSceneList(scenes) {
     button.setAttribute("aria-current", scene.id === state.selectedSceneId ? "true" : "false");
     button.addEventListener("click", () => selectScene(scene.id));
     button.innerHTML = `
-      <span class="scene-number">${scene.order}</span>
+      <span class="scene-number">${scene.outlinePosition ?? scene.order}</span>
       <span>
         <h3>${escapeHtml(scene.title)}</h3>
         <p>${escapeHtml(scene.summary)}</p>
       </span>
+      ${renderSceneThumb(art)}
     `;
     item.append(button);
     elements.sceneList.append(item);
@@ -176,18 +213,25 @@ function renderSceneDetail(scene) {
     return;
   }
 
+  const orderedScene = getStoryOutlineScenes().find((entry) => entry.id === scene.id) ?? scene;
   const location = state.data.locationNodes.find((node) => node.id === scene.locationNode);
+  const art = getPrimarySceneArt(scene.id);
 
   elements.sceneDetail.innerHTML = `
-    <p class="eyebrow">Scene ${scene.order}</p>
+    <p class="eyebrow">Chronology ${orderedScene.outlinePosition ?? scene.order}</p>
     <h3>${escapeHtml(scene.title)}</h3>
     <p class="scene-summary">${escapeHtml(scene.summary)}</p>
+    ${renderSceneArt(art)}
     <div class="scene-meta">
       <span class="tag scary">Scariness ${scene.scarinessLevel}/5</span>
       <span class="tag map">${escapeHtml(scene.locationBucket)}</span>
       <span class="tag">${escapeHtml(location?.label ?? scene.locationNode)}</span>
     </div>
     <div class="detail-grid">
+      <div class="detail-block">
+        <h4>Timeline Note</h4>
+        <p class="location-note">${escapeHtml(orderedScene.timelineNote ?? "Timeline note needed.")}</p>
+      </div>
       <div class="detail-block">
         <h4>Characters</h4>
         <ul>${scene.characters.map((character) => `<li class="tag">${escapeHtml(character)}</li>`).join("")}</ul>
@@ -208,26 +252,48 @@ function renderSceneDetail(scene) {
   `;
 }
 
-function renderJourney() {
-  const seen = new Set();
-  const nodesInOrder = state.data.scenes
-    .map((scene) => state.data.locationNodes.find((node) => node.id === scene.locationNode))
-    .filter(Boolean)
-    .filter((node) => {
-      if (seen.has(node.id)) {
-        return false;
-      }
-      seen.add(node.id);
-      return true;
-    });
+function getPrimarySceneArt(sceneId) {
+  return state.assets.find((asset) => asset.variant === "color" && asset.sceneIds.includes(sceneId))
+    ?? state.assets.find((asset) => asset.sceneIds.includes(sceneId));
+}
 
-  elements.journey.innerHTML = nodesInOrder
+function renderSceneThumb(art) {
+  if (!art) {
+    return `<span class="scene-thumb placeholder" aria-hidden="true">art</span>`;
+  }
+
+  return `<img class="scene-thumb" src="${escapeAttribute(art.file)}" alt="">`;
+}
+
+function renderSceneArt(art) {
+  if (!art) {
+    return "";
+  }
+
+  return `
+    <figure class="scene-art">
+      <img src="${escapeAttribute(art.file)}" alt="${escapeAttribute(art.alt)}">
+      <figcaption>${escapeHtml(art.notes)} <strong>${escapeHtml(art.variant)}</strong> reference.</figcaption>
+    </figure>
+  `;
+}
+
+function renderJourney() {
+  const route = state.data.journeySequence ?? buildJourneyFromSceneOrder();
+
+  elements.journey.innerHTML = route
     .map(
-      (node, index) => `
-        <button class="journey-node" type="button" data-location="${escapeAttribute(node.id)}">
-          <span>${index + 1}. ${escapeHtml(node.bucket)}</span>
-          <strong>${escapeHtml(node.label)}</strong>
-          <span>${escapeHtml(node.parentGeographyNote)}</span>
+      (stop) => `
+        <button
+          class="journey-node"
+          type="button"
+          data-location="${escapeAttribute(stop.locationNode)}"
+          data-scene="${escapeAttribute(stop.relatedSceneIds?.[0] ?? "")}"
+        >
+          <span>${stop.chronologyOrder}. ${escapeHtml(stop.bucket)}</span>
+          <strong>${escapeHtml(stop.label)}</strong>
+          <span>${escapeHtml(stop.event)}</span>
+          <em>${escapeHtml(stop.sequenceNote)}</em>
         </button>
       `
     )
@@ -236,13 +302,42 @@ function renderJourney() {
   elements.journey.querySelectorAll(".journey-node").forEach((button) => {
     button.addEventListener("click", () => {
       state.bucket = "all";
-      state.search = button.dataset.location;
       elements.bucket.value = "all";
-      elements.search.value = button.dataset.location;
+      if (button.dataset.scene) {
+        state.search = "";
+        elements.search.value = "";
+        state.selectedSceneId = button.dataset.scene;
+      } else {
+        state.search = button.dataset.location;
+        elements.search.value = button.dataset.location;
+      }
       render();
       document.querySelector("#outline").scrollIntoView({ behavior: "smooth" });
     });
   });
+}
+
+function buildJourneyFromSceneOrder() {
+  const seen = new Set();
+  return state.data.scenes
+    .map((scene) => state.data.locationNodes.find((node) => node.id === scene.locationNode))
+    .filter(Boolean)
+    .filter((node) => {
+      if (seen.has(node.id)) {
+        return false;
+      }
+      seen.add(node.id);
+      return true;
+    })
+    .map((node, index) => ({
+      chronologyOrder: index + 1,
+      locationNode: node.id,
+      label: node.label,
+      event: node.parentGeographyNote,
+      bucket: node.bucket,
+      relatedSceneIds: [],
+      sequenceNote: "Generated from current reading order."
+    }));
 }
 
 function renderGlossaryPreview() {
@@ -271,10 +366,12 @@ function escapeAttribute(value) {
   return escapeHtml(value).replaceAll("`", "&#096;");
 }
 
-loadStoryData().then((data) => {
+Promise.all([loadStoryData(), loadAssetsIndex()]).then(([data, assetIndex]) => {
   state.data = data;
+  state.assets = assetIndex.assets ?? [];
   state.selectedSceneId = data.scenes[0]?.id;
   elements.sceneCount.textContent = data.scenes.length;
+  elements.assetCount.textContent = state.assets.length;
   initControls();
   renderGlossaryPreview();
   render();

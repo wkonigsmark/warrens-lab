@@ -106,7 +106,18 @@ Princess Nausicaa finds Odysseus near the river and helps him reach the palace. 
 - Themes: kindness to strangers, grief, identity
 - Parent note: This scene models hospitality and lets Odysseus' hidden pain show.
 
-### 8. The Lotus-Eaters
+### 8. The Cicones
+
+After leaving Troy, Odysseus and his men attack the Cicones at Ismarus. At first they win, but the men linger too long instead of leaving quickly. The Cicones gather reinforcements, drive them back to the ships, and the journey begins with a painful lesson.
+
+- Location node: `cicones`
+- Location bucket: mythic/possible real place
+- Key characters: Odysseus, his crew, the Cicones
+- Scariness level: 3
+- Themes: victory, greed, bad judgment, consequences
+- Parent note: This is the first post-Troy stop and a useful early example of Odysseus' leadership being challenged by his men's choices.
+
+### 9. The Lotus-Eaters
 
 Odysseus begins telling his story. After leaving Troy, his ships come to the land of the Lotus-Eaters, where some men eat a strange flower and forget they ever wanted to go home. Odysseus drags them back to the ships.
 
@@ -117,7 +128,7 @@ Odysseus begins telling his story. After leaving Troy, his ships come to the lan
 - Themes: forgetfulness, temptation, the pull of home
 - Parent note: This can be dreamy rather than frightening.
 
-### 9. The Cyclops' Cave
+### 10. The Cyclops' Cave
 
 Odysseus and his men enter the cave of Polyphemus, a one-eyed giant. The Cyclops traps them and kills some of the crew. Odysseus tricks him with the name "Nobody" and escapes under the sheep, but then pride makes him shout his real name, bringing Poseidon's curse.
 
@@ -128,7 +139,7 @@ Odysseus and his men enter the cave of Polyphemus, a one-eyed giant. The Cyclops
 - Themes: cleverness, pride, consequences, monsters
 - Parent note: This is one of the scariest scenes. Avoid gore; focus on fear, darkness, and escape.
 
-### 10. Aeolus and the Bag of Winds
+### 11. Aeolus and the Bag of Winds
 
 Aeolus, keeper of the winds, gives Odysseus a bag holding storm winds so the ships can sail safely home. Ithaca is almost in sight, but the tired crew opens the bag, thinking it contains treasure. The winds burst out and blow them far away again.
 
@@ -139,7 +150,7 @@ Aeolus, keeper of the winds, gives Odysseus a bag holding storm winds so the shi
 - Themes: mistrust, exhaustion, bad timing
 - Parent note: This scene is heartbreaking because home is almost reached.
 
-### 11. The Laestrygonians
+### 12. The Laestrygonians
 
 The ships reach the land of giant Laestrygonians. The giants attack, and only Odysseus' ship escapes. The journey becomes lonelier and more desperate.
 
@@ -150,7 +161,7 @@ The ships reach the land of giant Laestrygonians. The giants attack, and only Od
 - Themes: sudden danger, loss, survival
 - Parent note: Keep this brief for younger children; the important story point is that nearly all the ships are lost.
 
-### 12. Circe's Island
+### 13. Circe's Island
 
 Odysseus lands on Aeaea, the island of Circe, a powerful enchantress. She turns some of his men into pigs, but Hermes gives Odysseus help. Circe and Odysseus reach an uneasy peace, and the crew stays for a year before Odysseus remembers they must go home.
 
@@ -161,7 +172,7 @@ Odysseus lands on Aeaea, the island of Circe, a powerful enchantress. She turns 
 - Themes: magic, temptation, leadership, delay
 - Parent note: Circe should be powerful and morally complex, not a simple villain.
 
-### 13. The Underworld
+### 14. The Underworld
 
 Circe tells Odysseus he must visit the land of the dead to hear from the prophet Tiresias. There, Odysseus meets spirits, including his mother, old comrades from Troy, and Tiresias, who warns him not to harm the cattle of the Sun.
 
@@ -172,7 +183,7 @@ Circe tells Odysseus he must visit the land of the dead to hear from the prophet
 - Themes: grief, prophecy, memory, mortality
 - Parent note: This can be spooky and sad, with emotional focus on Odysseus learning his mother died while he was away.
 
-### 14. Sirens, Scylla, and Charybdis
+### 15. Sirens, Scylla, and Charybdis
 
 Odysseus passes the Sirens, whose song lures sailors toward death. Then he must steer between Scylla, a many-headed monster, and Charybdis, a swallowing whirlpool. He survives, but more men are lost.
 
@@ -183,7 +194,7 @@ Odysseus passes the Sirens, whose song lures sailors toward death. Then he must 
 - Themes: impossible choices, self-control, leadership costs
 - Parent note: Some traditions connect Scylla and Charybdis with the Strait of Messina. Keep that as optional map commentary, not a certainty.
 
-### 15. The Cattle of the Sun
+### 16. The Cattle of the Sun
 
 The crew reaches Thrinacia, the island of Helios' sacred cattle. Odysseus warns them not to touch the animals, but while he sleeps, hungry men slaughter the cattle. Zeus destroys the ship, and Odysseus alone survives.
 
@@ -194,7 +205,7 @@ The crew reaches Thrinacia, the island of Helios' sacred cattle. Odysseus warns 
 - Themes: hunger, warning, disobedience, divine justice
 - Parent note: This explains why Odysseus arrives at Calypso's island alone.
 
-### 16. Home to Ithaca in Disguise
+### 17. Home to Ithaca in Disguise
 
 The Phaeacians carry Odysseus safely to Ithaca while he sleeps. Athena hides him in the shape of an old beggar so he can learn what has happened at home. He visits the loyal swineherd Eumaeus and keeps his identity secret.
 
@@ -205,7 +216,7 @@ The Phaeacians carry Odysseus safely to Ithaca while he sleeps. Athena hides him
 - Themes: disguise, patience, testing loyalty, homecoming
 - Parent note: Odysseus is home, but the story slows down because he must act carefully.
 
-### 17. Father and Son
+### 18. Father and Son
 
 Telemachus returns safely and escapes the suitors' ambush. At Eumaeus' hut, Athena reveals Odysseus to Telemachus. Father and son reunite, then make a plan to face the suitors.
 
@@ -216,7 +227,7 @@ Telemachus returns safely and escapes the suitors' ambush. At Eumaeus' hut, Athe
 - Themes: reunion, trust, planning, courage
 - Parent note: This is one of the emotional centers of the story.
 
-### 18. The Beggar in the Palace
+### 19. The Beggar in the Palace
 
 Odysseus enters his own palace disguised as a beggar. The suitors insult him, but he stays patient. His old dog Argos recognizes him before dying, and Penelope speaks with the stranger, not knowing he is her husband.
 
@@ -227,7 +238,7 @@ Odysseus enters his own palace disguised as a beggar. The suitors insult him, bu
 - Themes: patience, recognition, grief, self-control
 - Parent note: Argos may be sad for young kids; it is also a gentle, powerful recognition scene.
 
-### 19. The Bow Contest
+### 20. The Bow Contest
 
 Penelope announces a contest: whoever can string Odysseus' great bow and shoot an arrow through twelve axe heads may marry her. The suitors fail. The disguised Odysseus strings the bow easily.
 
@@ -238,7 +249,7 @@ Penelope announces a contest: whoever can string Odysseus' great bow and shoot a
 - Themes: identity, skill, justice approaching
 - Parent note: This scene should feel tense and ceremonial.
 
-### 20. The Reckoning
+### 21. The Reckoning
 
 Odysseus reveals himself and, with Telemachus and loyal servants, defeats the suitors. The household is shaken by violence, but the chaos that ruled Ithaca is ended.
 
@@ -249,7 +260,7 @@ Odysseus reveals himself and, with Telemachus and loyal servants, defeats the su
 - Themes: justice, revenge, consequences, restoring order
 - Parent note: This is the most difficult kid adaptation point. Avoid gore; frame it as a dangerous reckoning after years of threats and wrongdoing.
 
-### 21. Penelope's Test
+### 22. Penelope's Test
 
 Penelope does not immediately trust that the stranger is truly Odysseus. She tests him by mentioning their marriage bed, which only Odysseus could know was built around a living olive tree. Odysseus proves who he is, and they are reunited.
 
@@ -260,7 +271,7 @@ Penelope does not immediately trust that the stranger is truly Odysseus. She tes
 - Themes: trust, intelligence, marriage, home
 - Parent note: Penelope's cleverness should mirror Odysseus' cleverness.
 
-### 22. Peace in Ithaca
+### 23. Peace in Ithaca
 
 The families of the suitors are angry, and Ithaca nearly falls into more violence. Athena intervenes, and peace is restored. Odysseus' long journey ends not just when he reaches home, but when home becomes whole again.
 
@@ -280,7 +291,7 @@ For a first web version, the 22 scene outline can be grouped into about 18 readi
 3. News from Nestor, Menelaus, and Helen
 4. Calypso Lets Odysseus Go
 5. Storm and Scheria
-6. The Lotus-Eaters
+6. The Cicones and the Lotus-Eaters
 7. The Cyclops
 8. The Bag of Winds
 9. Giants and Loss
@@ -293,4 +304,3 @@ For a first web version, the 22 scene outline can be grouped into about 18 readi
 16. The Beggar in the Palace
 17. The Bow and the Reckoning
 18. Penelope's Test and Peace
-

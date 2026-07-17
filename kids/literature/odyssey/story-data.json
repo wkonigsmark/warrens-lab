@@ -13,7 +13,308 @@
     "spiritual place",
     "uncertain route"
   ],
+  "journeySequence": [
+    {
+      "chronologyOrder": 1,
+      "locationNode": "troy",
+      "label": "Troy",
+      "event": "Odysseus leaves Troy after the long war.",
+      "bucket": "known place",
+      "relatedSceneIds": [],
+      "sequenceNote": "Backstory node; useful if we later add a short prologue."
+    },
+    {
+      "chronologyOrder": 2,
+      "locationNode": "cicones",
+      "label": "Land of the Cicones",
+      "event": "The crew raids Ismarus and suffers an early loss.",
+      "bucket": "mythic/possible real place",
+      "relatedSceneIds": ["cicones-raid"],
+      "sequenceNote": "Now tracked as the first full travel scene after Troy."
+    },
+    {
+      "chronologyOrder": 3,
+      "locationNode": "lotus-eaters",
+      "label": "The Lotus-Eaters",
+      "event": "Some sailors eat the lotus and forget the wish to go home.",
+      "bucket": "mythic place",
+      "relatedSceneIds": ["lotus-eaters"],
+      "sequenceNote": "First major temptation stop."
+    },
+    {
+      "chronologyOrder": 4,
+      "locationNode": "cyclops-island",
+      "label": "The Cyclops' Cave",
+      "event": "Odysseus blinds Polyphemus and brings Poseidon's anger.",
+      "bucket": "mythic place",
+      "relatedSceneIds": ["cyclops-cave"],
+      "sequenceNote": "Major turning point: cleverness works, pride costs him."
+    },
+    {
+      "chronologyOrder": 5,
+      "locationNode": "aeolia",
+      "label": "Aeolia",
+      "event": "Aeolus gives the bag of winds, but the crew opens it near Ithaca.",
+      "bucket": "mythic place",
+      "relatedSceneIds": ["bag-of-winds"],
+      "sequenceNote": "They nearly reach home, then lose it."
+    },
+    {
+      "chronologyOrder": 6,
+      "locationNode": "laestrygonians",
+      "label": "The Laestrygonians",
+      "event": "Giant Laestrygonians destroy all but Odysseus' ship.",
+      "bucket": "mythic place",
+      "relatedSceneIds": ["laestrygonians"],
+      "sequenceNote": "The journey narrows from a fleet to one ship."
+    },
+    {
+      "chronologyOrder": 7,
+      "locationNode": "aeaea",
+      "label": "Aeaea",
+      "event": "Circe transforms some of the crew, then becomes an uneasy helper.",
+      "bucket": "mythic place",
+      "relatedSceneIds": ["circes-island"],
+      "sequenceNote": "First visit to Circe's island."
+    },
+    {
+      "chronologyOrder": 8,
+      "locationNode": "underworld",
+      "label": "The Underworld",
+      "event": "Odysseus seeks Tiresias and receives warnings about the road home.",
+      "bucket": "spiritual place",
+      "relatedSceneIds": ["underworld"],
+      "sequenceNote": "A spiritual journey rather than ordinary geography."
+    },
+    {
+      "chronologyOrder": 9,
+      "locationNode": "aeaea",
+      "label": "Return to Aeaea",
+      "event": "Odysseus returns to Circe, who explains the next dangers.",
+      "bucket": "mythic place",
+      "relatedSceneIds": ["circes-island"],
+      "sequenceNote": "Repeated node on purpose: the route returns to Circe before moving on."
+    },
+    {
+      "chronologyOrder": 10,
+      "locationNode": "sirens",
+      "label": "The Sirens",
+      "event": "The crew rows past the deadly song while Odysseus is tied to the mast.",
+      "bucket": "mythic/possible real place",
+      "relatedSceneIds": ["sirens-scylla-charybdis"],
+      "sequenceNote": "Self-control and curiosity meet real danger."
+    },
+    {
+      "chronologyOrder": 11,
+      "locationNode": "scylla-charybdis",
+      "label": "Scylla and Charybdis",
+      "event": "Odysseus chooses the monster over the whirlpool and loses more men.",
+      "bucket": "mythic/possible real place",
+      "relatedSceneIds": ["sirens-scylla-charybdis"],
+      "sequenceNote": "The impossible-choice passage."
+    },
+    {
+      "chronologyOrder": 12,
+      "locationNode": "thrinacia",
+      "label": "Thrinacia",
+      "event": "The hungry crew kills the sacred cattle of the Sun.",
+      "bucket": "mythic/possible real place",
+      "relatedSceneIds": ["cattle-of-the-sun"],
+      "sequenceNote": "The final warning is broken."
+    },
+    {
+      "chronologyOrder": 13,
+      "locationNode": "open-sea-shipwreck",
+      "label": "The Last Shipwreck",
+      "event": "Zeus destroys the ship, and Odysseus alone survives.",
+      "bucket": "uncertain route",
+      "relatedSceneIds": ["cattle-of-the-sun"],
+      "sequenceNote": "Connective route node explaining why Odysseus reaches Calypso alone."
+    },
+    {
+      "chronologyOrder": 14,
+      "locationNode": "ogygia",
+      "label": "Ogygia",
+      "event": "Calypso keeps Odysseus on her island for years.",
+      "bucket": "mythic place",
+      "relatedSceneIds": ["odysseus-on-ogygia"],
+      "sequenceNote": "Chronologically this follows the shipwreck, even though Homer reveals it early."
+    },
+    {
+      "chronologyOrder": 15,
+      "locationNode": "scheria-shore",
+      "label": "Scheria Shore",
+      "event": "Poseidon's storm wrecks the raft, and Odysseus reaches Scheria.",
+      "bucket": "mythic place",
+      "relatedSceneIds": ["storm-and-scheria"],
+      "sequenceNote": "Final survival test before Odysseus tells his story."
+    },
+    {
+      "chronologyOrder": 16,
+      "locationNode": "scheria-palace",
+      "label": "Phaeacian Palace",
+      "event": "The Phaeacians welcome Odysseus and agree to send him home.",
+      "bucket": "mythic place",
+      "relatedSceneIds": ["phaeacian-court"],
+      "sequenceNote": "This is where many earlier stops are narrated as flashback in Homer."
+    },
+    {
+      "chronologyOrder": 17,
+      "locationNode": "ithaca-eumaeus-hut",
+      "label": "Eumaeus' Hut",
+      "event": "Odysseus reaches Ithaca in disguise and tests loyalty.",
+      "bucket": "known place",
+      "relatedSceneIds": ["home-in-disguise", "father-and-son"],
+      "sequenceNote": "The homecoming begins quietly, before the palace reveal."
+    },
+    {
+      "chronologyOrder": 18,
+      "locationNode": "ithaca-palace",
+      "label": "Ithaca Palace",
+      "event": "Odysseus returns to the palace, strings the bow, and reunites with Penelope.",
+      "bucket": "known place",
+      "relatedSceneIds": ["beggar-in-palace", "bow-contest", "reckoning", "penelopes-test"],
+      "sequenceNote": "The route ends at home, but the household still has to be restored."
+    },
+    {
+      "chronologyOrder": 19,
+      "locationNode": "ithaca-countryside",
+      "label": "Ithaca Countryside",
+      "event": "The last threat of violence is stopped, and peace returns.",
+      "bucket": "known place",
+      "relatedSceneIds": ["peace-in-ithaca"],
+      "sequenceNote": "Ending node: home becomes whole again."
+    }
+  ],
+  "storyOutlineOrder": [
+    {
+      "position": 1,
+      "sceneId": "cicones-raid",
+      "timelineNote": "The first stop after Troy shows Odysseus' men winning, lingering too long, and paying for it."
+    },
+    {
+      "position": 2,
+      "sceneId": "lotus-eaters",
+      "timelineNote": "Odysseus' early wanderings after leaving Troy."
+    },
+    {
+      "position": 3,
+      "sceneId": "cyclops-cave",
+      "timelineNote": "Before Poseidon's curse fully shapes the journey."
+    },
+    {
+      "position": 4,
+      "sceneId": "bag-of-winds",
+      "timelineNote": "The crew nearly reaches Ithaca, then loses the chance."
+    },
+    {
+      "position": 5,
+      "sceneId": "laestrygonians",
+      "timelineNote": "The fleet is reduced to Odysseus' single ship."
+    },
+    {
+      "position": 6,
+      "sceneId": "circes-island",
+      "timelineNote": "Circe delays the crew, then sends Odysseus toward prophecy."
+    },
+    {
+      "position": 7,
+      "sceneId": "underworld",
+      "timelineNote": "Odysseus receives warnings about the road ahead."
+    },
+    {
+      "position": 8,
+      "sceneId": "sirens-scylla-charybdis",
+      "timelineNote": "The Sirens come first, then the impossible passage."
+    },
+    {
+      "position": 9,
+      "sceneId": "cattle-of-the-sun",
+      "timelineNote": "The final ship is lost after the sacred cattle are harmed."
+    },
+    {
+      "position": 10,
+      "sceneId": "odysseus-on-ogygia",
+      "timelineNote": "Odysseus is stranded with Calypso after the last shipwreck."
+    },
+    {
+      "position": 11,
+      "sceneId": "trouble-in-ithaca",
+      "timelineNote": "Meanwhile, Ithaca has been under pressure for years."
+    },
+    {
+      "position": 12,
+      "sceneId": "athena-sends-telemachus",
+      "timelineNote": "Athena starts the Ithaca thread moving while Odysseus' return nears."
+    },
+    {
+      "position": 13,
+      "sceneId": "telemachus-visits-nestor",
+      "timelineNote": "Telemachus searches for news of Odysseus."
+    },
+    {
+      "position": 14,
+      "sceneId": "telemachus-visits-sparta",
+      "timelineNote": "Telemachus gains hope while the suitors become more dangerous."
+    },
+    {
+      "position": 15,
+      "sceneId": "storm-and-scheria",
+      "timelineNote": "Odysseus leaves Ogygia and survives Poseidon's storm."
+    },
+    {
+      "position": 16,
+      "sceneId": "phaeacian-court",
+      "timelineNote": "The Phaeacians hear Odysseus' story and send him home."
+    },
+    {
+      "position": 17,
+      "sceneId": "home-in-disguise",
+      "timelineNote": "Odysseus reaches Ithaca but must stay hidden."
+    },
+    {
+      "position": 18,
+      "sceneId": "father-and-son",
+      "timelineNote": "Telemachus returns and learns his father is alive."
+    },
+    {
+      "position": 19,
+      "sceneId": "beggar-in-palace",
+      "timelineNote": "Odysseus tests the palace while disguised."
+    },
+    {
+      "position": 20,
+      "sceneId": "bow-contest",
+      "timelineNote": "Penelope's bow contest reveals who still has Odysseus' strength."
+    },
+    {
+      "position": 21,
+      "sceneId": "reckoning",
+      "timelineNote": "Odysseus reveals himself and ends the suitors' rule."
+    },
+    {
+      "position": 22,
+      "sceneId": "penelopes-test",
+      "timelineNote": "Penelope proves the truth through the secret of the marriage bed."
+    },
+    {
+      "position": 23,
+      "sceneId": "peace-in-ithaca",
+      "timelineNote": "The final threat is stopped and Ithaca becomes whole again."
+    }
+  ],
   "scenes": [
+    {
+      "id": "cicones-raid",
+      "order": 23,
+      "title": "The Cicones",
+      "summary": "After leaving Troy, Odysseus and his men raid the Cicones, linger too long, and are driven back to sea with painful losses.",
+      "locationNode": "cicones",
+      "locationBucket": "mythic/possible real place",
+      "characters": ["Odysseus", "Odysseus' crew", "the Cicones"],
+      "scarinessLevel": 3,
+      "themes": ["victory", "greed", "bad judgment", "consequences"]
+    },
     {
       "id": "trouble-in-ithaca",
       "order": 1,
@@ -259,6 +560,18 @@
   ],
   "locationNodes": [
     {
+      "id": "troy",
+      "label": "Troy",
+      "bucket": "known place",
+      "parentGeographyNote": "Ancient Troy is commonly associated with Hisarlik in modern Turkey."
+    },
+    {
+      "id": "cicones",
+      "label": "Land of the Cicones",
+      "bucket": "mythic/possible real place",
+      "parentGeographyNote": "Often associated with Ismarus and Thrace; useful as an early route stop."
+    },
+    {
       "id": "ithaca-palace",
       "label": "Ithaca Palace",
       "bucket": "known place",
@@ -331,6 +644,12 @@
       "parentGeographyNote": "Not a normal geographic stop."
     },
     {
+      "id": "sirens",
+      "label": "The Sirens",
+      "bucket": "mythic/possible real place",
+      "parentGeographyNote": "Later traditions place the Sirens near southern Italy, but the base map should keep this interpretive."
+    },
+    {
       "id": "scylla-charybdis",
       "label": "Scylla and Charybdis",
       "bucket": "mythic/possible real place",
@@ -341,6 +660,12 @@
       "label": "Thrinacia",
       "bucket": "mythic/possible real place",
       "parentGeographyNote": "Often associated by later readers with Sicily."
+    },
+    {
+      "id": "open-sea-shipwreck",
+      "label": "The Last Shipwreck",
+      "bucket": "uncertain route",
+      "parentGeographyNote": "A connective sea node rather than a fixed location."
     },
     {
       "id": "ithaca-eumaeus-hut",

@@ -24,8 +24,11 @@ export default function CurriculumJourney() {
 
   const groups = arrange(mode)
   const stepOf = new Map(MATH_LADDER.map((t, i) => [t.id, i + 1]))
-  const completed = MATH_LADDER.filter((t) => done.has(t.id)).length
-  const pct = Math.round((completed / MATH_LADDER.length) * 100)
+  // Progress counts only buildable tools — planned modules aren't checkable.
+  const buildable = MATH_LADDER.filter((t) => t.status !== 'planned')
+  const plannedCount = MATH_LADDER.length - buildable.length
+  const completed = buildable.filter((t) => done.has(t.id)).length
+  const pct = Math.round((completed / buildable.length) * 100)
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-cyan-50 to-emerald-50">
@@ -39,7 +42,7 @@ export default function CurriculumJourney() {
             <div className="w-28 h-2 rounded-full bg-white/25 overflow-hidden">
               <motion.div className="h-full bg-white rounded-full" initial={{ width: 0 }} animate={{ width: `${pct}%` }} />
             </div>
-            <span>{completed}/{MATH_LADDER.length}</span>
+            <span>{completed}/{buildable.length}</span>
           </div>
 
           {/* arrange control */}
@@ -91,17 +94,56 @@ export default function CurriculumJourney() {
         ))}
 
         <p className="text-center text-[11px] text-gray-400 mt-2">
-          Tap a tile to open the tool · tap the corner ✓ to track progress · more subjects can join later.
+          Tap a tile to open the tool · tap the corner ✓ to track progress ·
+          <span className="text-slate-400 font-semibold"> dashed &amp; greyed = {plannedCount} planned module{plannedCount === 1 ? '' : 's'} not built yet</span>.
         </p>
       </div>
     </div>
   )
 }
 
-// A small tile: emoji + name, a status dot, an optional step number, and a
-// done-toggle in the corner. The tile body is a link that opens the tool.
+// A small tile: emoji + name, a status dot, an optional step number. Built tools
+// (live/dev) are a link that opens the tool, with a corner done-toggle. Planned
+// modules render greyed-out with a dashed outline and no link/toggle — a clearly
+// unbuilt placeholder that still holds its place in the sequence.
 function Tile({ tool, step, done, onToggle }) {
   const status = STATUS_META[tool.status]
+  const planned = tool.status === 'planned'
+
+  const inner = (
+    <>
+      <div className="flex items-center justify-between">
+        {step != null ? (
+          <span className="text-[10px] font-black text-gray-300">{step}</span>
+        ) : (
+          <span className="text-[10px]" />
+        )}
+        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: status.color }} title={status.label} />
+      </div>
+      <div className={`text-3xl leading-none mt-1 ${planned ? 'opacity-70 grayscale' : ''}`}>{tool.emoji}</div>
+      <div className={`mt-1.5 font-bold text-sm leading-tight ${planned ? 'text-slate-400' : 'text-gray-800'}`}>{tool.name}</div>
+      <div className="text-[11px] font-semibold leading-tight" style={{ color: planned ? '#94a3b8' : tool.accent }}>{tool.subject}</div>
+      {planned && (
+        <div className="mt-1.5 inline-block text-[9px] font-black uppercase tracking-wider text-slate-400 bg-slate-100 rounded-full px-2 py-0.5">
+          Planned
+        </div>
+      )}
+    </>
+  )
+
+  if (planned) {
+    return (
+      <motion.div layout transition={{ type: 'spring', stiffness: 320, damping: 30 }} className="relative">
+        <div
+          className="h-full rounded-xl bg-white/40 p-3 border-2 border-dashed border-slate-300 cursor-default select-none"
+          title={`${tool.name} — planned, not built yet`}
+        >
+          {inner}
+        </div>
+      </motion.div>
+    )
+  }
+
   return (
     <motion.div layout transition={{ type: 'spring', stiffness: 320, damping: 30 }} className="relative">
       <a
@@ -114,17 +156,7 @@ function Tile({ tool, step, done, onToggle }) {
         style={{ borderColor: tool.accent }}
         title={`Open ${tool.name}`}
       >
-        <div className="flex items-center justify-between">
-          {step != null ? (
-            <span className="text-[10px] font-black text-gray-300">{step}</span>
-          ) : (
-            <span className="text-[10px]" />
-          )}
-          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: status.color }} title={status.label} />
-        </div>
-        <div className="text-3xl leading-none mt-1">{tool.emoji}</div>
-        <div className="mt-1.5 font-bold text-sm text-gray-800 leading-tight">{tool.name}</div>
-        <div className="text-[11px] font-semibold leading-tight" style={{ color: tool.accent }}>{tool.subject}</div>
+        {inner}
       </a>
 
       {/* done toggle — corner, stops the link */}

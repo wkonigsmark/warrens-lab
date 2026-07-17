@@ -78,6 +78,14 @@ Backlog: reorder to taste; add non-math subjects later; tie the checklist into t
 `_shared/progress` tracking; auto-derive "explored" from real assessment results;
 more arrangements (e.g. by grade/age band).
 
+**Planned target modules added to the path** — the ladder now includes 6 greyed-out
+`status: 'planned'` tiles (dashed outline, greyscale, "PLANNED" pill, no link/toggle,
+excluded from the progress denominator) so the roadmap's gaps are visible: 🧱 Ants &
+Amounts (place value), 🍰 Ants & Ratios (ratios/proportions), 🏔️ Ants & Altitudes
+(integers/negatives), 📏 Ants & Acres (area/perimeter/measurement), 🧊 Ants &
+Architecture (3-D & volume), 🎲 Ants & Anthill (probability). Each slots into its
+difficulty position + strand. These are the candidate build queue.
+
 ## Progress tracking — wired in (done)
 Ants & Assessment is now a first-class **tracked tool** in the shared iq-progress
 system (previously it was only the `?admin` reader/motherbrain). Mirrors the

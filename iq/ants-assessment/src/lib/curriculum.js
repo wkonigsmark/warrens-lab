@@ -5,8 +5,10 @@
 // tool's status). Math only for now; starts at Ants & Apples, ends at Ants &
 // Statistics.
 //
-//   status: 'live' — deployed, opens anywhere
-//           'dev'  — in development, opens on its local dev-server port
+//   status: 'live'    — deployed, opens anywhere
+//           'dev'     — in development, opens on its local dev-server port
+//           'planned' — a target module we intend to build; shown greyed-out in
+//                       the path with no link (url: null) so the gaps are visible
 //
 // For 'dev' tools we keep the localhost URL so the link works while Warren is
 // running that tool locally; swap to a vercel URL once it deploys (status→'live').
@@ -17,6 +19,11 @@
 // unlock more arrangements later.
 
 export const MATH_LADDER = [
+  {
+    id: 'amounts', name: 'Ants & Amounts', emoji: '🧱', accent: '#eab308', strand: 'number',
+    subject: 'Place value & big numbers', blurb: 'Tens, hundreds, thousands — how big numbers are built and compared.',
+    status: 'planned', url: null,
+  },
   {
     id: 'apples', name: 'Ants & Apples', emoji: '🍎', accent: '#ef4444', strand: 'number',
     subject: 'Arithmetic', blurb: 'Counting, adding, subtracting & times tables — where it all begins.',
@@ -31,6 +38,16 @@ export const MATH_LADDER = [
     id: 'zero-to-one', name: '0 → 1', emoji: '💯', accent: '#06b6d4', strand: 'number',
     subject: 'Percents & decimals', blurb: 'Everything between none and all — percents and decimals.',
     status: 'live', url: 'https://ants-0-1.vercel.app/',
+  },
+  {
+    id: 'ratios', name: 'Ants & Ratios', emoji: '🍰', accent: '#f97316', strand: 'number',
+    subject: 'Ratios & proportions', blurb: 'Comparing amounts — recipes, maps, scale and fair shares.',
+    status: 'planned', url: null,
+  },
+  {
+    id: 'altitudes', name: 'Ants & Altitudes', emoji: '🏔️', accent: '#0ea5e9', strand: 'number',
+    subject: 'Integers & negatives', blurb: 'Below zero — the number line runs both ways.',
+    status: 'planned', url: null,
   },
   {
     id: 'exponents', name: 'Ants & Exponents', emoji: '⬆️', accent: '#8b5cf6', strand: 'number',
@@ -53,9 +70,24 @@ export const MATH_LADDER = [
     status: 'live', url: 'https://ants-angles.vercel.app/',
   },
   {
+    id: 'acres', name: 'Ants & Acres', emoji: '📏', accent: '#22c55e', strand: 'geometry',
+    subject: 'Area, perimeter & measurement', blurb: 'Measuring the world — length, perimeter and area.',
+    status: 'planned', url: null,
+  },
+  {
     id: 'axes', name: 'Ants & Axes', emoji: '📊', accent: '#0ea5e9', strand: 'geometry',
     subject: 'Coordinate geometry', blurb: 'Points, grids and slopes — finding your way on the plane.',
     status: 'live', url: 'https://ants-axes.vercel.app/',
+  },
+  {
+    id: 'architecture', name: 'Ants & Architecture', emoji: '🧊', accent: '#14b8a6', strand: 'geometry',
+    subject: '3-D shapes & volume', blurb: 'Nets, solids and volume — geometry in three dimensions.',
+    status: 'planned', url: null,
+  },
+  {
+    id: 'anthill', name: 'Ants & Anthill', emoji: '🎲', accent: '#a855f7', strand: 'data',
+    subject: 'Probability & chance', blurb: 'Dice, spinners and odds — how likely is it?',
+    status: 'planned', url: null,
   },
   {
     id: 'stats', name: 'Ants & Statistics', emoji: '📈', accent: '#14b8a6', strand: 'data',
@@ -67,6 +99,7 @@ export const MATH_LADDER = [
 export const STATUS_META = {
   live: { label: 'Live', emoji: '🟢', color: '#10b981' },
   dev: { label: 'In development', emoji: '🚧', color: '#f59e0b' },
+  planned: { label: 'Planned', emoji: '⚪', color: '#94a3b8' },
 }
 
 // Math domains — an alternate way to organize the same tools.
@@ -92,7 +125,7 @@ export function arrange(mode) {
     })).filter((g) => g.tools.length)
   }
   if (mode === 'status') {
-    return ['live', 'dev'].map((key) => ({
+    return ['live', 'dev', 'planned'].map((key) => ({
       key, meta: STATUS_META[key], tools: MATH_LADDER.filter((t) => t.status === key),
     })).filter((g) => g.tools.length)
   }
