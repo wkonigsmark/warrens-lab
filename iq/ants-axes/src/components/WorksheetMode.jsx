@@ -118,7 +118,7 @@ export default function WorksheetMode({ onExit }) {
         >
           <h1 className="text-4xl font-bold text-gray-800 mb-4">🖨 Printable Worksheets</h1>
           <p className="text-gray-600 text-lg">
-            Generate a 6-problem worksheet to print and practice on paper.
+            Generate a 4-problem worksheet to print and practice on paper.
           </p>
         </motion.div>
 

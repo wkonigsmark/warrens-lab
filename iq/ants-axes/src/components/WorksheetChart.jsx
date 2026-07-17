@@ -82,7 +82,7 @@ export default function WorksheetChart({ points = [] }) {
           y={TOP_PADDING + (MAX_VALUE - i) * CELL_SIZE}
           textAnchor="end"
           dominantBaseline="middle"
-          fontSize="20"
+          fontSize="24"
           fill="#000"
         >
           {i}
@@ -96,7 +96,7 @@ export default function WorksheetChart({ points = [] }) {
           x={50 + i * CELL_SIZE}
           y={TOP_PADDING + GRID_SIZE + 28}
           textAnchor="middle"
-          fontSize="20"
+          fontSize="24"
           fill="#000"
         >
           {i}
@@ -109,7 +109,7 @@ export default function WorksheetChart({ points = [] }) {
         y={TOP_PADDING + GRID_SIZE}
         textAnchor="start"
         dominantBaseline="middle"
-        fontSize="28"
+        fontSize="32"
         fontWeight="bold"
         fill="#000"
       >
@@ -122,7 +122,7 @@ export default function WorksheetChart({ points = [] }) {
         y={-10}
         textAnchor="middle"
         dominantBaseline="middle"
-        fontSize="28"
+        fontSize="32"
         fontWeight="bold"
         fill="#000"
       >

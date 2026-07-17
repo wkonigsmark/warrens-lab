@@ -180,9 +180,11 @@ const LEVEL_TITLES = {
 }
 
 function FormulaKey({ level }) {
+  const keyStyles = 'border-2 border-gray-800 rounded px-3 py-2 bg-gray-50 print:bg-white'
+  const keyFont = { fontSize: '11pt' }
   if (level === 1) {
     return (
-      <div className="border-2 border-gray-800 rounded p-2 text-sm bg-gray-50 print:bg-white">
+      <div className={keyStyles} style={keyFont}>
         <span className="font-bold mr-2">Key:</span>
         A coordinate is written as (X, Y).
         <span className="mx-2">•</span>
@@ -194,7 +196,7 @@ function FormulaKey({ level }) {
   }
   if (level === '2a' || level === '2b') {
     return (
-      <div className="border-2 border-gray-800 rounded p-2 text-sm bg-gray-50 print:bg-white">
+      <div className={keyStyles} style={keyFont}>
         <span className="font-bold mr-2">Key:</span>
         Rise = y₂ − y₁
         <span className="mx-3">•</span>
@@ -206,7 +208,7 @@ function FormulaKey({ level }) {
   }
   if (level === 3) {
     return (
-      <div className="border-2 border-gray-800 rounded p-2 text-sm bg-gray-50 print:bg-white">
+      <div className={keyStyles} style={keyFont}>
         <span className="font-bold mr-2">Key:</span>
         Rise = y₂ − y₁
         <span className="mx-3">•</span>
@@ -220,7 +222,7 @@ function FormulaKey({ level }) {
   }
   if (level === 'mp') {
     return (
-      <div className="border-2 border-gray-800 rounded p-2 text-sm bg-gray-50 print:bg-white">
+      <div className={keyStyles} style={keyFont}>
         <span className="font-bold mr-2">Key:</span>
         Distance d = √((x₂ − x₁)² + (y₂ − y₁)²)
         <span className="mx-3">•</span>
@@ -234,7 +236,7 @@ function FormulaKey({ level }) {
 // A reusable inline blank (for filling in).
 // Uses absolute inch dimensions so the printed size is consistent
 // regardless of font scaling differences between screen and print.
-function Blank({ width = '0.8in', height = '0.45in' }) {
+function Blank({ width = '0.6in', height = '0.3in' }) {
   return (
     <span
       className="inline-block border-b-2 border-gray-800 align-baseline"
@@ -243,32 +245,36 @@ function Blank({ width = '0.8in', height = '0.45in' }) {
   )
 }
 
-function ProblemBlanks({ level, index }) {
+function ProblemBlanks({ level }) {
+  // Tighter row spacing for 4-row levels so cells fit landscape height.
+  const gap = level === 3 || level === 'mp' ? 'mb-2' : 'mb-3'
   return (
-    <div className="leading-relaxed" style={{ fontSize: '14pt' }}>
-      <p className="font-bold mb-3" style={{ fontSize: '18pt' }}>
-        #{index + 1}
-      </p>
-      <p className="mb-4">
+    <div className="leading-snug" style={{ fontSize: '13pt' }}>
+      <p className={gap}>
         P₁ = ( <Blank /> , <Blank /> )
       </p>
-      <p className="mb-4">
+      <p className={level === 1 ? '' : gap}>
         P₂ = ( <Blank /> , <Blank /> )
       </p>
-      {(level === '2a' || level === '2b' || level === 3) && (
-        <p className="mb-4">
-          m = <Blank width="1in" />
+      {(level === '2a' || level === '2b') && (
+        <p>
+          m = <Blank width="0.85in" />
         </p>
       )}
       {level === 3 && (
-        <p>
-          b = <Blank width="1in" />
-        </p>
+        <>
+          <p className={gap}>
+            m = <Blank width="0.85in" />
+          </p>
+          <p>
+            b = <Blank width="0.85in" />
+          </p>
+        </>
       )}
       {level === 'mp' && (
         <>
-          <p className="mb-4">
-            d = <Blank width="1in" />
+          <p className={gap}>
+            d = <Blank width="0.85in" />
           </p>
           <p>
             M = ( <Blank /> , <Blank /> )
@@ -289,7 +295,16 @@ export default function Worksheet({ level, mode, onBack }) {
   const handleRegenerate = () => setSeed((s) => s + 1)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100 print:bg-white">
+    <div
+      className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100 print:bg-white"
+      style={{
+        // Break out of any parent max-width so the 11in worksheet renders true-to-print.
+        width: '100vw',
+        position: 'relative',
+        left: '50%',
+        marginLeft: '-50vw',
+      }}
+    >
       {/* Top toolbar (hidden on print) */}
       <div className="no-print bg-white shadow p-4 flex justify-between items-center sticky top-0 z-10">
         <button
@@ -305,32 +320,39 @@ export default function Worksheet({ level, mode, onBack }) {
           >
             ↻ New Worksheet
           </button>
-          <button
-            onClick={handlePrint}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold px-4 py-2 rounded hover:shadow-lg"
-          >
-            🖨 Print
-          </button>
+          <div className="flex flex-col items-end">
+            <button
+              onClick={handlePrint}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold px-4 py-2 rounded hover:shadow-lg"
+            >
+              🖨 Print
+            </button>
+            <span className="text-xs text-gray-500 mt-1">
+              Choose <b>Landscape</b> in the print dialog
+            </span>
+          </div>
         </div>
       </div>
 
       {/* Worksheet page (printable) */}
-      <div className="flex justify-center p-6 print:p-0">
+      <div className="flex justify-center p-4 print:p-0">
         <div
-          className="worksheet-page bg-white shadow-lg p-8 print:shadow-none print:p-0"
+          className="worksheet-page bg-white shadow-lg p-6 print:shadow-none print:p-0"
           style={{ width: '11in', maxWidth: '100%', minHeight: '8.5in' }}
         >
           {/* Header */}
-          <div className="border-b-2 border-gray-800 pb-2 mb-3 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
+          <div className="border-b-2 border-gray-800 pb-2 mb-4 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
               <img
                 src="/text_logo_ants_axes.png"
                 alt="Ants & Axes"
-                className="h-12 w-auto"
+                className="h-12 w-auto flex-shrink-0"
               />
-              <div>
-                <h1 className="text-lg font-bold leading-tight">{LEVEL_TITLES[level]}</h1>
-                <p className="text-sm text-gray-700 leading-tight">
+              <div className="min-w-0">
+                <h1 className="font-bold leading-tight" style={{ fontSize: '16pt' }}>
+                  {LEVEL_TITLES[level]}
+                </h1>
+                <p className="text-gray-700 leading-tight" style={{ fontSize: '10pt' }}>
                   {level === 1 && 'Write the coordinates of each labeled point.'}
                   {(level === '2a' || level === '2b') &&
                     'Identify the two points, then calculate the slope (m).'}
@@ -341,38 +363,49 @@ export default function Worksheet({ level, mode, onBack }) {
                 </p>
               </div>
             </div>
-            <div className="text-sm flex gap-4 items-center flex-shrink-0">
+            <div
+              className="flex gap-5 items-center flex-shrink-0"
+              style={{ fontSize: '11pt' }}
+            >
               <span>
-                Name: <Blank width="7em" />
+                Name: <Blank width="1.6in" height="0.28in" />
               </span>
               <span>
-                Date: <Blank width="5em" />
+                Date: <Blank width="1in" height="0.28in" />
               </span>
               <span>
-                Score: <Blank width="2em" /> / 4
+                Score: <Blank width="0.5in" height="0.28in" /> / 4
               </span>
             </div>
           </div>
 
           {/* Formula key (Mentor mode only) */}
           {mode === 'mentor' && (
-            <div className="mb-3">
+            <div className="mb-4">
               <FormulaKey level={level} />
             </div>
           )}
 
-          {/* 2×2 problem grid */}
-          <div className="grid grid-cols-2 grid-rows-2 gap-4">
+          {/* 2×2 problem grid (no grid-rows-2 — that stretches rows to fill,
+              which creates a big empty gap when content is shorter than the page) */}
+          <div className="grid grid-cols-2 gap-4">
             {problems.map((problem, idx) => (
               <div
                 key={idx}
-                className="worksheet-problem border border-gray-400 rounded p-2 flex gap-2 items-center"
+                className="worksheet-problem border border-gray-300 rounded p-2"
               >
-                <div className="flex-1 min-w-0">
-                  <WorksheetChart points={[problem.p1, problem.p2]} />
-                </div>
-                <div className="flex-shrink-0" style={{ width: '52%' }}>
-                  <ProblemBlanks level={level} index={idx} />
+                {/* Problem number spans the full cell width */}
+                <p className="font-bold mb-1" style={{ fontSize: '18pt' }}>
+                  #{idx + 1}
+                </p>
+                {/* Chart on left, blanks on right, top-aligned */}
+                <div className="flex gap-3 items-start">
+                  <div className="flex-1 min-w-0">
+                    <WorksheetChart points={[problem.p1, problem.p2]} />
+                  </div>
+                  <div className="flex-shrink-0" style={{ width: '50%' }}>
+                    <ProblemBlanks level={level} />
+                  </div>
                 </div>
               </div>
             ))}
