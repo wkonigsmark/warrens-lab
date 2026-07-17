@@ -13,6 +13,98 @@
     "spiritual place",
     "uncertain route"
   ],
+  "fleetStates": [
+    {
+      "id": "after-troy",
+      "label": "Leaving Troy",
+      "ships": 12,
+      "menApprox": 600,
+      "certainty": "ships exact, men estimated",
+      "display": "12 ships / about 600 men",
+      "note": "Homer states that Odysseus has twelve ships; the man count is a visual estimate using about fifty men per ship."
+    },
+    {
+      "id": "after-cicones",
+      "label": "After the Cicones",
+      "ships": 12,
+      "menApprox": 528,
+      "certainty": "ships exact, losses exact, men estimated",
+      "display": "12 ships / about 528 men",
+      "note": "The poem says six men from each of twelve ships died at Ismarus: seventy-two total."
+    },
+    {
+      "id": "after-lotus",
+      "label": "After the Lotus-Eaters",
+      "ships": 12,
+      "menApprox": 528,
+      "certainty": "estimated",
+      "display": "12 ships / about 528 men",
+      "note": "No deaths are reported among the Lotus-Eaters; the danger is forgetting home."
+    },
+    {
+      "id": "after-cyclops",
+      "label": "After Polyphemus",
+      "ships": 12,
+      "menApprox": 522,
+      "certainty": "ships exact, losses exact, men estimated",
+      "display": "12 ships / about 522 men",
+      "note": "Odysseus takes twelve selected men into the cave; six companions are killed before the escape."
+    },
+    {
+      "id": "after-aeolus",
+      "label": "After Aeolus",
+      "ships": 12,
+      "menApprox": 522,
+      "certainty": "estimated",
+      "display": "12 ships / about 522 men",
+      "note": "No deaths are reported at Aeolia, but the fleet loses its near-return to Ithaca."
+    },
+    {
+      "id": "after-laestrygonians",
+      "label": "After the Laestrygonians",
+      "ships": 1,
+      "menApprox": 45,
+      "certainty": "ships exact, men estimated",
+      "display": "1 ship / about 45 men",
+      "note": "Only Odysseus' ship escapes. The later Circe episode implies a small crew, split into two groups, one led by Eurylochus with twenty-two men."
+    },
+    {
+      "id": "after-circe",
+      "label": "After Circe",
+      "ships": 1,
+      "menApprox": 44,
+      "certainty": "estimated",
+      "display": "1 ship / about 44 men",
+      "note": "Elpenor dies at Circe's house before the underworld journey; Homer does not give a full surviving roster."
+    },
+    {
+      "id": "after-scylla",
+      "label": "After Scylla",
+      "ships": 1,
+      "menApprox": 38,
+      "certainty": "losses exact, men estimated",
+      "display": "1 ship / about 38 men",
+      "note": "Scylla takes six men from the final ship."
+    },
+    {
+      "id": "after-final-shipwreck",
+      "label": "After Zeus' Storm",
+      "ships": 0,
+      "menApprox": 1,
+      "certainty": "exact survivor count",
+      "display": "0 ships / 1 survivor",
+      "note": "Zeus destroys the last ship after the cattle of Helios are killed; Odysseus alone reaches Ogygia."
+    },
+    {
+      "id": "odysseus-alone",
+      "label": "Odysseus Alone",
+      "ships": 0,
+      "menApprox": 1,
+      "certainty": "exact survivor count",
+      "display": "0 ships / 1 survivor",
+      "note": "The crew story is over; the return now depends on Odysseus, divine help, and Phaeacian hospitality."
+    }
+  ],
   "journeySequence": [
     {
       "chronologyOrder": 1,
@@ -312,6 +404,7 @@
       "locationNode": "cicones",
       "locationBucket": "mythic/possible real place",
       "characters": ["Odysseus", "Odysseus' crew", "the Cicones"],
+      "fleetStateId": "after-cicones",
       "scarinessLevel": 3,
       "themes": ["victory", "greed", "bad judgment", "consequences"]
     },
@@ -367,6 +460,7 @@
       "locationNode": "ogygia",
       "locationBucket": "mythic place",
       "characters": ["Odysseus", "Calypso", "Hermes", "Athena", "Zeus"],
+      "fleetStateId": "odysseus-alone",
       "scarinessLevel": 1,
       "themes": ["homesickness", "temptation", "freedom"]
     },
@@ -378,6 +472,7 @@
       "locationNode": "scheria-shore",
       "locationBucket": "mythic place",
       "characters": ["Odysseus", "Poseidon", "Ino", "Athena"],
+      "fleetStateId": "odysseus-alone",
       "scarinessLevel": 3,
       "themes": ["survival", "divine anger", "endurance"]
     },
@@ -389,6 +484,7 @@
       "locationNode": "scheria-palace",
       "locationBucket": "mythic place",
       "characters": ["Odysseus", "Nausicaa", "Alcinous", "Arete", "Demodocus"],
+      "fleetStateId": "odysseus-alone",
       "scarinessLevel": 1,
       "themes": ["hospitality", "grief", "identity"]
     },
@@ -400,6 +496,7 @@
       "locationNode": "lotus-eaters",
       "locationBucket": "mythic place",
       "characters": ["Odysseus", "Odysseus' crew"],
+      "fleetStateId": "after-lotus",
       "scarinessLevel": 2,
       "themes": ["forgetfulness", "temptation", "home"]
     },
@@ -411,6 +508,7 @@
       "locationNode": "cyclops-island",
       "locationBucket": "mythic place",
       "characters": ["Odysseus", "Polyphemus", "Odysseus' crew", "Poseidon"],
+      "fleetStateId": "after-cyclops",
       "scarinessLevel": 4,
       "themes": ["cleverness", "pride", "consequences"]
     },
@@ -422,6 +520,7 @@
       "locationNode": "aeolia",
       "locationBucket": "mythic place",
       "characters": ["Odysseus", "Aeolus", "Odysseus' crew"],
+      "fleetStateId": "after-aeolus",
       "scarinessLevel": 2,
       "themes": ["mistrust", "exhaustion", "bad timing"]
     },
@@ -433,6 +532,7 @@
       "locationNode": "laestrygonians",
       "locationBucket": "mythic place",
       "characters": ["Odysseus", "Odysseus' crew", "Laestrygonians"],
+      "fleetStateId": "after-laestrygonians",
       "scarinessLevel": 4,
       "themes": ["sudden danger", "loss", "survival"]
     },
@@ -444,6 +544,7 @@
       "locationNode": "aeaea",
       "locationBucket": "mythic place",
       "characters": ["Odysseus", "Circe", "Hermes", "Eurylochus", "Odysseus' crew"],
+      "fleetStateId": "after-circe",
       "scarinessLevel": 3,
       "themes": ["magic", "temptation", "leadership"]
     },
@@ -455,6 +556,7 @@
       "locationNode": "underworld",
       "locationBucket": "spiritual place",
       "characters": ["Odysseus", "Tiresias", "Anticleia", "Achilles", "Agamemnon"],
+      "fleetStateId": "after-circe",
       "scarinessLevel": 4,
       "themes": ["grief", "prophecy", "memory"]
     },
@@ -466,6 +568,7 @@
       "locationNode": "scylla-charybdis",
       "locationBucket": "mythic/possible real place",
       "characters": ["Odysseus", "Odysseus' crew", "Sirens", "Scylla", "Charybdis"],
+      "fleetStateId": "after-scylla",
       "scarinessLevel": 4,
       "themes": ["impossible choices", "self-control", "leadership costs"]
     },
@@ -477,6 +580,7 @@
       "locationNode": "thrinacia",
       "locationBucket": "mythic/possible real place",
       "characters": ["Odysseus", "Odysseus' crew", "Helios", "Zeus"],
+      "fleetStateId": "after-final-shipwreck",
       "scarinessLevel": 4,
       "themes": ["hunger", "warning", "divine justice"]
     },
@@ -556,6 +660,112 @@
       "characters": ["Odysseus", "Penelope", "Telemachus", "Laertes", "Athena", "Zeus"],
       "scarinessLevel": 2,
       "themes": ["peace", "family", "restoration"]
+    }
+  ],
+  "glossaryEntries": [
+    {
+      "id": "odysseus",
+      "title": "Odysseus",
+      "type": "character",
+      "tags": ["Core Cast"],
+      "relatedSceneIds": ["cicones-raid", "cyclops-cave", "bag-of-winds", "laestrygonians", "circes-island", "underworld", "sirens-scylla-charybdis", "cattle-of-the-sun", "odysseus-on-ogygia", "storm-and-scheria", "phaeacian-court"],
+      "text": "King of Ithaca: brilliant, brave, proud, tricky, loving, and complicated."
+    },
+    {
+      "id": "eurylochus",
+      "title": "Eurylochus",
+      "type": "character",
+      "tags": ["Limited Role", "Crew"],
+      "relatedSceneIds": ["circes-island", "underworld", "sirens-scylla-charybdis", "cattle-of-the-sun"],
+      "text": "A named crewman and second-in-command figure. He is cautious at Circe's house, helps Odysseus in ritual moments, and later pushes the starving men toward the forbidden cattle."
+    },
+    {
+      "id": "elpenor",
+      "title": "Elpenor",
+      "type": "character",
+      "tags": ["Limited Role", "Crew"],
+      "relatedSceneIds": ["circes-island", "underworld"],
+      "text": "The youngest and least famous of Odysseus' men. His accidental death at Circe's house gives the underworld chapter a sad, human-scale note."
+    },
+    {
+      "id": "polites",
+      "title": "Polites",
+      "type": "character",
+      "tags": ["Limited Role", "Crew"],
+      "relatedSceneIds": ["circes-island"],
+      "text": "A trusted, friendly crewman who encourages the scouts to approach Circe's palace. He can help make the crew feel like people rather than a crowd."
+    },
+    {
+      "id": "perimedes",
+      "title": "Perimedes",
+      "type": "character",
+      "tags": ["Limited Role", "Crew"],
+      "relatedSceneIds": ["underworld", "sirens-scylla-charybdis"],
+      "text": "A named companion who helps Odysseus during serious ritual and sailing moments. Useful as a quiet, reliable sailor in the background."
+    },
+    {
+      "id": "antinous",
+      "title": "Antinous",
+      "type": "character",
+      "tags": ["Limited Role", "Suitor"],
+      "relatedSceneIds": ["trouble-in-ithaca", "telemachus-visits-sparta", "beggar-in-palace", "reckoning"],
+      "text": "One of the boldest and cruelest suitors. He can become the main face of the suitors' threat in kid-readable scenes."
+    },
+    {
+      "id": "eurymachus",
+      "title": "Eurymachus",
+      "type": "character",
+      "tags": ["Limited Role", "Suitor"],
+      "relatedSceneIds": ["trouble-in-ithaca", "beggar-in-palace", "reckoning"],
+      "text": "A smooth-talking suitor who can seem polite while still being dangerous and selfish."
+    },
+    {
+      "id": "mentes",
+      "title": "Mentes",
+      "type": "character",
+      "tags": ["Limited Role", "Disguise"],
+      "relatedSceneIds": ["athena-sends-telemachus"],
+      "text": "The friendly visitor whose form Athena takes when she first gives Telemachus courage."
+    },
+    {
+      "id": "mentor",
+      "title": "Mentor",
+      "type": "character",
+      "tags": ["Limited Role", "Disguise"],
+      "relatedSceneIds": ["telemachus-visits-nestor"],
+      "text": "An Ithacan elder whose form Athena uses while guiding Telemachus. This is where our word mentor gets its storybook power."
+    },
+    {
+      "id": "pisistratus",
+      "title": "Pisistratus",
+      "type": "character",
+      "tags": ["Limited Role"],
+      "relatedSceneIds": ["telemachus-visits-nestor", "telemachus-visits-sparta"],
+      "text": "Nestor's son, who travels with Telemachus and gives him a peer companion during the search for news."
+    },
+    {
+      "id": "halitherses",
+      "title": "Halitherses",
+      "type": "character",
+      "tags": ["Limited Role", "Prophecy"],
+      "relatedSceneIds": ["athena-sends-telemachus"],
+      "text": "An Ithacan seer who understands signs from the gods and warns that Odysseus may return."
+    },
+    {
+      "id": "the-crew",
+      "title": "Odysseus' Crew",
+      "type": "group",
+      "tags": ["Group", "Fleet Counter"],
+      "relatedSceneIds": ["cicones-raid", "lotus-eaters", "cyclops-cave", "bag-of-winds", "laestrygonians", "circes-island", "sirens-scylla-charybdis", "cattle-of-the-sun"],
+      "text": "The sailors are not just background. Their hunger, fear, mistrust, and longing for home drive many of the journey's hardest choices."
+    },
+    {
+      "id": "hospitality",
+      "title": "Hospitality",
+      "type": "idea",
+      "tags": ["Theme"],
+      "relatedSceneIds": ["cyclops-cave", "phaeacian-court", "home-in-disguise"],
+      "text": "The ancient rule that guests and strangers should be treated with respect. Good hosts and bad hosts shape the whole story."
     }
   ],
   "locationNodes": [

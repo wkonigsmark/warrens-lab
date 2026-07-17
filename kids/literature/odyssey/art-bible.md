@@ -92,12 +92,33 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 - Telemachus should look young, watchful, and frustrated rather than fully powerful yet.
 - Suitors can be loud, wasteful, and careless in the background without becoming cartoon villains.
 
+### Ithaca Disguise / Beggar Scenes
+
+- Athena's transformation should feel strategic and protective, not cruel.
+- Beggar Odysseus should remain recognizably Odysseus underneath: same eyes, beard shape, and watchful intelligence, but bent, ragged, and underestimated.
+- The suitors should read as careless, privileged, and mocking; keep them threatening through posture and numbers rather than gore.
+- Argos can carry emotional recognition when present: old, loyal, and gentle.
+
+### Bow Contest Scenes
+
+- The bow should be visually important and difficult: large, polished, and clearly Odysseus' special weapon.
+- Penelope should read as controlled and intelligent when she introduces the contest.
+- Telemachus should appear tense, alert, and nearly ready to act.
+- Suitors should shift from arrogance to shock as Odysseus proves himself.
+
 ### Poseidon / Raft Wreck Scenes
 
 - Poseidon may appear in the storm clouds or waves as a divine presence.
 - Odysseus should look exhausted but still fighting to survive.
 - Raft wreckage, dark clouds, lightning, cliffs, and a visible shore can all help tell the survival beat.
 - If a whirlpool-like shape appears, treat it as storm drama for this scene unless the route node is explicitly Scylla/Charybdis.
+
+### Nausicaa / Phaeacian Hospitality Scenes
+
+- Scheria should feel bright, ordered, safe, and beautiful after the chaos of Poseidon's storm.
+- Nausicaa should read as kind, brave, royal, and young, offering help without fear.
+- Odysseus should look exhausted, salt-worn, and vulnerable rather than triumphant.
+- Palaces, clean columns, blue trim, terraces, boats, and attendants can establish the Phaeacians as generous and civilized.
 
 ### Athena
 
@@ -160,6 +181,10 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 | `penelope-telemachus-bw` | `assets/penelope-telemachus-bw.png` | black-and-white | 1086x1448 | `trouble-in-ithaca` | Line-art companion for the Trouble in Ithaca scene. |
 | `odysseus-poseidon-raft-wreck-charybdis-color` | `assets/odysseus-poseidon-raft-wreck-charybdis-color.png` | color | 1122x1402 | `storm-and-scheria` | Primary storm/Scheria reference; Poseidon's storm wrecks the raft as Odysseus struggles toward shore. |
 | `odysseus-poseidon-raft-wreck-charybdis-bw` | `assets/odysseus-poseidon-raft-wreck-charybdis-bw.png` | black-and-white | 1122x1402 | `storm-and-scheria` | Line-art companion for the storm and Phaeacian shore scene. |
+| `odysseus-nausicaa-color` | `assets/odysseus-nausicaa-color.png` | color | 1086x1448 | `phaeacian-court` | Primary Nausicaa/Scheria reference; rescue and hospitality after the storm. |
+| `odysseus-nausicaa-bw` | `assets/odysseus-nausicaa-bw.png` | black-and-white | 1086x1448 | `phaeacian-court` | Line-art companion for the Nausicaa and Phaeacian hospitality scene. |
+| `odysseus-athena-beggar-ithica-color` | `assets/odysseus-athena-beggar-ithica-color.png` | color | 1122x1402 | `home-in-disguise` | Primary home-in-disguise reference; Athena transforms Odysseus into a beggar. |
+| `odysseus-athena-beggar-ithica-bw` | `assets/odysseus-athena-beggar-ithica-bw.png` | black-and-white | 1122x1402 | `home-in-disguise` | Line-art companion for Athena transforming Odysseus. |
 | `odysseus-athena-color` | `assets/odysseus-athena-color.png` | color | 1086x1448 | `athena-sends-telemachus`, `home-in-disguise` | Strong Athena reference; Odysseus seated by sea. |
 | `odysseus-athena-bw` | `assets/odysseus-athena-bw.png` | black-and-white | 1086x1448 | `athena-sends-telemachus`, `home-in-disguise` | Line-art companion. |
 | `odysseus-circe-hermes-color` | `assets/odysseus-circe-hermes-color.png` | color | 1122x1402 | `circes-island` | Main Circe/Hermes/Odysseus reference. |
@@ -168,6 +193,16 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 | `odysseus-polyphemus-bw` | `assets/odysseus-polyphemus-bw.png` | black-and-white | 1086x1448 | `cyclops-cave` | Line-art companion. |
 | `sirens-odysseus-color` | `assets/sirens-odysseus-color.png` | color | 1122x1402 | `sirens-scylla-charybdis` | Main Sirens scene reference. |
 | `sirens-odysseus-bw` | `assets/sirens-odysseus-bw.png` | black-and-white | 1122x1402 | `sirens-scylla-charybdis` | Line-art companion. |
+| `odysseus-beggar-ithica-color` | `assets/odysseus-beggar-ithica-color.png` | color | 1122x1402 | `beggar-in-palace` | Primary beggar-in-palace reference; includes Argos, Telemachus, suitors, and disguised Odysseus. |
+| `odysseus-beggar-ithica-bw` | `assets/odysseus-beggar-ithica-bw.png` | black-and-white | 1122x1402 | `beggar-in-palace` | Line-art companion for disguised Odysseus entering the palace. |
+| `odysseus-beggar-2-ithica-color` | `assets/odysseus-beggar-2-ithica-color.png` | color | 1124x1399 | `beggar-in-palace` | Alternate beggar-palace composition focused on suitor mockery. |
+| `odysseus-beggar-2-ithica-bw` | `assets/odysseus-beggar-2-ithica-bw.png` | black-and-white | 1122x1402 | `beggar-in-palace` | Line-art companion for alternate beggar composition 2. |
+| `odysseus-beggar-3-ithica-color` | `assets/odysseus-beggar-3-ithica-color.png` | color | 1122x1402 | `beggar-in-palace` | Alternate beggar-palace composition with Odysseus watching from the margin. |
+| `odysseus-beggar-3-ithica-bw` | `assets/odysseus-beggar-3-ithica-bw.png` | black-and-white | 1122x1402 | `beggar-in-palace` | Line-art companion for alternate beggar composition 3. |
+| `penelope-telemachus--odysseus-bow-color` | `assets/penelope-telemachus--odysseus-bow-color.png` | color | 1122x1402 | `bow-contest` | Primary bow contest reference; Odysseus proves himself before Penelope, Telemachus, and the suitors. |
+| `penelope-telemachus--odysseus-bow-bw` | `assets/penelope-telemachus--odysseus-bow-bw.png` | black-and-white | 1122x1402 | `bow-contest` | Line-art companion for the primary bow contest scene. |
+| `penelope-telemachus-bow-color` | `assets/penelope-telemachus-bow-color.png` | color | 1122x1402 | `bow-contest` | Alternate bow contest setup with Penelope presenting the bow. |
+| `penelope-telemachus-bow-bw` | `assets/penelope-telemachus-bow-bw.png` | black-and-white | 1122x1402 | `bow-contest` | Line-art companion for the bow contest setup image. |
 
 ## Asset Naming Convention
 

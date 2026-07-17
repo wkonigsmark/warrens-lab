@@ -65,6 +65,7 @@ function renderReader() {
   const art = getPrimaryArt(scene.id);
   const readSummary = readerState.details.sceneDetails[scene.id] ?? scene.summary;
   const total = readerState.scenes.length;
+  const fleetState = getFleetState(scene.fleetStateId);
 
   document.title = `${scene.outlinePosition}. ${scene.title} - Odyssey Reader`;
   readerElements.count.textContent = `${scene.outlinePosition} of ${total}`;
@@ -79,6 +80,7 @@ function renderReader() {
         <h1>${escapeHtml(scene.title)}</h1>
         <p class="short-summary">${escapeHtml(scene.summary)}</p>
         <p class="read-summary">${escapeHtml(readSummary)}</p>
+        ${renderFleetState(fleetState)}
         <div class="scene-meta">
           <span class="tag scary">Scariness ${scene.scarinessLevel}/5</span>
           <span class="tag">${escapeHtml(scene.locationBucket)}</span>
@@ -91,6 +93,36 @@ function renderReader() {
   renderToc();
   window.location.hash = `scene-${scene.outlinePosition}`;
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function getFleetState(fleetStateId) {
+  if (!fleetStateId) {
+    return null;
+  }
+  return readerState.data.fleetStates?.find((entry) => entry.id === fleetStateId) ?? null;
+}
+
+function renderFleetState(fleetState) {
+  if (!fleetState) {
+    return "";
+  }
+
+  const shipUnits = Math.max(0, Math.min(12, fleetState.ships));
+  const shipIcons = Array.from({ length: 12 }, (_, index) => {
+    const activeClass = index < shipUnits ? "active" : "";
+    return `<span class="fleet-ship ${activeClass}" aria-hidden="true"></span>`;
+  }).join("");
+
+  return `
+    <section class="fleet-card" aria-label="Fleet counter">
+      <p class="fleet-label">Fleet Counter</p>
+      <strong>${escapeHtml(fleetState.display)}</strong>
+      <span>${escapeHtml(fleetState.note)}</span>
+      <div class="fleet-visual" title="${escapeAttribute(fleetState.certainty)}">
+        ${shipIcons}
+      </div>
+    </section>
+  `;
 }
 
 function renderArt(art) {

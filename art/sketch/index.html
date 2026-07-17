@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fade &amp; Draw — Progressive Trace Course</title>
+<style>
+  :root{
+    --ink:#1c1c1c;
+    --paper:#ffffff;
+    --muted:#6b7280;
+    --accent:#b4472e;
+    --line:#e5e2dc;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#efece6;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+
+  /* ---------- Screen chrome (hidden when printing) ---------- */
+  .toolbar{position:sticky;top:0;z-index:50;background:#1c1c1c;color:#fff;
+    display:flex;align-items:center;gap:18px;padding:14px 22px;flex-wrap:wrap;}
+  .toolbar h1{font-size:16px;margin:0;font-weight:600;letter-spacing:.3px;}
+  .toolbar .sub{color:#b9b3a8;font-size:13px;}
+  .toolbar .spacer{flex:1;}
+  .toolbar button, .toolbar select{
+    font-size:13px;padding:8px 14px;border-radius:8px;border:1px solid #3a3a3a;
+    background:#2a2a2a;color:#fff;cursor:pointer;}
+  .toolbar button.primary{background:var(--accent);border-color:var(--accent);font-weight:600;}
+  .toolbar button:hover{filter:brightness(1.12);}
+  .intro{max-width:820px;margin:26px auto 6px;padding:0 22px;color:#3a3a3a;}
+  .intro p{line-height:1.55;font-size:14.5px;}
+  .intro .hint{background:#fff7ec;border:1px solid #f0dcc0;border-radius:10px;
+    padding:12px 16px;font-size:13.5px;color:#6b4a24;}
+
+  /* ---------- Pages ---------- */
+  .sheets{display:flex;flex-direction:column;align-items:center;gap:26px;
+    padding:26px 16px 60px;}
+  .page{
+    background:var(--paper);width:8.5in;height:11in;position:relative;
+    box-shadow:0 8px 30px rgba(0,0,0,.14);
+    padding:0.6in 0.65in;display:flex;flex-direction:column;}
+  .page-head{display:flex;align-items:flex-start;justify-content:space-between;
+    border-bottom:2px solid var(--ink);padding-bottom:10px;}
+  .day-badge{font-size:44px;font-weight:800;line-height:.9;letter-spacing:-1px;}
+  .day-badge small{display:block;font-size:12px;font-weight:600;letter-spacing:2px;
+    color:var(--muted);margin-top:6px;}
+  .head-right{text-align:right;max-width:3.3in;}
+  .course-name{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  .task{font-size:13.5px;color:#333;margin-top:6px;line-height:1.4;}
+  .task b{color:var(--ink);}
+
+  .canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;
+    margin:8px 0;}
+  .canvas-wrap svg{width:100%;height:100%;max-height:7.6in;}
+
+  .page-foot{display:flex;align-items:flex-end;justify-content:space-between;
+    border-top:1px solid var(--line);padding-top:8px;}
+  .foot-tip{font-size:11.5px;color:var(--muted);max-width:5in;line-height:1.35;}
+  .ref-thumb{width:1.05in;height:1.35in;border:1px solid var(--line);border-radius:5px;
+    object-fit:cover;background:#f4f2ee;}
+  .ref-cap{font-size:9px;color:var(--muted);text-align:center;margin-top:3px;letter-spacing:1px;}
+  .ref-box{text-align:center;}
+
+  /* progress dots */
+  .dots{display:flex;gap:5px;margin-top:10px;}
+  .dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--ink);}
+  .dot.done{background:var(--ink);}
+  .dot.now{background:var(--accent);border-color:var(--accent);}
+
+  @media print{
+    html,body{background:#fff;}
+    .toolbar,.intro{display:none !important;}
+    .sheets{padding:0;gap:0;}
+    .page{box-shadow:none;width:100%;height:100vh;page-break-after:always;
+      padding:0.5in 0.55in;}
+    .page:last-child{page-break-after:auto;}
+    @page{size:letter portrait;margin:0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <h1>Fade &amp; Draw</h1>
+  <span class="sub">Progressive trace course · Subject: Hand</span>
+  <span class="spacer"></span>
+  <button class="primary" onclick="window.print()">⌘P · Save as PDF</button>
+</div>
+
+<div class="intro">
+  <p><b>How it works:</b> Print all 7 pages. Do one page a day. Each day the template hands you
+  <i>less</i> — first the shading disappears, then the fine detail, then the outline itself, until
+  the last days give you only the underlying construction guides, and finally almost nothing.
+  You trace less and draw more, every single day, until the hand lives in your hand.</p>
+  <p class="hint">🖼️ <b>To add your reference photo:</b> save your finished hand drawing as
+  <code>reference-target.jpg</code> in this folder and it will appear as the "goal" thumbnail on
+  every page. (Optional — the pages work without it.)</p>
+</div>
+
+<div class="sheets" id="sheets"></div>
+
+<script>
+/* ------------------------------------------------------------------ *
+ *  LAYERED HAND  — one authored vector, six independent layers.
+ *  Fade schedule below controls each layer's opacity per day, so the
+ *  whole 7-day ladder is data-driven and easy to re-tune.
+ * ------------------------------------------------------------------ */
+
+/* Each layer is a <g>. Colors are grayscale so everything prints clean;
+   per-day opacity does the "fading". */
+const HAND_SVG = `
+<svg viewBox="0 0 620 820" xmlns="http://www.w3.org/2000/svg" fill="none"
+     stroke-linecap="round" stroke-linejoin="round">
+
+  <!-- FRAME: proportion axes + tilt cross marks (fades away LAST) -->
+  <g id="L-frame" stroke="#8a94a0" stroke-width="1.4">
+    <line x1="150" y1="150" x2="470" y2="120"/>
+    <line x1="300" y1="70"  x2="300" y2="700"/>
+    <line x1="150" y1="120" x2="245" y2="185"/>
+    <line x1="255" y1="115" x2="160" y2="180"/>
+    <line x1="120" y1="500" x2="500" y2="470"/>
+  </g>
+
+  <!-- OVALS: palm mass + heel/thumb ball (steps 1–2) -->
+  <g id="L-ovals" stroke="#8a94a0" stroke-width="1.8">
+    <ellipse cx="300" cy="470" rx="150" ry="178"/>
+    <ellipse cx="278" cy="548" rx="98"  ry="82"/>
+  </g>
+
+  <!-- FINGER LINES: direction rays + joint ticks (step 3–4) -->
+  <g id="L-guides" stroke="#7f8b98" stroke-width="1.5">
+    <line x1="300" y1="360" x2="195" y2="250"/>
+    <line x1="300" y1="360" x2="252" y2="150"/>
+    <line x1="300" y1="360" x2="308" y2="110"/>
+    <line x1="300" y1="360" x2="365" y2="165"/>
+    <line x1="300" y1="360" x2="492" y2="462"/>
+    <!-- joint ticks -->
+    <line x1="182" y1="300" x2="208" y2="300"/>
+    <line x1="238" y1="235" x2="266" y2="235"/>
+    <line x1="293" y1="205" x2="323" y2="205"/>
+    <line x1="350" y1="245" x2="380" y2="245"/>
+  </g>
+
+  <!-- CONTOUR: the hand outline (the main crutch — fades mid-course) -->
+  <g id="L-contour" stroke="#1c1c1c" stroke-width="2.6">
+    <!-- palm -->
+    <path d="M171,360 Q178,345 205,349 Q230,353 226,344 Q253,339 281,340
+             Q309,338 337,341 Q362,344 391,349 Q405,410 402,470
+             Q398,540 372,600 Q368,640 350,662 L205,662
+             Q188,640 183,600 Q176,480 171,360 Z"/>
+    <!-- pinky -->
+    <path d="M171,360 L171,272 Q171,250 195,250 Q219,250 219,272 L219,356"/>
+    <!-- ring -->
+    <path d="M226,346 L225,172 Q225,150 252,150 Q279,150 279,172 L279,342"/>
+    <!-- middle -->
+    <path d="M280,340 L280,132 Q280,110 308,110 Q336,110 336,132 L336,340"/>
+    <!-- index -->
+    <path d="M338,344 L338,187 Q338,165 365,165 Q392,165 392,187 L392,349"/>
+    <!-- thumb -->
+    <path d="M383,545 L473,444 Q505,448 511,480 L417,590"/>
+  </g>
+
+  <!-- INTERIOR: knuckle creases, nails, palm lines (fades early) -->
+  <g id="L-interior" stroke="#333" stroke-width="1.5">
+    <!-- nails -->
+    <path d="M182,268 Q195,258 208,268 L206,286 Q195,292 184,286 Z"/>
+    <path d="M239,168 Q252,158 265,168 L263,188 Q252,194 241,188 Z"/>
+    <path d="M294,128 Q308,118 322,128 L320,150 Q308,156 296,150 Z"/>
+    <path d="M351,183 Q365,173 379,183 L377,203 Q365,209 353,203 Z"/>
+    <!-- finger joint creases -->
+    <path d="M172,315 Q195,322 218,315"/>
+    <path d="M226,232 Q252,239 278,232"/>
+    <path d="M281,196 Q308,203 335,196"/>
+    <path d="M339,247 Q365,254 391,247"/>
+    <path d="M228,300 Q252,306 277,300"/>
+    <path d="M283,268 Q308,274 334,268"/>
+    <!-- palm creases -->
+    <path d="M210,430 Q290,470 380,440"/>
+    <path d="M205,470 Q275,510 330,505"/>
+    <path d="M250,540 Q265,600 300,635"/>
+  </g>
+
+  <!-- SHADING: light form tone (fades first, day 1 only) -->
+  <g id="L-shading" stroke="#9a9a9a" stroke-width="3" opacity="0.9">
+    <path d="M360,400 Q380,470 360,560" opacity=".5"/>
+    <path d="M340,410 Q360,480 342,555" opacity=".4"/>
+    <path d="M300,560 Q260,600 235,600" opacity=".45"/>
+    <path d="M200,300 Q205,330 200,352" opacity=".4"/>
+    <path d="M256,205 Q260,240 256,300" opacity=".4"/>
+    <path d="M312,175 Q316,220 312,300" opacity=".4"/>
+  </g>
+</svg>`;
+
+/* ---- Fade schedule: opacity of each layer, day by day ---- */
+const DAYS = [
+  { d:1, task:"<b>Trace everything.</b> Get to know the shape — every line, every shadow.",
+    tip:"Go slow. Notice how the shading follows the round form of each finger.",
+    op:{frame:.25, ovals:.30, guides:.40, contour:1,  interior:1,  shading:.9} },
+
+  { d:2, task:"Trace the outline &amp; detail. <b>Add the shading yourself</b> (it's gone now).",
+    tip:"Shade with the side of your pencil, following the form you traced yesterday.",
+    op:{frame:.25, ovals:.30, guides:.40, contour:1,  interior:1,  shading:0} },
+
+  { d:3, task:"Trace the outline. <b>Draw the knuckles, nails &amp; creases</b> from memory.",
+    tip:"The faint marks are a safety net — try to place the detail before you peek.",
+    op:{frame:.30, ovals:.40, guides:.50, contour:1,  interior:.28, shading:0} },
+
+  { d:4, task:"Guides are strong; the <b>outline is faint</b>. Firm up the whole contour yourself.",
+    tip:"Build each finger off its direction line and tick — that's the real skill.",
+    op:{frame:.35, ovals:.55, guides:.75, contour:.30, interior:0, shading:0} },
+
+  { d:5, task:"<b>Construction only.</b> Draw the entire hand outline onto the ovals &amp; guides.",
+    tip:"Ovals for the palm mass, rays for the fingers. This is how artists really start.",
+    op:{frame:.55, ovals:1,   guides:1,  contour:0,  interior:0, shading:0} },
+
+  { d:6, task:"Just the <b>palm oval &amp; frame</b>. Place and draw all five fingers yourself.",
+    tip:"Lightly rough in your own direction lines first, then commit.",
+    op:{frame:.80, ovals:.60, guides:0,  contour:0,  interior:0, shading:0} },
+
+  { d:7, task:"<b>Almost blank.</b> Only faint proportion marks. Draw the whole hand, freehand.",
+    tip:"You've built it six times. Trust your hand — then compare to Day 1.",
+    op:{frame:.30, ovals:0,   guides:0,  contour:0,  interior:0, shading:0} },
+];
+
+const LAYER_IDS = {frame:"L-frame", ovals:"L-ovals", guides:"L-guides",
+                   contour:"L-contour", interior:"L-interior", shading:"L-shading"};
+
+function buildPage(day, idx){
+  const page = document.createElement("div");
+  page.className = "page";
+
+  // dots
+  let dots = "";
+  DAYS.forEach((_,i)=>{
+    const cls = i<idx ? "dot done" : (i===idx ? "dot now" : "dot");
+    dots += `<span class="${cls}"></span>`;
+  });
+
+  page.innerHTML = `
+    <div class="page-head">
+      <div>
+        <div class="day-badge">${day.d}<small>DAY ${day.d} / 7</small></div>
+        <div class="dots">${dots}</div>
+      </div>
+      <div class="head-right">
+        <div class="course-name">Fade &amp; Draw · Hand</div>
+        <div class="task">${day.task}</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">${HAND_SVG}</div>
+
+    <div class="page-foot">
+      <div class="foot-tip">💡 ${day.tip}</div>
+      <div class="ref-box">
+        <img class="ref-thumb" src="reference-target.jpg"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='none';">
+        <div class="ref-cap">THE GOAL</div>
+      </div>
+    </div>`;
+
+  // apply this day's layer opacities
+  const svg = page.querySelector("svg");
+  for(const key in LAYER_IDS){
+    const g = svg.querySelector("#"+LAYER_IDS[key]);
+    if(g) g.setAttribute("opacity", day.op[key]);
+  }
+  return page;
+}
+
+const sheets = document.getElementById("sheets");
+DAYS.forEach((day,i)=> sheets.appendChild(buildPage(day,i)));
+</script>
+</body>
+</html>

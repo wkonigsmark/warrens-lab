@@ -233,6 +233,7 @@ function renderSceneDetail(scene) {
   const orderedScene = getStoryOutlineScenes().find((entry) => entry.id === scene.id) ?? scene;
   const location = state.data.locationNodes.find((node) => node.id === scene.locationNode);
   const art = getPrimarySceneArt(scene.id);
+  const fleetState = getFleetState(scene.fleetStateId);
 
   elements.sceneDetail.innerHTML = `
     <p class="eyebrow">Chronology ${orderedScene.outlinePosition ?? scene.order}</p>
@@ -240,6 +241,7 @@ function renderSceneDetail(scene) {
     <p class="scene-summary">${escapeHtml(scene.summary)}</p>
     ${renderExpandedSummary(scene)}
     ${renderSceneArt(art)}
+    ${renderFleetState(fleetState)}
     <div class="scene-meta">
       <span class="tag scary">Scariness ${scene.scarinessLevel}/5</span>
       <span class="tag map">${escapeHtml(scene.locationBucket)}</span>
@@ -267,6 +269,38 @@ function renderSceneDetail(scene) {
         <p class="location-note">${escapeHtml(location?.parentGeographyNote ?? "Map note needed.")}</p>
       </div>
     </div>
+  `;
+}
+
+function getFleetState(fleetStateId) {
+  if (!fleetStateId) {
+    return null;
+  }
+  return state.data.fleetStates?.find((entry) => entry.id === fleetStateId) ?? null;
+}
+
+function renderFleetState(fleetState) {
+  if (!fleetState) {
+    return "";
+  }
+
+  const shipUnits = Math.max(0, Math.min(12, fleetState.ships));
+  const shipIcons = Array.from({ length: 12 }, (_, index) => {
+    const activeClass = index < shipUnits ? "active" : "";
+    return `<span class="fleet-ship ${activeClass}" aria-hidden="true"></span>`;
+  }).join("");
+
+  return `
+    <section class="fleet-card" aria-label="Fleet counter">
+      <div>
+        <p class="eyebrow">Fleet Counter</p>
+        <h4>${escapeHtml(fleetState.display)}</h4>
+        <p>${escapeHtml(fleetState.note)}</p>
+      </div>
+      <div class="fleet-visual" title="${escapeAttribute(fleetState.certainty)}">
+        ${shipIcons}
+      </div>
+    </section>
   `;
 }
 
@@ -378,16 +412,31 @@ function buildJourneyFromSceneOrder() {
 }
 
 function renderGlossaryPreview() {
-  elements.glossary.innerHTML = fallbackGlossary
+  const entries = state.data.glossaryEntries?.length ? state.data.glossaryEntries : fallbackGlossary;
+
+  elements.glossary.innerHTML = entries
     .map(
       (entry) => `
         <article class="glossary-card">
           <h3>${escapeHtml(entry.title)}</h3>
+          ${renderGlossaryTags(entry)}
           <p>${escapeHtml(entry.text)}</p>
         </article>
       `
     )
     .join("");
+}
+
+function renderGlossaryTags(entry) {
+  if (!entry.tags?.length) {
+    return "";
+  }
+
+  return `
+    <div class="glossary-tags">
+      ${entry.tags.map((tag) => `<span class="tag tiny">${escapeHtml(tag)}</span>`).join("")}
+    </div>
+  `;
 }
 
 function escapeHtml(value) {

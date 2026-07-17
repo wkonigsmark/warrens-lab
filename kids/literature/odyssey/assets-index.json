@@ -315,6 +315,54 @@
       "notes": "Line-art companion for the storm and Phaeacian shore scene."
     },
     {
+      "id": "odysseus-nausicaa-color",
+      "file": "assets/odysseus-nausicaa-color.png",
+      "variant": "color",
+      "width": 1086,
+      "height": 1448,
+      "type": "reference",
+      "subjects": ["Odysseus", "Nausicaa", "Phaeacians", "Scheria"],
+      "sceneIds": ["phaeacian-court"],
+      "alt": "Nausicaa offers help to exhausted Odysseus on the Phaeacian shore with the bright palace of Scheria behind them.",
+      "notes": "Primary Nausicaa and Phaeacian hospitality reference; the rescue beat after the storm, with Scheria established in the background."
+    },
+    {
+      "id": "odysseus-nausicaa-bw",
+      "file": "assets/odysseus-nausicaa-bw.png",
+      "variant": "black-and-white",
+      "width": 1086,
+      "height": 1448,
+      "type": "reference",
+      "subjects": ["Odysseus", "Nausicaa", "Phaeacians", "Scheria"],
+      "sceneIds": ["phaeacian-court"],
+      "alt": "Black-and-white line art of Nausicaa helping Odysseus on the shore of Scheria.",
+      "notes": "Line-art companion for the Nausicaa and Phaeacian hospitality scene."
+    },
+    {
+      "id": "odysseus-athena-beggar-ithica-color",
+      "file": "assets/odysseus-athena-beggar-ithica-color.png",
+      "variant": "color",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Odysseus", "Athena", "the suitors", "Ithaca"],
+      "sceneIds": ["home-in-disguise"],
+      "alt": "Athena transforms Odysseus into a ragged beggar while careless suitors laugh in the background.",
+      "notes": "Primary home-in-disguise reference; Athena's transformation makes Odysseus vulnerable and hidden before he enters Ithaca."
+    },
+    {
+      "id": "odysseus-athena-beggar-ithica-bw",
+      "file": "assets/odysseus-athena-beggar-ithica-bw.png",
+      "variant": "black-and-white",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Odysseus", "Athena", "the suitors", "Ithaca"],
+      "sceneIds": ["home-in-disguise"],
+      "alt": "Black-and-white line art of Athena disguising Odysseus as a beggar in Ithaca.",
+      "notes": "Line-art companion for Athena transforming Odysseus."
+    },
+    {
       "id": "odysseus-athena-color",
       "file": "assets/odysseus-athena-color.png",
       "variant": "color",
@@ -409,6 +457,126 @@
       "sceneIds": ["sirens-scylla-charybdis"],
       "alt": "Black-and-white line art of Odysseus and crew passing the Sirens.",
       "notes": "Line-art companion for Sirens scene."
+    },
+    {
+      "id": "odysseus-beggar-ithica-color",
+      "file": "assets/odysseus-beggar-ithica-color.png",
+      "variant": "color",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Odysseus", "Telemachus", "Argos", "the suitors", "Ithaca"],
+      "sceneIds": ["beggar-in-palace"],
+      "alt": "Disguised Odysseus enters the palace yard as Telemachus and Argos notice him while the suitors feast behind them.",
+      "notes": "Primary beggar-in-palace reference; includes Argos, Telemachus, suitors, and Odysseus' disguise."
+    },
+    {
+      "id": "odysseus-beggar-ithica-bw",
+      "file": "assets/odysseus-beggar-ithica-bw.png",
+      "variant": "black-and-white",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Odysseus", "Telemachus", "Argos", "the suitors", "Ithaca"],
+      "sceneIds": ["beggar-in-palace"],
+      "alt": "Black-and-white line art of disguised Odysseus entering the palace yard with Argos and Telemachus nearby.",
+      "notes": "Line-art companion for the beggar entering the palace scene."
+    },
+    {
+      "id": "odysseus-beggar-2-ithica-color",
+      "file": "assets/odysseus-beggar-2-ithica-color.png",
+      "variant": "color",
+      "width": 1124,
+      "height": 1399,
+      "type": "reference",
+      "subjects": ["Odysseus", "the suitors", "Ithaca"],
+      "sceneIds": ["beggar-in-palace"],
+      "alt": "Disguised Odysseus walks past lounging suitors who mock him outside the palace.",
+      "notes": "Alternate beggar-in-palace composition focused on the suitors' scorn."
+    },
+    {
+      "id": "odysseus-beggar-2-ithica-bw",
+      "file": "assets/odysseus-beggar-2-ithica-bw.png",
+      "variant": "black-and-white",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Odysseus", "the suitors", "Ithaca"],
+      "sceneIds": ["beggar-in-palace"],
+      "alt": "Black-and-white line art of disguised Odysseus being mocked by the suitors.",
+      "notes": "Line-art companion for alternate beggar composition 2."
+    },
+    {
+      "id": "odysseus-beggar-3-ithica-color",
+      "file": "assets/odysseus-beggar-3-ithica-color.png",
+      "variant": "color",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Odysseus", "the suitors", "Ithaca"],
+      "sceneIds": ["beggar-in-palace"],
+      "alt": "Disguised Odysseus keeps to the edge of the palace while suitors feast and laugh nearby.",
+      "notes": "Alternate beggar-in-palace composition with Odysseus watching from the margin."
+    },
+    {
+      "id": "odysseus-beggar-3-ithica-bw",
+      "file": "assets/odysseus-beggar-3-ithica-bw.png",
+      "variant": "black-and-white",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Odysseus", "the suitors", "Ithaca"],
+      "sceneIds": ["beggar-in-palace"],
+      "alt": "Black-and-white line art of disguised Odysseus observing the suitors from the edge of the palace.",
+      "notes": "Line-art companion for alternate beggar composition 3."
+    },
+    {
+      "id": "penelope-telemachus--odysseus-bow-color",
+      "file": "assets/penelope-telemachus--odysseus-bow-color.png",
+      "variant": "color",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Odysseus", "Penelope", "Telemachus", "the suitors", "the bow"],
+      "sceneIds": ["bow-contest"],
+      "alt": "Odysseus stands with his bow while Telemachus, Penelope, and the shocked suitors watch in the palace hall.",
+      "notes": "Primary bow contest reference; captures the moment the room realizes the disguised stranger has Odysseus' strength."
+    },
+    {
+      "id": "penelope-telemachus--odysseus-bow-bw",
+      "file": "assets/penelope-telemachus--odysseus-bow-bw.png",
+      "variant": "black-and-white",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Odysseus", "Penelope", "Telemachus", "the suitors", "the bow"],
+      "sceneIds": ["bow-contest"],
+      "alt": "Black-and-white line art of Odysseus holding the bow before Telemachus, Penelope, and the suitors.",
+      "notes": "Line-art companion for the primary bow contest scene."
+    },
+    {
+      "id": "penelope-telemachus-bow-color",
+      "file": "assets/penelope-telemachus-bow-color.png",
+      "variant": "color",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Penelope", "Telemachus", "the suitors", "the bow"],
+      "sceneIds": ["bow-contest"],
+      "alt": "Penelope presents Odysseus' bow beside Telemachus while the suitors gather for the contest.",
+      "notes": "Alternate bow contest setup reference focused on Penelope announcing the challenge."
+    },
+    {
+      "id": "penelope-telemachus-bow-bw",
+      "file": "assets/penelope-telemachus-bow-bw.png",
+      "variant": "black-and-white",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Penelope", "Telemachus", "the suitors", "the bow"],
+      "sceneIds": ["bow-contest"],
+      "alt": "Black-and-white line art of Penelope presenting the bow for the contest.",
+      "notes": "Line-art companion for the bow contest setup image."
     }
   ]
 }
