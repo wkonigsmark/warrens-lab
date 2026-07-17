@@ -1,6 +1,10 @@
 const state = {
   data: null,
   assets: [],
+  details: {
+    sceneDetails: {},
+    journeyDetails: {}
+  },
   selectedSceneId: null,
   search: "",
   maxScariness: 5,
@@ -79,6 +83,18 @@ async function loadAssetsIndex() {
   }
 }
 
+async function loadStoryDetails() {
+  try {
+    const response = await fetch("story-details.json");
+    if (!response.ok) {
+      return { sceneDetails: {}, journeyDetails: {} };
+    }
+    return response.json();
+  } catch (error) {
+    return { sceneDetails: {}, journeyDetails: {} };
+  }
+}
+
 function initControls() {
   const buckets = [...new Set(state.data.scenes.map((scene) => scene.locationBucket))];
   buckets.forEach((bucket) => {
@@ -121,6 +137,7 @@ function getFilteredScenes() {
     const searchTarget = [
       scene.title,
       scene.summary,
+      state.details.sceneDetails[scene.id] ?? "",
       scene.locationNode,
       scene.locationBucket,
       ...scene.characters,
@@ -221,6 +238,7 @@ function renderSceneDetail(scene) {
     <p class="eyebrow">Chronology ${orderedScene.outlinePosition ?? scene.order}</p>
     <h3>${escapeHtml(scene.title)}</h3>
     <p class="scene-summary">${escapeHtml(scene.summary)}</p>
+    ${renderExpandedSummary(scene)}
     ${renderSceneArt(art)}
     <div class="scene-meta">
       <span class="tag scary">Scariness ${scene.scarinessLevel}/5</span>
@@ -248,6 +266,20 @@ function renderSceneDetail(scene) {
         <h4>Parent Map Note</h4>
         <p class="location-note">${escapeHtml(location?.parentGeographyNote ?? "Map note needed.")}</p>
       </div>
+    </div>
+  `;
+}
+
+function renderExpandedSummary(scene) {
+  const detail = state.details.sceneDetails[scene.id];
+  if (!detail) {
+    return "";
+  }
+
+  return `
+    <div class="story-detail">
+      <h4>Read-Through Summary</h4>
+      <p>${escapeHtml(detail)}</p>
     </div>
   `;
 }
@@ -293,7 +325,7 @@ function renderJourney() {
           <span>${stop.chronologyOrder}. ${escapeHtml(stop.bucket)}</span>
           <strong>${escapeHtml(stop.label)}</strong>
           <span>${escapeHtml(stop.event)}</span>
-          <em>${escapeHtml(stop.sequenceNote)}</em>
+          <em>${escapeHtml(getJourneyDetail(stop) ?? stop.sequenceNote)}</em>
         </button>
       `
     )
@@ -315,6 +347,11 @@ function renderJourney() {
       document.querySelector("#outline").scrollIntoView({ behavior: "smooth" });
     });
   });
+}
+
+function getJourneyDetail(stop) {
+  return state.details.journeyDetails[`${stop.chronologyOrder}:${stop.locationNode}`]
+    ?? state.details.journeyDetails[stop.locationNode];
 }
 
 function buildJourneyFromSceneOrder() {
@@ -366,9 +403,10 @@ function escapeAttribute(value) {
   return escapeHtml(value).replaceAll("`", "&#096;");
 }
 
-Promise.all([loadStoryData(), loadAssetsIndex()]).then(([data, assetIndex]) => {
+Promise.all([loadStoryData(), loadAssetsIndex(), loadStoryDetails()]).then(([data, assetIndex, details]) => {
   state.data = data;
   state.assets = assetIndex.assets ?? [];
+  state.details = details;
   state.selectedSceneId = data.scenes[0]?.id;
   elements.sceneCount.textContent = data.scenes.length;
   elements.assetCount.textContent = state.assets.length;

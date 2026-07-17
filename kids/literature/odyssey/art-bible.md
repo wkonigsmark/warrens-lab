@@ -43,6 +43,34 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 - Odysseus should stay active and alert, gesturing back toward the ship or trying to gather the crew.
 - The danger is softness, forgetting, and delay rather than violence.
 
+### Aeolus / Wind Bag Scenes
+
+- Wind should be visible as pale blue-white swirling ribbons that feel magical but physical.
+- The leather bag is an important prop and should read clearly even in thumbnails.
+- Aeolus can appear as an older, dignified ruler associated with clouds, heights, or floating island imagery.
+- The key emotion is frustrated almost-home disaster: surprise, fear, and Odysseus realizing the chance was lost.
+
+### Laestrygonians / Trapped Harbor Scenes
+
+- The geography matters: a narrow harbor, high cliffs, trapped ships, and Odysseus' ship outside or escaping.
+- Giants should feel enormous and threatening from above, often hurling rocks.
+- The scene can show wrecked ships and men in the water, but keep it non-graphic.
+- This is a major scale shift in the journey: the fleet becomes one surviving ship.
+
+### Underworld / Tiresias Scenes
+
+- Use blue, violet, gray, and pale ghostly light to separate the underworld from ordinary daylight scenes.
+- Spirits can appear translucent, sorrowful, and human, with soft smoke-like edges.
+- Tiresias should feel ancient, calm, prophetic, and visually distinct from the other spirits.
+- The scene should be spooky and sad, not horrific.
+
+### Scylla And Charybdis / Impossible Passage Scenes
+
+- Landscape composition works well because the danger comes from both sides at once.
+- Scylla should read as a cliff monster with multiple heads; Charybdis should read as a vast, swallowing whirlpool.
+- Odysseus' ship should be visibly caught between two bad choices.
+- This is a level 4 danger scene: intense peril is fine, but avoid blood and gore.
+
 ### Athena
 
 - Tall goddess in white and gold.
@@ -88,6 +116,14 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 | `cicones-odysseus-4-bw` | `assets/cicones-odysseus-4-bw.png` | black-and-white | 984x712 | `cicones-raid` | Line-art companion for alternate Cicones composition 4. |
 | `lotus-eaters-odysseus-color` | `assets/lotus-eaters-odysseus-color.png` | color | 1122x1402 | `lotus-eaters` | Primary Lotus-Eaters reference; dreamy temptation with Odysseus calling the crew back. |
 | `lotus-eaters-odysseus-bw` | `assets/lotus-eaters-odysseus-bw.png` | black-and-white | 1122x1402 | `lotus-eaters` | Line-art companion for the Lotus-Eaters scene. |
+| `aeolus-odysseus-color` | `assets/aeolus-odysseus-color.png` | color | 1122x1402 | `bag-of-winds` | Primary Aeolus reference; shows the gift of the wind bag and the accidental release. |
+| `aeolus-odysseus-bw` | `assets/aeolus-odysseus-bw.png` | black-and-white | 1122x1402 | `bag-of-winds` | Line-art companion for the Aeolus and Bag of Winds scene. |
+| `laestrygonians-odysseus-color` | `assets/laestrygonians-odysseus-color.png` | color | 1122x1402 | `laestrygonians` | Primary Laestrygonians reference; trapped harbor, giants, wrecked fleet, and Odysseus escaping. |
+| `laestrygonians-odysseus-bw` | `assets/laestrygonians-odysseus-bw.png` | black-and-white | 1122x1402 | `laestrygonians` | Line-art companion for the Laestrygonians scene. |
+| `tiresias-odysseus-underworld-color` | `assets/tiresias-odysseus-underworld-color.png` | color | 1122x1402 | `underworld` | Primary Underworld reference; Odysseus meeting Tiresias among pale spirits. |
+| `tiresias-odysseus-underworld-bw` | `assets/tiresias-odysseus-underworld-bw.png` | black-and-white | 1122x1402 | `underworld` | Line-art companion for the Underworld scene. |
+| `scylla-charybdis-color` | `assets/scylla-charybdis-color.png` | color | 1672x941 | `sirens-scylla-charybdis` | Primary Scylla/Charybdis reference; wide impossible-choice composition. |
+| `scylla-charybdis-bw` | `assets/scylla-charybdis-bw.png` | black-and-white | 1672x941 | `sirens-scylla-charybdis` | Line-art companion for the Scylla and Charybdis passage. |
 | `odysseus-athena-color` | `assets/odysseus-athena-color.png` | color | 1086x1448 | `athena-sends-telemachus`, `home-in-disguise` | Strong Athena reference; Odysseus seated by sea. |
 | `odysseus-athena-bw` | `assets/odysseus-athena-bw.png` | black-and-white | 1086x1448 | `athena-sends-telemachus`, `home-in-disguise` | Line-art companion. |
 | `odysseus-circe-hermes-color` | `assets/odysseus-circe-hermes-color.png` | color | 1122x1402 | `circes-island` | Main Circe/Hermes/Odysseus reference. |
