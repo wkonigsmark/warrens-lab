@@ -152,7 +152,7 @@
     .workout-content.hidden{display:none}
 
     /* ── COMPLETION ── */
-    .completion-banner{background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(34,197,94,.04));border:1px solid var(--green);border-radius:16px;padding:22px;text-align:center;margin-bottom:12px;display:none}
+    .completion-banner{background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(34,197,94,.04));border:1px solid var(--green);border-radius:16px;padding:22px;text-align:center;margin:4px 0 12px;display:none}
     .completion-banner.visible{display:block}
     .completion-title{font-size:1.9rem;font-weight:900;color:var(--green)}
     .completion-sub{color:var(--muted-light);margin-top:6px;font-size:.85rem}
@@ -527,12 +527,14 @@
 <!-- MAIN CONTENT -->
 <div class="content">
   <div class="workout-content" id="workoutContent">
+    <div id="workout-sections"></div>
+
+    <!-- COMPLETION CELEBRATION (below cool-down, just above the log button) -->
     <div class="completion-banner" id="completionBanner">
       <div class="completion-title">Workout Complete!</div>
       <div class="completion-sub">Every set crushed. Time to fuel up and let the gains happen.</div>
       <div class="completion-time" id="completionTime"></div>
     </div>
-    <div id="workout-sections"></div>
 
     <!-- SUBMIT -->
     <div class="submit-panel" id="submitPanel">
