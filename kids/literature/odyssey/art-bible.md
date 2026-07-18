@@ -92,6 +92,13 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 - Telemachus should look young, watchful, and frustrated rather than fully powerful yet.
 - Suitors can be loud, wasteful, and careless in the background without becoming cartoon villains.
 
+### Athena Sends Telemachus Out Scenes
+
+- Athena's guidance should feel active and directional, with Telemachus visibly being called into motion.
+- A ship, harbor, or sea horizon helps make the mission readable: Telemachus is leaving Ithaca to search for news of Odysseus.
+- Athena may appear openly divine in the art, even though the story can mention her mysterious or disguised presence.
+- Telemachus should look young but newly brave, caught between uncertainty and the first step of responsibility.
+
 ### Telemachus / Pylos And Nestor Scenes
 
 - Pylos should feel bright, coastal, ceremonial, and orderly.
@@ -140,6 +147,13 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 - Penelope should read as careful and emotionally guarded, not cold.
 - Odysseus should react strongly because the bed is proof of identity, marriage, and home.
 - This scene should feel intimate, warm, and still after the danger of the bow and reckoning.
+
+### Peace In Ithaca Scenes
+
+- Athena should be visually central, ending the cycle of revenge rather than escalating the violence.
+- Odysseus, Telemachus, Laertes, and Penelope should read as a reunited household, weary but protected.
+- The opposing crowd can look angry, frightened, or grief-struck, but avoid turning them into monsters.
+- The mood should move from danger toward sunlight, stillness, and restoration.
 
 ### Poseidon / Raft Wreck Scenes
 
@@ -220,6 +234,8 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 | `odysseus-nausicaa-bw` | `assets/odysseus-nausicaa-bw.png` | black-and-white | 1086x1448 | `phaeacian-court` | Line-art companion for the Nausicaa and Phaeacian hospitality scene. |
 | `odysseus-athena-beggar-ithica-color` | `assets/odysseus-athena-beggar-ithica-color.png` | color | 1122x1402 | `home-in-disguise` | Primary home-in-disguise reference; Athena transforms Odysseus into a beggar. |
 | `odysseus-athena-beggar-ithica-bw` | `assets/odysseus-athena-beggar-ithica-bw.png` | black-and-white | 1122x1402 | `home-in-disguise` | Line-art companion for Athena transforming Odysseus. |
+| `athena-telemachus-color` | `assets/athena-telemachus-color.png` | color | 1122x1402 | `athena-sends-telemachus` | Primary Athena/Telemachus reference; Athena points Telemachus toward the sea and his search for Odysseus. |
+| `athena-telemachus-bw` | `assets/athena-telemachus-bw.png` | black-and-white | 1122x1402 | `athena-sends-telemachus` | Line-art companion for Athena sending Telemachus out from Ithaca. |
 | `odysseus-athena-color` | `assets/odysseus-athena-color.png` | color | 1086x1448 | `athena-sends-telemachus`, `home-in-disguise` | Strong Athena reference; Odysseus seated by sea. |
 | `odysseus-athena-bw` | `assets/odysseus-athena-bw.png` | black-and-white | 1086x1448 | `athena-sends-telemachus`, `home-in-disguise` | Line-art companion. |
 | `odysseus-circe-hermes-color` | `assets/odysseus-circe-hermes-color.png` | color | 1122x1402 | `circes-island` | Main Circe/Hermes/Odysseus reference. |
@@ -248,6 +264,10 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 | `telemachus-odysseus-athena-eumaeus-bw` | `assets/telemachus-odysseus-athena-eumaeus-bw.png` | black-and-white | 1122x1402 | `father-and-son` | Line-art companion for Odysseus revealing himself to Telemachus. |
 | `odysseus-suitors-color` | `assets/odysseus-suitors-color.png` | color | 1122x1402 | `reckoning` | Primary reckoning reference; Odysseus and allies confront the suitors under Athena's protection. |
 | `odysseus-suitors-bw` | `assets/odysseus-suitors-bw.png` | black-and-white | 1122x1402 | `reckoning` | Line-art companion for the reckoning scene. |
+| `athena-odysseus-laertes-telemachus-suitors-color` | `assets/athena-odysseus-laertes-telemachus-suitors-color.png` | color | 1448x1086 | `peace-in-ithaca` | Primary Peace in Ithaca reference; Athena stops the last threat of revenge between Odysseus' family and the angry crowd. |
+| `athena-odysseus-laertes-telemachus-suitors-bw` | `assets/athena-odysseus-laertes-telemachus-suitors-bw.png` | black-and-white | 1448x1086 | `peace-in-ithaca` | Line-art companion for the final peace in Ithaca scene. |
+| `achilles-color` | `assets/achilles-color.png` | color | 1122x1402 | `underworld`, glossary `achilles` | Primary Achilles glossary portrait; heroic, sorrowful, and spectral in the underworld. |
+| `achilles-bw` | `assets/achilles-bw.png` | black-and-white | 1122x1402 | `underworld`, glossary `achilles` | Line-art companion for the Achilles glossary portrait. |
 
 ## Asset Naming Convention
 

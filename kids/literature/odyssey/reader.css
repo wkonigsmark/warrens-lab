@@ -164,6 +164,86 @@ h1 {
   line-height: 1.68;
 }
 
+.storybook-draft {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid rgba(168, 78, 53, 0.22);
+  border-radius: 8px;
+  background: #fffdf7;
+}
+
+.storybook-draft h2 {
+  margin: 0;
+  font-size: 1.65rem;
+  line-height: 1.05;
+}
+
+.draft-prose {
+  display: grid;
+  gap: 13px;
+}
+
+.draft-prose p {
+  margin: 0;
+  color: #312b26;
+  font-size: 1.12rem;
+  line-height: 1.72;
+}
+
+.draft-notes {
+  display: grid;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.draft-notes h3 {
+  margin: 0;
+  color: var(--clay);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.draft-notes ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+  color: #4a423a;
+}
+
+.draft-notes p {
+  margin: 0;
+  color: var(--muted);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.48;
+}
+
+.dialogue-list {
+  padding-left: 0;
+  list-style: none;
+}
+
+.dialogue-list li {
+  display: grid;
+  gap: 4px;
+}
+
+.dialogue-list strong {
+  color: var(--sea-dark);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.86rem;
+}
+
+.dialogue-list span {
+  color: #312b26;
+  font-style: italic;
+}
+
 .chapter-briefing {
   display: grid;
   gap: 12px;

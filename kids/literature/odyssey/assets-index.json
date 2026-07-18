@@ -363,6 +363,30 @@
       "notes": "Line-art companion for Athena transforming Odysseus."
     },
     {
+      "id": "athena-telemachus-color",
+      "file": "assets/athena-telemachus-color.png",
+      "variant": "color",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Athena", "Telemachus", "Ithaca", "the palace", "Odysseus' ship"],
+      "sceneIds": ["athena-sends-telemachus"],
+      "alt": "Athena points Telemachus toward the sea and a waiting ship from the palace terrace in Ithaca.",
+      "notes": "Primary Athena-sends-Telemachus reference; replaces the general Athena/Odysseus placeholder for Telemachus' departure scene."
+    },
+    {
+      "id": "athena-telemachus-bw",
+      "file": "assets/athena-telemachus-bw.png",
+      "variant": "black-and-white",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Athena", "Telemachus", "Ithaca", "the palace", "Odysseus' ship"],
+      "sceneIds": ["athena-sends-telemachus"],
+      "alt": "Black-and-white line art of Athena sending Telemachus toward the sea to search for news of Odysseus.",
+      "notes": "Line-art companion for Athena sending Telemachus out from Ithaca."
+    },
+    {
       "id": "odysseus-athena-color",
       "file": "assets/odysseus-athena-color.png",
       "variant": "color",
@@ -697,6 +721,56 @@
       "sceneIds": ["reckoning"],
       "alt": "Black-and-white line art of Odysseus and his allies confronting the suitors in the palace.",
       "notes": "Line-art companion for the reckoning scene."
+    },
+    {
+      "id": "athena-odysseus-laertes-telemachus-suitors-color",
+      "file": "assets/athena-odysseus-laertes-telemachus-suitors-color.png",
+      "variant": "color",
+      "width": 1448,
+      "height": 1086,
+      "type": "reference",
+      "subjects": ["Athena", "Odysseus", "Laertes", "Telemachus", "Penelope", "the suitors' families", "Ithaca"],
+      "sceneIds": ["peace-in-ithaca"],
+      "alt": "Athena stands between Odysseus' family and an angry crowd, stopping the last threat of violence in Ithaca.",
+      "notes": "Primary Peace in Ithaca reference; Athena's intervention turns the final confrontation away from revenge and toward restoration."
+    },
+    {
+      "id": "athena-odysseus-laertes-telemachus-suitors-bw",
+      "file": "assets/athena-odysseus-laertes-telemachus-suitors-bw.png",
+      "variant": "black-and-white",
+      "width": 1448,
+      "height": 1086,
+      "type": "reference",
+      "subjects": ["Athena", "Odysseus", "Laertes", "Telemachus", "Penelope", "the suitors' families", "Ithaca"],
+      "sceneIds": ["peace-in-ithaca"],
+      "alt": "Black-and-white line art of Athena making peace between Odysseus' family and the angry people of Ithaca.",
+      "notes": "Line-art companion for the final peace in Ithaca scene."
+    },
+    {
+      "id": "achilles-color",
+      "file": "assets/achilles-color.png",
+      "variant": "color",
+      "width": 1122,
+      "height": 1402,
+      "type": "glossary",
+      "subjects": ["Achilles", "the Underworld", "Troy memory"],
+      "sceneIds": ["underworld"],
+      "glossaryIds": ["achilles"],
+      "alt": "The spirit of Achilles stands in the underworld holding a spear and helmet among pale shades.",
+      "notes": "Primary Achilles glossary portrait; heroic, sorrowful, and spectral for the underworld memory of Troy."
+    },
+    {
+      "id": "achilles-bw",
+      "file": "assets/achilles-bw.png",
+      "variant": "black-and-white",
+      "width": 1122,
+      "height": 1402,
+      "type": "glossary",
+      "subjects": ["Achilles", "the Underworld", "Troy memory"],
+      "sceneIds": ["underworld"],
+      "glossaryIds": ["achilles"],
+      "alt": "Black-and-white line art of Achilles as a spirit in the underworld.",
+      "notes": "Line-art companion for the Achilles glossary portrait."
     }
   ]
 }

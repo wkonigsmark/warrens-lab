@@ -68,6 +68,7 @@ function renderReader() {
   const fleetState = getFleetState(scene.fleetStateId);
   const briefing = getSceneBriefing(scene.id);
   const timeAway = getTimeAwayEstimate(scene.id);
+  const storybookDraft = getStorybookDraft(scene.id);
 
   document.title = `${scene.outlinePosition}. ${scene.title} - Odyssey Reader`;
   readerElements.count.textContent = `${scene.outlinePosition} of ${total}`;
@@ -83,7 +84,8 @@ function renderReader() {
         <p class="short-summary">${escapeHtml(scene.summary)}</p>
         ${renderTimeAway(timeAway)}
         ${renderSceneBriefing(briefing)}
-        <p class="read-summary">${escapeHtml(readSummary)}</p>
+        ${renderStorybookDraft(scene.id)}
+        ${storybookDraft ? "" : `<p class="read-summary">${escapeHtml(readSummary)}</p>`}
         ${renderFleetState(fleetState)}
         <div class="scene-meta">
           <span class="tag scary">Scariness ${scene.scarinessLevel}/5</span>
@@ -105,6 +107,49 @@ function getSceneBriefing(sceneId) {
 
 function getTimeAwayEstimate(sceneId) {
   return readerState.details.timeAwayEstimates?.[sceneId] ?? null;
+}
+
+function getStorybookDraft(sceneId) {
+  return readerState.details.storybookDrafts?.[sceneId] ?? null;
+}
+
+function renderStorybookDraft(sceneId) {
+  const draft = getStorybookDraft(sceneId);
+  if (!draft) {
+    return "";
+  }
+
+  const paragraphs = draft.readAloud?.length
+    ? draft.readAloud.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")
+    : "";
+
+  const dialogue = draft.dialogueBeats?.length
+    ? draft.dialogueBeats
+        .map(
+          (beat) => `
+            <li>
+              <strong>${escapeHtml(beat.speaker)}</strong>
+              <span>${escapeHtml(beat.line)}</span>
+            </li>
+          `
+        )
+        .join("")
+    : "";
+
+  const themes = draft.themesForKids?.length
+    ? draft.themesForKids.map((item) => `<li>${escapeHtml(item)}</li>`).join("")
+    : "";
+
+  return `
+    <section class="storybook-draft" aria-label="Storybook draft">
+      <p class="fleet-label">Storybook Draft</p>
+      <h2>${escapeHtml(draft.readAloudTitle ?? "Chapter Draft")}</h2>
+      <div class="draft-prose">${paragraphs}</div>
+      ${dialogue ? `<div class="draft-notes"><h3>Dialogue</h3><ul class="dialogue-list">${dialogue}</ul></div>` : ""}
+      ${themes ? `<div class="draft-notes"><h3>Themes</h3><ul>${themes}</ul></div>` : ""}
+      ${draft.parentNote ? `<div class="draft-notes parent-note"><h3>Parent Note</h3><p>${escapeHtml(draft.parentNote)}</p></div>` : ""}
+    </section>
+  `;
 }
 
 function renderTimeAway(timeAway) {

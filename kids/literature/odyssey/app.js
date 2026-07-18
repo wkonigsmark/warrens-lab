@@ -243,6 +243,7 @@ function renderSceneDetail(scene) {
     <p class="scene-summary">${escapeHtml(scene.summary)}</p>
     ${renderTimeAway(timeAway)}
     ${renderSceneBriefing(briefing)}
+    ${renderStorybookDraft(scene.id)}
     ${renderExpandedSummary(scene)}
     ${renderSceneArt(art)}
     ${renderFleetState(fleetState)}
@@ -282,6 +283,62 @@ function getSceneBriefing(sceneId) {
 
 function getTimeAwayEstimate(sceneId) {
   return state.details.timeAwayEstimates?.[sceneId] ?? null;
+}
+
+function getStorybookDraft(sceneId) {
+  return state.details.storybookDrafts?.[sceneId] ?? null;
+}
+
+function renderStorybookDraft(sceneId) {
+  const draft = getStorybookDraft(sceneId);
+  if (!draft) {
+    return "";
+  }
+
+  const paragraphs = draft.readAloud?.length
+    ? draft.readAloud.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")
+    : "";
+
+  const dialogue = draft.dialogueBeats?.length
+    ? draft.dialogueBeats
+        .map(
+          (beat) => `
+            <li>
+              <strong>${escapeHtml(beat.speaker)}:</strong>
+              <span>${escapeHtml(beat.line)}</span>
+              <em>${escapeHtml(beat.purpose)}</em>
+            </li>
+          `
+        )
+        .join("")
+    : "";
+
+  const sensoryColor = draft.sensoryColor?.length
+    ? draft.sensoryColor.map((item) => `<li>${escapeHtml(item)}</li>`).join("")
+    : "";
+
+  const themes = draft.themesForKids?.length
+    ? draft.themesForKids.map((item) => `<li>${escapeHtml(item)}</li>`).join("")
+    : "";
+
+  return `
+    <section class="storybook-draft" aria-label="Storybook draft">
+      <div class="draft-head">
+        <div>
+          <p class="eyebrow">Storybook Draft</p>
+          <h4>${escapeHtml(draft.readAloudTitle ?? "Chapter Draft")}</h4>
+        </div>
+        <span class="tag">${escapeHtml(draft.status ?? "draft")}</span>
+      </div>
+      <div class="draft-prose">${paragraphs}</div>
+      <div class="draft-grid">
+        ${dialogue ? `<div><h5>Dialogue Beats</h5><ul class="dialogue-list">${dialogue}</ul></div>` : ""}
+        ${sensoryColor ? `<div><h5>Sensory Color</h5><ul>${sensoryColor}</ul></div>` : ""}
+        ${themes ? `<div><h5>Themes For Kids</h5><ul>${themes}</ul></div>` : ""}
+        ${draft.parentNote ? `<div><h5>Parent Note</h5><p>${escapeHtml(draft.parentNote)}</p></div>` : ""}
+      </div>
+    </section>
+  `;
 }
 
 function renderTimeAway(timeAway) {
@@ -481,6 +538,7 @@ function renderGlossaryPreview() {
     .map(
       (entry) => `
         <article class="glossary-card">
+          ${renderGlossaryImage(entry)}
           <h3>${escapeHtml(entry.title)}</h3>
           ${renderGlossaryTags(entry)}
           <p>${escapeHtml(entry.text)}</p>
@@ -488,6 +546,25 @@ function renderGlossaryPreview() {
       `
     )
     .join("");
+}
+
+function renderGlossaryImage(entry) {
+  const art = getPrimaryGlossaryArt(entry);
+  if (!art) {
+    return "";
+  }
+
+  return `
+    <figure class="glossary-art">
+      <img src="${escapeAttribute(art.file)}" alt="${escapeAttribute(art.alt)}">
+    </figure>
+  `;
+}
+
+function getPrimaryGlossaryArt(entry) {
+  return state.assets.find((asset) => asset.variant === "color" && asset.glossaryIds?.includes(entry.id))
+    ?? state.assets.find((asset) => asset.glossaryIds?.includes(entry.id))
+    ?? null;
 }
 
 function renderGlossaryTags(entry) {

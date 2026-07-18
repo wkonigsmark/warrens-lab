@@ -936,6 +936,38 @@
       "text": "Odysseus' mother, whom he meets among the dead. Her scene shows the private grief inside the heroic journey."
     },
     {
+      "id": "achilles",
+      "title": "Achilles",
+      "type": "character",
+      "tags": ["Limited Role", "Underworld", "Troy Memory"],
+      "relatedSceneIds": ["underworld"],
+      "text": "The great Greek warrior from Troy. In the underworld, he helps show that glory and sadness can exist together."
+    },
+    {
+      "id": "agamemnon",
+      "title": "Agamemnon",
+      "type": "character",
+      "tags": ["Limited Role", "Underworld", "Troy Memory"],
+      "relatedSceneIds": ["underworld"],
+      "text": "The Greek commander from Troy. His underworld story warns Odysseus that getting home can still be dangerous."
+    },
+    {
+      "id": "aeolus",
+      "title": "Aeolus",
+      "type": "character",
+      "tags": ["Limited Role", "Host", "Wind"],
+      "relatedSceneIds": ["bag-of-winds"],
+      "text": "The keeper of the winds, who gives Odysseus a sealed bag that should help him reach Ithaca."
+    },
+    {
+      "id": "ino",
+      "title": "Ino",
+      "type": "god",
+      "tags": ["Limited Role", "Sea Helper"],
+      "relatedSceneIds": ["storm-and-scheria"],
+      "text": "A sea goddess who helps Odysseus survive Poseidon's storm by giving him a protective veil."
+    },
+    {
       "id": "polyphemus",
       "title": "Polyphemus",
       "type": "character",
@@ -984,6 +1016,30 @@
       "text": "The men crowding Odysseus' palace and pressuring Penelope. Antinous and Eurymachus are the clearest named faces of this threat."
     },
     {
+      "id": "the-cicones",
+      "title": "The Cicones",
+      "type": "group",
+      "tags": ["Group", "Limited Role", "Early Journey"],
+      "relatedSceneIds": ["cicones-raid"],
+      "text": "The people of Ismarus, whose counterattack teaches Odysseus' crew that the habits of war can follow them into the journey home."
+    },
+    {
+      "id": "lotus-eaters-group",
+      "title": "Lotus-Eaters",
+      "type": "group",
+      "tags": ["Group", "Limited Role", "Temptation"],
+      "relatedSceneIds": ["lotus-eaters"],
+      "text": "A gentle but dangerous people whose lotus flowers make visitors forget home and the desire to leave."
+    },
+    {
+      "id": "laestrygonians-group",
+      "title": "Laestrygonians",
+      "type": "group",
+      "tags": ["Group", "Limited Role", "Giant Danger"],
+      "relatedSceneIds": ["laestrygonians"],
+      "text": "Terrifying giants who trap most of Odysseus' fleet in their harbor. Their scene changes the journey from twelve ships to one."
+    },
+    {
       "id": "ithaca",
       "title": "Ithaca",
       "type": "location",
@@ -1006,6 +1062,150 @@
       "tags": ["Place", "Known Place"],
       "relatedSceneIds": ["telemachus-visits-sparta"],
       "text": "The palace of Menelaus and Helen, where Telemachus hears that Odysseus may still be alive."
+    },
+    {
+      "id": "troy",
+      "title": "Troy",
+      "type": "location",
+      "tags": ["Place", "Known Place", "Backstory"],
+      "relatedSceneIds": ["cicones-raid"],
+      "text": "The war city Odysseus leaves behind at the beginning of the journey. Its shadow follows the crew into the first chapters."
+    },
+    {
+      "id": "land-of-the-cicones",
+      "title": "Land of the Cicones",
+      "type": "location",
+      "tags": ["Place", "Mythic/Possible Real Place"],
+      "relatedSceneIds": ["cicones-raid"],
+      "text": "The first stop after Troy, often connected with Ismarus and Thrace in parent map notes."
+    },
+    {
+      "id": "ithaca-palace",
+      "title": "Ithaca Palace",
+      "type": "location",
+      "tags": ["Place", "Known Place", "Home"],
+      "relatedSceneIds": ["trouble-in-ithaca", "beggar-in-palace", "bow-contest", "reckoning", "penelopes-test"],
+      "text": "The center of Odysseus' household, where Penelope waits, the suitors waste the family's goods, and the homecoming is finally tested."
+    },
+    {
+      "id": "ogygia",
+      "title": "Ogygia",
+      "type": "location",
+      "tags": ["Place", "Mythic Place"],
+      "relatedSceneIds": ["odysseus-on-ogygia"],
+      "text": "Calypso's beautiful island, where Odysseus is safe but unable to return home for many years."
+    },
+    {
+      "id": "scheria-shore",
+      "title": "Scheria Shore",
+      "type": "location",
+      "tags": ["Place", "Mythic Place"],
+      "relatedSceneIds": ["storm-and-scheria"],
+      "text": "The shore where Odysseus arrives with nothing after Poseidon's storm destroys his raft."
+    },
+    {
+      "id": "scheria-palace",
+      "title": "Phaeacian Palace",
+      "type": "location",
+      "tags": ["Place", "Mythic Place", "Hospitality"],
+      "relatedSceneIds": ["phaeacian-court"],
+      "text": "The generous court of Alcinous and Arete, where Odysseus receives hospitality and earns the voyage home."
+    },
+    {
+      "id": "land-of-the-lotus-eaters",
+      "title": "Land of the Lotus-Eaters",
+      "type": "location",
+      "tags": ["Place", "Mythic Place", "Temptation"],
+      "relatedSceneIds": ["lotus-eaters"],
+      "text": "A soft, dreamy place where the danger is forgetting home rather than being attacked."
+    },
+    {
+      "id": "cyclops-island",
+      "title": "Island of the Cyclopes",
+      "type": "location",
+      "tags": ["Place", "Mythic Place", "Monster"],
+      "relatedSceneIds": ["cyclops-cave"],
+      "text": "The rough island where Odysseus enters Polyphemus' cave and learns how dangerous bad hospitality can be."
+    },
+    {
+      "id": "aeolia",
+      "title": "Aeolia",
+      "type": "location",
+      "tags": ["Place", "Mythic Place", "Wind"],
+      "relatedSceneIds": ["bag-of-winds"],
+      "text": "The island of Aeolus, where a magical gift brings Odysseus almost home before mistrust blows the ships away."
+    },
+    {
+      "id": "land-of-the-laestrygonians",
+      "title": "Land of the Laestrygonians",
+      "type": "location",
+      "tags": ["Place", "Mythic Place", "Giant Danger"],
+      "relatedSceneIds": ["laestrygonians"],
+      "text": "A cliff-ringed harbor where most of Odysseus' fleet is trapped and destroyed."
+    },
+    {
+      "id": "aeaea",
+      "title": "Aeaea",
+      "type": "location",
+      "tags": ["Place", "Mythic Place", "Magic"],
+      "relatedSceneIds": ["circes-island", "underworld", "sirens-scylla-charybdis"],
+      "text": "Circe's island, first a place of enchantment and danger, then a strange pause where Odysseus receives guidance."
+    },
+    {
+      "id": "the-underworld",
+      "title": "The Underworld",
+      "type": "location",
+      "tags": ["Place", "Spiritual Place"],
+      "relatedSceneIds": ["underworld"],
+      "text": "A spiritual place beyond normal geography, where Odysseus speaks with the dead and learns what the journey has cost."
+    },
+    {
+      "id": "sirens-coast",
+      "title": "The Sirens' Coast",
+      "type": "location",
+      "tags": ["Place", "Mythic/Possible Real Place", "Temptation"],
+      "relatedSceneIds": ["sirens-scylla-charybdis"],
+      "text": "The dangerous coastline where Odysseus hears the Sirens while his crew rows safely past with their ears sealed."
+    },
+    {
+      "id": "scylla-charybdis",
+      "title": "Scylla and Charybdis",
+      "type": "location",
+      "tags": ["Place", "Mythic/Possible Real Place", "Sea Danger"],
+      "relatedSceneIds": ["sirens-scylla-charybdis"],
+      "text": "The narrow passage between monster and whirlpool, often connected in parent notes with the Strait of Messina."
+    },
+    {
+      "id": "thrinacia",
+      "title": "Thrinacia",
+      "type": "location",
+      "tags": ["Place", "Mythic/Possible Real Place", "Sun"],
+      "relatedSceneIds": ["cattle-of-the-sun"],
+      "text": "The island of Helios' sacred cattle, where hunger, warning, and disobedience lead to the final shipwreck."
+    },
+    {
+      "id": "open-sea-shipwreck",
+      "title": "The Last Shipwreck",
+      "type": "location",
+      "tags": ["Place", "Uncertain Route", "Sea Danger"],
+      "relatedSceneIds": ["cattle-of-the-sun", "odysseus-on-ogygia"],
+      "text": "A route node rather than a fixed place: Zeus' storm destroys the last ship, and Odysseus is left alone."
+    },
+    {
+      "id": "ithaca-eumaeus-hut",
+      "title": "Eumaeus' Hut",
+      "type": "location",
+      "tags": ["Place", "Known Place", "Ithaca"],
+      "relatedSceneIds": ["home-in-disguise", "father-and-son"],
+      "text": "The humble shelter where Odysseus first tests loyalty at home and where Telemachus recognizes his father."
+    },
+    {
+      "id": "ithaca-countryside",
+      "title": "Ithaca Countryside",
+      "type": "location",
+      "tags": ["Place", "Known Place", "Ithaca"],
+      "relatedSceneIds": ["peace-in-ithaca"],
+      "text": "The countryside around Laertes' farm, where the final threat of revenge is stopped and peace returns."
     },
     {
       "id": "hospitality",
