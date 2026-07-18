@@ -59,31 +59,33 @@
       </section>
 
       <section class="workspace" id="outline" aria-labelledby="outline-title">
-        <aside class="controls" aria-label="Story controls">
-          <div class="control-group">
-            <label for="scene-search">Search scenes</label>
-            <input id="scene-search" type="search" placeholder="Cyclops, Ithaca, Athena">
-          </div>
-
-          <div class="control-group">
-            <label for="scariness-filter">Max scariness</label>
-            <input id="scariness-filter" type="range" min="1" max="5" value="5">
-            <output id="scariness-output" for="scariness-filter">5</output>
-          </div>
-
-          <div class="control-group">
-            <label for="bucket-filter">Location bucket</label>
-            <select id="bucket-filter">
-              <option value="all">All buckets</option>
-            </select>
-          </div>
-
-          <div class="control-actions">
-            <button id="reset-filters" type="button">Reset</button>
-          </div>
-        </aside>
-
         <section class="outline-shell" aria-labelledby="outline-title">
+          <aside class="controls" aria-label="Story controls">
+            <div class="control-group search-control">
+              <label for="scene-search">Search scenes</label>
+              <input id="scene-search" type="search" placeholder="Cyclops, Ithaca, Athena">
+            </div>
+
+            <div class="control-group scariness-control">
+              <label for="scariness-filter">Max scariness</label>
+              <div class="range-row">
+                <input id="scariness-filter" type="range" min="1" max="5" value="5">
+                <output id="scariness-output" for="scariness-filter">5</output>
+              </div>
+            </div>
+
+            <div class="control-group bucket-control">
+              <label for="bucket-filter">Location bucket</label>
+              <select id="bucket-filter">
+                <option value="all">All buckets</option>
+              </select>
+            </div>
+
+            <div class="control-actions">
+              <button id="reset-filters" type="button">Reset</button>
+            </div>
+          </aside>
+
           <div class="section-heading">
             <div>
               <p class="eyebrow">Table of contents</p>

@@ -190,21 +190,20 @@ main {
 }
 
 .workspace {
-  display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  gap: 22px;
-  align-items: start;
+  display: block;
 }
 
 .controls {
-  position: sticky;
-  top: 88px;
   display: grid;
-  gap: 18px;
-  padding: 18px;
+  grid-template-columns: minmax(280px, 1.5fr) minmax(240px, 1fr) minmax(190px, 0.75fr) auto;
+  gap: 14px;
+  align-items: end;
+  margin-bottom: 28px;
+  padding: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 250, 240, 0.86);
+  box-shadow: 0 12px 32px rgba(39, 31, 20, 0.08);
 }
 
 .control-group {
@@ -222,7 +221,7 @@ main {
 input[type="search"],
 select {
   width: 100%;
-  min-height: 42px;
+  min-height: 40px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fffdf7;
@@ -235,8 +234,14 @@ input[type="range"] {
   accent-color: var(--clay);
 }
 
+.range-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
 output {
-  justify-self: start;
   min-width: 32px;
   padding: 3px 9px;
   border-radius: 999px;
@@ -247,7 +252,7 @@ output {
 }
 
 button {
-  min-height: 42px;
+  min-height: 40px;
   padding: 8px 12px;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-weight: 750;
@@ -289,8 +294,8 @@ h2 {
 
 .outline-layout {
   display: grid;
-  grid-template-columns: minmax(280px, 0.9fr) minmax(360px, 1.1fr);
-  gap: 18px;
+  grid-template-columns: minmax(360px, 0.92fr) minmax(520px, 1.08fr);
+  gap: 24px;
   align-items: start;
 }
 
@@ -306,11 +311,11 @@ h2 {
 
 .scene-button {
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr) 54px;
-  gap: 12px;
+  grid-template-columns: 46px minmax(0, 1fr) 64px;
+  gap: 14px;
   width: 100%;
-  min-height: 92px;
-  padding: 13px;
+  min-height: 104px;
+  padding: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 250, 240, 0.72);
@@ -325,8 +330,8 @@ h2 {
 
 .scene-number {
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   place-items: center;
   border-radius: 50%;
   background: rgba(35, 107, 115, 0.12);
@@ -341,7 +346,7 @@ h2 {
 }
 
 .scene-button h3 {
-  font-size: 1.08rem;
+  font-size: 1.16rem;
   line-height: 1.2;
 }
 
@@ -349,13 +354,13 @@ h2 {
   margin: 7px 0 0;
   color: var(--muted);
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.94rem;
   line-height: 1.35;
 }
 
 .scene-thumb {
-  width: 54px;
-  height: 72px;
+  width: 64px;
+  height: 84px;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: rgba(35, 107, 115, 0.08);
@@ -650,15 +655,8 @@ h2 {
 
 @media (max-width: 980px) {
   .hero,
-  .workspace,
   .outline-layout {
     grid-template-columns: 1fr;
-  }
-
-  .controls,
-  .scene-list {
-    position: static;
-    max-height: none;
   }
 
   .controls {
@@ -695,6 +693,10 @@ h2 {
   .fleet-card,
   .detail-grid {
     grid-template-columns: 1fr;
+  }
+
+  .range-row {
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .scene-detail {
