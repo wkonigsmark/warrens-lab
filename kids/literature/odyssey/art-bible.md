@@ -113,12 +113,26 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 - The suitors should read as careless, privileged, and mocking; keep them threatening through posture and numbers rather than gore.
 - Argos can carry emotional recognition when present: old, loyal, and gentle.
 
+### Father And Son / Eumaeus' Hut Scenes
+
+- Eumaeus' hut should feel humble, warm, earthy, and safe compared with the palace.
+- Athena's restoration of Odysseus can be shown as golden light or dissolving disguise.
+- Telemachus should look shocked, hopeful, and emotionally overwhelmed.
+- Eumaeus should read as loyal and reverent, present but not stealing focus from the father-son recognition.
+
 ### Bow Contest Scenes
 
 - The bow should be visually important and difficult: large, polished, and clearly Odysseus' special weapon.
 - Penelope should read as controlled and intelligent when she introduces the contest.
 - Telemachus should appear tense, alert, and nearly ready to act.
 - Suitors should shift from arrogance to shock as Odysseus proves himself.
+
+### Reckoning / Suitors Scenes
+
+- This is the highest-danger Ithaca scene; use fear, motion, broken furniture, and divine light instead of gore.
+- Odysseus should look controlled and formidable, not gleeful.
+- Telemachus, Eumaeus, and Philoetius should read as loyal allies holding the line.
+- Athena's presence can make the scene feel like justice and consequence rather than simple revenge.
 
 ### Penelope's Test / Olive-Tree Bed Scenes
 
@@ -230,6 +244,10 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 | `telemachus-nestor-bw` | `assets/telemachus-nestor-bw.png` | black-and-white | 1122x1402 | `telemachus-visits-nestor` | Line-art companion for Telemachus meeting Nestor. |
 | `telemachus-menelaus-helen-color` | `assets/telemachus-menelaus-helen-color.png` | color | 1122x1402 | `telemachus-visits-sparta` | Primary Sparta reference; Telemachus receives news from Menelaus and Helen. |
 | `telemachus-menelaus-helen-bw` | `assets/telemachus-menelaus-helen-bw.png` | black-and-white | 1122x1402 | `telemachus-visits-sparta` | Line-art companion for Telemachus meeting Menelaus and Helen. |
+| `telemachus-odysseus-athena-eumaeus-color` | `assets/telemachus-odysseus-athena-eumaeus-color.png` | color | 1122x1402 | `father-and-son` | Primary father-and-son reveal reference; Athena restores Odysseus in Eumaeus' hut. |
+| `telemachus-odysseus-athena-eumaeus-bw` | `assets/telemachus-odysseus-athena-eumaeus-bw.png` | black-and-white | 1122x1402 | `father-and-son` | Line-art companion for Odysseus revealing himself to Telemachus. |
+| `odysseus-suitors-color` | `assets/odysseus-suitors-color.png` | color | 1122x1402 | `reckoning` | Primary reckoning reference; Odysseus and allies confront the suitors under Athena's protection. |
+| `odysseus-suitors-bw` | `assets/odysseus-suitors-bw.png` | black-and-white | 1122x1402 | `reckoning` | Line-art companion for the reckoning scene. |
 
 ## Asset Naming Convention
 
