@@ -213,6 +213,7 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 | `cicones-odysseus-4-color` | `assets/cicones-odysseus-4-color.png` | color | 1000x773 | `cicones-raid` | Alternate Cicones composition with the strongest fire/smoke backdrop. |
 | `cicones-odysseus-4-bw` | `assets/cicones-odysseus-4-bw.png` | black-and-white | 984x712 | `cicones-raid` | Line-art companion for alternate Cicones composition 4. |
 | `lotus-eaters-odysseus-color` | `assets/lotus-eaters-odysseus-color.png` | color | 1122x1402 | `lotus-eaters` | Primary Lotus-Eaters reference; dreamy temptation with Odysseus calling the crew back. |
+| `odysseus-lotus-eaters-video` | `video/odysseus-lotus-eaters.mp4` | motion | mp4 | `lotus-eaters` | Motion plate for the soft, sleepy danger of the lotus flowers. |
 | `lotus-eaters-odysseus-bw` | `assets/lotus-eaters-odysseus-bw.png` | black-and-white | 1122x1402 | `lotus-eaters` | Line-art companion for the Lotus-Eaters scene. |
 | `aeolus-odysseus-color` | `assets/aeolus-odysseus-color.png` | color | 1122x1402 | `bag-of-winds` | Primary Aeolus reference; shows the gift of the wind bag and the accidental release. |
 | `aeolus-odysseus-bw` | `assets/aeolus-odysseus-bw.png` | black-and-white | 1122x1402 | `bag-of-winds` | Line-art companion for the Aeolus and Bag of Winds scene. |
