@@ -3,7 +3,8 @@ const readerState = {
   details: { sceneDetails: {} },
   assets: [],
   scenes: [],
-  currentIndex: 0
+  currentIndex: 0,
+  mediaMode: localStorage.getItem("odysseyMediaMode") === "motion" ? "motion" : "still"
 };
 
 const readerElements = {
@@ -11,6 +12,7 @@ const readerElements = {
   count: document.querySelector("#reader-count"),
   prev: document.querySelector("#prev-scene"),
   next: document.querySelector("#next-scene"),
+  mediaMode: document.querySelector("#media-mode"),
   tocButton: document.querySelector("#toc-button"),
   tocPanel: document.querySelector("#toc-panel"),
   tocClose: document.querySelector("#toc-close"),
@@ -47,8 +49,12 @@ function buildSceneOrder(data) {
 }
 
 function getPrimaryArt(sceneId) {
-  return readerState.assets.find((asset) => asset.variant === "color" && asset.sceneIds.includes(sceneId))
-    ?? readerState.assets.find((asset) => asset.sceneIds.includes(sceneId));
+  return readerState.assets.find((asset) => asset.type !== "video" && asset.variant === "color" && asset.sceneIds.includes(sceneId))
+    ?? readerState.assets.find((asset) => asset.type !== "video" && asset.sceneIds.includes(sceneId));
+}
+
+function getPrimaryVideo(sceneId) {
+  return readerState.assets.find((asset) => asset.type === "video" && asset.sceneIds.includes(sceneId)) ?? null;
 }
 
 function renderReader() {
@@ -63,6 +69,7 @@ function renderReader() {
   }
 
   const art = getPrimaryArt(scene.id);
+  const video = getPrimaryVideo(scene.id);
   const readSummary = readerState.details.sceneDetails[scene.id] ?? scene.summary;
   const total = readerState.scenes.length;
   const fleetState = getFleetState(scene.fleetStateId);
@@ -74,10 +81,11 @@ function renderReader() {
   readerElements.count.textContent = `${scene.outlinePosition} of ${total}`;
   readerElements.prev.disabled = readerState.currentIndex === 0;
   readerElements.next.disabled = readerState.currentIndex === total - 1;
+  renderMediaModeButton(video);
 
   readerElements.shell.innerHTML = `
     <article class="reader-card">
-      ${renderArt(art)}
+      ${renderArt(art, video)}
       <div class="scene-body">
         <p class="eyebrow">Scene ${scene.outlinePosition} of ${total}</p>
         <h1>${escapeHtml(scene.title)}</h1>
@@ -230,7 +238,16 @@ function renderFleetState(fleetState) {
   `;
 }
 
-function renderArt(art) {
+function renderArt(art, video) {
+  if (readerState.mediaMode === "motion" && video) {
+    return `
+      <figure class="scene-art motion">
+        <video src="${escapeAttribute(video.file)}" aria-label="${escapeAttribute(video.alt)}" autoplay muted loop playsinline controls preload="metadata"></video>
+        <figcaption>${escapeHtml(video.notes)}</figcaption>
+      </figure>
+    `;
+  }
+
   if (!art) {
     return `<div class="scene-art empty">Art needed</div>`;
   }
@@ -240,6 +257,14 @@ function renderArt(art) {
       <img src="${escapeAttribute(art.file)}" alt="${escapeAttribute(art.alt)}">
     </figure>
   `;
+}
+
+function renderMediaModeButton(video) {
+  const isMotion = readerState.mediaMode === "motion";
+  readerElements.mediaMode.textContent = video && isMotion ? "Motion" : "Still";
+  readerElements.mediaMode.setAttribute("aria-pressed", video && isMotion ? "true" : "false");
+  readerElements.mediaMode.disabled = !video;
+  readerElements.mediaMode.title = video ? "Toggle still art or motion plate" : "No motion plate for this scene yet";
 }
 
 function renderToc() {
@@ -303,6 +328,11 @@ function hydrateIndexFromHash() {
 function bindEvents() {
   readerElements.prev.addEventListener("click", () => goToOffset(-1));
   readerElements.next.addEventListener("click", () => goToOffset(1));
+  readerElements.mediaMode.addEventListener("click", () => {
+    readerState.mediaMode = readerState.mediaMode === "motion" ? "still" : "motion";
+    localStorage.setItem("odysseyMediaMode", readerState.mediaMode);
+    renderReader();
+  });
   readerElements.tocButton.addEventListener("click", () => {
     if (readerElements.tocPanel.hidden) {
       openToc();

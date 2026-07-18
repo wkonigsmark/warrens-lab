@@ -233,6 +233,7 @@ function renderSceneDetail(scene) {
   const orderedScene = getStoryOutlineScenes().find((entry) => entry.id === scene.id) ?? scene;
   const location = state.data.locationNodes.find((node) => node.id === scene.locationNode);
   const art = getPrimarySceneArt(scene.id);
+  const video = getPrimarySceneVideo(scene.id);
   const fleetState = getFleetState(scene.fleetStateId);
   const briefing = getSceneBriefing(scene.id);
   const timeAway = getTimeAwayEstimate(scene.id);
@@ -243,6 +244,7 @@ function renderSceneDetail(scene) {
     <p class="scene-summary">${escapeHtml(scene.summary)}</p>
     ${renderTimeAway(timeAway)}
     ${renderSceneBriefing(briefing)}
+    ${renderSceneVideo(video)}
     ${renderStorybookDraft(scene.id)}
     ${renderExpandedSummary(scene)}
     ${renderSceneArt(art)}
@@ -439,8 +441,12 @@ function renderExpandedSummary(scene) {
 }
 
 function getPrimarySceneArt(sceneId) {
-  return state.assets.find((asset) => asset.variant === "color" && asset.sceneIds.includes(sceneId))
-    ?? state.assets.find((asset) => asset.sceneIds.includes(sceneId));
+  return state.assets.find((asset) => asset.type !== "video" && asset.variant === "color" && asset.sceneIds.includes(sceneId))
+    ?? state.assets.find((asset) => asset.type !== "video" && asset.sceneIds.includes(sceneId));
+}
+
+function getPrimarySceneVideo(sceneId) {
+  return state.assets.find((asset) => asset.type === "video" && asset.sceneIds.includes(sceneId)) ?? null;
 }
 
 function renderSceneThumb(art) {
@@ -460,6 +466,19 @@ function renderSceneArt(art) {
     <figure class="scene-art">
       <img src="${escapeAttribute(art.file)}" alt="${escapeAttribute(art.alt)}">
       <figcaption>${escapeHtml(art.notes)} <strong>${escapeHtml(art.variant)}</strong> reference.</figcaption>
+    </figure>
+  `;
+}
+
+function renderSceneVideo(video) {
+  if (!video) {
+    return "";
+  }
+
+  return `
+    <figure class="scene-art scene-motion">
+      <video src="${escapeAttribute(video.file)}" aria-label="${escapeAttribute(video.alt)}" autoplay muted loop playsinline controls preload="metadata"></video>
+      <figcaption>${escapeHtml(video.notes)} <strong>motion</strong> reference.</figcaption>
     </figure>
   `;
 }

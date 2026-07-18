@@ -394,11 +394,16 @@ h2 {
   background: #fffdf7;
 }
 
-.scene-art img {
+.scene-art img,
+.scene-art video {
   display: block;
   width: 100%;
   max-height: 520px;
   object-fit: contain;
+}
+
+.scene-art video {
+  background: #111;
 }
 
 .scene-art figcaption {
