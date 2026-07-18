@@ -24,6 +24,169 @@
     "penelopes-test": "Even after the battle, Penelope does not simply accept that the stranger is Odysseus. She has survived for years by being careful, and she tests him with the secret of their marriage bed. Odysseus built the bed around a living olive tree, so it cannot be moved. When he reacts with the knowledge only the real Odysseus could have, Penelope knows him at last. Their reunion is not simple fairy-tale happiness; it is trust returning after a very long absence.",
     "peace-in-ithaca": "The story does not end the moment the suitors fall. Their families are angry, and Ithaca is close to another cycle of violence. Odysseus goes to see his father Laertes, and another confrontation begins to form. Athena and Zeus intervene so the fighting does not continue forever. Peace returns to Ithaca, and the long journey finally becomes more than arrival: Odysseus is home, his family is joined again, and the kingdom can begin to heal."
   },
+  "sceneBriefings": {
+    "cicones-raid": {
+      "livingCrew": ["Eurylochus", "Elpenor", "Polites", "Perimedes"],
+      "featuredCharacters": ["Odysseus", "Odysseus' crew", "the Cicones"],
+      "namedCrewAtRisk": "No named crewman dies in this scene.",
+      "sceneLosses": "72 unnamed crewmen die: six men from each of the twelve ships.",
+      "endState": "12 ships remain, but the crew is smaller and the journey begins with grief."
+    },
+    "lotus-eaters": {
+      "livingCrew": ["Eurylochus", "Elpenor", "Polites", "Perimedes"],
+      "featuredCharacters": ["Odysseus", "Odysseus' crew", "Lotus-Eaters"],
+      "namedCrewAtRisk": "No named crewman dies in this scene.",
+      "sceneLosses": "No deaths are reported.",
+      "endState": "12 ships remain. Some sailors have to be forced back aboard because the lotus makes them forget home."
+    },
+    "cyclops-cave": {
+      "livingCrew": ["Eurylochus", "Elpenor", "Polites", "Perimedes"],
+      "featuredCharacters": ["Odysseus", "Polyphemus", "selected crewmen", "Poseidon"],
+      "namedCrewAtRisk": "No named crewman is identified as dying here.",
+      "sceneLosses": "Six unnamed men from Odysseus' selected cave party die.",
+      "endState": "12 ships remain. Odysseus escapes, but Poseidon's curse begins."
+    },
+    "bag-of-winds": {
+      "livingCrew": ["Eurylochus", "Elpenor", "Polites", "Perimedes"],
+      "featuredCharacters": ["Odysseus", "Aeolus", "Odysseus' crew"],
+      "namedCrewAtRisk": "No named crewman dies in this scene.",
+      "sceneLosses": "No deaths are reported.",
+      "endState": "12 ships remain, but the fleet loses its near-return to Ithaca."
+    },
+    "laestrygonians": {
+      "livingCrew": ["Eurylochus", "Elpenor", "Polites", "Perimedes"],
+      "featuredCharacters": ["Odysseus", "Odysseus' crew", "Laestrygonians"],
+      "namedCrewAtRisk": "No named crewman is specifically reported dead, but most of the fleet is destroyed.",
+      "sceneLosses": "Eleven ships are destroyed. The exact number of men lost is not given.",
+      "endState": "Only Odysseus' ship remains, carrying a much smaller surviving crew."
+    },
+    "circes-island": {
+      "livingCrew": ["Eurylochus", "Elpenor", "Polites", "Perimedes"],
+      "featuredCharacters": ["Odysseus", "Circe", "Hermes", "Eurylochus", "Polites", "Elpenor", "Odysseus' crew"],
+      "namedCrewAtRisk": "Elpenor dies accidentally before the underworld journey.",
+      "sceneLosses": "One named crewman, Elpenor, dies. The transformed men survive and return to human shape.",
+      "endState": "One ship remains. Eurylochus, Polites, and Perimedes can continue; Elpenor becomes important in the underworld scene."
+    },
+    "underworld": {
+      "livingCrew": ["Eurylochus", "Polites", "Perimedes"],
+      "featuredCharacters": ["Odysseus", "Tiresias", "Elpenor's spirit", "Anticleia", "Achilles", "Agamemnon"],
+      "namedCrewAtRisk": "No living named crewman dies in this scene.",
+      "sceneLosses": "No new ship or crew losses are reported.",
+      "endState": "Odysseus receives warnings. Elpenor is mourned and properly remembered."
+    },
+    "sirens-scylla-charybdis": {
+      "livingCrew": ["Eurylochus", "Polites", "Perimedes"],
+      "featuredCharacters": ["Odysseus", "Odysseus' crew", "Sirens", "Scylla", "Charybdis"],
+      "namedCrewAtRisk": "No named crewman is identified as one of Scylla's victims.",
+      "sceneLosses": "Scylla takes six unnamed men from the final ship.",
+      "endState": "One ship remains, but the crew is smaller and shaken by an impossible choice."
+    },
+    "cattle-of-the-sun": {
+      "livingCrew": ["Eurylochus", "Polites", "Perimedes"],
+      "featuredCharacters": ["Odysseus", "Eurylochus", "Odysseus' crew", "Helios", "Zeus"],
+      "namedCrewAtRisk": "Eurylochus and the remaining crew perish after the cattle are killed.",
+      "sceneLosses": "The final ship is destroyed. Every remaining crewman dies; Odysseus alone survives.",
+      "endState": "0 ships remain. Odysseus is the only survivor."
+    },
+    "odysseus-on-ogygia": {
+      "livingCrew": [],
+      "featuredCharacters": ["Odysseus", "Calypso", "Hermes", "Athena", "Zeus"],
+      "namedCrewAtRisk": "No crew remains with Odysseus.",
+      "sceneLosses": "No new crew losses occur in this scene.",
+      "endState": "Odysseus remains alone, longing for Ithaca."
+    },
+    "trouble-in-ithaca": {
+      "livingCrew": [],
+      "featuredCharacters": ["Penelope", "Telemachus", "Athena", "the suitors", "Antinous", "Eurymachus"],
+      "namedCrewAtRisk": "Odysseus' crew is not present in Ithaca.",
+      "sceneLosses": "No ship or crew losses occur in this scene.",
+      "endState": "The palace is still under pressure from the suitors."
+    },
+    "athena-sends-telemachus": {
+      "livingCrew": [],
+      "featuredCharacters": ["Athena as Mentes", "Telemachus", "Penelope", "the suitors", "Halitherses"],
+      "namedCrewAtRisk": "Odysseus' crew is not present in this scene.",
+      "sceneLosses": "No ship or crew losses occur in this scene.",
+      "endState": "Telemachus begins to act and prepares to search for news."
+    },
+    "telemachus-visits-nestor": {
+      "livingCrew": [],
+      "featuredCharacters": ["Telemachus", "Athena as Mentor", "Nestor", "Pisistratus"],
+      "namedCrewAtRisk": "Odysseus' crew is not present in this scene.",
+      "sceneLosses": "No ship or crew losses occur in this scene.",
+      "endState": "Telemachus gains help and travels onward with Pisistratus."
+    },
+    "telemachus-visits-sparta": {
+      "livingCrew": [],
+      "featuredCharacters": ["Telemachus", "Menelaus", "Helen", "Pisistratus", "the suitors"],
+      "namedCrewAtRisk": "Odysseus' crew is not present in this scene.",
+      "sceneLosses": "No ship or crew losses occur in this scene.",
+      "endState": "Telemachus gains hope, while the suitors plan an ambush."
+    },
+    "storm-and-scheria": {
+      "livingCrew": [],
+      "featuredCharacters": ["Odysseus", "Poseidon", "Ino", "Athena"],
+      "namedCrewAtRisk": "No crew remains with Odysseus.",
+      "sceneLosses": "No crew dies, but Odysseus' raft is wrecked.",
+      "endState": "Odysseus reaches Scheria alone and exhausted."
+    },
+    "phaeacian-court": {
+      "livingCrew": [],
+      "featuredCharacters": ["Odysseus", "Nausicaa", "Alcinous", "Arete", "Demodocus"],
+      "namedCrewAtRisk": "No crew remains with Odysseus.",
+      "sceneLosses": "No ship or crew losses occur in this scene.",
+      "endState": "The Phaeacians agree to help Odysseus return home."
+    },
+    "home-in-disguise": {
+      "livingCrew": [],
+      "featuredCharacters": ["Odysseus", "Athena", "Eumaeus"],
+      "namedCrewAtRisk": "Odysseus' crew is gone; this is now a homecoming story.",
+      "sceneLosses": "No ship or crew losses occur in this scene.",
+      "endState": "Odysseus is home in Ithaca, hidden in disguise."
+    },
+    "father-and-son": {
+      "livingCrew": [],
+      "featuredCharacters": ["Odysseus", "Telemachus", "Athena", "Eumaeus"],
+      "namedCrewAtRisk": "Odysseus' crew is not present.",
+      "sceneLosses": "No ship or crew losses occur in this scene.",
+      "endState": "Odysseus and Telemachus are reunited and begin planning."
+    },
+    "beggar-in-palace": {
+      "livingCrew": [],
+      "featuredCharacters": ["Odysseus", "Penelope", "Telemachus", "Argos", "Eurycleia", "the suitors"],
+      "namedCrewAtRisk": "Odysseus' crew is not present.",
+      "sceneLosses": "No ship or crew losses occur. Argos dies after recognizing Odysseus.",
+      "endState": "Odysseus has tested the palace while keeping his identity hidden."
+    },
+    "bow-contest": {
+      "livingCrew": [],
+      "featuredCharacters": ["Penelope", "Odysseus", "Telemachus", "the suitors", "Eumaeus", "Philoetius"],
+      "namedCrewAtRisk": "Odysseus' crew is not present.",
+      "sceneLosses": "No ship or crew losses occur in this scene.",
+      "endState": "Odysseus strings the bow and the hidden-return story turns toward open reckoning."
+    },
+    "reckoning": {
+      "livingCrew": [],
+      "featuredCharacters": ["Odysseus", "Telemachus", "Athena", "the suitors", "Eumaeus", "Philoetius", "Eurycleia"],
+      "namedCrewAtRisk": "Odysseus' crew is not present.",
+      "sceneLosses": "No ship or crew losses occur; the suitors are defeated.",
+      "endState": "Odysseus regains the palace, though peace is not fully settled yet."
+    },
+    "penelopes-test": {
+      "livingCrew": [],
+      "featuredCharacters": ["Odysseus", "Penelope", "Eurycleia"],
+      "namedCrewAtRisk": "Odysseus' crew is not present.",
+      "sceneLosses": "No ship or crew losses occur in this scene.",
+      "endState": "Penelope recognizes Odysseus through the secret of their bed."
+    },
+    "peace-in-ithaca": {
+      "livingCrew": [],
+      "featuredCharacters": ["Odysseus", "Penelope", "Telemachus", "Laertes", "Athena", "Zeus"],
+      "namedCrewAtRisk": "Odysseus' crew is not present.",
+      "sceneLosses": "No ship or crew losses occur.",
+      "endState": "Athena stops the cycle of revenge, and Ithaca can heal."
+    }
+  },
   "journeyDetails": {
     "troy": "The route begins at Troy, after the war is already over. Odysseus has survived the fighting and helped the Greeks win through cunning, but victory does not mean rest. He and his men sail away carrying glory, grief, treasure, and the habits of war into a dangerous peacetime journey.",
     "cicones": "At Ismarus, the land of the Cicones, Odysseus' men behave like raiders instead of guests. They win at first, but they stay too long, and the Cicones return in force. This stop marks the first sign that the journey home will be shaped not only by monsters and gods, but also by human choices.",

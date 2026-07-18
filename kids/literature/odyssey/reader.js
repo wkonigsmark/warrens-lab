@@ -66,6 +66,7 @@ function renderReader() {
   const readSummary = readerState.details.sceneDetails[scene.id] ?? scene.summary;
   const total = readerState.scenes.length;
   const fleetState = getFleetState(scene.fleetStateId);
+  const briefing = getSceneBriefing(scene.id);
 
   document.title = `${scene.outlinePosition}. ${scene.title} - Odyssey Reader`;
   readerElements.count.textContent = `${scene.outlinePosition} of ${total}`;
@@ -79,6 +80,7 @@ function renderReader() {
         <p class="eyebrow">Scene ${scene.outlinePosition} of ${total}</p>
         <h1>${escapeHtml(scene.title)}</h1>
         <p class="short-summary">${escapeHtml(scene.summary)}</p>
+        ${renderSceneBriefing(briefing)}
         <p class="read-summary">${escapeHtml(readSummary)}</p>
         ${renderFleetState(fleetState)}
         <div class="scene-meta">
@@ -93,6 +95,41 @@ function renderReader() {
   renderToc();
   window.location.hash = `scene-${scene.outlinePosition}`;
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function getSceneBriefing(sceneId) {
+  return readerState.details.sceneBriefings?.[sceneId] ?? null;
+}
+
+function renderSceneBriefing(briefing) {
+  if (!briefing) {
+    return "";
+  }
+
+  const livingCrew = briefing.livingCrew?.length
+    ? briefing.livingCrew.map((name) => `<li class="tag">${escapeHtml(name)}</li>`).join("")
+    : `<li class="tag quiet">No crew present</li>`;
+
+  const featured = briefing.featuredCharacters?.length
+    ? briefing.featuredCharacters.map((name) => `<li class="tag">${escapeHtml(name)}</li>`).join("")
+    : "";
+
+  return `
+    <section class="chapter-briefing" aria-label="Chapter briefing">
+      <h2>Chapter Briefing</h2>
+      <div class="briefing-group">
+        <h3>Named Crew Alive</h3>
+        <ul>${livingCrew}</ul>
+      </div>
+      <div class="briefing-group">
+        <h3>Characters This Scene</h3>
+        <ul>${featured}</ul>
+      </div>
+      <p><strong>Risk:</strong> ${escapeHtml(briefing.namedCrewAtRisk)}</p>
+      <p><strong>Scene losses:</strong> ${escapeHtml(briefing.sceneLosses)}</p>
+      <p><strong>End state:</strong> ${escapeHtml(briefing.endState)}</p>
+    </section>
+  `;
 }
 
 function getFleetState(fleetStateId) {

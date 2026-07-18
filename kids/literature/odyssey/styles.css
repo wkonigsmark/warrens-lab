@@ -430,6 +430,53 @@ h2 {
   background: rgba(247, 242, 232, 0.62);
 }
 
+.chapter-briefing {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid rgba(35, 107, 115, 0.18);
+  border-radius: 8px;
+  background: rgba(35, 107, 115, 0.07);
+}
+
+.briefing-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 16px;
+}
+
+.chapter-briefing h4 {
+  margin: 0 0 8px;
+  color: var(--sea-dark);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.chapter-briefing ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.briefing-notes {
+  display: grid;
+  gap: 7px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(35, 107, 115, 0.14);
+}
+
+.briefing-notes p {
+  margin: 0;
+  color: #413a33;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.42;
+}
+
 .story-detail h4 {
   margin: 0 0 8px;
   color: var(--clay);
@@ -473,6 +520,11 @@ h2 {
 .tag.map {
   background: rgba(35, 107, 115, 0.12);
   color: var(--sea-dark);
+}
+
+.tag.quiet {
+  background: rgba(112, 104, 95, 0.1);
+  color: var(--muted);
 }
 
 .tag.tiny {
@@ -690,6 +742,7 @@ h2 {
 
   .hero-panel,
   .controls,
+  .briefing-row,
   .fleet-card,
   .detail-grid {
     grid-template-columns: 1fr;

@@ -234,11 +234,13 @@ function renderSceneDetail(scene) {
   const location = state.data.locationNodes.find((node) => node.id === scene.locationNode);
   const art = getPrimarySceneArt(scene.id);
   const fleetState = getFleetState(scene.fleetStateId);
+  const briefing = getSceneBriefing(scene.id);
 
   elements.sceneDetail.innerHTML = `
     <p class="eyebrow">Chronology ${orderedScene.outlinePosition ?? scene.order}</p>
     <h3>${escapeHtml(scene.title)}</h3>
     <p class="scene-summary">${escapeHtml(scene.summary)}</p>
+    ${renderSceneBriefing(briefing)}
     ${renderExpandedSummary(scene)}
     ${renderSceneArt(art)}
     ${renderFleetState(fleetState)}
@@ -269,6 +271,44 @@ function renderSceneDetail(scene) {
         <p class="location-note">${escapeHtml(location?.parentGeographyNote ?? "Map note needed.")}</p>
       </div>
     </div>
+  `;
+}
+
+function getSceneBriefing(sceneId) {
+  return state.details.sceneBriefings?.[sceneId] ?? null;
+}
+
+function renderSceneBriefing(briefing) {
+  if (!briefing) {
+    return "";
+  }
+
+  const livingCrew = briefing.livingCrew?.length
+    ? briefing.livingCrew.map((name) => `<li class="tag">${escapeHtml(name)}</li>`).join("")
+    : `<li class="tag quiet">No crew present</li>`;
+
+  const featured = briefing.featuredCharacters?.length
+    ? briefing.featuredCharacters.map((name) => `<li class="tag">${escapeHtml(name)}</li>`).join("")
+    : "";
+
+  return `
+    <section class="chapter-briefing" aria-label="Chapter briefing">
+      <div class="briefing-row">
+        <div>
+          <h4>Named Crew Alive</h4>
+          <ul>${livingCrew}</ul>
+        </div>
+        <div>
+          <h4>Characters This Scene</h4>
+          <ul>${featured}</ul>
+        </div>
+      </div>
+      <div class="briefing-notes">
+        <p><strong>Risk:</strong> ${escapeHtml(briefing.namedCrewAtRisk)}</p>
+        <p><strong>Scene losses:</strong> ${escapeHtml(briefing.sceneLosses)}</p>
+        <p><strong>End state:</strong> ${escapeHtml(briefing.endState)}</p>
+      </div>
+    </section>
   `;
 }
 

@@ -106,6 +106,13 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 - Telemachus should appear tense, alert, and nearly ready to act.
 - Suitors should shift from arrogance to shock as Odysseus proves himself.
 
+### Penelope's Test / Olive-Tree Bed Scenes
+
+- The olive tree should be unmistakable: living roots, trunk, and bed all connected.
+- Penelope should read as careful and emotionally guarded, not cold.
+- Odysseus should react strongly because the bed is proof of identity, marriage, and home.
+- This scene should feel intimate, warm, and still after the danger of the bow and reckoning.
+
 ### Poseidon / Raft Wreck Scenes
 
 - Poseidon may appear in the storm clouds or waves as a divine presence.
@@ -203,6 +210,8 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 | `penelope-telemachus--odysseus-bow-bw` | `assets/penelope-telemachus--odysseus-bow-bw.png` | black-and-white | 1122x1402 | `bow-contest` | Line-art companion for the primary bow contest scene. |
 | `penelope-telemachus-bow-color` | `assets/penelope-telemachus-bow-color.png` | color | 1122x1402 | `bow-contest` | Alternate bow contest setup with Penelope presenting the bow. |
 | `penelope-telemachus-bow-bw` | `assets/penelope-telemachus-bow-bw.png` | black-and-white | 1122x1402 | `bow-contest` | Line-art companion for the bow contest setup image. |
+| `odysseus-penelope-olive-tree-bed-color` | `assets/odysseus-penelope-olive-tree-bed-color.png` | color | 1122x1402 | `penelopes-test` | Primary Penelope's test reference; the olive-tree bed proves Odysseus' identity. |
+| `odysseus-penelope-olive-tree-bed-bw` | `assets/odysseus-penelope-olive-tree-bed-bw.png` | black-and-white | 1122x1402 | `penelopes-test` | Line-art companion for Penelope's test and the olive-tree bed. |
 
 ## Asset Naming Convention
 
