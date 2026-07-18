@@ -305,6 +305,8 @@
     /* ── SMART BUILD ── */
     .smart-btn{display:inline-flex;align-items:center;gap:5px;font-family:inherit;font-size:.66rem;font-weight:800;padding:7px 16px;border-radius:20px;cursor:pointer;letter-spacing:.02em;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);color:#fbbf24;transition:background .15s}
     .smart-btn:hover{background:rgba(251,191,36,.2)}
+    .monster-btn{display:inline-flex;align-items:center;gap:5px;font-family:inherit;font-size:.66rem;font-weight:800;padding:7px 16px;border-radius:20px;cursor:pointer;letter-spacing:.02em;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.35);color:var(--red);transition:background .15s}
+    .monster-btn:hover{background:rgba(248,113,113,.22)}
     .smart-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
     .smart-overlay.open{opacity:1;pointer-events:all}
     .smart-overlay::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(6px)}
@@ -485,8 +487,9 @@
     </div>
   </div>
   <div class="week-scroll" id="weekScroll"></div>
-  <div style="padding:8px 0 2px;text-align:center">
+  <div style="padding:8px 0 2px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
     <button class="smart-btn" onclick="openSmartBuilder()">⚡ Smart Build — auto-select by recovery</button>
+    <button class="monster-btn" onclick="loadWorkout('core-monster');window.scrollTo({top:0,behavior:'smooth'})">🔥 Core Monster</button>
   </div>
 </div>
 
@@ -638,10 +641,11 @@ const DB_REC_MUSCLES = {
   'db-pull':        ['back','lats','biceps','core'],
   'db-upper':       ['chest','lats','shoulders','biceps','triceps','core'],
   'full-body-core': ['chest','back','lats','shoulders','triceps','biceps','quads','glutes','hamstrings','calves','core','obliques'],
+  'core-monster':   ['quads','hamstrings','glutes','back','core','obliques'],
 };
 const DB_REC_NAMES = {
   'db-push':'DB Push Day','db-lower':'DB Lower Body','db-pull':'DB Pull & Back',
-  'db-upper':'DB Upper Burn','full-body-core':'Full Body Core Focus',
+  'db-upper':'DB Upper Burn','full-body-core':'Full Body Core Focus','core-monster':'Core Monster',
 };
 
 const SMART_POOL = {
@@ -895,6 +899,38 @@ const WORKOUTS = {
         { id:'d1', name:"Child's Pose / Cat-Cow",    detail:'Hold & breathe',  sets:1, muscles:[['other','Spine'],['other','Hips']],     tip:null, video_url:'https://www.youtube.com/results?search_query=child+pose+cool+down+stretch' },
         { id:'d2', name:'Seated Spinal Twist',       detail:'Both sides',      sets:1, muscles:[['back','Back'],['other','Spine']],       tip:null, video_url:'https://www.youtube.com/results?search_query=seated+spinal+twist+stretch' },
         { id:'d3', name:'Standing Forward Fold',     detail:'Hold 30 sec',     sets:1, muscles:[['lower','Hamstrings'],['other','Calves']], tip:null, video_url:'https://www.youtube.com/results?search_query=standing+forward+fold+hamstring+stretch' },
+      ]},
+    ]
+  },
+
+  // ── CORE MONSTER (standalone) ───────────────────────
+  'core-monster': {
+    title:'Core Monster', mode:'dumbbell', totalSets:39,
+    sections:[
+      { id:'warmup', name:'Warm-Up', emoji:'🔥', meta:'5 min · switch on the posterior chain', weighted:false, exercises:[
+        { id:'w1', name:'Bodyweight Squats',   detail:'20 reps',            sets:1, muscles:[['lower','Quads'],['lower','Glutes']],                 tip:'Deep and controlled — wake the legs up', video_url:'https://www.youtube.com/watch?v=aclHkVaku9U' },
+        { id:'w2', name:'Bird-Dog',            detail:'10 each side',       sets:1, muscles:[['core','Core'],['back','Lower Back']],               tip:'Opposite arm + leg, hips level — brace before you reach', video_url:'https://www.youtube.com/results?search_query=bird+dog+core+exercise' },
+        { id:'w3', name:'Glute Bridge',        detail:'15 reps',            sets:1, muscles:[['lower','Glutes'],['lower','Hamstrings']],           tip:'Squeeze glutes hard at the top, 1s pause', video_url:'https://www.youtube.com/results?search_query=glute+bridge' },
+      ]},
+      { id:'strength', name:'Posterior Chain Power', emoji:'💪', meta:'3 rounds · 60-75s rest', weighted:true, exercises:[
+        { id:'s1', name:'Goblet Squat',        detail:'15 reps (dumbbell at chest)', sets:3, muscles:[['lower','Quads'],['lower','Glutes'],['core','Core']],           tip:'Chest tall, brace the core, drive through heels', video_url:'https://www.youtube.com/watch?v=MeIiIdhvXT4' },
+        { id:'s2', name:'Romanian Deadlift',   detail:'12 reps',            sets:3, muscles:[['lower','Hamstrings'],['lower','Glutes'],['back','Lower Back']], tip:'Hinge at hips, bar close, feel the hamstring stretch — control the lower back', video_url:'https://www.youtube.com/watch?v=jEy_czb3RKA' },
+        { id:'s3', name:'DB Reverse Lunge',    detail:'10 reps each leg',   sets:3, muscles:[['lower','Quads'],['lower','Glutes'],['core','Core']],           tip:'Step back, drop the knee, stay upright — resist the wobble', video_url:'https://www.youtube.com/results?search_query=dumbbell+reverse+lunge' },
+        { id:'s4', name:'DB Good Morning',     detail:'12 reps',            sets:3, muscles:[['lower','Hamstrings'],['back','Lower Back']],                   tip:'DB on upper back, soft knees, hinge until you feel the hamstrings load — light and clean', video_url:'https://www.youtube.com/watch?v=YA-h3n9L4YU' },
+        { id:'s5', name:'DB Suitcase Carry',   detail:'40 steps each side', sets:3, muscles:[['core','Obliques'],['core','Core'],['back','Lower Back']],       tip:'One heavy DB, stand dead tall — fight the lean, this lights up the deep core', video_url:'https://www.youtube.com/results?search_query=suitcase+carry+obliques' },
+      ]},
+      { id:'core', name:'The Core Gauntlet', emoji:'🔥', meta:'3 rounds · MINIMAL rest — this is the pain', weighted:true, exercises:[
+        { id:'c1', name:'Weighted Russian Twists', detail:'20 reps each side', sets:3, muscles:[['core','Obliques'],['core','Core']],   tip:'Feet off the floor if you dare — rotate from the ribs, not the arms', video_url:'https://www.youtube.com/watch?v=wkD8rjkodUI' },
+        { id:'c2', name:'Weighted Leg Raise',      detail:'15 reps',           sets:3, muscles:[['core','Core']],                       tip:'DB pinched between the feet — lower slowly, low back STAYS pinned', video_url:'https://www.youtube.com/results?search_query=lying+leg+raise+lower+abs' },
+        { id:'c3', name:'DB Deadbug',              detail:'12 reps each side', sets:3, muscles:[['core','Core'],['core','Stability']],  tip:'Opposite arm + leg extend, lower back glued to floor the whole time', video_url:'https://www.youtube.com/watch?v=4XLEnwUr1d8' },
+        { id:'c4', name:'Plank Hold',              detail:'Hold 45-60 sec',    sets:3, muscles:[['core','Core'],['upper','Shoulders']], tip:'Squeeze glutes + abs, hips level — do not sag', video_url:'https://www.youtube.com/watch?v=pvIjcsm_8dU' },
+        { id:'c5', name:'Hollow Body Hold',        detail:'Hold 30-45 sec',    sets:3, muscles:[['core','Core']],                       tip:'Low back flat, arms & legs just off the floor — shake is the point', video_url:'https://www.youtube.com/results?search_query=hollow+body+hold+core' },
+        { id:'c6', name:'Superman Hold',           detail:'15 reps, 2 sec hold', sets:3, muscles:[['back','Lower Back'],['lower','Glutes']], tip:'Lift arms and legs together, squeeze at the top — finishes off the low back', video_url:'https://www.youtube.com/results?search_query=superman+hold+back' },
+      ]},
+      { id:'cooldown', name:'Cool-Down', emoji:'🧘', meta:'5 min · decompress', weighted:false, exercises:[
+        { id:'d1', name:'Standing Quad Stretch', detail:'Hold 30 sec each',  sets:1, muscles:[['lower','Quads']],                    tip:'Heel to glute, knees together, stand tall', video_url:'https://www.youtube.com/results?search_query=standing+quad+stretch' },
+        { id:'d2', name:'Seated Forward Fold',   detail:'Hold 30-45 sec',    sets:1, muscles:[['lower','Hamstrings'],['back','Lower Back']], tip:'Hinge from the hips, reach long — release the hamstrings', video_url:'https://www.youtube.com/results?search_query=seated+forward+fold+hamstring+stretch' },
+        { id:'d3', name:"Child's Pose",          detail:'Hold 45 sec',       sets:1, muscles:[['back','Back'],['other','Spine']],   tip:'Walk hands forward, sink hips to heels — decompress the lower back', video_url:'https://www.youtube.com/results?search_query=childs+pose+back+stretch' },
       ]},
     ]
   },
