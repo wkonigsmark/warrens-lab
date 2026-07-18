@@ -415,7 +415,7 @@
       "summary": "Penelope and Telemachus struggle while suitors crowd Odysseus' palace.",
       "locationNode": "ithaca-palace",
       "locationBucket": "known place",
-      "characters": ["Penelope", "Telemachus", "Athena", "the suitors"],
+      "characters": ["Penelope", "Telemachus", "Athena", "Antinous", "Eurymachus", "the suitors"],
       "scarinessLevel": 1,
       "themes": ["waiting", "growing up", "disorder at home"]
     },
@@ -426,7 +426,7 @@
       "summary": "Athena gives Telemachus courage and urges him to search for news of his father.",
       "locationNode": "ithaca-palace",
       "locationBucket": "known place",
-      "characters": ["Athena", "Telemachus", "Penelope", "the suitors"],
+      "characters": ["Athena", "Mentes", "Telemachus", "Penelope", "Antinous", "Eurymachus", "Halitherses", "the suitors"],
       "scarinessLevel": 1,
       "themes": ["courage", "guidance", "disguise"]
     },
@@ -448,7 +448,7 @@
       "summary": "In Sparta, Telemachus learns that Odysseus may still be alive.",
       "locationNode": "sparta",
       "locationBucket": "known place",
-      "characters": ["Telemachus", "Menelaus", "Helen", "Pisistratus", "the suitors"],
+      "characters": ["Telemachus", "Menelaus", "Helen", "Pisistratus", "Antinous", "Eurymachus", "the suitors"],
       "scarinessLevel": 2,
       "themes": ["hope", "old stories", "danger at home"]
     },
@@ -613,7 +613,7 @@
       "summary": "Odysseus enters his palace in disguise and sees the suitors' behavior.",
       "locationNode": "ithaca-palace",
       "locationBucket": "known place",
-      "characters": ["Odysseus", "Penelope", "Telemachus", "Argos", "Eurycleia", "the suitors"],
+      "characters": ["Odysseus", "Penelope", "Telemachus", "Argos", "Eurycleia", "Antinous", "Eurymachus", "the suitors"],
       "scarinessLevel": 2,
       "themes": ["patience", "recognition", "self-control"]
     },
@@ -624,7 +624,7 @@
       "summary": "Penelope sets the contest of Odysseus' bow, and the disguised Odysseus succeeds.",
       "locationNode": "ithaca-palace",
       "locationBucket": "known place",
-      "characters": ["Penelope", "Odysseus", "Telemachus", "the suitors", "Eumaeus", "Philoetius"],
+      "characters": ["Penelope", "Odysseus", "Telemachus", "Antinous", "Eurymachus", "the suitors", "Eumaeus", "Philoetius"],
       "scarinessLevel": 3,
       "themes": ["identity", "skill", "justice approaching"]
     },
@@ -635,7 +635,7 @@
       "summary": "Odysseus reveals himself and defeats the suitors with help from loyal allies.",
       "locationNode": "ithaca-palace",
       "locationBucket": "known place",
-      "characters": ["Odysseus", "Telemachus", "Athena", "the suitors", "Eumaeus", "Philoetius", "Eurycleia"],
+      "characters": ["Odysseus", "Telemachus", "Athena", "Antinous", "Eurymachus", "the suitors", "Eumaeus", "Philoetius", "Eurycleia"],
       "scarinessLevel": 5,
       "themes": ["justice", "revenge", "consequences"]
     },
@@ -670,6 +670,102 @@
       "tags": ["Core Cast"],
       "relatedSceneIds": ["cicones-raid", "cyclops-cave", "bag-of-winds", "laestrygonians", "circes-island", "underworld", "sirens-scylla-charybdis", "cattle-of-the-sun", "odysseus-on-ogygia", "storm-and-scheria", "phaeacian-court"],
       "text": "King of Ithaca: brilliant, brave, proud, tricky, loving, and complicated."
+    },
+    {
+      "id": "penelope",
+      "title": "Penelope",
+      "type": "character",
+      "tags": ["Core Cast", "Ithaca"],
+      "relatedSceneIds": ["trouble-in-ithaca", "athena-sends-telemachus", "beggar-in-palace", "bow-contest", "penelopes-test", "peace-in-ithaca"],
+      "text": "Odysseus' wife and Telemachus' mother. She survives by patience, intelligence, and careful tests instead of force."
+    },
+    {
+      "id": "telemachus",
+      "title": "Telemachus",
+      "type": "character",
+      "tags": ["Core Cast", "Ithaca"],
+      "relatedSceneIds": ["trouble-in-ithaca", "athena-sends-telemachus", "telemachus-visits-nestor", "telemachus-visits-sparta", "father-and-son", "beggar-in-palace", "bow-contest", "reckoning", "peace-in-ithaca"],
+      "text": "The son of Odysseus and Penelope. His arc is learning how to become brave before he knows whether his father is alive."
+    },
+    {
+      "id": "athena",
+      "title": "Athena",
+      "type": "god",
+      "tags": ["God", "Core Cast"],
+      "relatedSceneIds": ["trouble-in-ithaca", "athena-sends-telemachus", "telemachus-visits-nestor", "storm-and-scheria", "home-in-disguise", "father-and-son", "reckoning", "peace-in-ithaca"],
+      "text": "Goddess of wisdom, strategy, and courageous action. She helps Odysseus and Telemachus, often through disguise."
+    },
+    {
+      "id": "poseidon",
+      "title": "Poseidon",
+      "type": "god",
+      "tags": ["God", "Sea"],
+      "relatedSceneIds": ["cyclops-cave", "storm-and-scheria"],
+      "text": "God of the sea and father of Polyphemus. His anger makes the journey home much harder."
+    },
+    {
+      "id": "zeus",
+      "title": "Zeus",
+      "type": "god",
+      "tags": ["God", "Olympian"],
+      "relatedSceneIds": ["cattle-of-the-sun", "odysseus-on-ogygia", "peace-in-ithaca"],
+      "text": "King of the gods. He allows Odysseus' release from Calypso and sends the storm after Helios' cattle are harmed."
+    },
+    {
+      "id": "hermes",
+      "title": "Hermes",
+      "type": "god",
+      "tags": ["God", "Messenger"],
+      "relatedSceneIds": ["circes-island", "odysseus-on-ogygia"],
+      "text": "Messenger god. He gives Odysseus protection before Circe and later carries Zeus' command to Calypso."
+    },
+    {
+      "id": "helios",
+      "title": "Helios",
+      "type": "god",
+      "tags": ["God", "Sun"],
+      "relatedSceneIds": ["cattle-of-the-sun"],
+      "text": "The Sun god whose sacred cattle must not be harmed. His anger leads to the final shipwreck."
+    },
+    {
+      "id": "calypso",
+      "title": "Calypso",
+      "type": "character",
+      "tags": ["Divine", "Island Host"],
+      "relatedSceneIds": ["odysseus-on-ogygia"],
+      "text": "A powerful nymph who keeps Odysseus on Ogygia. She cares for him, but she also keeps him from home."
+    },
+    {
+      "id": "circe",
+      "title": "Circe",
+      "type": "character",
+      "tags": ["Divine", "Magic"],
+      "relatedSceneIds": ["circes-island", "underworld", "sirens-scylla-charybdis"],
+      "text": "An enchantress on Aeaea. She begins as a danger, then becomes an uneasy helper who teaches Odysseus what comes next."
+    },
+    {
+      "id": "eumaeus",
+      "title": "Eumaeus",
+      "type": "character",
+      "tags": ["Ithaca", "Loyal Helper"],
+      "relatedSceneIds": ["home-in-disguise", "father-and-son", "bow-contest", "reckoning"],
+      "text": "The loyal swineherd who welcomes Odysseus in disguise and helps restore the household."
+    },
+    {
+      "id": "eurycleia",
+      "title": "Eurycleia",
+      "type": "character",
+      "tags": ["Ithaca", "Loyal Helper"],
+      "relatedSceneIds": ["beggar-in-palace", "reckoning", "penelopes-test"],
+      "text": "The old nurse of Odysseus' household. She recognizes Odysseus by his scar before Penelope knows the truth."
+    },
+    {
+      "id": "argos",
+      "title": "Argos",
+      "type": "character",
+      "tags": ["Ithaca", "Recognition"],
+      "relatedSceneIds": ["beggar-in-palace"],
+      "text": "Odysseus' old dog. Argos recognizes his master even when Odysseus is disguised."
     },
     {
       "id": "eurylochus",
@@ -752,12 +848,164 @@
       "text": "An Ithacan seer who understands signs from the gods and warns that Odysseus may return."
     },
     {
+      "id": "nestor",
+      "title": "Nestor",
+      "type": "character",
+      "tags": ["Limited Role", "Host"],
+      "relatedSceneIds": ["telemachus-visits-nestor"],
+      "text": "The old king of Pylos, famous for wisdom and memories of Troy. He welcomes Telemachus and sends him onward."
+    },
+    {
+      "id": "menelaus",
+      "title": "Menelaus",
+      "type": "character",
+      "tags": ["Limited Role", "Host"],
+      "relatedSceneIds": ["telemachus-visits-sparta"],
+      "text": "King of Sparta and one of the Greek leaders from Troy. He tells Telemachus that Odysseus may still be alive."
+    },
+    {
+      "id": "helen",
+      "title": "Helen",
+      "type": "character",
+      "tags": ["Limited Role", "Troy Memory"],
+      "relatedSceneIds": ["telemachus-visits-sparta"],
+      "text": "Queen of Sparta, whose story is tied to the Trojan War. She recognizes qualities of Odysseus in Telemachus."
+    },
+    {
+      "id": "nausicaa",
+      "title": "Nausicaa",
+      "type": "character",
+      "tags": ["Limited Role", "Helper"],
+      "relatedSceneIds": ["phaeacian-court"],
+      "text": "The Phaeacian princess who finds Odysseus after the storm and helps him reach safety."
+    },
+    {
+      "id": "alcinous",
+      "title": "Alcinous",
+      "type": "character",
+      "tags": ["Limited Role", "Host"],
+      "relatedSceneIds": ["phaeacian-court"],
+      "text": "King of the Phaeacians. He offers proper hospitality and arranges Odysseus' final voyage home."
+    },
+    {
+      "id": "arete",
+      "title": "Arete",
+      "type": "character",
+      "tags": ["Limited Role", "Host"],
+      "relatedSceneIds": ["phaeacian-court"],
+      "text": "Queen of the Phaeacians. Odysseus must approach her respectfully when asking for help."
+    },
+    {
+      "id": "demodocus",
+      "title": "Demodocus",
+      "type": "character",
+      "tags": ["Limited Role", "Storyteller"],
+      "relatedSceneIds": ["phaeacian-court"],
+      "text": "The Phaeacian bard whose songs about Troy make Odysseus weep and reveal his hidden grief."
+    },
+    {
+      "id": "laertes",
+      "title": "Laertes",
+      "type": "character",
+      "tags": ["Limited Role", "Ithaca"],
+      "relatedSceneIds": ["peace-in-ithaca"],
+      "text": "Odysseus' father. Their reunion shows that the homecoming reaches beyond the palace."
+    },
+    {
+      "id": "philoetius",
+      "title": "Philoetius",
+      "type": "character",
+      "tags": ["Limited Role", "Loyal Helper"],
+      "relatedSceneIds": ["bow-contest", "reckoning"],
+      "text": "A loyal cowherd who helps Odysseus, Telemachus, and Eumaeus in the final palace struggle."
+    },
+    {
+      "id": "tiresias",
+      "title": "Tiresias",
+      "type": "character",
+      "tags": ["Prophecy", "Underworld"],
+      "relatedSceneIds": ["underworld"],
+      "text": "The dead prophet who tells Odysseus how to survive the road home and warns him about Helios' cattle."
+    },
+    {
+      "id": "anticleia",
+      "title": "Anticleia",
+      "type": "character",
+      "tags": ["Limited Role", "Underworld"],
+      "relatedSceneIds": ["underworld"],
+      "text": "Odysseus' mother, whom he meets among the dead. Her scene shows the private grief inside the heroic journey."
+    },
+    {
+      "id": "polyphemus",
+      "title": "Polyphemus",
+      "type": "character",
+      "tags": ["Monster", "Cyclops"],
+      "relatedSceneIds": ["cyclops-cave"],
+      "text": "The one-eyed Cyclops who traps Odysseus and his men. He is Poseidon's son, so Odysseus' escape has divine consequences."
+    },
+    {
+      "id": "scylla",
+      "title": "Scylla",
+      "type": "monster",
+      "tags": ["Monster", "Sea Danger"],
+      "relatedSceneIds": ["sirens-scylla-charybdis"],
+      "text": "A many-headed monster on the cliffs. Odysseus chooses to pass near her because Charybdis would destroy the whole ship."
+    },
+    {
+      "id": "charybdis",
+      "title": "Charybdis",
+      "type": "monster",
+      "tags": ["Monster", "Sea Danger"],
+      "relatedSceneIds": ["sirens-scylla-charybdis"],
+      "text": "A terrifying whirlpool that can swallow the sea. She represents the danger of total loss."
+    },
+    {
+      "id": "sirens",
+      "title": "Sirens",
+      "type": "monster",
+      "tags": ["Monster", "Temptation"],
+      "relatedSceneIds": ["sirens-scylla-charybdis"],
+      "text": "Enchanted singers whose beautiful song pulls sailors toward destruction."
+    },
+    {
       "id": "the-crew",
       "title": "Odysseus' Crew",
       "type": "group",
       "tags": ["Group", "Fleet Counter"],
       "relatedSceneIds": ["cicones-raid", "lotus-eaters", "cyclops-cave", "bag-of-winds", "laestrygonians", "circes-island", "sirens-scylla-charybdis", "cattle-of-the-sun"],
       "text": "The sailors are not just background. Their hunger, fear, mistrust, and longing for home drive many of the journey's hardest choices."
+    },
+    {
+      "id": "the-suitors",
+      "title": "The Suitors",
+      "type": "group",
+      "tags": ["Group", "Ithaca"],
+      "relatedSceneIds": ["trouble-in-ithaca", "athena-sends-telemachus", "telemachus-visits-sparta", "beggar-in-palace", "bow-contest", "reckoning"],
+      "text": "The men crowding Odysseus' palace and pressuring Penelope. Antinous and Eurymachus are the clearest named faces of this threat."
+    },
+    {
+      "id": "ithaca",
+      "title": "Ithaca",
+      "type": "location",
+      "tags": ["Place", "Home"],
+      "relatedSceneIds": ["trouble-in-ithaca", "home-in-disguise", "father-and-son", "beggar-in-palace", "bow-contest", "reckoning", "penelopes-test", "peace-in-ithaca"],
+      "text": "Odysseus' island home. The journey is not finished until the house and kingdom are made whole again."
+    },
+    {
+      "id": "pylos",
+      "title": "Pylos",
+      "type": "location",
+      "tags": ["Place", "Known Place"],
+      "relatedSceneIds": ["telemachus-visits-nestor"],
+      "text": "The kingdom of Nestor, where Telemachus first enters the world of older heroes and proper hospitality."
+    },
+    {
+      "id": "sparta",
+      "title": "Sparta",
+      "type": "location",
+      "tags": ["Place", "Known Place"],
+      "relatedSceneIds": ["telemachus-visits-sparta"],
+      "text": "The palace of Menelaus and Helen, where Telemachus hears that Odysseus may still be alive."
     },
     {
       "id": "hospitality",

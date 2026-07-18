@@ -601,6 +601,54 @@
       "sceneIds": ["penelopes-test"],
       "alt": "Black-and-white line art of Odysseus and Penelope beside the olive-tree bed.",
       "notes": "Line-art companion for Penelope's test and the olive-tree bed."
+    },
+    {
+      "id": "telemachus-nestor-color",
+      "file": "assets/telemachus-nestor-color.png",
+      "variant": "color",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Telemachus", "Nestor", "Athena as Mentor", "Pisistratus", "Pylos"],
+      "sceneIds": ["telemachus-visits-nestor"],
+      "alt": "Telemachus speaks with old King Nestor beside an altar at Pylos while Athena watches in disguise.",
+      "notes": "Primary Pylos/Nestor reference; shows Telemachus receiving hospitality and wisdom from an elder of the Trojan War generation."
+    },
+    {
+      "id": "telemachus-nestor-bw",
+      "file": "assets/telemachus-nestor-bw.png",
+      "variant": "black-and-white",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Telemachus", "Nestor", "Athena as Mentor", "Pisistratus", "Pylos"],
+      "sceneIds": ["telemachus-visits-nestor"],
+      "alt": "Black-and-white line art of Telemachus meeting Nestor at Pylos.",
+      "notes": "Line-art companion for the Telemachus and Nestor scene."
+    },
+    {
+      "id": "telemachus-menelaus-helen-color",
+      "file": "assets/telemachus-menelaus-helen-color.png",
+      "variant": "color",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Telemachus", "Menelaus", "Helen", "Pisistratus", "Sparta"],
+      "sceneIds": ["telemachus-visits-sparta"],
+      "alt": "Telemachus speaks with Menelaus and Helen in the palace at Sparta while attendants stand nearby.",
+      "notes": "Primary Sparta reference; Telemachus receives news and old memories of Odysseus from Menelaus and Helen."
+    },
+    {
+      "id": "telemachus-menelaus-helen-bw",
+      "file": "assets/telemachus-menelaus-helen-bw.png",
+      "variant": "black-and-white",
+      "width": 1122,
+      "height": 1402,
+      "type": "reference",
+      "subjects": ["Telemachus", "Menelaus", "Helen", "Pisistratus", "Sparta"],
+      "sceneIds": ["telemachus-visits-sparta"],
+      "alt": "Black-and-white line art of Telemachus meeting Menelaus and Helen in Sparta.",
+      "notes": "Line-art companion for the Telemachus, Menelaus, and Helen scene."
     }
   ]
 }

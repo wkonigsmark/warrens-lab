@@ -97,14 +97,14 @@
     },
     "trouble-in-ithaca": {
       "livingCrew": [],
-      "featuredCharacters": ["Penelope", "Telemachus", "Athena", "the suitors", "Antinous", "Eurymachus"],
+      "featuredCharacters": ["Penelope", "Telemachus", "Athena", "Antinous", "Eurymachus", "the suitors"],
       "namedCrewAtRisk": "Odysseus' crew is not present in Ithaca.",
       "sceneLosses": "No ship or crew losses occur in this scene.",
       "endState": "The palace is still under pressure from the suitors."
     },
     "athena-sends-telemachus": {
       "livingCrew": [],
-      "featuredCharacters": ["Athena as Mentes", "Telemachus", "Penelope", "the suitors", "Halitherses"],
+      "featuredCharacters": ["Athena as Mentes", "Telemachus", "Penelope", "Antinous", "Eurymachus", "Halitherses", "the suitors"],
       "namedCrewAtRisk": "Odysseus' crew is not present in this scene.",
       "sceneLosses": "No ship or crew losses occur in this scene.",
       "endState": "Telemachus begins to act and prepares to search for news."
@@ -118,7 +118,7 @@
     },
     "telemachus-visits-sparta": {
       "livingCrew": [],
-      "featuredCharacters": ["Telemachus", "Menelaus", "Helen", "Pisistratus", "the suitors"],
+      "featuredCharacters": ["Telemachus", "Menelaus", "Helen", "Pisistratus", "Antinous", "Eurymachus", "the suitors"],
       "namedCrewAtRisk": "Odysseus' crew is not present in this scene.",
       "sceneLosses": "No ship or crew losses occur in this scene.",
       "endState": "Telemachus gains hope, while the suitors plan an ambush."
@@ -153,21 +153,21 @@
     },
     "beggar-in-palace": {
       "livingCrew": [],
-      "featuredCharacters": ["Odysseus", "Penelope", "Telemachus", "Argos", "Eurycleia", "the suitors"],
+      "featuredCharacters": ["Odysseus", "Penelope", "Telemachus", "Argos", "Eurycleia", "Antinous", "Eurymachus", "the suitors"],
       "namedCrewAtRisk": "Odysseus' crew is not present.",
       "sceneLosses": "No ship or crew losses occur. Argos dies after recognizing Odysseus.",
       "endState": "Odysseus has tested the palace while keeping his identity hidden."
     },
     "bow-contest": {
       "livingCrew": [],
-      "featuredCharacters": ["Penelope", "Odysseus", "Telemachus", "the suitors", "Eumaeus", "Philoetius"],
+      "featuredCharacters": ["Penelope", "Odysseus", "Telemachus", "Antinous", "Eurymachus", "the suitors", "Eumaeus", "Philoetius"],
       "namedCrewAtRisk": "Odysseus' crew is not present.",
       "sceneLosses": "No ship or crew losses occur in this scene.",
       "endState": "Odysseus strings the bow and the hidden-return story turns toward open reckoning."
     },
     "reckoning": {
       "livingCrew": [],
-      "featuredCharacters": ["Odysseus", "Telemachus", "Athena", "the suitors", "Eumaeus", "Philoetius", "Eurycleia"],
+      "featuredCharacters": ["Odysseus", "Telemachus", "Athena", "Antinous", "Eurymachus", "the suitors", "Eumaeus", "Philoetius", "Eurycleia"],
       "namedCrewAtRisk": "Odysseus' crew is not present.",
       "sceneLosses": "No ship or crew losses occur; the suitors are defeated.",
       "endState": "Odysseus regains the palace, though peace is not fully settled yet."
@@ -185,6 +185,123 @@
       "namedCrewAtRisk": "Odysseus' crew is not present.",
       "sceneLosses": "No ship or crew losses occur.",
       "endState": "Athena stops the cycle of revenge, and Ithaca can heal."
+    }
+  },
+  "timeAwayEstimates": {
+    "cicones-raid": {
+      "start": "about 10 years away",
+      "end": "about 10 years away",
+      "note": "The Trojan War has just ended; Odysseus has already been away from Ithaca for about ten years."
+    },
+    "lotus-eaters": {
+      "start": "about 10 years away",
+      "end": "about 10 years away",
+      "note": "This is still early in the wandering after Troy."
+    },
+    "cyclops-cave": {
+      "start": "about 10 years away",
+      "end": "about 10 years away",
+      "note": "The exact month is not fixed, but this belongs to the early post-Troy voyage."
+    },
+    "bag-of-winds": {
+      "start": "about 10 years away",
+      "end": "about 10 years away",
+      "note": "The fleet nearly reaches Ithaca here, but the opened wind bag sends them away again."
+    },
+    "laestrygonians": {
+      "start": "about 10 years away",
+      "end": "about 10 years away",
+      "note": "This still appears before the long stay with Circe."
+    },
+    "circes-island": {
+      "start": "about 10 years away",
+      "end": "about 11 years away",
+      "note": "The crew stays with Circe for roughly a year."
+    },
+    "underworld": {
+      "start": "about 11 years away",
+      "end": "about 11 years away",
+      "note": "This happens after the year with Circe and before the final dangerous sea passages."
+    },
+    "sirens-scylla-charybdis": {
+      "start": "about 11 years away",
+      "end": "about 11 years away",
+      "note": "This follows the underworld and Circe's warnings."
+    },
+    "cattle-of-the-sun": {
+      "start": "about 11 years away",
+      "end": "about 12 years away",
+      "note": "The shipwreck after Helios' cattle leaves Odysseus alone before the long Calypso delay."
+    },
+    "odysseus-on-ogygia": {
+      "start": "about 12 years away",
+      "end": "about 20 years away",
+      "note": "Calypso keeps Odysseus for years; by release, his total absence is nearing twenty years."
+    },
+    "trouble-in-ithaca": {
+      "start": "about 20 years away",
+      "end": "about 20 years away",
+      "note": "This is the Ithaca thread near the end of Odysseus' long absence."
+    },
+    "athena-sends-telemachus": {
+      "start": "about 20 years away",
+      "end": "about 20 years away",
+      "note": "Athena moves Telemachus into action while Odysseus' return is finally approaching."
+    },
+    "telemachus-visits-nestor": {
+      "start": "about 20 years away",
+      "end": "about 20 years away",
+      "note": "Telemachus is searching for news during the final stretch of Odysseus' absence."
+    },
+    "telemachus-visits-sparta": {
+      "start": "about 20 years away",
+      "end": "about 20 years away",
+      "note": "Telemachus gains hope just before Odysseus returns to Ithaca."
+    },
+    "storm-and-scheria": {
+      "start": "about 20 years away",
+      "end": "about 20 years away",
+      "note": "Odysseus leaves Ogygia and survives the last sea crossing before Scheria."
+    },
+    "phaeacian-court": {
+      "start": "about 20 years away",
+      "end": "about 20 years away",
+      "note": "The Phaeacians hear his story and arrange the final passage home."
+    },
+    "home-in-disguise": {
+      "start": "about 20 years away",
+      "end": "about 20 years away, now back on Ithaca",
+      "note": "Odysseus reaches his island but cannot yet reveal himself to his family."
+    },
+    "father-and-son": {
+      "start": "about 20 years away",
+      "end": "about 20 years away, reunited with Telemachus",
+      "note": "The family reunion begins privately before the palace knows."
+    },
+    "beggar-in-palace": {
+      "start": "about 20 years away",
+      "end": "about 20 years away, inside his own house",
+      "note": "Odysseus is physically home but still hidden from Penelope and the suitors."
+    },
+    "bow-contest": {
+      "start": "about 20 years away",
+      "end": "about 20 years away, identity about to be revealed",
+      "note": "The bow turns hidden return into open recognition."
+    },
+    "reckoning": {
+      "start": "about 20 years away",
+      "end": "about 20 years away, palace reclaimed",
+      "note": "Odysseus' absence effectively ends as he reveals himself and regains the household."
+    },
+    "penelopes-test": {
+      "start": "about 20 years away",
+      "end": "about 20 years away, recognized by Penelope",
+      "note": "The secret of the olive-tree bed completes the deepest family recognition."
+    },
+    "peace-in-ithaca": {
+      "start": "about 20 years away",
+      "end": "about 20 years away, homecoming settled",
+      "note": "The journey becomes peace only after the final threat of revenge is stopped."
     }
   },
   "journeyDetails": {

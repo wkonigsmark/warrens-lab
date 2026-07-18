@@ -14,6 +14,13 @@ Working notes for making the storybook more source-aware while keeping the prose
 - Scylla takes six men from the final ship.
 - After the cattle of Helios are killed, Zeus destroys the final ship and Odysseus alone survives.
 
+## Time-Away Counters
+
+- The storybook counter measures how long Odysseus has been away from Ithaca, Penelope, and Telemachus.
+- The stable anchor is that Odysseus spends about ten years at Troy and returns around the twentieth year of absence.
+- Scene-by-scene timing after Troy is interpretive. The current tool treats the early wanderings as around year ten away, Circe's island as roughly one year, the final shipwreck as before the long Calypso delay, and the Ithaca/homecoming scenes as happening near year twenty.
+- These counters are meant as parent-facing story orientation, not a claim that Homer gives a precise date for every stop.
+
 ## Named Limited-Role Crew
 
 - Eurylochus: important crew leader, cautious at Circe's palace, later central in the cattle-of-Helios disaster.

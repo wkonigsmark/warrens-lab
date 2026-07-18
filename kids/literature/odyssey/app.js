@@ -235,11 +235,13 @@ function renderSceneDetail(scene) {
   const art = getPrimarySceneArt(scene.id);
   const fleetState = getFleetState(scene.fleetStateId);
   const briefing = getSceneBriefing(scene.id);
+  const timeAway = getTimeAwayEstimate(scene.id);
 
   elements.sceneDetail.innerHTML = `
     <p class="eyebrow">Chronology ${orderedScene.outlinePosition ?? scene.order}</p>
     <h3>${escapeHtml(scene.title)}</h3>
     <p class="scene-summary">${escapeHtml(scene.summary)}</p>
+    ${renderTimeAway(timeAway)}
     ${renderSceneBriefing(briefing)}
     ${renderExpandedSummary(scene)}
     ${renderSceneArt(art)}
@@ -276,6 +278,27 @@ function renderSceneDetail(scene) {
 
 function getSceneBriefing(sceneId) {
   return state.details.sceneBriefings?.[sceneId] ?? null;
+}
+
+function getTimeAwayEstimate(sceneId) {
+  return state.details.timeAwayEstimates?.[sceneId] ?? null;
+}
+
+function renderTimeAway(timeAway) {
+  if (!timeAway) {
+    return "";
+  }
+
+  return `
+    <section class="time-away-card" aria-label="Time away from family">
+      <p class="eyebrow">Time Away From Family</p>
+      <div class="time-away-values">
+        <span><strong>Start</strong>${escapeHtml(timeAway.start)}</span>
+        <span><strong>End</strong>${escapeHtml(timeAway.end)}</span>
+      </div>
+      <p>${escapeHtml(timeAway.note)}</p>
+    </section>
+  `;
 }
 
 function renderSceneBriefing(briefing) {

@@ -67,6 +67,7 @@ function renderReader() {
   const total = readerState.scenes.length;
   const fleetState = getFleetState(scene.fleetStateId);
   const briefing = getSceneBriefing(scene.id);
+  const timeAway = getTimeAwayEstimate(scene.id);
 
   document.title = `${scene.outlinePosition}. ${scene.title} - Odyssey Reader`;
   readerElements.count.textContent = `${scene.outlinePosition} of ${total}`;
@@ -80,6 +81,7 @@ function renderReader() {
         <p class="eyebrow">Scene ${scene.outlinePosition} of ${total}</p>
         <h1>${escapeHtml(scene.title)}</h1>
         <p class="short-summary">${escapeHtml(scene.summary)}</p>
+        ${renderTimeAway(timeAway)}
         ${renderSceneBriefing(briefing)}
         <p class="read-summary">${escapeHtml(readSummary)}</p>
         ${renderFleetState(fleetState)}
@@ -99,6 +101,27 @@ function renderReader() {
 
 function getSceneBriefing(sceneId) {
   return readerState.details.sceneBriefings?.[sceneId] ?? null;
+}
+
+function getTimeAwayEstimate(sceneId) {
+  return readerState.details.timeAwayEstimates?.[sceneId] ?? null;
+}
+
+function renderTimeAway(timeAway) {
+  if (!timeAway) {
+    return "";
+  }
+
+  return `
+    <section class="time-away-card" aria-label="Time away from family">
+      <p class="fleet-label">Time Away From Family</p>
+      <div class="time-away-values">
+        <span><strong>Start</strong>${escapeHtml(timeAway.start)}</span>
+        <span><strong>End</strong>${escapeHtml(timeAway.end)}</span>
+      </div>
+      <p>${escapeHtml(timeAway.note)}</p>
+    </section>
+  `;
 }
 
 function renderSceneBriefing(briefing) {

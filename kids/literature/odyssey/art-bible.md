@@ -92,6 +92,20 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 - Telemachus should look young, watchful, and frustrated rather than fully powerful yet.
 - Suitors can be loud, wasteful, and careless in the background without becoming cartoon villains.
 
+### Telemachus / Pylos And Nestor Scenes
+
+- Pylos should feel bright, coastal, ceremonial, and orderly.
+- Nestor should read as very old, wise, generous, and rooted in the memory of Troy.
+- Telemachus should look respectful but increasingly brave, stepping into the adult world.
+- Athena may appear as Mentor visually, with enough calm authority to imply divine guidance.
+
+### Telemachus / Sparta, Menelaus, And Helen Scenes
+
+- Sparta should feel polished, wealthy, formal, and touched by memories of Troy.
+- Menelaus should look kingly, older, and battle-tested, with a warmer host presence than the suitors.
+- Helen should feel poised, luminous, and complicated rather than decorative.
+- Telemachus should look younger than the hosts, listening closely and trying to understand his father's story.
+
 ### Ithaca Disguise / Beggar Scenes
 
 - Athena's transformation should feel strategic and protective, not cruel.
@@ -212,6 +226,10 @@ Working art direction for the Odyssey storybook tool. This is a living document:
 | `penelope-telemachus-bow-bw` | `assets/penelope-telemachus-bow-bw.png` | black-and-white | 1122x1402 | `bow-contest` | Line-art companion for the bow contest setup image. |
 | `odysseus-penelope-olive-tree-bed-color` | `assets/odysseus-penelope-olive-tree-bed-color.png` | color | 1122x1402 | `penelopes-test` | Primary Penelope's test reference; the olive-tree bed proves Odysseus' identity. |
 | `odysseus-penelope-olive-tree-bed-bw` | `assets/odysseus-penelope-olive-tree-bed-bw.png` | black-and-white | 1122x1402 | `penelopes-test` | Line-art companion for Penelope's test and the olive-tree bed. |
+| `telemachus-nestor-color` | `assets/telemachus-nestor-color.png` | color | 1122x1402 | `telemachus-visits-nestor` | Primary Pylos/Nestor reference; Telemachus receives hospitality and elder counsel. |
+| `telemachus-nestor-bw` | `assets/telemachus-nestor-bw.png` | black-and-white | 1122x1402 | `telemachus-visits-nestor` | Line-art companion for Telemachus meeting Nestor. |
+| `telemachus-menelaus-helen-color` | `assets/telemachus-menelaus-helen-color.png` | color | 1122x1402 | `telemachus-visits-sparta` | Primary Sparta reference; Telemachus receives news from Menelaus and Helen. |
+| `telemachus-menelaus-helen-bw` | `assets/telemachus-menelaus-helen-bw.png` | black-and-white | 1122x1402 | `telemachus-visits-sparta` | Line-art companion for Telemachus meeting Menelaus and Helen. |
 
 ## Asset Naming Convention
 
