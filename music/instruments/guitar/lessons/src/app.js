@@ -9,35 +9,34 @@ import {
     playScore, silencePlayback, startMetronome, stopMetronome,
     setMetronomeTempo, isMetronomeOn, isPlaybackSupported,
 } from '/music/tools/composer/src/audio.js';
-import { LESSONS, lessonById, firstLessonId, exerciseInLesson } from './lessons.js';
+import { LESSONS, lessonById, firstLessonId, lessonNumber, exerciseInLesson } from '/music/_shared/lessons/index.js';
 
 // --- Transposition targets --------------------------------------------------
-// Key = a semitone shift from the lesson's written home, labelled by the minor
-// key it lands on (sharp spellings, since the note model spells black keys as
-// sharps). Lesson 1 is written in A minor, so 0 = A minor.
-export const KEYS = [
-    { semis: -5, label: 'E minor' },
-    { semis: -4, label: 'F minor' },
-    { semis: -3, label: 'F♯ minor' },
-    { semis: -2, label: 'G minor' },
-    { semis: -1, label: 'G♯ minor' },
-    { semis: 0,  label: 'A minor' },
-    { semis: 1,  label: 'A♯ minor' },
-    { semis: 2,  label: 'B minor' },
-    { semis: 3,  label: 'C minor' },
-    { semis: 4,  label: 'C♯ minor' },
-    { semis: 5,  label: 'D minor' },
-    { semis: 6,  label: 'D♯ minor' },
-];
+// Key options are LESSON-AWARE: a semitone shift from the lesson's written home,
+// labelled by the key it actually lands on (tonic + the lesson's mode). So an
+// A-minor lesson reads "A minor" at 0, a C-major lesson reads "C major" at 0.
+const SHARP_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+const tonicPc = (t) => SHARP_NAMES.indexOf(String(t).replace('#', '♯'));
+function keyOptionsFor(L) {
+    const base = tonicPc(L.home?.tonic || 'A');
+    const mode = L.home?.mode || 'minor';
+    const opts = [];
+    for (let s = -5; s <= 6; s++) opts.push({ semis: s, label: `${SHARP_NAMES[(base + s + 120) % 12]} ${mode}` });
+    return opts;
+}
+let keyOptions = [];
 
 // Instrument presets: `octave` shifts the SOUNDING pitch; `staffShift` + `clef`
 // control how it's written. Guitar is a transposing instrument — written an
 // octave above where it sounds — hence staffShift +1 (the little "8" under the clef).
+// `tipKey` selects which per-exercise tip to show (lesson content carries tips
+// keyed by instrument family). Piano and concert both read the 'piano' tip.
 export const INSTRUMENTS = {
-    guitar:  { label: 'Guitar',                     octave: 0,  staffShift: 1,  clef: 'treble' },
-    concert: { label: 'Concert pitch (piano·voice)', octave: 0,  staffShift: 0,  clef: 'treble' },
-    xylo:    { label: 'Xylophone (kids’ C5–A6)', octave: 2,  staffShift: -1, clef: 'treble' },
-    bass:    { label: 'Bass clef (low instruments)', octave: -1, staffShift: 0,  clef: 'bass' },
+    guitar:  { label: 'Guitar',                     octave: 0,  staffShift: 1,  clef: 'treble', tipKey: 'guitar' },
+    piano:   { label: 'Piano',                      octave: 0,  staffShift: 0,  clef: 'treble', tipKey: 'piano' },
+    concert: { label: 'Concert pitch (voice)',      octave: 0,  staffShift: 0,  clef: 'treble', tipKey: 'piano' },
+    xylo:    { label: 'Xylophone (kids’ C5–A6)', octave: 2,  staffShift: -1, clef: 'treble', tipKey: 'piano' },
+    bass:    { label: 'Bass clef (low instruments)', octave: -1, staffShift: 0,  clef: 'bass',   tipKey: 'piano' },
 };
 
 const state = {
@@ -80,7 +79,6 @@ const transposeNotes = (notes, semis) =>
     semis === 0 ? notes : notes.map((n) => ({ ...n, pitch: transposePitch(n.pitch, semis) }));
 
 // Chord symbols move with the KEY only (octave shifts don't rename a chord).
-const SHARP_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
 const ROOT_PC = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 function transposeSymbol(symbol, semis) {
     const m = symbol.match(/^([A-G])(♯|#)?(.*)$/);
@@ -107,6 +105,14 @@ function scoreFor(ex, { forPrint = false } = {}) {
     );
 }
 
+// Instrument-specific coaching for an exercise, if the lesson provides it.
+function tipFor(ex) {
+    const key = INSTRUMENTS[state.instrument].tipKey;
+    const text = ex.tips && ex.tips[key];
+    if (!text) return '';
+    return `<p class="gl-tip"><span class="gl-tip-icon">${INSTRUMENTS[state.instrument].label === 'Guitar' ? '🎸' : '🎹'}</span>${text}</p>`;
+}
+
 // The lesson pack picker + the current lesson's heading/blurb.
 function renderPicker() {
     els.picker.innerHTML = LESSONS.map((L, i) => {
@@ -118,7 +124,7 @@ function renderPicker() {
             + `</button>`;
     }).join('');
     const L = lesson();
-    els.lessonHead.innerHTML = `<h2 class="lesson-title">${L.icon} Lesson ${LESSONS.indexOf(L) + 1} — ${L.title}</h2>`
+    els.lessonHead.innerHTML = `<h2 class="lesson-title">${L.icon} Lesson ${lessonNumber(L.id)} — ${L.title}</h2>`
         + `<p class="lesson-blurb">${L.blurb}</p>`;
 }
 
@@ -135,6 +141,7 @@ function renderSections() {
             <p class="library-sub">${ex.subtitle}</p>
           </div>
           <p class="gl-story">${ex.story}</p>
+          ${tipFor(ex)}
           <div class="score-scroll">${scoreFor(ex)}</div>
           <div class="gl-actions">
             <button class="btn btn-play" data-action="play" data-ex="${ex.id}">▶ Play</button>
@@ -153,6 +160,7 @@ function renderPrintChecks() {
 // Full re-render after a lesson switch (picker + head + sections + print list).
 function renderLesson() {
     state.printInclude = Object.fromEntries(exercises().map((e) => [e.id, true]));
+    fillKeySelect();
     renderPicker();
     renderSections();
     renderPrintChecks();
@@ -213,14 +221,14 @@ function practiceInSingAlong(id) {
         const letter = pitch.replace(/-?\d+$/, '').replace('#', '♯');
         return { start: n.start, pitch, durBeats: n.durBeats, lyric: letter };
     });
-    const payload = { title: `Guitar Lesson — ${src.title}`, bpm: state.tempo, notes };
+    const payload = { title: `${lesson().title} — ${src.title}`, bpm: state.tempo, notes };
     try { localStorage.setItem('studio.singalong.incoming.v1', JSON.stringify(payload)); } catch (_) { /* ignore */ }
     window.location.href = '/music/tools/sing-along/index.html';
 }
 
 // --- Print -------------------------------------------------------------------
 function buildManuscript() {
-    const keyLabel = KEYS.find((k) => k.semis === state.keySemis)?.label || lesson().key;
+    const keyLabel = keyOptions.find((k) => k.semis === state.keySemis)?.label || lesson().key;
     const inst = INSTRUMENTS[state.instrument];
     let n = 0;
     const sections = exercises().filter((ex) => state.printInclude[ex.id]).map((ex) => {
@@ -245,8 +253,13 @@ function fillSelect(select, options) {
     select.innerHTML = options.map(([value, label]) => `<option value="${value}">${label}</option>`).join('');
 }
 
-fillSelect(els.key, KEYS.map((k) => [k.semis, k.label]));
-els.key.value = '0';
+// Rebuild the key dropdown for the current lesson's home (labels + reset to 0).
+function fillKeySelect() {
+    keyOptions = keyOptionsFor(lesson());
+    fillSelect(els.key, keyOptions.map((k) => [k.semis, k.label]));
+    els.key.value = '0';
+}
+
 fillSelect(els.instrument, Object.entries(INSTRUMENTS).map(([id, i]) => [id, i.label]));
 els.instrument.value = state.instrument;
 
@@ -255,7 +268,6 @@ els.picker.addEventListener('click', (e) => {
     if (!btn || btn.dataset.lesson === state.lessonId) return;
     state.lessonId = btn.dataset.lesson;
     state.keySemis = 0;
-    els.key.value = '0';
     stopPlayback();
     renderLesson();
 });

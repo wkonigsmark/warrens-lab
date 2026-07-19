@@ -26,6 +26,12 @@
 .gl-story { margin: 4px 0 14px; max-width: 72ch; color: var(--muted, #555); line-height: 1.55; }
 .gl-story strong { color: var(--ink, #1f2430); }
 
+/* Instrument-specific coaching line (guitar vs piano). */
+.gl-tip { display: flex; align-items: flex-start; gap: 8px; margin: -4px 0 14px; padding: 9px 13px;
+  background: #fff7f1; border: 1px solid #ffe4d1; border-radius: 12px; max-width: 72ch;
+  font-size: 13.5px; color: #7a5a44; line-height: 1.5; }
+.gl-tip-icon { flex: none; }
+
 .score-scroll { overflow-x: auto; padding-bottom: 6px; }
 .score-scroll svg { display: block; }
 
