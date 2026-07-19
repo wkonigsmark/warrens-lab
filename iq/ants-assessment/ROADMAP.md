@@ -78,6 +78,16 @@ Backlog: reorder to taste; add non-math subjects later; tie the checklist into t
 `_shared/progress` tracking; auto-derive "explored" from real assessment results;
 more arrangements (e.g. by grade/age band).
 
+**Vetting dimension (added)** — a second axis distinct from build `status`: how far
+each lesson plan has gotten through the **kid-testing litmus test**. Three stages
+(`VETTING_STAGES` in curriculum.js): ⚪ To test → 🧪 Testing with kids → ✅ Vetted.
+The tile's corner control cycles the stage (persisted to localStorage
+`…curriculum.vetting.v1`); vetted/testing tiles get a colored ring + chip. The
+header meter now tracks **vetting** ("✅ N/9 vetted · 🧪 M"), and a new **Vetting**
+arrangement boards the tools by stage (To test / Testing / Vetted / Not built yet).
+The old binary "explored" checklist (`loadProgress`/`saveProgress`) is superseded
+and unused. Next idea: per-tool notes on what happened in testing.
+
 **Planned target modules added to the path** — the ladder now includes 6 greyed-out
 `status: 'planned'` tiles (dashed outline, greyscale, "PLANNED" pill, no link/toggle,
 excluded from the progress denominator) so the roadmap's gaps are visible: 🧱 Ants &

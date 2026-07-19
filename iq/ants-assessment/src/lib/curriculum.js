@@ -102,6 +102,29 @@ export const STATUS_META = {
   planned: { label: 'Planned', emoji: '⚪', color: '#94a3b8' },
 }
 
+// ── Vetting: progress toward validating each lesson plan with REAL kids ──────
+// Separate from build `status`: a tool can be live yet never kid-tested — and
+// testing it on the kids is the real litmus test of whether the lesson plan
+// actually delivers value. This tracks that pipeline.
+export const VETTING_STAGES = [
+  { id: 'untested', label: 'To test', short: 'To test', emoji: '⚪', color: '#94a3b8' },
+  { id: 'testing', label: 'Testing with kids', short: 'Testing', emoji: '🧪', color: '#f59e0b' },
+  { id: 'vetted', label: 'Vetted — kid-approved', short: 'Vetted', emoji: '✅', color: '#10b981' },
+]
+export const stageOf = (id) => VETTING_STAGES.find((s) => s.id === id) ?? VETTING_STAGES[0]
+export function nextStage(id) {
+  const i = VETTING_STAGES.findIndex((s) => s.id === id)
+  return VETTING_STAGES[(i + 1) % VETTING_STAGES.length].id
+}
+
+const VET_KEY = 'ants-assessment.curriculum.vetting.v1'
+export function loadVetting() {
+  try { return JSON.parse(localStorage.getItem(VET_KEY)) || {} } catch { return {} }
+}
+export function saveVetting(map) {
+  try { localStorage.setItem(VET_KEY, JSON.stringify(map)) } catch {}
+}
+
 // Math domains — an alternate way to organize the same tools.
 export const STRAND_META = {
   number: { label: 'Number & Operations', emoji: '🔢', color: '#f59e0b' },
@@ -116,9 +139,10 @@ export const ARRANGEMENTS = [
   { id: 'path', label: 'Path', emoji: '🪜' },
   { id: 'strand', label: 'Strand', emoji: '🧭' },
   { id: 'status', label: 'Status', emoji: '🚦' },
+  { id: 'vetting', label: 'Vetting', emoji: '🧪' },
 ]
 
-export function arrange(mode) {
+export function arrange(mode, { vetting = {} } = {}) {
   if (mode === 'strand') {
     return Object.entries(STRAND_META).map(([key, meta]) => ({
       key, meta, tools: MATH_LADDER.filter((t) => t.strand === key),
@@ -128,6 +152,19 @@ export function arrange(mode) {
     return ['live', 'dev', 'planned'].map((key) => ({
       key, meta: STATUS_META[key], tools: MATH_LADDER.filter((t) => t.status === key),
     })).filter((g) => g.tools.length)
+  }
+  if (mode === 'vetting') {
+    // Built tools bucketed by how far along the kid-testing pipeline they are,
+    // plus a trailing group for anything not built yet.
+    const built = MATH_LADDER.filter((t) => t.status !== 'planned')
+    const groups = VETTING_STAGES.map((s) => ({
+      key: s.id,
+      meta: { label: s.label, emoji: s.emoji, color: s.color },
+      tools: built.filter((t) => (vetting[t.id] || 'untested') === s.id),
+    }))
+    const planned = MATH_LADDER.filter((t) => t.status === 'planned')
+    if (planned.length) groups.push({ key: 'planned', meta: { label: 'Not built yet', emoji: '⚪', color: '#cbd5e1' }, tools: planned })
+    return groups.filter((g) => g.tools.length)
   }
   // path — a single group in difficulty order
   return [{ key: 'path', meta: null, tools: MATH_LADDER }]
