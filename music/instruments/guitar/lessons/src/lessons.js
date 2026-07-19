@@ -1,10 +1,12 @@
-// lessons.js — the Guitar Lesson content, all data. Everything on this page is
-// generated from these exercises, so tweaking the course = editing this file.
+// lessons.js — the Guitar Lessons content, all data. This is a growing STARTER
+// LESSON PACK: `LESSONS` is an ordered list, each lesson a self-contained set of
+// exercises that build to a piece. The page renders a picker over the pack, so
+// adding a lesson = appending one entry here (no UI changes needed).
 //
-// The piece: an 8-bar progression in A minor, one chord per bar, strummed as two
-// half notes. Two matched 4-bar phrases, both closing on E7; the second phrase
-// swaps in B° (bar 7) — the eerie tension chord — before E7 pulls everything
-// home to Am.
+// Lesson 1 — "A minor: tension & resolve": an 8-bar progression in A minor, one
+// chord per bar, strummed as two half notes. Two matched 4-bar phrases, both
+// closing on E7; the second swaps in B° (bar 7) — the eerie tension chord —
+// before E7 pulls everything home to Am.
 //
 //   | Am | F | Dm | E7 | Am | Dm | B° | E7 | (Am)
 //
@@ -15,6 +17,8 @@
 // Notation DSL (same family as composer presets): tokens are `pitch:durBeats`
 // (durBeats defaults to 1), `|` is a cosmetic barline, `_` a rest, and `+`
 // stacks pitches into a chord: `A3+C4+E4:2` = a half-note Am triad.
+//
+// To add a lesson: append `lesson(id, meta, [ exercise(...), ... ])` to LESSONS.
 
 function parse(notation) {
     const tokens = notation.replace(/\|/g, ' ').trim().split(/\s+/).filter(Boolean);
@@ -53,7 +57,18 @@ function exercise(id, def) {
     return { id, ...def, notes, bars: Math.ceil(totalBeats / 4) };
 }
 
-export const EXERCISES = [
+// Bundle a set of exercises into a lesson with its own metadata.
+function lesson(id, meta, exercises) {
+    return { id, ...meta, exercises };
+}
+
+export const LESSONS = [
+  lesson('am-tension-resolve', {
+    title: 'A minor: tension & resolve',
+    key: 'Am', level: 1, levelLabel: 'Starter', icon: '🌒',
+    blurb: 'An 8-bar A-minor progression with an eerie diminished chord, plus the '
+        + 'warm-ups and walking-bass moves that make it sing. Ends with a strum-and-walk piece.',
+  }, [
     exercise('progression', {
         icon: '🎸', title: 'The Progression', subtitle: 'Eight bars in A minor — two half-note strums per bar',
         story: 'This is the whole piece: two matching 4-bar phrases, both ending on E7. '
@@ -111,6 +126,13 @@ export const EXERCISES = [
         chords: chordsAtBars([...PROGRESSION_SYMBOLS, 'Am']),
         practice: 'walk', // mic test uses the walking line — chords aren't mic-scorable
     }),
+  ]),
+
+  // --- Next lessons land here as the pack grows (see ROADMAP.md) ----------
 ];
 
-export const exerciseById = (id) => EXERCISES.find((e) => e.id === id);
+export const lessonById = (id) => LESSONS.find((l) => l.id === id);
+export const firstLessonId = () => LESSONS[0].id;
+// Find an exercise within a given lesson (walking-line handoff needs this).
+export const exerciseInLesson = (lessonId, exId) =>
+    (lessonById(lessonId)?.exercises || []).find((e) => e.id === exId);

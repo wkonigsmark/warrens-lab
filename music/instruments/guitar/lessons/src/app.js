@@ -1,19 +1,20 @@
-// app.js — the Guitar Lesson page. Renders the exercises from lessons.js onto
-// staves (reusing the composer's model/notation/audio modules), plays them back
-// with a light strum, transposes to other keys/instruments, prints a worksheet,
-// and hands melodic exercises to Sing-Along for mic-scored practice.
+// app.js — the Guitar Lessons page. Renders a lesson pack: a picker over LESSONS,
+// and for the selected lesson its exercises on staves (reusing the composer's
+// model/notation/audio modules), with strum playback, key/instrument transpose,
+// a printable worksheet, and a Sing-Along handoff for mic-scored practice.
 
-import { noteToMidi, midiToNoteName, accidentalOf } from '../../src/model.js';
-import { renderScore } from '../../src/notation.js';
+import { noteToMidi, midiToNoteName } from '/music/tools/composer/src/model.js';
+import { renderScore } from '/music/tools/composer/src/notation.js';
 import {
     playScore, silencePlayback, startMetronome, stopMetronome,
     setMetronomeTempo, isMetronomeOn, isPlaybackSupported,
-} from '../../src/audio.js';
-import { EXERCISES, exerciseById } from './lessons.js';
+} from '/music/tools/composer/src/audio.js';
+import { LESSONS, lessonById, firstLessonId, exerciseInLesson } from './lessons.js';
 
 // --- Transposition targets --------------------------------------------------
-// Key = a semitone shift from A minor, labelled by the minor key it lands on
-// (sharp spellings, since the note model spells black keys as sharps).
+// Key = a semitone shift from the lesson's written home, labelled by the minor
+// key it lands on (sharp spellings, since the note model spells black keys as
+// sharps). Lesson 1 is written in A minor, so 0 = A minor.
 export const KEYS = [
     { semis: -5, label: 'E minor' },
     { semis: -4, label: 'F minor' },
@@ -40,16 +41,19 @@ export const INSTRUMENTS = {
 };
 
 const state = {
+    lessonId: firstLessonId(),
     keySemis: 0,
     instrument: 'guitar',
     tempo: 80,
     letters: false,
     chordNames: true,
     colorPrint: false,
-    printInclude: Object.fromEntries(EXERCISES.map((e) => [e.id, true])),
+    printInclude: {}, // keyed per current lesson's exercises; rebuilt on lesson change
 };
 
 const els = {
+    picker: document.getElementById('lesson-picker'),
+    lessonHead: document.getElementById('lesson-head'),
     sections: document.getElementById('lesson-sections'),
     key: document.getElementById('key-select'),
     instrument: document.getElementById('instrument-select'),
@@ -63,6 +67,11 @@ const els = {
     printBtn: document.getElementById('print'),
     manuscript: document.getElementById('manuscript'),
 };
+
+// The active lesson + its exercises.
+const lesson = () => lessonById(state.lessonId);
+const exercises = () => lesson().exercises;
+const exerciseById = (id) => exercises().find((e) => e.id === id);
 
 // --- Transposition -----------------------------------------------------------
 const totalSemis = () => state.keySemis + INSTRUMENTS[state.instrument].octave * 12;
@@ -98,8 +107,23 @@ function scoreFor(ex, { forPrint = false } = {}) {
     );
 }
 
+// The lesson pack picker + the current lesson's heading/blurb.
+function renderPicker() {
+    els.picker.innerHTML = LESSONS.map((L, i) => {
+        const active = L.id === state.lessonId;
+        return `<button class="lesson-tab${active ? ' active' : ''}" data-lesson="${L.id}">`
+            + `<span class="lt-num">${i + 1}</span>`
+            + `<span class="lt-body"><span class="lt-title">${L.icon} ${L.title}</span>`
+            + `<span class="lt-meta">${L.levelLabel} · key of ${L.key}</span></span>`
+            + `</button>`;
+    }).join('');
+    const L = lesson();
+    els.lessonHead.innerHTML = `<h2 class="lesson-title">${L.icon} Lesson ${LESSONS.indexOf(L) + 1} — ${L.title}</h2>`
+        + `<p class="lesson-blurb">${L.blurb}</p>`;
+}
+
 function renderSections() {
-    els.sections.innerHTML = EXERCISES.map((ex, i) => {
+    els.sections.innerHTML = exercises().map((ex, i) => {
         const practiceBtn = ex.practice
             ? `<button class="btn btn-ghost" data-action="practice" data-ex="${ex.id}"
                  title="Send this line to Sing-Along and get scored as you play it">🎤 Test me in Sing-Along</button>`
@@ -119,6 +143,19 @@ function renderSections() {
         </section>`;
     }).join('');
     updatePlayButtons();
+}
+
+function renderPrintChecks() {
+    els.printChecks.innerHTML = exercises().map((ex) => `
+        <label class="print-check"><input type="checkbox" data-print-ex="${ex.id}" ${state.printInclude[ex.id] ? 'checked' : ''}> ${ex.icon} ${ex.title}</label>`).join('');
+}
+
+// Full re-render after a lesson switch (picker + head + sections + print list).
+function renderLesson() {
+    state.printInclude = Object.fromEntries(exercises().map((e) => [e.id, true]));
+    renderPicker();
+    renderSections();
+    renderPrintChecks();
 }
 
 // --- Playback ----------------------------------------------------------------
@@ -165,11 +202,11 @@ function updatePlayButtons() {
 
 // --- Sing-Along handoff --------------------------------------------------------
 // Same drop box the Composer uses; Sing-Along picks it up on load. Chords aren't
-// scorable, so the final piece hands over its walking line instead.
+// scorable, so a 'walk' exercise hands over its lesson's walking line instead.
 function practiceInSingAlong(id) {
     const ex = exerciseById(id);
     if (!ex || !ex.practice) return;
-    const src = ex.practice === 'walk' ? exerciseById('walking') : ex;
+    const src = ex.practice === 'walk' ? (exerciseInLesson(state.lessonId, 'walking') || ex) : ex;
     const semis = totalSemis();
     const notes = src.notes.map((n) => {
         const pitch = transposePitch(n.pitch, semis);
@@ -178,22 +215,22 @@ function practiceInSingAlong(id) {
     });
     const payload = { title: `Guitar Lesson — ${src.title}`, bpm: state.tempo, notes };
     try { localStorage.setItem('studio.singalong.incoming.v1', JSON.stringify(payload)); } catch (_) { /* ignore */ }
-    window.location.href = '../../sing-along/index.html';
+    window.location.href = '/music/tools/sing-along/index.html';
 }
 
 // --- Print -------------------------------------------------------------------
 function buildManuscript() {
-    const keyLabel = KEYS.find((k) => k.semis === state.keySemis)?.label || 'A minor';
+    const keyLabel = KEYS.find((k) => k.semis === state.keySemis)?.label || lesson().key;
     const inst = INSTRUMENTS[state.instrument];
     let n = 0;
-    const sections = EXERCISES.filter((ex) => state.printInclude[ex.id]).map((ex) => {
+    const sections = exercises().filter((ex) => state.printInclude[ex.id]).map((ex) => {
         n += 1;
         return `<div class="ms-exercise">`
             + `<div class="ms-ex-label"><span class="ms-ex-num">${n}</span><strong>${ex.title}</strong> — ${ex.subtitle}</div>`
             + `<div class="ms-score">${scoreFor(ex, { forPrint: true })}</div>`
             + `</div>`;
     });
-    return `<h2 class="ms-title">🎸 Guitar Lesson — ${keyLabel}</h2>`
+    return `<h2 class="ms-title">🎸 ${lesson().title} — ${keyLabel}</h2>`
         + `<p class="ms-by">${inst.label} · ♩ = ${state.tempo} · strum on 1 &amp; 3, let the half notes ring</p>`
         + sections.join('');
 }
@@ -213,8 +250,15 @@ els.key.value = '0';
 fillSelect(els.instrument, Object.entries(INSTRUMENTS).map(([id, i]) => [id, i.label]));
 els.instrument.value = state.instrument;
 
-els.printChecks.innerHTML = EXERCISES.map((ex) => `
-    <label class="print-check"><input type="checkbox" data-print-ex="${ex.id}" checked> ${ex.icon} ${ex.title}</label>`).join('');
+els.picker.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-lesson]');
+    if (!btn || btn.dataset.lesson === state.lessonId) return;
+    state.lessonId = btn.dataset.lesson;
+    state.keySemis = 0;
+    els.key.value = '0';
+    stopPlayback();
+    renderLesson();
+});
 
 els.key.addEventListener('change', () => { state.keySemis = parseInt(els.key.value, 10) || 0; stopPlayback(); renderSections(); });
 els.instrument.addEventListener('change', () => { state.instrument = els.instrument.value; stopPlayback(); renderSections(); });
@@ -254,4 +298,4 @@ els.sections.addEventListener('click', (e) => {
     if (btn.dataset.action === 'practice') practiceInSingAlong(btn.dataset.ex);
 });
 
-renderSections();
+renderLesson();

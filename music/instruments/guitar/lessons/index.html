@@ -3,27 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Guitar Lesson · Composer</title>
+  <title>Guitar Lessons · Music</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="/music/tools/composer/style.css">
   <link rel="stylesheet" href="guitar.css">
 </head>
 <body>
+  <script type="module" src="/music/_shared/music-nav.js"></script>
   <header class="topbar">
     <div class="brand">
       <span class="logo">🎸</span>
       <div>
-        <h1>Guitar Lesson <span class="beta-badge">BETA</span></h1>
-        <p class="tagline">Eight bars in A minor — scales, an eerie twist, walking roots, and your first strum-&amp;-walk piece.</p>
+        <h1>Guitar Lessons <span class="beta-badge">BETA</span></h1>
+        <p class="tagline">A growing starter lesson pack — play it, test yourself, transpose &amp; print.</p>
       </div>
     </div>
-    <a class="btn btn-ghost back-link" href="../index.html">← Composer</a>
+    <a class="btn btn-ghost back-link" href="/music/instruments/guitar/index.html">← Guitar</a>
   </header>
 
   <main>
+    <section class="lesson-pack" aria-label="Lessons">
+      <div id="lesson-picker" class="lesson-picker" role="tablist" aria-label="Choose a lesson"></div>
+      <div id="lesson-head" class="lesson-head"></div>
+    </section>
+
     <section class="controls" aria-label="Lesson controls">
       <div class="control">
         <label>Key</label>

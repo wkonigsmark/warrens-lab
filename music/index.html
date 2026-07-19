@@ -3,129 +3,133 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Music Domain - Burnmark Productions</title>
+  <title>Music · Burnmark Productions</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/favicon.svg">
   <meta name="theme-color" content="#1a1a1a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../style-lab.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* Pulsing BETA badge — flags in-progress tools at a glance. */
-    .beta-badge {
-      display: inline-block;
-      margin-left: 8px;
-      padding: 2px 8px;
-      font-size: 0.6em;
-      font-weight: 800;
-      letter-spacing: 1px;
-      vertical-align: middle;
-      color: #fff;
-      background: #ff8a3d;
-      border-radius: 999px;
-      animation: beta-pulse 1.6s ease-in-out infinite;
-    }
-    @keyframes beta-pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 138, 61, 0.55); opacity: 1; }
-      50%      { box-shadow: 0 0 0 7px rgba(255, 138, 61, 0); opacity: 0.78; }
-    }
+    :root { --ink:#1f2430; --muted:#6b7280; --line:#e3e7f1; --accent:#ff8a3d; --accent-2:#5b8cff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Outfit', system-ui, sans-serif; color: var(--ink);
+      background: linear-gradient(160deg, #fbfcff 0%, #eef2ff 55%, #fdf0e8 100%); min-height: 100vh; }
+
+    /* --- Terminal splash (skippable) ------------------------------------ */
+    .splash { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center;
+      background: #14161c; color: #7CFC98; font-family: 'JetBrains Mono', monospace; cursor: pointer;
+      transition: opacity 0.45s ease; }
+    .splash.gone { opacity: 0; pointer-events: none; }
+    .tty { font-size: clamp(15px, 3.2vw, 22px); padding: 24px; }
+    .tty .cursor { display: inline-block; width: 9px; background: #7CFC98; margin-left: 2px;
+      animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .skip-hint { position: fixed; bottom: 22px; left: 0; right: 0; text-align: center; color: #4a6b55;
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 1px; }
+
+    /* --- Hub ------------------------------------------------------------- */
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 24px 64px; opacity: 0; transition: opacity 0.5s ease; }
+    .wrap.shown { opacity: 1; }
+    .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 34px; flex-wrap: wrap; gap: 12px; }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .logo { font-size: 38px; background: #fff; padding: 8px 12px; border-radius: 16px; box-shadow: 0 4px 14px rgba(31,36,48,0.08); }
+    h1 { margin: 0; font-size: 30px; font-weight: 800; }
+    .tagline { margin: 3px 0 0; color: var(--muted); font-size: 15px; }
+    .back { font-size: 14px; font-weight: 700; color: var(--accent-2); text-decoration: none; }
+    .back:hover { text-decoration: underline; }
+
+    .zone { margin-bottom: 34px; }
+    .zone-head { display: flex; align-items: baseline; gap: 10px; margin: 0 2px 14px; flex-wrap: wrap; }
+    .zone-name { font-size: 20px; font-weight: 800; }
+    .zone-tag { color: var(--muted); font-size: 14px; }
+    .zone-hublink { margin-left: auto; font-size: 13px; font-weight: 700; color: var(--accent-2); text-decoration: none; }
+    .zone-hublink:hover { text-decoration: underline; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+    .card { display: flex; flex-direction: column; gap: 7px; background: #fff; border: 1px solid var(--line);
+      border-radius: 18px; padding: 20px; text-decoration: none; color: inherit; box-shadow: 0 6px 22px rgba(31,36,48,0.07);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease; position: relative; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(31,36,48,0.13); border-color: var(--accent-2); }
+    .card-icon { font-size: 38px; }
+    .card-name { font-size: 19px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+    .card-tag { color: var(--muted); font-size: 13.5px; line-height: 1.5; }
+    .go { margin-top: auto; padding-top: 4px; font-weight: 800; color: var(--accent-2); font-size: 13.5px; }
+    .beta-badge { font-size: 9px; font-weight: 800; letter-spacing: 0.5px; color: #fff; background: var(--accent);
+      border-radius: 999px; padding: 2px 6px; }
+
     @media (prefers-reduced-motion: reduce) {
-      .beta-badge { animation: none; }
+      .splash, .wrap { transition: none; }
+      .tty .cursor { animation: none; }
     }
   </style>
 </head>
 <body>
-  <div class="hero">
-    <div class="tty-container">
-      <span id="text"></span><span class="cursor"></span>
-    </div>
+  <div class="splash" id="splash" role="button" aria-label="Skip intro">
+    <div class="tty"><span id="tty-text"></span><span class="cursor">&nbsp;</span></div>
+  </div>
+  <div class="skip-hint" id="skip-hint">click anywhere to skip</div>
 
-    <nav id="main-nav" class="nav-menu">
-      <a href="instruments/guitar/index.html" class="nav-item">
-        <div class="item-icon">🎸</div>
-        <div class="item-info">
-          <h3 class="item-title">Guitar Theory</h3>
-          <p class="item-subtext">Scales & Modal Analysis</p>
+  <div class="wrap" id="hub">
+    <div class="top">
+      <div class="brand">
+        <span class="logo">🎵</span>
+        <div>
+          <h1>Music</h1>
+          <p class="tagline">Compose, play, learn — every music tool in one place.</p>
         </div>
-      </a>
-      <a href="tools/key-finder/index.html" class="nav-item">
-        <div class="item-icon">🧭</div>
-        <div class="item-info">
-          <h3 class="item-title">Key Finder</h3>
-          <p class="item-subtext">Chord → Scale, Mode & Key</p>
-        </div>
-      </a>
-      <a href="tools/music-school/index.html" class="nav-item">
-        <div class="item-icon">🎵</div>
-        <div class="item-info">
-          <h3 class="item-title">Music School</h3>
-          <p class="item-subtext">Theory Games & Worksheets for Kids</p>
-        </div>
-      </a>
-      <a href="tools/studio/index.html" class="nav-item">
-        <div class="item-icon">🎹</div>
-        <div class="item-info">
-          <h3 class="item-title">Composer Studio <span class="beta-badge">BETA</span></h3>
-          <p class="item-subtext">Compose · Capture · Sing — 3 tools</p>
-        </div>
-      </a>
-      <a href="../index.html" class="nav-item">
-        <div class="item-icon">🔙</div>
-        <div class="item-info">
-          <h3 class="item-title">Back to Lab</h3>
-          <p class="item-subtext">Return to Main Hub</p>
-        </div>
-      </a>
-    </nav>
+      </div>
+      <a class="back" href="../index.html">← Back to Lab</a>
+    </div>
+    <div id="zones"></div>
   </div>
 
-  <div id="skip-hint" class="skip-hint">Click Anywhere to Skip</div>
+  <script type="module">
+    import { ZONES, toolsInZone } from '/music/_shared/registry.js';
 
-  <script>
-    (function () {
-      const TEXT = "Tuning oscillators, warming up tubes...";
-      const textEl = document.getElementById("text");
-      const navEl = document.getElementById("main-nav");
-      const hintEl = document.getElementById("skip-hint");
-      let i = 0; let isSkipped = false;
-      function getStaggeredDelay(char) {
-        if (isSkipped) return 0;
-        let delay = Math.floor(60 + Math.random() * 60);
-        if (char === " ") delay += 100;
-        if (char === ",") delay += 300;
-        return delay;
-      }
-      function skip() {
-        if (isSkipped) return;
-        isSkipped = true;
-        textEl.textContent = TEXT;
-        showMenu();
-      }
-      function showMenu() {
-        navEl.classList.add("visible");
-        const items = navEl.querySelectorAll(".nav-item");
-        items.forEach((item, index) => {
-          setTimeout(() => { item.classList.add("revealed"); }, index * 120);
-        });
-        hintEl.style.opacity = "0";
-        setTimeout(() => hintEl.remove(), 400);
-      }
-      function type() {
-        if (isSkipped) return;
-        textEl.textContent = TEXT.slice(0, i++);
-        if (i <= TEXT.length) {
-          setTimeout(type, getStaggeredDelay(TEXT[i - 1]));
-        } else {
-          setTimeout(showMenu, 400);
-        }
-      }
-      document.addEventListener('click', skip);
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') skip();
-      });
-      setTimeout(type, 300);
-    })();
+    // Build the zoned card grid from the registry.
+    const badge = (t) => (t.status === 'beta' ? `<span class="beta-badge">BETA</span>` : '');
+    document.getElementById('zones').innerHTML = ZONES.map((z) => {
+      const cards = toolsInZone(z.id).map((t) => `
+        <a class="card" href="${t.path}">
+          <span class="card-icon">${t.icon}</span>
+          <span class="card-name">${t.name}${badge(t)}</span>
+          <span class="card-tag">${t.tagline}</span>
+          <span class="go">Open →</span>
+        </a>`).join('');
+      const hublink = z.hub ? `<a class="zone-hublink" href="${z.hub}">${z.icon} ${z.name} hub →</a>` : '';
+      return `<section class="zone">
+        <div class="zone-head"><span class="zone-name">${z.icon} ${z.name}</span>
+          <span class="zone-tag">${z.tagline}</span>${hublink}</div>
+        <div class="grid">${cards}</div>
+      </section>`;
+    }).join('');
+
+    // Terminal splash: type a line, then reveal the hub. Click / key / reduced-motion skips.
+    const splash = document.getElementById('splash');
+    const hint = document.getElementById('skip-hint');
+    const hub = document.getElementById('hub');
+    const textEl = document.getElementById('tty-text');
+    const LINE = 'Tuning oscillators, warming up tubes...';
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let done = false;
+
+    function reveal() {
+      if (done) return; done = true;
+      splash.classList.add('gone');
+      hint.style.opacity = '0';
+      hub.classList.add('shown');
+      setTimeout(() => { splash.remove(); hint.remove(); }, 500);
+    }
+    function type(i = 0) {
+      if (done) return;
+      textEl.textContent = LINE.slice(0, i);
+      if (i <= LINE.length) setTimeout(() => type(i + 1), 45 + Math.random() * 45);
+      else setTimeout(reveal, 500);
+    }
+    splash.addEventListener('click', reveal);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') reveal(); });
+    if (reduce) { textEl.textContent = LINE; reveal(); } else { setTimeout(() => type(0), 250); }
   </script>
 </body>
 </html>

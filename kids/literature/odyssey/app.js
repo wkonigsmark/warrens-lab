@@ -8,7 +8,9 @@ const state = {
   selectedSceneId: null,
   search: "",
   maxScariness: 5,
-  bucket: "all"
+  bucket: "all",
+  coloringSearch: "",
+  selectedColoringAssetId: null
 };
 
 const fallbackGlossary = [
@@ -50,7 +52,15 @@ const elements = {
   reset: document.querySelector("#reset-filters"),
   resultCount: document.querySelector("#result-count"),
   journey: document.querySelector("#journey-strip"),
-  glossary: document.querySelector("#glossary-grid")
+  glossary: document.querySelector("#glossary-grid"),
+  openColoring: document.querySelector("#open-coloring-modal"),
+  coloringModal: document.querySelector("#coloring-modal"),
+  closeColoring: document.querySelector("#close-coloring-modal"),
+  printColoring: document.querySelector("#print-coloring-template"),
+  coloringSearch: document.querySelector("#coloring-search"),
+  coloringResultCount: document.querySelector("#coloring-result-count"),
+  coloringResults: document.querySelector("#coloring-results"),
+  coloringPreview: document.querySelector("#coloring-preview")
 };
 
 async function loadStoryData() {
@@ -129,6 +139,24 @@ function initControls() {
     elements.scarinessOutput.textContent = "5";
     elements.bucket.value = "all";
     render();
+  });
+
+  elements.openColoring.addEventListener("click", openColoringModal);
+  elements.closeColoring.addEventListener("click", closeColoringModal);
+  elements.coloringModal.addEventListener("click", (event) => {
+    if (event.target === elements.coloringModal) {
+      closeColoringModal();
+    }
+  });
+  elements.coloringSearch.addEventListener("input", (event) => {
+    state.coloringSearch = event.target.value.trim().toLowerCase();
+    renderColoringLibrary();
+  });
+  elements.printColoring.addEventListener("click", printSelectedColoringTemplate);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !elements.coloringModal.hidden) {
+      closeColoringModal();
+    }
   });
 }
 
@@ -598,6 +626,193 @@ function renderGlossaryTags(entry) {
   `;
 }
 
+function openColoringModal() {
+  const templates = getColoringTemplates();
+  if (!state.selectedColoringAssetId && templates.length) {
+    state.selectedColoringAssetId = templates[0].id;
+  }
+  elements.coloringModal.hidden = false;
+  document.body.classList.add("modal-open");
+  renderColoringLibrary();
+  elements.coloringSearch.focus();
+}
+
+function closeColoringModal() {
+  elements.coloringModal.hidden = true;
+  document.body.classList.remove("modal-open");
+  document.body.classList.remove("printing-coloring");
+  elements.openColoring.focus();
+}
+
+function getColoringTemplates() {
+  return state.assets.filter((asset) => asset.type !== "video" && asset.variant === "black-and-white");
+}
+
+function getFilteredColoringTemplates() {
+  const templates = getColoringTemplates();
+  if (!state.coloringSearch) {
+    return templates;
+  }
+
+  return templates.filter((asset) => getColoringSearchText(asset).includes(state.coloringSearch));
+}
+
+function getColoringSearchText(asset) {
+  const scenes = getAssetScenes(asset);
+  const locations = getAssetLocations(asset);
+  const glossaryEntries = getAssetGlossaryEntries(asset);
+  return [
+    asset.id,
+    asset.file,
+    asset.alt,
+    asset.notes,
+    ...(asset.subjects ?? []),
+    ...scenes.map((scene) => scene.title),
+    ...scenes.flatMap((scene) => [...scene.characters, ...scene.themes, scene.locationBucket]),
+    ...locations.map((location) => location.label),
+    ...locations.map((location) => location.parentGeographyNote),
+    ...glossaryEntries.map((entry) => entry.title),
+    ...glossaryEntries.flatMap((entry) => entry.tags ?? [])
+  ]
+    .join(" ")
+    .toLowerCase();
+}
+
+function renderColoringLibrary() {
+  const templates = getFilteredColoringTemplates();
+  const allTemplates = getColoringTemplates();
+
+  elements.coloringResultCount.textContent = `${templates.length} of ${allTemplates.length} templates`;
+
+  if (!templates.length) {
+    elements.coloringResults.innerHTML = `<div class="empty-state">No coloring templates match that search yet.</div>`;
+    elements.coloringPreview.innerHTML = `<div class="empty-state">Try another character, scene, location, or theme.</div>`;
+    return;
+  }
+
+  if (!templates.some((asset) => asset.id === state.selectedColoringAssetId)) {
+    state.selectedColoringAssetId = templates[0].id;
+  }
+
+  elements.coloringResults.innerHTML = templates
+    .map((asset) => renderColoringResult(asset))
+    .join("");
+
+  elements.coloringResults.querySelectorAll(".coloring-card").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.selectedColoringAssetId = button.dataset.assetId;
+      renderColoringLibrary();
+    });
+  });
+
+  renderColoringPreview(templates.find((asset) => asset.id === state.selectedColoringAssetId));
+}
+
+function renderColoringResult(asset) {
+  const title = getColoringTitle(asset);
+  const tags = getColoringTags(asset).slice(0, 5);
+
+  return `
+    <button class="coloring-card" type="button" data-asset-id="${escapeAttribute(asset.id)}" aria-current="${asset.id === state.selectedColoringAssetId ? "true" : "false"}">
+      <img src="${escapeAttribute(asset.file)}" alt="">
+      <span class="coloring-card-copy">
+        <strong>${escapeHtml(title)}</strong>
+        <em>${escapeHtml(getAssetScenes(asset)[0]?.title ?? "Glossary art")}</em>
+        <span class="coloring-tags">${tags.map((tag) => `<small>${escapeHtml(tag)}</small>`).join("")}</span>
+      </span>
+    </button>
+  `;
+}
+
+function renderColoringPreview(asset) {
+  if (!asset) {
+    elements.coloringPreview.innerHTML = `<div class="empty-state">Choose a template to preview.</div>`;
+    return;
+  }
+
+  const title = getColoringTitle(asset);
+  const tags = getColoringTags(asset).filter((tag) => tag !== title).slice(0, 8);
+
+  elements.coloringPreview.innerHTML = `
+    <div class="coloring-print-sheet">
+      <figure>
+        <img src="${escapeAttribute(asset.file)}" alt="${escapeAttribute(asset.alt)}">
+      </figure>
+      <footer class="coloring-scroll-footer" aria-label="Template story labels">
+        <div class="scroll-title">${escapeHtml(title)}</div>
+        ${tags.length ? `<div class="scroll-meta">${tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>` : ""}
+      </footer>
+    </div>
+  `;
+}
+
+function getColoringTitle(asset) {
+  const scene = getAssetScenes(asset)[0];
+  if (scene) {
+    return scene.title;
+  }
+
+  const glossaryEntry = getAssetGlossaryEntries(asset)[0];
+  if (glossaryEntry) {
+    return glossaryEntry.title;
+  }
+
+  return (asset.subjects?.[0] ?? asset.id).replaceAll("-", " ");
+}
+
+function getColoringTags(asset) {
+  const subjects = asset.subjects ?? [];
+  const scenes = getAssetScenes(asset);
+  const locations = getAssetLocations(asset);
+  const glossaryEntries = getAssetGlossaryEntries(asset);
+  const values = [
+    ...subjects,
+    ...scenes.map((scene) => scene.title),
+    ...locations.map((location) => location.label),
+    ...scenes.map((scene) => scene.locationBucket),
+    ...glossaryEntries.map((entry) => entry.title),
+    ...glossaryEntries.flatMap((entry) => entry.tags ?? [])
+  ].filter(Boolean);
+
+  return [...new Set(values)].slice(0, 12);
+}
+
+function getAssetScenes(asset) {
+  const sceneIds = asset.sceneIds ?? [];
+  return sceneIds
+    .map((sceneId) => state.data.scenes.find((scene) => scene.id === sceneId))
+    .filter(Boolean);
+}
+
+function getAssetLocations(asset) {
+  const locationIds = new Set(getAssetScenes(asset).map((scene) => scene.locationNode));
+  return [...locationIds]
+    .map((locationId) => state.data.locationNodes.find((location) => location.id === locationId))
+    .filter(Boolean);
+}
+
+function getAssetGlossaryEntries(asset) {
+  const glossaryIds = asset.glossaryIds ?? [];
+  const directEntries = glossaryIds
+    .map((entryId) => state.data.glossaryEntries?.find((entry) => entry.id === entryId))
+    .filter(Boolean);
+
+  const subjectEntries = (asset.subjects ?? [])
+    .map((subject) => state.data.glossaryEntries?.find((entry) => entry.title.toLowerCase() === subject.toLowerCase()))
+    .filter(Boolean);
+
+  return [...new Map([...directEntries, ...subjectEntries].map((entry) => [entry.id, entry])).values()];
+}
+
+function printSelectedColoringTemplate() {
+  if (!state.selectedColoringAssetId) {
+    return;
+  }
+  document.body.classList.add("printing-coloring");
+  window.print();
+  window.setTimeout(() => document.body.classList.remove("printing-coloring"), 500);
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -620,5 +835,6 @@ Promise.all([loadStoryData(), loadAssetsIndex(), loadStoryDetails()]).then(([dat
   elements.assetCount.textContent = state.assets.length;
   initControls();
   renderGlossaryPreview();
+  renderColoringLibrary();
   render();
 });

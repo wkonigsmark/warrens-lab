@@ -22,6 +22,7 @@
       <nav class="topnav" aria-label="Page sections">
         <a href="#outline">Outline</a>
         <a href="#journey">Journey</a>
+        <button id="open-coloring-modal" type="button">Coloring</button>
         <a href="#glossary-preview">Glossary</a>
         <a href="reader.html">Reader</a>
       </nav>
@@ -122,6 +123,30 @@
         <div class="glossary-grid" id="glossary-grid"></div>
       </section>
     </main>
+
+    <div class="coloring-modal" id="coloring-modal" role="dialog" aria-modal="true" aria-labelledby="coloring-modal-title" hidden>
+      <div class="coloring-modal-panel">
+        <header class="coloring-modal-head">
+          <div>
+            <p class="eyebrow">Coloring Library</p>
+            <h2 id="coloring-modal-title">Printable Odyssey Templates</h2>
+          </div>
+          <div class="coloring-modal-actions">
+            <button id="print-coloring-template" type="button">Print Selected</button>
+            <button id="close-coloring-modal" type="button" aria-label="Close coloring library">Close</button>
+          </div>
+        </header>
+        <div class="coloring-modal-tools">
+          <label for="coloring-search">Search templates</label>
+          <input id="coloring-search" type="search" placeholder="Athena, Cyclops, Ithaca, Underworld">
+          <span id="coloring-result-count" class="result-count"></span>
+        </div>
+        <div class="coloring-modal-body">
+          <div class="coloring-results" id="coloring-results" aria-label="Coloring template results"></div>
+          <article class="coloring-preview" id="coloring-preview" aria-live="polite"></article>
+        </div>
+      </div>
+    </div>
 
     <script src="app.js"></script>
   </body>
