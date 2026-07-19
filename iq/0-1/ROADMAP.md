@@ -36,12 +36,21 @@ QuizShell/QuizFigure. Validated by `percentLevels.check.js` (`node
 src/lib/percentLevels.check.js`): 28 levels × 300 draws all pass invariants.
 *This replaces the flat 5-level `percentQuiz.js` as the progression source.*
 
-Next to wire it up (mirrors Fractions):
-1. Point QuizMode at `percentLevels.LEVELS` (tiered level picker + pass tracking).
-2. Add a **ProgressMode** (topic × tier tracks + "pick up where you left off" CTA)
-   and default the app to it — same as Fractions now does.
-3. Wire progress tracking (UserPicker + PinGate + sessions → `_shared/progress`),
-   register `0-1` / `ants-0-1` in the shared `TOOL_CATALOG`.
+**Wired in (done 2026-07-19):**
+1. ✅ QuizMode is now a **unit + tier picker** off `percentLevels.LEVELS`; QuizShell
+   shows title + tier badge, saves a session on finish (passed = score ≥ tier
+   passBar), and unlocks the next tier ("Tier Cleared!" → Play next).
+2. ✅ `progress/ProgressMode.jsx` — overall %, per-unit 4-tier tracks, and a "Pick
+   up where you left off →" hero. App **defaults to My Progress**, behind the
+   roster gate.
+3. ✅ Progress tracking wired: `UserPicker` + `PinGate` + `lib/users.js` +
+   `lib/sessions.js` (TOOL_ID `0-1`), `main.jsx` boots loadRoster→startAutoFlush→
+   backfill, `vite.config` `fs.allow:['..']`, registered `0-1` in the shared
+   `TOOL_CATALOG`. Verified end-to-end: a Guest pass on Percent-of·Intro recorded
+   locally, synced to Supabase (verified row), and ticked Progress to 1/28.
+
+Old flat `percentQuiz.js` is now **unused** (nothing imports it — Worksheets use
+their own `percentWorksheet.js`); safe to delete whenever.
 
 ## Next up (decimals)
 - Extend Quiz + Worksheets to decimals: read-the-line, write the decimal, match the

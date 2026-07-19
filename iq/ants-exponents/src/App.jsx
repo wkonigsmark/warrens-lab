@@ -1,28 +1,62 @@
 import { useState } from 'react'
 import Banner from './components/Banner'
+import UserPicker from './components/UserPicker'
+import PinGate from './components/PinGate'
 import Lesson from './components/Lesson'
 import Lesson2 from './components/Lesson2'
 import Lesson3 from './components/Lesson3'
 import Playground from './components/Playground'
-import Quiz from './components/Quiz'
+import QuizMode from './components/quiz/QuizMode'
+import ProgressMode from './components/progress/ProgressMode'
 import Worksheets from './components/Worksheets'
+import { getStoredUser, storeUser, clearStoredUser } from './lib/users'
+import { signOut } from '../../_shared/progress/index.js'
 
-// Same shell as the rest of the Ants & ___ family — all four modes live:
-// Learn (scroll-down lessons), Play (drag-to-explore), Quiz (leveled questions),
-// Worksheets (printable practice).
+// Same shell as the rest of the Ants & ___ family — now behind the shared roster
+// gate, with a My Progress hub as the home tab.
 const MODES = [
-  { id: 'learn', label: '📖 Learn', grad: 'from-indigo-500 to-violet-600', ready: true },
-  { id: 'play', label: '🧭 Play', grad: 'from-sky-500 to-cyan-600', ready: true },
-  { id: 'quiz', label: '📚 Quiz', grad: 'from-green-500 to-emerald-600', ready: true },
-  { id: 'worksheets', label: '🖨 Worksheets', grad: 'from-rose-500 to-pink-600', ready: true },
+  { id: 'learn', label: '📖 Learn', grad: 'from-indigo-500 to-violet-600' },
+  { id: 'play', label: '🧭 Play', grad: 'from-sky-500 to-cyan-600' },
+  { id: 'quiz', label: '📚 Quiz', grad: 'from-green-500 to-emerald-600' },
+  { id: 'progress', label: '🏅 My Progress', grad: 'from-violet-500 to-purple-600' },
+  { id: 'worksheets', label: '🖨 Worksheets', grad: 'from-rose-500 to-pink-600' },
 ]
 
 export default function App() {
-  const [mode, setMode] = useState('learn')
+  return <UserShell />
+}
+
+function UserShell() {
+  const [user, setUser] = useState(() => getStoredUser())
+  const selectUser = (id) => { storeUser(id); setUser(id) }
+  const switchUser = () => { clearStoredUser(); signOut(); setUser(null) }
+
+  if (!user) return <UserPicker onSelect={selectUser} />
+  return (
+    <PinGate key={user} user={user} onCancel={switchUser}>
+      <AppContent user={user} onSwitchUser={switchUser} />
+    </PinGate>
+  )
+}
+
+function AppContent({ user, onSwitchUser }) {
+  // Land in the progress hub by default — see where you are and pick the next
+  // unit. Learn/Play/Quiz are one tap away.
+  const [mode, setMode] = useState('progress')
+  const [quizStartLevel, setQuizStartLevel] = useState(null)
+  const [quizJumpCount, setQuizJumpCount] = useState(0)
+
+  // "Play →" from My Progress jumps straight into that tier in Quiz.
+  const playFromProgress = (levelId) => {
+    setQuizStartLevel(levelId)
+    setQuizJumpCount((c) => c + 1)
+    setMode('quiz')
+    window.scrollTo({ top: 0 })
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-violet-100">
-      <Banner />
+      <Banner user={user} onSwitchUser={onSwitchUser} />
 
       <div className="max-w-6xl mx-auto px-4 py-6">
         <div className="no-print mb-2 flex flex-wrap justify-center gap-2">
@@ -35,14 +69,14 @@ export default function App() {
               }`}
             >
               {m.label}
-              {!m.ready && <span className="ml-1 text-[10px] font-normal opacity-80">soon</span>}
             </button>
           ))}
         </div>
 
         {mode === 'learn' && <LearnMode onGoToMode={setMode} />}
         {mode === 'play' && <Playground />}
-        {mode === 'quiz' && <Quiz />}
+        {mode === 'quiz' && <QuizMode key={quizJumpCount} user={user} startLevel={quizStartLevel} />}
+        {mode === 'progress' && <ProgressMode user={user} onPlay={playFromProgress} />}
         {mode === 'worksheets' && <Worksheets />}
       </div>
     </div>

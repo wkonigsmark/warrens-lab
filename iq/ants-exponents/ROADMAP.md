@@ -4,11 +4,34 @@ Where we are and what's next. All four modes (📖 Learn · 🧭 Play · 📚 Qu
 are built, verified, and branded with both banner images. Learn now has **three lessons**
 (sequenced easiest → hardest: exponents → cubes → negative). This file tracks what comes after.
 
-_Last updated: 2026-06-03_
+_Last updated: 2026-07-19_
 
 ---
 
-## ✅ Done
+## ✅ Progression + My Progress hub (2026-07-19)
+
+- **Scaled lesson plan** — `src/lib/exponentLevels.js`: **9 units × 4 tiers
+  (Intro/Practice/Competent/Master) = 36 levels**, built with the shared
+  `_shared/quizLevels.js` `buildTieredLevels`. Units: Squares · Cubes & Powers ·
+  Write it as a Power · Powers of 10 · Power of 0 & 1 · Which is Bigger? · Product
+  Rule · Quotient Rule · Negative Exponents. Each unit's `generate(tier)` scales
+  difficulty. Validated by `exponentLevels.check.js` (36 × 300 draws, all valid).
+- **Quiz** rebuilt as a **unit + tier picker** (`components/quiz/QuizMode.jsx` +
+  `QuizShell.jsx`) off those levels; keeps the worked-out "explain" feedback,
+  saves a session on finish (passed = score ≥ tier passBar), unlocks the next tier
+  ("Tier Cleared!"). The old flat `components/Quiz.jsx` is now unused.
+- **My Progress hub** (`components/progress/ProgressMode.jsx`) — overall %, per-unit
+  4-tier tracks, "Pick up where you left off →" hero. App is now behind the shared
+  roster gate (`UserPicker` + `PinGate` + `lib/users.js` + `lib/sessions.js`,
+  TOOL_ID `ants-exponents`) and **defaults to My Progress**. `main.jsx` boots
+  loadRoster→startAutoFlush→backfill; `vite.config` `fs.allow:['..']`; registered
+  `ants-exponents` in the shared `TOOL_CATALOG`.
+- Verified end-to-end: Guest pass on Squares·Intro → local session + Supabase row
+  (verified) + Progress 1/36, no console errors, clean build.
+
+---
+
+## ✅ Done (earlier)
 
 - **Learn** — now **3 lessons** with a pill selector + a "What next?" footer on each
   (ordered easiest → hardest):

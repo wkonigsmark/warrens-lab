@@ -1,19 +1,17 @@
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { TOPICS, TIER_DEFS, LEVELS, getLevel } from '../../lib/percentLevels'
+import { TOPICS, TIER_DEFS, LEVELS, getLevel } from '../../lib/exponentLevels'
 import { getSessions } from '../../lib/sessions'
 import QuizShell from './QuizShell'
 
-// Next tier's display label when advancing within the same topic.
 function nextTitle(current, next) {
   if (!next) return null
   if (next.topicId === current?.topicId) return next.tierLabel
   return next.title
 }
 
-// A light unit + tier picker. The rich stats dashboard (overall %, tier tracks)
-// lives in the "My Progress" tab. `startLevel` lets Progress deep-link straight
-// into a specific tier.
+// A unit + tier picker. The rich stats hub lives in the "My Progress" tab.
+// `startLevel` lets Progress deep-link straight into a specific tier.
 export default function QuizMode({ user, startLevel }) {
   const [levelId, setLevelId] = useState(startLevel ?? null)
 
@@ -42,7 +40,7 @@ export default function QuizMode({ user, startLevel }) {
   return (
     <div className="max-w-2xl mx-auto">
       <motion.div className="text-center mb-6" initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-3xl font-black text-gray-800">📚 Percents & Decimals Quiz</h1>
+        <h1 className="text-3xl font-black text-gray-800">📚 Exponents Quiz</h1>
         <p className="text-gray-500 mt-1">Pick a unit and tier — they get trickier as you go.</p>
       </motion.div>
 
@@ -55,7 +53,7 @@ export default function QuizMode({ user, startLevel }) {
               className="bg-white rounded-2xl shadow-lg p-5 border-l-8"
               style={{ borderColor: topic.accent }}
               initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0, transition: { delay: i * 0.05 } }}
+              animate={{ opacity: 1, y: 0, transition: { delay: i * 0.04 } }}
             >
               <div className="mb-3 flex items-center gap-2">
                 <span className="text-xl">{topic.emoji}</span>

@@ -1,20 +1,21 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import QuizFigure from './QuizFigure'
-import { isCorrect } from '../../lib/percentQuiz'
+import { isCorrect, COUNT } from '../../lib/percentLevels'
+import { saveSession } from '../../lib/sessions'
 
-const COUNT = 5
-
-// Drives one quiz level end-to-end: rolls fresh questions on mount, shows the
-// grid + answer UI, gives instant feedback, tracks score, shows results.
-// Levels differ only by their pure generate() (see percentQuiz.js).
-export default function QuizShell({ level, onBack }) {
+// Drives one quiz level (a topic × tier) end-to-end: rolls fresh questions on
+// mount, shows the grid + answer UI, gives feedback, tracks score, and — once
+// the round finishes — saves a session (passed = score ≥ tier passBar) that
+// feeds My Progress and the shared tracker. `onAdvance` unlocks the next tier.
+export default function QuizShell({ level, user, onBack, onAdvance, nextLevelTitle }) {
   const [seed, setSeed] = useState(0)
   const [index, setIndex] = useState(0)
   const [phase, setPhase] = useState('asking') // 'asking' | 'feedback' | 'done'
   const [answers, setAnswers] = useState([])
   const [value, setValue] = useState('')
   const [lastCorrect, setLastCorrect] = useState(false)
+  const startRef = useRef(Date.now())
 
   const questions = useMemo(
     () => Array.from({ length: COUNT }, () => level.generate()),
@@ -23,6 +24,38 @@ export default function QuizShell({ level, onBack }) {
   const q = questions[index]
   const isLast = index === COUNT - 1
   const score = answers.filter((a) => a.correct).length
+
+  // Reset the per-question timer whenever a new question appears.
+  useEffect(() => { startRef.current = Date.now() }, [index, seed])
+
+  // Save the session once the round finishes.
+  useEffect(() => {
+    if (phase !== 'done' || !user) return
+    const finalScore = answers.filter((a) => a.correct).length
+    const times = answers.map((a) => a.ms).filter((m) => typeof m === 'number')
+    const avgMs = times.length ? Math.round(times.reduce((s, t) => s + t, 0) / times.length) : 0
+    saveSession({
+      id: Date.now(),
+      ts: new Date().toISOString(),
+      toolId: '0-1',
+      userId: user,
+      levelId: level.id,
+      levelTitle: level.title,
+      topicId: level.topicId,
+      tierId: level.tierId,
+      tierLabel: level.tierLabel,
+      score: finalScore,
+      count: COUNT,
+      passed: finalScore >= level.passBar,
+      avgMs,
+      answers: answers.map((a, i) => ({
+        q: i + 1,
+        prompt: questions[i]?.promptTitle ?? '',
+        correct: a.correct,
+        ms: a.ms,
+      })),
+    }, user)
+  }, [phase]) // eslint-disable-line
 
   const reset = () => {
     setIndex(0); setPhase('asking'); setAnswers([]); setValue(''); setSeed((s) => s + 1)
@@ -33,7 +66,7 @@ export default function QuizShell({ level, onBack }) {
     if (q.type === 'number' && (guess === '' || guess === null)) return
     const correct = isCorrect(q, guess)
     setLastCorrect(correct)
-    setAnswers((a) => [...a, { guess, correct }])
+    setAnswers((a) => [...a, { guess, correct, ms: Date.now() - startRef.current }])
     setPhase('feedback')
   }
 
@@ -44,13 +77,58 @@ export default function QuizShell({ level, onBack }) {
 
   // Results screen ------------------------------------------------------
   if (phase === 'done') {
+    const passed = score >= level.passBar
+    const times = answers.map((a) => a.ms).filter((m) => typeof m === 'number')
+    const avgSec = times.length ? (times.reduce((s, t) => s + t, 0) / times.length / 1000).toFixed(1) : '0.0'
+
+    // ── Tier cleared, next tier available ──────────────────────────────
+    if (passed && onAdvance) {
+      return (
+        <div className="max-w-xl mx-auto">
+          <motion.div className="bg-white rounded-2xl shadow-xl p-10 text-center" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
+            <div className="text-6xl mb-2">🎉</div>
+            <h1 className="text-3xl font-extrabold text-gray-800 mb-1">Tier Cleared!</h1>
+            <p className="text-sm text-gray-400 mb-2">{level.title} · <span className="font-bold" style={{ color: level.accent }}>{level.tierLabel}</span></p>
+            <div className="text-7xl font-extrabold my-3" style={{ color: level.accent }}>{score}/{COUNT}</div>
+            <p className="text-sm text-gray-400 mb-4">avg {avgSec}s per question</p>
+            {nextLevelTitle && <p className="text-gray-500 mb-6">Next: <span className="font-bold text-gray-700">{nextLevelTitle}</span></p>}
+            <button onClick={onAdvance} className="w-full text-white font-bold py-4 rounded-xl text-lg hover:shadow-lg transition-shadow mb-3" style={{ backgroundColor: level.accent }}>
+              {nextLevelTitle ? `Play ${nextLevelTitle} →` : 'Next →'}
+            </button>
+            <button onClick={reset} className="text-sm text-gray-400 hover:text-gray-600">Replay this tier</button>
+          </motion.div>
+        </div>
+      )
+    }
+
+    // ── Topic fully mastered — no next tier ────────────────────────────
+    if (passed && !onAdvance) {
+      return (
+        <div className="max-w-xl mx-auto">
+          <motion.div className="bg-white rounded-2xl shadow-xl p-10 text-center" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
+            <div className="text-6xl mb-2">🏆</div>
+            <h1 className="text-3xl font-extrabold text-gray-800 mb-1">Unit Mastered!</h1>
+            <p className="text-sm text-gray-400 mb-2">{level.title}</p>
+            <div className="text-7xl font-extrabold my-3" style={{ color: level.accent }}>{score}/{COUNT}</div>
+            <p className="text-sm text-gray-400 mb-1">avg {avgSec}s per question</p>
+            <p className="text-gray-500 mb-6">Every tier cleared. Come back to keep sharp!</p>
+            <button onClick={reset} className="w-full text-white font-bold py-4 rounded-xl text-lg mb-3" style={{ backgroundColor: level.accent }}>Play Again</button>
+            <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600">← Back to Units</button>
+          </motion.div>
+        </div>
+      )
+    }
+
+    // ── Keep practicing ────────────────────────────────────────────────
     const messages = ['Keep practicing! 💪', 'Nice start! 🙂', 'Good work! 👍', 'Great job! 🌟', 'Almost perfect! 🚀', 'Perfect score! 🏆']
     return (
       <div className="max-w-2xl mx-auto">
         <motion.div className="bg-white rounded-2xl shadow-lg p-10 text-center" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
-          <h1 className="text-3xl font-black text-gray-800 mb-2">Quiz Complete!</h1>
+          <h1 className="text-3xl font-black text-gray-800 mb-1">Quiz Complete!</h1>
+          <p className="text-sm text-gray-400 mb-2">{level.title} · <span className="font-bold" style={{ color: level.accent }}>{level.tierLabel}</span></p>
           <div className="text-6xl font-extrabold my-4" style={{ color: level.accent }}>{score}/{COUNT}</div>
-          <p className="text-lg text-gray-600 mb-8">{messages[score]}</p>
+          <p className="text-lg text-gray-600 mb-1">{messages[score]}</p>
+          <p className="text-sm text-gray-400 mb-6">Need {level.passBar}/{COUNT} to clear this tier · avg {avgSec}s</p>
 
           <div className="space-y-2 mb-8 text-left">
             {questions.map((qq, i) => (
@@ -63,7 +141,10 @@ export default function QuizShell({ level, onBack }) {
 
           <div className="space-y-3">
             <button onClick={reset} className="w-full text-white font-bold py-3 rounded-lg hover:shadow-lg transition-shadow" style={{ backgroundColor: level.accent }}>Try Again (new questions)</button>
-            <button onClick={onBack} className="w-full bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300 transition-colors">← Back to Levels</button>
+            {onAdvance && (
+              <button onClick={onAdvance} className="w-full bg-gray-100 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-200 transition-colors">Skip to {nextLevelTitle || 'Next'} →</button>
+            )}
+            <button onClick={onBack} className="w-full bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300 transition-colors">← Back to Units</button>
           </div>
         </motion.div>
       </div>
@@ -76,7 +157,10 @@ export default function QuizShell({ level, onBack }) {
     <div className="max-w-5xl mx-auto">
       <div className="mb-6">
         <div className="flex justify-between items-center mb-3">
-          <h1 className="text-2xl font-black text-gray-800">Level {level.id}: {level.title}</h1>
+          <h1 className="text-2xl font-black text-gray-800 flex items-center gap-2">
+            {level.title}
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: level.accent }}>{level.tierLabel}</span>
+          </h1>
           <span className="text-white px-3 py-1.5 rounded-lg font-bold text-sm" style={{ backgroundColor: level.accent }}>
             {index + 1} / {COUNT}
           </span>
@@ -100,7 +184,7 @@ export default function QuizShell({ level, onBack }) {
           </div>
 
           {q.type === 'choice' && (
-            <div className={`grid gap-3 ${q.choices.length > 2 ? 'grid-cols-3' : 'grid-cols-2'}`}>
+            <div className="grid gap-3 grid-cols-2">
               {q.choices.map((c) => {
                 const isAns = c === q.answer
                 const isGuess = answers[index]?.guess === c
@@ -149,7 +233,7 @@ export default function QuizShell({ level, onBack }) {
             )}
           </AnimatePresence>
 
-          <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600 mt-auto self-start">← Back to Levels</button>
+          <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600 mt-auto self-start">← Back to Units</button>
         </motion.div>
       </div>
     </div>
