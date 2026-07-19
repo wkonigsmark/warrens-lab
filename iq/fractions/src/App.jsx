@@ -46,7 +46,9 @@ function UserShell() {
 }
 
 function AppContent({ user, onSwitchUser }) {
-  const [mode, setMode] = useState('learn')
+  // Land in the user's progress area by default — see where you are and pick
+  // the next unit to work on. Learn/Play/Quiz are one tap away.
+  const [mode, setMode] = useState('progress')
   const [quizStartLevel, setQuizStartLevel] = useState(null)
   const [quizJumpCount, setQuizJumpCount] = useState(0)
 

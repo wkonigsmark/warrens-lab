@@ -36,13 +36,49 @@ export default function ProgressMode({ user, onPlay }) {
   const passedCount = LEVELS.filter((l) => passedIds.has(l.id)).length
   const pct = Math.round((passedCount / TOTAL) * 100)
 
+  // The single recommended "next unit": the first unpassed tier, scanning
+  // topic-by-topic then tier-by-tier — i.e. keep going where you left off.
+  const nextUnit = useMemo(() => {
+    for (const topic of TOPICS) {
+      for (const tier of TIER_DEFS) {
+        const levelId = `${topic.id}-${tier.id}`
+        if (!passedIds.has(levelId)) return { topic, tier, levelId }
+      }
+    }
+    return null // everything mastered
+  }, [passedIds])
+
   return (
     <div className="max-w-2xl mx-auto">
-      <motion.div className="text-center mb-8" initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }}>
+      <motion.div className="text-center mb-6" initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }}>
         <div className="text-5xl mb-2">{userObj?.emoji ?? '🎓'}</div>
         <h1 className="text-3xl font-extrabold text-gray-800">{userObj?.name}'s Progress</h1>
         <p className="text-gray-400 mt-1">{milestone(passedCount)}</p>
       </motion.div>
+
+      {/* Pick up where you left off — one tap to the next unit to work on. */}
+      {nextUnit ? (
+        <motion.button
+          onClick={() => onPlay(nextUnit.levelId)}
+          className="w-full rounded-2xl shadow-lg p-5 mb-6 flex items-center justify-between text-white hover:shadow-xl active:scale-[0.99] transition-all"
+          style={{ background: `linear-gradient(to right, ${nextUnit.topic.accent}, #7c3aed)` }}
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.04 } }}
+        >
+          <div className="text-left">
+            <div className="text-[11px] font-bold uppercase tracking-wide text-white/80">Pick up where you left off</div>
+            <div className="text-lg font-black leading-tight">{nextUnit.topic.emoji} {nextUnit.topic.title}</div>
+            <div className="text-sm text-white/90">{nextUnit.tier.label} tier · your next unit</div>
+          </div>
+          <span className="text-3xl font-black">→</span>
+        </motion.button>
+      ) : (
+        <motion.div
+          className="w-full rounded-2xl shadow-lg p-5 mb-6 text-center text-white font-black bg-gradient-to-r from-amber-400 to-rose-500"
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.04 } }}
+        >
+          🏆 Every unit mastered — you're a Fractions Master!
+        </motion.div>
+      )}
 
       <motion.div
         className="bg-white rounded-2xl shadow-lg p-6 mb-8"

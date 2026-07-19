@@ -47,17 +47,18 @@ lesson('lesson-id', {
 - **Lesson 2 — C major: the bright side.** Am's relative major (same notes). 8-bar
   I–vi–IV–V (`C Am F G | C Am F G7`); major-scale warm-up, major-pentatonic
   "no wrong notes" scale, walking roots (chromatic F→F♯→G), strum-&-walk final.
+- **Lesson 3 — A minor blues.** Back to Am, now for improvising. The 12-bar form on
+  7th chords (`Am7 · Dm7 · E7`), the minor-pentatonic soloing scale, the blue note
+  (♭5 = D♯), and a first blues lick. Its own 4-exercise shape (no strum-&-walk mold).
 
 ## Backlog (candidate next lessons)
 1. **Open-chord basics (key of G).** G · C · D · Em — the first-position workhorses;
    warm-up on the G major scale, simple down-strum quarter notes, then add the walk.
 2. **The Andalusian cadence (Am G F E7).** The other classic minor descent — pairs
    naturally with Lesson 1; introduces the ♭VII→♭VI→V bassline.
-3. **A minor pentatonic + the blues note.** Box-1 pentatonic warm-up, a 12-bar shuffle
-   feel, bends framed as "lean toward the next note."
-4. **Fingerpicking primer.** Same Am progression, but arpeggiated — one string at a time,
+3. **Fingerpicking primer.** Same Am progression, but arpeggiated — one string at a time,
    which *is* mic-scorable (each note lands alone), so Sing-Along can test the whole thing.
-5. **Piano edition.** A `music/instruments/piano/lessons/` page importing the SAME pack,
+4. **Piano edition.** A `music/instruments/piano/lessons/` page importing the SAME pack,
    defaulting to the piano instrument — proves the content is portable (this is why the
    lessons live in `_shared/`, not the guitar folder).
 

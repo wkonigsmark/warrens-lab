@@ -1,5 +1,6 @@
 const state = {
   data: null,
+  quiz: { chapters: [] },
   assets: [],
   details: {
     sceneDetails: {},
@@ -10,7 +11,13 @@ const state = {
   maxScariness: 5,
   bucket: "all",
   coloringSearch: "",
-  selectedColoringAssetId: null
+  selectedColoringAssetId: null,
+  quizMode: "chapter",
+  quizTypes: ["recall", "comprehension", "discussion"],
+  quizCount: "6",
+  quizSingleSceneId: null,
+  quizThroughSceneId: null,
+  quizManualSceneIds: new Set()
 };
 
 const fallbackGlossary = [
@@ -60,7 +67,22 @@ const elements = {
   coloringSearch: document.querySelector("#coloring-search"),
   coloringResultCount: document.querySelector("#coloring-result-count"),
   coloringResults: document.querySelector("#coloring-results"),
-  coloringPreview: document.querySelector("#coloring-preview")
+  coloringPreview: document.querySelector("#coloring-preview"),
+  openQuiz: document.querySelector("#open-quiz-modal"),
+  quizModal: document.querySelector("#quiz-modal"),
+  closeQuiz: document.querySelector("#close-quiz-modal"),
+  buildQuiz: document.querySelector("#build-quiz"),
+  quizMode: document.querySelector("#quiz-mode"),
+  quizSingleControl: document.querySelector("#quiz-single-control"),
+  quizThroughControl: document.querySelector("#quiz-through-control"),
+  quizSingleScene: document.querySelector("#quiz-single-scene"),
+  quizThroughScene: document.querySelector("#quiz-through-scene"),
+  quizManualScenes: document.querySelector("#quiz-manual-scenes"),
+  quizCount: document.querySelector("#quiz-count"),
+  quizIncludeRecall: document.querySelector("#quiz-include-recall"),
+  quizIncludeComprehension: document.querySelector("#quiz-include-comprehension"),
+  quizIncludeDiscussion: document.querySelector("#quiz-include-discussion"),
+  quizOutput: document.querySelector("#quiz-output")
 };
 
 async function loadStoryData() {
@@ -105,6 +127,18 @@ async function loadStoryDetails() {
   }
 }
 
+async function loadQuizData() {
+  try {
+    const response = await fetch("quiz-data.json");
+    if (!response.ok) {
+      return { chapters: [] };
+    }
+    return response.json();
+  } catch (error) {
+    return { chapters: [] };
+  }
+}
+
 function initControls() {
   const buckets = [...new Set(state.data.scenes.map((scene) => scene.locationBucket))];
   buckets.forEach((bucket) => {
@@ -141,6 +175,8 @@ function initControls() {
     render();
   });
 
+  initQuizControls();
+
   elements.openColoring.addEventListener("click", openColoringModal);
   elements.closeColoring.addEventListener("click", closeColoringModal);
   elements.coloringModal.addEventListener("click", (event) => {
@@ -153,9 +189,43 @@ function initControls() {
     renderColoringLibrary();
   });
   elements.printColoring.addEventListener("click", printSelectedColoringTemplate);
+  elements.openQuiz.addEventListener("click", openQuizModal);
+  elements.closeQuiz.addEventListener("click", closeQuizModal);
+  elements.quizModal.addEventListener("click", (event) => {
+    if (event.target === elements.quizModal) {
+      closeQuizModal();
+    }
+  });
+  elements.quizMode.addEventListener("change", (event) => {
+    state.quizMode = event.target.value;
+    renderQuizControls();
+    buildQuiz();
+  });
+  elements.quizSingleScene.addEventListener("change", (event) => {
+    state.quizSingleSceneId = event.target.value;
+    buildQuiz();
+  });
+  elements.quizThroughScene.addEventListener("change", (event) => {
+    state.quizThroughSceneId = event.target.value;
+    buildQuiz();
+  });
+  elements.quizCount.addEventListener("change", (event) => {
+    state.quizCount = event.target.value;
+    buildQuiz();
+  });
+  [elements.quizIncludeRecall, elements.quizIncludeComprehension, elements.quizIncludeDiscussion].forEach((checkbox) => {
+    checkbox.addEventListener("change", () => {
+      state.quizTypes = getSelectedQuizTypes();
+      buildQuiz();
+    });
+  });
+  elements.buildQuiz.addEventListener("click", buildQuiz);
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && !elements.coloringModal.hidden) {
       closeColoringModal();
+    }
+    if (event.key === "Escape" && !elements.quizModal.hidden) {
+      closeQuizModal();
     }
   });
 }
@@ -813,6 +883,208 @@ function printSelectedColoringTemplate() {
   window.setTimeout(() => document.body.classList.remove("printing-coloring"), 500);
 }
 
+function initQuizControls() {
+  const options = getStoryOutlineScenes()
+    .map((scene) => `<option value="${escapeAttribute(scene.id)}">${scene.outlinePosition}. ${escapeHtml(scene.title)}</option>`)
+    .join("");
+
+  elements.quizSingleScene.innerHTML = options;
+  elements.quizThroughScene.innerHTML = options;
+  state.quizSingleSceneId = getStoryOutlineScenes()[0]?.id ?? null;
+  state.quizThroughSceneId = getStoryOutlineScenes()[7]?.id ?? getStoryOutlineScenes()[0]?.id ?? null;
+  elements.quizSingleScene.value = state.quizSingleSceneId;
+  elements.quizThroughScene.value = state.quizThroughSceneId;
+  renderQuizManualPicker();
+  renderQuizControls();
+}
+
+function openQuizModal() {
+  elements.quizModal.hidden = false;
+  document.body.classList.add("modal-open");
+  buildQuiz();
+  elements.quizMode.focus();
+}
+
+function closeQuizModal() {
+  elements.quizModal.hidden = true;
+  document.body.classList.remove("modal-open");
+  elements.openQuiz.focus();
+}
+
+function renderQuizControls() {
+  elements.quizSingleControl.hidden = state.quizMode !== "chapter";
+  elements.quizThroughControl.hidden = state.quizMode !== "through";
+  elements.quizManualScenes.hidden = state.quizMode !== "manual";
+}
+
+function renderQuizManualPicker() {
+  const selectedDefaults = getStoryOutlineScenes().slice(0, 3).map((scene) => scene.id);
+  state.quizManualSceneIds = new Set(selectedDefaults);
+
+  elements.quizManualScenes.innerHTML = `
+    <p class="quiz-picker-label">Manual chapters</p>
+    <div class="quiz-chapter-grid">
+      ${getStoryOutlineScenes()
+        .map((scene) => `
+          <label>
+            <input type="checkbox" value="${escapeAttribute(scene.id)}" ${state.quizManualSceneIds.has(scene.id) ? "checked" : ""}>
+            <span>${scene.outlinePosition}. ${escapeHtml(scene.title)}</span>
+          </label>
+        `)
+        .join("")}
+    </div>
+  `;
+
+  elements.quizManualScenes.querySelectorAll("input[type='checkbox']").forEach((checkbox) => {
+    checkbox.addEventListener("change", (event) => {
+      if (event.target.checked) {
+        state.quizManualSceneIds.add(event.target.value);
+      } else {
+        state.quizManualSceneIds.delete(event.target.value);
+      }
+      buildQuiz();
+    });
+  });
+}
+
+function getSelectedQuizTypes() {
+  return [
+    elements.quizIncludeRecall.checked ? "recall" : null,
+    elements.quizIncludeComprehension.checked ? "comprehension" : null,
+    elements.quizIncludeDiscussion.checked ? "discussion" : null
+  ].filter(Boolean);
+}
+
+function getSelectedQuizSceneIds() {
+  const outline = getStoryOutlineScenes();
+  if (state.quizMode === "all") {
+    return outline.map((scene) => scene.id);
+  }
+
+  if (state.quizMode === "through") {
+    const throughIndex = outline.findIndex((scene) => scene.id === state.quizThroughSceneId);
+    return outline.slice(0, throughIndex + 1).map((scene) => scene.id);
+  }
+
+  if (state.quizMode === "manual") {
+    return outline.filter((scene) => state.quizManualSceneIds.has(scene.id)).map((scene) => scene.id);
+  }
+
+  return [state.quizSingleSceneId].filter(Boolean);
+}
+
+function buildQuiz() {
+  state.quizTypes = getSelectedQuizTypes();
+  state.quizCount = elements.quizCount.value;
+
+  const sceneIds = getSelectedQuizSceneIds();
+  const questions = getQuizQuestions(sceneIds).filter((item) => state.quizTypes.includes(item.type));
+  const selectedQuestions = limitQuizQuestions(questions);
+
+  renderQuizOutput(selectedQuestions, sceneIds);
+}
+
+function getQuizQuestions(sceneIds) {
+  const sceneSet = new Set(sceneIds);
+  return (state.quiz.chapters ?? [])
+    .filter((chapter) => sceneSet.has(chapter.sceneId))
+    .flatMap((chapter) => {
+      const scene = getStoryOutlineScenes().find((entry) => entry.id === chapter.sceneId);
+      return (chapter.questions ?? []).map((question) => ({
+        ...question,
+        sceneId: chapter.sceneId,
+        sceneTitle: scene?.title ?? chapter.sceneId,
+        scenePosition: scene?.outlinePosition ?? scene?.order ?? ""
+      }));
+    });
+}
+
+function limitQuizQuestions(questions) {
+  if (state.quizCount === "all") {
+    return questions;
+  }
+
+  const limit = Number(state.quizCount);
+  return questions.slice(0, limit);
+}
+
+function renderQuizOutput(questions, sceneIds) {
+  const chapterLabel = getQuizChapterLabel(sceneIds);
+
+  if (!questions.length) {
+    elements.quizOutput.innerHTML = `
+      <div class="empty-state">
+        <strong>No quiz questions match this setup.</strong>
+        <p>Choose at least one chapter and one question type.</p>
+      </div>
+    `;
+    return;
+  }
+
+  elements.quizOutput.innerHTML = `
+    <div class="quiz-output-head">
+      <div>
+        <p class="eyebrow">Built From The Story Draft</p>
+        <h3>${escapeHtml(chapterLabel)}</h3>
+      </div>
+      <span class="result-count">${questions.length} questions</span>
+    </div>
+    <ol class="quiz-list">
+      ${questions.map((question, index) => renderQuizQuestion(question, index)).join("")}
+    </ol>
+  `;
+
+  elements.quizOutput.querySelectorAll(".quiz-answer-toggle").forEach((button) => {
+    button.addEventListener("click", () => {
+      const answer = document.querySelector(`#${button.getAttribute("aria-controls")}`);
+      const isOpen = button.getAttribute("aria-expanded") === "true";
+      button.setAttribute("aria-expanded", String(!isOpen));
+      button.textContent = isOpen ? "Show Answer" : "Hide Answer";
+      answer.hidden = isOpen;
+    });
+  });
+}
+
+function renderQuizQuestion(question, index) {
+  const answerId = `quiz-answer-${index}`;
+  const isDiscussion = question.type === "discussion";
+
+  return `
+    <li class="quiz-question ${escapeAttribute(question.type)}">
+      <div class="quiz-question-meta">
+        <span>${escapeHtml(question.type)}</span>
+        <span>Chapter ${escapeHtml(question.scenePosition)}: ${escapeHtml(question.sceneTitle)}</span>
+      </div>
+      <p>${escapeHtml(question.question)}</p>
+      ${
+        isDiscussion
+          ? `<div class="quiz-discussion-note">Open-ended family discussion. No single right answer.</div>`
+          : `<button class="quiz-answer-toggle" type="button" aria-expanded="false" aria-controls="${answerId}">Show Answer</button>
+             <div class="quiz-answer" id="${answerId}" hidden>${escapeHtml(question.answer)}</div>`
+      }
+    </li>
+  `;
+}
+
+function getQuizChapterLabel(sceneIds) {
+  const outline = getStoryOutlineScenes();
+  if (state.quizMode === "all") {
+    return "Everything Mix";
+  }
+
+  if (state.quizMode === "through") {
+    const endScene = outline.find((scene) => scene.id === state.quizThroughSceneId);
+    return `Chapters 1-${endScene?.outlinePosition ?? sceneIds.length}`;
+  }
+
+  if (state.quizMode === "manual") {
+    return `${sceneIds.length} Manually Selected Chapters`;
+  }
+
+  const scene = outline.find((entry) => entry.id === state.quizSingleSceneId);
+  return scene ? `Chapter ${scene.outlinePosition}: ${scene.title}` : "Selected Chapter";
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -826,10 +1098,11 @@ function escapeAttribute(value) {
   return escapeHtml(value).replaceAll("`", "&#096;");
 }
 
-Promise.all([loadStoryData(), loadAssetsIndex(), loadStoryDetails()]).then(([data, assetIndex, details]) => {
+Promise.all([loadStoryData(), loadAssetsIndex(), loadStoryDetails(), loadQuizData()]).then(([data, assetIndex, details, quiz]) => {
   state.data = data;
   state.assets = assetIndex.assets ?? [];
   state.details = details;
+  state.quiz = quiz;
   state.selectedSceneId = data.scenes[0]?.id;
   elements.sceneCount.textContent = data.scenes.length;
   elements.assetCount.textContent = state.assets.length;

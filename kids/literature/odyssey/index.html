@@ -23,6 +23,7 @@
         <a href="#outline">Outline</a>
         <a href="#journey">Journey</a>
         <button id="open-coloring-modal" type="button">Coloring</button>
+        <button id="open-quiz-modal" type="button">Quiz</button>
         <a href="#glossary-preview">Glossary</a>
         <a href="reader.html">Reader</a>
       </nav>
@@ -144,6 +145,59 @@
         <div class="coloring-modal-body">
           <div class="coloring-results" id="coloring-results" aria-label="Coloring template results"></div>
           <article class="coloring-preview" id="coloring-preview" aria-live="polite"></article>
+        </div>
+      </div>
+    </div>
+
+    <div class="quiz-modal" id="quiz-modal" role="dialog" aria-modal="true" aria-labelledby="quiz-modal-title" hidden>
+      <div class="quiz-modal-panel">
+        <header class="quiz-modal-head">
+          <div>
+            <p class="eyebrow">Story Check</p>
+            <h2 id="quiz-modal-title">Odyssey Quiz Builder</h2>
+          </div>
+          <div class="quiz-modal-actions">
+            <button id="build-quiz" type="button">Build Quiz</button>
+            <button id="close-quiz-modal" type="button" aria-label="Close quiz builder">Close</button>
+          </div>
+        </header>
+        <div class="quiz-modal-body">
+          <aside class="quiz-builder" aria-label="Quiz builder controls">
+            <div class="quiz-control">
+              <label for="quiz-mode">Question source</label>
+              <select id="quiz-mode">
+                <option value="chapter">One chapter</option>
+                <option value="through">Up to a chapter</option>
+                <option value="manual">Pick chapters</option>
+                <option value="all">Everything mix</option>
+              </select>
+            </div>
+            <div class="quiz-control" id="quiz-single-control">
+              <label for="quiz-single-scene">Chapter</label>
+              <select id="quiz-single-scene"></select>
+            </div>
+            <div class="quiz-control" id="quiz-through-control" hidden>
+              <label for="quiz-through-scene">Through chapter</label>
+              <select id="quiz-through-scene"></select>
+            </div>
+            <div class="quiz-control" id="quiz-types-control">
+              <span>Question types</span>
+              <label><input id="quiz-include-recall" type="checkbox" checked> Recall</label>
+              <label><input id="quiz-include-comprehension" type="checkbox" checked> Comprehension</label>
+              <label><input id="quiz-include-discussion" type="checkbox" checked> Discussion</label>
+            </div>
+            <div class="quiz-control">
+              <label for="quiz-count">Question count</label>
+              <select id="quiz-count">
+                <option value="6">6 questions</option>
+                <option value="9">9 questions</option>
+                <option value="12">12 questions</option>
+                <option value="all">All matching questions</option>
+              </select>
+            </div>
+            <div class="quiz-manual" id="quiz-manual-scenes" hidden></div>
+          </aside>
+          <article class="quiz-output" id="quiz-output" aria-live="polite"></article>
         </div>
       </div>
     </div>

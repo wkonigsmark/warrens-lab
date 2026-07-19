@@ -1,0 +1,447 @@
+{
+  "version": 1,
+  "questionTypes": {
+    "recall": "Checks what happened in the story.",
+    "comprehension": "Checks why it mattered or how one event caused another.",
+    "discussion": "Opens a family conversation after reading."
+  },
+  "chapters": [
+    {
+      "sceneId": "cicones-raid",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "What mistake did Odysseus and his men make after raiding the Cicones?",
+          "answer": "They stayed too long instead of leaving quickly."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why does this chapter begin the journey with a hard lesson?",
+          "answer": "It shows that greed, delay, and not listening can cost lives."
+        },
+        {
+          "type": "discussion",
+          "question": "Have you ever seen someone win something but then push too far? What would have been wiser?"
+        }
+      ]
+    },
+    {
+      "sceneId": "lotus-eaters",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "What did the lotus flowers make some sailors forget?",
+          "answer": "They forgot their wish to go home."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why was the Lotus-Eaters' island dangerous even though it seemed peaceful?",
+          "answer": "Its danger was comfort and forgetting, not fighting."
+        },
+        {
+          "type": "discussion",
+          "question": "What is something pleasant that can still distract people from what matters?"
+        }
+      ]
+    },
+    {
+      "sceneId": "cyclops-cave",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "What false name did Odysseus give Polyphemus?",
+          "answer": "He said his name was Nobody."
+        },
+        {
+          "type": "comprehension",
+          "question": "How did Odysseus' taunting change the rest of the journey?",
+          "answer": "He revealed his real name, so Polyphemus called on Poseidon to curse him."
+        },
+        {
+          "type": "discussion",
+          "question": "Odysseus was clever enough to escape, but vain enough to boast. Where have you seen vanity make a problem worse? What would have been a better approach?"
+        }
+      ]
+    },
+    {
+      "sceneId": "bag-of-winds",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "What gift did Aeolus give Odysseus?",
+          "answer": "A bag holding the storm winds."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why did the crew open the bag?",
+          "answer": "They grew suspicious and thought Odysseus might be hiding treasure."
+        },
+        {
+          "type": "discussion",
+          "question": "Why can mistrust hurt a group, even when everyone wants to get home?"
+        }
+      ]
+    },
+    {
+      "sceneId": "laestrygonians",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "What happened to most of Odysseus' ships in the Laestrygonian harbor?",
+          "answer": "They were trapped and destroyed; only Odysseus' ship escaped."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why did Odysseus' choice to anchor outside the harbor matter?",
+          "answer": "It kept his ship from being trapped with the others."
+        },
+        {
+          "type": "discussion",
+          "question": "When is caution helpful, even if other people think you are being too careful?"
+        }
+      ]
+    },
+    {
+      "sceneId": "circes-island",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "What did Circe do to some of Odysseus' men?",
+          "answer": "She transformed them into pigs."
+        },
+        {
+          "type": "comprehension",
+          "question": "How did Hermes help Odysseus face Circe?",
+          "answer": "Hermes gave him protection and advice so Circe's magic would not overpower him."
+        },
+        {
+          "type": "discussion",
+          "question": "Circe changes from enemy to helper. What can make someone change how they treat others?"
+        }
+      ]
+    },
+    {
+      "sceneId": "underworld",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "Which prophet did Odysseus seek in the Underworld?",
+          "answer": "Tiresias."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why is the Underworld chapter sad as well as spooky?",
+          "answer": "Odysseus meets the dead and faces grief, memory, and warnings."
+        },
+        {
+          "type": "discussion",
+          "question": "Why do stories sometimes ask heroes to listen to hard truths before they can go forward?"
+        }
+      ]
+    },
+    {
+      "sceneId": "sirens-scylla-charybdis",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "How did Odysseus protect his crew from the Sirens?",
+          "answer": "He had them plug their ears and tie him to the mast."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why was Scylla and Charybdis such a terrible choice?",
+          "answer": "Both routes were dangerous, so Odysseus had to choose the loss he thought they could survive."
+        },
+        {
+          "type": "discussion",
+          "question": "Have you ever had to choose between two imperfect options? How did you decide?"
+        }
+      ]
+    },
+    {
+      "sceneId": "cattle-of-the-sun",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "Whose sacred cattle did the men kill?",
+          "answer": "The cattle of Helios, the sun god."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why did this choice bring disaster?",
+          "answer": "The men broke a divine warning, and Zeus destroyed the ship."
+        },
+        {
+          "type": "discussion",
+          "question": "Why can hunger, fear, or exhaustion make good rules harder to follow?"
+        }
+      ]
+    },
+    {
+      "sceneId": "odysseus-on-ogygia",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "Who kept Odysseus on Ogygia?",
+          "answer": "Calypso."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why did Odysseus choose to leave even though Calypso offered comfort and immortality?",
+          "answer": "His heart still turned toward his mortal home, family, and real life."
+        },
+        {
+          "type": "discussion",
+          "question": "Why might a difficult real life be better than an easy life that is not truly yours?"
+        }
+      ]
+    },
+    {
+      "sceneId": "trouble-in-ithaca",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "What trick did Penelope use to delay choosing a suitor?",
+          "answer": "She wove by day and unwove the cloth by night."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why is the palace dangerous even without monsters?",
+          "answer": "The suitors are consuming Odysseus' house and pressuring Penelope and Telemachus."
+        },
+        {
+          "type": "discussion",
+          "question": "What kind of courage does Penelope show while she waits?"
+        }
+      ]
+    },
+    {
+      "sceneId": "athena-sends-telemachus",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "What disguise did Athena use when she visited Telemachus?",
+          "answer": "She came as Mentes."
+        },
+        {
+          "type": "comprehension",
+          "question": "What did Athena push Telemachus to do?",
+          "answer": "Speak against the suitors and travel to seek news of his father."
+        },
+        {
+          "type": "discussion",
+          "question": "Who helps you become braver when you feel too small for a problem?"
+        }
+      ]
+    },
+    {
+      "sceneId": "telemachus-visits-nestor",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "Which old king did Telemachus visit in Pylos?",
+          "answer": "Nestor."
+        },
+        {
+          "type": "comprehension",
+          "question": "What did Telemachus gain even though Nestor did not know where Odysseus was?",
+          "answer": "Respect, encouragement, and a next step toward Sparta."
+        },
+        {
+          "type": "discussion",
+          "question": "Why can asking older people for stories or advice matter?"
+        }
+      ]
+    },
+    {
+      "sceneId": "telemachus-visits-sparta",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "Who hosted Telemachus in Sparta?",
+          "answer": "Menelaus and Helen."
+        },
+        {
+          "type": "comprehension",
+          "question": "What important hope did Telemachus receive in Sparta?",
+          "answer": "He learned that Odysseus might still be alive on Calypso's island."
+        },
+        {
+          "type": "discussion",
+          "question": "How can hope help someone, even before the problem is solved?"
+        }
+      ]
+    },
+    {
+      "sceneId": "storm-and-scheria",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "Who wrecked Odysseus' raft with a storm?",
+          "answer": "Poseidon."
+        },
+        {
+          "type": "comprehension",
+          "question": "How did Odysseus survive after the raft broke apart?",
+          "answer": "He kept swimming, accepted help, and reached the shore of Scheria."
+        },
+        {
+          "type": "discussion",
+          "question": "What helps people keep going when they are exhausted?"
+        }
+      ]
+    },
+    {
+      "sceneId": "phaeacian-court",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "Who found Odysseus near the river on Scheria?",
+          "answer": "Nausicaa."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why are the Phaeacians important to Odysseus' return?",
+          "answer": "Their hospitality gives him safety, a listening audience, and passage home."
+        },
+        {
+          "type": "discussion",
+          "question": "What makes someone a good host to a stranger?"
+        }
+      ]
+    },
+    {
+      "sceneId": "home-in-disguise",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "Who disguised Odysseus as a beggar when he reached Ithaca?",
+          "answer": "Athena."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why did Odysseus not reveal himself immediately?",
+          "answer": "He needed to learn what was happening in his house and who could be trusted."
+        },
+        {
+          "type": "discussion",
+          "question": "When is it wise to watch and listen before acting?"
+        }
+      ]
+    },
+    {
+      "sceneId": "father-and-son",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "Where did Odysseus reveal himself to Telemachus?",
+          "answer": "In Eumaeus' hut."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why is this reunion more than just a happy moment?",
+          "answer": "Father and son also become allies who must plan how to reclaim the house."
+        },
+        {
+          "type": "discussion",
+          "question": "How can family members become teammates when something is hard?"
+        }
+      ]
+    },
+    {
+      "sceneId": "beggar-in-palace",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "Which old dog recognized Odysseus?",
+          "answer": "Argos."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why is Odysseus' disguise painful inside his own palace?",
+          "answer": "He sees his home mistreated while he must stay hidden and endure insults."
+        },
+        {
+          "type": "discussion",
+          "question": "What is hard about being patient when someone treats you unfairly?"
+        }
+      ]
+    },
+    {
+      "sceneId": "bow-contest",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "What challenge did Penelope set for the suitors?",
+          "answer": "String Odysseus' bow and shoot through the axes."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why did the bow prove who Odysseus was?",
+          "answer": "It was tied to his strength, skill, and old life in the house."
+        },
+        {
+          "type": "discussion",
+          "question": "Why are some tests better than just asking someone to say who they are?"
+        }
+      ]
+    },
+    {
+      "sceneId": "reckoning",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "What did Odysseus reveal after shooting through the axes?",
+          "answer": "He revealed that he was the true master of the house."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why is this chapter serious rather than simply exciting?",
+          "answer": "It brings justice and danger together, and the violence has consequences."
+        },
+        {
+          "type": "discussion",
+          "question": "What is the difference between justice and revenge?"
+        }
+      ]
+    },
+    {
+      "sceneId": "penelopes-test",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "What secret did Penelope use to test Odysseus?",
+          "answer": "The marriage bed built around a living olive tree."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why was Penelope right to be careful?",
+          "answer": "She had survived for years by testing words and not trusting too quickly."
+        },
+        {
+          "type": "discussion",
+          "question": "How can caution be a form of wisdom instead of fear?"
+        }
+      ]
+    },
+    {
+      "sceneId": "peace-in-ithaca",
+      "questions": [
+        {
+          "type": "recall",
+          "question": "Which goddess helped stop the cycle of revenge in Ithaca?",
+          "answer": "Athena."
+        },
+        {
+          "type": "comprehension",
+          "question": "Why does the story need peace after Odysseus wins back his house?",
+          "answer": "The families of the suitors are angry, and Ithaca needs healing instead of more violence."
+        },
+        {
+          "type": "discussion",
+          "question": "What does it take for people to stop fighting after everyone has been hurt?"
+        }
+      ]
+    }
+  ]
+}

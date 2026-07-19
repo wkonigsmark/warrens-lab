@@ -8,10 +8,12 @@
 
 import { LESSON as amTensionResolve } from './am-tension-resolve.js';
 import { LESSON as cMajorBrightSide } from './c-major-bright-side.js';
+import { LESSON as aMinorBlues } from './a-minor-blues.js';
 
 export const LESSONS = [
     amTensionResolve,
     cMajorBrightSide,
+    aMinorBlues,
     // Append new lessons here — position sets the order (see ROADMAP.md).
 ];
 
