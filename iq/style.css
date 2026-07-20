@@ -339,6 +339,33 @@ body {
     }
 }
 
+/* ---- Welcome Bubble ---- */
+.welcome-bubble {
+    background: linear-gradient(135deg, var(--mist) 0%, var(--cloud) 100%);
+    border: 1.5px solid rgba(26, 28, 32, 0.08);
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin-top: 12px;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    animation: fadeUp 0.7s ease 0.4s forwards;
+    opacity: 0;
+    max-width: 520px;
+}
+
+.welcome-bubble p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--ink);
+    font-weight: 400;
+    letter-spacing: 0.3px;
+}
+
+.welcome-bubble p::first-letter {
+    font-weight: 500;
+    color: var(--ink);
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 480px) {
     #toolkit {
