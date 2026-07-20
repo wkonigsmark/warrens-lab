@@ -50,15 +50,16 @@ lesson('lesson-id', {
 - **Lesson 3 — A minor blues.** Back to Am, now for improvising. The 12-bar form on
   7th chords (`Am7 · Dm7 · E7`), the minor-pentatonic soloing scale, the blue note
   (♭5 = D♯), and a first blues lick. Its own 4-exercise shape (no strum-&-walk mold).
+- **Lesson 4 — G major: four chords, countless songs.** The starter-guitar staple:
+  open chords G · D · Em · C and the I–V–vi–IV loop. Learn the shapes, a clean-changes
+  drill (whole notes), the G major scale (meets F♯), and a singable folk melody.
 
 ## Backlog (candidate next lessons)
-1. **Open-chord basics (key of G).** G · C · D · Em — the first-position workhorses;
-   warm-up on the G major scale, simple down-strum quarter notes, then add the walk.
-2. **The Andalusian cadence (Am G F E7).** The other classic minor descent — pairs
+1. **The Andalusian cadence (Am G F E7).** The other classic minor descent — pairs
    naturally with Lesson 1; introduces the ♭VII→♭VI→V bassline.
-3. **Fingerpicking primer.** Same Am progression, but arpeggiated — one string at a time,
+2. **Fingerpicking primer.** Same Am progression, but arpeggiated — one string at a time,
    which *is* mic-scorable (each note lands alone), so Sing-Along can test the whole thing.
-4. **Piano edition.** A `music/instruments/piano/lessons/` page importing the SAME pack,
+3. **Piano edition.** A `music/instruments/piano/lessons/` page importing the SAME pack,
    defaulting to the piano instrument — proves the content is portable (this is why the
    lessons live in `_shared/`, not the guitar folder).
 

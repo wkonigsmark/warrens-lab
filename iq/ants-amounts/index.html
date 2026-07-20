@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Ants &amp; Amounts · Build It!</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">🐜🧱 <span>Ants &amp; Amounts</span></div>
+    <button id="soundBtn" class="icon-btn" title="Sound on/off" aria-label="Toggle sound">🔊</button>
+  </header>
+
+  <main id="game">
+    <!-- The ask -->
+    <div id="prompt">
+      <span class="prompt-text">Can you build</span>
+      <span id="target" class="target">3</span>
+      <span class="prompt-text">?</span>
+    </div>
+
+    <!-- The build stage: tap to add blocks to the tower -->
+    <div id="stage" role="button" tabindex="0" aria-label="Tap to add a block">
+      <div id="tower"><!-- slots injected by JS --></div>
+      <div id="countBubble" class="hidden">0</div>
+    </div>
+
+    <!-- Controls -->
+    <div id="controls">
+      <button id="addBtn" class="big-btn">➕ Add a block</button>
+      <button id="resetBtn" class="round-btn" title="Start this tower over" aria-label="Start over">↺</button>
+    </div>
+
+    <!-- Little trophy row of towers built -->
+    <div id="builtRow" aria-label="Towers you have built"></div>
+  </main>
+
+  <!-- Celebration overlay -->
+  <div id="cheer" class="hidden">
+    <div id="confetti"></div>
+    <div class="cheer-card">
+      <div id="cheerEmoji">🎉</div>
+      <div id="cheerText">You built <b>3</b>!</div>
+      <button id="nextBtn" class="big-btn">Next ➜</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

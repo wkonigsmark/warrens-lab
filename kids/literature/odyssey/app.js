@@ -12,12 +12,13 @@ const state = {
   bucket: "all",
   coloringSearch: "",
   selectedColoringAssetId: null,
-  quizMode: "chapter",
-  quizTypes: ["recall", "comprehension", "discussion"],
-  quizCount: "6",
+  quizMode: "through",
+  quizTypes: ["recall", "comprehension", "image", "discussion"],
+  quizCount: "9",
   quizSingleSceneId: null,
   quizThroughSceneId: null,
-  quizManualSceneIds: new Set()
+  quizManualSceneIds: new Set(),
+  quizBuildNumber: 0
 };
 
 const fallbackGlossary = [
@@ -81,6 +82,7 @@ const elements = {
   quizCount: document.querySelector("#quiz-count"),
   quizIncludeRecall: document.querySelector("#quiz-include-recall"),
   quizIncludeComprehension: document.querySelector("#quiz-include-comprehension"),
+  quizIncludeImage: document.querySelector("#quiz-include-image"),
   quizIncludeDiscussion: document.querySelector("#quiz-include-discussion"),
   quizOutput: document.querySelector("#quiz-output")
 };
@@ -105,7 +107,7 @@ async function loadStoryData() {
 
 async function loadAssetsIndex() {
   try {
-    const response = await fetch("assets-index.json");
+    const response = await fetch("assets-index.json", { cache: "no-store" });
     if (!response.ok) {
       return { assets: [] };
     }
@@ -199,24 +201,24 @@ function initControls() {
   elements.quizMode.addEventListener("change", (event) => {
     state.quizMode = event.target.value;
     renderQuizControls();
-    buildQuiz();
+    stageQuizBuild();
   });
   elements.quizSingleScene.addEventListener("change", (event) => {
     state.quizSingleSceneId = event.target.value;
-    buildQuiz();
+    stageQuizBuild();
   });
   elements.quizThroughScene.addEventListener("change", (event) => {
     state.quizThroughSceneId = event.target.value;
-    buildQuiz();
+    stageQuizBuild();
   });
   elements.quizCount.addEventListener("change", (event) => {
     state.quizCount = event.target.value;
-    buildQuiz();
+    stageQuizBuild();
   });
-  [elements.quizIncludeRecall, elements.quizIncludeComprehension, elements.quizIncludeDiscussion].forEach((checkbox) => {
+  [elements.quizIncludeRecall, elements.quizIncludeComprehension, elements.quizIncludeImage, elements.quizIncludeDiscussion].forEach((checkbox) => {
     checkbox.addEventListener("change", () => {
       state.quizTypes = getSelectedQuizTypes();
-      buildQuiz();
+      stageQuizBuild();
     });
   });
   elements.buildQuiz.addEventListener("click", buildQuiz);
@@ -446,16 +448,58 @@ function renderTimeAway(timeAway) {
     return "";
   }
 
+  const remaining = getHomecomingCountdown(timeAway);
+
   return `
-    <section class="time-away-card" aria-label="Time away from family">
-      <p class="eyebrow">Time Away From Family</p>
+    <section class="time-away-card" aria-label="Odyssey time counter">
+      <p class="eyebrow">Odyssey Time Counter</p>
       <div class="time-away-values">
-        <span><strong>Start</strong>${escapeHtml(timeAway.start)}</span>
-        <span><strong>End</strong>${escapeHtml(timeAway.end)}</span>
+        <span><strong>Time away from home</strong>${escapeHtml(formatElapsedAwayYears(timeAway.end))}</span>
+        ${remaining ? `<span><strong>Time until homecoming</strong>${escapeHtml(remaining.end)}</span>` : ""}
       </div>
       <p>${escapeHtml(timeAway.note)}</p>
     </section>
   `;
+}
+
+function formatElapsedAwayYears(value) {
+  const years = extractApproxYears(value);
+  if (years === null) {
+    return value;
+  }
+  if (years === 1) {
+    return "about 1 year";
+  }
+  return `about ${years} years`;
+}
+
+function getHomecomingCountdown(timeAway) {
+  const startYears = extractApproxYears(timeAway.start);
+  const endYears = extractApproxYears(timeAway.end);
+  if (startYears === null || endYears === null) {
+    return null;
+  }
+
+  return {
+    start: formatRemainingHomecomingYears(20 - startYears),
+    end: formatRemainingHomecomingYears(20 - endYears)
+  };
+}
+
+function extractApproxYears(value) {
+  const match = String(value).match(/(\d+(?:\.\d+)?)/);
+  return match ? Number(match[1]) : null;
+}
+
+function formatRemainingHomecomingYears(years) {
+  const safeYears = Math.max(0, years);
+  if (safeYears === 0) {
+    return "homecoming reached";
+  }
+  if (safeYears === 1) {
+    return "about 1 year left";
+  }
+  return `about ${safeYears} years left`;
 }
 
 function renderSceneBriefing(briefing) {
@@ -892,6 +936,8 @@ function initQuizControls() {
   elements.quizThroughScene.innerHTML = options;
   state.quizSingleSceneId = getStoryOutlineScenes()[0]?.id ?? null;
   state.quizThroughSceneId = getStoryOutlineScenes()[7]?.id ?? getStoryOutlineScenes()[0]?.id ?? null;
+  elements.quizMode.value = state.quizMode;
+  elements.quizCount.value = state.quizCount;
   elements.quizSingleScene.value = state.quizSingleSceneId;
   elements.quizThroughScene.value = state.quizThroughSceneId;
   renderQuizManualPicker();
@@ -942,7 +988,7 @@ function renderQuizManualPicker() {
       } else {
         state.quizManualSceneIds.delete(event.target.value);
       }
-      buildQuiz();
+      stageQuizBuild();
     });
   });
 }
@@ -951,6 +997,7 @@ function getSelectedQuizTypes() {
   return [
     elements.quizIncludeRecall.checked ? "recall" : null,
     elements.quizIncludeComprehension.checked ? "comprehension" : null,
+    elements.quizIncludeImage.checked ? "image" : null,
     elements.quizIncludeDiscussion.checked ? "discussion" : null
   ].filter(Boolean);
 }
@@ -973,20 +1020,43 @@ function getSelectedQuizSceneIds() {
   return [state.quizSingleSceneId].filter(Boolean);
 }
 
-function buildQuiz() {
+function getCurrentQuizPool() {
   state.quizTypes = getSelectedQuizTypes();
   state.quizCount = elements.quizCount.value;
-
   const sceneIds = getSelectedQuizSceneIds();
   const questions = getQuizQuestions(sceneIds).filter((item) => state.quizTypes.includes(item.type));
+  return { sceneIds, questions };
+}
+
+function stageQuizBuild() {
+  const { sceneIds, questions } = getCurrentQuizPool();
+  const chapterLabel = getQuizChapterLabel(sceneIds);
+  const targetCount = state.quizCount === "all" ? questions.length : Math.min(Number(state.quizCount), questions.length);
+
+  elements.quizOutput.innerHTML = `
+    <div class="quiz-staged">
+      <p class="eyebrow">Ready To Build</p>
+      <h3>${escapeHtml(chapterLabel)}</h3>
+      <p>${escapeHtml(sceneIds.length)} chapter${sceneIds.length === 1 ? "" : "s"} selected with ${escapeHtml(questions.length)} matching question${questions.length === 1 ? "" : "s"}.</p>
+      <p>The next build will create ${escapeHtml(targetCount)} question${targetCount === 1 ? "" : "s"} from this pool.</p>
+      <button type="button" class="quiz-inline-build">Build / Shuffle Quiz</button>
+    </div>
+  `;
+
+  elements.quizOutput.querySelector(".quiz-inline-build")?.addEventListener("click", buildQuiz);
+}
+
+function buildQuiz() {
+  state.quizBuildNumber += 1;
+  const { sceneIds, questions } = getCurrentQuizPool();
   const selectedQuestions = limitQuizQuestions(questions);
 
-  renderQuizOutput(selectedQuestions, sceneIds);
+  renderQuizOutput(selectedQuestions, sceneIds, questions.length);
 }
 
 function getQuizQuestions(sceneIds) {
   const sceneSet = new Set(sceneIds);
-  return (state.quiz.chapters ?? [])
+  const storyQuestions = (state.quiz.chapters ?? [])
     .filter((chapter) => sceneSet.has(chapter.sceneId))
     .flatMap((chapter) => {
       const scene = getStoryOutlineScenes().find((entry) => entry.id === chapter.sceneId);
@@ -997,18 +1067,55 @@ function getQuizQuestions(sceneIds) {
         scenePosition: scene?.outlinePosition ?? scene?.order ?? ""
       }));
     });
+
+  return [...storyQuestions, ...getImageQuizQuestions(sceneIds)];
+}
+
+function getImageQuizQuestions(sceneIds) {
+  const sceneSet = new Set(sceneIds);
+  const scenesById = new Map(getStoryOutlineScenes().map((scene) => [scene.id, scene]));
+
+  return state.assets
+    .filter((asset) => asset.type !== "video" && asset.sceneIds?.some((sceneId) => sceneSet.has(sceneId)))
+    .filter((asset) => asset.variant === "color" || asset.variant === "black-and-white")
+    .map((asset) => {
+      const sceneId = asset.sceneIds.find((id) => sceneSet.has(id));
+      const scene = scenesById.get(sceneId);
+      const subjects = asset.subjects?.length ? asset.subjects.join(", ") : "the visual clues";
+      return {
+        type: "image",
+        question: "Which chapter or story moment does this picture show?",
+        answer: `${scene?.title ?? sceneId}. Clues: ${subjects}.`,
+        sceneId,
+        sceneTitle: scene?.title ?? sceneId,
+        scenePosition: scene?.outlinePosition ?? scene?.order ?? "",
+        image: asset.file,
+        imageAlt: asset.alt,
+        imageVariant: asset.variant
+      };
+    });
 }
 
 function limitQuizQuestions(questions) {
+  const shuffled = shuffleQuizQuestions(questions);
   if (state.quizCount === "all") {
-    return questions;
+    return shuffled;
   }
 
   const limit = Number(state.quizCount);
-  return questions.slice(0, limit);
+  return shuffled.slice(0, limit);
 }
 
-function renderQuizOutput(questions, sceneIds) {
+function shuffleQuizQuestions(questions) {
+  const shuffled = [...questions];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+  return shuffled;
+}
+
+function renderQuizOutput(questions, sceneIds, poolCount) {
   const chapterLabel = getQuizChapterLabel(sceneIds);
 
   if (!questions.length) {
@@ -1027,7 +1134,7 @@ function renderQuizOutput(questions, sceneIds) {
         <p class="eyebrow">Built From The Story Draft</p>
         <h3>${escapeHtml(chapterLabel)}</h3>
       </div>
-      <span class="result-count">${questions.length} questions</span>
+      <span class="result-count">Build ${state.quizBuildNumber}: ${questions.length} of ${poolCount} questions</span>
     </div>
     <ol class="quiz-list">
       ${questions.map((question, index) => renderQuizQuestion(question, index)).join("")}
@@ -1048,6 +1155,14 @@ function renderQuizOutput(questions, sceneIds) {
 function renderQuizQuestion(question, index) {
   const answerId = `quiz-answer-${index}`;
   const isDiscussion = question.type === "discussion";
+  const imageBlock = question.type === "image"
+    ? `
+      <figure class="quiz-image-card">
+        <img src="${escapeAttribute(question.image)}" alt="${escapeAttribute(question.imageAlt ?? "")}">
+        <figcaption>Look for story clues before revealing the answer.</figcaption>
+      </figure>
+    `
+    : "";
 
   return `
     <li class="quiz-question ${escapeAttribute(question.type)}">
@@ -1056,6 +1171,7 @@ function renderQuizQuestion(question, index) {
         <span>Chapter ${escapeHtml(question.scenePosition)}: ${escapeHtml(question.sceneTitle)}</span>
       </div>
       <p>${escapeHtml(question.question)}</p>
+      ${imageBlock}
       ${
         isDiscussion
           ? `<div class="quiz-discussion-note">Open-ended family discussion. No single right answer.</div>`

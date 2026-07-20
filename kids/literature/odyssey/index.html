@@ -157,7 +157,7 @@
             <h2 id="quiz-modal-title">Odyssey Quiz Builder</h2>
           </div>
           <div class="quiz-modal-actions">
-            <button id="build-quiz" type="button">Build Quiz</button>
+            <button id="build-quiz" type="button">Build / Shuffle Quiz</button>
             <button id="close-quiz-modal" type="button" aria-label="Close quiz builder">Close</button>
           </div>
         </header>
@@ -167,7 +167,7 @@
               <label for="quiz-mode">Question source</label>
               <select id="quiz-mode">
                 <option value="chapter">One chapter</option>
-                <option value="through">Up to a chapter</option>
+                <option value="through" selected>Up to a chapter</option>
                 <option value="manual">Pick chapters</option>
                 <option value="all">Everything mix</option>
               </select>
@@ -184,13 +184,14 @@
               <span>Question types</span>
               <label><input id="quiz-include-recall" type="checkbox" checked> Recall</label>
               <label><input id="quiz-include-comprehension" type="checkbox" checked> Comprehension</label>
+              <label><input id="quiz-include-image" type="checkbox" checked> Image Recognition</label>
               <label><input id="quiz-include-discussion" type="checkbox" checked> Discussion</label>
             </div>
             <div class="quiz-control">
               <label for="quiz-count">Question count</label>
               <select id="quiz-count">
                 <option value="6">6 questions</option>
-                <option value="9">9 questions</option>
+                <option value="9" selected>9 questions</option>
                 <option value="12">12 questions</option>
                 <option value="all">All matching questions</option>
               </select>
@@ -202,6 +203,6 @@
       </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=20260719-video-cache"></script>
   </body>
 </html>

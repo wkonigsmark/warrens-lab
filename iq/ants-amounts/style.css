@@ -1,0 +1,185 @@
+/* Ants & Amounts — "Build It!" · pure vanilla, no build step.
+   Designed for a pre-K player: giant tap targets, bright colors, big numerals,
+   lots of bounce. Everything scales with the viewport. */
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --sky1: #bde0fe;
+  --sky2: #a2d2ff;
+  --grass: #8ec26b;
+  --ink: #3a2e2a;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Baloo 2', 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
+  color: var(--ink);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  background: linear-gradient(180deg, var(--sky1) 0%, var(--sky2) 55%, var(--grass) 55%, #7bb85c 100%);
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* ── Top bar ─────────────────────────────────────────────────────────────── */
+#topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 18px;
+}
+.brand {
+  font-size: clamp(20px, 4.5vw, 30px);
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0,0,0,.15);
+  display: flex; align-items: center; gap: 8px;
+}
+.brand span { letter-spacing: .5px; }
+.icon-btn {
+  border: none; background: rgba(255,255,255,.55); border-radius: 999px;
+  width: 52px; height: 52px; font-size: 26px; cursor: pointer;
+  box-shadow: 0 3px 0 rgba(0,0,0,.12);
+  transition: transform .1s;
+}
+.icon-btn:active { transform: scale(.9); }
+
+/* ── Game area ───────────────────────────────────────────────────────────── */
+#game {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: space-between;
+  padding: 4px 16px 20px;
+  gap: 6px;
+}
+
+#prompt {
+  display: flex; align-items: center; gap: 14px;
+  color: #fff; text-shadow: 0 3px 0 rgba(0,0,0,.15);
+}
+.prompt-text { font-size: clamp(22px, 5vw, 38px); font-weight: 800; }
+.target {
+  font-size: clamp(56px, 15vw, 120px);
+  font-weight: 900; line-height: 1;
+  color: #fff;
+  background: #ff6b6b;
+  border-radius: 24px;
+  padding: 4px 28px;
+  box-shadow: 0 6px 0 rgba(0,0,0,.18);
+  animation: targetPop .5s cubic-bezier(.2,1.4,.4,1);
+}
+@keyframes targetPop { from { transform: scale(.3) rotate(-8deg); opacity: 0; } }
+
+/* ── The tower / build stage ─────────────────────────────────────────────── */
+#stage {
+  flex: 1;
+  width: 100%;
+  max-width: 420px;
+  display: flex; align-items: flex-end; justify-content: center;
+  position: relative;
+  cursor: pointer;
+  min-height: 0;
+}
+
+#tower {
+  display: flex;
+  flex-direction: column-reverse;   /* fill from the bottom up */
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 6px;
+}
+
+/* One tower slot — either a faint ghost or a filled block */
+.slot {
+  width: clamp(90px, 34vw, 150px);
+  height: clamp(34px, 6.2vh, 54px);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+.slot.ghost {
+  border: 3px dashed rgba(255,255,255,.75);
+  background: rgba(255,255,255,.15);
+}
+.slot.filled {
+  border: none;
+  color: rgba(255,255,255,.95);
+  font-weight: 900;
+  font-size: clamp(18px, 3.6vh, 26px);
+  box-shadow: inset 0 -6px 0 rgba(0,0,0,.15), inset 0 5px 0 rgba(255,255,255,.35), 0 3px 4px rgba(0,0,0,.12);
+}
+.slot.pop { animation: dropIn .45s cubic-bezier(.2,1.5,.4,1); }
+@keyframes dropIn {
+  0%   { transform: translateY(-60px) scale(.6); opacity: 0; }
+  70%  { transform: translateY(4px) scale(1.05); opacity: 1; }
+  100% { transform: translateY(0) scale(1); }
+}
+.slot.counting { animation: pulse .4s ease; }
+@keyframes pulse { 50% { transform: scale(1.18); filter: brightness(1.25); } }
+
+#countBubble {
+  position: absolute; top: -6px; right: 8px;
+  min-width: 56px; height: 56px; padding: 0 10px;
+  background: #fff; color: var(--ink);
+  border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34px; font-weight: 900;
+  box-shadow: 0 4px 0 rgba(0,0,0,.15);
+}
+
+/* ── Controls ────────────────────────────────────────────────────────────── */
+#controls { display: flex; align-items: center; gap: 14px; }
+.big-btn {
+  border: none; cursor: pointer;
+  background: #ffb703;
+  color: #fff; font-weight: 900;
+  font-size: clamp(22px, 5vw, 30px);
+  padding: 16px 34px; border-radius: 22px;
+  box-shadow: 0 6px 0 #e69500;
+  transition: transform .08s, box-shadow .08s;
+}
+.big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #e69500; }
+.big-btn:disabled { opacity: .45; cursor: default; }
+.round-btn {
+  border: none; cursor: pointer;
+  width: 60px; height: 60px; border-radius: 999px;
+  background: #fff; color: var(--ink); font-size: 30px; font-weight: 900;
+  box-shadow: 0 5px 0 rgba(0,0,0,.12);
+}
+.round-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,.12); }
+
+#builtRow {
+  display: flex; gap: 4px; flex-wrap: wrap; justify-content: center;
+  min-height: 30px; font-size: 26px;
+}
+#builtRow .star { animation: targetPop .4s cubic-bezier(.2,1.4,.4,1); }
+
+/* ── Celebration overlay ─────────────────────────────────────────────────── */
+#cheer {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.28);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 20;
+}
+.cheer-card {
+  background: #fff; border-radius: 28px; padding: 30px 40px;
+  text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,.3);
+  animation: targetPop .45s cubic-bezier(.2,1.4,.4,1);
+}
+#cheerEmoji { font-size: 72px; }
+#cheerText { font-size: clamp(26px, 6vw, 40px); font-weight: 800; margin: 8px 0 22px; }
+#cheerText b { color: #ff6b6b; }
+
+#confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.confetti-bit {
+  position: absolute; top: -20px; width: 12px; height: 16px; border-radius: 3px;
+  animation: fall linear forwards;
+}
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(720deg); opacity: .9; }
+}
+
+.hidden { display: none !important; }

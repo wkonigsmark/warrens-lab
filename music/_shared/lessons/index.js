@@ -9,11 +9,13 @@
 import { LESSON as amTensionResolve } from './am-tension-resolve.js';
 import { LESSON as cMajorBrightSide } from './c-major-bright-side.js';
 import { LESSON as aMinorBlues } from './a-minor-blues.js';
+import { LESSON as gMajorFourChords } from './g-major-four-chords.js';
 
 export const LESSONS = [
     amTensionResolve,
     cMajorBrightSide,
     aMinorBlues,
+    gMajorFourChords,
     // Append new lessons here — position sets the order (see ROADMAP.md).
 ];
 
