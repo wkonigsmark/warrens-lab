@@ -377,7 +377,14 @@ function init() {
     if (printReversalBtn) printReversalBtn.addEventListener('click', printReversalWorksheet);
 
     const printFadeBtn = document.getElementById('printFadeBtn');
-    if (printFadeBtn) printFadeBtn.addEventListener('click', printFadeTraceWorksheet);
+    if (printFadeBtn) printFadeBtn.addEventListener('click', openFadeTraceModal);
+
+    // Fade & Trace picker wiring
+    buildFadeGrids();
+    document.querySelectorAll('.fade-case-btn').forEach(b =>
+        b.addEventListener('click', () => setFadeCase(b.dataset.case)));
+    document.getElementById('fadeCancelBtn')?.addEventListener('click', closeFadeTraceModal);
+    document.getElementById('fadePrintBtn')?.addEventListener('click', fadeTracePrintFromPicker);
 
     // Setting Button Listeners
     // Add touchstart to ensure early capture on tablets before modal messes with event propagation
