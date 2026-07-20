@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BOOK1 } from '../data/book1.js'
 import { BOOK2 } from '../data/book2.js'
+import { BOOK3, READ_UP_TO } from '../data/book3.js'
 import { CATS, HOUSES } from '../data/houses.js'
 import { FROG_CARDS } from '../data/frogCards.js'
 import { buildDeck, presentOptions, pointsFor, qKey, shuffle } from '../lib/game.js'
@@ -9,7 +10,9 @@ import FrogCard from '../components/FrogCard.jsx'
 import Burst from '../components/Burst.jsx'
 
 export default function Quiz({ game, setGame, book, onHome }) {
-  const bank = book === 1 ? BOOK1 : book === 2 ? BOOK2 : [...BOOK1, ...BOOK2]
+  // Book 3 is being read right now — only deal questions up to the last finished chapter.
+  const BOOK3_SAFE = BOOK3.filter(q => q.chapter <= READ_UP_TO)
+  const bank = book === 1 ? BOOK1 : book === 2 ? BOOK2 : book === 3 ? BOOK3_SAFE : [...BOOK1, ...BOOK2, ...BOOK3_SAFE]
   const [deck, setDeck] = useState(() => buildDeck(bank, game.seen))
   const [i, setI] = useState(0)
   const [streak, setStreak] = useState(0)
@@ -137,7 +140,12 @@ export default function Quiz({ game, setGame, book, onHome }) {
               </span>
               {book === 'mix' && (
                 <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-indigo-200">
-                  Book {q.book ?? (BOOK1.includes(q) ? 'I' : 'II')}
+                  Book {BOOK1.includes(q) ? 'I' : BOOK2.includes(q) ? 'II' : 'III'}
+                </span>
+              )}
+              {q.chapter && (
+                <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-indigo-200">
+                  Ch. {q.chapter}
                 </span>
               )}
             </div>
@@ -275,7 +283,39 @@ export default function Quiz({ game, setGame, book, onHome }) {
 
 function QuestionBody({ q, solved, onCorrect }) {
   if (q.type === 'order') return <OrderQuestion q={q} solved={solved} onCorrect={onCorrect} />
+  if (q.type === 'talk') return <TalkQuestion q={q} solved={solved} onCorrect={onCorrect} />
   return <OptionsQuestion q={q} solved={solved} onCorrect={onCorrect} />
+}
+
+// Talk it over: an open discussion prompt — no wrong answers, points for talking.
+function TalkQuestion({ q, solved, onCorrect }) {
+  return (
+    <div>
+      <h2 className="mt-3 text-xl font-black leading-snug">{q.q}</h2>
+      {q.talk && (
+        <ul className="mt-3 space-y-2">
+          {q.talk.map((t, i) => (
+            <li key={i} className="flex gap-2.5 text-sm font-semibold leading-snug text-indigo-100/90">
+              <span style={{ color: 'var(--trim)' }}>✦</span>
+              <span>{t}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <p className="mt-3 text-xs font-bold italic text-indigo-200/70">
+        No wrong answers here — talk it through together, then collect your points.
+      </p>
+      {!solved && (
+        <button
+          onClick={() => onCorrect(0)}
+          className="mt-4 w-full rounded-2xl py-4 font-heading text-lg font-bold text-night-900 shadow-lg transition active:scale-[0.98]"
+          style={{ background: 'linear-gradient(180deg, #e2c7ff, #b48ae8)' }}
+        >
+          💬 We talked it over!
+        </button>
+      )}
+    </div>
+  )
 }
 
 // mc / tf / quote / odd all share "pick the right option" mechanics

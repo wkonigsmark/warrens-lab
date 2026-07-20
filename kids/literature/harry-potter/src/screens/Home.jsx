@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BOOKS, HOUSES } from '../data/houses.js'
 import { FROG_CARDS } from '../data/frogCards.js'
+import { READ_UP_TO } from '../data/book3.js'
 import FrogCard from '../components/FrogCard.jsx'
 
 export default function Home({ game, setGame, onPlay }) {
@@ -81,8 +82,15 @@ export default function Home({ game, setGame, onPlay }) {
                 {b.emoji}
               </div>
               <div className="min-w-0">
-                <div className="font-heading text-[11px] font-bold uppercase tracking-widest" style={{ color: 'var(--trim)' }}>
-                  Book {b.num}
+                <div className="flex items-center gap-2">
+                  <span className="font-heading text-[11px] font-bold uppercase tracking-widest" style={{ color: 'var(--trim)' }}>
+                    Book {b.num}
+                  </span>
+                  {b.reading && (
+                    <span className="rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-amber-300">
+                      📖 Reading now · ch. 1–{READ_UP_TO}
+                    </span>
+                  )}
                 </div>
                 <div className="font-heading text-lg font-bold leading-tight">{b.title}</div>
                 <div className="truncate text-xs text-indigo-200/70">{b.blurb}</div>
@@ -101,13 +109,13 @@ export default function Home({ game, setGame, onPlay }) {
             </div>
             <div>
               <div className="font-heading text-lg font-bold leading-tight">Grand Mix</div>
-              <div className="text-xs text-indigo-200/70">Books I & II shuffled together — the full challenge!</div>
+              <div className="text-xs text-indigo-200/70">Every unlocked question shuffled together — the full challenge!</div>
             </div>
             <div className="ml-auto text-xl" style={{ color: 'var(--trim)' }}>▶</div>
           </button>
 
           {/* Locked books */}
-          <div className="grid grid-cols-5 gap-2 pt-1.5">
+          <div className="grid grid-cols-4 gap-2 pt-1.5">
             {BOOKS.filter(b => !b.unlocked).map(b => (
               <div key={b.id} className="glass rounded-xl px-1 py-2.5 text-center opacity-45 grayscale">
                 <div className="text-lg">🔒</div>
