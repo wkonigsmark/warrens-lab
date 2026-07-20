@@ -21,12 +21,13 @@ export const CATS = {
   story: { label: 'Story', emoji: '📖', color: '#6ea8ff' },
   heart: { label: 'Heart & Courage', emoji: '💖', color: '#ff8fb2' },
   superfan: { label: 'Superfan', emoji: '⭐', color: '#ffd97a' },
+  talk: { label: 'Talk it over', emoji: '💬', color: '#c9a2ff' },
 }
 
 export const BOOKS = [
   { id: 1, num: 'I', title: 'The Sorcerer’s Stone', emoji: '🪄', unlocked: true, blurb: 'A cupboard, a castle, and a very good dog named Fluffy.' },
   { id: 2, num: 'II', title: 'The Chamber of Secrets', emoji: '🐍', unlocked: true, blurb: 'A warning on the wall, a voice in the pipes…' },
-  { id: 3, num: 'III', title: 'The Prisoner of Azkaban', emoji: '🌙', unlocked: false },
+  { id: 3, num: 'III', title: 'The Prisoner of Azkaban', emoji: '🌙', unlocked: true, reading: true, blurb: 'A black dog, a strange map, and dementors at the gates…' },
   { id: 4, num: 'IV', title: 'The Goblet of Fire', emoji: '🏆', unlocked: false },
   { id: 5, num: 'V', title: 'The Order of the Phoenix', emoji: '🐦‍🔥', unlocked: false },
   { id: 6, num: 'VI', title: 'The Half-Blood Prince', emoji: '📖', unlocked: false },
