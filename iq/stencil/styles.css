@@ -267,6 +267,180 @@ body {
     margin: 0 !important;
 }
 
+.fade-print {
+    background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+    box-shadow: 0 4px 15px rgba(41, 128, 185, 0.3);
+}
+
+.fade-print:hover {
+    box-shadow: 0 6px 20px rgba(41, 128, 185, 0.5);
+}
+
+.fade-group {
+    display: flex;
+    align-items: center;
+    background: #fdfdfd;
+    padding: 3px;
+    border: 1.5px solid #eee;
+    border-radius: 12px;
+}
+
+.fade-group input {
+    border: none;
+    background: transparent;
+    padding: 4px 10px;
+    width: 110px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #2980b9;
+    text-align: center;
+    outline: none;
+}
+
+.fade-group button {
+    margin: 0 !important;
+}
+
+/* Fade & Trace picker modal */
+.fade-modal-content {
+    max-width: 540px;
+    width: 90%;
+}
+
+.fade-modal-sub {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.fade-case-toggle {
+    display: inline-flex;
+    gap: 4px;
+    background: #eef1f4;
+    padding: 4px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+.fade-case-btn {
+    border: none;
+    background: transparent;
+    padding: 6px 16px;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.fade-case-btn.active {
+    background: #2980b9;
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(41, 128, 185, 0.35);
+}
+
+.fade-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.fade-number-grid {
+    grid-template-columns: repeat(10, 1fr);
+    max-width: 320px;
+    margin: 0 auto 6px;
+}
+
+.fade-chip {
+    aspect-ratio: 1 / 1;
+    border: 1.5px solid #d7dde3;
+    background: #fff;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #444;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s ease;
+    user-select: none;
+}
+
+.fade-chip:hover {
+    border-color: #2980b9;
+    background: #eaf3fa;
+}
+
+.fade-chip.selected {
+    background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+    border-color: #2471a3;
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(41, 128, 185, 0.35);
+}
+
+.fade-chip.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.fade-chip.disabled:hover {
+    border-color: #d7dde3;
+    background: #fff;
+}
+
+.fade-custom-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 14px 0 4px;
+}
+
+.fade-custom-row label {
+    font-size: 13px;
+    color: #777;
+    white-space: nowrap;
+}
+
+.fade-custom-row input {
+    flex: 1;
+    border: 1.5px solid #e2e6ea;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #2980b9;
+    outline: none;
+}
+
+.fade-custom-row input:focus {
+    border-color: #2980b9;
+}
+
+.fade-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 18px;
+}
+
+.fade-count {
+    font-size: 13px;
+    color: #888;
+    font-weight: 600;
+}
+
+.fade-modal-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.fade-modal-actions .close-overlay {
+    margin: 0;
+}
+
 .word-display {
     display: none;
     /* Hidden used for internal logic or debug if needed */

@@ -376,6 +376,9 @@ function init() {
     const printReversalBtn = document.getElementById('printReversalBtn');
     if (printReversalBtn) printReversalBtn.addEventListener('click', printReversalWorksheet);
 
+    const printFadeBtn = document.getElementById('printFadeBtn');
+    if (printFadeBtn) printFadeBtn.addEventListener('click', printFadeTraceWorksheet);
+
     // Setting Button Listeners
     // Add touchstart to ensure early capture on tablets before modal messes with event propagation
     ['click', 'touchstart'].forEach(evt => {
@@ -1760,6 +1763,171 @@ function printIndependentWorksheet() {
             img.addEventListener('error', checkAllLoaded);
         }
     });
+}
+
+/**
+ * GENERATE FADE & TRACE WORKSHEET
+ * Each row repeats a token (letter, "Aa" pair, or word) using the app's OWN
+ * letter paths as inline SVG. The trace fades from dark on the left to nearly
+ * invisible on the right, then a blank column lets the child write it solo.
+ * (Gradual release: "I do -> we do -> you do".)
+ */
+
+// Render one token's strokes as SVG polylines, laid out left-to-right from xOffset.
+function fadeTokenSvg(token, xOffset, charWidth, charGap) {
+    let out = '';
+    let x = xOffset;
+    for (const ch of token) {
+        const paths = LETTER_PATHS[ch];
+        if (paths) {
+            for (const stroke of paths) {
+                const pts = stroke.map(([px, py]) => `${(x + px * charWidth).toFixed(3)},${py.toFixed(3)}`).join(' ');
+                out += `<polyline points="${pts}"/>`;
+            }
+        }
+        x += charWidth + charGap;
+    }
+    return out;
+}
+
+// Build one full-width row: guideline rails + fading copies + a blank practice cell.
+function fadeRowSvg(token, numFilled, numBlank) {
+    const charWidth = 1, charGap = 0.32, cellGap = 0.85;
+    const tokenWidth = token.length * charWidth + Math.max(0, token.length - 1) * charGap;
+    const cellWidth = tokenWidth + cellGap;
+    const totalWidth = (numFilled + numBlank) * cellWidth;
+    const W = totalWidth.toFixed(2);
+
+    // Rails span the whole row (incl. blank cell). y: 0 sky, 0.5 plane, 1 grass, 1.5 worm.
+    const rails =
+        `<line x1="0" y1="0" x2="${W}" y2="0" stroke="rgba(74,144,226,0.55)" stroke-width="0.02"/>` +
+        `<line x1="0" y1="0.5" x2="${W}" y2="0.5" stroke="rgba(0,0,0,0.28)" stroke-width="0.014" stroke-dasharray="0.09,0.07"/>` +
+        `<line x1="0" y1="1" x2="${W}" y2="1" stroke="rgba(120,175,55,0.85)" stroke-width="0.025"/>` +
+        `<line x1="0" y1="1.5" x2="${W}" y2="1.5" stroke="rgba(139,119,101,0.45)" stroke-width="0.018"/>`;
+
+    let glyphs = '';
+    for (let i = 0; i < numFilled; i++) {
+        const t = numFilled === 1 ? 0 : i / (numFilled - 1);
+        const opacity = (0.92 - 0.8 * t).toFixed(3); // dark left -> faint right
+        const cellX = i * cellWidth + cellGap / 2;
+        glyphs += `<g stroke="#1a1a1a" stroke-opacity="${opacity}" stroke-width="0.05" fill="none" stroke-linecap="round" stroke-linejoin="round">` +
+            fadeTokenSvg(token, cellX, charWidth, charGap) + `</g>`;
+    }
+
+    return `<svg viewBox="-0.08 -0.2 ${(totalWidth + 0.16).toFixed(2)} 1.9" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">${rails}${glyphs}</svg>`;
+}
+
+function printFadeTraceWorksheet(tokensArg) {
+    let printContainer = document.getElementById('printableWorksheet');
+    if (!printContainer) {
+        printContainer = document.createElement('div');
+        printContainer.id = 'printableWorksheet';
+        document.body.appendChild(printContainer);
+    }
+
+    const fallback = ['Aa', 'Bb', 'Cc', 'Dd', 'Ee', 'Ff'];
+    const tokens = ((Array.isArray(tokensArg) && tokensArg.length) ? tokensArg : fallback).slice(0, FADE_MAX);
+
+    const rowsHtml = tokens.map(tok =>
+        `<div style="margin-bottom:16px;">${fadeRowSvg(tok, 4, 1)}</div>`
+    ).join('');
+
+    printContainer.innerHTML = `
+        <div style="font-family:'Helvetica',sans-serif;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; border-bottom:1px solid #ccc; padding-bottom:6px;">
+                <div style="font-size:11px; color:#999; font-family:'Georgia',serif; letter-spacing:0.5px;">STENCIL / Fade &amp; Trace</div>
+                <div style="font-size:11px; color:#999; font-family:'Georgia',serif;">Name: _________________ &nbsp; Date: ________</div>
+            </div>
+            <div style="font-size:12px; color:#666; font-style:italic; margin-bottom:18px;">Trace each letter as it fades &mdash; then write the last one all by yourself!</div>
+            ${rowsHtml}
+        </div>
+    `;
+
+    window.print();
+}
+
+// ---- Fade & Trace letter picker --------------------------------------------
+const FADE_MAX = 6;                 // max rows that fit cleanly on one page
+let fadeSelection = [];             // ordered keys ('A'..'Z','0'..'9')
+let fadeCaseMode = 'both';          // 'both' (Aa) | 'upper' (A) | 'lower' (a)
+
+// Turn a picker key into a printable token honoring the case toggle.
+function fadeKeyToToken(key) {
+    if (/[A-Z]/.test(key)) {
+        if (fadeCaseMode === 'upper') return key;
+        if (fadeCaseMode === 'lower') return key.toLowerCase();
+        return key + key.toLowerCase(); // "Aa"
+    }
+    return key; // digits ignore case
+}
+
+function buildFadeGrids() {
+    const letterGrid = document.getElementById('fadeLetterGrid');
+    const numberGrid = document.getElementById('fadeNumberGrid');
+    if (!letterGrid || !numberGrid) return;
+    const chip = k => `<div class="fade-chip" data-key="${k}">${k}</div>`;
+    letterGrid.innerHTML = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(chip).join('');
+    numberGrid.innerHTML = '0123456789'.split('').map(chip).join('');
+    [...letterGrid.children, ...numberGrid.children].forEach(el =>
+        el.addEventListener('click', () => toggleFadeChip(el.dataset.key)));
+}
+
+function fadeChipLabel(key) {
+    if (/[A-Z]/.test(key)) {
+        if (fadeCaseMode === 'upper') return key;
+        if (fadeCaseMode === 'lower') return key.toLowerCase();
+        return key + key.toLowerCase();
+    }
+    return key;
+}
+
+function refreshFadeChips() {
+    const atCap = fadeSelection.length >= FADE_MAX;
+    document.querySelectorAll('#fadeLetterGrid .fade-chip, #fadeNumberGrid .fade-chip').forEach(el => {
+        const key = el.dataset.key;
+        const selected = fadeSelection.includes(key);
+        el.classList.toggle('selected', selected);
+        el.classList.toggle('disabled', atCap && !selected);
+        el.textContent = fadeChipLabel(key);
+    });
+    const count = document.getElementById('fadeCount');
+    if (count) count.textContent = `${fadeSelection.length} / ${FADE_MAX} selected`;
+}
+
+function toggleFadeChip(key) {
+    const idx = fadeSelection.indexOf(key);
+    if (idx >= 0) {
+        fadeSelection.splice(idx, 1);
+    } else if (fadeSelection.length < FADE_MAX) {
+        fadeSelection.push(key);
+    }
+    refreshFadeChips();
+}
+
+function setFadeCase(mode) {
+    fadeCaseMode = mode;
+    document.querySelectorAll('.fade-case-btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.case === mode));
+    refreshFadeChips();
+}
+
+function openFadeTraceModal() {
+    document.getElementById('fadeTraceModal').classList.remove('hidden');
+    refreshFadeChips();
+}
+
+function closeFadeTraceModal() {
+    document.getElementById('fadeTraceModal').classList.add('hidden');
+}
+
+function fadeTracePrintFromPicker() {
+    // Selection first, then any custom-typed tokens, capped at FADE_MAX.
+    let tokens = fadeSelection.map(fadeKeyToToken);
+    const raw = (document.getElementById('fadeChars')?.value || '').trim();
+    if (raw) tokens = tokens.concat(raw.split(/\s+/));
+    tokens = tokens.slice(0, FADE_MAX);
+    closeFadeTraceModal();
+    printFadeTraceWorksheet(tokens);
 }
 
 /**

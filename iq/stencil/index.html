@@ -57,6 +57,7 @@
                     <button id="printDrawBtn" class="print-button draw-print">Draw & Write</button>
                     <button id="printVocabBtn" class="print-button vocab-print">Vocab Quiz</button>
                     <button id="printIndependentBtn" class="print-button independent-print">Ind. Spelling</button>
+                    <button id="printFadeBtn" class="print-button fade-print">Fade &amp; Trace</button>
                     <div class="reversal-group">
                         <input type="text" id="reversalChars" maxlength="5" placeholder="e.g. 762E3">
                         <button id="printReversalBtn" class="print-button reversal-print">Reversal Study</button>
@@ -144,6 +145,36 @@
                 </button>
             </div>
             <button id="closeDrawWriteModal" class="close-overlay" style="margin-top: 20px;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Fade & Trace Letter Picker -->
+    <div id="fadeTraceModal" class="modal hidden">
+        <div class="modal-content fade-modal-content">
+            <h2>Fade &amp; Trace</h2>
+            <p class="fade-modal-sub">Pick up to <span id="fadeMax">6</span> to practice. Each one gets its own row that fades left&rarr;right, then a blank to try solo.</p>
+
+            <div class="fade-case-toggle" id="fadeCaseToggle">
+                <button class="fade-case-btn active" data-case="both">Aa</button>
+                <button class="fade-case-btn" data-case="upper">A</button>
+                <button class="fade-case-btn" data-case="lower">a</button>
+            </div>
+
+            <div id="fadeLetterGrid" class="fade-picker-grid"></div>
+            <div id="fadeNumberGrid" class="fade-picker-grid fade-number-grid"></div>
+
+            <div class="fade-custom-row">
+                <label for="fadeChars">Or type your own:</label>
+                <input type="text" id="fadeChars" maxlength="40" placeholder="e.g. cat  dog  Ee">
+            </div>
+
+            <div class="fade-modal-footer">
+                <span id="fadeCount" class="fade-count">0 / 6 selected</span>
+                <div class="fade-modal-actions">
+                    <button id="fadeCancelBtn" class="close-overlay">Cancel</button>
+                    <button id="fadePrintBtn" class="print-button fade-print">Print</button>
+                </div>
+            </div>
         </div>
     </div>
 
