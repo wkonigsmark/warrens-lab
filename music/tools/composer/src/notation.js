@@ -36,6 +36,22 @@ function ledgerSteps(step, topStep) {
     return out;
 }
 
+// How many flags a duration carries: eighth (0.5) → 1, sixteenth (0.25) → 2.
+// (Quarter and longer → 0.) Kept generic so faster values could extend it.
+function flagCount(durBeats) { return durBeats < 0.5 ? 2 : (durBeats < 1 ? 1 : 0); }
+
+// Draw `count` flags off a stem tip at (sx, syTip). Extra flags stack back along
+// the stem toward the head, as engravers do for sixteenths and faster.
+function flagsSvg(sx, syTip, up, count, fill) {
+    let s = '';
+    const d = up ? 1 : -1;
+    for (let i = 0; i < count; i++) {
+        const y = syTip + i * GAP * 1.15 * d; // stack toward the head
+        s += `<path d="M ${sx} ${y} q ${GAP * 0.85} ${d * GAP * 0.55} ${GAP * 0.45} ${d * GAP * 1.45}" fill="none" stroke="${fill}" stroke-width="3" stroke-linecap="round"/>`;
+    }
+    return s;
+}
+
 // One note head, positioned by its beat *within its system* (localBeat).
 function renderNote(n, localBeat, { colored, showLetters, staffShift, topStep, baseTop }) {
     // Notation may sit octaves from the sounding pitch (clef + staffShift). The
@@ -49,7 +65,6 @@ function renderNote(n, localBeat, { colored, showLetters, staffShift, topStep, b
     const rx = GAP * 0.66, ry = GAP * 0.5;
     const open = n.durBeats >= 2;        // half & whole have open heads
     const hasStem = n.durBeats < 4;      // whole note has no stem
-    const hasFlag = n.durBeats < 1;      // eighth note gets a flag
     const sharp = isSharp(n.pitch);
     const fill = colored ? (sharp ? BLACK_KEY_COLOR : NOTE_COLORS[letterOf(n.pitch)]) : '#1f2430';
 
@@ -73,11 +88,7 @@ function renderNote(n, localBeat, { colored, showLetters, staffShift, topStep, b
         const sx = up ? cx + rx - 0.5 : cx - rx + 0.5;
         const sy2 = up ? cy - GAP * 3 : cy + GAP * 3;
         svg += `<line x1="${sx}" y1="${cy}" x2="${sx}" y2="${sy2}" stroke="${fill}" stroke-width="2.2"/>`;
-        if (hasFlag) {
-            // a single flag off the stem tip, curving away from the head
-            const d = up ? 1 : -1;
-            svg += `<path d="M ${sx} ${sy2} q ${GAP * 0.85} ${d * GAP * 0.55} ${GAP * 0.45} ${d * GAP * 1.45}" fill="none" stroke="${fill}" stroke-width="3" stroke-linecap="round"/>`;
-        }
+        svg += flagsSvg(sx, sy2, up, flagCount(n.durBeats), fill);
     }
     // mentor mode: the letter name, centred in the head.
     if (showLetters) {
@@ -141,6 +152,7 @@ function renderChord(group, localBeat, { colored, showLetters, staffShift, topSt
         const y1 = up ? lowY : highY;
         const y2 = up ? highY - GAP * 3 : lowY + GAP * 3;
         svg += `<line x1="${sx}" y1="${y1}" x2="${sx}" y2="${y2}" stroke="${ink}" stroke-width="2.2"/>`;
+        svg += flagsSvg(sx, y2, up, flagCount(durBeats), ink);
     }
     return svg;
 }

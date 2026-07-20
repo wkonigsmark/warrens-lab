@@ -1,0 +1,49 @@
+/* guitar.css — Guitar Lesson page additions on top of the composer stylesheet. */
+
+.topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.back-link { text-decoration: none; display: inline-flex; align-items: center; white-space: nowrap; margin-top: 6px; }
+
+/* Lesson pack: a row of lesson tabs + the selected lesson's heading/blurb. */
+.lesson-pack { margin-top: 14px; }
+.lesson-picker { display: flex; flex-wrap: wrap; gap: 10px; }
+.lesson-tab { display: inline-flex; align-items: center; gap: 10px; text-align: left;
+  font: inherit; cursor: pointer; padding: 10px 14px; border-radius: 14px;
+  border: 1px solid var(--line, #e3e7f1); background: #fff; transition: all 0.12s ease; }
+.lesson-tab:hover { border-color: var(--accent, #ff8a3d); }
+.lesson-tab.active { border-color: var(--accent, #ff8a3d); background: #fff7f1;
+  box-shadow: 0 4px 14px rgba(255,138,61,0.18); }
+.lesson-tab .lt-num { display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 999px; background: var(--accent, #ff8a3d);
+  color: #fff; font-weight: 800; font-size: 14px; }
+.lesson-tab .lt-body { display: flex; flex-direction: column; }
+.lesson-tab .lt-title { font-weight: 700; font-size: 15px; color: var(--ink, #1f2430); }
+.lesson-tab .lt-meta { font-size: 12px; color: var(--muted, #8a90a0); }
+.lesson-head { margin: 16px 0 4px; }
+.lesson-title { margin: 0 0 4px; font-size: 20px; font-weight: 800; }
+.lesson-blurb { margin: 0; max-width: 74ch; color: var(--muted, #555); line-height: 1.55; }
+
+.gl-section { margin-top: 18px; }
+.gl-story { margin: 4px 0 14px; max-width: 72ch; color: var(--muted, #555); line-height: 1.55; }
+.gl-story strong { color: var(--ink, #1f2430); }
+
+/* Instrument-specific coaching line (guitar vs piano). */
+.gl-tip { display: flex; align-items: flex-start; gap: 8px; margin: -4px 0 14px; padding: 9px 13px;
+  background: #fff7f1; border: 1px solid #ffe4d1; border-radius: 12px; max-width: 72ch;
+  font-size: 13.5px; color: #7a5a44; line-height: 1.5; }
+.gl-tip-icon { flex: none; }
+
+.score-scroll { overflow-x: auto; padding-bottom: 6px; }
+.score-scroll svg { display: block; }
+
+.gl-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+.gl-note { font-size: 13px; color: var(--muted, #777); font-style: italic; }
+
+.toggle.on { color: var(--ink, #1f2430); border-color: var(--accent, #ff8a3d); }
+
+.print-panel { margin-top: 26px; }
+.print-checks { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 6px 0 12px; }
+.print-check { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; cursor: pointer; }
+.print-check input { accent-color: var(--accent, #ff8a3d); }
+
+/* Worksheet: staves scale to the page width. */
+.manuscript .ms-score svg { max-width: 100%; height: auto; }

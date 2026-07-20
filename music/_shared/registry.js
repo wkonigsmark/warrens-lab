@@ -67,6 +67,11 @@ export const TOOLS = [
     },
     // --- Tools & Kids zone -------------------------------------------------
     {
+        id: 'rhythm-lab', zone: 'tools', name: 'Rhythm Lab', short: 'Rhythm Lab', icon: '🥁',
+        path: '/music/tools/rhythm-lab/index.html', status: 'beta',
+        tagline: 'Read & play rhythms — whole to sixteenth notes, in C major.',
+    },
+    {
         id: 'key-finder', zone: 'tools', name: 'Key Finder', short: 'Key Finder', icon: '🧭',
         path: '/music/tools/key-finder/index.html',
         tagline: 'Enter a few chords → scale, mode & key candidates.',
