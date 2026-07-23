@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fitness | Workout Tracker</title>
+  <title>Forge | Workout Tracker</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
@@ -307,6 +307,25 @@
     .smart-btn:hover{background:rgba(251,191,36,.2)}
     .monster-btn{display:inline-flex;align-items:center;gap:5px;font-family:inherit;font-size:.66rem;font-weight:800;padding:7px 16px;border-radius:20px;cursor:pointer;letter-spacing:.02em;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.35);color:var(--red);transition:background .15s}
     .monster-btn:hover{background:rgba(248,113,113,.22)}
+
+    /* ── HOME / SPLASH SCREEN ── */
+    .home-screen{position:fixed;inset:0;z-index:550;background:radial-gradient(circle at 50% 28%,#17130f 0%,#0a0a0a 62%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;transition:opacity .4s ease,visibility .4s ease}
+    .home-screen.hidden{opacity:0;pointer-events:none;visibility:hidden}
+    .home-super{font-size:.62rem;text-transform:uppercase;letter-spacing:.24em;font-weight:800;color:var(--muted-light);margin-bottom:14px}
+    .home-wordmark{font-size:3.4rem;font-weight:900;letter-spacing:-.02em;line-height:1;margin-bottom:12px;color:var(--text)}
+    .home-wordmark .bolt{color:var(--accent)}
+    .home-tagline{font-size:.9rem;color:var(--muted-light);margin-bottom:40px;font-weight:500}
+    .home-actions{display:flex;flex-direction:column;gap:12px;width:100%;max-width:360px}
+    .home-btn{display:flex;align-items:center;gap:14px;padding:15px 16px;border-radius:16px;background:var(--card);border:1px solid var(--border);cursor:pointer;text-align:left;transition:border-color .18s,background .18s,transform .12s;font-family:inherit}
+    .home-btn:hover{border-color:#444;background:var(--card-hover);transform:translateY(-1px)}
+    .home-btn:active{transform:translateY(0)}
+    .home-btn-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+    .home-btn-text{flex:1;min-width:0}
+    .home-btn-title{font-size:.95rem;font-weight:800;color:var(--text)}
+    .home-btn-sub{font-size:.68rem;color:var(--muted-light);margin-top:2px}
+    .home-btn-arrow{color:var(--muted);font-size:1.1rem;font-weight:700;flex-shrink:0}
+    .home-footer{margin-top:38px;font-size:.58rem;color:var(--muted);letter-spacing:.12em;font-weight:700}
+    .brand{cursor:pointer}
     .smart-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
     .smart-overlay.open{opacity:1;pointer-events:all}
     .smart-overlay::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(6px)}
@@ -448,11 +467,36 @@
 <body>
 <canvas id="confetti-canvas"></canvas>
 
+<!-- HOME / SPLASH SCREEN -->
+<div class="home-screen" id="homeScreen">
+  <div class="home-super">Warren's Lab</div>
+  <div class="home-wordmark"><span class="bolt">⚡</span> Forge</div>
+  <div class="home-tagline">Train with intent.</div>
+  <div class="home-actions">
+    <button class="home-btn" onclick="enterApp('plan')">
+      <div class="home-btn-icon" style="background:var(--accent-dim);color:var(--accent)">🏋️</div>
+      <div class="home-btn-text"><div class="home-btn-title">Plan Workout</div><div class="home-btn-sub">Choose today's session and start training</div></div>
+      <div class="home-btn-arrow">→</div>
+    </button>
+    <button class="home-btn" onclick="enterApp('suggest')">
+      <div class="home-btn-icon" style="background:rgba(251,191,36,.12);color:#fbbf24">⚡</div>
+      <div class="home-btn-text"><div class="home-btn-title">Suggest Workout</div><div class="home-btn-sub">Smart Build picks by muscle recovery</div></div>
+      <div class="home-btn-arrow">→</div>
+    </button>
+    <button class="home-btn" onclick="enterApp('review')">
+      <div class="home-btn-icon" style="background:var(--teal-dim);color:var(--teal)">📊</div>
+      <div class="home-btn-text"><div class="home-btn-title">Review Progress</div><div class="home-btn-sub">Charts, streaks and muscle volume</div></div>
+      <div class="home-btn-arrow">→</div>
+    </button>
+  </div>
+  <div class="home-footer">⚡ FORGE · WARREN'S LAB</div>
+</div>
+
 <!-- HEADER -->
 <header class="app-header">
-  <div class="brand">
+  <div class="brand" onclick="goHome()">
     <div class="brand-super">Warren's Lab</div>
-    <div class="brand-title">⚡ <span>Fitness</span></div>
+    <div class="brand-title">⚡ <span>Forge</span></div>
   </div>
   <div class="sync-status" id="syncDot"></div>
   <div class="mini-ring-wrap" id="miniRingWrap">
@@ -2403,6 +2447,19 @@ init();
 
 function closePlanner() {
   document.getElementById('plannerOverlay').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════════════
+//  HOME / SPLASH  (front door only — never touches data)
+// ═══════════════════════════════════════════════════════
+function enterApp(action) {
+  document.getElementById('homeScreen').classList.add('hidden');
+  if(action === 'suggest') setTimeout(openSmartBuilder, 260);
+  else if(action === 'review') setTimeout(openInsights, 260);
+  // 'plan' simply reveals the app at the workout picker
+}
+function goHome() {
+  document.getElementById('homeScreen').classList.remove('hidden');
 }
 
 // ═══════════════════════════════════════════════════════
