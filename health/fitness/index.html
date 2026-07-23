@@ -8,10 +8,10 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
     :root {
-      --bg:#0a0a0a;--surface:#111;--card:#181818;--card-hover:#1e1e1e;
-      --border:#272727;--accent:#f97316;--accent-dim:rgba(249,115,22,.12);
-      --gold:#fbbf24;--green:#4ade80;--green-dim:rgba(74,222,128,.12);
-      --red:#f87171;--blue:#60a5fa;--teal:#2dd4bf;--teal-dim:rgba(45,212,191,.12);--text:#f0f0f0;--muted:#555;--muted-light:#888;
+      --bg:#08090b;--surface:#0d1013;--card:#111519;--card-hover:#161b21;
+      --border:#232a30;--accent:#f97316;--accent-dim:rgba(249,115,22,.10);
+      --gold:#fbbf24;--green:#4ade80;--green-dim:rgba(74,222,128,.10);
+      --red:#f87171;--blue:#60a5fa;--teal:#2dd4bf;--teal-dim:rgba(45,212,191,.10);--text:#eef1f3;--muted:#59616a;--muted-light:#8a929b;
     }
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
     body{font-family:'Outfit',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px}
@@ -96,7 +96,7 @@
 
     /* ── WEEK PICKER ── */
     .week-picker{padding:14px 12px 0;max-width:660px;margin:0 auto}
-    .week-scroll{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;-ms-overflow-style:none;scrollbar-width:none}
+    .week-scroll{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;-ms-overflow-style:none;scrollbar-width:none;justify-content:safe center}
     .week-scroll::-webkit-scrollbar{display:none}
     .day-card{
       flex-shrink:0;background:var(--card);border:1px solid var(--border);
@@ -309,22 +309,22 @@
     .monster-btn:hover{background:rgba(248,113,113,.22)}
 
     /* ── HOME / SPLASH SCREEN ── */
-    .home-screen{position:fixed;inset:0;z-index:550;background:radial-gradient(circle at 50% 28%,#17130f 0%,#0a0a0a 62%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;transition:opacity .4s ease,visibility .4s ease}
+    .home-screen{position:fixed;inset:0;z-index:550;background:radial-gradient(circle at 50% 32%,#0e1216 0%,#080a0b 60%,#060708 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;transition:opacity .4s ease,visibility .4s ease}
     .home-screen.hidden{opacity:0;pointer-events:none;visibility:hidden}
-    .home-super{font-size:.62rem;text-transform:uppercase;letter-spacing:.24em;font-weight:800;color:var(--muted-light);margin-bottom:14px}
-    .home-wordmark{font-size:3.4rem;font-weight:900;letter-spacing:-.02em;line-height:1;margin-bottom:12px;color:var(--text)}
-    .home-wordmark .bolt{color:var(--accent)}
-    .home-tagline{font-size:.9rem;color:var(--muted-light);margin-bottom:40px;font-weight:500}
-    .home-actions{display:flex;flex-direction:column;gap:12px;width:100%;max-width:360px}
-    .home-btn{display:flex;align-items:center;gap:14px;padding:15px 16px;border-radius:16px;background:var(--card);border:1px solid var(--border);cursor:pointer;text-align:left;transition:border-color .18s,background .18s,transform .12s;font-family:inherit}
-    .home-btn:hover{border-color:#444;background:var(--card-hover);transform:translateY(-1px)}
-    .home-btn:active{transform:translateY(0)}
-    .home-btn-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+    .home-logo-wrap{position:relative;display:flex;justify-content:center;margin-bottom:14px}
+    .home-logo-wrap::before{content:'';position:absolute;inset:-30% -8%;background:radial-gradient(ellipse at center,rgba(150,180,214,.10) 0%,rgba(150,180,214,.03) 42%,transparent 70%);filter:blur(26px);z-index:0;pointer-events:none}
+    .home-logo{position:relative;z-index:1;width:clamp(230px,58vw,430px);height:auto;mix-blend-mode:screen;filter:contrast(1.05) brightness(1.03) saturate(.85);animation:logoIn 1.15s cubic-bezier(.22,1,.36,1) both}
+    @keyframes logoIn{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
+    @keyframes homeFadeUp{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+    .home-tagline{font-size:.9rem;color:var(--muted-light);margin-bottom:40px;font-weight:500;letter-spacing:.03em;animation:homeFadeUp .8s ease .28s both}
+    .home-actions{display:flex;flex-direction:column;gap:8px;width:100%;max-width:300px;animation:homeFadeUp .8s ease .42s both}
+    .home-btn{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:2px;background:rgba(255,255,255,.02);border:1px solid #262b30;border-left:2px solid #3a4147;cursor:pointer;text-align:left;transition:border-color .16s,background .16s;font-family:inherit}
+    .home-btn:hover{background:rgba(255,255,255,.045);border-color:#3a4147;border-left-color:var(--accent)}
     .home-btn-text{flex:1;min-width:0}
-    .home-btn-title{font-size:.95rem;font-weight:800;color:var(--text)}
-    .home-btn-sub{font-size:.68rem;color:var(--muted-light);margin-top:2px}
-    .home-btn-arrow{color:var(--muted);font-size:1.1rem;font-weight:700;flex-shrink:0}
-    .home-footer{margin-top:38px;font-size:.58rem;color:var(--muted);letter-spacing:.12em;font-weight:700}
+    .home-btn-title{font-size:.76rem;font-weight:800;color:var(--text);text-transform:uppercase;letter-spacing:.11em}
+    .home-btn-sub{font-size:.58rem;color:var(--muted-light);margin-top:3px;letter-spacing:.02em}
+    .home-btn-arrow{color:var(--muted);font-size:.8rem;font-weight:700;flex-shrink:0}
+    .home-footer{margin-top:38px;font-size:.58rem;color:var(--muted);letter-spacing:.22em;font-weight:700;animation:homeFadeUp .8s ease .55s both}
     .brand{cursor:pointer}
     .smart-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
     .smart-overlay.open{opacity:1;pointer-events:all}
@@ -462,6 +462,56 @@
 
     /* ── CONFETTI ── */
     #confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:998}
+
+    /* ═══════════════════════════════════════════════════
+       STEEL THEME — cold, rigid, tough (cohesive overrides)
+       ═══════════════════════════════════════════════════ */
+    /* Rigid, machined corners everywhere the UI was rounded */
+    .btn,.mode-btn,.stat-pill,.day-card,.section,.panel,.submit-panel,.submit-summary,
+    .submit-btn,.cardio-card,.cardio-log,.cardio-complete-btn,.completion-banner,
+    .weight-input,.log-input,.log-field .log-input,.zone-badge,.zone-stat,.effort-btn,
+    .ex-video-btn,.workout-mode-badge,.tag,.hist-anomaly-badge,.smart-btn,.monster-btn,
+    .hist-menu-dropdown,.hist-menu-item,.strava-open,.training-note,.cardio-desc,
+    .weight-suggest,.badge,.food-card,.panel-link,.ex-timer-btn,.rest-timer,
+    .hist-menu-btn,.submit-muscles .tag{border-radius:2px}
+
+    /* Industrial uppercase headings */
+    .workout-title,.cardio-title-main,.rest-title,.completion-title{text-transform:uppercase;letter-spacing:.05em}
+    .section-name{letter-spacing:.14em}
+    .ring-label{letter-spacing:.18em}
+    .brand-title{letter-spacing:.04em}
+
+    /* Sections & panels get a machined left edge */
+    .section{border-left:2px solid #2b333b}
+    .section.section-done{border-left-color:var(--green)}
+
+    /* Cool, flat stat chips */
+    .stat-pill{background:rgba(255,255,255,.02)}
+
+    /* Mode + day: steel base, a single orange spark when active */
+    .mode-btn{text-transform:uppercase;letter-spacing:.07em;font-size:.68rem}
+    .mode-btn.active.dumbbell,.mode-btn.active.calisthenics,.mode-btn.active.triathlon{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+    .day-card.active{border-color:var(--accent);border-left:2px solid var(--accent);background:rgba(249,115,22,.06)}
+    .day-card.active .dc-day{color:rgba(249,115,22,.7)}
+
+    /* Buttons read as stamped steel */
+    .btn,.smart-btn,.monster-btn{text-transform:uppercase;letter-spacing:.07em}
+    .submit-btn,.cardio-complete-btn{text-transform:uppercase;letter-spacing:.08em}
+
+    /* Mute decorative emoji to cold gray — reads as machined icon, not toy */
+    .dc-emoji,.section-emoji,.cardio-icon,.rest-emoji,.fi-icon,.mode-emoji{filter:grayscale(1) brightness(1.25) opacity(.55)}
+    .mode-emoji{display:inline-block}
+
+    /* Header brand logo (clip the PNG's vertical padding, screen-blend on the dark bar) */
+    .brand-logo-box{height:22px;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-top:2px}
+    .brand-logo{height:58px;width:auto;display:block;mix-blend-mode:screen;filter:contrast(1.05) brightness(1.06) saturate(.85)}
+    .brand-super{text-align:center}
+
+    /* Kill the emoji on the preset-workout day cards */
+    .dc-emoji{display:none}
+
+    /* Drop the candy out of the muscle tags, keep the semantic hue */
+    .tag{filter:saturate(.65)}
   </style>
 </head>
 <body>
@@ -469,34 +519,32 @@
 
 <!-- HOME / SPLASH SCREEN -->
 <div class="home-screen" id="homeScreen">
-  <div class="home-super">Warren's Lab</div>
-  <div class="home-wordmark"><span class="bolt">⚡</span> Forge</div>
+  <div class="home-logo-wrap">
+    <img src="forge-logo.png" alt="Forge" class="home-logo">
+  </div>
   <div class="home-tagline">Train with intent.</div>
   <div class="home-actions">
     <button class="home-btn" onclick="enterApp('plan')">
-      <div class="home-btn-icon" style="background:var(--accent-dim);color:var(--accent)">🏋️</div>
       <div class="home-btn-text"><div class="home-btn-title">Plan Workout</div><div class="home-btn-sub">Choose today's session and start training</div></div>
       <div class="home-btn-arrow">→</div>
     </button>
     <button class="home-btn" onclick="enterApp('suggest')">
-      <div class="home-btn-icon" style="background:rgba(251,191,36,.12);color:#fbbf24">⚡</div>
       <div class="home-btn-text"><div class="home-btn-title">Suggest Workout</div><div class="home-btn-sub">Smart Build picks by muscle recovery</div></div>
       <div class="home-btn-arrow">→</div>
     </button>
     <button class="home-btn" onclick="enterApp('review')">
-      <div class="home-btn-icon" style="background:var(--teal-dim);color:var(--teal)">📊</div>
       <div class="home-btn-text"><div class="home-btn-title">Review Progress</div><div class="home-btn-sub">Charts, streaks and muscle volume</div></div>
       <div class="home-btn-arrow">→</div>
     </button>
   </div>
-  <div class="home-footer">⚡ FORGE · WARREN'S LAB</div>
+  <div class="home-footer">WARREN'S LAB</div>
 </div>
 
 <!-- HEADER -->
 <header class="app-header">
   <div class="brand" onclick="goHome()">
     <div class="brand-super">Warren's Lab</div>
-    <div class="brand-title">⚡ <span>Forge</span></div>
+    <div class="brand-logo-box"><img src="forge-logo.png" alt="Forge" class="brand-logo"></div>
   </div>
   <div class="sync-status" id="syncDot"></div>
   <div class="mini-ring-wrap" id="miniRingWrap">
@@ -517,16 +565,15 @@
 <div class="week-picker">
   <div class="mode-selector-wrap">
     <div class="mode-group-row">
-      <span class="mode-group-label">Weights</span>
       <div class="mode-group-btns">
-        <button class="mode-btn dumbbell active" id="btnDumbbell" onclick="setMode('dumbbell')">🏋️ Dumbbells</button>
-        <button class="mode-btn calisthenics" id="btnCalisthenics" onclick="setMode('calisthenics')">🤸 Bodyweight</button>
+        <button class="mode-btn dumbbell active" id="btnDumbbell" onclick="setMode('dumbbell')"><span class="mode-emoji">🏋️</span> Weights</button>
+        <button class="mode-btn calisthenics" id="btnCalisthenics" onclick="setMode('calisthenics')"><span class="mode-emoji">🤸</span> Body</button>
       </div>
     </div>
-    <div class="mode-group-row">
+    <div class="mode-group-row" style="display:none">
       <span class="mode-group-label">Cardio</span>
       <div class="mode-group-btns">
-        <button class="mode-btn triathlon" id="btnTriathlon" onclick="setMode('triathlon')">🏊 Triathlon Plan</button>
+        <button class="mode-btn triathlon" id="btnTriathlon" onclick="setMode('triathlon')"><span class="mode-emoji">🏊</span> Triathlon Plan</button>
       </div>
     </div>
   </div>
