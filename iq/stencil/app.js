@@ -315,8 +315,12 @@ const DIFFICULTY_LABELS = {
 
 const MODE_LABELS = {
     'vocabulary': 'Vocabulary',
-    'numbers': 'Numbers'
+    'numbers': 'Numbers',
+    'custom': 'Custom Phrase'
 };
+
+// Teacher/parent-entered phrase for Type mode (set via the Type modal)
+let CUSTOM_PHRASE = '';
 
 function init() {
     // Resize handling: Use ResizeObserver to ensure we sync whenever the 
@@ -386,6 +390,15 @@ function init() {
     document.getElementById('fadeCancelBtn')?.addEventListener('click', closeFadeTraceModal);
     document.getElementById('fadePrintBtn')?.addEventListener('click', fadeTracePrintFromPicker);
 
+    // Type-a-Phrase wiring
+    document.getElementById('typePhraseBtn')?.addEventListener('click', openTypePhraseModal);
+    document.getElementById('phraseTraceBtn')?.addEventListener('click', traceCustomPhrase);
+    document.getElementById('phrasePrintBtn')?.addEventListener('click', () => printPhraseWorksheet());
+    document.getElementById('phraseCancelBtn')?.addEventListener('click', closeTypePhraseModal);
+    document.getElementById('phraseInput')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); traceCustomPhrase(); }
+    });
+
     // Setting Button Listeners
     // Add touchstart to ensure early capture on tablets before modal messes with event propagation
     ['click', 'touchstart'].forEach(evt => {
@@ -431,8 +444,12 @@ function syncSettingsToUI() {
     const roundsBtn = document.getElementById('roundsBtn');
 
     if (modeBtn) {
-        const modeOpt = SETTING_OPTIONS.mode.options.find(o => o.value === SETTINGS.mode);
-        modeBtn.textContent = modeOpt ? modeOpt.short : 'SPL';
+        if (SETTINGS.mode === 'custom') {
+            modeBtn.textContent = '✏️';
+        } else {
+            const modeOpt = SETTING_OPTIONS.mode.options.find(o => o.value === SETTINGS.mode);
+            modeBtn.textContent = modeOpt ? modeOpt.short : 'VOC';
+        }
     }
     if (levelBtn) {
         const levelOpt = SETTING_OPTIONS.level.options.find(o => o.value === SETTINGS.level);
@@ -443,13 +460,18 @@ function syncSettingsToUI() {
 
     const newWordBtn = document.getElementById('newWordBtn');
     if (newWordBtn) {
-        newWordBtn.textContent = SETTINGS.mode === 'numbers' ? 'New Number' : 'New Word';
+        newWordBtn.textContent = SETTINGS.mode === 'numbers' ? 'New Number'
+            : SETTINGS.mode === 'custom' ? 'Restart' : 'New Word';
     }
 
     const levelName = document.querySelector('.level-indicator');
     const modeName = document.querySelector('.mode-indicator');
     if (levelName) levelName.textContent = `Level: ${DIFFICULTY_LABELS[SETTINGS.level]}`;
-    if (modeName) modeName.textContent = `Mode: ${MODE_LABELS[SETTINGS.mode]}`;
+    if (modeName) {
+        modeName.textContent = (SETTINGS.mode === 'custom' && CUSTOM_PHRASE)
+            ? `Phrase: "${CUSTOM_PHRASE}"`
+            : `Mode: ${MODE_LABELS[SETTINGS.mode]}`;
+    }
 
     applyDifficulty();
 }
@@ -527,6 +549,16 @@ function resetGame() {
 }
 
 function startNewWord() {
+    // Custom "Type" mode: trace the teacher-entered phrase verbatim (spaces & case
+    // preserved). Bypasses word banks, mobile length caps, and level lowercasing.
+    if (SETTINGS.mode === 'custom') {
+        GAME_STATE.word = CUSTOM_PHRASE || 'HELLO';
+        GAME_STATE.letterIndex = 0;
+        resetForNewLetter();
+        calculateLayout();
+        return;
+    }
+
     // 1. Determine eligible words
     const selectedLevel = SETTINGS.level;
     const isVocab = SETTINGS.mode === 'vocabulary';
@@ -597,6 +629,18 @@ function forceNextWord() {
 
 
 
+// Skip any characters with no traceable path (spaces, unsupported chars): mark
+// them done and advance so the active target is always a real, traceable glyph.
+function advancePastSpaces() {
+    while (GAME_STATE.letterIndex < GAME_STATE.word.length &&
+        !LETTER_PATHS[GAME_STATE.word[GAME_STATE.letterIndex]]) {
+        if (GAME_STATE.completedLetters) {
+            GAME_STATE.completedLetters[GAME_STATE.letterIndex] = true;
+        }
+        GAME_STATE.letterIndex++;
+    }
+}
+
 function resetForNewLetter() {
     GAME_STATE.fadingStrokes = [];
     GAME_STATE.currentStroke = [];
@@ -605,6 +649,9 @@ function resetForNewLetter() {
     if (GAME_STATE.letterIndex === 0) {
         GAME_STATE.completedLetters = new Array(GAME_STATE.word.length).fill(false);
     }
+
+    // Auto-skip spaces / unsupported chars so tracing never stalls on a gap.
+    advancePastSpaces();
 
     calculateTargetArea();
 }
@@ -683,6 +730,8 @@ function updateIconPositions(canvasHeight) {
 
 function calculateTargetArea() {
     if (GAME_STATE.letterIndex >= GAME_STATE.word.length) return;
+    // Canvas not laid out yet (0-size): skip hit-test setup; retried on next layout.
+    if (!hitCanvas.width || !hitCanvas.height) return;
 
     const letter = GAME_STATE.word[GAME_STATE.letterIndex];
     const path = LETTER_PATHS[letter];
@@ -1935,6 +1984,127 @@ function fadeTracePrintFromPicker() {
     tokens = tokens.slice(0, FADE_MAX);
     closeFadeTraceModal();
     printFadeTraceWorksheet(tokens);
+}
+
+// ---- Type-a-Phrase (custom stencil) ----------------------------------------
+const PHRASE_MAX = 40;
+
+// Keep only traceable characters (letters, digits, spaces); tidy whitespace/length.
+function sanitizePhrase(text) {
+    return (text || '')
+        .replace(/[^a-zA-Z0-9 ]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, PHRASE_MAX);
+}
+
+function openTypePhraseModal() {
+    const modal = document.getElementById('typePhraseModal');
+    const input = document.getElementById('phraseInput');
+    if (input) input.value = CUSTOM_PHRASE;
+    if (modal) modal.classList.remove('hidden');
+    if (input) setTimeout(() => input.focus(), 50);
+}
+
+function closeTypePhraseModal() {
+    document.getElementById('typePhraseModal')?.classList.add('hidden');
+}
+
+// Start tracing the phrase on the device (reuses the scored tracing flow).
+function traceCustomPhrase() {
+    const phrase = sanitizePhrase(document.getElementById('phraseInput')?.value);
+    if (!phrase) return;
+    CUSTOM_PHRASE = phrase;
+    SETTINGS.mode = 'custom';
+    closeTypePhraseModal();
+    syncSettingsToUI();
+    resetGame();
+}
+
+// Wrap a phrase into lines of at most maxChars, breaking on spaces (hard-split
+// any single word longer than maxChars) so each printed line has big letters.
+function wrapPhrase(phrase, maxChars) {
+    const lines = [];
+    let cur = '';
+    for (let word of phrase.split(' ')) {
+        while (word.length > maxChars) {
+            if (cur) { lines.push(cur); cur = ''; }
+            lines.push(word.slice(0, maxChars));
+            word = word.slice(maxChars);
+        }
+        if (!cur) cur = word;
+        else if ((cur + ' ' + word).length <= maxChars) cur += ' ' + word;
+        else { lines.push(cur); cur = word; }
+    }
+    if (cur) lines.push(cur);
+    return lines;
+}
+
+// One writing line at a FIXED letter size (unitPx px per letter-unit) so all lines
+// match. opacity 0 => blank practice line. Centered; never wider than the page.
+function phraseLineSvg(text, opacity, unitPx) {
+    const charWidth = 1, charGap = 0.32;
+    const n = [...text].length || 1;
+    const totalWidth = n * charWidth + Math.max(0, n - 1) * charGap;
+    const vbW = totalWidth + 0.16;
+    const W = totalWidth.toFixed(2);
+
+    const rails =
+        `<line x1="0" y1="0" x2="${W}" y2="0" stroke="rgba(74,144,226,0.55)" stroke-width="0.02"/>` +
+        `<line x1="0" y1="0.5" x2="${W}" y2="0.5" stroke="rgba(0,0,0,0.28)" stroke-width="0.014" stroke-dasharray="0.09,0.07"/>` +
+        `<line x1="0" y1="1" x2="${W}" y2="1" stroke="rgba(120,175,55,0.85)" stroke-width="0.025"/>` +
+        `<line x1="0" y1="1.5" x2="${W}" y2="1.5" stroke="rgba(139,119,101,0.45)" stroke-width="0.018"/>`;
+
+    const glyphs = opacity > 0
+        ? `<g stroke="#1a1a1a" stroke-opacity="${opacity}" stroke-width="0.05" fill="none" stroke-linecap="round" stroke-linejoin="round">${fadeTokenSvg(text, 0, charWidth, charGap)}</g>`
+        : '';
+
+    const pxW = (vbW * unitPx).toFixed(1);
+    const pxH = (1.9 * unitPx).toFixed(1);
+    return `<svg viewBox="-0.08 -0.2 ${vbW.toFixed(2)} 1.9" width="${pxW}" height="${pxH}" style="display:block; margin:0 auto; max-width:100%;">${rails}${glyphs}</svg>`;
+}
+
+// Printable worksheet: show the phrase ONCE (wrapped, big letters) to trace, then
+// blank lines to write it independently. Fills the page; letters do not repeat.
+function printPhraseWorksheet(phraseArg) {
+    const phrase = sanitizePhrase(phraseArg != null ? phraseArg : document.getElementById('phraseInput')?.value);
+    if (!phrase) return;
+    CUSTOM_PHRASE = phrase;
+
+    let printContainer = document.getElementById('printableWorksheet');
+    if (!printContainer) {
+        printContainer = document.createElement('div');
+        printContainer.id = 'printableWorksheet';
+        document.body.appendChild(printContainer);
+    }
+
+    const MAX_CHARS = 10, UNIT = 54, TOTAL_ROWS = 6;
+    const traceLines = wrapPhrase(phrase, MAX_CHARS);
+    const blanks = Math.max(2, TOTAL_ROWS - traceLines.length);
+    // Blank lines match the width of the longest trace line for a tidy column.
+    const widest = traceLines.reduce((a, b) => (b.length > a.length ? b : a), traceLines[0] || '');
+    const blankRef = ' '.repeat(widest.length);
+
+    let rowsHtml = '';
+    traceLines.forEach(line => {
+        rowsHtml += `<div style="margin-bottom:20px;">${phraseLineSvg(line, 0.55, UNIT)}</div>`;
+    });
+    for (let i = 0; i < blanks; i++) {
+        rowsHtml += `<div style="margin-bottom:20px;">${phraseLineSvg(blankRef, 0, UNIT)}</div>`;
+    }
+
+    printContainer.innerHTML = `
+        <div style="font-family:'Helvetica',sans-serif;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; border-bottom:1px solid #ccc; padding-bottom:6px;">
+                <div style="font-size:11px; color:#999; font-family:'Georgia',serif; letter-spacing:0.5px;">STENCIL / Trace the Phrase</div>
+                <div style="font-size:11px; color:#999; font-family:'Georgia',serif;">Name: _________________ &nbsp; Date: ________</div>
+            </div>
+            <div style="font-size:13px; color:#666; font-style:italic; margin-bottom:22px;">Trace the phrase, then write it yourself on the lines below!</div>
+            ${rowsHtml}
+        </div>
+    `;
+
+    window.print();
 }
 
 /**

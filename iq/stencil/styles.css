@@ -441,6 +441,62 @@ body {
     margin: 0;
 }
 
+/* Type-a-Phrase */
+.type-print {
+    background: linear-gradient(135deg, #d35400 0%, #e67e22 100%);
+    box-shadow: 0 4px 15px rgba(211, 84, 0, 0.3);
+}
+
+.type-print:hover {
+    box-shadow: 0 6px 20px rgba(211, 84, 0, 0.5);
+}
+
+.type-modal-content {
+    max-width: 460px;
+    width: 90%;
+    text-align: center;
+}
+
+.type-modal-sub {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.phrase-input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px solid #e2e6ea;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 22px;
+    font-weight: 600;
+    color: #34495e;
+    text-align: center;
+    outline: none;
+}
+
+.phrase-input:focus {
+    border-color: #e67e22;
+}
+
+.type-modal-hint {
+    font-size: 12px;
+    color: #999;
+    margin: 8px 0 20px;
+}
+
+.type-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.type-modal-actions .close-overlay {
+    margin: 0;
+}
+
 .word-display {
     display: none;
     /* Hidden used for internal logic or debug if needed */

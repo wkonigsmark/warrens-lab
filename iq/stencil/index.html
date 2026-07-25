@@ -58,6 +58,7 @@
                     <button id="printVocabBtn" class="print-button vocab-print">Vocab Quiz</button>
                     <button id="printIndependentBtn" class="print-button independent-print">Ind. Spelling</button>
                     <button id="printFadeBtn" class="print-button fade-print">Fade &amp; Trace</button>
+                    <button id="typePhraseBtn" class="print-button type-print">✏️ Type</button>
                     <div class="reversal-group">
                         <input type="text" id="reversalChars" maxlength="5" placeholder="e.g. 762E3">
                         <button id="printReversalBtn" class="print-button reversal-print">Reversal Study</button>
@@ -174,6 +175,21 @@
                     <button id="fadeCancelBtn" class="close-overlay">Cancel</button>
                     <button id="fadePrintBtn" class="print-button fade-print">Print</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Type a Phrase (custom stencil) -->
+    <div id="typePhraseModal" class="modal hidden">
+        <div class="modal-content type-modal-content">
+            <h2>Type a Phrase</h2>
+            <p class="type-modal-sub">Enter a short phrase to turn into a tracing stencil. Your child can trace it on screen or on a printout.</p>
+            <input type="text" id="phraseInput" class="phrase-input" maxlength="40" placeholder="e.g. I love you" autocomplete="off">
+            <p class="type-modal-hint">Letters, numbers &amp; spaces &middot; up to 40 characters</p>
+            <div class="type-modal-actions">
+                <button id="phraseCancelBtn" class="close-overlay">Cancel</button>
+                <button id="phrasePrintBtn" class="print-button type-print">Print Worksheet</button>
+                <button id="phraseTraceBtn" class="print-button">Trace on Screen</button>
             </div>
         </div>
     </div>
