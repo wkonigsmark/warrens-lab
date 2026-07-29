@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Literature Domain - Burnmark Productions">
+  <title>Literature Domain - Burnmark Productions</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style-lab.css">
+</head>
+<body>
+  <div class="hero">
+    <div class="tty-container">
+      <span id="text"></span><span class="cursor"></span>
+    </div>
+
+    <nav id="main-nav" class="nav-menu">
+      <a href="https://wizarding-quiz.vercel.app/" class="nav-item">
+        <div class="item-icon">🧙</div>
+        <div class="item-info">
+          <h3 class="item-title">Harry Potter Wizarding Quiz</h3>
+          <p class="item-subtext">Books 1–2 Wizarding World Knowledge</p>
+        </div>
+      </a>
+      <a href="odyssey/index.html" class="nav-item">
+        <div class="item-icon">🌊</div>
+        <div class="item-info">
+          <h3 class="item-title">Odyssey</h3>
+          <p class="item-subtext">Epic Journey & Adventure</p>
+        </div>
+      </a>
+      <a href="../index.html" class="nav-item">
+        <div class="item-icon">🔙</div>
+        <div class="item-info">
+          <h3 class="item-title">Back to Lab</h3>
+          <p class="item-subtext">Return to Main Hub</p>
+        </div>
+      </a>
+    </nav>
+  </div>
+
+  <div id="skip-hint" class="skip-hint">Click Anywhere to Skip</div>
+
+  <script>
+    (function () {
+      const TEXT = "Opening the library, turning pages...";
+      const textEl = document.getElementById("text");
+      const navEl = document.getElementById("main-nav");
+      const hintEl = document.getElementById("skip-hint");
+      let i = 0; let isSkipped = false;
+      function getStaggeredDelay(char) {
+        if (isSkipped) return 0;
+        let delay = Math.floor(60 + Math.random() * 60);
+        if (char === " ") delay += 100;
+        if (char === ",") delay += 300;
+        return delay;
+      }
+      function skip() {
+        if (isSkipped) return;
+        isSkipped = true;
+        textEl.textContent = TEXT;
+        showMenu();
+      }
+      function showMenu() {
+        navEl.classList.add("visible");
+        const items = navEl.querySelectorAll(".nav-item");
+        items.forEach((item, index) => {
+          setTimeout(() => { item.classList.add("revealed"); }, index * 120);
+        });
+        hintEl.style.opacity = "0";
+        setTimeout(() => hintEl.remove(), 400);
+      }
+      function type() {
+        if (isSkipped) return;
+        textEl.textContent = TEXT.slice(0, i++);
+        if (i <= TEXT.length) {
+          setTimeout(type, getStaggeredDelay(TEXT[i - 1]));
+        } else {
+          setTimeout(showMenu, 400);
+        }
+      }
+      document.addEventListener('click', skip);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') skip();
+      });
+      setTimeout(type, 300);
+    })();
+  </script>
+</body>
+</html>
