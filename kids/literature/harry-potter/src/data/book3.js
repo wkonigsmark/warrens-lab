@@ -1,20 +1,21 @@
-// Book 3 — Harry Potter and the Prisoner of Azkaban (READING IN PROGRESS)
+// Book 3 — Harry Potter and the Prisoner of Azkaban (FULLY READ ✔)
 //
 // ⚠️ SPOILER GATE: every question is tagged with the chapter it becomes safe in.
-// Bump READ_UP_TO as you finish chapters — questions above it are never dealt.
+// The book is finished, so READ_UP_TO covers all 22 chapters and every twist —
+// Lupin, the Marauders, Pettigrew, the Time-Turner — is fair game below.
 //
-// HARD RULES for adding content here (book 3 is a minefield of twists):
-//  - Black's story is always "what everyone believes/says" — never asserted as fact
-//  - Scabbers: only "Ron blames Crookshanks" — nothing more, ever
-//  - No linking Lupin's illnesses to anything; no werewolf talk
-//  - Map makers: their signed insults only — never who they are
-//  - No animagi, no Shrieking Shack lore, no time talk beyond "impossible schedule"
-//  - The Grim stays an open mystery
+// GOING FORWARD: this same chapter-gate mechanism is how future books (4+) get
+// added safely while they're still being read — copy the pattern, set a lower
+// READ_UP_TO, and keep these rules until that book is finished:
+//  - Never let book 3 content foreshadow or hint at book 4+ events
+//  - Cedric Diggory (introduced ch. 15 as a good sport) stays a positive,
+//    uncomplicated character here — no foreshadowing of anything later
+//  - Nothing about Pettigrew's escape implying future significance
 //
-// New question type here: 'talk' — an open discussion prompt with no wrong answer.
-// `talk` = follow-up questions to keep it going; `fact` = listening tips for the grown-up.
+// Question type 'talk' = an open discussion prompt with no wrong answer.
+// `talk` = follow-up questions to keep it going; `fact` = notes for the grown-up.
 
-export const READ_UP_TO = 14 // just finished: ch. 14, "Snape's Grudge"
+export const READ_UP_TO = 22 // book finished! every chapter is unlocked
 
 export const BOOK3 = [
   // ---------- STORY ----------
@@ -363,5 +364,403 @@ export const BOOK3 = [
       'What could Harry, Ron, and Hermione actually DO to help?',
     ],
     fact: 'For the grown-up: let the unfairness sit — the book wants it felt. Fear and influence beating truth is worth naming out loud together.',
+  },
+
+  // ============================================================
+  // THE FINALE — chapters 15–22. Every twist is fair game below.
+  // ============================================================
+
+  // ---------- STORY ----------
+  {
+    chapter: 15, type: 'mc', cat: 'story',
+    q: 'The Slytherins dress up as dementors to spook Harry during the Quidditch final. What happens this time?',
+    options: ['Harry casts a full Patronus and stays on his broom', 'Harry falls again', 'Snape stops them first', 'The match is called off'],
+    answer: 0,
+    fact: 'All those lessons with Lupin paid off. Gryffindor won the match — and the Quidditch Cup.',
+  },
+  {
+    chapter: 15, type: 'mc', cat: 'story',
+    q: 'Who is the talented Ravenclaw Seeker Harry has to beat in the final?',
+    options: ['Cho Chang', 'Roger Davies', 'Penelope Clearwater', 'Padma Patil'],
+    answer: 0,
+    fact: 'She’s a very good flier. This won’t be the last you hear of her.',
+  },
+  {
+    chapter: 16, type: 'mc', cat: 'story',
+    q: 'What does the Committee for the Disposal of Dangerous Creatures decide about Buckbeak?',
+    options: ['Guilty — his execution is scheduled', 'Not guilty — he’s freed', 'The case is delayed a year', 'He’s sent away from Hogwarts instead'],
+    answer: 0,
+    fact: 'Lucius Malfoy’s influence on the committee did exactly what Hagrid feared. A date is set — at sunset.',
+  },
+  {
+    chapter: 16, type: 'mc', cat: 'story',
+    q: 'During the Divination exam, something strange happens to Professor Trelawney. What?',
+    options: ['She falls into a real trance and speaks a genuine prophecy', 'She faints', 'She predicts her own death', 'She refuses to give Harry a grade'],
+    answer: 0,
+    fact: 'Her voice went harsh, her eyes rolled back — completely unlike her usual dramatics. She remembered none of it afterward.',
+  },
+  {
+    chapter: 16, type: 'mc', cat: 'story',
+    q: 'In her trance, Trelawney speaks of a hidden, loyal servant preparing to escape. Roughly how long does she say he’s been imprisoned?',
+    options: ['Twelve years', 'One year', 'A few months', 'Forever'],
+    answer: 0,
+    fact: 'Nobody in the room understood what it meant — including, at that moment, Harry.',
+  },
+  {
+    chapter: 17, type: 'mc', cat: 'story',
+    q: 'What makes Ron chase Scabbers straight toward the Whomping Willow?',
+    options: ['Scabbers bites him and bolts, and a huge black dog drags them both underground', 'Scabbers runs there on his own', 'Hermione’s cat chases them both', 'Hagrid asks him to check a burrow'],
+    answer: 0,
+    fact: 'The Willow batters Harry and Hermione as they scramble after him — until they find the tunnel entrance at its roots.',
+  },
+  {
+    chapter: 17, type: 'mc', cat: 'story',
+    q: 'Where does the secret tunnel under the Whomping Willow lead?',
+    options: ['The Shrieking Shack', 'Hagrid’s hut', 'The Chamber of Secrets', 'Hogsmeade station'],
+    answer: 0,
+    fact: 'Supposedly the most haunted building in Britain. Turns out its “ghosts” had a much stranger explanation.',
+  },
+  {
+    chapter: 17, type: 'mc', cat: 'story',
+    q: 'What does the big black dog turn out to be?',
+    options: ['Sirius Black, in Animagus form', 'A regular stray', 'Snape in disguise', 'A Grim, exactly as Trelawney warned'],
+    answer: 0,
+    fact: 'An unregistered Animagus — a wizard who can transform into an animal at will. Padfoot, to his old friends.',
+  },
+  {
+    chapter: 17, type: 'mc', cat: 'story',
+    q: 'Who else shows up at the Shrieking Shack, wearing Harry’s own invisibility cloak?',
+    options: ['Snape, who’d been trailing them all year', 'Dumbledore', 'Fudge', 'Percy'],
+    answer: 0,
+    fact: 'Harry had dropped the cloak earlier that night. Snape used it to follow — and burst in ready to hand Sirius straight to the dementors.',
+  },
+  {
+    chapter: 18, type: 'mc', cat: 'story',
+    q: 'What secret has Lupin kept since he was a student?',
+    options: ['He is a werewolf', 'He is Sirius’s brother', 'He’s a wanted criminal too', 'He can see the future'],
+    answer: 0,
+    fact: 'Bitten as a small boy. Dumbledore let him attend Hogwarts anyway — one of the kindest things anyone ever did for him.',
+  },
+  {
+    chapter: 18, type: 'mc', cat: 'story',
+    q: 'Why did James, Sirius, and Peter secretly become illegal Animagi while still students?',
+    options: ['To keep Lupin company safely during his transformations', 'To spy on Slytherin', 'To sneak into Hogsmeade', 'To win a bet with Snape'],
+    answer: 0,
+    fact: 'A werewolf is far less dangerous around animals than around people. Three best friends, learning one of the hardest kinds of magic there is, just to sit with him.',
+  },
+  {
+    chapter: 18, type: 'mc', cat: 'story',
+    q: 'Which four friends made the Marauder’s Map together at school?',
+    options: ['James, Sirius, Peter, and Lupin', 'James, Snape, Sirius, and Lupin', 'Hagrid, James, Sirius, and Peter', 'Dumbledore, James, Sirius, and Lupin'],
+    answer: 0,
+    fact: 'Moony, Wormtail, Padfoot, and Prongs — the same four names signed to the insults Snape uncovered back in chapter 14.',
+  },
+  {
+    chapter: 18, type: 'mc', cat: 'story',
+    q: 'Who was secretly the Potters’ true Secret-Keeper the night Voldemort found them — not Sirius, as everyone believed?',
+    options: ['Peter Pettigrew', 'Lupin', 'Dumbledore', 'Hagrid'],
+    answer: 0,
+    fact: 'They switched at the last moment — Sirius seemed the obvious choice, so Peter seemed like the safer, unexpected one. It was the opposite.',
+  },
+  {
+    chapter: 18, type: 'mc', cat: 'story',
+    q: 'How did Peter Pettigrew fake his own death and frame Sirius for it?',
+    options: ['He cut off his own finger, blew up the street, and escaped as a rat', 'He used Polyjuice Potion to look like Sirius', 'He forged a confession letter', 'He paid dementors to lie'],
+    answer: 0,
+    fact: 'A dozen Muggles were hurt in the blast. All anyone ever found of “Peter” was that one finger — enough to convince the whole wizarding world.',
+  },
+  {
+    chapter: 18, type: 'mc', cat: 'story',
+    q: 'What is Scabbers, Ron’s “ordinary” pet rat, really?',
+    options: ['Peter Pettigrew, hiding as an unregistered Animagus', 'A cursed toy', 'Percy’s old pet', 'Nothing unusual at all'],
+    answer: 0,
+    fact: 'Missing exactly the same finger. He’d been living safely under their noses for twelve years.',
+  },
+  {
+    chapter: 19, type: 'mc', cat: 'story',
+    q: 'When Peter is forced to transform back into a man, what does he do?',
+    options: ['Grovels and begs for mercy, blaming Voldemort’s power', 'Attacks everyone at once', 'Confesses proudly', 'Stays silent'],
+    answer: 0,
+    fact: 'Small, balding, watery-eyed — nothing like the brave friend James and Sirius remembered.',
+  },
+  {
+    chapter: 19, type: 'mc', cat: 'story',
+    q: 'What goes wrong on the walk back up to the castle?',
+    options: ['Lupin forgot his potion and transforms under the full moon', 'Fudge arrives too early', 'Buckbeak escapes', 'Snape wakes up'],
+    answer: 0,
+    fact: 'Snape usually brews him the Wolfsbane Potion every month to keep his mind human even while transformed. In all the chaos, Lupin never drank it that night.',
+  },
+  {
+    chapter: 19, type: 'mc', cat: 'story',
+    q: 'Who protects Harry, Ron, and Hermione when werewolf-Lupin turns dangerous?',
+    options: ['Sirius, transforming into Padfoot to hold him off', 'Snape', 'Buckbeak', 'Dumbledore, arriving just in time'],
+    answer: 0,
+    fact: 'A werewolf will attack humans but not fight another animal the same way. Sirius took a bad mauling doing it.',
+  },
+  {
+    chapter: 19, type: 'mc', cat: 'story',
+    q: 'How does Peter escape in the chaos of that night?',
+    options: ['He grabs a dropped wand, transforms back into a rat, and scurries off', 'He Apparates away', 'He fights his way past everyone', 'Snape lets him go'],
+    answer: 0,
+    fact: 'And just like that, twelve years of proof walked off on four tiny legs.',
+  },
+  {
+    chapter: 19, type: 'mc', cat: 'story',
+    q: 'What happens to Sirius by the lake once he’s cornered again?',
+    options: ['Dementors swarm him and nearly perform the Kiss, until a mysterious Patronus drives them off', 'He’s recaptured quietly', 'He escapes on Buckbeak', 'Fudge arrests him peacefully'],
+    answer: 0,
+    fact: 'Harry saw someone across the water cast an enormous, glowing shield before he blacked out — and was sure, for a moment, it was his father.',
+  },
+  {
+    chapter: 20, type: 'mc', cat: 'story',
+    q: 'When Harry wakes in the hospital wing, what has happened to Sirius?',
+    options: ['He’s been recaptured and is awaiting the Dementor’s Kiss', 'He’s escaped for good', 'He’s been officially cleared', 'He’s already been sent to Azkaban'],
+    answer: 0,
+    fact: 'The Kiss removes a person’s soul forever. Fudge is satisfied the case is finally closed.',
+  },
+  {
+    chapter: 20, type: 'mc', cat: 'story',
+    q: 'Whose version of events does the Ministry believe — Harry and Hermione’s, or Snape’s?',
+    options: ['Snape’s', 'Harry and Hermione’s', 'Nobody’s — they open a new investigation', 'Lupin’s'],
+    answer: 0,
+    fact: 'The full truth of that night says everyone was bewitched. Being right isn’t always enough when the person with more power tells a simpler story.',
+  },
+  {
+    chapter: 20, type: 'quote', cat: 'story',
+    quote: 'What we need is more time.',
+    options: ['Dumbledore', 'McGonagall', 'Snape', 'Hermione'],
+    answer: 0,
+    fact: 'He said it looking straight at Harry and Hermione — the biggest hint in the whole book, delivered completely calmly.',
+  },
+  {
+    chapter: 21, type: 'mc', cat: 'story',
+    q: 'What has Hermione secretly been using all year to attend impossible numbers of classes?',
+    options: ['A Ministry-issued Time-Turner', 'A cloning charm', 'Extra-strength Skele-Gro', 'Nothing — she just never sleeps'],
+    answer: 0,
+    fact: 'McGonagall approved it herself. A tiny hourglass on a chain — one turn sends you backward exactly one hour.',
+  },
+  {
+    chapter: 21, type: 'mc', cat: 'story',
+    q: 'What do Harry and Hermione do FIRST after traveling back three hours?',
+    options: ['Secretly free Buckbeak before the execution', 'Warn Dumbledore', 'Confront Peter directly', 'Rescue Sirius immediately'],
+    answer: 0,
+    fact: 'The executioner’s axe fell on empty air. Buckbeak was already gone, hidden with Hagrid’s pumpkin patch as a witness.',
+  },
+  {
+    chapter: 21, type: 'mc', cat: 'story',
+    q: 'Watching the night replay from hiding, Harry realizes something about the Patronus that saved everyone by the lake. What?',
+    options: ['It was Harry himself, from the future — not his father', 'It was actually Dumbledore', 'It was Hermione the whole time', 'It never happened — he imagined it'],
+    answer: 0,
+    fact: 'He’d spent the whole night sure he’d seen his dad. He’d actually seen himself.',
+  },
+  {
+    chapter: 21, type: 'mc', cat: 'story',
+    q: 'What shape does Harry’s Patronus finally take?',
+    options: ['A stag — the same as his father’s Animagus form', 'A phoenix', 'A wolf', 'A lion'],
+    answer: 0,
+    fact: 'Prongs. Even without meaning to, Harry carried a piece of his father into that moment.',
+  },
+  {
+    chapter: 21, type: 'mc', cat: 'story',
+    q: 'How do Harry and Hermione get Sirius away from the tower before the Kiss can happen?',
+    options: ['They fly him out on Buckbeak’s back', 'They use the Time-Turner again', 'Dumbledore teleports him away', 'They sneak him out through the tunnel'],
+    answer: 0,
+    fact: 'Straight out the window and into the night sky — while Snape, stunned and confused, never even sees it happen.',
+  },
+  {
+    chapter: 22, type: 'mc', cat: 'story',
+    q: 'By the end of the book, is Sirius officially cleared of the murder charges?',
+    options: ['No — he’s still a fugitive, since Peter got away with no other proof', 'Yes, completely', 'Only partly — he’s on probation', 'The Ministry never finds out any of it'],
+    answer: 0,
+    fact: 'Free from the Kiss, but not free to walk around. He has to stay in hiding — an innocent man, still running.',
+  },
+  {
+    chapter: 22, type: 'mc', cat: 'story',
+    q: 'Why does Lupin resign as Defense Against the Dark Arts teacher?',
+    options: ['His werewolf secret gets out and he doesn’t want to put students or parents through the fear of it', 'He’s arrested alongside Sirius', 'Dumbledore fires him', 'He decides to go looking for Sirius instead'],
+    answer: 0,
+    fact: 'The best Defense teacher Harry ever had at Hogwarts — gone because of something he never chose and never hurt anyone with.',
+  },
+  {
+    chapter: 22, type: 'mc', cat: 'story',
+    q: 'Who lets Lupin’s secret slip to the whole school?',
+    options: ['Snape', 'Fudge', 'Draco Malfoy', 'Percy'],
+    answer: 0,
+    fact: 'He’d been ordered to stay quiet about the real events of that night — so he took his frustration out the only way he had left.',
+  },
+  {
+    chapter: 22, type: 'mc', cat: 'story',
+    q: 'What does Sirius arrange for Harry, in secret, before next year?',
+    options: ['Permission to visit Hogsmeade, signed as Harry’s godfather', 'A new Firebolt', 'A place to live with him', 'A pardon from the Ministry'],
+    answer: 0,
+    fact: 'A small, quiet gift from a man who’d just lost everything twice over — and still thought of Harry first.',
+  },
+
+  // ---------- HEART & COURAGE ----------
+  {
+    chapter: 19, type: 'mc', cat: 'heart',
+    q: 'Sirius and Lupin want to kill Peter for what he did. Why does Harry stop them?',
+    options: ['He says his father wouldn’t have wanted his two best friends to become killers', 'He feels sorry for Peter', 'He wants Peter to suffer longer in Azkaban', 'He’s afraid of getting in trouble'],
+    answer: 0,
+    fact: 'A twelve-year-old, in the middle of the worst night of his life, choosing mercy over revenge for the two grown men he loves most.',
+  },
+  {
+    chapter: 18, type: 'mc', cat: 'heart',
+    q: 'How did Sirius keep his mind clear through twelve years in Azkaban, when it breaks most prisoners?',
+    options: ['Knowing he was truly innocent gave him something the dementors couldn’t take, and turning into Padfoot let him think simpler animal thoughts', 'He had a secret escape plan the whole time', 'The dementors left him alone', 'He doesn’t explain it'],
+    answer: 0,
+    fact: 'Even his enemies couldn’t steal the one true thing he knew about himself. That’s a kind of strength that doesn’t look like fighting.',
+  },
+  {
+    chapter: 20, type: 'mc', cat: 'heart',
+    q: 'Dumbledore believes Harry and Hermione’s wild story over the Ministry’s official one — even though he can’t say so publicly. What does that show about him?',
+    options: ['He trusts people he knows, even when the truth is inconvenient', 'He doesn’t respect the Ministry’s rules', 'He already knew the whole story', 'He just likes Harry more than Fudge'],
+    answer: 0,
+    fact: '“I have no power to make other men see the truth.” He couldn’t fix it by force — so he quietly showed them how to fix it themselves.',
+  },
+  {
+    chapter: 22, type: 'mc', cat: 'heart',
+    q: 'Lupin leaves Hogwarts quietly rather than fight to keep a job he loves and is brilliant at. What does his graceful exit say about him?',
+    options: ['He’d rather protect others’ comfort than demand fairness for himself', 'He was secretly relieved to leave', 'He never really liked teaching', 'He agreed the parents were right to be afraid'],
+    answer: 0,
+    fact: 'He never raises his voice about it, never blames the students. Some kinds of courage are quiet ones.',
+  },
+  {
+    chapter: 17, type: 'mc', cat: 'heart',
+    q: 'Even with a broken leg and everyone shouting around him, what does Ron do first, before anyone explains anything?',
+    options: ['Defends Scabbers, refusing to believe his own pet could be anything sinister', 'Runs for help', 'Sides with Sirius immediately', 'Faints from the pain'],
+    answer: 0,
+    fact: 'Loyalty to something small and familiar, even when it turns out to be wrong — a very Ron thing to do, and not a bad instinct to have.',
+  },
+
+  // ---------- SUPERFAN ----------
+  {
+    chapter: 18, type: 'mc', cat: 'superfan',
+    q: 'SUPERFAN: Which Marauder nickname belongs to Sirius Black?',
+    options: ['Padfoot', 'Prongs', 'Moony', 'Wormtail'],
+    answer: 0,
+    fact: 'His Animagus form is a great black dog — which is exactly why so many people mistook him for a Grim.',
+  },
+  {
+    chapter: 18, type: 'mc', cat: 'superfan',
+    q: 'SUPERFAN: Which Marauder nickname belongs to Harry’s father, James?',
+    options: ['Prongs', 'Padfoot', 'Moony', 'Wormtail'],
+    answer: 0,
+    fact: 'His Animagus form is a stag — which turns out to matter a great deal by the end of the book.',
+  },
+  {
+    chapter: 18, type: 'mc', cat: 'superfan',
+    q: 'SUPERFAN: Which Marauder nickname belongs to Peter Pettigrew?',
+    options: ['Wormtail', 'Padfoot', 'Prongs', 'Moony'],
+    answer: 0,
+    fact: 'A rat, fittingly. He spent twelve years living as one, so it stopped being a nickname and started being a hiding spot.',
+  },
+  {
+    chapter: 18, type: 'mc', cat: 'superfan',
+    q: 'SUPERFAN: Why is Lupin called “Moony,” even though he never learned to become an Animagus himself?',
+    options: ['It’s a nickname for his werewolf condition, tied to the full moon', 'He’s afraid of the moon', 'He named himself after the map', 'Sirius picked it as a joke'],
+    answer: 0,
+    fact: 'The other three earned animal forms just to keep him company — Moony never needed one of his own to be part of the group.',
+  },
+  {
+    chapter: 18, type: 'mc', cat: 'superfan',
+    q: 'SUPERFAN: What does Sirius say is the mistake he’ll never forgive himself for?',
+    options: ['Convincing James and Lily to make Peter their Secret-Keeper instead of him', 'Becoming an Animagus', 'Trusting Snape', 'Getting caught by the Ministry'],
+    answer: 0,
+    fact: 'He thought he was being clever — nobody would suspect quiet, unremarkable Peter. That’s exactly what Peter was counting on.',
+  },
+  {
+    chapter: 17, type: 'mc', cat: 'superfan',
+    q: 'SUPERFAN: After Lupin disarms Snape in the Shrieking Shack, what do they do with him?',
+    options: ['Bind and levitate him along behind them, unconscious', 'Leave him locked in the Shack', 'Send him back to the castle alone', 'Wake him up right away'],
+    answer: 0,
+    fact: 'Knocked out cold, floating along like luggage, while the four of them sort out twelve years of lies. He missed the whole thing.',
+  },
+  {
+    chapter: 21, type: 'mc', cat: 'superfan',
+    q: 'SUPERFAN: What rule does Dumbledore give Harry and Hermione about using the Time-Turner?',
+    options: ['Don’t be seen by their past selves, and use it only this once', 'Never go back more than an hour', 'Only Hermione may touch it', 'Tell no one, ever, under any circumstance'],
+    answer: 0,
+    fact: 'Seeing your own past self is supposed to be deeply dangerous. They spend the whole rescue hiding from themselves.',
+  },
+  {
+    chapter: 15, type: 'mc', cat: 'superfan',
+    q: 'SUPERFAN: What position does Cho Chang play for Ravenclaw?',
+    options: ['Seeker', 'Chaser', 'Keeper', 'Beater'],
+    answer: 0,
+    fact: 'She goes head-to-head with Harry for the Snitch in the Cup final — his hardest opponent yet.',
+  },
+  {
+    chapter: 22, type: 'mc', cat: 'superfan',
+    q: 'SUPERFAN: What does Sirius send Ron as an apology gift for the loss of Scabbers?',
+    options: ['A tiny, hyperactive owl', 'A new rat', 'A Firebolt of his own', 'A photograph of James and Lily'],
+    answer: 0,
+    fact: 'Ron ends up naming him Pigwidgeon — not exactly the name he’d have picked, but it sticks.',
+  },
+  {
+    chapter: 20, type: 'tf', cat: 'superfan',
+    q: 'SUPERFAN: The dementors are permanently removed from the Hogwarts grounds by the end of the book.',
+    answer: true,
+    fact: 'After everything they caused that year — including attacking Harry mid-air during a Quidditch match — Dumbledore has had more than enough of them.',
+  },
+  {
+    chapter: 16, type: 'tf', cat: 'superfan',
+    q: 'SUPERFAN: Professor Trelawney remembers making a real prophecy in the exam.',
+    answer: false,
+    fact: 'She has no memory of it afterward at all — completely unlike her usual overdramatic predictions, which is exactly what made this one different.',
+  },
+  {
+    chapter: 19, type: 'odd', cat: 'superfan',
+    q: 'SUPERFAN: Which of these did NOT happen on the night everything is revealed?',
+    options: ['Fudge personally arrives to arrest Peter on the spot', 'Lupin transforms under the full moon', 'Sirius fights Lupin off in his dog form', 'Peter escapes as a rat'],
+    answer: 0,
+    fact: 'Fudge shows up later, at the castle — and by then, Peter is long gone and nobody can prove a thing.',
+  },
+
+  // ---------- TALK IT OVER ----------
+  {
+    chapter: 18, type: 'talk', cat: 'talk',
+    q: 'Now you know the truth — Sirius spent twelve years in Azkaban for something Peter did, while Peter lived safely as a pet in your own house. Look back at everything you believed about Sirius before chapter 17. What made it so easy for the WHOLE wizarding world to believe the wrong story for twelve years?',
+    talk: [
+      'Was there ever a moment earlier in the book that should have made people doubt the official story?',
+      'What would it take to convince a whole world they’d been wrong for over a decade?',
+    ],
+    fact: 'For the grown-up: this is the book’s biggest theme, right out in the open now — a confident, repeated story can beat the truth for a very long time. Worth naming that out loud.',
+  },
+  {
+    chapter: 19, type: 'talk', cat: 'talk',
+    q: 'Harry stops Sirius and Lupin from killing Peter, even after everything Peter did. Do you agree with that choice? Why might mercy matter even for someone who clearly doesn’t deserve it?',
+    talk: [
+      'Is there a difference between mercy and letting someone off the hook?',
+      'Would you have made the same choice Harry did?',
+    ],
+    fact: 'For the grown-up: no right answer here — some kids will passionately disagree with Harry, and that’s a great conversation, not a wrong one.',
+  },
+  {
+    chapter: 22, type: 'talk', cat: 'talk',
+    q: 'Lupin loses his job because parents are afraid of him once his secret is known — even though he never hurt a single student and was one of the best teachers Harry ever had. Is that fair? What do you think about people being judged for something they can’t control?',
+    talk: [
+      'Was anyone in the story actually harmed by Lupin being a teacher?',
+      'What would you have said to the worried parents, if you got the chance?',
+    ],
+    fact: 'For the grown-up: this one tends to land hard and honestly with kids — let it. It’s the book quietly teaching empathy through unfairness.',
+  },
+  {
+    chapter: 22, type: 'talk', cat: 'talk',
+    q: 'At the very end, the Ministry still doesn’t officially believe Sirius is innocent, so he has to keep hiding. Does the ending feel fully fair to you? Can something be true even when the people in charge won’t admit it?',
+    talk: [
+      'What would it take for Sirius to finally be safe and free?',
+      'Does a happy ending have to mean everything gets fixed?',
+    ],
+    fact: 'For the grown-up: it’s okay for a book to end with something still unresolved — that’s a genuinely useful thing for kids to sit with.',
+  },
+  {
+    chapter: 21, type: 'talk', cat: 'talk',
+    q: 'Harry’s Patronus turns out to be a stag — the same shape as his father’s Animagus form. Why do you think the author connected Harry’s happiest magic to his dad like that?',
+    talk: [
+      'What memory do you think Harry used to cast it?',
+      'If your Patronus took the shape of someone you love, who would it be?',
+    ],
+    fact: 'For the grown-up: a lovely one to circle back to after the ch.12 Patronus talk question — see how the answer has grown now that the mystery’s resolved.',
   },
 ]
