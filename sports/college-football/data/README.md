@@ -76,12 +76,15 @@ sources you copy out by hand.
 
 | Raw file | Source | Season | Pulled | Rows |
 |---|---|---|---|---|
-| `raw/draft-capital/by-school-2021-2025.json` | NFL draft capital by school (via CFBD) | 2025 | 2026-07-07 | 164 |
+| `raw/draft-capital/by-school-2021-2025.json` | NFL draft capital by school (via CFBD) | 2025 | 2026-08-14 | 164 |
 | `raw/recruiting-247/2025.json` | 247Sports Composite (via CFBD) | 2025 | 2026-07-07 | 232 |
-| `raw/revenue-share/2026.json` | House settlement revenue-sharing cap | 2026 | 2026-07-07 | 1 |
+| `raw/recruiting-247/2026.json` | 247Sports Composite (via CFBD) | 2026 | 2026-08-14 | 221 |
+| `raw/revenue-share/2026.json` | House settlement revenue-sharing cap | 2026 | 2026-08-14 | 1 |
 | `raw/sp-plus/ratings-2025.json` | SP+ ratings (via CFBD) | 2025 | 2026-07-07 | 136 |
+| `raw/sp-plus/ratings-2026.json` | SP+ ratings (via CFBD) | 2026 | 2026-08-14 | 138 |
 | `raw/sp-plus/returning-2025.json` | SP+ returning production (via CFBD) | 2025 | 2026-07-07 | 134 |
-| `raw/transfer-portal/2026.json` | Transfer portal net (computed from CFBD player feed) | 2026 | 2026-07-07 | 409 |
+| `raw/sp-plus/returning-2026.json` | SP+ returning production (via CFBD) | 2026 | 2026-08-14 | 136 |
+| `raw/transfer-portal/2026.json` | Transfer portal net (computed from CFBD player feed) | 2026 | 2026-08-14 | 417 |
 
 <!-- PULL-STATUS:END -->
 

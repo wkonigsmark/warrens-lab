@@ -1,29 +1,29 @@
 {
  "source": "Transfer portal net (computed from CFBD player feed)",
  "url": "https://api.collegefootballdata.com/player/portal",
- "pulledAt": "2026-07-07",
+ "pulledAt": "2026-08-14",
  "season": 2026,
- "notes": "Computed net = talent in \u2212 talent out from 4427 portal moves; 1535 moves had no rating (star-mapped or defaulted to 0.75). NOT 247/On3's editorial team ranking (their pages are ToS-restricted \u2014 not scraped).",
+ "notes": "Computed net = talent in \u2212 talent out from 4441 portal moves; 1547 moves had no rating (star-mapped or defaulted to 0.75). NOT 247/On3's editorial team ranking (their pages are ToS-restricted \u2014 not scraped).",
  "data": [
   {
    "team": "Austin Peay",
-   "value": 17.2,
+   "value": 18.04,
    "rank": 1,
    "raw": {
-    "in": 26,
+    "in": 27,
     "out": 5,
-    "gained": 21.25,
+    "gained": 22.09,
     "lost": 4.05
    }
   },
   {
    "team": "UCLA",
-   "value": 10.46,
+   "value": 11.21,
    "rank": 2,
    "raw": {
-    "in": 41,
+    "in": 42,
     "out": 29,
-    "gained": 35.11,
+    "gained": 35.86,
     "lost": 24.65
    }
   },
@@ -72,9 +72,20 @@
    }
   },
   {
+   "team": "Virginia",
+   "value": 8.06,
+   "rank": 7,
+   "raw": {
+    "in": 31,
+    "out": 22,
+    "gained": 26.46,
+    "lost": 18.4
+   }
+  },
+  {
    "team": "South Florida",
    "value": 7.7,
-   "rank": 7,
+   "rank": 8,
    "raw": {
     "in": 44,
     "out": 34,
@@ -85,7 +96,7 @@
   {
    "team": "Northwestern",
    "value": 7.51,
-   "rank": 8,
+   "rank": 9,
    "raw": {
     "in": 17,
     "out": 8,
@@ -96,23 +107,12 @@
   {
    "team": "Southern Miss",
    "value": 7.31,
-   "rank": 9,
+   "rank": 10,
    "raw": {
     "in": 37,
     "out": 28,
     "gained": 30.93,
     "lost": 23.62
-   }
-  },
-  {
-   "team": "Virginia",
-   "value": 7.31,
-   "rank": 10,
-   "raw": {
-    "in": 30,
-    "out": 22,
-    "gained": 25.71,
-    "lost": 18.4
    }
   },
   {
@@ -171,9 +171,20 @@
    }
   },
   {
+   "team": "Jacksonville State",
+   "value": 6.23,
+   "rank": 16,
+   "raw": {
+    "in": 21,
+    "out": 13,
+    "gained": 17.07,
+    "lost": 10.84
+   }
+  },
+  {
    "team": "Hawai'i",
    "value": 6.07,
-   "rank": 16,
+   "rank": 17,
    "raw": {
     "in": 16,
     "out": 9,
@@ -184,7 +195,7 @@
   {
    "team": "James Madison",
    "value": 5.86,
-   "rank": 17,
+   "rank": 18,
    "raw": {
     "in": 37,
     "out": 30,
@@ -195,7 +206,7 @@
   {
    "team": "Liberty",
    "value": 5.81,
-   "rank": 18,
+   "rank": 19,
    "raw": {
     "in": 26,
     "out": 19,
@@ -206,23 +217,12 @@
   {
    "team": "Iowa",
    "value": 5.8,
-   "rank": 19,
+   "rank": 20,
    "raw": {
     "in": 15,
     "out": 8,
     "gained": 12.59,
     "lost": 6.79
-   }
-  },
-  {
-   "team": "Jacksonville State",
-   "value": 5.48,
-   "rank": 20,
-   "raw": {
-    "in": 20,
-    "out": 13,
-    "gained": 16.32,
-    "lost": 10.84
    }
   },
   {
@@ -237,9 +237,20 @@
    }
   },
   {
+   "team": "Marshall",
+   "value": 4.83,
+   "rank": 22,
+   "raw": {
+    "in": 28,
+    "out": 22,
+    "gained": 22.91,
+    "lost": 18.08
+   }
+  },
+  {
    "team": "Purdue",
    "value": 4.82,
-   "rank": 22,
+   "rank": 23,
    "raw": {
     "in": 29,
     "out": 24,
@@ -250,7 +261,7 @@
   {
    "team": "UAB",
    "value": 4.54,
-   "rank": 23,
+   "rank": 24,
    "raw": {
     "in": 38,
     "out": 33,
@@ -261,7 +272,7 @@
   {
    "team": "Kansas",
    "value": 4.53,
-   "rank": 24,
+   "rank": 25,
    "raw": {
     "in": 31,
     "out": 26,
@@ -272,7 +283,7 @@
   {
    "team": "Sam Houston",
    "value": 4.2,
-   "rank": 25,
+   "rank": 26,
    "raw": {
     "in": 20,
     "out": 15,
@@ -283,7 +294,7 @@
   {
    "team": "Delaware",
    "value": 4.2,
-   "rank": 26,
+   "rank": 27,
    "raw": {
     "in": 13,
     "out": 8,
@@ -294,23 +305,12 @@
   {
    "team": "Tennessee Tech",
    "value": 4.12,
-   "rank": 27,
+   "rank": 28,
    "raw": {
     "in": 10,
     "out": 5,
     "gained": 8.15,
     "lost": 4.03
-   }
-  },
-  {
-   "team": "Marshall",
-   "value": 4.08,
-   "rank": 28,
-   "raw": {
-    "in": 27,
-    "out": 22,
-    "gained": 22.16,
-    "lost": 18.08
    }
   },
   {
@@ -369,9 +369,20 @@
    }
   },
   {
+   "team": "Kentucky",
+   "value": 3.19,
+   "rank": 34,
+   "raw": {
+    "in": 30,
+    "out": 27,
+    "gained": 26.06,
+    "lost": 22.87
+   }
+  },
+  {
    "team": "Arizona State",
    "value": 3.03,
-   "rank": 34,
+   "rank": 35,
    "raw": {
     "in": 24,
     "out": 21,
@@ -382,7 +393,7 @@
   {
    "team": "UL Monroe",
    "value": 2.71,
-   "rank": 35,
+   "rank": 36,
    "raw": {
     "in": 20,
     "out": 17,
@@ -393,23 +404,12 @@
   {
    "team": "Missouri",
    "value": 2.7,
-   "rank": 36,
+   "rank": 37,
    "raw": {
     "in": 30,
     "out": 27,
     "gained": 25.91,
     "lost": 23.21
-   }
-  },
-  {
-   "team": "Massachusetts",
-   "value": 2.64,
-   "rank": 37,
-   "raw": {
-    "in": 22,
-    "out": 19,
-    "gained": 18.36,
-    "lost": 15.72
    }
   },
   {
@@ -479,20 +479,9 @@
    }
   },
   {
-   "team": "Kentucky",
-   "value": 2.33,
-   "rank": 44,
-   "raw": {
-    "in": 29,
-    "out": 27,
-    "gained": 25.2,
-    "lost": 22.87
-   }
-  },
-  {
    "team": "Arizona",
    "value": 2.05,
-   "rank": 45,
+   "rank": 44,
    "raw": {
     "in": 22,
     "out": 20,
@@ -503,7 +492,7 @@
   {
    "team": "Houston",
    "value": 1.99,
-   "rank": 46,
+   "rank": 45,
    "raw": {
     "in": 18,
     "out": 16,
@@ -514,12 +503,23 @@
   {
    "team": "Rhode Island",
    "value": 1.81,
-   "rank": 47,
+   "rank": 46,
    "raw": {
     "in": 6,
     "out": 4,
     "gained": 4.98,
     "lost": 3.17
+   }
+  },
+  {
+   "team": "Massachusetts",
+   "value": 1.79,
+   "rank": 47,
+   "raw": {
+    "in": 21,
+    "out": 19,
+    "gained": 17.51,
+    "lost": 15.72
    }
   },
   {
@@ -578,9 +578,20 @@
    }
   },
   {
+   "team": "Southwest Mississippi C.C.",
+   "value": 1.6,
+   "rank": 53,
+   "raw": {
+    "in": 2,
+    "out": 0,
+    "gained": 1.6,
+    "lost": 0.0
+   }
+  },
+  {
    "team": "Miami (OH)",
    "value": 1.59,
-   "rank": 53,
+   "rank": 54,
    "raw": {
     "in": 16,
     "out": 14,
@@ -591,7 +602,7 @@
   {
    "team": "Texas Tech",
    "value": 1.57,
-   "rank": 54,
+   "rank": 55,
    "raw": {
     "in": 22,
     "out": 21,
@@ -602,7 +613,7 @@
   {
    "team": "UC Davis",
    "value": 1.57,
-   "rank": 55,
+   "rank": 56,
    "raw": {
     "in": 5,
     "out": 3,
@@ -613,23 +624,12 @@
   {
    "team": "Duke",
    "value": 1.54,
-   "rank": 56,
+   "rank": 57,
    "raw": {
     "in": 19,
     "out": 17,
     "gained": 16.27,
     "lost": 14.73
-   }
-  },
-  {
-   "team": "Incarnate Word",
-   "value": 1.53,
-   "rank": 57,
-   "raw": {
-    "in": 6,
-    "out": 4,
-    "gained": 4.81,
-    "lost": 3.28
    }
   },
   {
@@ -666,20 +666,9 @@
    }
   },
   {
-   "team": "New Mexico",
-   "value": 1.07,
-   "rank": 61,
-   "raw": {
-    "in": 15,
-    "out": 14,
-    "gained": 12.4,
-    "lost": 11.33
-   }
-  },
-  {
    "team": "Wake Forest",
    "value": 0.94,
-   "rank": 62,
+   "rank": 61,
    "raw": {
     "in": 24,
     "out": 23,
@@ -690,7 +679,7 @@
   {
    "team": "Southern",
    "value": 0.94,
-   "rank": 63,
+   "rank": 62,
    "raw": {
     "in": 3,
     "out": 2,
@@ -701,7 +690,7 @@
   {
    "team": "Western Michigan",
    "value": 0.88,
-   "rank": 64,
+   "rank": 63,
    "raw": {
     "in": 14,
     "out": 13,
@@ -712,11 +701,22 @@
   {
    "team": "Professional",
    "value": 0.87,
-   "rank": 65,
+   "rank": 64,
    "raw": {
     "in": 1,
     "out": 0,
     "gained": 0.87,
+    "lost": 0.0
+   }
+  },
+  {
+   "team": "Long Beach City College",
+   "value": 0.86,
+   "rank": 65,
+   "raw": {
+    "in": 1,
+    "out": 0,
+    "gained": 0.86,
     "lost": 0.0
    }
   },
@@ -732,20 +732,9 @@
    }
   },
   {
-   "team": "Northwest Missouri St",
+   "team": "Blinn College",
    "value": 0.85,
    "rank": 67,
-   "raw": {
-    "in": 3,
-    "out": 2,
-    "gained": 2.43,
-    "lost": 1.58
-   }
-  },
-  {
-   "team": "Southwest Mississippi C.C.",
-   "value": 0.85,
-   "rank": 68,
    "raw": {
     "in": 1,
     "out": 0,
@@ -754,7 +743,18 @@
    }
   },
   {
-   "team": "Missouri S&T",
+   "team": "Northwest Missouri State",
+   "value": 0.85,
+   "rank": 68,
+   "raw": {
+    "in": 3,
+    "out": 2,
+    "gained": 2.43,
+    "lost": 1.58
+   }
+  },
+  {
+   "team": "City College of San Francisco",
    "value": 0.85,
    "rank": 69,
    "raw": {
@@ -765,7 +765,7 @@
    }
   },
   {
-   "team": "Blinn College",
+   "team": "Missouri S&T",
    "value": 0.85,
    "rank": 70,
    "raw": {
@@ -776,7 +776,7 @@
    }
   },
   {
-   "team": "Adams",
+   "team": "College of the Sequoias",
    "value": 0.84,
    "rank": 71,
    "raw": {
@@ -787,7 +787,7 @@
    }
   },
   {
-   "team": "College of the Sequoias",
+   "team": "Adams",
    "value": 0.84,
    "rank": 72,
    "raw": {
@@ -897,14 +897,14 @@
    }
   },
   {
-   "team": "Iowa Western C.C.",
-   "value": 0.75,
+   "team": "Incarnate Word",
+   "value": 0.78,
    "rank": 82,
    "raw": {
-    "in": 1,
-    "out": 0,
-    "gained": 0.75,
-    "lost": 0.0
+    "in": 6,
+    "out": 5,
+    "gained": 4.81,
+    "lost": 4.03
    }
   },
   {
@@ -974,25 +974,25 @@
    }
   },
   {
-   "team": "Cal Poly",
-   "value": 0.49,
-   "rank": 89,
-   "raw": {
-    "in": 11,
-    "out": 10,
-    "gained": 8.95,
-    "lost": 8.46
-   }
-  },
-  {
    "team": "San Jos\u00e9 State",
    "value": 0.48,
-   "rank": 90,
+   "rank": 89,
    "raw": {
     "in": 17,
     "out": 16,
     "gained": 14.13,
     "lost": 13.65
+   }
+  },
+  {
+   "team": "New Mexico",
+   "value": 0.24,
+   "rank": 90,
+   "raw": {
+    "in": 14,
+    "out": 14,
+    "gained": 11.57,
+    "lost": 11.33
    }
   },
   {
@@ -1007,7 +1007,7 @@
    }
   },
   {
-   "team": "Valdosta State",
+   "team": "Wagner",
    "value": 0.01,
    "rank": 92,
    "raw": {
@@ -1018,7 +1018,7 @@
    }
   },
   {
-   "team": "Wagner",
+   "team": "Valdosta State",
    "value": 0.01,
    "rank": 93,
    "raw": {
@@ -1029,9 +1029,20 @@
    }
   },
   {
+   "team": "Savannah State",
+   "value": 0.01,
+   "rank": 94,
+   "raw": {
+    "in": 1,
+    "out": 1,
+    "gained": 0.84,
+    "lost": 0.83
+   }
+  },
+  {
    "team": "Stony Brook",
    "value": 0.0,
-   "rank": 94,
+   "rank": 95,
    "raw": {
     "in": 3,
     "out": 3,
@@ -1042,7 +1053,7 @@
   {
    "team": "North Alabama",
    "value": -0.01,
-   "rank": 95,
+   "rank": 96,
    "raw": {
     "in": 5,
     "out": 5,
@@ -1051,9 +1062,20 @@
    }
   },
   {
+   "team": "West Alabama",
+   "value": -0.02,
+   "rank": 97,
+   "raw": {
+    "in": 1,
+    "out": 1,
+    "gained": 0.82,
+    "lost": 0.84
+   }
+  },
+  {
    "team": "Idaho State",
    "value": -0.04,
-   "rank": 96,
+   "rank": 98,
    "raw": {
     "in": 6,
     "out": 6,
@@ -1062,20 +1084,9 @@
    }
   },
   {
-   "team": "Buffalo",
-   "value": -0.13,
-   "rank": 97,
-   "raw": {
-    "in": 16,
-    "out": 16,
-    "gained": 13.16,
-    "lost": 13.29
-   }
-  },
-  {
    "team": "San Diego State",
    "value": -0.13,
-   "rank": 98,
+   "rank": 99,
    "raw": {
     "in": 26,
     "out": 26,
@@ -1084,9 +1095,20 @@
    }
   },
   {
+   "team": "Buffalo",
+   "value": -0.13,
+   "rank": 100,
+   "raw": {
+    "in": 16,
+    "out": 16,
+    "gained": 13.16,
+    "lost": 13.29
+   }
+  },
+  {
    "team": "Rutgers",
    "value": -0.21,
-   "rank": 99,
+   "rank": 101,
    "raw": {
     "in": 15,
     "out": 15,
@@ -1095,9 +1117,31 @@
    }
   },
   {
+   "team": "Cal Poly",
+   "value": -0.26,
+   "rank": 102,
+   "raw": {
+    "in": 11,
+    "out": 11,
+    "gained": 8.95,
+    "lost": 9.21
+   }
+  },
+  {
+   "team": "Arkansas",
+   "value": -0.32,
+   "rank": 103,
+   "raw": {
+    "in": 42,
+    "out": 43,
+    "gained": 35.88,
+    "lost": 36.2
+   }
+  },
+  {
    "team": "Minnesota",
    "value": -0.32,
-   "rank": 100,
+   "rank": 104,
    "raw": {
     "in": 19,
     "out": 20,
@@ -1108,7 +1152,7 @@
   {
    "team": "Georgia Southern",
    "value": -0.5,
-   "rank": 101,
+   "rank": 105,
    "raw": {
     "in": 17,
     "out": 18,
@@ -1119,7 +1163,7 @@
   {
    "team": "Baylor",
    "value": -0.58,
-   "rank": 102,
+   "rank": 106,
    "raw": {
     "in": 31,
     "out": 32,
@@ -1130,7 +1174,7 @@
   {
    "team": "Georgia Tech",
    "value": -0.61,
-   "rank": 103,
+   "rank": 107,
    "raw": {
     "in": 19,
     "out": 20,
@@ -1141,7 +1185,7 @@
   {
    "team": "Bethune-Cookman",
    "value": -0.62,
-   "rank": 104,
+   "rank": 108,
    "raw": {
     "in": 4,
     "out": 5,
@@ -1152,7 +1196,7 @@
   {
    "team": "Robert Morris",
    "value": -0.73,
-   "rank": 105,
+   "rank": 109,
    "raw": {
     "in": 3,
     "out": 4,
@@ -1161,51 +1205,7 @@
    }
   },
   {
-   "team": "McMurry University",
-   "value": -0.75,
-   "rank": 106,
-   "raw": {
-    "in": 0,
-    "out": 1,
-    "gained": 0.0,
-    "lost": 0.75
-   }
-  },
-  {
    "team": "MidAmerica Nazarene",
-   "value": -0.75,
-   "rank": 107,
-   "raw": {
-    "in": 0,
-    "out": 1,
-    "gained": 0.0,
-    "lost": 0.75
-   }
-  },
-  {
-   "team": "Averett University",
-   "value": -0.75,
-   "rank": 108,
-   "raw": {
-    "in": 0,
-    "out": 1,
-    "gained": 0.0,
-    "lost": 0.75
-   }
-  },
-  {
-   "team": "Simpson College",
-   "value": -0.75,
-   "rank": 109,
-   "raw": {
-    "in": 0,
-    "out": 1,
-    "gained": 0.0,
-    "lost": 0.75
-   }
-  },
-  {
-   "team": "Reinhardt University",
    "value": -0.75,
    "rank": 110,
    "raw": {
@@ -1216,7 +1216,7 @@
    }
   },
   {
-   "team": "Montana Tech",
+   "team": "Simpson College",
    "value": -0.75,
    "rank": 111,
    "raw": {
@@ -1227,7 +1227,7 @@
    }
   },
   {
-   "team": "Chowan",
+   "team": "Ferrum College",
    "value": -0.75,
    "rank": 112,
    "raw": {
@@ -1238,7 +1238,7 @@
    }
   },
   {
-   "team": "Ferrum College",
+   "team": "McMurry University",
    "value": -0.75,
    "rank": 113,
    "raw": {
@@ -1249,7 +1249,7 @@
    }
   },
   {
-   "team": "University of Calgary",
+   "team": "Averett University",
    "value": -0.75,
    "rank": 114,
    "raw": {
@@ -1260,7 +1260,7 @@
    }
   },
   {
-   "team": "Montana-Western",
+   "team": "Warner University",
    "value": -0.75,
    "rank": 115,
    "raw": {
@@ -1271,7 +1271,7 @@
    }
   },
   {
-   "team": "Peru State",
+   "team": "Reinhardt",
    "value": -0.75,
    "rank": 116,
    "raw": {
@@ -1282,7 +1282,7 @@
    }
   },
   {
-   "team": "Minot State",
+   "team": "Montana Tech",
    "value": -0.75,
    "rank": 117,
    "raw": {
@@ -1293,7 +1293,7 @@
    }
   },
   {
-   "team": "East Central (OK)",
+   "team": "Chowan",
    "value": -0.75,
    "rank": 118,
    "raw": {
@@ -1304,7 +1304,7 @@
    }
   },
   {
-   "team": "Northeastern State",
+   "team": "University of Calgary",
    "value": -0.75,
    "rank": 119,
    "raw": {
@@ -1315,9 +1315,64 @@
    }
   },
   {
-   "team": "Emporia State University",
-   "value": -0.76,
+   "team": "Montana Western",
+   "value": -0.75,
    "rank": 120,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.75
+   }
+  },
+  {
+   "team": "Peru State",
+   "value": -0.75,
+   "rank": 121,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.75
+   }
+  },
+  {
+   "team": "Minot State",
+   "value": -0.75,
+   "rank": 122,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.75
+   }
+  },
+  {
+   "team": "East Central",
+   "value": -0.75,
+   "rank": 123,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.75
+   }
+  },
+  {
+   "team": "Northeastern State",
+   "value": -0.75,
+   "rank": 124,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.75
+   }
+  },
+  {
+   "team": "Emporia State",
+   "value": -0.76,
+   "rank": 125,
    "raw": {
     "in": 1,
     "out": 2,
@@ -1326,9 +1381,31 @@
    }
   },
   {
+   "team": "Winona State",
+   "value": -0.78,
+   "rank": 126,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.78
+   }
+  },
+  {
+   "team": "Salisbury University",
+   "value": -0.8,
+   "rank": 127,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.8
+   }
+  },
+  {
    "team": "Anna Maria College",
    "value": -0.8,
-   "rank": 121,
+   "rank": 128,
    "raw": {
     "in": 0,
     "out": 1,
@@ -1339,7 +1416,7 @@
   {
    "team": "Central Arkansas",
    "value": -0.8,
-   "rank": 122,
+   "rank": 129,
    "raw": {
     "in": 4,
     "out": 5,
@@ -1350,7 +1427,7 @@
   {
    "team": "South Dakota State",
    "value": -0.8,
-   "rank": 123,
+   "rank": 130,
    "raw": {
     "in": 2,
     "out": 3,
@@ -1359,20 +1436,9 @@
    }
   },
   {
-   "team": "Salisbury University",
-   "value": -0.8,
-   "rank": 124,
-   "raw": {
-    "in": 0,
-    "out": 1,
-    "gained": 0.0,
-    "lost": 0.8
-   }
-  },
-  {
    "team": "Maryville College",
    "value": -0.8,
-   "rank": 125,
+   "rank": 131,
    "raw": {
     "in": 0,
     "out": 1,
@@ -1383,7 +1449,7 @@
   {
    "team": "Quincy",
    "value": -0.8,
-   "rank": 126,
+   "rank": 132,
    "raw": {
     "in": 0,
     "out": 1,
@@ -1394,7 +1460,7 @@
   {
    "team": "Vanderbilt",
    "value": -0.81,
-   "rank": 127,
+   "rank": 133,
    "raw": {
     "in": 18,
     "out": 19,
@@ -1405,7 +1471,7 @@
   {
    "team": "Indiana State",
    "value": -0.82,
-   "rank": 128,
+   "rank": 134,
    "raw": {
     "in": 5,
     "out": 6,
@@ -1414,9 +1480,20 @@
    }
   },
   {
+   "team": "LaGrange",
+   "value": -0.82,
+   "rank": 135,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.82
+   }
+  },
+  {
    "team": "Mount St. Joseph",
    "value": -0.82,
-   "rank": 129,
+   "rank": 136,
    "raw": {
     "in": 0,
     "out": 1,
@@ -1427,7 +1504,7 @@
   {
    "team": "Puget Sound",
    "value": -0.82,
-   "rank": 130,
+   "rank": 137,
    "raw": {
     "in": 0,
     "out": 1,
@@ -1438,7 +1515,7 @@
   {
    "team": "Youngstown State",
    "value": -0.83,
-   "rank": 131,
+   "rank": 138,
    "raw": {
     "in": 5,
     "out": 6,
@@ -1447,84 +1524,7 @@
    }
   },
   {
-   "team": "California Lutheran University",
-   "value": -0.83,
-   "rank": 132,
-   "raw": {
-    "in": 0,
-    "out": 1,
-    "gained": 0.0,
-    "lost": 0.83
-   }
-  },
-  {
-   "team": "Lake Erie",
-   "value": -0.83,
-   "rank": 133,
-   "raw": {
-    "in": 0,
-    "out": 1,
-    "gained": 0.0,
-    "lost": 0.83
-   }
-  },
-  {
    "team": "Elizabeth City State",
-   "value": -0.83,
-   "rank": 134,
-   "raw": {
-    "in": 0,
-    "out": 1,
-    "gained": 0.0,
-    "lost": 0.83
-   }
-  },
-  {
-   "team": "West Virginia State",
-   "value": -0.83,
-   "rank": 135,
-   "raw": {
-    "in": 0,
-    "out": 1,
-    "gained": 0.0,
-    "lost": 0.83
-   }
-  },
-  {
-   "team": "Savannah St",
-   "value": -0.83,
-   "rank": 136,
-   "raw": {
-    "in": 0,
-    "out": 1,
-    "gained": 0.0,
-    "lost": 0.83
-   }
-  },
-  {
-   "team": "Roanoke",
-   "value": -0.83,
-   "rank": 137,
-   "raw": {
-    "in": 0,
-    "out": 1,
-    "gained": 0.0,
-    "lost": 0.83
-   }
-  },
-  {
-   "team": "Fairmont State",
-   "value": -0.83,
-   "rank": 138,
-   "raw": {
-    "in": 0,
-    "out": 1,
-    "gained": 0.0,
-    "lost": 0.83
-   }
-  },
-  {
-   "team": "Carson Newman",
    "value": -0.83,
    "rank": 139,
    "raw": {
@@ -1535,7 +1535,7 @@
    }
   },
   {
-   "team": "Henderson State",
+   "team": "Cal Lutheran",
    "value": -0.83,
    "rank": 140,
    "raw": {
@@ -1546,7 +1546,7 @@
    }
   },
   {
-   "team": "Davenport",
+   "team": "West Virginia State",
    "value": -0.83,
    "rank": 141,
    "raw": {
@@ -1557,7 +1557,7 @@
    }
   },
   {
-   "team": "Ohio Dominican",
+   "team": "Roanoke",
    "value": -0.83,
    "rank": 142,
    "raw": {
@@ -1568,7 +1568,7 @@
    }
   },
   {
-   "team": "Brown",
+   "team": "Lake Erie",
    "value": -0.83,
    "rank": 143,
    "raw": {
@@ -1579,7 +1579,7 @@
    }
   },
   {
-   "team": "Wisconsin La Crosse",
+   "team": "Fairmont State",
    "value": -0.83,
    "rank": 144,
    "raw": {
@@ -1590,7 +1590,7 @@
    }
   },
   {
-   "team": "American International",
+   "team": "Carson Newman",
    "value": -0.83,
    "rank": 145,
    "raw": {
@@ -1601,7 +1601,7 @@
    }
   },
   {
-   "team": "Faulkner University",
+   "team": "Benedict College",
    "value": -0.83,
    "rank": 146,
    "raw": {
@@ -1612,84 +1612,84 @@
    }
   },
   {
-   "team": "Lock Haven University",
-   "value": -0.84,
+   "team": "Henderson State",
+   "value": -0.83,
    "rank": 147,
    "raw": {
     "in": 0,
     "out": 1,
     "gained": 0.0,
-    "lost": 0.84
+    "lost": 0.83
    }
   },
   {
-   "team": "West Chester",
-   "value": -0.84,
+   "team": "Davenport",
+   "value": -0.83,
    "rank": 148,
    "raw": {
     "in": 0,
     "out": 1,
     "gained": 0.0,
-    "lost": 0.84
+    "lost": 0.83
    }
   },
   {
-   "team": "Edward Waters",
-   "value": -0.84,
+   "team": "Ohio Dominican",
+   "value": -0.83,
    "rank": 149,
    "raw": {
     "in": 0,
     "out": 1,
     "gained": 0.0,
-    "lost": 0.84
+    "lost": 0.83
    }
   },
   {
-   "team": "Indiana-Pennsylvania",
-   "value": -0.84,
+   "team": "Brown",
+   "value": -0.83,
    "rank": 150,
    "raw": {
     "in": 0,
     "out": 1,
     "gained": 0.0,
-    "lost": 0.84
+    "lost": 0.83
    }
   },
   {
-   "team": "St. Vincent",
-   "value": -0.84,
+   "team": "Wisconsin La Crosse",
+   "value": -0.83,
    "rank": 151,
    "raw": {
     "in": 0,
     "out": 1,
     "gained": 0.0,
-    "lost": 0.84
+    "lost": 0.83
    }
   },
   {
-   "team": "West Alabama",
-   "value": -0.84,
+   "team": "American International",
+   "value": -0.83,
    "rank": 152,
    "raw": {
     "in": 0,
     "out": 1,
     "gained": 0.0,
-    "lost": 0.84
+    "lost": 0.83
    }
   },
   {
-   "team": "Mount Union ",
-   "value": -0.84,
+   "team": "Faulkner University",
+   "value": -0.83,
    "rank": 153,
    "raw": {
     "in": 0,
     "out": 1,
     "gained": 0.0,
-    "lost": 0.84
+    "lost": 0.83
    }
   },
   {
-   "team": "Erskine",
+   "team": "Western Oregon",
    "value": -0.84,
    "rank": 154,
    "raw": {
@@ -1700,7 +1700,7 @@
    }
   },
   {
-   "team": "Catawba",
+   "team": "Mount Union ",
    "value": -0.84,
    "rank": 155,
    "raw": {
@@ -1711,7 +1711,7 @@
    }
   },
   {
-   "team": "Concordia University, St. Paul",
+   "team": "Erskine",
    "value": -0.84,
    "rank": 156,
    "raw": {
@@ -1722,7 +1722,7 @@
    }
   },
   {
-   "team": "Black Hills State",
+   "team": "Catawba",
    "value": -0.84,
    "rank": 157,
    "raw": {
@@ -1733,7 +1733,7 @@
    }
   },
   {
-   "team": "Christopher Newport",
+   "team": "West Chester",
    "value": -0.84,
    "rank": 158,
    "raw": {
@@ -1744,7 +1744,7 @@
    }
   },
   {
-   "team": "Western Oregon",
+   "team": "IU Pennsylvania",
    "value": -0.84,
    "rank": 159,
    "raw": {
@@ -1755,7 +1755,7 @@
    }
   },
   {
-   "team": "Truman State",
+   "team": "Edward Waters",
    "value": -0.84,
    "rank": 160,
    "raw": {
@@ -1766,84 +1766,84 @@
    }
   },
   {
-   "team": "Pace",
-   "value": -0.85,
+   "team": "Concordia University, St. Paul",
+   "value": -0.84,
    "rank": 161,
    "raw": {
     "in": 0,
     "out": 1,
     "gained": 0.0,
-    "lost": 0.85
+    "lost": 0.84
    }
   },
   {
-   "team": "Concordia University St Paul",
-   "value": -0.85,
+   "team": "Christopher Newport",
+   "value": -0.84,
    "rank": 162,
    "raw": {
     "in": 0,
     "out": 1,
     "gained": 0.0,
-    "lost": 0.85
+    "lost": 0.84
    }
   },
   {
-   "team": "Virginia St",
-   "value": -0.85,
+   "team": "Lenoir Rhyne",
+   "value": -0.84,
    "rank": 163,
    "raw": {
     "in": 0,
     "out": 1,
     "gained": 0.0,
-    "lost": 0.85
+    "lost": 0.84
    }
   },
   {
-   "team": "Southwestern Oklahoma State",
-   "value": -0.85,
+   "team": "St. Vincent",
+   "value": -0.84,
    "rank": 164,
    "raw": {
     "in": 0,
     "out": 1,
     "gained": 0.0,
-    "lost": 0.85
+    "lost": 0.84
    }
   },
   {
-   "team": "North Central College",
-   "value": -0.85,
+   "team": "Lock Haven",
+   "value": -0.84,
    "rank": 165,
    "raw": {
     "in": 0,
     "out": 1,
     "gained": 0.0,
-    "lost": 0.85
+    "lost": 0.84
    }
   },
   {
-   "team": "Wayne State College",
-   "value": -0.85,
+   "team": "Black Hills State",
+   "value": -0.84,
    "rank": 166,
    "raw": {
     "in": 0,
     "out": 1,
     "gained": 0.0,
-    "lost": 0.85
+    "lost": 0.84
    }
   },
   {
-   "team": "Western Connecticut State",
-   "value": -0.85,
+   "team": "Truman State",
+   "value": -0.84,
    "rank": 167,
    "raw": {
     "in": 0,
     "out": 1,
     "gained": 0.0,
-    "lost": 0.85
+    "lost": 0.84
    }
   },
   {
-   "team": "Keiser (Fl)",
+   "team": "Marian (IN)",
    "value": -0.85,
    "rank": 168,
    "raw": {
@@ -1854,7 +1854,7 @@
    }
   },
   {
-   "team": "Arkansas Tech",
+   "team": "Pace",
    "value": -0.85,
    "rank": 169,
    "raw": {
@@ -1865,7 +1865,7 @@
    }
   },
   {
-   "team": "Western Colorado",
+   "team": "Southwestern Oklahoma State",
    "value": -0.85,
    "rank": 170,
    "raw": {
@@ -1876,7 +1876,7 @@
    }
   },
   {
-   "team": "Arkansas-Monticello",
+   "team": "Wayne State College",
    "value": -0.85,
    "rank": 171,
    "raw": {
@@ -1887,9 +1887,108 @@
    }
   },
   {
-   "team": "Laurier",
-   "value": -0.86,
+   "team": "Virginia State",
+   "value": -0.85,
    "rank": 172,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.85
+   }
+  },
+  {
+   "team": "Concordia St. Paul",
+   "value": -0.85,
+   "rank": 173,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.85
+   }
+  },
+  {
+   "team": "North Central College",
+   "value": -0.85,
+   "rank": 174,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.85
+   }
+  },
+  {
+   "team": "Nebraska-Kearney",
+   "value": -0.85,
+   "rank": 175,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.85
+   }
+  },
+  {
+   "team": "Western Connecticut State",
+   "value": -0.85,
+   "rank": 176,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.85
+   }
+  },
+  {
+   "team": "Keiser (Fl)",
+   "value": -0.85,
+   "rank": 177,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.85
+   }
+  },
+  {
+   "team": "Arkansas Tech",
+   "value": -0.85,
+   "rank": 178,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.85
+   }
+  },
+  {
+   "team": "Western Colorado",
+   "value": -0.85,
+   "rank": 179,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.85
+   }
+  },
+  {
+   "team": "Arkansas Monticello",
+   "value": -0.85,
+   "rank": 180,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.85
+   }
+  },
+  {
+   "team": "Hope ",
+   "value": -0.86,
+   "rank": 181,
    "raw": {
     "in": 0,
     "out": 1,
@@ -1898,9 +1997,9 @@
    }
   },
   {
-   "team": "Hope ",
+   "team": "Laurier",
    "value": -0.86,
-   "rank": 173,
+   "rank": 182,
    "raw": {
     "in": 0,
     "out": 1,
@@ -1911,7 +2010,7 @@
   {
    "team": "Wisconsin-River Falls",
    "value": -0.86,
-   "rank": 174,
+   "rank": 183,
    "raw": {
     "in": 0,
     "out": 1,
@@ -1922,7 +2021,7 @@
   {
    "team": "Southwest Minnesota State",
    "value": -0.86,
-   "rank": 175,
+   "rank": 184,
    "raw": {
     "in": 0,
     "out": 1,
@@ -1933,7 +2032,7 @@
   {
    "team": "Carroll College",
    "value": -0.86,
-   "rank": 176,
+   "rank": 185,
    "raw": {
     "in": 0,
     "out": 1,
@@ -1942,9 +2041,20 @@
    }
   },
   {
+   "team": "Colgate",
+   "value": -0.87,
+   "rank": 186,
+   "raw": {
+    "in": 0,
+    "out": 1,
+    "gained": 0.0,
+    "lost": 0.87
+   }
+  },
+  {
    "team": "South Carolina State",
    "value": -0.87,
-   "rank": 177,
+   "rank": 187,
    "raw": {
     "in": 4,
     "out": 5,
@@ -1955,7 +2065,7 @@
   {
    "team": "Texas A&M",
    "value": -0.87,
-   "rank": 178,
+   "rank": 188,
    "raw": {
     "in": 19,
     "out": 21,
@@ -1964,20 +2074,9 @@
    }
   },
   {
-   "team": "Colgate",
-   "value": -0.87,
-   "rank": 179,
-   "raw": {
-    "in": 0,
-    "out": 1,
-    "gained": 0.0,
-    "lost": 0.87
-   }
-  },
-  {
    "team": "Ouachita Baptist",
    "value": -0.87,
-   "rank": 180,
+   "rank": 189,
    "raw": {
     "in": 0,
     "out": 1,
@@ -1988,7 +2087,7 @@
   {
    "team": "The Citadel",
    "value": -0.88,
-   "rank": 181,
+   "rank": 190,
    "raw": {
     "in": 2,
     "out": 3,
@@ -1999,7 +2098,7 @@
   {
    "team": "Minnesota Duluth",
    "value": -0.88,
-   "rank": 182,
+   "rank": 191,
    "raw": {
     "in": 0,
     "out": 1,
@@ -2010,7 +2109,7 @@
   {
    "team": "Cincinnati",
    "value": -0.89,
-   "rank": 183,
+   "rank": 192,
    "raw": {
     "in": 22,
     "out": 23,
@@ -2019,20 +2118,9 @@
    }
   },
   {
-   "team": "Maryland",
-   "value": -0.9,
-   "rank": 184,
-   "raw": {
-    "in": 15,
-    "out": 16,
-    "gained": 12.79,
-    "lost": 13.69
-   }
-  },
-  {
    "team": "Central Washington",
    "value": -0.91,
-   "rank": 185,
+   "rank": 193,
    "raw": {
     "in": 1,
     "out": 2,
@@ -2043,7 +2131,7 @@
   {
    "team": "Auburn",
    "value": -0.95,
-   "rank": 186,
+   "rank": 194,
    "raw": {
     "in": 38,
     "out": 39,
@@ -2054,7 +2142,7 @@
   {
    "team": "Ferris State",
    "value": -0.97,
-   "rank": 187,
+   "rank": 195,
    "raw": {
     "in": 1,
     "out": 2,
@@ -2065,7 +2153,7 @@
   {
    "team": "North Dakota",
    "value": -1.01,
-   "rank": 188,
+   "rank": 196,
    "raw": {
     "in": 2,
     "out": 3,
@@ -2076,7 +2164,7 @@
   {
    "team": "Tulsa",
    "value": -1.07,
-   "rank": 189,
+   "rank": 197,
    "raw": {
     "in": 21,
     "out": 22,
@@ -2087,7 +2175,7 @@
   {
    "team": "Temple",
    "value": -1.11,
-   "rank": 190,
+   "rank": 198,
    "raw": {
     "in": 23,
     "out": 25,
@@ -2096,20 +2184,42 @@
    }
   },
   {
-   "team": "Arkansas",
-   "value": -1.16,
-   "rank": 191,
+   "team": "UTSA",
+   "value": -1.14,
+   "rank": 199,
    "raw": {
-    "in": 41,
-    "out": 43,
-    "gained": 35.04,
-    "lost": 36.2
+    "in": 22,
+    "out": 23,
+    "gained": 18.27,
+    "lost": 19.41
+   }
+  },
+  {
+   "team": "Nebraska",
+   "value": -1.4,
+   "rank": 200,
+   "raw": {
+    "in": 17,
+    "out": 19,
+    "gained": 14.68,
+    "lost": 16.08
+   }
+  },
+  {
+   "team": "Eastern Kentucky",
+   "value": -1.48,
+   "rank": 201,
+   "raw": {
+    "in": 9,
+    "out": 11,
+    "gained": 7.48,
+    "lost": 8.96
    }
   },
   {
    "team": "Merrimack",
    "value": -1.48,
-   "rank": 192,
+   "rank": 202,
    "raw": {
     "in": 2,
     "out": 4,
@@ -2118,20 +2228,9 @@
    }
   },
   {
-   "team": "Susquehanna",
+   "team": "Harding",
    "value": -1.5,
-   "rank": 193,
-   "raw": {
-    "in": 0,
-    "out": 2,
-    "gained": 0.0,
-    "lost": 1.5
-   }
-  },
-  {
-   "team": "Harding University",
-   "value": -1.5,
-   "rank": 194,
+   "rank": 203,
    "raw": {
     "in": 1,
     "out": 3,
@@ -2140,9 +2239,20 @@
    }
   },
   {
-   "team": "Johnson C Smith",
+   "team": "Johnson C. Smith",
    "value": -1.5,
-   "rank": 195,
+   "rank": 204,
+   "raw": {
+    "in": 0,
+    "out": 2,
+    "gained": 0.0,
+    "lost": 1.5
+   }
+  },
+  {
+   "team": "Susquehanna",
+   "value": -1.5,
+   "rank": 205,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2153,7 +2263,7 @@
   {
    "team": "Grambling",
    "value": -1.53,
-   "rank": 196,
+   "rank": 206,
    "raw": {
     "in": 2,
     "out": 4,
@@ -2164,7 +2274,7 @@
   {
    "team": "Army",
    "value": -1.54,
-   "rank": 197,
+   "rank": 207,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2173,9 +2283,20 @@
    }
   },
   {
+   "team": "Benedict",
+   "value": -1.55,
+   "rank": 208,
+   "raw": {
+    "in": 0,
+    "out": 2,
+    "gained": 0.0,
+    "lost": 1.55
+   }
+  },
+  {
    "team": "Furman",
    "value": -1.56,
-   "rank": 198,
+   "rank": 209,
    "raw": {
     "in": 6,
     "out": 8,
@@ -2186,7 +2307,7 @@
   {
    "team": "Columbia",
    "value": -1.57,
-   "rank": 199,
+   "rank": 210,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2197,18 +2318,7 @@
   {
    "team": "Bowie State",
    "value": -1.58,
-   "rank": 200,
-   "raw": {
-    "in": 0,
-    "out": 2,
-    "gained": 0.0,
-    "lost": 1.58
-   }
-  },
-  {
-   "team": "UVA Wise",
-   "value": -1.58,
-   "rank": 201,
+   "rank": 211,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2219,7 +2329,7 @@
   {
    "team": "Butler",
    "value": -1.58,
-   "rank": 202,
+   "rank": 212,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2228,20 +2338,20 @@
    }
   },
   {
-   "team": "Fort Hays State",
-   "value": -1.59,
-   "rank": 203,
+   "team": "UVA Wise",
+   "value": -1.58,
+   "rank": 213,
    "raw": {
     "in": 0,
     "out": 2,
     "gained": 0.0,
-    "lost": 1.59
+    "lost": 1.58
    }
   },
   {
    "team": "Newberry",
    "value": -1.59,
-   "rank": 204,
+   "rank": 214,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2250,9 +2360,20 @@
    }
   },
   {
-   "team": "Stonehill",
+   "team": "Fort Hays",
+   "value": -1.59,
+   "rank": 215,
+   "raw": {
+    "in": 0,
+    "out": 2,
+    "gained": 0.0,
+    "lost": 1.59
+   }
+  },
+  {
+   "team": "Slippery Rock",
    "value": -1.6,
-   "rank": 205,
+   "rank": 216,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2261,9 +2382,9 @@
    }
   },
   {
-   "team": "Slippery Rock",
+   "team": "Stonehill",
    "value": -1.6,
-   "rank": 206,
+   "rank": 217,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2274,7 +2395,7 @@
   {
    "team": "UT Martin",
    "value": -1.61,
-   "rank": 207,
+   "rank": 218,
    "raw": {
     "in": 2,
     "out": 4,
@@ -2283,9 +2404,20 @@
    }
   },
   {
+   "team": "Delaware State",
+   "value": -1.61,
+   "rank": 219,
+   "raw": {
+    "in": 3,
+    "out": 5,
+    "gained": 2.53,
+    "lost": 4.14
+   }
+  },
+  {
    "team": "Defiance College",
    "value": -1.61,
-   "rank": 208,
+   "rank": 220,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2296,7 +2428,7 @@
   {
    "team": "Sioux Falls",
    "value": -1.61,
-   "rank": 209,
+   "rank": 221,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2307,7 +2439,7 @@
   {
    "team": "West Liberty",
    "value": -1.61,
-   "rank": 210,
+   "rank": 222,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2318,7 +2450,7 @@
   {
    "team": "Ashland University",
    "value": -1.62,
-   "rank": 211,
+   "rank": 223,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2329,7 +2461,7 @@
   {
    "team": "Sacred Heart",
    "value": -1.65,
-   "rank": 212,
+   "rank": 224,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2338,9 +2470,20 @@
    }
   },
   {
+   "team": "Arkansas-Pine Bluff",
+   "value": -1.66,
+   "rank": 225,
+   "raw": {
+    "in": 0,
+    "out": 2,
+    "gained": 0.0,
+    "lost": 1.66
+   }
+  },
+  {
    "team": "St. Thomas",
    "value": -1.66,
-   "rank": 213,
+   "rank": 226,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2351,18 +2494,7 @@
   {
    "team": "North Greenville",
    "value": -1.66,
-   "rank": 214,
-   "raw": {
-    "in": 0,
-    "out": 2,
-    "gained": 0.0,
-    "lost": 1.66
-   }
-  },
-  {
-   "team": "Arkansas-Pine Bluff",
-   "value": -1.66,
-   "rank": 215,
+   "rank": 227,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2373,7 +2505,7 @@
   {
    "team": "Lincoln (MO)",
    "value": -1.66,
-   "rank": 216,
+   "rank": 228,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2382,20 +2514,9 @@
    }
   },
   {
-   "team": "Missouri Southern State",
-   "value": -1.67,
-   "rank": 217,
-   "raw": {
-    "in": 0,
-    "out": 2,
-    "gained": 0.0,
-    "lost": 1.67
-   }
-  },
-  {
    "team": "Rice",
    "value": -1.67,
-   "rank": 218,
+   "rank": 229,
    "raw": {
     "in": 20,
     "out": 22,
@@ -2406,7 +2527,18 @@
   {
    "team": "Siena Heights",
    "value": -1.67,
-   "rank": 219,
+   "rank": 230,
+   "raw": {
+    "in": 0,
+    "out": 2,
+    "gained": 0.0,
+    "lost": 1.67
+   }
+  },
+  {
+   "team": "Missouri Southern State",
+   "value": -1.67,
+   "rank": 231,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2417,7 +2549,18 @@
   {
    "team": "Gannon",
    "value": -1.67,
-   "rank": 220,
+   "rank": 232,
+   "raw": {
+    "in": 0,
+    "out": 2,
+    "gained": 0.0,
+    "lost": 1.67
+   }
+  },
+  {
+   "team": "Nebraska Kearney",
+   "value": -1.67,
+   "rank": 233,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2428,7 +2571,7 @@
   {
    "team": "CSU-Pueblo",
    "value": -1.67,
-   "rank": 221,
+   "rank": 234,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2439,7 +2582,7 @@
   {
    "team": "Shippensburg",
    "value": -1.67,
-   "rank": 222,
+   "rank": 235,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2450,7 +2593,7 @@
   {
    "team": "Allen University",
    "value": -1.68,
-   "rank": 223,
+   "rank": 236,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2459,20 +2602,9 @@
    }
   },
   {
-   "team": "Shepherd",
-   "value": -1.69,
-   "rank": 224,
-   "raw": {
-    "in": 0,
-    "out": 2,
-    "gained": 0.0,
-    "lost": 1.69
-   }
-  },
-  {
    "team": "TCU",
    "value": -1.69,
-   "rank": 225,
+   "rank": 237,
    "raw": {
     "in": 12,
     "out": 14,
@@ -2481,9 +2613,31 @@
    }
   },
   {
-   "team": "Morehouse College",
+   "team": "Marian",
    "value": -1.69,
-   "rank": 226,
+   "rank": 238,
+   "raw": {
+    "in": 0,
+    "out": 2,
+    "gained": 0.0,
+    "lost": 1.69
+   }
+  },
+  {
+   "team": "Shepherd",
+   "value": -1.69,
+   "rank": 239,
+   "raw": {
+    "in": 0,
+    "out": 2,
+    "gained": 0.0,
+    "lost": 1.69
+   }
+  },
+  {
+   "team": "Morehouse",
+   "value": -1.69,
+   "rank": 240,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2494,7 +2648,7 @@
   {
    "team": "San Diego",
    "value": -1.7,
-   "rank": 227,
+   "rank": 241,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2505,7 +2659,18 @@
   {
    "team": "Wayne State",
    "value": -1.7,
-   "rank": 228,
+   "rank": 242,
+   "raw": {
+    "in": 0,
+    "out": 2,
+    "gained": 0.0,
+    "lost": 1.7
+   }
+  },
+  {
+   "team": "Lenoir-Rhyne",
+   "value": -1.7,
+   "rank": 243,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2516,7 +2681,7 @@
   {
    "team": "Augustana",
    "value": -1.71,
-   "rank": 229,
+   "rank": 244,
    "raw": {
     "in": 0,
     "out": 2,
@@ -2525,9 +2690,20 @@
    }
   },
   {
+   "team": "Colorado School of Mines",
+   "value": -1.72,
+   "rank": 245,
+   "raw": {
+    "in": 1,
+    "out": 3,
+    "gained": 0.75,
+    "lost": 2.47
+   }
+  },
+  {
    "team": "Norfolk State",
    "value": -1.75,
-   "rank": 230,
+   "rank": 246,
    "raw": {
     "in": 1,
     "out": 3,
@@ -2538,7 +2714,7 @@
   {
    "team": "Chattanooga",
    "value": -1.76,
-   "rank": 231,
+   "rank": 247,
    "raw": {
     "in": 3,
     "out": 5,
@@ -2547,9 +2723,20 @@
    }
   },
   {
+   "team": "Maryland",
+   "value": -1.76,
+   "rank": 248,
+   "raw": {
+    "in": 14,
+    "out": 16,
+    "gained": 11.93,
+    "lost": 13.69
+   }
+  },
+  {
    "team": "NC State",
    "value": -1.79,
-   "rank": 232,
+   "rank": 249,
    "raw": {
     "in": 20,
     "out": 22,
@@ -2560,7 +2747,7 @@
   {
    "team": "Louisiana",
    "value": -1.84,
-   "rank": 233,
+   "rank": 250,
    "raw": {
     "in": 5,
     "out": 7,
@@ -2569,20 +2756,20 @@
    }
   },
   {
-   "team": "UTSA",
-   "value": -1.98,
-   "rank": 234,
+   "team": "East Carolina",
+   "value": -2.13,
+   "rank": 251,
    "raw": {
-    "in": 21,
-    "out": 23,
-    "gained": 17.43,
-    "lost": 19.41
+    "in": 24,
+    "out": 26,
+    "gained": 19.76,
+    "lost": 21.89
    }
   },
   {
    "team": "North Carolina A&T",
    "value": -2.24,
-   "rank": 235,
+   "rank": 252,
    "raw": {
     "in": 1,
     "out": 4,
@@ -2591,20 +2778,9 @@
    }
   },
   {
-   "team": "Nebraska",
-   "value": -2.24,
-   "rank": 236,
-   "raw": {
-    "in": 16,
-    "out": 19,
-    "gained": 13.84,
-    "lost": 16.08
-   }
-  },
-  {
    "team": "Utah Tech",
    "value": -2.28,
-   "rank": 237,
+   "rank": 253,
    "raw": {
     "in": 2,
     "out": 5,
@@ -2613,20 +2789,9 @@
    }
   },
   {
-   "team": "Eastern Kentucky",
-   "value": -2.31,
-   "rank": 238,
-   "raw": {
-    "in": 8,
-    "out": 11,
-    "gained": 6.65,
-    "lost": 8.96
-   }
-  },
-  {
    "team": "Mars Hill",
    "value": -2.33,
-   "rank": 239,
+   "rank": 254,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2637,7 +2802,7 @@
   {
    "team": "Albany State",
    "value": -2.34,
-   "rank": 240,
+   "rank": 255,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2646,20 +2811,9 @@
    }
   },
   {
-   "team": "Pittsburg St",
-   "value": -2.35,
-   "rank": 241,
-   "raw": {
-    "in": 0,
-    "out": 3,
-    "gained": 0.0,
-    "lost": 2.35
-   }
-  },
-  {
    "team": "Marist",
    "value": -2.35,
-   "rank": 242,
+   "rank": 256,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2670,7 +2824,7 @@
   {
    "team": "Clark Atlanta",
    "value": -2.35,
-   "rank": 243,
+   "rank": 257,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2681,7 +2835,18 @@
   {
    "team": "Central State",
    "value": -2.35,
-   "rank": 244,
+   "rank": 258,
+   "raw": {
+    "in": 0,
+    "out": 3,
+    "gained": 0.0,
+    "lost": 2.35
+   }
+  },
+  {
+   "team": "Pittsburg State",
+   "value": -2.35,
+   "rank": 259,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2692,7 +2857,7 @@
   {
    "team": "Lindenwood",
    "value": -2.36,
-   "rank": 245,
+   "rank": 260,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2701,31 +2866,20 @@
    }
   },
   {
-   "team": "Benedict College",
-   "value": -2.38,
-   "rank": 246,
+   "team": "Texas State",
+   "value": -2.39,
+   "rank": 261,
    "raw": {
-    "in": 0,
-    "out": 3,
-    "gained": 0.0,
-    "lost": 2.38
-   }
-  },
-  {
-   "team": "Central Missouri",
-   "value": -2.4,
-   "rank": 247,
-   "raw": {
-    "in": 0,
-    "out": 3,
-    "gained": 0.0,
-    "lost": 2.4
+    "in": 18,
+    "out": 21,
+    "gained": 15.07,
+    "lost": 17.46
    }
   },
   {
    "team": "Valparaiso",
    "value": -2.4,
-   "rank": 248,
+   "rank": 262,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2736,7 +2890,7 @@
   {
    "team": "Western Illinois",
    "value": -2.4,
-   "rank": 249,
+   "rank": 263,
    "raw": {
     "in": 2,
     "out": 5,
@@ -2745,9 +2899,20 @@
    }
   },
   {
+   "team": "Central Missouri",
+   "value": -2.4,
+   "rank": 264,
+   "raw": {
+    "in": 0,
+    "out": 3,
+    "gained": 0.0,
+    "lost": 2.4
+   }
+  },
+  {
    "team": "Southeastern Louisiana",
    "value": -2.41,
-   "rank": 250,
+   "rank": 265,
    "raw": {
     "in": 1,
     "out": 4,
@@ -2756,20 +2921,9 @@
    }
   },
   {
-   "team": "Stetson",
-   "value": -2.42,
-   "rank": 251,
-   "raw": {
-    "in": 0,
-    "out": 3,
-    "gained": 0.0,
-    "lost": 2.42
-   }
-  },
-  {
    "team": "Alcorn State",
    "value": -2.42,
-   "rank": 252,
+   "rank": 266,
    "raw": {
     "in": 1,
     "out": 4,
@@ -2778,9 +2932,31 @@
    }
   },
   {
+   "team": "Stetson",
+   "value": -2.42,
+   "rank": 267,
+   "raw": {
+    "in": 0,
+    "out": 3,
+    "gained": 0.0,
+    "lost": 2.42
+   }
+  },
+  {
+   "team": "Alabama State",
+   "value": -2.42,
+   "rank": 268,
+   "raw": {
+    "in": 2,
+    "out": 5,
+    "gained": 1.69,
+    "lost": 4.11
+   }
+  },
+  {
    "team": "Southern Illinois",
    "value": -2.43,
-   "rank": 253,
+   "rank": 269,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2789,31 +2965,20 @@
    }
   },
   {
-   "team": "PennWest California",
+   "team": "California (PA)",
    "value": -2.43,
-   "rank": 254,
+   "rank": 270,
    "raw": {
     "in": 0,
     "out": 3,
     "gained": 0.0,
     "lost": 2.43
-   }
-  },
-  {
-   "team": "Wheeling",
-   "value": -2.44,
-   "rank": 255,
-   "raw": {
-    "in": 0,
-    "out": 3,
-    "gained": 0.0,
-    "lost": 2.44
    }
   },
   {
    "team": "Western Kentucky",
    "value": -2.44,
-   "rank": 256,
+   "rank": 271,
    "raw": {
     "in": 19,
     "out": 22,
@@ -2822,20 +2987,31 @@
    }
   },
   {
-   "team": "Delaware State",
-   "value": -2.45,
-   "rank": 257,
+   "team": "Wheeling",
+   "value": -2.44,
+   "rank": 272,
    "raw": {
-    "in": 2,
-    "out": 5,
-    "gained": 1.69,
-    "lost": 4.14
+    "in": 0,
+    "out": 3,
+    "gained": 0.0,
+    "lost": 2.44
+   }
+  },
+  {
+   "team": "Presbyterian",
+   "value": -2.46,
+   "rank": 273,
+   "raw": {
+    "in": 1,
+    "out": 4,
+    "gained": 0.75,
+    "lost": 3.21
    }
   },
   {
    "team": "Angelo State",
    "value": -2.46,
-   "rank": 258,
+   "rank": 274,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2846,7 +3022,7 @@
   {
    "team": "Mississippi Valley State",
    "value": -2.47,
-   "rank": 259,
+   "rank": 275,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2855,20 +3031,9 @@
    }
   },
   {
-   "team": "Colorado School Of Mines",
+   "team": "Barton",
    "value": -2.47,
-   "rank": 260,
-   "raw": {
-    "in": 0,
-    "out": 3,
-    "gained": 0.0,
-    "lost": 2.47
-   }
-  },
-  {
-   "team": "Wilson",
-   "value": -2.47,
-   "rank": 261,
+   "rank": 276,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2879,7 +3044,7 @@
   {
    "team": "Shorter",
    "value": -2.47,
-   "rank": 262,
+   "rank": 277,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2890,7 +3055,7 @@
   {
    "team": "Southern Utah",
    "value": -2.49,
-   "rank": 263,
+   "rank": 278,
    "raw": {
     "in": 2,
     "out": 5,
@@ -2901,7 +3066,7 @@
   {
    "team": "Navy",
    "value": -2.49,
-   "rank": 264,
+   "rank": 279,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2912,7 +3077,7 @@
   {
    "team": "Eastern Washington",
    "value": -2.5,
-   "rank": 265,
+   "rank": 280,
    "raw": {
     "in": 3,
     "out": 6,
@@ -2923,18 +3088,7 @@
   {
    "team": "Indianapolis",
    "value": -2.51,
-   "rank": 266,
-   "raw": {
-    "in": 0,
-    "out": 3,
-    "gained": 0.0,
-    "lost": 2.51
-   }
-  },
-  {
-   "team": "Anderson",
-   "value": -2.51,
-   "rank": 267,
+   "rank": 281,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2945,7 +3099,7 @@
   {
    "team": "Northern Arizona",
    "value": -2.52,
-   "rank": 268,
+   "rank": 282,
    "raw": {
     "in": 5,
     "out": 8,
@@ -2956,18 +3110,7 @@
   {
    "team": "Princeton",
    "value": -2.52,
-   "rank": 269,
-   "raw": {
-    "in": 0,
-    "out": 3,
-    "gained": 0.0,
-    "lost": 2.52
-   }
-  },
-  {
-   "team": "Nebraska-Kearney",
-   "value": -2.52,
-   "rank": 270,
+   "rank": 283,
    "raw": {
     "in": 0,
     "out": 3,
@@ -2978,7 +3121,7 @@
   {
    "team": "UCF",
    "value": -2.53,
-   "rank": 271,
+   "rank": 284,
    "raw": {
     "in": 32,
     "out": 35,
@@ -2987,42 +3130,9 @@
    }
   },
   {
-   "team": "Marian College",
-   "value": -2.54,
-   "rank": 272,
-   "raw": {
-    "in": 0,
-    "out": 3,
-    "gained": 0.0,
-    "lost": 2.54
-   }
-  },
-  {
-   "team": "Lenoir-Rhyne",
-   "value": -2.54,
-   "rank": 273,
-   "raw": {
-    "in": 0,
-    "out": 3,
-    "gained": 0.0,
-    "lost": 2.54
-   }
-  },
-  {
-   "team": "South Dakota",
-   "value": -2.58,
-   "rank": 274,
-   "raw": {
-    "in": 6,
-    "out": 9,
-    "gained": 4.82,
-    "lost": 7.4
-   }
-  },
-  {
    "team": "Livingstone",
    "value": -2.6,
-   "rank": 275,
+   "rank": 285,
    "raw": {
     "in": 1,
     "out": 4,
@@ -3033,7 +3143,7 @@
   {
    "team": "Utah",
    "value": -2.7,
-   "rank": 276,
+   "rank": 286,
    "raw": {
     "in": 17,
     "out": 20,
@@ -3044,7 +3154,7 @@
   {
    "team": "Akron",
    "value": -2.79,
-   "rank": 277,
+   "rank": 287,
    "raw": {
     "in": 15,
     "out": 18,
@@ -3055,7 +3165,7 @@
   {
    "team": "California",
    "value": -2.91,
-   "rank": 278,
+   "rank": 288,
    "raw": {
     "in": 32,
     "out": 36,
@@ -3064,20 +3174,9 @@
    }
   },
   {
-   "team": "East Carolina",
-   "value": -2.97,
-   "rank": 279,
-   "raw": {
-    "in": 23,
-    "out": 26,
-    "gained": 19.01,
-    "lost": 21.98
-   }
-  },
-  {
    "team": "App State",
    "value": -3.01,
-   "rank": 280,
+   "rank": 289,
    "raw": {
     "in": 38,
     "out": 41,
@@ -3088,7 +3187,7 @@
   {
    "team": "Air Force",
    "value": -3.03,
-   "rank": 281,
+   "rank": 290,
    "raw": {
     "in": 0,
     "out": 4,
@@ -3099,7 +3198,7 @@
   {
    "team": "BYU",
    "value": -3.08,
-   "rank": 282,
+   "rank": 291,
    "raw": {
     "in": 9,
     "out": 13,
@@ -3110,7 +3209,7 @@
   {
    "team": "Samford",
    "value": -3.13,
-   "rank": 283,
+   "rank": 292,
    "raw": {
     "in": 1,
     "out": 5,
@@ -3119,20 +3218,9 @@
    }
   },
   {
-   "team": "Texas State",
-   "value": -3.14,
-   "rank": 284,
-   "raw": {
-    "in": 17,
-    "out": 21,
-    "gained": 14.32,
-    "lost": 17.46
-   }
-  },
-  {
    "team": "Western New Mexico",
    "value": -3.16,
-   "rank": 285,
+   "rank": 293,
    "raw": {
     "in": 0,
     "out": 4,
@@ -3143,7 +3231,7 @@
   {
    "team": "Texas-Permian Basin",
    "value": -3.17,
-   "rank": 286,
+   "rank": 294,
    "raw": {
     "in": 0,
     "out": 4,
@@ -3154,7 +3242,7 @@
   {
    "team": "Texas-Rio Grande Valley",
    "value": -3.19,
-   "rank": 287,
+   "rank": 295,
    "raw": {
     "in": 0,
     "out": 4,
@@ -3165,7 +3253,7 @@
   {
    "team": "Florida A&M",
    "value": -3.2,
-   "rank": 288,
+   "rank": 296,
    "raw": {
     "in": 5,
     "out": 9,
@@ -3176,18 +3264,7 @@
   {
    "team": "Dayton",
    "value": -3.21,
-   "rank": 289,
-   "raw": {
-    "in": 0,
-    "out": 4,
-    "gained": 0.0,
-    "lost": 3.21
-   }
-  },
-  {
-   "team": "Presbyterian",
-   "value": -3.21,
-   "rank": 290,
+   "rank": 297,
    "raw": {
     "in": 0,
     "out": 4,
@@ -3198,7 +3275,7 @@
   {
    "team": "Richmond",
    "value": -3.22,
-   "rank": 291,
+   "rank": 298,
    "raw": {
     "in": 1,
     "out": 5,
@@ -3209,7 +3286,7 @@
   {
    "team": "Central Connecticut",
    "value": -3.25,
-   "rank": 292,
+   "rank": 299,
    "raw": {
     "in": 0,
     "out": 4,
@@ -3218,20 +3295,20 @@
    }
   },
   {
-   "team": "Alabama State",
-   "value": -3.27,
-   "rank": 293,
+   "team": "Anderson",
+   "value": -3.26,
+   "rank": 300,
    "raw": {
-    "in": 1,
-    "out": 5,
-    "gained": 0.84,
-    "lost": 4.11
+    "in": 0,
+    "out": 4,
+    "gained": 0.0,
+    "lost": 3.26
    }
   },
   {
    "team": "Washburn",
    "value": -3.27,
-   "rank": 294,
+   "rank": 301,
    "raw": {
     "in": 0,
     "out": 4,
@@ -3242,7 +3319,7 @@
   {
    "team": "LIU Post",
    "value": -3.28,
-   "rank": 295,
+   "rank": 302,
    "raw": {
     "in": 3,
     "out": 7,
@@ -3253,7 +3330,7 @@
   {
    "team": "Findlay",
    "value": -3.29,
-   "rank": 296,
+   "rank": 303,
    "raw": {
     "in": 0,
     "out": 4,
@@ -3264,7 +3341,7 @@
   {
    "team": "Murray State",
    "value": -3.3,
-   "rank": 297,
+   "rank": 304,
    "raw": {
     "in": 2,
     "out": 6,
@@ -3275,7 +3352,7 @@
   {
    "team": "William & Mary",
    "value": -3.31,
-   "rank": 298,
+   "rank": 305,
    "raw": {
     "in": 0,
     "out": 4,
@@ -3284,9 +3361,20 @@
    }
   },
   {
+   "team": "South Dakota",
+   "value": -3.33,
+   "rank": 306,
+   "raw": {
+    "in": 6,
+    "out": 10,
+    "gained": 4.82,
+    "lost": 8.15
+   }
+  },
+  {
    "team": "Texas A&M-Kingsville",
    "value": -3.34,
-   "rank": 299,
+   "rank": 307,
    "raw": {
     "in": 0,
     "out": 4,
@@ -3297,7 +3385,7 @@
   {
    "team": "Idaho",
    "value": -3.37,
-   "rank": 300,
+   "rank": 308,
    "raw": {
     "in": 3,
     "out": 7,
@@ -3308,7 +3396,7 @@
   {
    "team": "Clemson",
    "value": -3.38,
-   "rank": 301,
+   "rank": 309,
    "raw": {
     "in": 11,
     "out": 15,
@@ -3317,9 +3405,9 @@
    }
   },
   {
-   "team": "Emory & Henry College",
+   "team": "Emory & Henry",
    "value": -3.38,
-   "rank": 302,
+   "rank": 310,
    "raw": {
     "in": 0,
     "out": 4,
@@ -3330,7 +3418,7 @@
   {
    "team": "Central Oklahoma",
    "value": -3.39,
-   "rank": 303,
+   "rank": 311,
    "raw": {
     "in": 0,
     "out": 4,
@@ -3341,7 +3429,7 @@
   {
    "team": "Montana State",
    "value": -3.48,
-   "rank": 304,
+   "rank": 312,
    "raw": {
     "in": 1,
     "out": 5,
@@ -3352,7 +3440,7 @@
   {
    "team": "Boston College",
    "value": -3.5,
-   "rank": 305,
+   "rank": 313,
    "raw": {
     "in": 26,
     "out": 30,
@@ -3363,7 +3451,7 @@
   {
    "team": "Kent State",
    "value": -3.52,
-   "rank": 306,
+   "rank": 314,
    "raw": {
     "in": 11,
     "out": 15,
@@ -3374,7 +3462,7 @@
   {
    "team": "North Dakota State",
    "value": -3.52,
-   "rank": 307,
+   "rank": 315,
    "raw": {
     "in": 3,
     "out": 7,
@@ -3385,7 +3473,7 @@
   {
    "team": "Fordham",
    "value": -3.96,
-   "rank": 308,
+   "rank": 316,
    "raw": {
     "in": 0,
     "out": 5,
@@ -3396,7 +3484,7 @@
   {
    "team": "Cornell",
    "value": -4.01,
-   "rank": 309,
+   "rank": 317,
    "raw": {
     "in": 1,
     "out": 6,
@@ -3407,7 +3495,7 @@
   {
    "team": "Morgan State",
    "value": -4.09,
-   "rank": 310,
+   "rank": 318,
    "raw": {
     "in": 2,
     "out": 7,
@@ -3416,20 +3504,9 @@
    }
   },
   {
-   "team": "Texas Southern",
-   "value": -4.11,
-   "rank": 311,
-   "raw": {
-    "in": 1,
-    "out": 6,
-    "gained": 0.85,
-    "lost": 4.96
-   }
-  },
-  {
    "team": "Drake",
    "value": -4.11,
-   "rank": 312,
+   "rank": 319,
    "raw": {
     "in": 0,
     "out": 5,
@@ -3438,9 +3515,20 @@
    }
   },
   {
+   "team": "Texas Southern",
+   "value": -4.11,
+   "rank": 320,
+   "raw": {
+    "in": 1,
+    "out": 6,
+    "gained": 0.85,
+    "lost": 4.96
+   }
+  },
+  {
    "team": "Nicholls",
    "value": -4.17,
-   "rank": 313,
+   "rank": 321,
    "raw": {
     "in": 3,
     "out": 8,
@@ -3451,7 +3539,7 @@
   {
    "team": "Harvard",
    "value": -4.2,
-   "rank": 314,
+   "rank": 322,
    "raw": {
     "in": 0,
     "out": 5,
@@ -3462,7 +3550,7 @@
   {
    "team": "Bucknell",
    "value": -4.21,
-   "rank": 315,
+   "rank": 323,
    "raw": {
     "in": 1,
     "out": 6,
@@ -3471,9 +3559,9 @@
    }
   },
   {
-   "team": "Concord University",
+   "team": "Concord",
    "value": -4.21,
-   "rank": 316,
+   "rank": 324,
    "raw": {
     "in": 0,
     "out": 5,
@@ -3484,7 +3572,7 @@
   {
    "team": "Towson",
    "value": -4.21,
-   "rank": 317,
+   "rank": 325,
    "raw": {
     "in": 0,
     "out": 5,
@@ -3493,20 +3581,9 @@
    }
   },
   {
-   "team": "Lehigh",
-   "value": -4.28,
-   "rank": 318,
-   "raw": {
-    "in": 0,
-    "out": 5,
-    "gained": 0.0,
-    "lost": 4.28
-   }
-  },
-  {
    "team": "Illinois State",
    "value": -4.28,
-   "rank": 319,
+   "rank": 326,
    "raw": {
     "in": 3,
     "out": 8,
@@ -3515,9 +3592,20 @@
    }
   },
   {
+   "team": "Lehigh",
+   "value": -4.28,
+   "rank": 327,
+   "raw": {
+    "in": 0,
+    "out": 5,
+    "gained": 0.0,
+    "lost": 4.28
+   }
+  },
+  {
    "team": "Northern Colorado",
    "value": -4.35,
-   "rank": 320,
+   "rank": 328,
    "raw": {
     "in": 3,
     "out": 8,
@@ -3528,7 +3616,7 @@
   {
    "team": "Pittsburgh",
    "value": -4.45,
-   "rank": 321,
+   "rank": 329,
    "raw": {
     "in": 16,
     "out": 21,
@@ -3539,7 +3627,7 @@
   {
    "team": "Toledo",
    "value": -4.51,
-   "rank": 322,
+   "rank": 330,
    "raw": {
     "in": 33,
     "out": 38,
@@ -3550,7 +3638,7 @@
   {
    "team": "Louisville",
    "value": -4.55,
-   "rank": 323,
+   "rank": 331,
    "raw": {
     "in": 33,
     "out": 39,
@@ -3559,20 +3647,9 @@
    }
   },
   {
-   "team": "Florida International",
-   "value": -4.65,
-   "rank": 324,
-   "raw": {
-    "in": 16,
-    "out": 21,
-    "gained": 13.06,
-    "lost": 17.71
-   }
-  },
-  {
    "team": "Tennessee State",
    "value": -4.7,
-   "rank": 325,
+   "rank": 332,
    "raw": {
     "in": 4,
     "out": 10,
@@ -3581,9 +3658,20 @@
    }
   },
   {
+   "team": "Florida International",
+   "value": -4.74,
+   "rank": 333,
+   "raw": {
+    "in": 17,
+    "out": 22,
+    "gained": 13.81,
+    "lost": 18.55
+   }
+  },
+  {
    "team": "Miami",
    "value": -4.74,
-   "rank": 326,
+   "rank": 334,
    "raw": {
     "in": 13,
     "out": 19,
@@ -3594,7 +3682,7 @@
   {
    "team": "Campbell",
    "value": -4.75,
-   "rank": 327,
+   "rank": 335,
    "raw": {
     "in": 3,
     "out": 9,
@@ -3605,7 +3693,7 @@
   {
    "team": "New Hampshire",
    "value": -4.75,
-   "rank": 328,
+   "rank": 336,
    "raw": {
     "in": 3,
     "out": 9,
@@ -3616,7 +3704,7 @@
   {
    "team": "Virginia Union",
    "value": -4.82,
-   "rank": 329,
+   "rank": 337,
    "raw": {
     "in": 0,
     "out": 6,
@@ -3627,7 +3715,7 @@
   {
    "team": "Central Michigan",
    "value": -4.84,
-   "rank": 330,
+   "rank": 338,
    "raw": {
     "in": 12,
     "out": 17,
@@ -3638,7 +3726,7 @@
   {
    "team": "Saginaw Valley State",
    "value": -4.87,
-   "rank": 331,
+   "rank": 339,
    "raw": {
     "in": 0,
     "out": 6,
@@ -3649,7 +3737,7 @@
   {
    "team": "Maine",
    "value": -4.87,
-   "rank": 332,
+   "rank": 340,
    "raw": {
     "in": 1,
     "out": 7,
@@ -3660,7 +3748,7 @@
   {
    "team": "West Florida",
    "value": -4.93,
-   "rank": 333,
+   "rank": 341,
    "raw": {
     "in": 3,
     "out": 9,
@@ -3671,7 +3759,7 @@
   {
    "team": "North Carolina Central",
    "value": -4.93,
-   "rank": 334,
+   "rank": 342,
    "raw": {
     "in": 3,
     "out": 9,
@@ -3682,7 +3770,7 @@
   {
    "team": "Georgia State",
    "value": -4.94,
-   "rank": 335,
+   "rank": 343,
    "raw": {
     "in": 33,
     "out": 39,
@@ -3691,20 +3779,9 @@
    }
   },
   {
-   "team": "Albany",
-   "value": -5.0,
-   "rank": 336,
-   "raw": {
-    "in": 0,
-    "out": 6,
-    "gained": 0.0,
-    "lost": 5.0
-   }
-  },
-  {
    "team": "West Georgia",
    "value": -5.02,
-   "rank": 337,
+   "rank": 344,
    "raw": {
     "in": 6,
     "out": 12,
@@ -3713,9 +3790,20 @@
    }
   },
   {
+   "team": "Colorado State",
+   "value": -5.03,
+   "rank": 345,
+   "raw": {
+    "in": 32,
+    "out": 38,
+    "gained": 26.56,
+    "lost": 31.59
+   }
+  },
+  {
    "team": "Howard",
    "value": -5.06,
-   "rank": 338,
+   "rank": 346,
    "raw": {
     "in": 1,
     "out": 7,
@@ -3726,7 +3814,7 @@
   {
    "team": "Duquesne",
    "value": -5.07,
-   "rank": 339,
+   "rank": 347,
    "raw": {
     "in": 1,
     "out": 7,
@@ -3737,7 +3825,7 @@
   {
    "team": "Eastern Illinois",
    "value": -5.1,
-   "rank": 340,
+   "rank": 348,
    "raw": {
     "in": 1,
     "out": 7,
@@ -3748,7 +3836,7 @@
   {
    "team": "Texas",
    "value": -5.11,
-   "rank": 341,
+   "rank": 349,
    "raw": {
     "in": 22,
     "out": 28,
@@ -3759,7 +3847,7 @@
   {
    "team": "Stanford",
    "value": -5.11,
-   "rank": 342,
+   "rank": 350,
    "raw": {
     "in": 6,
     "out": 12,
@@ -3770,7 +3858,7 @@
   {
    "team": "Hampton",
    "value": -5.66,
-   "rank": 343,
+   "rank": 351,
    "raw": {
     "in": 0,
     "out": 7,
@@ -3779,9 +3867,9 @@
    }
   },
   {
-   "team": "Grand Valley State University",
+   "team": "Grand Valley State",
    "value": -5.69,
-   "rank": 344,
+   "rank": 352,
    "raw": {
     "in": 1,
     "out": 8,
@@ -3790,31 +3878,9 @@
    }
   },
   {
-   "team": "VMI",
-   "value": -5.7,
-   "rank": 345,
-   "raw": {
-    "in": 0,
-    "out": 7,
-    "gained": 0.0,
-    "lost": 5.7
-   }
-  },
-  {
-   "team": "Portland State",
-   "value": -5.73,
-   "rank": 346,
-   "raw": {
-    "in": 5,
-    "out": 12,
-    "gained": 4.17,
-    "lost": 9.9
-   }
-  },
-  {
    "team": "Nevada",
    "value": -5.74,
-   "rank": 347,
+   "rank": 353,
    "raw": {
     "in": 14,
     "out": 21,
@@ -3825,7 +3891,7 @@
   {
    "team": "Holy Cross",
    "value": -5.74,
-   "rank": 348,
+   "rank": 354,
    "raw": {
     "in": 4,
     "out": 11,
@@ -3834,31 +3900,20 @@
    }
   },
   {
-   "team": "Colorado State",
-   "value": -5.78,
-   "rank": 349,
+   "team": "Albany",
+   "value": -5.75,
+   "rank": 355,
    "raw": {
-    "in": 31,
-    "out": 38,
-    "gained": 25.81,
-    "lost": 31.59
-   }
-  },
-  {
-   "team": "Monmouth",
-   "value": -5.82,
-   "rank": 350,
-   "raw": {
-    "in": 3,
-    "out": 10,
-    "gained": 2.43,
-    "lost": 8.25
+    "in": 0,
+    "out": 7,
+    "gained": 0.0,
+    "lost": 5.75
    }
   },
   {
    "team": "Houston Christian",
    "value": -5.83,
-   "rank": 351,
+   "rank": 356,
    "raw": {
     "in": 1,
     "out": 8,
@@ -3869,7 +3924,7 @@
   {
    "team": "Charleston Southern",
    "value": -5.88,
-   "rank": 352,
+   "rank": 357,
    "raw": {
     "in": 0,
     "out": 7,
@@ -3880,7 +3935,7 @@
   {
    "team": "East Texas A&M",
    "value": -5.89,
-   "rank": 353,
+   "rank": 358,
    "raw": {
     "in": 0,
     "out": 7,
@@ -3891,7 +3946,7 @@
   {
    "team": "Jackson State",
    "value": -5.9,
-   "rank": 354,
+   "rank": 359,
    "raw": {
     "in": 3,
     "out": 10,
@@ -3902,7 +3957,7 @@
   {
    "team": "Old Dominion",
    "value": -5.91,
-   "rank": 355,
+   "rank": 360,
    "raw": {
     "in": 15,
     "out": 22,
@@ -3913,7 +3968,7 @@
   {
    "team": "Georgia",
    "value": -5.91,
-   "rank": 356,
+   "rank": 361,
    "raw": {
     "in": 9,
     "out": 16,
@@ -3922,9 +3977,20 @@
    }
   },
   {
+   "team": "Illinois",
+   "value": -6.0,
+   "rank": 362,
+   "raw": {
+    "in": 20,
+    "out": 27,
+    "gained": 16.9,
+    "lost": 22.9
+   }
+  },
+  {
    "team": "Kansas State",
    "value": -6.01,
-   "rank": 357,
+   "rank": 363,
    "raw": {
     "in": 26,
     "out": 33,
@@ -3935,7 +4001,7 @@
   {
    "team": "Alabama",
    "value": -6.05,
-   "rank": 358,
+   "rank": 364,
    "raw": {
     "in": 17,
     "out": 24,
@@ -3946,7 +4012,7 @@
   {
    "team": "Tulane",
    "value": -6.11,
-   "rank": 359,
+   "rank": 365,
    "raw": {
     "in": 20,
     "out": 27,
@@ -3957,7 +4023,7 @@
   {
    "team": "Charlotte",
    "value": -6.3,
-   "rank": 360,
+   "rank": 366,
    "raw": {
     "in": 19,
     "out": 27,
@@ -3966,9 +4032,20 @@
    }
   },
   {
+   "team": "VMI",
+   "value": -6.45,
+   "rank": 367,
+   "raw": {
+    "in": 0,
+    "out": 8,
+    "gained": 0.0,
+    "lost": 6.45
+   }
+  },
+  {
    "team": "Lafayette",
    "value": -6.46,
-   "rank": 361,
+   "rank": 368,
    "raw": {
     "in": 1,
     "out": 9,
@@ -3977,9 +4054,20 @@
    }
   },
   {
+   "team": "Portland State",
+   "value": -6.48,
+   "rank": 369,
+   "raw": {
+    "in": 5,
+    "out": 13,
+    "gained": 4.17,
+    "lost": 10.65
+   }
+  },
+  {
    "team": "Georgetown",
    "value": -6.5,
-   "rank": 362,
+   "rank": 370,
    "raw": {
     "in": 2,
     "out": 10,
@@ -3990,7 +4078,7 @@
   {
    "team": "Wingate",
    "value": -6.52,
-   "rank": 363,
+   "rank": 371,
    "raw": {
     "in": 0,
     "out": 8,
@@ -4001,7 +4089,7 @@
   {
    "team": "Iowa State",
    "value": -6.53,
-   "rank": 364,
+   "rank": 372,
    "raw": {
     "in": 48,
     "out": 55,
@@ -4012,7 +4100,7 @@
   {
    "team": "Notre Dame",
    "value": -6.56,
-   "rank": 365,
+   "rank": 373,
    "raw": {
     "in": 7,
     "out": 15,
@@ -4023,7 +4111,7 @@
   {
    "team": "Tiffin University",
    "value": -6.56,
-   "rank": 366,
+   "rank": 374,
    "raw": {
     "in": 0,
     "out": 8,
@@ -4032,9 +4120,20 @@
    }
   },
   {
+   "team": "Monmouth",
+   "value": -6.57,
+   "rank": 375,
+   "raw": {
+    "in": 3,
+    "out": 11,
+    "gained": 2.43,
+    "lost": 9.0
+   }
+  },
+  {
    "team": "Saint Francis (PA)",
    "value": -6.59,
-   "rank": 367,
+   "rank": 376,
    "raw": {
     "in": 0,
     "out": 8,
@@ -4045,7 +4144,7 @@
   {
    "team": "Southeast Missouri State",
    "value": -6.64,
-   "rank": 368,
+   "rank": 377,
    "raw": {
     "in": 1,
     "out": 9,
@@ -4056,7 +4155,7 @@
   {
    "team": "Villanova",
    "value": -6.7,
-   "rank": 369,
+   "rank": 378,
    "raw": {
     "in": 0,
     "out": 8,
@@ -4067,7 +4166,7 @@
   {
    "team": "Florida Atlantic",
    "value": -6.78,
-   "rank": 370,
+   "rank": 379,
    "raw": {
     "in": 22,
     "out": 30,
@@ -4078,7 +4177,7 @@
   {
    "team": "Tennessee",
    "value": -6.83,
-   "rank": 371,
+   "rank": 380,
    "raw": {
     "in": 21,
     "out": 29,
@@ -4087,20 +4186,9 @@
    }
   },
   {
-   "team": "Illinois",
-   "value": -6.84,
-   "rank": 372,
-   "raw": {
-    "in": 19,
-    "out": 27,
-    "gained": 16.06,
-    "lost": 22.9
-   }
-  },
-  {
    "team": "Boise State",
    "value": -6.84,
-   "rank": 373,
+   "rank": 381,
    "raw": {
     "in": 11,
     "out": 19,
@@ -4109,20 +4197,20 @@
    }
   },
   {
-   "team": "Coastal Carolina",
-   "value": -7.51,
-   "rank": 374,
+   "team": "SMU",
+   "value": -7.53,
+   "rank": 382,
    "raw": {
-    "in": 33,
-    "out": 43,
-    "gained": 27.6,
-    "lost": 35.11
+    "in": 15,
+    "out": 25,
+    "gained": 13.03,
+    "lost": 20.56
    }
   },
   {
    "team": "Washington",
    "value": -7.82,
-   "rank": 375,
+   "rank": 383,
    "raw": {
     "in": 14,
     "out": 23,
@@ -4131,20 +4219,9 @@
    }
   },
   {
-   "team": "Wofford",
-   "value": -8.09,
-   "rank": 376,
-   "raw": {
-    "in": 1,
-    "out": 11,
-    "gained": 0.83,
-    "lost": 8.92
-   }
-  },
-  {
    "team": "Florida",
    "value": -8.11,
-   "rank": 377,
+   "rank": 384,
    "raw": {
     "in": 27,
     "out": 36,
@@ -4155,7 +4232,7 @@
   {
    "team": "Pennsylvania",
    "value": -8.11,
-   "rank": 378,
+   "rank": 385,
    "raw": {
     "in": 0,
     "out": 10,
@@ -4166,7 +4243,7 @@
   {
    "team": "McNeese",
    "value": -8.2,
-   "rank": 379,
+   "rank": 386,
    "raw": {
     "in": 2,
     "out": 12,
@@ -4177,7 +4254,7 @@
   {
    "team": "Oklahoma State",
    "value": -8.22,
-   "rank": 380,
+   "rank": 387,
    "raw": {
     "in": 55,
     "out": 65,
@@ -4188,7 +4265,7 @@
   {
    "team": "Syracuse",
    "value": -8.3,
-   "rank": 381,
+   "rank": 388,
    "raw": {
     "in": 19,
     "out": 29,
@@ -4197,20 +4274,20 @@
    }
   },
   {
-   "team": "SMU",
-   "value": -8.37,
-   "rank": 382,
+   "team": "Coastal Carolina",
+   "value": -8.35,
+   "rank": 389,
    "raw": {
-    "in": 14,
-    "out": 25,
-    "gained": 12.19,
-    "lost": 20.56
+    "in": 32,
+    "out": 43,
+    "gained": 26.76,
+    "lost": 35.11
    }
   },
   {
    "team": "Yale",
    "value": -8.37,
-   "rank": 383,
+   "rank": 390,
    "raw": {
     "in": 0,
     "out": 10,
@@ -4219,9 +4296,53 @@
    }
   },
   {
+   "team": "Penn State",
+   "value": -8.6,
+   "rank": 391,
+   "raw": {
+    "in": 38,
+    "out": 48,
+    "gained": 32.92,
+    "lost": 41.52
+   }
+  },
+  {
+   "team": "Bowling Green",
+   "value": -8.72,
+   "rank": 392,
+   "raw": {
+    "in": 17,
+    "out": 27,
+    "gained": 13.89,
+    "lost": 22.61
+   }
+  },
+  {
+   "team": "Wofford",
+   "value": -8.84,
+   "rank": 393,
+   "raw": {
+    "in": 1,
+    "out": 12,
+    "gained": 0.83,
+    "lost": 9.67
+   }
+  },
+  {
+   "team": "Western Carolina",
+   "value": -9.0,
+   "rank": 394,
+   "raw": {
+    "in": 5,
+    "out": 16,
+    "gained": 3.97,
+    "lost": 12.97
+   }
+  },
+  {
    "team": "Dartmouth",
    "value": -9.07,
-   "rank": 384,
+   "rank": 395,
    "raw": {
     "in": 0,
     "out": 11,
@@ -4230,42 +4351,9 @@
    }
   },
   {
-   "team": "Penn State",
-   "value": -9.35,
-   "rank": 385,
-   "raw": {
-    "in": 37,
-    "out": 48,
-    "gained": 32.08,
-    "lost": 41.43
-   }
-  },
-  {
-   "team": "North Carolina",
-   "value": -9.39,
-   "rank": 386,
-   "raw": {
-    "in": 20,
-    "out": 31,
-    "gained": 17.19,
-    "lost": 26.58
-   }
-  },
-  {
-   "team": "Western Carolina",
-   "value": -9.75,
-   "rank": 387,
-   "raw": {
-    "in": 4,
-    "out": 16,
-    "gained": 3.22,
-    "lost": 12.97
-   }
-  },
-  {
    "team": "Mercer",
    "value": -9.92,
-   "rank": 388,
+   "rank": 396,
    "raw": {
     "in": 6,
     "out": 18,
@@ -4274,20 +4362,20 @@
    }
   },
   {
-   "team": "Bowling Green",
-   "value": -10.31,
-   "rank": 389,
+   "team": "North Carolina",
+   "value": -10.24,
+   "rank": 397,
    "raw": {
-    "in": 15,
-    "out": 27,
-    "gained": 12.3,
-    "lost": 22.61
+    "in": 19,
+    "out": 31,
+    "gained": 16.34,
+    "lost": 26.58
    }
   },
   {
    "team": "Mississippi State",
    "value": -10.48,
-   "rank": 390,
+   "rank": 398,
    "raw": {
     "in": 27,
     "out": 40,
@@ -4298,7 +4386,7 @@
   {
    "team": "Louisiana Tech",
    "value": -10.52,
-   "rank": 391,
+   "rank": 399,
    "raw": {
     "in": 11,
     "out": 24,
@@ -4309,7 +4397,7 @@
   {
    "team": "Washington State",
    "value": -10.53,
-   "rank": 392,
+   "rank": 400,
    "raw": {
     "in": 28,
     "out": 41,
@@ -4320,7 +4408,7 @@
   {
    "team": "Gardner-Webb",
    "value": -10.69,
-   "rank": 393,
+   "rank": 401,
    "raw": {
     "in": 2,
     "out": 15,
@@ -4331,7 +4419,7 @@
   {
    "team": "Weber State",
    "value": -10.71,
-   "rank": 394,
+   "rank": 402,
    "raw": {
     "in": 2,
     "out": 15,
@@ -4342,7 +4430,7 @@
   {
    "team": "Troy",
    "value": -10.8,
-   "rank": 395,
+   "rank": 403,
    "raw": {
     "in": 14,
     "out": 27,
@@ -4351,9 +4439,20 @@
    }
   },
   {
+   "team": "Arkansas State",
+   "value": -10.83,
+   "rank": 404,
+   "raw": {
+    "in": 24,
+    "out": 37,
+    "gained": 19.97,
+    "lost": 30.8
+   }
+  },
+  {
    "team": "Elon",
    "value": -10.87,
-   "rank": 396,
+   "rank": 405,
    "raw": {
     "in": 1,
     "out": 14,
@@ -4362,20 +4461,9 @@
    }
   },
   {
-   "team": "Arkansas State",
-   "value": -10.92,
-   "rank": 397,
-   "raw": {
-    "in": 24,
-    "out": 37,
-    "gained": 19.97,
-    "lost": 30.89
-   }
-  },
-  {
    "team": "USC",
    "value": -11.07,
-   "rank": 398,
+   "rank": 406,
    "raw": {
     "in": 9,
     "out": 22,
@@ -4386,7 +4474,7 @@
   {
    "team": "Oklahoma",
    "value": -11.17,
-   "rank": 399,
+   "rank": 407,
    "raw": {
     "in": 16,
     "out": 29,
@@ -4397,7 +4485,7 @@
   {
    "team": "West Virginia",
    "value": -12.03,
-   "rank": 400,
+   "rank": 408,
    "raw": {
     "in": 34,
     "out": 50,
@@ -4408,7 +4496,7 @@
   {
    "team": "Eastern Michigan",
    "value": -12.16,
-   "rank": 401,
+   "rank": 409,
    "raw": {
     "in": 11,
     "out": 26,
@@ -4417,9 +4505,20 @@
    }
   },
   {
+   "team": "Northern Illinois",
+   "value": -12.61,
+   "rank": 410,
+   "raw": {
+    "in": 7,
+    "out": 22,
+    "gained": 5.67,
+    "lost": 18.28
+   }
+  },
+  {
    "team": "Oregon State",
    "value": -12.73,
-   "rank": 402,
+   "rank": 411,
    "raw": {
     "in": 20,
     "out": 35,
@@ -4430,7 +4529,7 @@
   {
    "team": "Michigan",
    "value": -13.54,
-   "rank": 403,
+   "rank": 412,
    "raw": {
     "in": 17,
     "out": 33,
@@ -4439,31 +4538,9 @@
    }
   },
   {
-   "team": "Northern Illinois",
-   "value": -14.21,
-   "rank": 404,
-   "raw": {
-    "in": 5,
-    "out": 22,
-    "gained": 4.07,
-    "lost": 18.28
-   }
-  },
-  {
-   "team": "Oregon",
-   "value": -14.77,
-   "rank": 405,
-   "raw": {
-    "in": 13,
-    "out": 30,
-    "gained": 11.37,
-    "lost": 26.14
-   }
-  },
-  {
    "team": "South Alabama",
    "value": -15.03,
-   "rank": 406,
+   "rank": 413,
    "raw": {
     "in": 12,
     "out": 30,
@@ -4474,7 +4551,7 @@
   {
    "team": "Michigan State",
    "value": -15.11,
-   "rank": 407,
+   "rank": 414,
    "raw": {
     "in": 28,
     "out": 46,
@@ -4483,9 +4560,20 @@
    }
   },
   {
+   "team": "Oregon",
+   "value": -15.61,
+   "rank": 415,
+   "raw": {
+    "in": 13,
+    "out": 31,
+    "gained": 11.37,
+    "lost": 26.98
+   }
+  },
+  {
    "team": "Ohio State",
    "value": -16.57,
-   "rank": 408,
+   "rank": 416,
    "raw": {
     "in": 17,
     "out": 37,
@@ -4496,7 +4584,7 @@
   {
    "team": "Florida State",
    "value": -18.32,
-   "rank": 409,
+   "rank": 417,
    "raw": {
     "in": 22,
     "out": 43,

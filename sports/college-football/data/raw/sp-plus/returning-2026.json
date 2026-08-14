@@ -1,0 +1,1233 @@
+{
+ "source": "SP+ returning production (via CFBD)",
+ "url": "https://api.collegefootballdata.com/player/returning",
+ "pulledAt": "2026-08-14",
+ "season": 2026,
+ "notes": "Returning production (share of prior-season PPA returning) via CFBD.",
+ "data": [
+  {
+   "team": "Western Michigan",
+   "value": 0.997,
+   "rank": 1,
+   "raw": {
+    "totalPPA": 155.5,
+    "usage": 1
+   }
+  },
+  {
+   "team": "Marshall",
+   "value": 0.988,
+   "rank": 2,
+   "raw": {
+    "totalPPA": 284.6,
+    "usage": 0.752
+   }
+  },
+  {
+   "team": "San Diego State",
+   "value": 0.987,
+   "rank": 3,
+   "raw": {
+    "totalPPA": 182.6,
+    "usage": 0.998
+   }
+  },
+  {
+   "team": "Louisiana",
+   "value": 0.919,
+   "rank": 4,
+   "raw": {
+    "totalPPA": 189.3,
+    "usage": 0.661
+   }
+  },
+  {
+   "team": "Akron",
+   "value": 0.918,
+   "rank": 5,
+   "raw": {
+    "totalPPA": 158.8,
+    "usage": 0.943
+   }
+  },
+  {
+   "team": "Washington State",
+   "value": 0.913,
+   "rank": 6,
+   "raw": {
+    "totalPPA": 228.3,
+    "usage": 0.975
+   }
+  },
+  {
+   "team": "Southern Miss",
+   "value": 0.902,
+   "rank": 7,
+   "raw": {
+    "totalPPA": 289.4,
+    "usage": 0.921
+   }
+  },
+  {
+   "team": "Northwestern",
+   "value": 0.885,
+   "rank": 8,
+   "raw": {
+    "totalPPA": 198.2,
+    "usage": 0.948
+   }
+  },
+  {
+   "team": "Delaware",
+   "value": 0.849,
+   "rank": 9,
+   "raw": {
+    "totalPPA": 299.8,
+    "usage": 0.917
+   }
+  },
+  {
+   "team": "Western Kentucky",
+   "value": 0.837,
+   "rank": 10,
+   "raw": {
+    "totalPPA": 312.2,
+    "usage": 0.784
+   }
+  },
+  {
+   "team": "Houston",
+   "value": 0.812,
+   "rank": 11,
+   "raw": {
+    "totalPPA": 242.7,
+    "usage": 0.6
+   }
+  },
+  {
+   "team": "Army",
+   "value": 0.802,
+   "rank": 12,
+   "raw": {
+    "totalPPA": 168.5,
+    "usage": 0.586
+   }
+  },
+  {
+   "team": "UAB",
+   "value": 0.796,
+   "rank": 13,
+   "raw": {
+    "totalPPA": 245.1,
+    "usage": 0.855
+   }
+  },
+  {
+   "team": "South Alabama",
+   "value": 0.786,
+   "rank": 14,
+   "raw": {
+    "totalPPA": 180.8,
+    "usage": 0.759
+   }
+  },
+  {
+   "team": "BYU",
+   "value": 0.785,
+   "rank": 15,
+   "raw": {
+    "totalPPA": 284.3,
+    "usage": 0.882
+   }
+  },
+  {
+   "team": "Texas State",
+   "value": 0.76,
+   "rank": 16,
+   "raw": {
+    "totalPPA": 306.4,
+    "usage": 0.667
+   }
+  },
+  {
+   "team": "Oregon",
+   "value": 0.753,
+   "rank": 17,
+   "raw": {
+    "totalPPA": 373.3,
+    "usage": 0.67
+   }
+  },
+  {
+   "team": "Texas A&M",
+   "value": 0.728,
+   "rank": 18,
+   "raw": {
+    "totalPPA": 266.6,
+    "usage": 0.702
+   }
+  },
+  {
+   "team": "Eastern Michigan",
+   "value": 0.721,
+   "rank": 19,
+   "raw": {
+    "totalPPA": 228.5,
+    "usage": 0.587
+   }
+  },
+  {
+   "team": "Texas",
+   "value": 0.721,
+   "rank": 20,
+   "raw": {
+    "totalPPA": 187.5,
+    "usage": 0.58
+   }
+  },
+  {
+   "team": "Kansas State",
+   "value": 0.714,
+   "rank": 21,
+   "raw": {
+    "totalPPA": 167.8,
+    "usage": 0.795
+   }
+  },
+  {
+   "team": "Michigan",
+   "value": 0.692,
+   "rank": 22,
+   "raw": {
+    "totalPPA": 212.5,
+    "usage": 0.711
+   }
+  },
+  {
+   "team": "Florida",
+   "value": 0.691,
+   "rank": 23,
+   "raw": {
+    "totalPPA": 143,
+    "usage": 0.79
+   }
+  },
+  {
+   "team": "South Carolina",
+   "value": 0.69,
+   "rank": 24,
+   "raw": {
+    "totalPPA": 148.3,
+    "usage": 0.676
+   }
+  },
+  {
+   "team": "Georgia",
+   "value": 0.687,
+   "rank": 25,
+   "raw": {
+    "totalPPA": 248.1,
+    "usage": 0.742
+   }
+  },
+  {
+   "team": "Florida Atlantic",
+   "value": 0.684,
+   "rank": 26,
+   "raw": {
+    "totalPPA": 266.8,
+    "usage": 0.65
+   }
+  },
+  {
+   "team": "Ohio State",
+   "value": 0.683,
+   "rank": 27,
+   "raw": {
+    "totalPPA": 355.9,
+    "usage": 0.709
+   }
+  },
+  {
+   "team": "Utah",
+   "value": 0.679,
+   "rank": 28,
+   "raw": {
+    "totalPPA": 278.5,
+    "usage": 0.715
+   }
+  },
+  {
+   "team": "UTSA",
+   "value": 0.669,
+   "rank": 29,
+   "raw": {
+    "totalPPA": 234.1,
+    "usage": 0.7
+   }
+  },
+  {
+   "team": "Boise State",
+   "value": 0.663,
+   "rank": 30,
+   "raw": {
+    "totalPPA": 234.2,
+    "usage": 0.734
+   }
+  },
+  {
+   "team": "Toledo",
+   "value": 0.663,
+   "rank": 31,
+   "raw": {
+    "totalPPA": 224.9,
+    "usage": 0.564
+   }
+  },
+  {
+   "team": "Utah State",
+   "value": 0.652,
+   "rank": 32,
+   "raw": {
+    "totalPPA": 215,
+    "usage": 0.708
+   }
+  },
+  {
+   "team": "Arizona",
+   "value": 0.649,
+   "rank": 33,
+   "raw": {
+    "totalPPA": 202.4,
+    "usage": 0.686
+   }
+  },
+  {
+   "team": "Minnesota",
+   "value": 0.649,
+   "rank": 34,
+   "raw": {
+    "totalPPA": 113.5,
+    "usage": 0.679
+   }
+  },
+  {
+   "team": "Hawai'i",
+   "value": 0.645,
+   "rank": 35,
+   "raw": {
+    "totalPPA": 234.7,
+    "usage": 0.578
+   }
+  },
+  {
+   "team": "Kent State",
+   "value": 0.641,
+   "rank": 36,
+   "raw": {
+    "totalPPA": 108.3,
+    "usage": 0.516
+   }
+  },
+  {
+   "team": "Louisiana Tech",
+   "value": 0.639,
+   "rank": 37,
+   "raw": {
+    "totalPPA": 138.6,
+    "usage": 0.489
+   }
+  },
+  {
+   "team": "Oklahoma",
+   "value": 0.632,
+   "rank": 38,
+   "raw": {
+    "totalPPA": 181.3,
+    "usage": 0.746
+   }
+  },
+  {
+   "team": "Ohio",
+   "value": 0.625,
+   "rank": 39,
+   "raw": {
+    "totalPPA": 205.6,
+    "usage": 0.833
+   }
+  },
+  {
+   "team": "Baylor",
+   "value": 0.602,
+   "rank": 40,
+   "raw": {
+    "totalPPA": 212.6,
+    "usage": 0.651
+   }
+  },
+  {
+   "team": "NC State",
+   "value": 0.599,
+   "rank": 41,
+   "raw": {
+    "totalPPA": 233.7,
+    "usage": 0.622
+   }
+  },
+  {
+   "team": "USC",
+   "value": 0.592,
+   "rank": 42,
+   "raw": {
+    "totalPPA": 305.5,
+    "usage": 0.657
+   }
+  },
+  {
+   "team": "California",
+   "value": 0.583,
+   "rank": 43,
+   "raw": {
+    "totalPPA": 188.8,
+    "usage": 0.53
+   }
+  },
+  {
+   "team": "New Mexico",
+   "value": 0.582,
+   "rank": 44,
+   "raw": {
+    "totalPPA": 174.1,
+    "usage": 0.573
+   }
+  },
+  {
+   "team": "Oregon State",
+   "value": 0.579,
+   "rank": 45,
+   "raw": {
+    "totalPPA": 97.3,
+    "usage": 0.503
+   }
+  },
+  {
+   "team": "Sam Houston",
+   "value": 0.577,
+   "rank": 46,
+   "raw": {
+    "totalPPA": 38.1,
+    "usage": 0.521
+   }
+  },
+  {
+   "team": "Air Force",
+   "value": 0.574,
+   "rank": 47,
+   "raw": {
+    "totalPPA": 185.9,
+    "usage": 0.625
+   }
+  },
+  {
+   "team": "UCLA",
+   "value": 0.57,
+   "rank": 48,
+   "raw": {
+    "totalPPA": 108.3,
+    "usage": 0.635
+   }
+  },
+  {
+   "team": "SMU",
+   "value": 0.569,
+   "rank": 49,
+   "raw": {
+    "totalPPA": 219.8,
+    "usage": 0.578
+   }
+  },
+  {
+   "team": "Washington",
+   "value": 0.544,
+   "rank": 50,
+   "raw": {
+    "totalPPA": 228.1,
+    "usage": 0.571
+   }
+  },
+  {
+   "team": "Central Michigan",
+   "value": 0.54,
+   "rank": 51,
+   "raw": {
+    "totalPPA": 134.9,
+    "usage": 0.422
+   }
+  },
+  {
+   "team": "Maryland",
+   "value": 0.54,
+   "rank": 52,
+   "raw": {
+    "totalPPA": 112.3,
+    "usage": 0.705
+   }
+  },
+  {
+   "team": "Texas Tech",
+   "value": 0.534,
+   "rank": 53,
+   "raw": {
+    "totalPPA": 231.6,
+    "usage": 0.567
+   }
+  },
+  {
+   "team": "Notre Dame",
+   "value": 0.512,
+   "rank": 54,
+   "raw": {
+    "totalPPA": 175.6,
+    "usage": 0.461
+   }
+  },
+  {
+   "team": "Ole Miss",
+   "value": 0.503,
+   "rank": 55,
+   "raw": {
+    "totalPPA": 279.4,
+    "usage": 0.679
+   }
+  },
+  {
+   "team": "Jacksonville State",
+   "value": 0.495,
+   "rank": 56,
+   "raw": {
+    "totalPPA": 133.7,
+    "usage": 0.466
+   }
+  },
+  {
+   "team": "Purdue",
+   "value": 0.475,
+   "rank": 57,
+   "raw": {
+    "totalPPA": 111.7,
+    "usage": 0.49
+   }
+  },
+  {
+   "team": "Georgia State",
+   "value": 0.465,
+   "rank": 58,
+   "raw": {
+    "totalPPA": 131.7,
+    "usage": 0.286
+   }
+  },
+  {
+   "team": "Nebraska",
+   "value": 0.463,
+   "rank": 59,
+   "raw": {
+    "totalPPA": 146.2,
+    "usage": 0.392
+   }
+  },
+  {
+   "team": "Rutgers",
+   "value": 0.444,
+   "rank": 60,
+   "raw": {
+    "totalPPA": 165,
+    "usage": 0.407
+   }
+  },
+  {
+   "team": "Northern Illinois",
+   "value": 0.437,
+   "rank": 61,
+   "raw": {
+    "totalPPA": 35.8,
+    "usage": 0.473
+   }
+  },
+  {
+   "team": "Missouri",
+   "value": 0.42,
+   "rank": 62,
+   "raw": {
+    "totalPPA": 132.8,
+    "usage": 0.502
+   }
+  },
+  {
+   "team": "Clemson",
+   "value": 0.414,
+   "rank": 63,
+   "raw": {
+    "totalPPA": 124.3,
+    "usage": 0.373
+   }
+  },
+  {
+   "team": "Tulsa",
+   "value": 0.413,
+   "rank": 64,
+   "raw": {
+    "totalPPA": 89.6,
+    "usage": 0.4
+   }
+  },
+  {
+   "team": "Charlotte",
+   "value": 0.409,
+   "rank": 65,
+   "raw": {
+    "totalPPA": 53.6,
+    "usage": 0.478
+   }
+  },
+  {
+   "team": "Florida State",
+   "value": 0.401,
+   "rank": 66,
+   "raw": {
+    "totalPPA": 162.9,
+    "usage": 0.305
+   }
+  },
+  {
+   "team": "Pittsburgh",
+   "value": 0.397,
+   "rank": 67,
+   "raw": {
+    "totalPPA": 149.9,
+    "usage": 0.505
+   }
+  },
+  {
+   "team": "Colorado State",
+   "value": 0.396,
+   "rank": 68,
+   "raw": {
+    "totalPPA": 79.6,
+    "usage": 0.306
+   }
+  },
+  {
+   "team": "Rice",
+   "value": 0.394,
+   "rank": 69,
+   "raw": {
+    "totalPPA": 32.7,
+    "usage": 0.318
+   }
+  },
+  {
+   "team": "UL Monroe",
+   "value": 0.387,
+   "rank": 70,
+   "raw": {
+    "totalPPA": 63.5,
+    "usage": 0.458
+   }
+  },
+  {
+   "team": "Fresno State",
+   "value": 0.383,
+   "rank": 71,
+   "raw": {
+    "totalPPA": 104.6,
+    "usage": 0.491
+   }
+  },
+  {
+   "team": "Liberty",
+   "value": 0.383,
+   "rank": 72,
+   "raw": {
+    "totalPPA": 86.9,
+    "usage": 0.425
+   }
+  },
+  {
+   "team": "App State",
+   "value": 0.379,
+   "rank": 73,
+   "raw": {
+    "totalPPA": 107.7,
+    "usage": 0.523
+   }
+  },
+  {
+   "team": "Temple",
+   "value": 0.37,
+   "rank": 74,
+   "raw": {
+    "totalPPA": 96.1,
+    "usage": 0.292
+   }
+  },
+  {
+   "team": "Miami",
+   "value": 0.369,
+   "rank": 75,
+   "raw": {
+    "totalPPA": 167.9,
+    "usage": 0.491
+   }
+  },
+  {
+   "team": "Virginia Tech",
+   "value": 0.367,
+   "rank": 76,
+   "raw": {
+    "totalPPA": 94.3,
+    "usage": 0.277
+   }
+  },
+  {
+   "team": "Nevada",
+   "value": 0.355,
+   "rank": 77,
+   "raw": {
+    "totalPPA": 32.3,
+    "usage": 0.444
+   }
+  },
+  {
+   "team": "Vanderbilt",
+   "value": 0.354,
+   "rank": 78,
+   "raw": {
+    "totalPPA": 203.3,
+    "usage": 0.326
+   }
+  },
+  {
+   "team": "Tennessee",
+   "value": 0.353,
+   "rank": 79,
+   "raw": {
+    "totalPPA": 186.2,
+    "usage": 0.367
+   }
+  },
+  {
+   "team": "Troy",
+   "value": 0.353,
+   "rank": 80,
+   "raw": {
+    "totalPPA": 75.1,
+    "usage": 0.568
+   }
+  },
+  {
+   "team": "Syracuse",
+   "value": 0.35,
+   "rank": 81,
+   "raw": {
+    "totalPPA": 80.1,
+    "usage": 0.29
+   }
+  },
+  {
+   "team": "Louisville",
+   "value": 0.348,
+   "rank": 82,
+   "raw": {
+    "totalPPA": 92.3,
+    "usage": 0.268
+   }
+  },
+  {
+   "team": "Iowa",
+   "value": 0.342,
+   "rank": 83,
+   "raw": {
+    "totalPPA": 80.4,
+    "usage": 0.404
+   }
+  },
+  {
+   "team": "Mississippi State",
+   "value": 0.339,
+   "rank": 84,
+   "raw": {
+    "totalPPA": 109.5,
+    "usage": 0.398
+   }
+  },
+  {
+   "team": "Middle Tennessee",
+   "value": 0.325,
+   "rank": 85,
+   "raw": {
+    "totalPPA": 70.8,
+    "usage": 0.287
+   }
+  },
+  {
+   "team": "Florida International",
+   "value": 0.316,
+   "rank": 86,
+   "raw": {
+    "totalPPA": 75.2,
+    "usage": 0.263
+   }
+  },
+  {
+   "team": "Missouri State",
+   "value": 0.313,
+   "rank": 87,
+   "raw": {
+    "totalPPA": 98.9,
+    "usage": 0.192
+   }
+  },
+  {
+   "team": "Wisconsin",
+   "value": 0.31,
+   "rank": 88,
+   "raw": {
+    "totalPPA": 29.8,
+    "usage": 0.468
+   }
+  },
+  {
+   "team": "Arkansas State",
+   "value": 0.3,
+   "rank": 89,
+   "raw": {
+    "totalPPA": 73.9,
+    "usage": 0.389
+   }
+  },
+  {
+   "team": "North Carolina",
+   "value": 0.278,
+   "rank": 90,
+   "raw": {
+    "totalPPA": 46.9,
+    "usage": 0.316
+   }
+  },
+  {
+   "team": "Alabama",
+   "value": 0.264,
+   "rank": 91,
+   "raw": {
+    "totalPPA": 120.2,
+    "usage": 0.301
+   }
+  },
+  {
+   "team": "UCF",
+   "value": 0.248,
+   "rank": 92,
+   "raw": {
+    "totalPPA": 62.3,
+    "usage": 0.196
+   }
+  },
+  {
+   "team": "New Mexico State",
+   "value": 0.244,
+   "rank": 93,
+   "raw": {
+    "totalPPA": 34.2,
+    "usage": 0.301
+   }
+  },
+  {
+   "team": "Wyoming",
+   "value": 0.23,
+   "rank": 94,
+   "raw": {
+    "totalPPA": 36.8,
+    "usage": 0.281
+   }
+  },
+  {
+   "team": "TCU",
+   "value": 0.224,
+   "rank": 95,
+   "raw": {
+    "totalPPA": 94.3,
+    "usage": 0.251
+   }
+  },
+  {
+   "team": "Stanford",
+   "value": 0.213,
+   "rank": 96,
+   "raw": {
+    "totalPPA": 47.9,
+    "usage": 0.298
+   }
+  },
+  {
+   "team": "LSU",
+   "value": 0.212,
+   "rank": 97,
+   "raw": {
+    "totalPPA": 42.9,
+    "usage": 0.269
+   }
+  },
+  {
+   "team": "Illinois",
+   "value": 0.211,
+   "rank": 98,
+   "raw": {
+    "totalPPA": 83.5,
+    "usage": 0.435
+   }
+  },
+  {
+   "team": "Tulane",
+   "value": 0.21,
+   "rank": 99,
+   "raw": {
+    "totalPPA": 72.5,
+    "usage": 0.185
+   }
+  },
+  {
+   "team": "Michigan State",
+   "value": 0.209,
+   "rank": 100,
+   "raw": {
+    "totalPPA": 52.9,
+    "usage": 0.304
+   }
+  },
+  {
+   "team": "Kentucky",
+   "value": 0.193,
+   "rank": 101,
+   "raw": {
+    "totalPPA": 43.8,
+    "usage": 0.18
+   }
+  },
+  {
+   "team": "Kansas",
+   "value": 0.181,
+   "rank": 102,
+   "raw": {
+    "totalPPA": 59.5,
+    "usage": 0.162
+   }
+  },
+  {
+   "team": "Duke",
+   "value": 0.171,
+   "rank": 103,
+   "raw": {
+    "totalPPA": 75.6,
+    "usage": 0.22
+   }
+  },
+  {
+   "team": "Indiana",
+   "value": 0.166,
+   "rank": 104,
+   "raw": {
+    "totalPPA": 97.9,
+    "usage": 0.118
+   }
+  },
+  {
+   "team": "Boston College",
+   "value": 0.156,
+   "rank": 105,
+   "raw": {
+    "totalPPA": 45.8,
+    "usage": 0.095
+   }
+  },
+  {
+   "team": "Arizona State",
+   "value": 0.155,
+   "rank": 106,
+   "raw": {
+    "totalPPA": 37.6,
+    "usage": 0.135
+   }
+  },
+  {
+   "team": "Coastal Carolina",
+   "value": 0.154,
+   "rank": 107,
+   "raw": {
+    "totalPPA": 28.4,
+    "usage": 0.226
+   }
+  },
+  {
+   "team": "UNLV",
+   "value": 0.154,
+   "rank": 108,
+   "raw": {
+    "totalPPA": 66.1,
+    "usage": 0.271
+   }
+  },
+  {
+   "team": "Arkansas",
+   "value": 0.145,
+   "rank": 109,
+   "raw": {
+    "totalPPA": 65.7,
+    "usage": 0.196
+   }
+  },
+  {
+   "team": "Auburn",
+   "value": 0.144,
+   "rank": 110,
+   "raw": {
+    "totalPPA": 35.8,
+    "usage": 0.196
+   }
+  },
+  {
+   "team": "Wake Forest",
+   "value": 0.142,
+   "rank": 111,
+   "raw": {
+    "totalPPA": 44.1,
+    "usage": 0.121
+   }
+  },
+  {
+   "team": "West Virginia",
+   "value": 0.14,
+   "rank": 112,
+   "raw": {
+    "totalPPA": 21.1,
+    "usage": 0.262
+   }
+  },
+  {
+   "team": "Miami (OH)",
+   "value": 0.139,
+   "rank": 113,
+   "raw": {
+    "totalPPA": 31.9,
+    "usage": 0.287
+   }
+  },
+  {
+   "team": "Navy",
+   "value": 0.138,
+   "rank": 114,
+   "raw": {
+    "totalPPA": 46.7,
+    "usage": 0.136
+   }
+  },
+  {
+   "team": "Colorado",
+   "value": 0.137,
+   "rank": 115,
+   "raw": {
+    "totalPPA": 26.4,
+    "usage": 0.36
+   }
+  },
+  {
+   "team": "East Carolina",
+   "value": 0.136,
+   "rank": 116,
+   "raw": {
+    "totalPPA": 50.6,
+    "usage": 0.136
+   }
+  },
+  {
+   "team": "Georgia Tech",
+   "value": 0.126,
+   "rank": 117,
+   "raw": {
+    "totalPPA": 47.7,
+    "usage": 0.145
+   }
+  },
+  {
+   "team": "South Florida",
+   "value": 0.126,
+   "rank": 118,
+   "raw": {
+    "totalPPA": 55,
+    "usage": 0.161
+   }
+  },
+  {
+   "team": "Virginia",
+   "value": 0.095,
+   "rank": 119,
+   "raw": {
+    "totalPPA": 34.9,
+    "usage": 0.136
+   }
+  },
+  {
+   "team": "Old Dominion",
+   "value": 0.092,
+   "rank": 120,
+   "raw": {
+    "totalPPA": 32.8,
+    "usage": 0.306
+   }
+  },
+  {
+   "team": "Cincinnati",
+   "value": 0.083,
+   "rank": 121,
+   "raw": {
+    "totalPPA": 34.8,
+    "usage": 0.071
+   }
+  },
+  {
+   "team": "James Madison",
+   "value": 0.08,
+   "rank": 122,
+   "raw": {
+    "totalPPA": 31,
+    "usage": 0.079
+   }
+  },
+  {
+   "team": "Penn State",
+   "value": 0.076,
+   "rank": 123,
+   "raw": {
+    "totalPPA": 21.5,
+    "usage": 0.035
+   }
+  },
+  {
+   "team": "Kennesaw State",
+   "value": 0.061,
+   "rank": 124,
+   "raw": {
+    "totalPPA": 23.1,
+    "usage": 0.052
+   }
+  },
+  {
+   "team": "Georgia Southern",
+   "value": 0.058,
+   "rank": 125,
+   "raw": {
+    "totalPPA": 19.4,
+    "usage": 0.212
+   }
+  },
+  {
+   "team": "Ball State",
+   "value": 0.057,
+   "rank": 126,
+   "raw": {
+    "totalPPA": 5.6,
+    "usage": 0.173
+   }
+  },
+  {
+   "team": "Memphis",
+   "value": 0.056,
+   "rank": 127,
+   "raw": {
+    "totalPPA": 20.7,
+    "usage": 0.031
+   }
+  },
+  {
+   "team": "San Jos\u00e9 State",
+   "value": 0.038,
+   "rank": 128,
+   "raw": {
+    "totalPPA": 11.2,
+    "usage": 0.137
+   }
+  },
+  {
+   "team": "North Texas",
+   "value": 0.025,
+   "rank": 129,
+   "raw": {
+    "totalPPA": 13.8,
+    "usage": 0.017
+   }
+  },
+  {
+   "team": "UConn",
+   "value": 0.023,
+   "rank": 130,
+   "raw": {
+    "totalPPA": 11.4,
+    "usage": 0.027
+   }
+  },
+  {
+   "team": "Iowa State",
+   "value": 0.017,
+   "rank": 131,
+   "raw": {
+    "totalPPA": 4.7,
+    "usage": 0.029
+   }
+  },
+  {
+   "team": "Oklahoma State",
+   "value": 0,
+   "rank": 132,
+   "raw": {
+    "totalPPA": 0,
+    "usage": 0
+   }
+  },
+  {
+   "team": "Buffalo",
+   "value": -0.008,
+   "rank": 133,
+   "raw": {
+    "totalPPA": -1.6,
+    "usage": 0.146
+   }
+  },
+  {
+   "team": "UTEP",
+   "value": -0.011,
+   "rank": 134,
+   "raw": {
+    "totalPPA": -0.9,
+    "usage": 0.098
+   }
+  },
+  {
+   "team": "Bowling Green",
+   "value": -0.062,
+   "rank": 135,
+   "raw": {
+    "totalPPA": -7.1,
+    "usage": 0.226
+   }
+  },
+  {
+   "team": "Massachusetts",
+   "value": -0.567,
+   "rank": 136,
+   "raw": {
+    "totalPPA": -3.4,
+    "usage": 0.135
+   }
+  }
+ ]
+}

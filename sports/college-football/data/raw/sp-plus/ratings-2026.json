@@ -1,0 +1,1251 @@
+{
+ "source": "SP+ ratings (via CFBD)",
+ "url": "https://api.collegefootballdata.com/ratings/sp",
+ "pulledAt": "2026-08-14",
+ "season": 2026,
+ "notes": "SP+ overall rating via CFBD (ESPN+ article is paywalled \u2014 not scraped).",
+ "data": [
+  {
+   "team": "Ohio State",
+   "value": 32.7,
+   "rank": 1,
+   "raw": {
+    "offense": 41,
+    "defense": 8.4
+   }
+  },
+  {
+   "team": "Oregon",
+   "value": 29.2,
+   "rank": 2,
+   "raw": {
+    "offense": 41.1,
+    "defense": 12.2
+   }
+  },
+  {
+   "team": "Notre Dame",
+   "value": 26.5,
+   "rank": 3,
+   "raw": {
+    "offense": 40.6,
+    "defense": 14.3
+   }
+  },
+  {
+   "team": "Georgia",
+   "value": 26.4,
+   "rank": 4,
+   "raw": {
+    "offense": 38.7,
+    "defense": 12.9
+   }
+  },
+  {
+   "team": "Indiana",
+   "value": 25.8,
+   "rank": 5,
+   "raw": {
+    "offense": 37.8,
+    "defense": 12.5
+   }
+  },
+  {
+   "team": "Texas",
+   "value": 22.8,
+   "rank": 6,
+   "raw": {
+    "offense": 37.3,
+    "defense": 14.9
+   }
+  },
+  {
+   "team": "Miami",
+   "value": 22,
+   "rank": 7,
+   "raw": {
+    "offense": 35,
+    "defense": 13.3
+   }
+  },
+  {
+   "team": "Texas Tech",
+   "value": 21.8,
+   "rank": 8,
+   "raw": {
+    "offense": 36.6,
+    "defense": 15
+   }
+  },
+  {
+   "team": "Texas A&M",
+   "value": 20.9,
+   "rank": 9,
+   "raw": {
+    "offense": 37.6,
+    "defense": 16.4
+   }
+  },
+  {
+   "team": "LSU",
+   "value": 20.4,
+   "rank": 10,
+   "raw": {
+    "offense": 32.6,
+    "defense": 12.4
+   }
+  },
+  {
+   "team": "Oklahoma",
+   "value": 18.8,
+   "rank": 11,
+   "raw": {
+    "offense": 32.1,
+    "defense": 13.7
+   }
+  },
+  {
+   "team": "USC",
+   "value": 17.7,
+   "rank": 12,
+   "raw": {
+    "offense": 38,
+    "defense": 19.9
+   }
+  },
+  {
+   "team": "Alabama",
+   "value": 17.6,
+   "rank": 13,
+   "raw": {
+    "offense": 31,
+    "defense": 13
+   }
+  },
+  {
+   "team": "Tennessee",
+   "value": 17.3,
+   "rank": 14,
+   "raw": {
+    "offense": 39.3,
+    "defense": 22.4
+   }
+  },
+  {
+   "team": "Michigan",
+   "value": 17,
+   "rank": 15,
+   "raw": {
+    "offense": 33.2,
+    "defense": 15.8
+   }
+  },
+  {
+   "team": "Ole Miss",
+   "value": 16.5,
+   "rank": 16,
+   "raw": {
+    "offense": 35.2,
+    "defense": 19.4
+   }
+  },
+  {
+   "team": "Penn State",
+   "value": 16.2,
+   "rank": 17,
+   "raw": {
+    "offense": 33.9,
+    "defense": 18.3
+   }
+  },
+  {
+   "team": "Washington",
+   "value": 15.8,
+   "rank": 18,
+   "raw": {
+    "offense": 33,
+    "defense": 17
+   }
+  },
+  {
+   "team": "Missouri",
+   "value": 15.4,
+   "rank": 19,
+   "raw": {
+    "offense": 32.3,
+    "defense": 16.4
+   }
+  },
+  {
+   "team": "Florida",
+   "value": 15.2,
+   "rank": 20,
+   "raw": {
+    "offense": 30.4,
+    "defense": 15.8
+   }
+  },
+  {
+   "team": "BYU",
+   "value": 14.9,
+   "rank": 21,
+   "raw": {
+    "offense": 32.9,
+    "defense": 18.3
+   }
+  },
+  {
+   "team": "Iowa",
+   "value": 14.6,
+   "rank": 22,
+   "raw": {
+    "offense": 30.8,
+    "defense": 16.8
+   }
+  },
+  {
+   "team": "Clemson",
+   "value": 13.1,
+   "rank": 23,
+   "raw": {
+    "offense": 29.8,
+    "defense": 17.1
+   }
+  },
+  {
+   "team": "South Carolina",
+   "value": 12.6,
+   "rank": 24,
+   "raw": {
+    "offense": 30.2,
+    "defense": 18.1
+   }
+  },
+  {
+   "team": "SMU",
+   "value": 12.1,
+   "rank": 25,
+   "raw": {
+    "offense": 32.5,
+    "defense": 20.1
+   }
+  },
+  {
+   "team": "Auburn",
+   "value": 11.5,
+   "rank": 26,
+   "raw": {
+    "offense": 28.5,
+    "defense": 17.3
+   }
+  },
+  {
+   "team": "Louisville",
+   "value": 11.1,
+   "rank": 27,
+   "raw": {
+    "offense": 30.7,
+    "defense": 19.8
+   }
+  },
+  {
+   "team": "Illinois",
+   "value": 10.4,
+   "rank": 28,
+   "raw": {
+    "offense": 32,
+    "defense": 22.1
+   }
+  },
+  {
+   "team": "Vanderbilt",
+   "value": 9.8,
+   "rank": 29,
+   "raw": {
+    "offense": 33.3,
+    "defense": 24.2
+   }
+  },
+  {
+   "team": "Utah",
+   "value": 9.8,
+   "rank": 29,
+   "raw": {
+    "offense": 31.9,
+    "defense": 22.1
+   }
+  },
+  {
+   "team": "Arizona",
+   "value": 9.5,
+   "rank": 31,
+   "raw": {
+    "offense": 31.1,
+    "defense": 21.2
+   }
+  },
+  {
+   "team": "TCU",
+   "value": 9.4,
+   "rank": 32,
+   "raw": {
+    "offense": 31.4,
+    "defense": 21.8
+   }
+  },
+  {
+   "team": "Nebraska",
+   "value": 9.3,
+   "rank": 33,
+   "raw": {
+    "offense": 30,
+    "defense": 20.7
+   }
+  },
+  {
+   "team": "Kansas State",
+   "value": 9.2,
+   "rank": 34,
+   "raw": {
+    "offense": 32.5,
+    "defense": 23.6
+   }
+  },
+  {
+   "team": "Florida State",
+   "value": 9.1,
+   "rank": 35,
+   "raw": {
+    "offense": 29.8,
+    "defense": 20.4
+   }
+  },
+  {
+   "team": "Virginia Tech",
+   "value": 8.6,
+   "rank": 36,
+   "raw": {
+    "offense": 30.7,
+    "defense": 21.9
+   }
+  },
+  {
+   "team": "Virginia",
+   "value": 8.1,
+   "rank": 37,
+   "raw": {
+    "offense": 26.9,
+    "defense": 18.9
+   }
+  },
+  {
+   "team": "Houston",
+   "value": 7.4,
+   "rank": 38,
+   "raw": {
+    "offense": 30.9,
+    "defense": 23.1
+   }
+  },
+  {
+   "team": "Oklahoma State",
+   "value": 6.9,
+   "rank": 39,
+   "raw": {
+    "offense": 29.9,
+    "defense": 23.4
+   }
+  },
+  {
+   "team": "Minnesota",
+   "value": 6.2,
+   "rank": 40,
+   "raw": {
+    "offense": 25.7,
+    "defense": 19
+   }
+  },
+  {
+   "team": "Pittsburgh",
+   "value": 6.2,
+   "rank": 40,
+   "raw": {
+    "offense": 30,
+    "defense": 23.9
+   }
+  },
+  {
+   "team": "Georgia Tech",
+   "value": 5.9,
+   "rank": 42,
+   "raw": {
+    "offense": 28.7,
+    "defense": 23.4
+   }
+  },
+  {
+   "team": "NC State",
+   "value": 5.7,
+   "rank": 43,
+   "raw": {
+    "offense": 31,
+    "defense": 24.9
+   }
+  },
+  {
+   "team": "Arkansas",
+   "value": 5.6,
+   "rank": 44,
+   "raw": {
+    "offense": 34.4,
+    "defense": 29
+   }
+  },
+  {
+   "team": "Duke",
+   "value": 5.6,
+   "rank": 44,
+   "raw": {
+    "offense": 32.8,
+    "defense": 27.6
+   }
+  },
+  {
+   "team": "UCLA",
+   "value": 5.4,
+   "rank": 46,
+   "raw": {
+    "offense": 29.1,
+    "defense": 23.7
+   }
+  },
+  {
+   "team": "Maryland",
+   "value": 5.2,
+   "rank": 47,
+   "raw": {
+    "offense": 26.8,
+    "defense": 22
+   }
+  },
+  {
+   "team": "Kentucky",
+   "value": 5.2,
+   "rank": 47,
+   "raw": {
+    "offense": 26.3,
+    "defense": 21.1
+   }
+  },
+  {
+   "team": "Northwestern",
+   "value": 5.1,
+   "rank": 49,
+   "raw": {
+    "offense": 25.3,
+    "defense": 20.7
+   }
+  },
+  {
+   "team": "Boise State",
+   "value": 5.1,
+   "rank": 49,
+   "raw": {
+    "offense": 29,
+    "defense": 23.7
+   }
+  },
+  {
+   "team": "Arizona State",
+   "value": 4.9,
+   "rank": 51,
+   "raw": {
+    "offense": 27.4,
+    "defense": 22
+   }
+  },
+  {
+   "team": "Mississippi State",
+   "value": 4.8,
+   "rank": 52,
+   "raw": {
+    "offense": 30.8,
+    "defense": 26.5
+   }
+  },
+  {
+   "team": "Baylor",
+   "value": 3.8,
+   "rank": 53,
+   "raw": {
+    "offense": 31.9,
+    "defense": 28.8
+   }
+  },
+  {
+   "team": "Wisconsin",
+   "value": 3.8,
+   "rank": 53,
+   "raw": {
+    "offense": 21.6,
+    "defense": 17.5
+   }
+  },
+  {
+   "team": "UNLV",
+   "value": 3.6,
+   "rank": 55,
+   "raw": {
+    "offense": 31.4,
+    "defense": 28
+   }
+  },
+  {
+   "team": "North Carolina",
+   "value": 3.5,
+   "rank": 56,
+   "raw": {
+    "offense": 24.3,
+    "defense": 21.2
+   }
+  },
+  {
+   "team": "Wake Forest",
+   "value": 3.4,
+   "rank": 57,
+   "raw": {
+    "offense": 24.2,
+    "defense": 20.7
+   }
+  },
+  {
+   "team": "Kansas",
+   "value": 3.3,
+   "rank": 58,
+   "raw": {
+    "offense": 28.8,
+    "defense": 26.1
+   }
+  },
+  {
+   "team": "Cincinnati",
+   "value": 3,
+   "rank": 59,
+   "raw": {
+    "offense": 28.9,
+    "defense": 26.1
+   }
+  },
+  {
+   "team": "California",
+   "value": 3,
+   "rank": 59,
+   "raw": {
+    "offense": 28.8,
+    "defense": 25.5
+   }
+  },
+  {
+   "team": "Rutgers",
+   "value": 2.7,
+   "rank": 61,
+   "raw": {
+    "offense": 30.8,
+    "defense": 28.2
+   }
+  },
+  {
+   "team": "Michigan State",
+   "value": 2.2,
+   "rank": 62,
+   "raw": {
+    "offense": 27.7,
+    "defense": 25.1
+   }
+  },
+  {
+   "team": "UCF",
+   "value": 1.7,
+   "rank": 63,
+   "raw": {
+    "offense": 24.2,
+    "defense": 22.3
+   }
+  },
+  {
+   "team": "Navy",
+   "value": 1.2,
+   "rank": 64,
+   "raw": {
+    "offense": 27.8,
+    "defense": 26.8
+   }
+  },
+  {
+   "team": "San Diego State",
+   "value": 0.7,
+   "rank": 65,
+   "raw": {
+    "offense": 24.1,
+    "defense": 24
+   }
+  },
+  {
+   "team": "Colorado",
+   "value": 0.7,
+   "rank": 65,
+   "raw": {
+    "offense": 26.1,
+    "defense": 25
+   }
+  },
+  {
+   "team": "Memphis",
+   "value": 0.3,
+   "rank": 67,
+   "raw": {
+    "offense": 29,
+    "defense": 29.2
+   }
+  },
+  {
+   "team": "New Mexico",
+   "value": 0,
+   "rank": 68,
+   "raw": {
+    "offense": 25.6,
+    "defense": 26.1
+   }
+  },
+  {
+   "team": "Iowa State",
+   "value": -0.4,
+   "rank": 69,
+   "raw": {
+    "offense": 22.4,
+    "defense": 23.2
+   }
+  },
+  {
+   "team": "James Madison",
+   "value": -0.9,
+   "rank": 70,
+   "raw": {
+    "offense": 26.7,
+    "defense": 27.2
+   }
+  },
+  {
+   "team": "UTSA",
+   "value": -1.1,
+   "rank": 71,
+   "raw": {
+    "offense": 29.9,
+    "defense": 31.1
+   }
+  },
+  {
+   "team": "West Virginia",
+   "value": -1.3,
+   "rank": 72,
+   "raw": {
+    "offense": 25.3,
+    "defense": 26.6
+   }
+  },
+  {
+   "team": "Fresno State",
+   "value": -1.4,
+   "rank": 73,
+   "raw": {
+    "offense": 21,
+    "defense": 22.4
+   }
+  },
+  {
+   "team": "South Florida",
+   "value": -1.7,
+   "rank": 74,
+   "raw": {
+    "offense": 28.1,
+    "defense": 29.6
+   }
+  },
+  {
+   "team": "North Dakota State",
+   "value": -1.8,
+   "rank": 75,
+   "raw": {
+    "offense": 24.1,
+    "defense": 25.9
+   }
+  },
+  {
+   "team": "Syracuse",
+   "value": -1.9,
+   "rank": 76,
+   "raw": {
+    "offense": 23.3,
+    "defense": 25.6
+   }
+  },
+  {
+   "team": "Texas State",
+   "value": -2.1,
+   "rank": 77,
+   "raw": {
+    "offense": 33.2,
+    "defense": 35.4
+   }
+  },
+  {
+   "team": "Purdue",
+   "value": -2.2,
+   "rank": 78,
+   "raw": {
+    "offense": 24.2,
+    "defense": 27
+   }
+  },
+  {
+   "team": "Stanford",
+   "value": -2.3,
+   "rank": 79,
+   "raw": {
+    "offense": 22.5,
+    "defense": 24.2
+   }
+  },
+  {
+   "team": "East Carolina",
+   "value": -2.3,
+   "rank": 79,
+   "raw": {
+    "offense": 24.1,
+    "defense": 26.3
+   }
+  },
+  {
+   "team": "Army",
+   "value": -2.4,
+   "rank": 81,
+   "raw": {
+    "offense": 24.8,
+    "defense": 27.2
+   }
+  },
+  {
+   "team": "Boston College",
+   "value": -2.5,
+   "rank": 82,
+   "raw": {
+    "offense": 24.7,
+    "defense": 27.7
+   }
+  },
+  {
+   "team": "Hawai'i",
+   "value": -2.6,
+   "rank": 83,
+   "raw": {
+    "offense": 25.9,
+    "defense": 29.1
+   }
+  },
+  {
+   "team": "Air Force",
+   "value": -3.2,
+   "rank": 84,
+   "raw": {
+    "offense": 24.8,
+    "defense": 28.1
+   }
+  },
+  {
+   "team": "Miami (OH)",
+   "value": -4,
+   "rank": 85,
+   "raw": {
+    "offense": 19.2,
+    "defense": 23.8
+   }
+  },
+  {
+   "team": "Washington State",
+   "value": -4.3,
+   "rank": 86,
+   "raw": {
+    "offense": 20.4,
+    "defense": 24.6
+   }
+  },
+  {
+   "team": "Tulane",
+   "value": -4.3,
+   "rank": 86,
+   "raw": {
+    "offense": 22.8,
+    "defense": 27.7
+   }
+  },
+  {
+   "team": "Liberty",
+   "value": -5.3,
+   "rank": 88,
+   "raw": {
+    "offense": 26,
+    "defense": 31.1
+   }
+  },
+  {
+   "team": "Oregon State",
+   "value": -5.6,
+   "rank": 89,
+   "raw": {
+    "offense": 21.2,
+    "defense": 26.1
+   }
+  },
+  {
+   "team": "Western Michigan",
+   "value": -6,
+   "rank": 90,
+   "raw": {
+    "offense": 19.6,
+    "defense": 25.2
+   }
+  },
+  {
+   "team": "Florida Atlantic",
+   "value": -6.1,
+   "rank": 91,
+   "raw": {
+    "offense": 27.7,
+    "defense": 34.3
+   }
+  },
+  {
+   "team": "Tulsa",
+   "value": -6.1,
+   "rank": 91,
+   "raw": {
+    "offense": 24.2,
+    "defense": 30.9
+   }
+  },
+  {
+   "team": "Old Dominion",
+   "value": -6.9,
+   "rank": 93,
+   "raw": {
+    "offense": 19.6,
+    "defense": 25.8
+   }
+  },
+  {
+   "team": "Western Kentucky",
+   "value": -7.3,
+   "rank": 94,
+   "raw": {
+    "offense": 24.2,
+    "defense": 32
+   }
+  },
+  {
+   "team": "Jacksonville State",
+   "value": -7.8,
+   "rank": 95,
+   "raw": {
+    "offense": 24.8,
+    "defense": 32
+   }
+  },
+  {
+   "team": "Utah State",
+   "value": -7.9,
+   "rank": 96,
+   "raw": {
+    "offense": 23.4,
+    "defense": 30.8
+   }
+  },
+  {
+   "team": "Troy",
+   "value": -8,
+   "rank": 97,
+   "raw": {
+    "offense": 22.5,
+    "defense": 30.7
+   }
+  },
+  {
+   "team": "Marshall",
+   "value": -8.2,
+   "rank": 98,
+   "raw": {
+    "offense": 27.6,
+    "defense": 36
+   }
+  },
+  {
+   "team": "Louisiana Tech",
+   "value": -9.1,
+   "rank": 99,
+   "raw": {
+    "offense": 21.9,
+    "defense": 31
+   }
+  },
+  {
+   "team": "Temple",
+   "value": -9.1,
+   "rank": 99,
+   "raw": {
+    "offense": 25,
+    "defense": 34.4
+   }
+  },
+  {
+   "team": "Toledo",
+   "value": -9.1,
+   "rank": 99,
+   "raw": {
+    "offense": 17.9,
+    "defense": 26.6
+   }
+  },
+  {
+   "team": "Louisiana",
+   "value": -10.6,
+   "rank": 102,
+   "raw": {
+    "offense": 24.4,
+    "defense": 34.6
+   }
+  },
+  {
+   "team": "Georgia Southern",
+   "value": -10.8,
+   "rank": 103,
+   "raw": {
+    "offense": 22.7,
+    "defense": 33.5
+   }
+  },
+  {
+   "team": "Wyoming",
+   "value": -10.8,
+   "rank": 103,
+   "raw": {
+    "offense": 15.5,
+    "defense": 25.6
+   }
+  },
+  {
+   "team": "North Texas",
+   "value": -11.6,
+   "rank": 105,
+   "raw": {
+    "offense": 23.7,
+    "defense": 35
+   }
+  },
+  {
+   "team": "Arkansas State",
+   "value": -11.6,
+   "rank": 105,
+   "raw": {
+    "offense": 22.1,
+    "defense": 33.8
+   }
+  },
+  {
+   "team": "Colorado State",
+   "value": -11.6,
+   "rank": 105,
+   "raw": {
+    "offense": 16.8,
+    "defense": 28.3
+   }
+  },
+  {
+   "team": "Nevada",
+   "value": -11.7,
+   "rank": 108,
+   "raw": {
+    "offense": 17.6,
+    "defense": 29.7
+   }
+  },
+  {
+   "team": "Ohio",
+   "value": -11.8,
+   "rank": 109,
+   "raw": {
+    "offense": 14.1,
+    "defense": 25.3
+   }
+  },
+  {
+   "team": "UConn",
+   "value": -11.9,
+   "rank": 110,
+   "raw": {
+    "offense": 19.9,
+    "defense": 32.4
+   }
+  },
+  {
+   "team": "App State",
+   "value": -12.7,
+   "rank": 111,
+   "raw": {
+    "offense": 20.8,
+    "defense": 33.9
+   }
+  },
+  {
+   "team": "Buffalo",
+   "value": -12.7,
+   "rank": 111,
+   "raw": {
+    "offense": 15.3,
+    "defense": 28.5
+   }
+  },
+  {
+   "team": "Kennesaw State",
+   "value": -12.9,
+   "rank": 113,
+   "raw": {
+    "offense": 19.5,
+    "defense": 31.8
+   }
+  },
+  {
+   "team": "Delaware",
+   "value": -12.9,
+   "rank": 113,
+   "raw": {
+    "offense": 22.8,
+    "defense": 35.4
+   }
+  },
+  {
+   "team": "Florida International",
+   "value": -14.5,
+   "rank": 115,
+   "raw": {
+    "offense": 21.1,
+    "defense": 35.3
+   }
+  },
+  {
+   "team": "South Alabama",
+   "value": -14.6,
+   "rank": 116,
+   "raw": {
+    "offense": 22,
+    "defense": 35.9
+   }
+  },
+  {
+   "team": "Coastal Carolina",
+   "value": -14.7,
+   "rank": 117,
+   "raw": {
+    "offense": 20.6,
+    "defense": 34.8
+   }
+  },
+  {
+   "team": "Bowling Green",
+   "value": -15,
+   "rank": 118,
+   "raw": {
+    "offense": 13.9,
+    "defense": 29.2
+   }
+  },
+  {
+   "team": "Central Michigan",
+   "value": -15.1,
+   "rank": 119,
+   "raw": {
+    "offense": 15.5,
+    "defense": 30.4
+   }
+  },
+  {
+   "team": "Rice",
+   "value": -15.3,
+   "rank": 120,
+   "raw": {
+    "offense": 16.7,
+    "defense": 32.5
+   }
+  },
+  {
+   "team": "San Jos\u00e9 State",
+   "value": -15.7,
+   "rank": 121,
+   "raw": {
+    "offense": 18.3,
+    "defense": 33.5
+   }
+  },
+  {
+   "team": "Eastern Michigan",
+   "value": -16.1,
+   "rank": 122,
+   "raw": {
+    "offense": 17.2,
+    "defense": 33.4
+   }
+  },
+  {
+   "team": "Northern Illinois",
+   "value": -17.2,
+   "rank": 123,
+   "raw": {
+    "offense": 15.2,
+    "defense": 32.1
+   }
+  },
+  {
+   "team": "UAB",
+   "value": -17.5,
+   "rank": 124,
+   "raw": {
+    "offense": 20.6,
+    "defense": 37.6
+   }
+  },
+  {
+   "team": "New Mexico State",
+   "value": -18.5,
+   "rank": 125,
+   "raw": {
+    "offense": 15.9,
+    "defense": 34.4
+   }
+  },
+  {
+   "team": "Missouri State",
+   "value": -19.1,
+   "rank": 126,
+   "raw": {
+    "offense": 16.4,
+    "defense": 35.1
+   }
+  },
+  {
+   "team": "UTEP",
+   "value": -19.3,
+   "rank": 127,
+   "raw": {
+    "offense": 15.2,
+    "defense": 34.1
+   }
+  },
+  {
+   "team": "Southern Miss",
+   "value": -20.7,
+   "rank": 128,
+   "raw": {
+    "offense": 17.8,
+    "defense": 38
+   }
+  },
+  {
+   "team": "Kent State",
+   "value": -22.4,
+   "rank": 129,
+   "raw": {
+    "offense": 14.7,
+    "defense": 36.6
+   }
+  },
+  {
+   "team": "Akron",
+   "value": -22.9,
+   "rank": 130,
+   "raw": {
+    "offense": 11.3,
+    "defense": 33.6
+   }
+  },
+  {
+   "team": "Sacramento State",
+   "value": -23.4,
+   "rank": 131,
+   "raw": {
+    "offense": 14.7,
+    "defense": 38.2
+   }
+  },
+  {
+   "team": "Charlotte",
+   "value": -24.1,
+   "rank": 132,
+   "raw": {
+    "offense": 14.5,
+    "defense": 38.1
+   }
+  },
+  {
+   "team": "Ball State",
+   "value": -25.1,
+   "rank": 133,
+   "raw": {
+    "offense": 12.2,
+    "defense": 36.7
+   }
+  },
+  {
+   "team": "Sam Houston",
+   "value": -26,
+   "rank": 134,
+   "raw": {
+    "offense": 14.2,
+    "defense": 39.8
+   }
+  },
+  {
+   "team": "Middle Tennessee",
+   "value": -26.5,
+   "rank": 135,
+   "raw": {
+    "offense": 13.8,
+    "defense": 40.5
+   }
+  },
+  {
+   "team": "UL Monroe",
+   "value": -28.9,
+   "rank": 136,
+   "raw": {
+    "offense": 11.9,
+    "defense": 40.1
+   }
+  },
+  {
+   "team": "Georgia State",
+   "value": -29.3,
+   "rank": 137,
+   "raw": {
+    "offense": 14.8,
+    "defense": 43.4
+   }
+  },
+  {
+   "team": "Massachusetts",
+   "value": -32.9,
+   "rank": 138,
+   "raw": {
+    "offense": 8.8,
+    "defense": 41.2
+   }
+  }
+ ]
+}

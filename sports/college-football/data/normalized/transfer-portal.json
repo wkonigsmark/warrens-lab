@@ -2,216 +2,216 @@
  "source": "Transfer portal net (computed from CFBD player feed)",
  "sourceFile": "raw/transfer-portal/2026.json",
  "season": 2026,
- "generatedAt": "2026-07-07",
+ "generatedAt": "2026-08-14",
  "stat": "portal net talent (gained \u2212 lost)",
- "notes": "Computed net = talent in \u2212 talent out from 4427 portal moves; 1535 moves had no rating (star-mapped or defaulted to 0.75). NOT 247/On3's editorial team ranking (their pages are ToS-restricted \u2014 not scraped).",
+ "notes": "Computed net = talent in \u2212 talent out from 4441 portal moves; 1547 moves had no rating (star-mapped or defaulted to 0.75). NOT 247/On3's editorial team ranking (their pages are ToS-restricted \u2014 not scraped).",
  "teams": [
   {
    "team": "UCLA",
-   "value": 10.46,
-   "zscore": 2.08,
+   "value": 11.21,
+   "zscore": 2.19,
    "percentile": 99.6,
    "rank": 1
   },
   {
    "team": "Utah State",
    "value": 8.46,
-   "zscore": 1.75,
+   "zscore": 1.74,
    "percentile": 98.9,
    "rank": 2
   },
   {
    "team": "North Texas",
    "value": 8.45,
-   "zscore": 1.75,
+   "zscore": 1.74,
    "percentile": 98.2,
    "rank": 3
   },
   {
    "team": "Kennesaw State",
    "value": 8.43,
-   "zscore": 1.75,
+   "zscore": 1.73,
    "percentile": 97.5,
    "rank": 4
   },
   {
-   "team": "South Florida",
-   "value": 7.7,
-   "zscore": 1.63,
+   "team": "Virginia",
+   "value": 8.06,
+   "zscore": 1.67,
    "percentile": 96.7,
    "rank": 5
   },
   {
-   "team": "Northwestern",
-   "value": 7.51,
-   "zscore": 1.59,
+   "team": "South Florida",
+   "value": 7.7,
+   "zscore": 1.61,
    "percentile": 96.0,
    "rank": 6
   },
   {
-   "team": "Southern Miss",
-   "value": 7.31,
-   "zscore": 1.56,
+   "team": "Northwestern",
+   "value": 7.51,
+   "zscore": 1.58,
    "percentile": 95.3,
    "rank": 7
   },
   {
-   "team": "Virginia",
+   "team": "Southern Miss",
    "value": 7.31,
-   "zscore": 1.56,
+   "zscore": 1.55,
    "percentile": 94.6,
    "rank": 8
   },
   {
    "team": "Wisconsin",
    "value": 7.29,
-   "zscore": 1.56,
+   "zscore": 1.55,
    "percentile": 93.8,
    "rank": 9
   },
   {
    "team": "Missouri State",
    "value": 7.01,
-   "zscore": 1.51,
+   "zscore": 1.5,
    "percentile": 93.1,
    "rank": 10
   },
   {
    "team": "UConn",
    "value": 6.8,
-   "zscore": 1.48,
+   "zscore": 1.47,
    "percentile": 92.4,
    "rank": 11
   },
   {
-   "team": "Hawai'i",
-   "value": 6.07,
-   "zscore": 1.36,
+   "team": "Jacksonville State",
+   "value": 6.23,
+   "zscore": 1.37,
    "percentile": 91.7,
    "rank": 12
   },
   {
-   "team": "James Madison",
-   "value": 5.86,
-   "zscore": 1.32,
+   "team": "Hawai'i",
+   "value": 6.07,
+   "zscore": 1.35,
    "percentile": 90.9,
    "rank": 13
   },
   {
-   "team": "Liberty",
-   "value": 5.81,
+   "team": "James Madison",
+   "value": 5.86,
    "zscore": 1.31,
    "percentile": 90.2,
    "rank": 14
   },
   {
-   "team": "Iowa",
-   "value": 5.8,
-   "zscore": 1.31,
+   "team": "Liberty",
+   "value": 5.81,
+   "zscore": 1.3,
    "percentile": 89.5,
    "rank": 15
   },
   {
-   "team": "Jacksonville State",
-   "value": 5.48,
-   "zscore": 1.26,
+   "team": "Iowa",
+   "value": 5.8,
+   "zscore": 1.3,
    "percentile": 88.8,
    "rank": 16
   },
   {
    "team": "Ball State",
    "value": 5.13,
-   "zscore": 1.2,
+   "zscore": 1.19,
    "percentile": 88.0,
    "rank": 17
   },
   {
-   "team": "Purdue",
-   "value": 4.82,
-   "zscore": 1.15,
+   "team": "Marshall",
+   "value": 4.83,
+   "zscore": 1.14,
    "percentile": 87.3,
    "rank": 18
   },
   {
-   "team": "UAB",
-   "value": 4.54,
-   "zscore": 1.1,
+   "team": "Purdue",
+   "value": 4.82,
+   "zscore": 1.14,
    "percentile": 86.6,
    "rank": 19
   },
   {
-   "team": "Kansas",
-   "value": 4.53,
-   "zscore": 1.1,
+   "team": "UAB",
+   "value": 4.54,
+   "zscore": 1.09,
    "percentile": 85.9,
    "rank": 20
   },
   {
-   "team": "Sam Houston",
-   "value": 4.2,
-   "zscore": 1.05,
+   "team": "Kansas",
+   "value": 4.53,
+   "zscore": 1.09,
    "percentile": 85.1,
    "rank": 21
   },
   {
-   "team": "Delaware",
+   "team": "Sam Houston",
    "value": 4.2,
-   "zscore": 1.05,
+   "zscore": 1.04,
    "percentile": 84.4,
    "rank": 22
   },
   {
-   "team": "Marshall",
-   "value": 4.08,
-   "zscore": 1.03,
+   "team": "Delaware",
+   "value": 4.2,
+   "zscore": 1.04,
    "percentile": 83.7,
    "rank": 23
   },
   {
    "team": "Colorado",
    "value": 3.99,
-   "zscore": 1.01,
+   "zscore": 1.0,
    "percentile": 83.0,
    "rank": 24
   },
   {
    "team": "Memphis",
    "value": 3.54,
-   "zscore": 0.94,
+   "zscore": 0.93,
    "percentile": 82.2,
    "rank": 25
   },
   {
    "team": "Ole Miss",
    "value": 3.32,
-   "zscore": 0.9,
+   "zscore": 0.89,
    "percentile": 81.5,
    "rank": 26
   },
   {
-   "team": "Arizona State",
-   "value": 3.03,
-   "zscore": 0.86,
+   "team": "Kentucky",
+   "value": 3.19,
+   "zscore": 0.87,
    "percentile": 80.8,
    "rank": 27
   },
   {
-   "team": "UL Monroe",
-   "value": 2.71,
-   "zscore": 0.8,
+   "team": "Arizona State",
+   "value": 3.03,
+   "zscore": 0.84,
    "percentile": 80.1,
    "rank": 28
   },
   {
-   "team": "Missouri",
-   "value": 2.7,
-   "zscore": 0.8,
+   "team": "UL Monroe",
+   "value": 2.71,
+   "zscore": 0.79,
    "percentile": 79.3,
    "rank": 29
   },
   {
-   "team": "Massachusetts",
-   "value": 2.64,
+   "team": "Missouri",
+   "value": 2.7,
    "zscore": 0.79,
    "percentile": 78.6,
    "rank": 30
@@ -219,384 +219,384 @@
   {
    "team": "Sacramento State",
    "value": 2.57,
-   "zscore": 0.78,
+   "zscore": 0.77,
    "percentile": 77.9,
    "rank": 31
   },
   {
    "team": "Fresno State",
    "value": 2.54,
-   "zscore": 0.77,
+   "zscore": 0.76,
    "percentile": 77.2,
    "rank": 32
   },
   {
    "team": "Wyoming",
    "value": 2.35,
-   "zscore": 0.74,
+   "zscore": 0.73,
    "percentile": 76.4,
    "rank": 33
   },
   {
-   "team": "Kentucky",
-   "value": 2.33,
-   "zscore": 0.74,
+   "team": "Arizona",
+   "value": 2.05,
+   "zscore": 0.68,
    "percentile": 75.7,
    "rank": 34
   },
   {
-   "team": "Arizona",
-   "value": 2.05,
-   "zscore": 0.69,
+   "team": "Houston",
+   "value": 1.99,
+   "zscore": 0.67,
    "percentile": 75.0,
    "rank": 35
   },
   {
-   "team": "Houston",
-   "value": 1.99,
-   "zscore": 0.68,
+   "team": "Massachusetts",
+   "value": 1.79,
+   "zscore": 0.64,
    "percentile": 74.3,
    "rank": 36
   },
   {
    "team": "Indiana",
    "value": 1.7,
-   "zscore": 0.64,
+   "zscore": 0.62,
    "percentile": 73.6,
    "rank": 37
   },
   {
    "team": "Miami (OH)",
    "value": 1.59,
-   "zscore": 0.62,
+   "zscore": 0.61,
    "percentile": 72.8,
    "rank": 38
   },
   {
    "team": "Texas Tech",
    "value": 1.57,
-   "zscore": 0.61,
+   "zscore": 0.6,
    "percentile": 72.1,
    "rank": 39
   },
   {
    "team": "Duke",
    "value": 1.54,
-   "zscore": 0.61,
+   "zscore": 0.6,
    "percentile": 71.4,
    "rank": 40
   },
   {
    "team": "South Carolina",
    "value": 1.49,
-   "zscore": 0.6,
+   "zscore": 0.59,
    "percentile": 70.7,
    "rank": 41
   },
   {
    "team": "Ohio",
    "value": 1.38,
-   "zscore": 0.58,
+   "zscore": 0.57,
    "percentile": 69.9,
    "rank": 42
   },
   {
    "team": "New Mexico State",
    "value": 1.11,
-   "zscore": 0.54,
+   "zscore": 0.53,
    "percentile": 69.2,
    "rank": 43
   },
   {
-   "team": "New Mexico",
-   "value": 1.07,
-   "zscore": 0.53,
+   "team": "Wake Forest",
+   "value": 0.94,
+   "zscore": 0.5,
    "percentile": 68.5,
    "rank": 44
   },
   {
-   "team": "Wake Forest",
-   "value": 0.94,
-   "zscore": 0.51,
+   "team": "Western Michigan",
+   "value": 0.88,
+   "zscore": 0.49,
    "percentile": 67.8,
    "rank": 45
   },
   {
-   "team": "Western Michigan",
-   "value": 0.88,
-   "zscore": 0.5,
+   "team": "Virginia Tech",
+   "value": 0.83,
+   "zscore": 0.48,
    "percentile": 67.0,
    "rank": 46
   },
   {
-   "team": "Virginia Tech",
-   "value": 0.83,
-   "zscore": 0.49,
+   "team": "Middle Tennessee",
+   "value": 0.67,
+   "zscore": 0.45,
    "percentile": 66.3,
    "rank": 47
   },
   {
-   "team": "Middle Tennessee",
-   "value": 0.67,
-   "zscore": 0.47,
+   "team": "LSU",
+   "value": 0.54,
+   "zscore": 0.43,
    "percentile": 65.6,
    "rank": 48
   },
   {
-   "team": "LSU",
-   "value": 0.54,
-   "zscore": 0.44,
+   "team": "UTEP",
+   "value": 0.5,
+   "zscore": 0.43,
    "percentile": 64.9,
    "rank": 49
   },
   {
-   "team": "UTEP",
-   "value": 0.5,
-   "zscore": 0.44,
+   "team": "San Jos\u00e9 State",
+   "value": 0.48,
+   "zscore": 0.42,
    "percentile": 64.1,
    "rank": 50
   },
   {
-   "team": "San Jos\u00e9 State",
-   "value": 0.48,
-   "zscore": 0.43,
+   "team": "New Mexico",
+   "value": 0.24,
+   "zscore": 0.38,
    "percentile": 63.4,
    "rank": 51
   },
   {
    "team": "UNLV",
    "value": 0.06,
-   "zscore": 0.37,
+   "zscore": 0.35,
    "percentile": 62.7,
    "rank": 52
   },
   {
-   "team": "Buffalo",
+   "team": "San Diego State",
    "value": -0.13,
-   "zscore": 0.33,
+   "zscore": 0.32,
    "percentile": 62.0,
    "rank": 53
   },
   {
-   "team": "San Diego State",
+   "team": "Buffalo",
    "value": -0.13,
-   "zscore": 0.33,
+   "zscore": 0.32,
    "percentile": 61.2,
    "rank": 54
   },
   {
    "team": "Rutgers",
    "value": -0.21,
-   "zscore": 0.32,
+   "zscore": 0.31,
    "percentile": 60.5,
    "rank": 55
   },
   {
-   "team": "Minnesota",
+   "team": "Arkansas",
    "value": -0.32,
-   "zscore": 0.3,
+   "zscore": 0.29,
    "percentile": 59.8,
    "rank": 56
   },
   {
-   "team": "Georgia Southern",
-   "value": -0.5,
-   "zscore": 0.27,
+   "team": "Minnesota",
+   "value": -0.32,
+   "zscore": 0.29,
    "percentile": 59.1,
    "rank": 57
   },
   {
-   "team": "Baylor",
-   "value": -0.58,
+   "team": "Georgia Southern",
+   "value": -0.5,
    "zscore": 0.26,
    "percentile": 58.3,
    "rank": 58
   },
   {
-   "team": "Georgia Tech",
-   "value": -0.61,
+   "team": "Baylor",
+   "value": -0.58,
    "zscore": 0.25,
    "percentile": 57.6,
    "rank": 59
   },
   {
-   "team": "Vanderbilt",
-   "value": -0.81,
-   "zscore": 0.22,
+   "team": "Georgia Tech",
+   "value": -0.61,
+   "zscore": 0.24,
    "percentile": 56.9,
    "rank": 60
   },
   {
-   "team": "Texas A&M",
-   "value": -0.87,
+   "team": "Vanderbilt",
+   "value": -0.81,
    "zscore": 0.21,
    "percentile": 56.2,
    "rank": 61
   },
   {
-   "team": "Cincinnati",
-   "value": -0.89,
-   "zscore": 0.21,
+   "team": "Texas A&M",
+   "value": -0.87,
+   "zscore": 0.2,
    "percentile": 55.4,
    "rank": 62
   },
   {
-   "team": "Maryland",
-   "value": -0.9,
-   "zscore": 0.21,
+   "team": "Cincinnati",
+   "value": -0.89,
+   "zscore": 0.2,
    "percentile": 54.7,
    "rank": 63
   },
   {
    "team": "Auburn",
    "value": -0.95,
-   "zscore": 0.2,
+   "zscore": 0.19,
    "percentile": 54.0,
    "rank": 64
   },
   {
    "team": "Tulsa",
    "value": -1.07,
-   "zscore": 0.18,
+   "zscore": 0.17,
    "percentile": 53.3,
    "rank": 65
   },
   {
    "team": "Temple",
    "value": -1.11,
-   "zscore": 0.17,
+   "zscore": 0.16,
    "percentile": 52.5,
    "rank": 66
   },
   {
-   "team": "Arkansas",
-   "value": -1.16,
+   "team": "UTSA",
+   "value": -1.14,
    "zscore": 0.16,
    "percentile": 51.8,
    "rank": 67
   },
   {
-   "team": "Army",
-   "value": -1.54,
-   "zscore": 0.1,
+   "team": "Nebraska",
+   "value": -1.4,
+   "zscore": 0.11,
    "percentile": 51.1,
    "rank": 68
   },
   {
-   "team": "Rice",
-   "value": -1.67,
-   "zscore": 0.08,
+   "team": "Army",
+   "value": -1.54,
+   "zscore": 0.09,
    "percentile": 50.4,
    "rank": 69
   },
   {
-   "team": "TCU",
-   "value": -1.69,
-   "zscore": 0.08,
+   "team": "Rice",
+   "value": -1.67,
+   "zscore": 0.07,
    "percentile": 49.6,
    "rank": 70
   },
   {
-   "team": "NC State",
-   "value": -1.79,
-   "zscore": 0.06,
+   "team": "TCU",
+   "value": -1.69,
+   "zscore": 0.07,
    "percentile": 48.9,
    "rank": 71
   },
   {
-   "team": "Louisiana",
-   "value": -1.84,
+   "team": "Maryland",
+   "value": -1.76,
    "zscore": 0.05,
    "percentile": 48.2,
    "rank": 72
   },
   {
-   "team": "UTSA",
-   "value": -1.98,
-   "zscore": 0.03,
+   "team": "NC State",
+   "value": -1.79,
+   "zscore": 0.05,
    "percentile": 47.5,
    "rank": 73
   },
   {
-   "team": "Nebraska",
-   "value": -2.24,
-   "zscore": -0.01,
+   "team": "Louisiana",
+   "value": -1.84,
+   "zscore": 0.04,
    "percentile": 46.7,
    "rank": 74
   },
   {
-   "team": "Western Kentucky",
-   "value": -2.44,
-   "zscore": -0.05,
+   "team": "East Carolina",
+   "value": -2.13,
+   "zscore": -0.01,
    "percentile": 46.0,
    "rank": 75
   },
   {
-   "team": "Navy",
-   "value": -2.49,
-   "zscore": -0.06,
+   "team": "Texas State",
+   "value": -2.39,
+   "zscore": -0.05,
    "percentile": 45.3,
    "rank": 76
   },
   {
-   "team": "UCF",
-   "value": -2.53,
+   "team": "Western Kentucky",
+   "value": -2.44,
    "zscore": -0.06,
    "percentile": 44.6,
    "rank": 77
   },
   {
-   "team": "Utah",
-   "value": -2.7,
-   "zscore": -0.09,
+   "team": "Navy",
+   "value": -2.49,
+   "zscore": -0.07,
    "percentile": 43.8,
    "rank": 78
   },
   {
-   "team": "Akron",
-   "value": -2.79,
-   "zscore": -0.11,
+   "team": "UCF",
+   "value": -2.53,
+   "zscore": -0.07,
    "percentile": 43.1,
    "rank": 79
   },
   {
-   "team": "California",
-   "value": -2.91,
-   "zscore": -0.12,
+   "team": "Utah",
+   "value": -2.7,
+   "zscore": -0.1,
    "percentile": 42.4,
    "rank": 80
   },
   {
-   "team": "East Carolina",
-   "value": -2.97,
-   "zscore": -0.13,
+   "team": "Akron",
+   "value": -2.79,
+   "zscore": -0.12,
    "percentile": 41.7,
    "rank": 81
   },
   {
-   "team": "App State",
-   "value": -3.01,
+   "team": "California",
+   "value": -2.91,
    "zscore": -0.14,
    "percentile": 40.9,
    "rank": 82
   },
   {
-   "team": "Air Force",
-   "value": -3.03,
-   "zscore": -0.14,
+   "team": "App State",
+   "value": -3.01,
+   "zscore": -0.15,
    "percentile": 40.2,
    "rank": 83
   },
   {
-   "team": "BYU",
-   "value": -3.08,
-   "zscore": -0.15,
+   "team": "Air Force",
+   "value": -3.03,
+   "zscore": -0.16,
    "percentile": 39.5,
    "rank": 84
   },
   {
-   "team": "Texas State",
-   "value": -3.14,
+   "team": "BYU",
+   "value": -3.08,
    "zscore": -0.16,
    "percentile": 38.8,
    "rank": 85
@@ -604,104 +604,104 @@
   {
    "team": "Clemson",
    "value": -3.38,
-   "zscore": -0.2,
+   "zscore": -0.21,
    "percentile": 38.0,
    "rank": 86
   },
   {
    "team": "Boston College",
    "value": -3.5,
-   "zscore": -0.22,
+   "zscore": -0.23,
    "percentile": 37.3,
    "rank": 87
   },
   {
    "team": "Kent State",
    "value": -3.52,
-   "zscore": -0.23,
+   "zscore": -0.24,
    "percentile": 36.6,
    "rank": 88
   },
   {
    "team": "North Dakota State",
    "value": -3.52,
-   "zscore": -0.23,
+   "zscore": -0.24,
    "percentile": 35.9,
    "rank": 89
   },
   {
    "team": "Pittsburgh",
    "value": -4.45,
-   "zscore": -0.38,
+   "zscore": -0.39,
    "percentile": 35.1,
    "rank": 90
   },
   {
    "team": "Toledo",
    "value": -4.51,
-   "zscore": -0.39,
+   "zscore": -0.4,
    "percentile": 34.4,
    "rank": 91
   },
   {
    "team": "Louisville",
    "value": -4.55,
-   "zscore": -0.4,
+   "zscore": -0.41,
    "percentile": 33.7,
    "rank": 92
   },
   {
    "team": "Florida International",
-   "value": -4.65,
-   "zscore": -0.41,
+   "value": -4.74,
+   "zscore": -0.44,
    "percentile": 33.0,
    "rank": 93
   },
   {
    "team": "Miami",
    "value": -4.74,
-   "zscore": -0.43,
+   "zscore": -0.44,
    "percentile": 32.2,
    "rank": 94
   },
   {
    "team": "Central Michigan",
    "value": -4.84,
-   "zscore": -0.44,
+   "zscore": -0.45,
    "percentile": 31.5,
    "rank": 95
   },
   {
    "team": "Georgia State",
    "value": -4.94,
-   "zscore": -0.46,
+   "zscore": -0.47,
    "percentile": 30.8,
    "rank": 96
   },
   {
-   "team": "Texas",
-   "value": -5.11,
+   "team": "Colorado State",
+   "value": -5.03,
    "zscore": -0.49,
    "percentile": 30.1,
    "rank": 97
   },
   {
-   "team": "Stanford",
+   "team": "Texas",
    "value": -5.11,
-   "zscore": -0.49,
+   "zscore": -0.5,
    "percentile": 29.3,
    "rank": 98
   },
   {
-   "team": "Nevada",
-   "value": -5.74,
-   "zscore": -0.59,
+   "team": "Stanford",
+   "value": -5.11,
+   "zscore": -0.5,
    "percentile": 28.6,
    "rank": 99
   },
   {
-   "team": "Colorado State",
-   "value": -5.78,
+   "team": "Nevada",
+   "value": -5.74,
    "zscore": -0.6,
    "percentile": 27.9,
    "rank": 100
@@ -709,146 +709,146 @@
   {
    "team": "Old Dominion",
    "value": -5.91,
-   "zscore": -0.62,
+   "zscore": -0.63,
    "percentile": 27.2,
    "rank": 101
   },
   {
    "team": "Georgia",
    "value": -5.91,
-   "zscore": -0.62,
+   "zscore": -0.63,
    "percentile": 26.4,
    "rank": 102
   },
   {
-   "team": "Kansas State",
-   "value": -6.01,
-   "zscore": -0.64,
+   "team": "Illinois",
+   "value": -6.0,
+   "zscore": -0.65,
    "percentile": 25.7,
    "rank": 103
   },
   {
-   "team": "Alabama",
-   "value": -6.05,
-   "zscore": -0.64,
+   "team": "Kansas State",
+   "value": -6.01,
+   "zscore": -0.65,
    "percentile": 25.0,
    "rank": 104
   },
   {
-   "team": "Tulane",
-   "value": -6.11,
+   "team": "Alabama",
+   "value": -6.05,
    "zscore": -0.65,
    "percentile": 24.3,
    "rank": 105
   },
   {
-   "team": "Charlotte",
-   "value": -6.3,
-   "zscore": -0.68,
+   "team": "Tulane",
+   "value": -6.11,
+   "zscore": -0.66,
    "percentile": 23.6,
    "rank": 106
   },
   {
-   "team": "Iowa State",
-   "value": -6.53,
-   "zscore": -0.72,
+   "team": "Charlotte",
+   "value": -6.3,
+   "zscore": -0.7,
    "percentile": 22.8,
    "rank": 107
   },
   {
-   "team": "Notre Dame",
-   "value": -6.56,
+   "team": "Iowa State",
+   "value": -6.53,
    "zscore": -0.73,
    "percentile": 22.1,
    "rank": 108
   },
   {
-   "team": "Florida Atlantic",
-   "value": -6.78,
-   "zscore": -0.76,
+   "team": "Notre Dame",
+   "value": -6.56,
+   "zscore": -0.74,
    "percentile": 21.4,
    "rank": 109
   },
   {
-   "team": "Tennessee",
-   "value": -6.83,
+   "team": "Florida Atlantic",
+   "value": -6.78,
    "zscore": -0.77,
    "percentile": 20.7,
    "rank": 110
   },
   {
-   "team": "Illinois",
-   "value": -6.84,
-   "zscore": -0.77,
+   "team": "Tennessee",
+   "value": -6.83,
+   "zscore": -0.78,
    "percentile": 19.9,
    "rank": 111
   },
   {
    "team": "Boise State",
    "value": -6.84,
-   "zscore": -0.77,
+   "zscore": -0.78,
    "percentile": 19.2,
    "rank": 112
   },
   {
-   "team": "Coastal Carolina",
-   "value": -7.51,
-   "zscore": -0.88,
+   "team": "SMU",
+   "value": -7.53,
+   "zscore": -0.9,
    "percentile": 18.5,
    "rank": 113
   },
   {
    "team": "Washington",
    "value": -7.82,
-   "zscore": -0.94,
+   "zscore": -0.95,
    "percentile": 17.8,
    "rank": 114
   },
   {
    "team": "Florida",
    "value": -8.11,
-   "zscore": -0.98,
+   "zscore": -0.99,
    "percentile": 17.0,
    "rank": 115
   },
   {
    "team": "Oklahoma State",
    "value": -8.22,
-   "zscore": -1.0,
+   "zscore": -1.01,
    "percentile": 16.3,
    "rank": 116
   },
   {
    "team": "Syracuse",
    "value": -8.3,
-   "zscore": -1.01,
+   "zscore": -1.03,
    "percentile": 15.6,
    "rank": 117
   },
   {
-   "team": "SMU",
-   "value": -8.37,
+   "team": "Coastal Carolina",
+   "value": -8.35,
    "zscore": -1.03,
    "percentile": 14.9,
    "rank": 118
   },
   {
    "team": "Penn State",
-   "value": -9.35,
-   "zscore": -1.19,
+   "value": -8.6,
+   "zscore": -1.07,
    "percentile": 14.1,
    "rank": 119
   },
   {
-   "team": "North Carolina",
-   "value": -9.39,
-   "zscore": -1.19,
+   "team": "Bowling Green",
+   "value": -8.72,
+   "zscore": -1.09,
    "percentile": 13.4,
    "rank": 120
   },
   {
-   "team": "Bowling Green",
-   "value": -10.31,
+   "team": "North Carolina",
+   "value": -10.24,
    "zscore": -1.35,
    "percentile": 12.7,
    "rank": 121
@@ -856,119 +856,119 @@
   {
    "team": "Mississippi State",
    "value": -10.48,
-   "zscore": -1.37,
+   "zscore": -1.38,
    "percentile": 12.0,
    "rank": 122
   },
   {
    "team": "Louisiana Tech",
    "value": -10.52,
-   "zscore": -1.38,
+   "zscore": -1.39,
    "percentile": 11.2,
    "rank": 123
   },
   {
    "team": "Washington State",
    "value": -10.53,
-   "zscore": -1.38,
+   "zscore": -1.39,
    "percentile": 10.5,
    "rank": 124
   },
   {
    "team": "Troy",
    "value": -10.8,
-   "zscore": -1.43,
+   "zscore": -1.44,
    "percentile": 9.8,
    "rank": 125
   },
   {
    "team": "Arkansas State",
-   "value": -10.92,
-   "zscore": -1.45,
+   "value": -10.83,
+   "zscore": -1.44,
    "percentile": 9.1,
    "rank": 126
   },
   {
    "team": "USC",
    "value": -11.07,
-   "zscore": -1.47,
+   "zscore": -1.48,
    "percentile": 8.3,
    "rank": 127
   },
   {
    "team": "Oklahoma",
    "value": -11.17,
-   "zscore": -1.49,
+   "zscore": -1.5,
    "percentile": 7.6,
    "rank": 128
   },
   {
    "team": "West Virginia",
    "value": -12.03,
-   "zscore": -1.63,
+   "zscore": -1.64,
    "percentile": 6.9,
    "rank": 129
   },
   {
    "team": "Eastern Michigan",
    "value": -12.16,
-   "zscore": -1.65,
+   "zscore": -1.66,
    "percentile": 6.2,
    "rank": 130
   },
   {
-   "team": "Oregon State",
-   "value": -12.73,
-   "zscore": -1.75,
+   "team": "Northern Illinois",
+   "value": -12.61,
+   "zscore": -1.74,
    "percentile": 5.4,
    "rank": 131
   },
   {
-   "team": "Michigan",
-   "value": -13.54,
-   "zscore": -1.88,
+   "team": "Oregon State",
+   "value": -12.73,
+   "zscore": -1.76,
    "percentile": 4.7,
    "rank": 132
   },
   {
-   "team": "Northern Illinois",
-   "value": -14.21,
-   "zscore": -1.99,
+   "team": "Michigan",
+   "value": -13.54,
+   "zscore": -1.89,
    "percentile": 4.0,
    "rank": 133
   },
   {
-   "team": "Oregon",
-   "value": -14.77,
-   "zscore": -2.08,
+   "team": "South Alabama",
+   "value": -15.03,
+   "zscore": -2.14,
    "percentile": 3.3,
    "rank": 134
   },
   {
-   "team": "South Alabama",
-   "value": -15.03,
-   "zscore": -2.13,
+   "team": "Michigan State",
+   "value": -15.11,
+   "zscore": -2.15,
    "percentile": 2.5,
    "rank": 135
   },
   {
-   "team": "Michigan State",
-   "value": -15.11,
-   "zscore": -2.14,
+   "team": "Oregon",
+   "value": -15.61,
+   "zscore": -2.23,
    "percentile": 1.8,
    "rank": 136
   },
   {
    "team": "Ohio State",
    "value": -16.57,
-   "zscore": -2.38,
+   "zscore": -2.39,
    "percentile": 1.1,
    "rank": 137
   },
   {
    "team": "Florida State",
    "value": -18.32,
-   "zscore": -2.67,
+   "zscore": -2.68,
    "percentile": 0.4,
    "rank": 138
   }
@@ -986,13 +986,15 @@
   "Anderson",
   "Angelo State",
   "Anna Maria College",
+  "Arkansas Monticello",
   "Arkansas Tech",
-  "Arkansas-Monticello",
   "Arkansas-Pine Bluff",
   "Ashland University",
   "Augustana",
   "Austin Peay",
   "Averett University",
+  "Barton",
+  "Benedict",
   "Benedict College",
   "Bethune-Cookman",
   "Black Hills State",
@@ -1003,8 +1005,9 @@
   "Bucknell",
   "Butler",
   "CSU-Pueblo",
+  "Cal Lutheran",
   "Cal Poly",
-  "California Lutheran University",
+  "California (PA)",
   "Campbell",
   "Carroll College",
   "Carson Newman",
@@ -1019,14 +1022,15 @@
   "Chattanooga",
   "Chowan",
   "Christopher Newport",
+  "City College of San Francisco",
   "Clark Atlanta",
   "Colgate",
   "College of San Mateo",
   "College of the Sequoias",
-  "Colorado School Of Mines",
+  "Colorado School of Mines",
   "Columbia",
-  "Concord University",
-  "Concordia University St Paul",
+  "Concord",
+  "Concordia St. Paul",
   "Concordia University, St. Paul",
   "Cornell",
   "Dartmouth",
@@ -1036,7 +1040,7 @@
   "Delaware State",
   "Drake",
   "Duquesne",
-  "East Central (OK)",
+  "East Central",
   "East Tennessee State",
   "East Texas A&M",
   "Eastern Illinois",
@@ -1045,8 +1049,8 @@
   "Edward Waters",
   "Elizabeth City State",
   "Elon",
-  "Emory & Henry College",
-  "Emporia State University",
+  "Emory & Henry",
+  "Emporia State",
   "Erskine",
   "Fairmont State",
   "Faulkner University",
@@ -1055,15 +1059,15 @@
   "Findlay",
   "Florida A&M",
   "Fordham",
-  "Fort Hays State",
+  "Fort Hays",
   "Furman",
   "Gannon",
   "Gardner-Webb",
   "Georgetown",
   "Grambling",
-  "Grand Valley State University",
+  "Grand Valley State",
   "Hampton",
-  "Harding University",
+  "Harding",
   "Harvard",
   "Henderson State",
   "Holy Cross",
@@ -1072,19 +1076,19 @@
   "Howard",
   "Howard Payne",
   "Hutchinson C.C.",
+  "IU Pennsylvania",
   "Idaho",
   "Idaho State",
   "Illinois State",
   "Incarnate Word",
   "Indiana State",
-  "Indiana-Pennsylvania",
   "Indianapolis",
-  "Iowa Western C.C.",
   "Jackson State",
-  "Johnson C Smith",
+  "Johnson C. Smith",
   "Keiser (Fl)",
   "Kilgore College",
   "LIU Post",
+  "LaGrange",
   "Lafayette",
   "Lake Erie",
   "Lamar",
@@ -1092,13 +1096,16 @@
   "Laurier",
   "LeMoyne-Owen",
   "Lehigh",
+  "Lenoir Rhyne",
   "Lenoir-Rhyne",
   "Lincoln (MO)",
   "Lindenwood",
   "Livingstone",
-  "Lock Haven University",
+  "Lock Haven",
+  "Long Beach City College",
   "Maine",
-  "Marian College",
+  "Marian",
+  "Marian (IN)",
   "Marist",
   "Mars Hill",
   "Maryville College",
@@ -1118,12 +1125,13 @@
   "Montana",
   "Montana State",
   "Montana Tech",
-  "Montana-Western",
-  "Morehouse College",
+  "Montana Western",
+  "Morehouse",
   "Morgan State",
   "Mount St. Joseph",
   "Mount Union ",
   "Murray State",
+  "Nebraska Kearney",
   "Nebraska-Kearney",
   "New Hampshire",
   "New Haven",
@@ -1140,16 +1148,15 @@
   "Northern Arizona",
   "Northern Colorado",
   "Northern Iowa",
-  "Northwest Missouri St",
+  "Northwest Missouri State",
   "Northwestern State",
   "Ohio Dominican",
   "Ottawa",
   "Ouachita Baptist",
   "Pace",
-  "PennWest California",
   "Pennsylvania",
   "Peru State",
-  "Pittsburg St",
+  "Pittsburg State",
   "Portland State",
   "Prairie View A&M",
   "Presbyterian",
@@ -1157,7 +1164,7 @@
   "Professional",
   "Puget Sound",
   "Quincy",
-  "Reinhardt University",
+  "Reinhardt",
   "Rhode Island",
   "Richmond",
   "Roanoke",
@@ -1168,7 +1175,7 @@
   "Salisbury University",
   "Samford",
   "San Diego",
-  "Savannah St",
+  "Savannah State",
   "Shepherd",
   "Shippensburg",
   "Shorter",
@@ -1216,10 +1223,11 @@
   "Valdosta State",
   "Valparaiso",
   "Villanova",
-  "Virginia St",
+  "Virginia State",
   "Virginia Union",
   "Wagner",
   "Walsh",
+  "Warner University",
   "Washburn",
   "Wayne State",
   "Wayne State College",
@@ -1238,8 +1246,8 @@
   "Western Oregon",
   "Wheeling",
   "William & Mary",
-  "Wilson",
   "Wingate",
+  "Winona State",
   "Wisconsin La Crosse",
   "Wisconsin-River Falls",
   "Wofford",
