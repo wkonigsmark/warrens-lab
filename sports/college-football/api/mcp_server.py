@@ -285,5 +285,65 @@ def refresh_data() -> str:
     return "Refresh complete.\n" + "\n".join(log)
 
 
+@mcp.tool()
+def ledger_status() -> str:
+    """The 2026 Live Ledger scorecard: how the model's frozen pre-kickoff picks are
+    doing against the market — ATS record, ROI at -110, W² miss vs market miss —
+    overall, by edge size, and by week. Grades read frozen snapshots; nothing is revised."""
+    try:
+        L = load("ledger/ledger.json")
+    except Exception:
+        return "No ledger yet. Freeze a week first: python3 api/ledger.py snapshot <week>"
+    s = L.get("summary") or {}
+    if not s.get("totalPicks"):
+        return "Ledger is empty."
+    rec = lambda a: f"{a['w']}-{a['l']}-{a['p']}" if a.get("n") else "—"
+    a, pl = s["all"], s["playable"]
+    out = [f"2026 Live Ledger · weeks frozen {s['weeksFrozen']} · {s['totalPicks']} picks "
+           f"({a['n']} graded, {s['totalPicks'] - a['n']} pending)", ""]
+    if pl["n"]:
+        out.append(f"PLAYABLE (competitive lines): {rec(pl)} ATS = {pl['atsPct']}% · ROI {pl['roi']:+}% at -110")
+        out.append(f"  W² miss {pl['modelMae']} vs market miss {pl['mktMae']} · W² closer in {pl['modelCloserPct']}% of games")
+        for t in ("small", "mid", "big"):
+            e = s["byEdgeTier"][t]
+            if e["n"]:
+                out.append(f"  edge {t:<5} {rec(e)} ({e['atsPct']}%) ROI {e['roi']:+}%")
+    if a["n"]:
+        out.append(f"ALL lined games (incl. blowout lines): {rec(a)} ({a['atsPct']}%) · miss {a['modelMae']} vs {a['mktMae']}")
+    out.append("")
+    for w in s["byWeek"]:
+        out.append(f"  wk{w['week']}: {w['n']} graded / {w['pending']} pending"
+                   + (f" · {rec(w)} ({w['atsPct']}%)" if w["n"] and w.get("atsPct") is not None else ""))
+    out.append("\nBreak-even at -110 is 52.4%. Playable = FBS-vs-FBS, market ≤21, no mislabel. "
+               "Blowout lines (margin-cap artifact) and FBS-vs-FCS games (all FCS share one pooled "
+               "rating) are logged for the record, not bet.")
+    return "\n".join(out)
+
+
+@mcp.tool()
+def this_week_picks(playable_only: bool = True, max_results: int = 30) -> str:
+    """The latest frozen week's picks: W² line vs market on every lined game, the side
+    the model likes, the edge, and the grade once the game is final."""
+    try:
+        L = load("ledger/ledger.json")
+    except Exception:
+        return "No ledger yet."
+    weeks = sorted(L.get("weeks", {}).values(), key=lambda w: -w["week"])
+    if not weeks:
+        return "No weeks frozen yet."
+    wk = weeks[0]
+    picks = sorted([p for p in wk["picks"] if p["playable"] or not playable_only],
+                   key=lambda p: -abs(p["edge"]))
+    line = lambda p, m: f"{p['home']} by {abs(m):.1f}" if m >= 0 else f"{p['away']} by {abs(m):.1f}"
+    out = [f"Week {wk['week']} · frozen {wk['snapshotAt']} · {len(picks)} {'playable ' if playable_only else ''}picks", ""]
+    for p in picks[:max_results]:
+        g = p["grade"]
+        mark = {"W": "✅", "L": "❌", "P": "➖"}.get(g["ats"], "") if g else "⏳"
+        score = f"  [{g['awayPts']}-{g['homePts']}]" if g else ""
+        out.append(f"{mark} {p['away']} @ {p['home']}: W² {line(p, p['modelHome'])} · mkt {line(p, p['mktHome'])}"
+                   f" · edge +{abs(p['edge']):.1f} on {p['modelSide']}{score}")
+    return "\n".join(out)
+
+
 if __name__ == "__main__":
     mcp.run()

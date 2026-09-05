@@ -92,6 +92,25 @@
     .is-w2-dot { fill: var(--gold); }
     .is-mkt-dot { fill: rgba(245,233,208,0.55); }
 
+    /* 2026 live ledger pick rows */
+    .lg-list { display: flex; flex-direction: column; gap: 4px; }
+    .lg-row {
+      display: grid; grid-template-columns: 62px 1fr 160px 78px 56px; align-items: center; gap: 10px;
+      padding: 8px 10px; background: var(--glass-bg); border: 1px solid var(--glass-border);
+      border-radius: 10px; font-size: 0.82rem;
+    }
+    .lg-badge { font-family: 'Oswald', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.5px; padding: 3px 6px; border-radius: 6px; text-align: center; }
+    .lg-w { background: rgba(46,204,113,0.18); color: #7ddf8f; }
+    .lg-l { background: rgba(224,112,126,0.18); color: #e0707e; }
+    .lg-p, .lg-pend { background: rgba(255,255,255,0.06); color: rgba(245,233,208,0.6); }
+    .lg-game { font-weight: 700; } .lg-game em { color: rgba(255,255,255,0.35); font-style: normal; font-size: 0.7rem; }
+    .lg-line { font-size: 0.72rem; color: rgba(245,233,208,0.6); line-height: 1.35; } .lg-line b { color: var(--gold); }
+    .lg-edge { display: flex; flex-direction: column; align-items: center; line-height: 1.1; font-weight: 800; font-size: 0.82rem; color: var(--cream); }
+    .lg-edge small { font-size: 0.58rem; font-weight: 600; color: rgba(245,233,208,0.5); max-width: 78px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lg-edge.e-mid { color: var(--gold); } .lg-edge.e-big { color: #7ddf8f; }
+    .lg-score { text-align: right; font-variant-numeric: tabular-nums; color: rgba(245,233,208,0.7); font-size: 0.78rem; }
+    @media (max-width: 640px) { .lg-row { grid-template-columns: 52px 1fr 72px; } .lg-line, .lg-score { display: none; } }
+
     .biff-hidden { display: none !important; }
   </style>
 </head>
@@ -112,8 +131,8 @@
     <div class="biff-hero">
       <div class="kick">Gray's Sports Almanac, but make it math</div>
       <h1>📓 Biff's Almanac</h1>
-      <p>How the W²-Index spreads performed against the actual spreads — where the model
-        gets priced wrong, and where the value hides.</p>
+      <p>How the W²-Index spreads perform against the actual spreads — the 2026 live ledger
+        (frozen before kickoff, graded after), plus the 2025 replay that calibrated it.</p>
     </div>
     <div id="almanac-body"></div>
     <a href="index.html" class="back-link">← back to Viva CFP</a>

@@ -1,0 +1,3375 @@
+{
+ "season": 2026,
+ "week": 1,
+ "snapshotAt": "2026-09-05T13:25Z",
+ "indexVersion": "v1",
+ "inseason": null,
+ "spreadCal": {
+  "b": 1.122,
+  "h": 3.688
+ },
+ "rankings": [
+  {
+   "school": "Ohio State",
+   "rank": 1,
+   "rating": 20.51,
+   "preseasonRating": 20.51,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Georgia",
+   "rank": 2,
+   "rating": 19.65,
+   "preseasonRating": 19.65,
+   "conference": "SEC"
+  },
+  {
+   "school": "Notre Dame",
+   "rank": 3,
+   "rating": 18.99,
+   "preseasonRating": 18.99,
+   "conference": "FBS Independents"
+  },
+  {
+   "school": "Oregon",
+   "rank": 4,
+   "rating": 18.19,
+   "preseasonRating": 18.19,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Texas A&M",
+   "rank": 5,
+   "rating": 16.62,
+   "preseasonRating": 16.62,
+   "conference": "SEC"
+  },
+  {
+   "school": "Texas",
+   "rank": 6,
+   "rating": 15.83,
+   "preseasonRating": 15.83,
+   "conference": "SEC"
+  },
+  {
+   "school": "Texas Tech",
+   "rank": 7,
+   "rating": 15.23,
+   "preseasonRating": 15.23,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Indiana",
+   "rank": 8,
+   "rating": 15.03,
+   "preseasonRating": 15.03,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Miami",
+   "rank": 9,
+   "rating": 14.61,
+   "preseasonRating": 14.61,
+   "conference": "ACC"
+  },
+  {
+   "school": "Alabama",
+   "rank": 10,
+   "rating": 14.57,
+   "preseasonRating": 14.57,
+   "conference": "SEC"
+  },
+  {
+   "school": "USC",
+   "rank": 11,
+   "rating": 13.69,
+   "preseasonRating": 13.69,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Ole Miss",
+   "rank": 12,
+   "rating": 13.68,
+   "preseasonRating": 13.68,
+   "conference": "SEC"
+  },
+  {
+   "school": "Michigan",
+   "rank": 13,
+   "rating": 12.08,
+   "preseasonRating": 12.08,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Washington",
+   "rank": 14,
+   "rating": 11.8,
+   "preseasonRating": 11.8,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Iowa",
+   "rank": 15,
+   "rating": 11.79,
+   "preseasonRating": 11.79,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "LSU",
+   "rank": 16,
+   "rating": 11.53,
+   "preseasonRating": 11.53,
+   "conference": "SEC"
+  },
+  {
+   "school": "Oklahoma",
+   "rank": 17,
+   "rating": 11.51,
+   "preseasonRating": 11.51,
+   "conference": "SEC"
+  },
+  {
+   "school": "BYU",
+   "rank": 18,
+   "rating": 11.47,
+   "preseasonRating": 11.47,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Utah",
+   "rank": 19,
+   "rating": 11.34,
+   "preseasonRating": 11.34,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Tennessee",
+   "rank": 20,
+   "rating": 10.93,
+   "preseasonRating": 10.93,
+   "conference": "SEC"
+  },
+  {
+   "school": "South Carolina",
+   "rank": 21,
+   "rating": 10.31,
+   "preseasonRating": 10.31,
+   "conference": "SEC"
+  },
+  {
+   "school": "Missouri",
+   "rank": 22,
+   "rating": 10.09,
+   "preseasonRating": 10.09,
+   "conference": "SEC"
+  },
+  {
+   "school": "Florida",
+   "rank": 23,
+   "rating": 9.12,
+   "preseasonRating": 9.12,
+   "conference": "SEC"
+  },
+  {
+   "school": "Arizona",
+   "rank": 24,
+   "rating": 9.09,
+   "preseasonRating": 9.09,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Vanderbilt",
+   "rank": 25,
+   "rating": 9.09,
+   "preseasonRating": 9.09,
+   "conference": "SEC"
+  },
+  {
+   "school": "Northwestern",
+   "rank": 26,
+   "rating": 8.28,
+   "preseasonRating": 8.28,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Clemson",
+   "rank": 27,
+   "rating": 7.8,
+   "preseasonRating": 7.8,
+   "conference": "ACC"
+  },
+  {
+   "school": "Houston",
+   "rank": 28,
+   "rating": 7.75,
+   "preseasonRating": 7.75,
+   "conference": "Big 12"
+  },
+  {
+   "school": "SMU",
+   "rank": 29,
+   "rating": 7.56,
+   "preseasonRating": 7.56,
+   "conference": "ACC"
+  },
+  {
+   "school": "Penn State",
+   "rank": 30,
+   "rating": 7.1,
+   "preseasonRating": 7.1,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Illinois",
+   "rank": 31,
+   "rating": 6.94,
+   "preseasonRating": 6.94,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Auburn",
+   "rank": 32,
+   "rating": 6.34,
+   "preseasonRating": 6.34,
+   "conference": "SEC"
+  },
+  {
+   "school": "Louisville",
+   "rank": 33,
+   "rating": 5.94,
+   "preseasonRating": 5.94,
+   "conference": "ACC"
+  },
+  {
+   "school": "Minnesota",
+   "rank": 34,
+   "rating": 5.89,
+   "preseasonRating": 5.89,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Kansas State",
+   "rank": 35,
+   "rating": 5.82,
+   "preseasonRating": 5.82,
+   "conference": "Big 12"
+  },
+  {
+   "school": "NC State",
+   "rank": 36,
+   "rating": 5.57,
+   "preseasonRating": 5.57,
+   "conference": "ACC"
+  },
+  {
+   "school": "UCLA",
+   "rank": 37,
+   "rating": 5.47,
+   "preseasonRating": 5.47,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "TCU",
+   "rank": 38,
+   "rating": 5.4,
+   "preseasonRating": 5.4,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Pittsburgh",
+   "rank": 39,
+   "rating": 5.18,
+   "preseasonRating": 5.18,
+   "conference": "ACC"
+  },
+  {
+   "school": "Virginia",
+   "rank": 40,
+   "rating": 4.46,
+   "preseasonRating": 4.46,
+   "conference": "ACC"
+  },
+  {
+   "school": "Florida State",
+   "rank": 41,
+   "rating": 4.27,
+   "preseasonRating": 4.27,
+   "conference": "ACC"
+  },
+  {
+   "school": "Kentucky",
+   "rank": 42,
+   "rating": 3.97,
+   "preseasonRating": 3.97,
+   "conference": "SEC"
+  },
+  {
+   "school": "Maryland",
+   "rank": 43,
+   "rating": 3.9,
+   "preseasonRating": 3.9,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Arizona State",
+   "rank": 44,
+   "rating": 3.86,
+   "preseasonRating": 3.86,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Wisconsin",
+   "rank": 45,
+   "rating": 3.72,
+   "preseasonRating": 3.72,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Rutgers",
+   "rank": 46,
+   "rating": 3.7,
+   "preseasonRating": 3.7,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Nebraska",
+   "rank": 47,
+   "rating": 3.64,
+   "preseasonRating": 3.64,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Arkansas",
+   "rank": 48,
+   "rating": 3.61,
+   "preseasonRating": 3.61,
+   "conference": "SEC"
+  },
+  {
+   "school": "Baylor",
+   "rank": 49,
+   "rating": 3.49,
+   "preseasonRating": 3.49,
+   "conference": "Big 12"
+  },
+  {
+   "school": "San Diego State",
+   "rank": 50,
+   "rating": 3.23,
+   "preseasonRating": 3.23,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Georgia Tech",
+   "rank": 51,
+   "rating": 3.19,
+   "preseasonRating": 3.19,
+   "conference": "ACC"
+  },
+  {
+   "school": "Duke",
+   "rank": 52,
+   "rating": 2.85,
+   "preseasonRating": 2.85,
+   "conference": "ACC"
+  },
+  {
+   "school": "Virginia Tech",
+   "rank": 53,
+   "rating": 2.69,
+   "preseasonRating": 2.69,
+   "conference": "ACC"
+  },
+  {
+   "school": "Wake Forest",
+   "rank": 54,
+   "rating": 2.64,
+   "preseasonRating": 2.64,
+   "conference": "ACC"
+  },
+  {
+   "school": "Mississippi State",
+   "rank": 55,
+   "rating": 2.4,
+   "preseasonRating": 2.4,
+   "conference": "SEC"
+  },
+  {
+   "school": "Kansas",
+   "rank": 56,
+   "rating": 2.39,
+   "preseasonRating": 2.39,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Purdue",
+   "rank": 57,
+   "rating": 2.01,
+   "preseasonRating": 2.01,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Boise State",
+   "rank": 58,
+   "rating": 2.0,
+   "preseasonRating": 2.0,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "South Florida",
+   "rank": 59,
+   "rating": 1.92,
+   "preseasonRating": 1.92,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Cincinnati",
+   "rank": 60,
+   "rating": 1.61,
+   "preseasonRating": 1.61,
+   "conference": "Big 12"
+  },
+  {
+   "school": "California",
+   "rank": 61,
+   "rating": 1.17,
+   "preseasonRating": 1.17,
+   "conference": "ACC"
+  },
+  {
+   "school": "Iowa State",
+   "rank": 62,
+   "rating": 1.03,
+   "preseasonRating": 1.03,
+   "conference": "Big 12"
+  },
+  {
+   "school": "James Madison",
+   "rank": 63,
+   "rating": 0.83,
+   "preseasonRating": 0.83,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "UTSA",
+   "rank": 64,
+   "rating": 0.57,
+   "preseasonRating": 0.57,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Texas State",
+   "rank": 65,
+   "rating": 0.02,
+   "preseasonRating": 0.02,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "UCF",
+   "rank": 66,
+   "rating": -0.07,
+   "preseasonRating": -0.07,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Washington State",
+   "rank": 67,
+   "rating": -0.09,
+   "preseasonRating": -0.09,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Colorado",
+   "rank": 68,
+   "rating": -0.46,
+   "preseasonRating": -0.46,
+   "conference": "Big 12"
+  },
+  {
+   "school": "North Carolina",
+   "rank": 69,
+   "rating": -0.64,
+   "preseasonRating": -0.64,
+   "conference": "ACC"
+  },
+  {
+   "school": "Utah State",
+   "rank": 70,
+   "rating": -0.79,
+   "preseasonRating": -0.79,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Memphis",
+   "rank": 71,
+   "rating": -0.82,
+   "preseasonRating": -0.82,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Western Michigan",
+   "rank": 72,
+   "rating": -0.86,
+   "preseasonRating": -0.86,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Fresno State",
+   "rank": 73,
+   "rating": -1.4,
+   "preseasonRating": -1.4,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Michigan State",
+   "rank": 74,
+   "rating": -1.47,
+   "preseasonRating": -1.47,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "East Carolina",
+   "rank": 75,
+   "rating": -1.49,
+   "preseasonRating": -1.49,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Marshall",
+   "rank": 76,
+   "rating": -1.54,
+   "preseasonRating": -1.54,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "New Mexico",
+   "rank": 77,
+   "rating": -1.61,
+   "preseasonRating": -1.61,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Stanford",
+   "rank": 78,
+   "rating": -1.68,
+   "preseasonRating": -1.68,
+   "conference": "ACC"
+  },
+  {
+   "school": "Hawai'i",
+   "rank": 79,
+   "rating": -1.74,
+   "preseasonRating": -1.74,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Tulane",
+   "rank": 80,
+   "rating": -1.82,
+   "preseasonRating": -1.82,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "West Virginia",
+   "rank": 81,
+   "rating": -2.46,
+   "preseasonRating": -2.46,
+   "conference": "Big 12"
+  },
+  {
+   "school": "North Texas",
+   "rank": 82,
+   "rating": -2.59,
+   "preseasonRating": -2.59,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Syracuse",
+   "rank": 83,
+   "rating": -2.64,
+   "preseasonRating": -2.64,
+   "conference": "ACC"
+  },
+  {
+   "school": "Toledo",
+   "rank": 84,
+   "rating": -2.64,
+   "preseasonRating": -2.64,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Boston College",
+   "rank": 85,
+   "rating": -2.82,
+   "preseasonRating": -2.82,
+   "conference": "ACC"
+  },
+  {
+   "school": "UNLV",
+   "rank": 86,
+   "rating": -2.9,
+   "preseasonRating": -2.9,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Western Kentucky",
+   "rank": 87,
+   "rating": -3.25,
+   "preseasonRating": -3.25,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "UConn",
+   "rank": 88,
+   "rating": -3.33,
+   "preseasonRating": -3.33,
+   "conference": "FBS Independents"
+  },
+  {
+   "school": "Old Dominion",
+   "rank": 89,
+   "rating": -3.84,
+   "preseasonRating": -3.84,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Southern Miss",
+   "rank": 90,
+   "rating": -4.3,
+   "preseasonRating": -4.3,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Louisiana",
+   "rank": 91,
+   "rating": -4.51,
+   "preseasonRating": -4.51,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Ohio",
+   "rank": 92,
+   "rating": -4.55,
+   "preseasonRating": -4.55,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Navy",
+   "rank": 93,
+   "rating": -4.6,
+   "preseasonRating": -4.6,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Oklahoma State",
+   "rank": 94,
+   "rating": -4.6,
+   "preseasonRating": -4.6,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Jacksonville State",
+   "rank": 95,
+   "rating": -4.98,
+   "preseasonRating": -4.98,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Temple",
+   "rank": 96,
+   "rating": -5.15,
+   "preseasonRating": -5.15,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Army",
+   "rank": 97,
+   "rating": -5.5,
+   "preseasonRating": -5.5,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Louisiana Tech",
+   "rank": 98,
+   "rating": -5.64,
+   "preseasonRating": -5.64,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Liberty",
+   "rank": 99,
+   "rating": -5.76,
+   "preseasonRating": -5.76,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Tulsa",
+   "rank": 100,
+   "rating": -6.05,
+   "preseasonRating": -6.05,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Delaware",
+   "rank": 101,
+   "rating": -6.06,
+   "preseasonRating": -6.06,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Florida Atlantic",
+   "rank": 102,
+   "rating": -6.26,
+   "preseasonRating": -6.26,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "North Dakota State",
+   "rank": 103,
+   "rating": -6.32,
+   "preseasonRating": -6.32,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Miami (OH)",
+   "rank": 104,
+   "rating": -6.52,
+   "preseasonRating": -6.52,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Air Force",
+   "rank": 105,
+   "rating": -6.97,
+   "preseasonRating": -6.97,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Kennesaw State",
+   "rank": 106,
+   "rating": -7.09,
+   "preseasonRating": -7.09,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Oregon State",
+   "rank": 107,
+   "rating": -7.11,
+   "preseasonRating": -7.11,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Troy",
+   "rank": 108,
+   "rating": -7.16,
+   "preseasonRating": -7.16,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "UAB",
+   "rank": 109,
+   "rating": -7.86,
+   "preseasonRating": -7.86,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "App State",
+   "rank": 110,
+   "rating": -7.88,
+   "preseasonRating": -7.88,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Central Michigan",
+   "rank": 111,
+   "rating": -7.99,
+   "preseasonRating": -7.99,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Colorado State",
+   "rank": 112,
+   "rating": -8.29,
+   "preseasonRating": -8.29,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "South Alabama",
+   "rank": 113,
+   "rating": -8.3,
+   "preseasonRating": -8.3,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Georgia Southern",
+   "rank": 114,
+   "rating": -8.49,
+   "preseasonRating": -8.49,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Wyoming",
+   "rank": 115,
+   "rating": -8.53,
+   "preseasonRating": -8.53,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Missouri State",
+   "rank": 116,
+   "rating": -8.9,
+   "preseasonRating": -8.9,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Arkansas State",
+   "rank": 117,
+   "rating": -9.08,
+   "preseasonRating": -9.08,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Rice",
+   "rank": 118,
+   "rating": -9.09,
+   "preseasonRating": -9.09,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Florida International",
+   "rank": 119,
+   "rating": -9.7,
+   "preseasonRating": -9.7,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Nevada",
+   "rank": 120,
+   "rating": -10.46,
+   "preseasonRating": -10.46,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Akron",
+   "rank": 121,
+   "rating": -10.61,
+   "preseasonRating": -10.61,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Buffalo",
+   "rank": 122,
+   "rating": -11.02,
+   "preseasonRating": -11.02,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Coastal Carolina",
+   "rank": 123,
+   "rating": -11.03,
+   "preseasonRating": -11.03,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Eastern Michigan",
+   "rank": 124,
+   "rating": -11.03,
+   "preseasonRating": -11.03,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Kent State",
+   "rank": 125,
+   "rating": -11.55,
+   "preseasonRating": -11.55,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Sacramento State",
+   "rank": 126,
+   "rating": -11.82,
+   "preseasonRating": -11.82,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "San Jos\u00e9 State",
+   "rank": 127,
+   "rating": -12.38,
+   "preseasonRating": -12.38,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Northern Illinois",
+   "rank": 128,
+   "rating": -12.64,
+   "preseasonRating": -12.64,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Georgia State",
+   "rank": 129,
+   "rating": -12.9,
+   "preseasonRating": -12.9,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "UL Monroe",
+   "rank": 130,
+   "rating": -12.97,
+   "preseasonRating": -12.97,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "New Mexico State",
+   "rank": 131,
+   "rating": -13.11,
+   "preseasonRating": -13.11,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "UTEP",
+   "rank": 132,
+   "rating": -13.11,
+   "preseasonRating": -13.11,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Bowling Green",
+   "rank": 133,
+   "rating": -13.27,
+   "preseasonRating": -13.27,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Sam Houston",
+   "rank": 134,
+   "rating": -13.95,
+   "preseasonRating": -13.95,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Charlotte",
+   "rank": 135,
+   "rating": -14.05,
+   "preseasonRating": -14.05,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Middle Tennessee",
+   "rank": 136,
+   "rating": -14.35,
+   "preseasonRating": -14.35,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Ball State",
+   "rank": 137,
+   "rating": -14.67,
+   "preseasonRating": -14.67,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Massachusetts",
+   "rank": 138,
+   "rating": -23.67,
+   "preseasonRating": -23.67,
+   "conference": "Mid-American"
+  }
+ ],
+ "picks": [
+  {
+   "id": 401862701,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Army",
+   "away": "Bryant",
+   "neutral": false,
+   "homeRating": -5.5,
+   "awayRating": -22.93,
+   "modelHome": 23.2,
+   "mktHome": 37.2,
+   "edge": -14.0,
+   "edgeTier": "big",
+   "modelSide": "Bryant",
+   "homeWinProb": 0.973,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401862698,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Temple",
+   "away": "Rhode Island",
+   "neutral": false,
+   "homeRating": -5.15,
+   "awayRating": -22.93,
+   "modelHome": 23.6,
+   "mktHome": 14.5,
+   "edge": 9.1,
+   "edgeTier": "big",
+   "modelSide": "Temple",
+   "homeWinProb": 0.974,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856635,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Arkansas",
+   "away": "North Alabama",
+   "neutral": false,
+   "homeRating": 3.61,
+   "awayRating": -22.93,
+   "modelHome": 33.5,
+   "mktHome": 40.5,
+   "edge": -7.0,
+   "edgeTier": "big",
+   "modelSide": "North Alabama",
+   "homeWinProb": 0.994,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858208,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Syracuse",
+   "away": "New Hampshire",
+   "neutral": false,
+   "homeRating": -2.64,
+   "awayRating": -22.93,
+   "modelHome": 26.5,
+   "mktHome": 35.0,
+   "edge": -8.5,
+   "edgeTier": "big",
+   "modelSide": "New Hampshire",
+   "homeWinProb": 0.983,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401869960,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "James Madison",
+   "away": "Liberty",
+   "neutral": false,
+   "homeRating": 0.83,
+   "awayRating": -5.76,
+   "modelHome": 11.1,
+   "mktHome": 6.0,
+   "edge": 5.1,
+   "edgeTier": "mid",
+   "modelSide": "James Madison",
+   "homeWinProb": 0.846,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401866410,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Bowling Green",
+   "away": "Tarleton State",
+   "neutral": false,
+   "homeRating": -13.27,
+   "awayRating": -22.93,
+   "modelHome": 14.5,
+   "mktHome": 1.8,
+   "edge": 12.7,
+   "edgeTier": "big",
+   "modelSide": "Bowling Green",
+   "homeWinProb": 0.903,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856779,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Iowa State",
+   "away": "Southeast Missouri State",
+   "neutral": false,
+   "homeRating": 1.03,
+   "awayRating": -22.93,
+   "modelHome": 30.6,
+   "mktHome": 30.5,
+   "edge": 0.1,
+   "edgeTier": "small",
+   "modelSide": "Iowa State",
+   "homeWinProb": 0.991,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856767,
+   "week": 1,
+   "date": "2026-09-03",
+   "home": "UCF",
+   "away": "Bethune-Cookman",
+   "neutral": false,
+   "homeRating": -0.07,
+   "awayRating": -22.93,
+   "modelHome": 29.3,
+   "mktHome": 43.5,
+   "edge": -14.2,
+   "edgeTier": "big",
+   "modelSide": "Bethune-Cookman",
+   "homeWinProb": 0.989,
+   "books": [
+    "DraftKings",
+    "Draft Kings"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401861962,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "UConn",
+   "away": "Lafayette",
+   "neutral": false,
+   "homeRating": -3.33,
+   "awayRating": -22.93,
+   "modelHome": 25.7,
+   "mktHome": 19.5,
+   "edge": 6.2,
+   "edgeTier": "mid",
+   "modelSide": "UConn",
+   "homeWinProb": 0.981,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856777,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Cincinnati",
+   "away": "Boston College",
+   "neutral": false,
+   "homeRating": 1.61,
+   "awayRating": -2.82,
+   "modelHome": 8.7,
+   "mktHome": 7.5,
+   "edge": 1.2,
+   "edgeTier": "small",
+   "modelSide": "Cincinnati",
+   "homeWinProb": 0.791,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856659,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Kentucky",
+   "away": "Youngstown State",
+   "neutral": false,
+   "homeRating": 3.97,
+   "awayRating": -22.93,
+   "modelHome": 33.9,
+   "mktHome": 22.2,
+   "edge": 11.7,
+   "edgeTier": "big",
+   "modelSide": "Kentucky",
+   "homeWinProb": 0.995,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401864496,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Air Force",
+   "away": "Duquesne",
+   "neutral": false,
+   "homeRating": -6.97,
+   "awayRating": -22.93,
+   "modelHome": 21.6,
+   "mktHome": 29.0,
+   "edge": -7.4,
+   "edgeTier": "big",
+   "modelSide": "Duquesne",
+   "homeWinProb": 0.965,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856658,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Georgia",
+   "away": "Tennessee State",
+   "neutral": false,
+   "homeRating": 19.65,
+   "awayRating": -22.93,
+   "modelHome": 51.5,
+   "mktHome": 46.5,
+   "edge": 5.0,
+   "edgeTier": "mid",
+   "modelSide": "Georgia",
+   "homeWinProb": 1.0,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856666,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Tennessee",
+   "away": "Furman",
+   "neutral": false,
+   "homeRating": 10.93,
+   "awayRating": -22.93,
+   "modelHome": 41.7,
+   "mktHome": 48.2,
+   "edge": -6.5,
+   "edgeTier": "mid",
+   "modelSide": "Furman",
+   "homeWinProb": 0.998,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401866409,
+   "week": 1,
+   "date": "2026-09-03",
+   "home": "Buffalo",
+   "away": "UAlbany",
+   "neutral": false,
+   "homeRating": -11.02,
+   "awayRating": -22.93,
+   "modelHome": 17.1,
+   "mktHome": 18.5,
+   "edge": -1.4,
+   "edgeTier": "small",
+   "modelSide": "UAlbany",
+   "homeWinProb": 0.932,
+   "books": [
+    "DraftKings",
+    "Draft Kings"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401862696,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Navy",
+   "away": "Towson",
+   "neutral": false,
+   "homeRating": -4.6,
+   "awayRating": -22.93,
+   "modelHome": 24.3,
+   "mktHome": 30.5,
+   "edge": -6.2,
+   "edgeTier": "mid",
+   "modelSide": "Towson",
+   "homeWinProb": 0.976,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401866623,
+   "week": 1,
+   "date": "2026-09-04",
+   "home": "Georgia State",
+   "away": "North Carolina A&T",
+   "neutral": false,
+   "homeRating": -12.9,
+   "awayRating": -22.93,
+   "modelHome": 14.9,
+   "mktHome": 28.5,
+   "edge": -13.6,
+   "edgeTier": "big",
+   "modelSide": "North Carolina A&T",
+   "homeWinProb": 0.908,
+   "books": [
+    "DraftKings",
+    "Bovada",
+    "Draft Kings"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401858422,
+   "week": 1,
+   "date": "2026-09-04",
+   "home": "Minnesota",
+   "away": "Eastern Illinois",
+   "neutral": false,
+   "homeRating": 5.89,
+   "awayRating": -22.93,
+   "modelHome": 36.0,
+   "mktHome": 42.5,
+   "edge": -6.5,
+   "edgeTier": "mid",
+   "modelSide": "Eastern Illinois",
+   "homeWinProb": 0.996,
+   "books": [
+    "DraftKings",
+    "Draft Kings"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401856769,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Kansas",
+   "away": "Long Island University",
+   "neutral": false,
+   "homeRating": 2.39,
+   "awayRating": -22.93,
+   "modelHome": 32.1,
+   "mktHome": 44.5,
+   "edge": -12.4,
+   "edgeTier": "big",
+   "modelSide": "Long Island University",
+   "homeWinProb": 0.993,
+   "books": [
+    "DraftKings",
+    "Bovada",
+    "Draft Kings"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401856663,
+   "week": 1,
+   "date": "2026-09-04",
+   "home": "Missouri",
+   "away": "Arkansas-Pine Bluff",
+   "neutral": false,
+   "homeRating": 10.09,
+   "awayRating": -22.93,
+   "modelHome": 40.7,
+   "mktHome": 55.5,
+   "edge": -14.8,
+   "edgeTier": "big",
+   "modelSide": "Arkansas-Pine Bluff",
+   "homeWinProb": 0.998,
+   "books": [
+    "DraftKings",
+    "Draft Kings"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401864424,
+   "week": 1,
+   "date": "2026-09-03",
+   "home": "Delaware",
+   "away": "Merrimack",
+   "neutral": false,
+   "homeRating": -6.06,
+   "awayRating": -22.93,
+   "modelHome": 22.6,
+   "mktHome": 31.5,
+   "edge": -8.9,
+   "edgeTier": "big",
+   "modelSide": "Merrimack",
+   "homeWinProb": 0.97,
+   "books": [
+    "DraftKings",
+    "Draft Kings"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401858435,
+   "week": 1,
+   "date": "2026-09-04",
+   "home": "Purdue",
+   "away": "Indiana State",
+   "neutral": false,
+   "homeRating": 2.01,
+   "awayRating": -22.93,
+   "modelHome": 31.7,
+   "mktHome": 35.5,
+   "edge": -3.8,
+   "edgeTier": "mid",
+   "modelSide": "Indiana State",
+   "homeWinProb": 0.992,
+   "books": [
+    "DraftKings",
+    "Bovada",
+    "Draft Kings"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401862694,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Charlotte",
+   "away": "The Citadel",
+   "neutral": false,
+   "homeRating": -14.05,
+   "awayRating": -22.93,
+   "modelHome": 13.7,
+   "mktHome": 20.2,
+   "edge": -6.5,
+   "edgeTier": "mid",
+   "modelSide": "The Citadel",
+   "homeWinProb": 0.89,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401864425,
+   "week": 1,
+   "date": "2026-09-03",
+   "home": "Kennesaw State",
+   "away": "West Georgia",
+   "neutral": false,
+   "homeRating": -7.09,
+   "awayRating": -22.93,
+   "modelHome": 21.5,
+   "mktHome": 22.5,
+   "edge": -1.0,
+   "edgeTier": "small",
+   "modelSide": "West Georgia",
+   "homeWinProb": 0.964,
+   "books": [
+    "DraftKings",
+    "Draft Kings"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401862700,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "UTSA",
+   "away": "UT Rio Grande Valley",
+   "neutral": false,
+   "homeRating": 0.57,
+   "awayRating": -22.93,
+   "modelHome": 30.1,
+   "mktHome": 28.5,
+   "edge": 1.6,
+   "edgeTier": "small",
+   "modelSide": "UTSA",
+   "homeWinProb": 0.99,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401864499,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "North Dakota State",
+   "away": "Fordham",
+   "neutral": false,
+   "homeRating": -6.32,
+   "awayRating": -22.93,
+   "modelHome": 22.3,
+   "mktHome": 41.5,
+   "edge": -19.2,
+   "edgeTier": "big",
+   "modelSide": "Fordham",
+   "homeWinProb": 0.969,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401866627,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "App State",
+   "away": "Maine",
+   "neutral": false,
+   "homeRating": -7.88,
+   "awayRating": -22.93,
+   "modelHome": 20.6,
+   "mktHome": 19.5,
+   "edge": 1.1,
+   "edgeTier": "small",
+   "modelSide": "App State",
+   "homeWinProb": 0.959,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856770,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Texas Tech",
+   "away": "Abilene Christian",
+   "neutral": false,
+   "homeRating": 15.23,
+   "awayRating": -22.93,
+   "modelHome": 46.5,
+   "mktHome": 42.5,
+   "edge": 4.0,
+   "edgeTier": "mid",
+   "modelSide": "Texas Tech",
+   "homeWinProb": 0.999,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856775,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "BYU",
+   "away": "Utah Tech",
+   "neutral": false,
+   "homeRating": 11.47,
+   "awayRating": -22.93,
+   "modelHome": 42.3,
+   "mktHome": 51.5,
+   "edge": -9.2,
+   "edgeTier": "big",
+   "modelSide": "Utah Tech",
+   "homeWinProb": 0.998,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401868140,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Jacksonville State",
+   "away": "Eastern Kentucky",
+   "neutral": false,
+   "homeRating": -4.98,
+   "awayRating": -22.93,
+   "modelHome": 23.8,
+   "mktHome": 20.8,
+   "edge": 3.0,
+   "edgeTier": "mid",
+   "modelSide": "Jacksonville State",
+   "homeWinProb": 0.975,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856771,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Kansas State",
+   "away": "Nicholls",
+   "neutral": false,
+   "homeRating": 5.82,
+   "awayRating": -22.93,
+   "modelHome": 35.9,
+   "mktHome": 41.0,
+   "edge": -5.1,
+   "edgeTier": "mid",
+   "modelSide": "Nicholls",
+   "homeWinProb": 0.996,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401866411,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "Sacramento State",
+   "away": "Mississippi Valley State",
+   "neutral": false,
+   "homeRating": -11.82,
+   "awayRating": -22.93,
+   "modelHome": 16.2,
+   "mktHome": 37.5,
+   "edge": -21.3,
+   "edgeTier": "big",
+   "modelSide": "Mississippi Valley State",
+   "homeWinProb": 0.923,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401862697,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Rice",
+   "away": "Houston Christian",
+   "neutral": false,
+   "homeRating": -9.09,
+   "awayRating": -22.93,
+   "modelHome": 19.2,
+   "mktHome": 22.5,
+   "edge": -3.3,
+   "edgeTier": "mid",
+   "modelSide": "Houston Christian",
+   "homeWinProb": 0.95,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401860879,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "San Diego State",
+   "away": "Portland State",
+   "neutral": false,
+   "homeRating": 3.23,
+   "awayRating": -22.93,
+   "modelHome": 33.0,
+   "mktHome": 40.5,
+   "edge": -7.5,
+   "edgeTier": "big",
+   "modelSide": "Portland State",
+   "homeWinProb": 0.994,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856773,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "Arizona",
+   "away": "Northern Arizona",
+   "neutral": false,
+   "homeRating": 9.09,
+   "awayRating": -22.93,
+   "modelHome": 39.6,
+   "mktHome": 31.5,
+   "edge": 8.1,
+   "edgeTier": "big",
+   "modelSide": "Arizona",
+   "homeWinProb": 0.998,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858211,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Virginia Tech",
+   "away": "VMI",
+   "neutral": false,
+   "homeRating": 2.69,
+   "awayRating": -22.93,
+   "modelHome": 32.4,
+   "mktHome": 55.5,
+   "edge": -23.1,
+   "edgeTier": "big",
+   "modelSide": "VMI",
+   "homeWinProb": 0.993,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401868356,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Southern Miss",
+   "away": "Alcorn State",
+   "neutral": false,
+   "homeRating": -4.3,
+   "awayRating": -22.93,
+   "modelHome": 24.6,
+   "mktHome": 18.8,
+   "edge": 5.8,
+   "edgeTier": "mid",
+   "modelSide": "Southern Miss",
+   "homeWinProb": 0.978,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858431,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "Northwestern",
+   "away": "South Dakota State",
+   "neutral": false,
+   "homeRating": 8.28,
+   "awayRating": -22.93,
+   "modelHome": 38.7,
+   "mktHome": 12.5,
+   "edge": 26.2,
+   "edgeTier": "big",
+   "modelSide": "Northwestern",
+   "homeWinProb": 0.997,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401867866,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Middle Tennessee",
+   "away": "Murray State",
+   "neutral": false,
+   "homeRating": -14.35,
+   "awayRating": -22.93,
+   "modelHome": 13.3,
+   "mktHome": 21.2,
+   "edge": -7.9,
+   "edgeTier": "big",
+   "modelSide": "Murray State",
+   "homeWinProb": 0.885,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401868170,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Georgia Southern",
+   "away": "Charleston Southern",
+   "neutral": false,
+   "homeRating": -8.49,
+   "awayRating": -22.93,
+   "modelHome": 19.9,
+   "mktHome": 26.0,
+   "edge": -6.1,
+   "edgeTier": "mid",
+   "modelSide": "Charleston Southern",
+   "homeWinProb": 0.955,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401867973,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Old Dominion",
+   "away": "Norfolk State",
+   "neutral": false,
+   "homeRating": -3.84,
+   "awayRating": -22.93,
+   "modelHome": 25.1,
+   "mktHome": 40.8,
+   "edge": -15.7,
+   "edgeTier": "big",
+   "modelSide": "Norfolk State",
+   "homeWinProb": 0.979,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401869129,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Louisiana Tech",
+   "away": "Northwestern State",
+   "neutral": false,
+   "homeRating": -5.64,
+   "awayRating": -22.93,
+   "modelHome": 23.1,
+   "mktHome": 44.5,
+   "edge": -21.4,
+   "edgeTier": "big",
+   "modelSide": "Northwestern State",
+   "homeWinProb": 0.972,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858427,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "Maryland",
+   "away": "Hampton",
+   "neutral": false,
+   "homeRating": 3.9,
+   "awayRating": -22.93,
+   "modelHome": 33.8,
+   "mktHome": 45.5,
+   "edge": -11.7,
+   "edgeTier": "big",
+   "modelSide": "Hampton",
+   "homeWinProb": 0.994,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856774,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "Arizona State",
+   "away": "Morgan State",
+   "neutral": false,
+   "homeRating": 3.86,
+   "awayRating": -22.93,
+   "modelHome": 33.7,
+   "mktHome": 44.8,
+   "edge": -11.1,
+   "edgeTier": "big",
+   "modelSide": "Morgan State",
+   "homeWinProb": 0.994,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401869142,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "Louisiana",
+   "away": "Lamar",
+   "neutral": false,
+   "homeRating": -4.51,
+   "awayRating": -22.93,
+   "modelHome": 24.4,
+   "mktHome": 20.2,
+   "edge": 4.2,
+   "edgeTier": "mid",
+   "modelSide": "Louisiana",
+   "homeWinProb": 0.977,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856669,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Vanderbilt",
+   "away": "Austin Peay",
+   "neutral": false,
+   "homeRating": 9.09,
+   "awayRating": -22.93,
+   "modelHome": 39.6,
+   "mktHome": 28.8,
+   "edge": 10.8,
+   "edgeTier": "big",
+   "modelSide": "Vanderbilt",
+   "homeWinProb": 0.998,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401860880,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Utah State",
+   "away": "Idaho State",
+   "neutral": false,
+   "homeRating": -0.79,
+   "awayRating": -22.93,
+   "modelHome": 28.5,
+   "mktHome": 14.0,
+   "edge": 14.5,
+   "edgeTier": "big",
+   "modelSide": "Utah State",
+   "homeWinProb": 0.988,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401868316,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "South Alabama",
+   "away": "SE Louisiana",
+   "neutral": false,
+   "homeRating": -8.3,
+   "awayRating": -22.93,
+   "modelHome": 20.1,
+   "mktHome": 13.0,
+   "edge": 7.1,
+   "edgeTier": "big",
+   "modelSide": "South Alabama",
+   "homeWinProb": 0.956,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401870790,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "New Mexico State",
+   "away": "Mercyhurst",
+   "neutral": false,
+   "homeRating": -13.11,
+   "awayRating": -22.93,
+   "modelHome": 14.7,
+   "mktHome": 28.5,
+   "edge": -13.8,
+   "edgeTier": "big",
+   "modelSide": "Mercyhurst",
+   "homeWinProb": 0.905,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858423,
+   "week": 1,
+   "date": "2026-09-03",
+   "home": "Rutgers",
+   "away": "Massachusetts",
+   "neutral": false,
+   "homeRating": 3.7,
+   "awayRating": -23.67,
+   "modelHome": 34.4,
+   "mktHome": 29.5,
+   "edge": 4.9,
+   "edgeTier": "mid",
+   "modelSide": "Rutgers",
+   "homeWinProb": 0.995,
+   "books": [
+    "Bovada",
+    "Draft Kings",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401856768,
+   "week": 1,
+   "date": "2026-09-04",
+   "home": "Utah",
+   "away": "Idaho",
+   "neutral": false,
+   "homeRating": 11.34,
+   "awayRating": -22.93,
+   "modelHome": 42.1,
+   "mktHome": 38.0,
+   "edge": 4.1,
+   "edgeTier": "mid",
+   "modelSide": "Utah",
+   "homeWinProb": 0.998,
+   "books": [
+    "DraftKings",
+    "Draft Kings"
+   ],
+   "fcsGame": true,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401858212,
+   "week": 1,
+   "date": "2026-09-07",
+   "home": "Florida State",
+   "away": "SMU",
+   "neutral": false,
+   "homeRating": 4.27,
+   "awayRating": 7.56,
+   "modelHome": -0.0,
+   "mktHome": -3.0,
+   "edge": 3.0,
+   "edgeTier": "small",
+   "modelSide": "Florida State",
+   "homeWinProb": 0.5,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858201,
+   "week": 1,
+   "date": "2026-08-29",
+   "home": "Stanford",
+   "away": "Hawai'i",
+   "neutral": false,
+   "homeRating": -1.68,
+   "awayRating": -1.74,
+   "modelHome": 3.8,
+   "mktHome": 4.5,
+   "edge": -0.7,
+   "edgeTier": "small",
+   "modelSide": "Hawai'i",
+   "homeWinProb": 0.64,
+   "books": [
+    "DraftKings",
+    "Draft Kings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401858436,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "USC",
+   "away": "Fresno State",
+   "neutral": false,
+   "homeRating": 13.69,
+   "awayRating": -1.4,
+   "modelHome": 20.6,
+   "mktHome": 21.5,
+   "edge": -0.9,
+   "edgeTier": "small",
+   "modelSide": "Fresno State",
+   "homeWinProb": 0.96,
+   "books": [
+    "DraftKings",
+    "Bovada",
+    "Draft Kings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401856667,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Texas",
+   "away": "Texas State",
+   "neutral": false,
+   "homeRating": 15.83,
+   "awayRating": 0.02,
+   "modelHome": 21.4,
+   "mktHome": 29.5,
+   "edge": -8.1,
+   "edgeTier": "big",
+   "modelSide": "Texas State",
+   "homeWinProb": 0.964,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858437,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "Washington",
+   "away": "Washington State",
+   "neutral": false,
+   "homeRating": 11.8,
+   "awayRating": -0.09,
+   "modelHome": 17.0,
+   "mktHome": 23.2,
+   "edge": -6.2,
+   "edgeTier": "mid",
+   "modelSide": "Washington State",
+   "homeWinProb": 0.932,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858425,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Indiana",
+   "away": "North Texas",
+   "neutral": false,
+   "homeRating": 15.03,
+   "awayRating": -2.59,
+   "modelHome": 23.5,
+   "mktHome": 40.5,
+   "edge": -17.0,
+   "edgeTier": "big",
+   "modelSide": "North Texas",
+   "homeWinProb": 0.973,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858206,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Stanford",
+   "away": "Miami",
+   "neutral": false,
+   "homeRating": -1.68,
+   "awayRating": 14.61,
+   "modelHome": -14.6,
+   "mktHome": -24.5,
+   "edge": 9.9,
+   "edgeTier": "big",
+   "modelSide": "Stanford",
+   "homeWinProb": 0.096,
+   "books": [
+    "DraftKings",
+    "Bovada",
+    "Draft Kings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401856772,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Tulsa",
+   "away": "Oklahoma State",
+   "neutral": false,
+   "homeRating": -6.05,
+   "awayRating": -4.6,
+   "modelHome": 2.1,
+   "mktHome": -13.5,
+   "edge": 15.6,
+   "edgeTier": "big",
+   "modelSide": "Tulsa",
+   "homeWinProb": 0.578,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858209,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Duke",
+   "away": "Tulane",
+   "neutral": false,
+   "homeRating": 2.85,
+   "awayRating": -1.82,
+   "modelHome": 8.9,
+   "mktHome": 7.5,
+   "edge": 1.4,
+   "edgeTier": "small",
+   "modelSide": "Duke",
+   "homeWinProb": 0.797,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858202,
+   "week": 1,
+   "date": "2026-08-29",
+   "home": "Virginia",
+   "away": "NC State",
+   "neutral": false,
+   "homeRating": 4.46,
+   "awayRating": 5.57,
+   "modelHome": 2.4,
+   "mktHome": 4,
+   "edge": -1.6,
+   "edgeTier": "small",
+   "modelSide": "NC State",
+   "homeWinProb": 0.593,
+   "books": [
+    "Bovada",
+    "Draft Kings",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401862693,
+   "week": 1,
+   "date": "2026-08-30",
+   "home": "UNLV",
+   "away": "Memphis",
+   "neutral": false,
+   "homeRating": -2.9,
+   "awayRating": -0.82,
+   "modelHome": 1.4,
+   "mktHome": 4.5,
+   "edge": -3.1,
+   "edgeTier": "mid",
+   "modelSide": "Memphis",
+   "homeWinProb": 0.552,
+   "books": [
+    "DraftKings",
+    "Draft Kings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401856776,
+   "week": 1,
+   "date": "2026-09-04",
+   "home": "Georgia Tech",
+   "away": "Colorado",
+   "neutral": false,
+   "homeRating": 3.19,
+   "awayRating": -0.46,
+   "modelHome": 7.8,
+   "mktHome": 6.5,
+   "edge": 1.3,
+   "edgeTier": "small",
+   "modelSide": "Georgia Tech",
+   "homeWinProb": 0.768,
+   "books": [
+    "DraftKings",
+    "Draft Kings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401864577,
+   "week": 1,
+   "date": "2026-08-29",
+   "home": "North Dakota State",
+   "away": "Jacksonville State",
+   "neutral": false,
+   "homeRating": -6.32,
+   "awayRating": -4.98,
+   "modelHome": 2.2,
+   "mktHome": 6.5,
+   "edge": -4.3,
+   "edgeTier": "mid",
+   "modelSide": "Jacksonville State",
+   "homeWinProb": 0.583,
+   "books": [
+    "Draft Kings",
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401856766,
+   "week": 1,
+   "date": "2026-08-29",
+   "home": "TCU",
+   "away": "North Carolina",
+   "neutral": true,
+   "homeRating": 5.4,
+   "awayRating": -0.64,
+   "modelHome": 6.8,
+   "mktHome": 7.5,
+   "edge": -0.7,
+   "edgeTier": "small",
+   "modelSide": "North Carolina",
+   "homeWinProb": 0.739,
+   "books": [
+    "Draft Kings",
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401864494,
+   "week": 1,
+   "date": "2026-08-29",
+   "home": "USC",
+   "away": "San Jos\u00e9 State",
+   "neutral": false,
+   "homeRating": 13.69,
+   "awayRating": -12.38,
+   "modelHome": 32.9,
+   "mktHome": 37.5,
+   "edge": -4.6,
+   "edgeTier": "mid",
+   "modelSide": "San Jos\u00e9 State",
+   "homeWinProb": 0.994,
+   "books": [
+    "Draft Kings",
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401866408,
+   "week": 1,
+   "date": "2026-08-29",
+   "home": "Eastern Michigan",
+   "away": "Sacramento State",
+   "neutral": false,
+   "homeRating": -11.03,
+   "awayRating": -11.82,
+   "modelHome": 4.6,
+   "mktHome": 9,
+   "edge": -4.4,
+   "edgeTier": "mid",
+   "modelSide": "Sacramento State",
+   "homeWinProb": 0.669,
+   "books": [
+    "Draft Kings",
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401864570,
+   "week": 1,
+   "date": "2026-08-29",
+   "home": "Florida State",
+   "away": "New Mexico State",
+   "neutral": false,
+   "homeRating": 4.27,
+   "awayRating": -13.11,
+   "modelHome": 23.2,
+   "mktHome": 31,
+   "edge": -7.8,
+   "edgeTier": "big",
+   "modelSide": "New Mexico State",
+   "homeWinProb": 0.972,
+   "books": [
+    "Draft Kings",
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401856636,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Auburn",
+   "away": "Baylor",
+   "neutral": true,
+   "homeRating": 6.34,
+   "awayRating": 3.49,
+   "modelHome": 3.2,
+   "mktHome": 7.5,
+   "edge": -4.3,
+   "edgeTier": "mid",
+   "modelSide": "Baylor",
+   "homeWinProb": 0.62,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858428,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Michigan",
+   "away": "Western Michigan",
+   "neutral": false,
+   "homeRating": 12.08,
+   "awayRating": -0.86,
+   "modelHome": 18.2,
+   "mktHome": 27.5,
+   "edge": -9.3,
+   "edgeTier": "big",
+   "modelSide": "Western Michigan",
+   "homeWinProb": 0.942,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858424,
+   "week": 1,
+   "date": "2026-09-04",
+   "home": "Illinois",
+   "away": "UAB",
+   "neutral": false,
+   "homeRating": 6.94,
+   "awayRating": -7.86,
+   "modelHome": 20.3,
+   "mktHome": 25.5,
+   "edge": -5.2,
+   "edgeTier": "mid",
+   "modelSide": "UAB",
+   "homeWinProb": 0.958,
+   "books": [
+    "Bovada",
+    "Draft Kings",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401858430,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Nebraska",
+   "away": "Ohio",
+   "neutral": false,
+   "homeRating": 3.64,
+   "awayRating": -4.55,
+   "modelHome": 12.9,
+   "mktHome": 23.8,
+   "edge": -10.9,
+   "edgeTier": "big",
+   "modelSide": "Ohio",
+   "homeWinProb": 0.878,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858204,
+   "week": 1,
+   "date": "2026-09-03",
+   "home": "Wake Forest",
+   "away": "Akron",
+   "neutral": false,
+   "homeRating": 2.64,
+   "awayRating": -10.61,
+   "modelHome": 18.6,
+   "mktHome": 27.5,
+   "edge": -8.9,
+   "edgeTier": "big",
+   "modelSide": "Akron",
+   "homeWinProb": 0.945,
+   "books": [
+    "Draft Kings",
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401864498,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "New Mexico",
+   "away": "Central Michigan",
+   "neutral": false,
+   "homeRating": -1.61,
+   "awayRating": -7.99,
+   "modelHome": 10.8,
+   "mktHome": 10.5,
+   "edge": 0.3,
+   "edgeTier": "small",
+   "modelSide": "New Mexico",
+   "homeWinProb": 0.841,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858433,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Oregon",
+   "away": "Boise State",
+   "neutral": false,
+   "homeRating": 18.19,
+   "awayRating": 2.0,
+   "modelHome": 21.9,
+   "mktHome": 24.8,
+   "edge": -2.9,
+   "edgeTier": "small",
+   "modelSide": "Boise State",
+   "homeWinProb": 0.966,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401864497,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "Hawai'i",
+   "away": "UNLV",
+   "neutral": false,
+   "homeRating": -1.74,
+   "awayRating": -2.9,
+   "modelHome": 5.0,
+   "mktHome": -3.0,
+   "edge": 8.0,
+   "edgeTier": "big",
+   "modelSide": "Hawai'i",
+   "homeWinProb": 0.683,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858426,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Iowa",
+   "away": "Northern Illinois",
+   "neutral": false,
+   "homeRating": 11.79,
+   "awayRating": -12.64,
+   "modelHome": 31.1,
+   "mktHome": 31.8,
+   "edge": -0.7,
+   "edgeTier": "small",
+   "modelSide": "Northern Illinois",
+   "homeWinProb": 0.992,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856665,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "South Carolina",
+   "away": "Kent State",
+   "neutral": false,
+   "homeRating": 10.31,
+   "awayRating": -11.55,
+   "modelHome": 28.2,
+   "mktHome": 36.0,
+   "edge": -7.8,
+   "edgeTier": "big",
+   "modelSide": "Kent State",
+   "homeWinProb": 0.987,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858438,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "Notre Dame",
+   "away": "Wisconsin",
+   "neutral": true,
+   "homeRating": 18.99,
+   "awayRating": 3.72,
+   "modelHome": 17.1,
+   "mktHome": 20.5,
+   "edge": -3.4,
+   "edgeTier": "mid",
+   "modelSide": "Wisconsin",
+   "homeWinProb": 0.933,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401862699,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "South Florida",
+   "away": "Florida International",
+   "neutral": false,
+   "homeRating": 1.92,
+   "awayRating": -9.7,
+   "modelHome": 16.7,
+   "mktHome": 14.5,
+   "edge": 2.2,
+   "edgeTier": "small",
+   "modelSide": "South Florida",
+   "homeWinProb": 0.929,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858210,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "California",
+   "away": "UCLA",
+   "neutral": false,
+   "homeRating": 1.17,
+   "awayRating": 5.47,
+   "modelHome": -1.1,
+   "mktHome": -2.5,
+   "edge": 1.4,
+   "edgeTier": "small",
+   "modelSide": "California",
+   "homeWinProb": 0.456,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856634,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Alabama",
+   "away": "East Carolina",
+   "neutral": false,
+   "homeRating": 14.57,
+   "awayRating": -1.49,
+   "modelHome": 21.7,
+   "mktHome": 27.8,
+   "edge": -6.1,
+   "edgeTier": "mid",
+   "modelSide": "East Carolina",
+   "homeWinProb": 0.966,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856637,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Florida",
+   "away": "Florida Atlantic",
+   "neutral": false,
+   "homeRating": 9.12,
+   "awayRating": -6.26,
+   "modelHome": 20.9,
+   "mktHome": 26.5,
+   "edge": -5.6,
+   "edgeTier": "mid",
+   "modelSide": "Florida Atlantic",
+   "homeWinProb": 0.961,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401860878,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Colorado State",
+   "away": "Wyoming",
+   "neutral": false,
+   "homeRating": -8.29,
+   "awayRating": -8.53,
+   "modelHome": 4.0,
+   "mktHome": 3.0,
+   "edge": 1.0,
+   "edgeTier": "small",
+   "modelSide": "Colorado State",
+   "homeWinProb": 0.647,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401870763,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Troy",
+   "away": "Sam Houston",
+   "neutral": false,
+   "homeRating": -7.16,
+   "awayRating": -13.95,
+   "modelHome": 11.3,
+   "mktHome": 16.5,
+   "edge": -5.2,
+   "edgeTier": "mid",
+   "modelSide": "Sam Houston",
+   "homeWinProb": 0.85,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856778,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Houston",
+   "away": "Oregon State",
+   "neutral": false,
+   "homeRating": 7.75,
+   "awayRating": -7.11,
+   "modelHome": 20.4,
+   "mktHome": 20.8,
+   "edge": -0.4,
+   "edgeTier": "small",
+   "modelSide": "Oregon State",
+   "homeWinProb": 0.958,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858434,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Penn State",
+   "away": "Marshall",
+   "neutral": false,
+   "homeRating": 7.1,
+   "awayRating": -1.54,
+   "modelHome": 13.4,
+   "mktHome": 23.2,
+   "edge": -9.8,
+   "edgeTier": "big",
+   "modelSide": "Marshall",
+   "homeWinProb": 0.886,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401864432,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "Nevada",
+   "away": "Western Kentucky",
+   "neutral": false,
+   "homeRating": -10.46,
+   "awayRating": -3.25,
+   "modelHome": -4.4,
+   "mktHome": -0.2,
+   "edge": -4.2,
+   "edgeTier": "mid",
+   "modelSide": "Western Kentucky",
+   "homeWinProb": 0.337,
+   "books": [
+    "DraftKings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401864495,
+   "week": 1,
+   "date": "2026-09-04",
+   "home": "Eastern Michigan",
+   "away": "San Jos\u00e9 State",
+   "neutral": false,
+   "homeRating": -11.03,
+   "awayRating": -12.38,
+   "modelHome": 5.2,
+   "mktHome": 1.5,
+   "edge": 3.7,
+   "edgeTier": "mid",
+   "modelSide": "Eastern Michigan",
+   "homeWinProb": 0.69,
+   "books": [
+    "DraftKings",
+    "Draft Kings",
+    "Bovada"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401858207,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Pittsburgh",
+   "away": "Miami (OH)",
+   "neutral": false,
+   "homeRating": 5.18,
+   "awayRating": -6.52,
+   "modelHome": 16.8,
+   "mktHome": 16.2,
+   "edge": 0.6,
+   "edgeTier": "small",
+   "modelSide": "Pittsburgh",
+   "homeWinProb": 0.93,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856780,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "West Virginia",
+   "away": "Coastal Carolina",
+   "neutral": false,
+   "homeRating": -2.46,
+   "awayRating": -11.03,
+   "modelHome": 13.3,
+   "mktHome": 21.0,
+   "edge": -7.7,
+   "edgeTier": "big",
+   "modelSide": "Coastal Carolina",
+   "homeWinProb": 0.885,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856664,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Oklahoma",
+   "away": "UTEP",
+   "neutral": false,
+   "homeRating": 11.51,
+   "awayRating": -13.11,
+   "modelHome": 31.3,
+   "mktHome": 40.5,
+   "edge": -9.2,
+   "edgeTier": "big",
+   "modelSide": "UTEP",
+   "homeWinProb": 0.992,
+   "books": [
+    "Draft Kings",
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401858429,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Michigan State",
+   "away": "Toledo",
+   "neutral": false,
+   "homeRating": -1.47,
+   "awayRating": -2.64,
+   "modelHome": 5.0,
+   "mktHome": 10,
+   "edge": -5.0,
+   "edgeTier": "mid",
+   "modelSide": "Toledo",
+   "homeWinProb": 0.683,
+   "books": [
+    "Draft Kings",
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": false,
+   "grade": null
+  },
+  {
+   "id": 401862695,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Memphis",
+   "away": "Arkansas State",
+   "neutral": false,
+   "homeRating": -0.82,
+   "awayRating": -9.08,
+   "modelHome": 13.0,
+   "mktHome": 11.2,
+   "edge": 1.8,
+   "edgeTier": "small",
+   "modelSide": "Memphis",
+   "homeWinProb": 0.88,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856662,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Mississippi State",
+   "away": "UL Monroe",
+   "neutral": false,
+   "homeRating": 2.4,
+   "awayRating": -12.97,
+   "modelHome": 20.9,
+   "mktHome": 28.5,
+   "edge": -7.6,
+   "edgeTier": "big",
+   "modelSide": "UL Monroe",
+   "homeWinProb": 0.961,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858432,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Ohio State",
+   "away": "Ball State",
+   "neutral": false,
+   "homeRating": 20.51,
+   "awayRating": -14.67,
+   "modelHome": 43.2,
+   "mktHome": 50.2,
+   "edge": -7.0,
+   "edgeTier": "big",
+   "modelSide": "Ball State",
+   "homeWinProb": 0.999,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856660,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "LSU",
+   "away": "Clemson",
+   "neutral": false,
+   "homeRating": 11.53,
+   "awayRating": 7.8,
+   "modelHome": 7.9,
+   "mktHome": 9.8,
+   "edge": -1.9,
+   "edgeTier": "small",
+   "modelSide": "Clemson",
+   "homeWinProb": 0.77,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856668,
+   "week": 1,
+   "date": "2026-09-05",
+   "home": "Texas A&M",
+   "away": "Missouri State",
+   "neutral": false,
+   "homeRating": 16.62,
+   "awayRating": -8.9,
+   "modelHome": 32.3,
+   "mktHome": 40.5,
+   "edge": -8.2,
+   "edgeTier": "big",
+   "modelSide": "Missouri State",
+   "homeWinProb": 0.993,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856661,
+   "week": 1,
+   "date": "2026-09-06",
+   "home": "Ole Miss",
+   "away": "Louisville",
+   "neutral": true,
+   "homeRating": 13.68,
+   "awayRating": 5.94,
+   "modelHome": 8.7,
+   "mktHome": 6.5,
+   "edge": 2.2,
+   "edgeTier": "small",
+   "modelSide": "Ole Miss",
+   "homeWinProb": 0.791,
+   "books": [
+    "Bovada",
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  }
+ ]
+}

@@ -62,9 +62,11 @@ def main():
             "date": pick(game, "startDate", "start_date"),
             "homeTeam": pick(game, "homeTeam", "home_team"),
             "homeConf": pick(game, "homeConference", "home_conference"),
+            "homeClass": pick(game, "homeClassification", "home_classification"),
             "homePoints": pick(game, "homePoints", "home_points"),
             "awayTeam": pick(game, "awayTeam", "away_team"),
             "awayConf": pick(game, "awayConference", "away_conference"),
+            "awayClass": pick(game, "awayClassification", "away_classification"),
             "awayPoints": pick(game, "awayPoints", "away_points"),
             "venue": game.get("venue"),
             "neutralSite": pick(game, "neutralSite", "neutral_site"),
@@ -72,6 +74,10 @@ def main():
         }
         for game in games
     ]
+    # CFBD's division filter stopped trimming lower divisions (D2/D3 games started
+    # appearing) — keep only games with at least one FBS side. Classification is
+    # kept on each record so the in-season SRS can pool FCS opponents.
+    trimmed = [g for g in trimmed if "fbs" in (g["homeClass"], g["awayClass"])]
     trimmed.sort(key=lambda g: (g["week"] or 0, g["date"] or ""))
 
     DATA_DIR.mkdir(exist_ok=True)

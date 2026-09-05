@@ -51,6 +51,12 @@ COMPOSITE_WEIGHTS = {
 Z_TO_POINTS = 9.0           # 1 σ of FBS strength ≈ 9 points of SRS
 OFFSEASON_BLEND = 0.5       # v1 = 50% results-based base + 50% offseason composite
 
+# --- in-season update (the lever the 2025 replay validated) ---
+# rating = (1-w)·preseason prior + w·SRS(2026 results so far),  w = weeks/(weeks+PRIOR_STRENGTH)
+# The prior is the FROZEN preseason index (power-index-2026-preseason.json) so it never drifts.
+PRIOR_STRENGTH = 4.0        # preseason prior worth ~4 weeks of results
+MIN_INSEASON_GAMES = 15     # below this the SRS is noise — stay on the prior
+
 
 def fetch_season_results(api_key, year):
     """Completed-season results (regular + postseason), cached per year."""
@@ -221,6 +227,26 @@ def main():
         projected[school] = v1
         detail[school] = {"v0": v0, "compositeZ": cz, "compositePts": cpts}
 
+    # --- 4b. in-season update: blend 2026 results into the frozen preseason prior ---
+    anchor_path = DATA_DIR / "power-index-2026-preseason.json"
+    prior = dict(projected)
+    if anchor_path.exists():
+        for t in json.loads(anchor_path.read_text())["teams"]:
+            if t["school"] in prior:
+                prior[t["school"]] = t["rating"]
+    fbs_involved = [g for g in games_2026 if "fbs" in (g.get("homeClass"), g.get("awayClass"))]
+    done_2026 = [g for g in fbs_involved if g.get("completed") and g.get("homePoints") is not None]
+    max_week = max((g["week"] or 0) for g in fbs_involved) if fbs_involved else 14
+    # fraction of the season played × season length → handles partial weeks smoothly
+    weeks_played = len(done_2026) / len(fbs_involved) * max_week if fbs_involved else 0.0
+    iw = weeks_played / (weeks_played + PRIOR_STRENGTH) if len(done_2026) >= MIN_INSEASON_GAMES else 0.0
+    srs_2026 = srs_from_games(done_2026) if iw > 0 else {}
+    inseason = {}
+    for school in projected:
+        p, s = prior[school], srs_2026.get(school)
+        projected[school] = p if s is None else (1 - iw) * p + iw * s
+        inseason[school] = {"prior": p, "srs2026": s}
+
     # --- 5. 2026 SoS from projected ratings ---
     opponents_2026 = defaultdict(list)
     for g in games_2026:
@@ -261,6 +287,8 @@ def main():
                 "compositePts": round(d["compositePts"], 2) if d["compositePts"] is not None else None,
                 "compositeZ": round(d["compositeZ"], 2) if d["compositeZ"] is not None else None,
                 "srs2025": round(ratings[school], 2) if school in ratings else None,
+                "preseasonRating": round(inseason[school]["prior"], 2),
+                "inseasonSrs": round(inseason[school]["srs2026"], 2) if inseason[school]["srs2026"] is not None else None,
                 "confStrength2026": round(conf_strength_2026.get(t["conference"], 0), 2),
                 "confRecord2025": f"{w}-{l}" if (w or l) else None,
                 "pollRank": top25.get(school),
@@ -303,11 +331,23 @@ def main():
         "confMatrix2025": {c: dict(v) for c, v in matrix.items()},
         "confStrength": conf_table,
         "fcsPoolRating": round(ratings.get("FCS", 0), 2),
+        "inseason": {
+            "gamesUsed": len(done_2026),
+            "weeksPlayed": round(weeks_played, 2),
+            "blendWeight": round(iw, 3),
+            "priorStrengthWeeks": PRIOR_STRENGTH,
+            "priorFrozen": anchor_path.exists(),
+        },
         "teams": rows,
     }
     out_path = DATA_DIR / "power-index-2026.json"
     out_path.write_text(json.dumps(out, indent=1))
     print(f"✅ Power index built → {out_path}")
+    if iw > 0:
+        print(f"   In-season: {len(done_2026)} results onboarded ≈ {weeks_played:.2f} weeks → "
+              f"{iw:.1%} weight on 2026 results, {1 - iw:.1%} on the frozen preseason prior")
+    else:
+        print(f"   Preseason mode: {len(done_2026)} results (< {MIN_INSEASON_GAMES}) — rating = frozen prior")
     print(f"   FBS vs FCS in 2025: {fbs_vs_fcs['w']}-{fbs_vs_fcs['l']}")
     print("   Conference strength (2026 membership):")
     for c in conf_table:

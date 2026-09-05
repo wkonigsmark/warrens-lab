@@ -49,7 +49,72 @@ async function loadAlmanac() {
     const r = await fetch('data/inseason-2025.json');
     if (r.ok) inseason = await r.json();
   } catch { /* optional */ }
-  render(data, inseason);
+  let ledger = null;
+  try {
+    const r = await fetch('data/ledger/ledger.json', { cache: 'no-store' });
+    if (r.ok) ledger = await r.json();
+  } catch { /* optional — appears once a week is frozen */ }
+  render(data, inseason, ledger);
+}
+
+// ---- 2026 Live Ledger: the forward test (frozen pre-kickoff, graded after) ----
+function liveLedger(L) {
+  const s = L.summary || {};
+  const pl = s.playable || {}, all = s.all || {};
+  const c = (big, lbl, cls = '') => `<div class="verdict-card"><div class="big ${cls}">${big}</div><div class="lbl">${lbl}</div></div>`;
+  const rec = a => a && a.n ? `${a.w}–${a.l}${a.p ? `–${a.p}` : ''}` : '—';
+  const winCls = v => v == null ? '' : v >= 52.4 ? 'good' : 'bad';
+  const roiCls = v => v == null ? '' : v > 0 ? 'good' : 'bad';
+  const weeks = Object.values(L.weeks || {}).sort((a, b) => b.week - a.week);
+  const latest = weeks[0];
+  const lineStr = (p, m) => m >= 0 ? `${p.home} by ${Math.abs(m).toFixed(1)}` : `${p.away} by ${Math.abs(m).toFixed(1)}`;
+  const badge = g => !g ? '<span class="lg-badge lg-pend">⏳</span>'
+    : g.ats === 'W' ? '<span class="lg-badge lg-w">✅ W</span>'
+    : g.ats === 'L' ? '<span class="lg-badge lg-l">❌ L</span>' : '<span class="lg-badge lg-p">➖ P</span>';
+  const tierLabel = { small: '&lt; 3 pts', mid: '3–7 pts', big: '7+ pts' };
+  const picks = latest ? latest.picks.filter(p => p.playable).sort((a, b) => Math.abs(b.edge) - Math.abs(a.edge)) : [];
+  const skipped = latest ? latest.picks.length - picks.length : 0;
+  const pending = (s.totalPicks || 0) - (all.n || 0);
+  return `
+    <div class="index-section-title">📓 2026 Live Ledger
+      <span>the forward test — frozen before kickoff, graded after · ${s.totalPicks || 0} picks · weeks frozen: ${(s.weeksFrozen || []).join(', ') || '—'}</span></div>
+    <div class="verdict-grid" style="margin-bottom:10px">
+      ${c(rec(pl), 'playable ATS record')}
+      ${c(pl.atsPct == null ? '—' : pct(pl.atsPct), 'playable win %', winCls(pl.atsPct))}
+      ${c(pl.roi == null ? '—' : signed(pl.roi) + '%', 'ROI at -110', roiCls(pl.roi))}
+      ${c(pl.modelMae == null ? '—' : `${pl.modelMae} <span style="font-size:1rem;color:rgba(245,233,208,.4)">/</span> ${pl.mktMae}`,
+          'W² miss / market miss', pl.modelMae == null ? '' : pl.modelMae <= pl.mktMae ? 'good' : 'bad')}
+      ${c(`${all.n || 0}<span style="font-size:.9rem;color:rgba(245,233,208,.45)"> / ${pending}</span>`, 'graded / pending')}
+    </div>
+    <div class="matrix-wrap"><table class="conf-matrix">
+      <tr><th style="text-align:left">Edge size (playable)</th><th>Record</th><th>Win %</th><th>ROI (-110)</th></tr>
+      ${['small', 'mid', 'big'].map(t => { const a = (s.byEdgeTier || {})[t] || {}; return `<tr>
+        <td style="text-align:left">${tierLabel[t]}</td><td>${rec(a)}</td>
+        <td class="${a.atsPct == null ? '' : a.atsPct >= 52.4 ? 'mx-win' : 'mx-loss'}">${a.atsPct == null ? '—' : pct(a.atsPct)}</td>
+        <td class="${a.roi == null ? '' : a.roi > 0 ? 'mx-win' : 'mx-loss'}">${a.roi == null ? '—' : signed(a.roi) + '%'}</td></tr>`; }).join('')}
+    </table></div>
+    <div class="matrix-wrap" style="margin-top:8px"><table class="conf-matrix">
+      <tr><th style="text-align:left">Week</th><th>Graded</th><th>Pending</th><th>ATS · all lined</th><th>W² miss</th><th>Mkt miss</th></tr>
+      ${(s.byWeek || []).map(w => `<tr><td style="text-align:left">Wk ${w.week}</td><td>${w.n}</td><td>${w.pending}</td>
+        <td>${rec(w)}${w.atsPct == null ? '' : ` (${pct(w.atsPct)})`}</td><td>${w.modelMae ?? '—'}</td><td>${w.mktMae ?? '—'}</td></tr>`).join('')}
+    </table></div>
+    ${latest ? `
+    <div class="index-section-title" style="margin-top:14px">Week ${latest.week} · frozen picks
+      <span>playable only (FBS vs FBS, market ≤ 21) · ${skipped} blowout / FCS lines logged, not played · frozen ${latest.snapshotAt}</span></div>
+    <div class="lg-list">
+      ${picks.map(p => `<div class="lg-row">
+        ${badge(p.grade)}
+        <span class="lg-game">${p.away} @ ${p.home}${p.neutral ? ' <em>(N)</em>' : ''}</span>
+        <span class="lg-line">W² <b>${lineStr(p, p.modelHome)}</b><br>mkt ${lineStr(p, p.mktHome)}</span>
+        <span class="lg-edge ${Math.abs(p.edge) >= 7 ? 'e-big' : Math.abs(p.edge) >= 3 ? 'e-mid' : ''}">+${Math.abs(p.edge).toFixed(1)}<small>${p.modelSide}</small></span>
+        <span class="lg-score">${p.grade ? `${p.grade.awayPts}–${p.grade.homePts}` : ''}</span>
+      </div>`).join('')}
+    </div>` : ''}
+    <p class="index-footnote">Grading always reads the frozen snapshot, never the live index — nothing is revised after
+      the fact. "Playable" = FBS vs FBS, competitive market line (≤ 21), no home/away mislabel. Blowout lines and
+      FBS-vs-FCS games are logged for the record but not played: the margin cap softens blowouts, and every FCS team
+      shares one pooled rating, so the model can't tell South Dakota State from a cupcake — the market can.
+      Break-even at -110 is 52.4%.</p>`;
 }
 
 function inSeasonChart(ins) {
@@ -165,13 +230,15 @@ function spreadTierTable(tiers) {
       relative to the market. Big negatives on long lines expose the margin cap softening blowouts.</p>`;
 }
 
-function render(data, inseason) {
+function render(data, inseason, ledger) {
   const s = data.scorecard;
   document.getElementById('almanac-body').innerHTML = `
+    ${ledger ? liveLedger(ledger) : ''}
+
     <div class="biff-caveat">⚠️ ${data.caveat} <em>Basis: ${data.ratingBasis}. Season ${data.season},
       generated ${data.generatedAt}.</em></div>
 
-    <div class="index-section-title">The Verdict <span>W² line vs the closing number vs reality</span></div>
+    <div class="index-section-title">The Verdict · 2025 replay <span>W² line vs the closing number vs reality</span></div>
     ${verdictCards(s)}
     ${inseason ? inSeasonChart(inseason) : ''}
 
