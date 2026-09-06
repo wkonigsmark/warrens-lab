@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BOOK1 } from '../data/book1.js'
 import { BOOK2 } from '../data/book2.js'
-import { BOOK3, READ_UP_TO } from '../data/book3.js'
+import { BOOK3, READ_UP_TO as READ_UP_TO_3 } from '../data/book3.js'
+import { BOOK4, READ_UP_TO as READ_UP_TO_4 } from '../data/book4.js'
 import { CATS, HOUSES } from '../data/houses.js'
 import { FROG_CARDS } from '../data/frogCards.js'
 import { buildDeck, presentOptions, pointsFor, qKey, shuffle } from '../lib/game.js'
@@ -10,9 +11,16 @@ import FrogCard from '../components/FrogCard.jsx'
 import Burst from '../components/Burst.jsx'
 
 export default function Quiz({ game, setGame, book, onHome }) {
-  // Book 3 is being read right now — only deal questions up to the last finished chapter.
-  const BOOK3_SAFE = BOOK3.filter(q => q.chapter <= READ_UP_TO)
-  const bank = book === 1 ? BOOK1 : book === 2 ? BOOK2 : book === 3 ? BOOK3_SAFE : [...BOOK1, ...BOOK2, ...BOOK3_SAFE]
+  // Chapter-gated books only deal questions up to the last finished chapter
+  // (both are fully read now, but the gate stays in place for future books).
+  const BOOK3_SAFE = BOOK3.filter(q => q.chapter <= READ_UP_TO_3)
+  const BOOK4_SAFE = BOOK4.filter(q => q.chapter <= READ_UP_TO_4)
+  const bank =
+    book === 1 ? BOOK1 :
+    book === 2 ? BOOK2 :
+    book === 3 ? BOOK3_SAFE :
+    book === 4 ? BOOK4_SAFE :
+    [...BOOK1, ...BOOK2, ...BOOK3_SAFE, ...BOOK4_SAFE]
   const [deck, setDeck] = useState(() => buildDeck(bank, game.seen))
   const [i, setI] = useState(0)
   const [streak, setStreak] = useState(0)
@@ -140,7 +148,7 @@ export default function Quiz({ game, setGame, book, onHome }) {
               </span>
               {book === 'mix' && (
                 <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-indigo-200">
-                  Book {BOOK1.includes(q) ? 'I' : BOOK2.includes(q) ? 'II' : 'III'}
+                  Book {BOOK1.includes(q) ? 'I' : BOOK2.includes(q) ? 'II' : BOOK3.includes(q) ? 'III' : 'IV'}
                 </span>
               )}
               {q.chapter && (

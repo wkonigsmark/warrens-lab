@@ -1,5 +1,14 @@
 # Wizarding Quiz — Roadmap
 
+## v1.3 (shipped 2026-09-06)
+- Book 4 (Goblet of Fire) fully unlocked — 115 chapter-tagged questions, all 37 chapters
+- Spoiler line is now the END OF BOOK 4; denylist scan of all banks for book-5+ names
+- 393 questions total across Books I–IV; Grand Mix pools all four
+
+## v1.2 (shipped 2026-07)
+- Book 3 (Prisoner of Azkaban) — chapter-gated while reading, then fully unlocked (100 Qs)
+- New 💬 "Talk it over" question type: open discussion prompts, no wrong answer
+
 ## v1.1 (shipped)
 - Question trove deepened to 178 (74 + 104), superfan-heavy; book-text-only audit
 - Unseen-first dealing — no repeats until the whole bank is cleared

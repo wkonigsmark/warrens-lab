@@ -115,7 +115,7 @@ export default function Home({ game, setGame, onPlay }) {
           </button>
 
           {/* Locked books */}
-          <div className="grid grid-cols-4 gap-2 pt-1.5">
+          <div className="grid grid-cols-3 gap-2 pt-1.5">
             {BOOKS.filter(b => !b.unlocked).map(b => (
               <div key={b.id} className="glass rounded-xl px-1 py-2.5 text-center opacity-45 grayscale">
                 <div className="text-lg">🔒</div>

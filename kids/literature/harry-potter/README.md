@@ -43,7 +43,9 @@ Or from the lab root: `preview_start hp-quiz` / launch config `hp-quiz`.
 ```
 src/
   data/book1.js      74 questions — Sorcerer's Stone
-  data/book2.js      104 questions — Chamber of Secrets (the main focus)
+  data/book2.js      104 questions — Chamber of Secrets
+  data/book3.js      100 questions — Prisoner of Azkaban (chapter-tagged, READ_UP_TO gate)
+  data/book4.js      115 questions — Goblet of Fire (chapter-tagged, READ_UP_TO gate)
   data/frogCards.js  22 collectible cards, in unlock order
   data/houses.js     house themes, category meta, book list (locked flags)
   lib/game.js        persistence, deck building, option shuffling, scoring

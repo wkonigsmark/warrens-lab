@@ -28,7 +28,7 @@ export const BOOKS = [
   { id: 1, num: 'I', title: 'The Sorcerer’s Stone', emoji: '🪄', unlocked: true, blurb: 'A cupboard, a castle, and a very good dog named Fluffy.' },
   { id: 2, num: 'II', title: 'The Chamber of Secrets', emoji: '🐍', unlocked: true, blurb: 'A warning on the wall, a voice in the pipes…' },
   { id: 3, num: 'III', title: 'The Prisoner of Azkaban', emoji: '🌙', unlocked: true, blurb: 'A black dog, a strange map, and dementors at the gates…' },
-  { id: 4, num: 'IV', title: 'The Goblet of Fire', emoji: '🏆', unlocked: false },
+  { id: 4, num: 'IV', title: 'The Goblet of Fire', emoji: '🏆', unlocked: true, blurb: 'Four champions, three tasks, and a name that shouldn’t be there…' },
   { id: 5, num: 'V', title: 'The Order of the Phoenix', emoji: '🐦‍🔥', unlocked: false },
   { id: 6, num: 'VI', title: 'The Half-Blood Prince', emoji: '📖', unlocked: false },
   { id: 7, num: 'VII', title: 'The Deathly Hallows', emoji: '△', unlocked: false },

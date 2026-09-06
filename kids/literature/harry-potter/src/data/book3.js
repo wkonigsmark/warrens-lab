@@ -4,13 +4,10 @@
 // The book is finished, so READ_UP_TO covers all 22 chapters and every twist —
 // Lupin, the Marauders, Pettigrew, the Time-Turner — is fair game below.
 //
-// GOING FORWARD: this same chapter-gate mechanism is how future books (4+) get
-// added safely while they're still being read — copy the pattern, set a lower
-// READ_UP_TO, and keep these rules until that book is finished:
-//  - Never let book 3 content foreshadow or hint at book 4+ events
-//  - Cedric Diggory (introduced ch. 15 as a good sport) stays a positive,
-//    uncomplicated character here — no foreshadowing of anything later
-//  - Nothing about Pettigrew's escape implying future significance
+// Book 4 is now also fully read (see book4.js) — so book-4 events are no longer
+// spoilers. The line is now the END OF BOOK 4: never let any content here hint
+// at book 5+ events. The same chapter-gate mechanism is how book 5 gets added
+// safely while it's being read — copy the pattern and set a lower READ_UP_TO.
 //
 // Question type 'talk' = an open discussion prompt with no wrong answer.
 // `talk` = follow-up questions to keep it going; `fact` = notes for the grown-up.
