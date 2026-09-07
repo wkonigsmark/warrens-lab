@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynasty Soccer</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../style-lab.css">
+  <style>
+    .wrap { width: min(920px, 100% - 48px); margin: 48px auto; }
+    .head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+    .head h1 { margin: 0; font-weight: 800; font-size: 2rem; letter-spacing: -0.02em; }
+    .head h1 span { font-size: 1.4rem; margin-right: 10px; }
+    .status { font-size: 0.85rem; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-dim); }
+    .status.ok { color: var(--dos-green); border-color: rgba(51,255,51,0.4); box-shadow: 0 0 12px var(--dos-glow); }
+    .status.err { color: #ff6b6b; border-color: rgba(255,107,107,0.4); }
+    .card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 14px; padding: 20px 22px; margin-bottom: 20px; }
+    .card h2 { margin: 0 0 12px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; color: var(--text-dim); font-weight: 600; }
+    label { display: block; font-size: 0.85rem; color: var(--text-dim); margin-bottom: 6px; }
+    select { width: 100%; max-width: 420px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: #12151b; color: var(--text-main); font: inherit; }
+    .meta { color: var(--text-dim); font-size: 0.9rem; margin-top: 8px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--glass-border); }
+    th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); font-weight: 600; }
+    td.num { width: 60px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+    .empty { color: var(--text-dim); padding: 16px 0; }
+    .hint { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; }
+    .hint code { color: var(--dos-green); font-family: "Perfect DOS VGA 437", ui-monospace, monospace; }
+    .back { display: inline-block; margin-top: 8px; color: var(--text-dim); text-decoration: none; font-size: 0.85rem; }
+    .back:hover { color: var(--text-main); }
+    .table-scroll { overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="head">
+      <h1><span>⚽</span>Dynasty Soccer</h1>
+      <div id="status" class="status">Connecting…</div>
+    </div>
+
+    <section class="card">
+      <h2>Team</h2>
+      <label for="team">Roster</label>
+      <select id="team" disabled><option>Loading teams…</option></select>
+      <div id="team-meta" class="meta"></div>
+    </section>
+
+    <section class="card">
+      <h2>Roster</h2>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>#</th><th>Player</th><th>Position</th></tr></thead>
+          <tbody id="roster"><tr><td colspan="3" class="empty">Select a team.</td></tr></tbody>
+        </table>
+      </div>
+      <p id="count" class="meta"></p>
+    </section>
+
+    <section class="card">
+      <h2>Notes</h2>
+      <p class="hint">
+        This page reads from the Supabase <code>dynasty</code> project with the public key (read-only via RLS).
+        Add or edit players in the Supabase Table Editor for now. Auth, schedules, and per-team pages come in phase 2.
+      </p>
+      <a class="back" href="../../index.html">← Back to Sports</a>
+    </section>
+  </main>
+
+  <script type="module">
+    import { supabaseConfig } from './data/supabase-config.js';
+
+    const statusEl = document.getElementById('status');
+    const teamEl = document.getElementById('team');
+    const metaEl = document.getElementById('team-meta');
+    const rosterEl = document.getElementById('roster');
+    const countEl = document.getElementById('count');
+
+    const base = supabaseConfig.url.replace(/\/$/, '');
+    const headers = {
+      apikey: supabaseConfig.anonKey,
+      Authorization: `Bearer ${supabaseConfig.anonKey}`,
+    };
+
+    function setStatus(text, cls) {
+      statusEl.textContent = text;
+      statusEl.className = `status ${cls || ''}`;
+    }
+
+    async function sb(path) {
+      const res = await fetch(`${base}/rest/v1/${path}`, { headers });
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        throw new Error(`${res.status} ${res.statusText}${body ? ` — ${body.slice(0, 200)}` : ''}`);
+      }
+      return res.json();
+    }
+
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    async function loadRoster(team) {
+      rosterEl.innerHTML = '<tr><td colspan="3" class="empty">Loading…</td></tr>';
+      countEl.textContent = '';
+      metaEl.textContent = [team.season, team.age_group].filter(Boolean).join(' · ');
+
+      const rows = await sb(
+        `team_players?team_id=eq.${team.id}` +
+        `&select=jersey_number,position,players(first_name,last_name)` +
+        `&order=jersey_number.asc.nullslast`
+      );
+
+      rows.sort((a, b) => {
+        const ja = a.jersey_number ?? Infinity, jb = b.jersey_number ?? Infinity;
+        if (ja !== jb) return ja - jb;
+        return `${a.players.last_name} ${a.players.first_name}`.localeCompare(`${b.players.last_name} ${b.players.first_name}`);
+      });
+
+      if (!rows.length) {
+        rosterEl.innerHTML = '<tr><td colspan="3" class="empty">No players on this roster yet.</td></tr>';
+        return;
+      }
+
+      rosterEl.innerHTML = rows.map(r => `
+        <tr>
+          <td class="num">${r.jersey_number ?? '—'}</td>
+          <td>${esc(r.players.first_name)} ${esc(r.players.last_name)}</td>
+          <td>${esc(r.position ?? '')}</td>
+        </tr>`).join('');
+      countEl.textContent = `${rows.length} player${rows.length === 1 ? '' : 's'}`;
+    }
+
+    async function init() {
+      if (!supabaseConfig.url || supabaseConfig.url.includes('YOUR-PROJECT-REF') || supabaseConfig.anonKey.includes('REPLACE_ME')) {
+        setStatus('Not configured', 'err');
+        teamEl.innerHTML = '<option>Add your keys to data/supabase-config.js</option>';
+        rosterEl.innerHTML = '<tr><td colspan="3" class="empty">Fill in <code>data/supabase-config.js</code> with the project URL and publishable key.</td></tr>';
+        return;
+      }
+
+      try {
+        const teams = await sb('teams?select=id,slug,name,season,age_group,sport_id&active=eq.true&order=name.asc');
+        setStatus('Connected', 'ok');
+
+        if (!teams.length) {
+          teamEl.innerHTML = '<option>No teams yet — run supabase/seed.sql</option>';
+          return;
+        }
+
+        teamEl.innerHTML = teams.map(t => `<option value="${t.id}">${esc(t.name)}${t.season ? ` (${esc(t.season)})` : ''}</option>`).join('');
+        teamEl.disabled = false;
+
+        const byId = Object.fromEntries(teams.map(t => [t.id, t]));
+        const soccer = teams.find(t => t.sport_id === 'soccer') || teams[0];
+        teamEl.value = soccer.id;
+        await loadRoster(soccer);
+
+        teamEl.addEventListener('change', () => loadRoster(byId[teamEl.value]).catch(showError));
+      } catch (err) {
+        showError(err);
+      }
+    }
+
+    function showError(err) {
+      console.error(err);
+      setStatus('Connection failed', 'err');
+      teamEl.disabled = true;
+      rosterEl.innerHTML = `<tr><td colspan="3" class="empty">${esc(err.message)}</td></tr>`;
+    }
+
+    init();
+  </script>
+</body>
+</html>
