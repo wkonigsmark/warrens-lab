@@ -18,6 +18,9 @@
     ['🧪', 'Data Lab', `${root}/data-lab.html`],
     ['⚖️', 'Weight Lab', `${root}/data-lab.html#weight-lab`],
     ['🎞️', 'Blueprint Deck', `${root}/blueprint/index.html`],
+    // PIN-gated skunkworks. Linked here for Warren's own access; the page still
+    // gates on the code and carries <meta robots noindex>, so it stays unlisted.
+    ['📓', "Biff's Almanac", `${root}/almanac.html`],
     ['🏟️', 'Sports Hub', `${root}/../index.html`],
   ];
 
