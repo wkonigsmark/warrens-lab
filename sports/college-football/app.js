@@ -10,30 +10,11 @@ function calibratedMargin(gap, isHome) {
   return SPREAD_CAL.b * gap + SPREAD_CAL.h * isHome;
 }
 
-// ESPN Top 25 tiles mirror the W²-Index rows: team colors, logos, and the
-// W² rank as the cross-reference (the inverse of the ★ badge on the index)
-function renderPoll() {
-  const list = document.getElementById('poll-list');
-  const byName = INDEX_DATA ? new Map(INDEX_DATA.teams.map(t => [t.school, t])) : null;
-  list.innerHTML = TOP_25.map(t => {
-    const idx = byName?.get(t.team);
-    const conf = CONF_ACRO[t.conf] || t.conf;
-    return `
-      <div class="poll-tile" style="--team-color:${idx?.color || 'var(--gold-dim)'}">
-        <span class="poll-tile-rank">${t.rank}</span>
-        ${idx?.logo ? `<img class="poll-tile-logo" src="${idx.logo}" alt="" loading="lazy">` : ''}
-        <span class="poll-tile-team">${t.team}</span>
-        <span class="poll-tile-conf">${conf}</span>
-        ${idx ? `<span class="poll-tile-w2">W² #${idx.rank}</span>` : ''}
-      </div>
-    `;
-  }).join('');
-}
-
 // Tabs are hash-routed (#index, #top25, …) and driven by the shared header (nav.js)
 const TAB_ROUTES = {
   index: 'tab-index',
-  top25: 'tab-rankings',
+  // (ESPN "way-too-early" Top 25 retired once the season started — the live AP and
+  //  Coaches polls now sit alongside the W² rank as comparison columns on the index.)
   teams: 'tab-teams',
   schedule: 'tab-schedule',
   bracket: 'tab-bracket',
@@ -501,7 +482,6 @@ async function loadPowerIndex() {
     if (!res.ok) throw new Error(res.status);
     INDEX_DATA = await res.json();
     renderIndexUI(INDEX_DATA);
-    renderPoll();            // add W² cross-references to the ESPN tiles
     maybeRenderSchedule();   // schedule ratings need W² ratings
   } catch {
     document.getElementById('tab-index').innerHTML = `
@@ -562,19 +542,32 @@ function confMatrix(data) {
   `;
 }
 
+// A poll cell: the human rank, plus how far it sits from our own — the whole point
+// of showing them side by side is spotting where we disagree with the room.
+function pollCell(pollRank, w2Rank, label) {
+  if (!pollRank) return '<span class="index-stat dim poll-cell">—</span>';
+  const d = pollRank - w2Rank;                     // + → poll is lower on them than we are
+  const cls = d >= 5 ? 'poll-under' : d <= -5 ? 'poll-over' : '';
+  const tip = d === 0 ? `${label} agrees: #${pollRank}`
+    : `${label} #${pollRank} · ${Math.abs(d)} spot${Math.abs(d) === 1 ? '' : 's'} ` +
+      `${d > 0 ? 'lower than' : 'higher than'} W²`;
+  return `<span class="index-stat poll-cell ${cls}" title="${tip}">${pollRank}${
+    d ? `<small>${d > 0 ? '+' : ''}${d}</small>` : ''}</span>`;
+}
+
 function indexTeamRow(t) {
   const logo = t.logo ? `<img class="index-logo" src="${t.logo}" alt="" loading="lazy">` : '';
-  const poll = t.pollRank ? `<span class="index-poll">★ #${t.pollRank}</span>` : '';
-  const srs = t.srs2025 === null ? 'new' : (t.srs2025 > 0 ? '+' : '') + t.srs2025.toFixed(1);
   const sos = t.sos2026 === null ? '—' : (t.sos2026 > 0 ? '+' : '') + t.sos2026.toFixed(1);
+  const rec = t.record ? `<span class="index-rec">${t.record}</span>` : '';
   return `
     <div class="index-row" data-school="${t.school}" style="--team-color:${t.color || 'var(--gold-dim)'}">
       <span class="index-rank">${t.rank}</span>
       ${logo}
-      <span class="index-school">${t.school} ${poll}</span>
+      <span class="index-school">${t.school} ${rec}</span>
       <span class="index-conf">${CONF_ACRO[t.conference] || t.conference}</span>
       <span class="index-stat" title="projected rating">${(t.rating > 0 ? '+' : '') + t.rating.toFixed(1)}</span>
-      <span class="index-stat dim" title="2025 SRS">${srs}</span>
+      ${pollCell(t.apRank, t.rank, 'AP')}
+      ${pollCell(t.coachesRank, t.rank, 'Coaches')}
       <span class="index-stat dim" title="2026 strength of schedule">${sos}</span>
     </div>
   `;
@@ -637,7 +630,8 @@ function renderIndexUI(data) {
     <div class="index-list-head">
       <span>#</span><span></span><span>Team</span><span>Conf</span>
       <span title="Projected 2026 strength vs an average FBS team — rating gaps read like point spreads">Rating</span>
-      <span title="2025 results: avg margin adjusted for opponent strength, capped at ±28">'25 SRS</span>
+      <span title="AP Top 25 rank, with its gap vs our W² rank. Comparison only — polls never feed the index.">AP</span>
+      <span title="Coaches Poll rank, with its gap vs our W² rank. Comparison only — polls never feed the index.">Coa</span>
       <span title="Average projected rating of 2026 opponents — higher = harder schedule">'26 SoS</span>
     </div>
     <div class="index-list"></div>
@@ -696,7 +690,7 @@ function openTeamModal(school) {
     .filter(g => g.homeTeam === school || g.awayTeam === school)
     .sort((a, b) => (a.week - b.week) || String(a.date).localeCompare(String(b.date)));
 
-  let probSum = 0;
+  let probSum = 0, won = 0, lost = 0, pf = 0, pa = 0;
   const rows = games.map(g => {
     const isHome = g.homeTeam === school;
     const oppName = isHome ? g.awayTeam : g.homeTeam;
@@ -706,13 +700,37 @@ function openTeamModal(school) {
     const homeSign = g.neutralSite ? 0 : (isHome ? 1 : -1);
     const edge = SPREAD_CAL.b * (team.rating - oppRating) + SPREAD_CAL.h * homeSign;
     const p = 1 / (1 + Math.pow(10, -edge / 15));
-    probSum += p;
     const date = g.date
       ? new Date(g.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
       : 'TBD';
     const at = g.neutralSite ? 'vs' : (isHome ? 'vs' : 'at');
+    const played = g.completed && g.homePoints !== null && g.homePoints !== undefined;
+
+    // Played games show what actually happened; only unplayed ones carry a projection.
+    let tail;
+    if (played) {
+      const us = isHome ? g.homePoints : g.awayPoints;
+      const them = isHome ? g.awayPoints : g.homePoints;
+      const win = us > them;
+      const tie = us === them;
+      if (!tie) { win ? won++ : lost++; }
+      pf += us; pa += them;
+      probSum += win ? 1 : 0;
+      const margin = us - them;
+      tail = `
+        <span class="sched-score ${win ? 'res-w' : tie ? '' : 'res-l'}">
+          <b>${win ? 'W' : tie ? 'T' : 'L'}</b> ${us}–${them}
+        </span>
+        <span class="sched-margin ${win ? 'res-w' : 'res-l'}"
+          title="final margin">${margin > 0 ? '+' : ''}${margin}</span>`;
+    } else {
+      probSum += p;
+      tail = `
+        <span class="sched-edge" title="projected edge incl. home field">${edge > 0 ? '+' : ''}${edge.toFixed(1)}</span>
+        <span class="prob-chip ${probClass(p)}">${Math.round(p * 100)}%</span>`;
+    }
     return `
-      <div class="sched-row">
+      <div class="sched-row ${played ? 'sched-played' : ''}">
         <span class="sched-date">Wk ${g.week}<br>${date}</span>
         <span class="sched-opp">
           <span class="sched-at">${at}</span>
@@ -720,14 +738,14 @@ function openTeamModal(school) {
           <span>${oppName}</span>
           ${opp ? `<span class="sched-opp-rank">#${opp.rank}</span>` : '<span class="sched-opp-rank">FCS</span>'}
         </span>
-        <span class="sched-edge" title="projected edge incl. home field">${edge > 0 ? '+' : ''}${edge.toFixed(1)}</span>
-        <span class="prob-chip ${probClass(p)}">${Math.round(p * 100)}%</span>
+        ${tail}
       </div>
     `;
   });
 
   const wins = probSum;
   const losses = games.length - probSum;
+  const playedN = won + lost;
   document.getElementById('team-modal-body').innerHTML = `
     <div class="team-modal-head">
       ${team.logo ? `<img src="${team.logo}" alt="">` : ''}
@@ -736,15 +754,22 @@ function openTeamModal(school) {
         <div class="team-modal-sub">
           W² #${team.rank} · ${CONF_ACRO[team.conference] || team.conference}
           · ${(team.rating > 0 ? '+' : '') + team.rating.toFixed(1)}
-          ${team.pollRank ? ` · ★ ESPN #${team.pollRank}` : ''}
+          ${team.apRank ? ` · AP #${team.apRank}` : ''}
+          ${team.coachesRank ? ` · Coaches #${team.coachesRank}` : ''}
         </div>
       </div>
     </div>
-    <div class="team-proj-record">Projected: <strong>${wins.toFixed(1)}–${losses.toFixed(1)}</strong></div>
+    <div class="team-proj-record">
+      ${playedN ? `Record so far: <strong>${won}–${lost}</strong>
+        <span class="tpr-dim">(${pf}–${pa} pts, ${pf - pa > 0 ? '+' : ''}${pf - pa} margin)</span> · ` : ''}
+      Projected final: <strong>${wins.toFixed(1)}–${losses.toFixed(1)}</strong>
+    </div>
     <div class="sched-list">
       ${rows.join('') || '<div class="stub-card"><p>No 2026 games on the books yet.</p></div>'}
     </div>
-    <p class="index-footnote">Edge = calibrated spread (rating gap ×${SPREAD_CAL.b} ${SPREAD_CAL.h >= 0 ? '+' : ''}${SPREAD_CAL.h} home field) · % = win probability</p>
+    <p class="index-footnote">Played games show the final score and margin. Upcoming games show
+      Edge = calibrated spread (rating gap ×${SPREAD_CAL.b} ${SPREAD_CAL.h >= 0 ? '+' : ''}${SPREAD_CAL.h} home field)
+      · % = win probability. "Projected final" counts games already won as 1.0.</p>
   `;
   document.getElementById('team-modal').hidden = false;
 }
@@ -1172,7 +1197,6 @@ function initFormatModal() {
   });
 }
 
-renderPoll();
 initTabs();
 loadSchedule();
 loadTeamsDb();

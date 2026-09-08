@@ -1,14 +1,15 @@
 {
  "season": 2026,
  "week": 2,
- "snapshotAt": "2026-09-08T10:18Z",
+ "snapshotAt": "2026-09-08T14:24Z",
  "indexVersion": "v1",
  "inseason": {
   "gamesUsed": 99,
   "weeksPlayed": 1.09,
   "blendWeight": 0.214,
   "priorStrengthWeeks": 4.0,
-  "priorFrozen": true
+  "priorFrozen": true,
+  "method": "anchored ridge SRS \u2014 each team shrinks to its frozen preseason rating by games played: w = n/(n+k), k=4"
  },
  "spreadCal": {
   "b": 1.122,
@@ -16,969 +17,969 @@
  },
  "rankings": [
   {
-   "school": "USC",
+   "school": "Notre Dame",
    "rank": 1,
-   "rating": 19.53,
-   "preseasonRating": 13.69,
-   "conference": "Big Ten"
+   "rating": 21.11,
+   "preseasonRating": 18.99,
+   "conference": "FBS Independents"
   },
   {
    "school": "Ohio State",
    "rank": 2,
-   "rating": 18.24,
+   "rating": 19.31,
    "preseasonRating": 20.51,
    "conference": "Big Ten"
   },
   {
    "school": "Georgia",
    "rank": 3,
-   "rating": 17.2,
+   "rating": 19.28,
    "preseasonRating": 19.65,
    "conference": "SEC"
   },
   {
-   "school": "Notre Dame",
-   "rank": 4,
-   "rating": 17.05,
-   "preseasonRating": 18.99,
-   "conference": "FBS Independents"
-  },
-  {
-   "school": "Miami",
-   "rank": 5,
-   "rating": 15.89,
-   "preseasonRating": 14.61,
-   "conference": "ACC"
-  },
-  {
-   "school": "Texas A&M",
-   "rank": 6,
-   "rating": 15.18,
-   "preseasonRating": 16.62,
-   "conference": "SEC"
-  },
-  {
    "school": "Texas",
-   "rank": 7,
-   "rating": 14.56,
+   "rank": 4,
+   "rating": 17.86,
    "preseasonRating": 15.83,
    "conference": "SEC"
   },
   {
-   "school": "Oregon",
-   "rank": 8,
-   "rating": 14.18,
-   "preseasonRating": 18.19,
-   "conference": "Big Ten"
+   "school": "Texas A&M",
+   "rank": 5,
+   "rating": 17.03,
+   "preseasonRating": 16.62,
+   "conference": "SEC"
+  },
+  {
+   "school": "Miami",
+   "rank": 6,
+   "rating": 16.83,
+   "preseasonRating": 14.61,
+   "conference": "ACC"
   },
   {
    "school": "Indiana",
-   "rank": 9,
-   "rating": 13.93,
+   "rank": 7,
+   "rating": 16.76,
    "preseasonRating": 15.03,
    "conference": "Big Ten"
   },
   {
+   "school": "Oregon",
+   "rank": 8,
+   "rating": 16.66,
+   "preseasonRating": 18.19,
+   "conference": "Big Ten"
+  },
+  {
    "school": "Alabama",
-   "rank": 10,
-   "rating": 13.57,
+   "rank": 9,
+   "rating": 16.56,
    "preseasonRating": 14.57,
    "conference": "SEC"
   },
   {
-   "school": "Texas Tech",
-   "rank": 11,
-   "rating": 12.66,
-   "preseasonRating": 15.23,
-   "conference": "Big 12"
-  },
-  {
-   "school": "SMU",
-   "rank": 12,
-   "rating": 11.97,
-   "preseasonRating": 7.56,
-   "conference": "ACC"
-  },
-  {
-   "school": "Iowa",
-   "rank": 13,
-   "rating": 11.39,
-   "preseasonRating": 11.79,
-   "conference": "Big Ten"
-  },
-  {
    "school": "LSU",
-   "rank": 14,
-   "rating": 11.18,
+   "rank": 10,
+   "rating": 15.57,
    "preseasonRating": 11.53,
    "conference": "SEC"
   },
   {
-   "school": "Oklahoma",
+   "school": "USC",
+   "rank": 11,
+   "rating": 14.27,
+   "preseasonRating": 13.69,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Texas Tech",
+   "rank": 12,
+   "rating": 13.5,
+   "preseasonRating": 15.23,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Ole Miss",
+   "rank": 13,
+   "rating": 12.89,
+   "preseasonRating": 13.68,
+   "conference": "SEC"
+  },
+  {
+   "school": "Iowa",
+   "rank": 14,
+   "rating": 12.38,
+   "preseasonRating": 11.79,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Washington",
    "rank": 15,
-   "rating": 11.17,
+   "rating": 12.15,
+   "preseasonRating": 11.8,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Oklahoma",
+   "rank": 16,
+   "rating": 12.07,
    "preseasonRating": 11.51,
    "conference": "SEC"
   },
   {
    "school": "BYU",
-   "rank": 16,
-   "rating": 10.77,
+   "rank": 17,
+   "rating": 11.4,
    "preseasonRating": 11.47,
    "conference": "Big 12"
   },
   {
-   "school": "Utah",
-   "rank": 17,
-   "rating": 10.67,
-   "preseasonRating": 11.34,
-   "conference": "Big 12"
-  },
-  {
-   "school": "Tennessee",
-   "rank": 18,
-   "rating": 10.35,
-   "preseasonRating": 10.93,
-   "conference": "SEC"
-  },
-  {
    "school": "South Carolina",
-   "rank": 19,
-   "rating": 10.22,
+   "rank": 18,
+   "rating": 11.33,
    "preseasonRating": 10.31,
    "conference": "SEC"
   },
   {
-   "school": "Ole Miss",
-   "rank": 20,
-   "rating": 10.2,
-   "preseasonRating": 13.68,
-   "conference": "SEC"
-  },
-  {
-   "school": "Washington",
-   "rank": 21,
-   "rating": 9.9,
-   "preseasonRating": 11.8,
-   "conference": "Big Ten"
-  },
-  {
-   "school": "Missouri",
-   "rank": 22,
-   "rating": 9.68,
-   "preseasonRating": 10.09,
-   "conference": "SEC"
+   "school": "Utah",
+   "rank": 19,
+   "rating": 11.27,
+   "preseasonRating": 11.34,
+   "conference": "Big 12"
   },
   {
    "school": "Florida",
-   "rank": 23,
-   "rating": 9.29,
+   "rank": 20,
+   "rating": 11.22,
    "preseasonRating": 9.12,
    "conference": "SEC"
   },
   {
-   "school": "Arizona",
-   "rank": 24,
-   "rating": 8.9,
-   "preseasonRating": 9.09,
-   "conference": "Big 12"
-  },
-  {
-   "school": "Florida State",
-   "rank": 25,
-   "rating": 8.74,
-   "preseasonRating": 4.27,
-   "conference": "ACC"
-  },
-  {
-   "school": "Michigan",
-   "rank": 26,
-   "rating": 8.73,
-   "preseasonRating": 12.08,
-   "conference": "Big Ten"
+   "school": "Tennessee",
+   "rank": 21,
+   "rating": 10.87,
+   "preseasonRating": 10.93,
+   "conference": "SEC"
   },
   {
    "school": "Penn State",
-   "rank": 27,
-   "rating": 7.7,
+   "rank": 22,
+   "rating": 10.33,
    "preseasonRating": 7.1,
    "conference": "Big Ten"
   },
   {
-   "school": "Vanderbilt",
+   "school": "Michigan",
+   "rank": 23,
+   "rating": 10.09,
+   "preseasonRating": 12.08,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Missouri",
+   "rank": 24,
+   "rating": 10.07,
+   "preseasonRating": 10.09,
+   "conference": "SEC"
+  },
+  {
+   "school": "Arizona",
+   "rank": 25,
+   "rating": 9.11,
+   "preseasonRating": 9.09,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Virginia",
+   "rank": 26,
+   "rating": 8.98,
+   "preseasonRating": 4.46,
+   "conference": "ACC"
+  },
+  {
+   "school": "UCLA",
+   "rank": 27,
+   "rating": 8.25,
+   "preseasonRating": 5.47,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Pittsburgh",
    "rank": 28,
-   "rating": 6.98,
+   "rating": 7.9,
+   "preseasonRating": 5.18,
+   "conference": "ACC"
+  },
+  {
+   "school": "Vanderbilt",
+   "rank": 29,
+   "rating": 7.83,
    "preseasonRating": 9.09,
    "conference": "SEC"
   },
   {
-   "school": "Houston",
-   "rank": 29,
-   "rating": 6.61,
-   "preseasonRating": 7.75,
-   "conference": "Big 12"
-  },
-  {
    "school": "Illinois",
    "rank": 30,
-   "rating": 6.61,
+   "rating": 7.64,
    "preseasonRating": 6.94,
    "conference": "Big Ten"
   },
   {
-   "school": "Minnesota",
+   "school": "SMU",
    "rank": 31,
-   "rating": 6.38,
+   "rating": 7.52,
+   "preseasonRating": 7.56,
+   "conference": "ACC"
+  },
+  {
+   "school": "Houston",
+   "rank": 32,
+   "rating": 7.44,
+   "preseasonRating": 7.75,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Nebraska",
+   "rank": 33,
+   "rating": 6.94,
+   "preseasonRating": 3.64,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Louisville",
+   "rank": 34,
+   "rating": 6.73,
+   "preseasonRating": 5.94,
+   "conference": "ACC"
+  },
+  {
+   "school": "Northwestern",
+   "rank": 35,
+   "rating": 6.53,
+   "preseasonRating": 8.28,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Auburn",
+   "rank": 36,
+   "rating": 6.03,
+   "preseasonRating": 6.34,
+   "conference": "SEC"
+  },
+  {
+   "school": "Minnesota",
+   "rank": 37,
+   "rating": 6.02,
    "preseasonRating": 5.89,
    "conference": "Big Ten"
   },
   {
    "school": "Kansas State",
-   "rank": 32,
-   "rating": 6.33,
+   "rank": 38,
+   "rating": 5.95,
    "preseasonRating": 5.82,
    "conference": "Big 12"
   },
   {
-   "school": "Pittsburgh",
-   "rank": 33,
-   "rating": 6.19,
-   "preseasonRating": 5.18,
+   "school": "Mississippi State",
+   "rank": 39,
+   "rating": 4.5,
+   "preseasonRating": 2.4,
+   "conference": "SEC"
+  },
+  {
+   "school": "Duke",
+   "rank": 40,
+   "rating": 4.4,
+   "preseasonRating": 2.85,
    "conference": "ACC"
   },
   {
-   "school": "Northwestern",
-   "rank": 34,
-   "rating": 5.7,
-   "preseasonRating": 8.28,
-   "conference": "Big Ten"
-  },
-  {
-   "school": "UCLA",
-   "rank": 35,
-   "rating": 5.67,
-   "preseasonRating": 5.47,
-   "conference": "Big Ten"
-  },
-  {
-   "school": "Virginia",
-   "rank": 36,
-   "rating": 5.41,
-   "preseasonRating": 4.46,
+   "school": "Florida State",
+   "rank": 41,
+   "rating": 4.37,
+   "preseasonRating": 4.27,
    "conference": "ACC"
-  },
-  {
-   "school": "Nebraska",
-   "rank": 37,
-   "rating": 4.98,
-   "preseasonRating": 3.64,
-   "conference": "Big Ten"
   },
   {
    "school": "Kentucky",
-   "rank": 38,
-   "rating": 4.87,
+   "rank": 42,
+   "rating": 4.17,
    "preseasonRating": 3.97,
    "conference": "SEC"
   },
   {
    "school": "Maryland",
-   "rank": 39,
-   "rating": 4.82,
+   "rank": 43,
+   "rating": 4.1,
    "preseasonRating": 3.9,
    "conference": "Big Ten"
   },
   {
-   "school": "Arizona State",
-   "rank": 40,
-   "rating": 4.79,
-   "preseasonRating": 3.86,
-   "conference": "Big 12"
-  },
-  {
-   "school": "San Diego State",
-   "rank": 41,
-   "rating": 4.29,
-   "preseasonRating": 3.23,
-   "conference": "Pac-12"
-  },
-  {
-   "school": "Auburn",
-   "rank": 42,
-   "rating": 4.22,
-   "preseasonRating": 6.34,
-   "conference": "SEC"
-  },
-  {
-   "school": "Mississippi State",
-   "rank": 43,
-   "rating": 4.0,
-   "preseasonRating": 2.4,
-   "conference": "SEC"
-  },
-  {
-   "school": "Virginia Tech",
-   "rank": 44,
-   "rating": 3.87,
-   "preseasonRating": 2.69,
-   "conference": "ACC"
-  },
-  {
-   "school": "Kansas",
-   "rank": 45,
-   "rating": 3.63,
-   "preseasonRating": 2.39,
-   "conference": "Big 12"
-  },
-  {
    "school": "Wake Forest",
-   "rank": 46,
-   "rating": 3.55,
+   "rank": 44,
+   "rating": 4.1,
    "preseasonRating": 2.64,
    "conference": "ACC"
   },
   {
-   "school": "Louisville",
-   "rank": 47,
-   "rating": 3.47,
-   "preseasonRating": 5.94,
-   "conference": "ACC"
+   "school": "Arizona State",
+   "rank": 45,
+   "rating": 4.06,
+   "preseasonRating": 3.86,
+   "conference": "Big 12"
   },
   {
-   "school": "Duke",
+   "school": "Cincinnati",
+   "rank": 46,
+   "rating": 4.04,
+   "preseasonRating": 1.61,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Baylor",
+   "rank": 47,
+   "rating": 3.8,
+   "preseasonRating": 3.49,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Clemson",
    "rank": 48,
-   "rating": 2.86,
-   "preseasonRating": 2.85,
+   "rating": 3.75,
+   "preseasonRating": 7.8,
    "conference": "ACC"
   },
   {
    "school": "TCU",
    "rank": 49,
-   "rating": 2.84,
+   "rating": 3.56,
    "preseasonRating": 5.4,
    "conference": "Big 12"
   },
   {
-   "school": "Purdue",
+   "school": "Boise State",
    "rank": 50,
-   "rating": 2.69,
-   "preseasonRating": 2.01,
-   "conference": "Big Ten"
+   "rating": 3.53,
+   "preseasonRating": 2.0,
+   "conference": "Pac-12"
   },
   {
-   "school": "Iowa State",
+   "school": "San Diego State",
    "rank": 51,
-   "rating": 2.56,
-   "preseasonRating": 1.03,
-   "conference": "Big 12"
-  },
-  {
-   "school": "Cincinnati",
-   "rank": 52,
-   "rating": 2.42,
-   "preseasonRating": 1.61,
-   "conference": "Big 12"
-  },
-  {
-   "school": "Clemson",
-   "rank": 53,
-   "rating": 2.27,
-   "preseasonRating": 7.8,
-   "conference": "ACC"
+   "rating": 3.45,
+   "preseasonRating": 3.23,
+   "conference": "Pac-12"
   },
   {
    "school": "Arkansas",
-   "rank": 54,
-   "rating": 2.24,
+   "rank": 52,
+   "rating": 3.0,
    "preseasonRating": 3.61,
    "conference": "SEC"
   },
   {
-   "school": "UTSA",
-   "rank": 55,
-   "rating": 2.2,
-   "preseasonRating": 0.57,
-   "conference": "American Athletic"
+   "school": "Virginia Tech",
+   "rank": 53,
+   "rating": 2.93,
+   "preseasonRating": 2.69,
+   "conference": "ACC"
   },
   {
-   "school": "Baylor",
-   "rank": 56,
-   "rating": 1.76,
-   "preseasonRating": 3.49,
+   "school": "Kansas",
+   "rank": 54,
+   "rating": 2.64,
+   "preseasonRating": 2.39,
    "conference": "Big 12"
-  },
-  {
-   "school": "South Florida",
-   "rank": 57,
-   "rating": 1.7,
-   "preseasonRating": 1.92,
-   "conference": "American Athletic"
-  },
-  {
-   "school": "UCF",
-   "rank": 58,
-   "rating": 1.7,
-   "preseasonRating": -0.07,
-   "conference": "Big 12"
-  },
-  {
-   "school": "Fresno State",
-   "rank": 59,
-   "rating": 1.68,
-   "preseasonRating": -1.4,
-   "conference": "Pac-12"
   },
   {
    "school": "Georgia Tech",
-   "rank": 60,
-   "rating": 1.53,
+   "rank": 55,
+   "rating": 2.42,
    "preseasonRating": 3.19,
    "conference": "ACC"
   },
   {
+   "school": "Purdue",
+   "rank": 56,
+   "rating": 2.17,
+   "preseasonRating": 2.01,
+   "conference": "Big Ten"
+  },
+  {
    "school": "New Mexico",
-   "rank": 61,
-   "rating": 0.85,
+   "rank": 57,
+   "rating": 1.99,
    "preseasonRating": -1.61,
    "conference": "Mountain West"
   },
   {
-   "school": "NC State",
+   "school": "South Florida",
+   "rank": 58,
+   "rating": 1.65,
+   "preseasonRating": 1.92,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Wisconsin",
+   "rank": 59,
+   "rating": 1.6,
+   "preseasonRating": 3.72,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Memphis",
+   "rank": 60,
+   "rating": 1.5,
+   "preseasonRating": -0.82,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Iowa State",
+   "rank": 61,
+   "rating": 1.33,
+   "preseasonRating": 1.03,
+   "conference": "Big 12"
+  },
+  {
+   "school": "North Carolina",
    "rank": 62,
-   "rating": 0.73,
+   "rating": 1.2,
+   "preseasonRating": -0.64,
+   "conference": "ACC"
+  },
+  {
+   "school": "Western Michigan",
+   "rank": 63,
+   "rating": 1.13,
+   "preseasonRating": -0.86,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "NC State",
+   "rank": 64,
+   "rating": 1.05,
    "preseasonRating": 5.57,
    "conference": "ACC"
   },
   {
    "school": "James Madison",
-   "rank": 63,
-   "rating": 0.52,
+   "rank": 65,
+   "rating": 0.9,
    "preseasonRating": 0.83,
    "conference": "Sun Belt"
   },
   {
-   "school": "Rutgers",
-   "rank": 64,
-   "rating": 0.32,
-   "preseasonRating": 3.7,
-   "conference": "Big Ten"
-  },
-  {
-   "school": "Memphis",
-   "rank": 65,
-   "rating": 0.12,
-   "preseasonRating": -0.82,
+   "school": "UTSA",
+   "rank": 66,
+   "rating": 0.89,
+   "preseasonRating": 0.57,
    "conference": "American Athletic"
   },
   {
-   "school": "Boise State",
-   "rank": 66,
-   "rating": -0.05,
-   "preseasonRating": 2.0,
-   "conference": "Pac-12"
-  },
-  {
-   "school": "Syracuse",
-   "rank": 67,
-   "rating": -0.32,
-   "preseasonRating": -2.64,
-   "conference": "ACC"
-  },
-  {
-   "school": "North Carolina",
-   "rank": 68,
-   "rating": -0.84,
-   "preseasonRating": -0.64,
-   "conference": "ACC"
-  },
-  {
-   "school": "UConn",
-   "rank": 69,
-   "rating": -0.87,
-   "preseasonRating": -3.33,
-   "conference": "FBS Independents"
-  },
-  {
-   "school": "Wisconsin",
-   "rank": 70,
-   "rating": -0.94,
-   "preseasonRating": 3.72,
-   "conference": "Big Ten"
-  },
-  {
-   "school": "Michigan State",
-   "rank": 71,
-   "rating": -0.96,
-   "preseasonRating": -1.47,
-   "conference": "Big Ten"
-  },
-  {
    "school": "Colorado",
-   "rank": 72,
-   "rating": -1.13,
+   "rank": 67,
+   "rating": 0.31,
    "preseasonRating": -0.46,
    "conference": "Big 12"
   },
   {
-   "school": "North Dakota State",
-   "rank": 73,
-   "rating": -1.37,
-   "preseasonRating": -6.32,
-   "conference": "Mountain West"
-  },
-  {
-   "school": "Southern Miss",
-   "rank": 74,
-   "rating": -1.63,
-   "preseasonRating": -4.3,
-   "conference": "Sun Belt"
-  },
-  {
-   "school": "Western Michigan",
-   "rank": 75,
-   "rating": -1.66,
-   "preseasonRating": -0.86,
-   "conference": "Mid-American"
-  },
-  {
-   "school": "Louisiana",
-   "rank": 76,
-   "rating": -1.8,
-   "preseasonRating": -4.51,
-   "conference": "Sun Belt"
-  },
-  {
-   "school": "West Virginia",
-   "rank": 77,
-   "rating": -2.06,
-   "preseasonRating": -2.46,
+   "school": "UCF",
+   "rank": 68,
+   "rating": 0.27,
+   "preseasonRating": -0.07,
    "conference": "Big 12"
   },
   {
-   "school": "Navy",
-   "rank": 78,
-   "rating": -2.08,
-   "preseasonRating": -4.6,
-   "conference": "American Athletic"
-  },
-  {
-   "school": "California",
-   "rank": 79,
-   "rating": -2.2,
-   "preseasonRating": 1.17,
-   "conference": "ACC"
+   "school": "Michigan State",
+   "rank": 69,
+   "rating": 0.0,
+   "preseasonRating": -1.47,
+   "conference": "Big Ten"
   },
   {
    "school": "Washington State",
-   "rank": 80,
-   "rating": -2.44,
+   "rank": 70,
+   "rating": -0.44,
    "preseasonRating": -0.09,
    "conference": "Pac-12"
   },
   {
-   "school": "Army",
+   "school": "UNLV",
+   "rank": 71,
+   "rating": -1.17,
+   "preseasonRating": -2.9,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "North Dakota State",
+   "rank": 72,
+   "rating": -1.31,
+   "preseasonRating": -6.32,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "California",
+   "rank": 73,
+   "rating": -1.61,
+   "preseasonRating": 1.17,
+   "conference": "ACC"
+  },
+  {
+   "school": "Texas State",
+   "rank": 74,
+   "rating": -2.01,
+   "preseasonRating": 0.02,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Syracuse",
+   "rank": 75,
+   "rating": -2.2,
+   "preseasonRating": -2.64,
+   "conference": "ACC"
+  },
+  {
+   "school": "Stanford",
+   "rank": 76,
+   "rating": -2.3,
+   "preseasonRating": -1.68,
+   "conference": "ACC"
+  },
+  {
+   "school": "West Virginia",
+   "rank": 77,
+   "rating": -2.72,
+   "preseasonRating": -2.46,
+   "conference": "Big 12"
+  },
+  {
+   "school": "UConn",
+   "rank": 78,
+   "rating": -2.87,
+   "preseasonRating": -3.33,
+   "conference": "FBS Independents"
+  },
+  {
+   "school": "Tulane",
+   "rank": 79,
+   "rating": -3.38,
+   "preseasonRating": -1.82,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "East Carolina",
+   "rank": 80,
+   "rating": -3.48,
+   "preseasonRating": -1.49,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Tulsa",
    "rank": 81,
-   "rating": -2.57,
+   "rating": -3.48,
+   "preseasonRating": -6.05,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Rutgers",
+   "rank": 82,
+   "rating": -3.53,
+   "preseasonRating": 3.7,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Old Dominion",
+   "rank": 83,
+   "rating": -3.61,
+   "preseasonRating": -3.84,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Southern Miss",
+   "rank": 84,
+   "rating": -3.8,
+   "preseasonRating": -4.3,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Fresno State",
+   "rank": 85,
+   "rating": -3.87,
+   "preseasonRating": -1.4,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Louisiana",
+   "rank": 86,
+   "rating": -4.01,
+   "preseasonRating": -4.51,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Toledo",
+   "rank": 87,
+   "rating": -4.11,
+   "preseasonRating": -2.64,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Navy",
+   "rank": 88,
+   "rating": -4.13,
+   "preseasonRating": -4.6,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "North Texas",
+   "rank": 89,
+   "rating": -4.32,
+   "preseasonRating": -2.59,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Nevada",
+   "rank": 90,
+   "rating": -4.59,
+   "preseasonRating": -10.46,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Colorado State",
+   "rank": 91,
+   "rating": -4.66,
+   "preseasonRating": -8.29,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Marshall",
+   "rank": 92,
+   "rating": -4.77,
+   "preseasonRating": -1.54,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Temple",
+   "rank": 93,
+   "rating": -4.77,
+   "preseasonRating": -5.15,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Army",
+   "rank": 94,
+   "rating": -4.96,
    "preseasonRating": -5.5,
    "conference": "American Athletic"
   },
   {
    "school": "Louisiana Tech",
-   "rank": 82,
-   "rating": -2.68,
+   "rank": 95,
+   "rating": -5.1,
    "preseasonRating": -5.64,
    "conference": "Sun Belt"
   },
   {
-   "school": "Old Dominion",
-   "rank": 83,
-   "rating": -2.76,
-   "preseasonRating": -3.84,
-   "conference": "Sun Belt"
-  },
-  {
-   "school": "UNLV",
-   "rank": 84,
-   "rating": -2.79,
-   "preseasonRating": -2.9,
-   "conference": "Mountain West"
-  },
-  {
-   "school": "Stanford",
-   "rank": 85,
-   "rating": -2.9,
-   "preseasonRating": -1.68,
-   "conference": "ACC"
-  },
-  {
-   "school": "Delaware",
-   "rank": 86,
-   "rating": -3.01,
-   "preseasonRating": -6.06,
-   "conference": "Conference USA"
-  },
-  {
-   "school": "Temple",
-   "rank": 87,
-   "rating": -3.15,
-   "preseasonRating": -5.15,
-   "conference": "American Athletic"
-  },
-  {
-   "school": "Air Force",
-   "rank": 88,
-   "rating": -3.73,
-   "preseasonRating": -6.97,
-   "conference": "Mountain West"
-  },
-  {
-   "school": "Tulane",
-   "rank": 89,
-   "rating": -3.8,
-   "preseasonRating": -1.82,
-   "conference": "American Athletic"
-  },
-  {
-   "school": "Kennesaw State",
-   "rank": 90,
-   "rating": -3.82,
-   "preseasonRating": -7.09,
-   "conference": "Conference USA"
-  },
-  {
-   "school": "Texas State",
-   "rank": 91,
-   "rating": -3.85,
-   "preseasonRating": 0.02,
-   "conference": "Pac-12"
-  },
-  {
-   "school": "Jacksonville State",
-   "rank": 92,
-   "rating": -4.02,
-   "preseasonRating": -4.98,
-   "conference": "Conference USA"
-  },
-  {
-   "school": "Toledo",
-   "rank": 93,
-   "rating": -4.02,
-   "preseasonRating": -2.64,
-   "conference": "Mid-American"
-  },
-  {
-   "school": "Tulsa",
-   "rank": 94,
-   "rating": -4.14,
-   "preseasonRating": -6.05,
-   "conference": "American Athletic"
-  },
-  {
-   "school": "San Jos\u00e9 State",
-   "rank": 95,
-   "rating": -4.38,
-   "preseasonRating": -12.38,
-   "conference": "Mountain West"
-  },
-  {
-   "school": "App State",
-   "rank": 96,
-   "rating": -4.45,
-   "preseasonRating": -7.88,
-   "conference": "Sun Belt"
-  },
-  {
-   "school": "Eastern Michigan",
-   "rank": 97,
-   "rating": -4.6,
-   "preseasonRating": -11.03,
-   "conference": "Mid-American"
-  },
-  {
-   "school": "Georgia Southern",
-   "rank": 98,
-   "rating": -4.92,
-   "preseasonRating": -8.49,
-   "conference": "Sun Belt"
-  },
-  {
-   "school": "Colorado State",
-   "rank": 99,
-   "rating": -5.04,
-   "preseasonRating": -8.29,
-   "conference": "Pac-12"
-  },
-  {
-   "school": "East Carolina",
-   "rank": 100,
-   "rating": -5.04,
-   "preseasonRating": -1.49,
-   "conference": "American Athletic"
-  },
-  {
-   "school": "Marshall",
-   "rank": 101,
-   "rating": -5.08,
-   "preseasonRating": -1.54,
-   "conference": "Sun Belt"
-  },
-  {
-   "school": "Hawai'i",
-   "rank": 102,
-   "rating": -5.09,
-   "preseasonRating": -1.74,
-   "conference": "Mountain West"
-  },
-  {
    "school": "Boston College",
-   "rank": 103,
-   "rating": -5.12,
+   "rank": 96,
+   "rating": -5.25,
    "preseasonRating": -2.82,
    "conference": "ACC"
   },
   {
-   "school": "Rice",
-   "rank": 104,
-   "rating": -5.4,
-   "preseasonRating": -9.09,
-   "conference": "American Athletic"
-  },
-  {
-   "school": "South Alabama",
-   "rank": 105,
-   "rating": -5.42,
-   "preseasonRating": -8.3,
-   "conference": "Sun Belt"
-  },
-  {
-   "school": "North Texas",
-   "rank": 106,
-   "rating": -5.9,
-   "preseasonRating": -2.59,
-   "conference": "American Athletic"
-  },
-  {
-   "school": "Oklahoma State",
-   "rank": 107,
-   "rating": -5.99,
-   "preseasonRating": -4.6,
-   "conference": "Big 12"
-  },
-  {
-   "school": "Nevada",
-   "rank": 108,
-   "rating": -6.11,
-   "preseasonRating": -10.46,
-   "conference": "Mountain West"
+   "school": "Delaware",
+   "rank": 97,
+   "rating": -5.5,
+   "preseasonRating": -6.06,
+   "conference": "Conference USA"
   },
   {
    "school": "Liberty",
-   "rank": 109,
-   "rating": -6.15,
+   "rank": 98,
+   "rating": -5.83,
    "preseasonRating": -5.76,
    "conference": "Conference USA"
   },
   {
-   "school": "Troy",
-   "rank": 110,
-   "rating": -6.19,
-   "preseasonRating": -7.16,
-   "conference": "Sun Belt"
+   "school": "Hawai'i",
+   "rank": 99,
+   "rating": -5.9,
+   "preseasonRating": -1.74,
+   "conference": "Mountain West"
   },
   {
-   "school": "Western Kentucky",
-   "rank": 111,
-   "rating": -6.42,
-   "preseasonRating": -3.25,
+   "school": "Air Force",
+   "rank": 100,
+   "rating": -6.38,
+   "preseasonRating": -6.97,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Kennesaw State",
+   "rank": 101,
+   "rating": -6.49,
+   "preseasonRating": -7.09,
    "conference": "Conference USA"
   },
   {
-   "school": "Utah State",
-   "rank": 112,
-   "rating": -7.42,
-   "preseasonRating": -0.79,
-   "conference": "Pac-12"
-  },
-  {
-   "school": "Ohio",
-   "rank": 113,
-   "rating": -7.44,
-   "preseasonRating": -4.55,
-   "conference": "Mid-American"
-  },
-  {
-   "school": "Sacramento State",
-   "rank": 114,
-   "rating": -7.56,
-   "preseasonRating": -11.82,
-   "conference": "Mid-American"
-  },
-  {
    "school": "Oregon State",
-   "rank": 115,
-   "rating": -7.86,
+   "rank": 102,
+   "rating": -6.8,
    "preseasonRating": -7.11,
    "conference": "Pac-12"
   },
   {
-   "school": "Georgia State",
-   "rank": 116,
-   "rating": -8.39,
-   "preseasonRating": -12.9,
+   "school": "Oklahoma State",
+   "rank": 103,
+   "rating": -7.17,
+   "preseasonRating": -4.6,
+   "conference": "Big 12"
+  },
+  {
+   "school": "App State",
+   "rank": 104,
+   "rating": -7.26,
+   "preseasonRating": -7.88,
    "conference": "Sun Belt"
   },
   {
-   "school": "New Mexico State",
-   "rank": 117,
-   "rating": -8.56,
-   "preseasonRating": -13.11,
-   "conference": "Conference USA"
+   "school": "South Alabama",
+   "rank": 105,
+   "rating": -7.77,
+   "preseasonRating": -8.3,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Troy",
+   "rank": 106,
+   "rating": -7.79,
+   "preseasonRating": -7.16,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Georgia Southern",
+   "rank": 107,
+   "rating": -7.84,
+   "preseasonRating": -8.49,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Ohio",
+   "rank": 108,
+   "rating": -7.85,
+   "preseasonRating": -4.55,
+   "conference": "Mid-American"
   },
   {
    "school": "Florida Atlantic",
-   "rank": 118,
-   "rating": -8.79,
+   "rank": 109,
+   "rating": -8.36,
    "preseasonRating": -6.26,
    "conference": "American Athletic"
   },
   {
-   "school": "Miami (OH)",
-   "rank": 119,
-   "rating": -8.99,
-   "preseasonRating": -6.52,
-   "conference": "Mid-American"
+   "school": "Rice",
+   "rank": 110,
+   "rating": -8.42,
+   "preseasonRating": -9.09,
+   "conference": "American Athletic"
   },
   {
    "school": "UAB",
-   "rank": 120,
-   "rating": -9.09,
+   "rank": 111,
+   "rating": -8.56,
    "preseasonRating": -7.86,
    "conference": "American Athletic"
   },
   {
+   "school": "Jacksonville State",
+   "rank": 112,
+   "rating": -8.9,
+   "preseasonRating": -4.98,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Utah State",
+   "rank": 113,
+   "rating": -8.92,
+   "preseasonRating": -0.79,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Western Kentucky",
+   "rank": 114,
+   "rating": -9.12,
+   "preseasonRating": -3.25,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Miami (OH)",
+   "rank": 115,
+   "rating": -9.24,
+   "preseasonRating": -6.52,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "San Jos\u00e9 State",
+   "rank": 116,
+   "rating": -9.25,
+   "preseasonRating": -12.38,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Missouri State",
+   "rank": 117,
+   "rating": -9.31,
+   "preseasonRating": -8.9,
+   "conference": "Conference USA"
+  },
+  {
    "school": "Florida International",
-   "rank": 121,
-   "rating": -9.57,
+   "rank": 118,
+   "rating": -9.43,
    "preseasonRating": -9.7,
    "conference": "Conference USA"
   },
   {
-   "school": "Wyoming",
-   "rank": 122,
-   "rating": -9.93,
-   "preseasonRating": -8.53,
-   "conference": "Mountain West"
-  },
-  {
-   "school": "Central Michigan",
-   "rank": 123,
-   "rating": -10.15,
-   "preseasonRating": -7.99,
+   "school": "Eastern Michigan",
+   "rank": 119,
+   "rating": -10.23,
+   "preseasonRating": -11.03,
    "conference": "Mid-American"
   },
   {
    "school": "Arkansas State",
-   "rank": 124,
-   "rating": -10.22,
+   "rank": 120,
+   "rating": -10.56,
    "preseasonRating": -9.08,
    "conference": "Sun Belt"
   },
   {
    "school": "Coastal Carolina",
-   "rank": 125,
-   "rating": -10.3,
+   "rank": 121,
+   "rating": -10.77,
    "preseasonRating": -11.03,
    "conference": "Sun Belt"
   },
   {
-   "school": "Middle Tennessee",
-   "rank": 126,
-   "rating": -10.39,
-   "preseasonRating": -14.35,
-   "conference": "Conference USA"
-  },
-  {
-   "school": "Missouri State",
-   "rank": 127,
-   "rating": -10.87,
-   "preseasonRating": -8.9,
-   "conference": "Conference USA"
-  },
-  {
-   "school": "Akron",
-   "rank": 128,
-   "rating": -11.57,
-   "preseasonRating": -10.61,
-   "conference": "Mid-American"
-  },
-  {
    "school": "Buffalo",
-   "rank": 129,
-   "rating": -12.04,
+   "rank": 122,
+   "rating": -11.4,
    "preseasonRating": -11.02,
    "conference": "Mid-American"
   },
   {
-   "school": "Sam Houston",
-   "rank": 130,
-   "rating": -12.17,
-   "preseasonRating": -13.95,
+   "school": "Central Michigan",
+   "rank": 123,
+   "rating": -11.59,
+   "preseasonRating": -7.99,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Akron",
+   "rank": 124,
+   "rating": -12.07,
+   "preseasonRating": -10.61,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Georgia State",
+   "rank": 125,
+   "rating": -12.09,
+   "preseasonRating": -12.9,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Wyoming",
+   "rank": 126,
+   "rating": -12.16,
+   "preseasonRating": -8.53,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "New Mexico State",
+   "rank": 127,
+   "rating": -12.36,
+   "preseasonRating": -13.11,
    "conference": "Conference USA"
   },
   {
    "school": "Kent State",
-   "rank": 131,
-   "rating": -12.95,
+   "rank": 128,
+   "rating": -12.57,
    "preseasonRating": -11.55,
    "conference": "Mid-American"
   },
   {
+   "school": "Sacramento State",
+   "rank": 129,
+   "rating": -13.03,
+   "preseasonRating": -11.82,
+   "conference": "Mid-American"
+  },
+  {
    "school": "Northern Illinois",
-   "rank": 132,
-   "rating": -13.81,
+   "rank": 130,
+   "rating": -13.24,
    "preseasonRating": -12.64,
    "conference": "Mountain West"
   },
   {
-   "school": "UL Monroe",
-   "rank": 133,
-   "rating": -14.07,
-   "preseasonRating": -12.97,
-   "conference": "Sun Belt"
-  },
-  {
-   "school": "UTEP",
-   "rank": 134,
-   "rating": -14.18,
-   "preseasonRating": -13.11,
-   "conference": "Mountain West"
+   "school": "Sam Houston",
+   "rank": 131,
+   "rating": -13.32,
+   "preseasonRating": -13.95,
+   "conference": "Conference USA"
   },
   {
    "school": "Ball State",
-   "rank": 135,
-   "rating": -15.4,
+   "rank": 132,
+   "rating": -13.47,
    "preseasonRating": -14.67,
    "conference": "Mid-American"
   },
   {
+   "school": "Middle Tennessee",
+   "rank": 133,
+   "rating": -13.64,
+   "preseasonRating": -14.35,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "UTEP",
+   "rank": 134,
+   "rating": -13.67,
+   "preseasonRating": -13.11,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "UL Monroe",
+   "rank": 135,
+   "rating": -15.07,
+   "preseasonRating": -12.97,
+   "conference": "Sun Belt"
+  },
+  {
    "school": "Charlotte",
    "rank": 136,
-   "rating": -15.71,
+   "rating": -15.83,
    "preseasonRating": -14.05,
    "conference": "American Athletic"
   },
   {
-   "school": "Bowling Green",
+   "school": "Massachusetts",
    "rank": 137,
-   "rating": -16.16,
-   "preseasonRating": -13.27,
+   "rating": -16.44,
+   "preseasonRating": -23.67,
    "conference": "Mid-American"
   },
   {
-   "school": "Massachusetts",
+   "school": "Bowling Green",
    "rank": 138,
-   "rating": -17.78,
-   "preseasonRating": -23.67,
+   "rating": -16.63,
+   "preseasonRating": -13.27,
    "conference": "Mid-American"
   }
  ],
@@ -990,14 +991,14 @@
    "home": "Iowa",
    "away": "Iowa State",
    "neutral": false,
-   "homeRating": 11.39,
-   "awayRating": 2.56,
-   "modelHome": 13.6,
+   "homeRating": 12.38,
+   "awayRating": 1.33,
+   "modelHome": 16.1,
    "mktHome": 15.0,
-   "edge": -1.4,
+   "edge": 1.1,
    "edgeTier": "small",
-   "modelSide": "Iowa State",
-   "homeWinProb": 0.89,
+   "modelSide": "Iowa",
+   "homeWinProb": 0.922,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1014,14 +1015,14 @@
    "home": "Kansas",
    "away": "Missouri",
    "neutral": false,
-   "homeRating": 3.63,
-   "awayRating": 9.68,
-   "modelHome": -3.1,
+   "homeRating": 2.64,
+   "awayRating": 10.07,
+   "modelHome": -4.6,
    "mktHome": -5.0,
-   "edge": 1.9,
+   "edge": 0.4,
    "edgeTier": "small",
    "modelSide": "Kansas",
-   "homeWinProb": 0.383,
+   "homeWinProb": 0.329,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1038,14 +1039,14 @@
    "home": "Oklahoma State",
    "away": "Oregon",
    "neutral": false,
-   "homeRating": -5.99,
-   "awayRating": 14.18,
-   "modelHome": -18.9,
+   "homeRating": -7.17,
+   "awayRating": 16.66,
+   "modelHome": -23.0,
    "mktHome": -22.5,
-   "edge": 3.6,
-   "edgeTier": "mid",
-   "modelSide": "Oklahoma State",
-   "homeWinProb": 0.052,
+   "edge": -0.5,
+   "edgeTier": "small",
+   "modelSide": "Oregon",
+   "homeWinProb": 0.028,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1062,14 +1063,14 @@
    "home": "Utah",
    "away": "Arkansas",
    "neutral": false,
-   "homeRating": 10.67,
-   "awayRating": 2.24,
-   "modelHome": 13.1,
+   "homeRating": 11.27,
+   "awayRating": 3.0,
+   "modelHome": 13.0,
    "mktHome": 12.0,
-   "edge": 1.1,
+   "edge": 1.0,
    "edgeTier": "small",
    "modelSide": "Utah",
-   "homeWinProb": 0.883,
+   "homeWinProb": 0.88,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1086,14 +1087,14 @@
    "home": "Texas",
    "away": "Ohio State",
    "neutral": false,
-   "homeRating": 14.56,
-   "awayRating": 18.24,
-   "modelHome": -0.4,
+   "homeRating": 17.86,
+   "awayRating": 19.31,
+   "modelHome": 2.1,
    "mktHome": 1.8,
-   "edge": -2.2,
+   "edge": 0.3,
    "edgeTier": "small",
-   "modelSide": "Ohio State",
-   "homeWinProb": 0.483,
+   "modelSide": "Texas",
+   "homeWinProb": 0.578,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1110,14 +1111,14 @@
    "home": "Michigan",
    "away": "Oklahoma",
    "neutral": false,
-   "homeRating": 8.73,
-   "awayRating": 11.17,
-   "modelHome": 1.0,
+   "homeRating": 10.09,
+   "awayRating": 12.07,
+   "modelHome": 1.5,
    "mktHome": -5.0,
-   "edge": 6.0,
+   "edge": 6.5,
    "edgeTier": "mid",
    "modelSide": "Michigan",
-   "homeWinProb": 0.536,
+   "homeWinProb": 0.556,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1134,14 +1135,14 @@
    "home": "Texas A&M",
    "away": "Arizona State",
    "neutral": false,
-   "homeRating": 15.18,
-   "awayRating": 4.79,
-   "modelHome": 15.3,
+   "homeRating": 17.03,
+   "awayRating": 4.06,
+   "modelHome": 18.2,
    "mktHome": 15.0,
-   "edge": 0.3,
-   "edgeTier": "small",
+   "edge": 3.2,
+   "edgeTier": "mid",
    "modelSide": "Texas A&M",
-   "homeWinProb": 0.913,
+   "homeWinProb": 0.943,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1158,14 +1159,14 @@
    "home": "Virginia Tech",
    "away": "Old Dominion",
    "neutral": false,
-   "homeRating": 3.87,
-   "awayRating": -2.76,
-   "modelHome": 11.1,
+   "homeRating": 2.93,
+   "awayRating": -3.61,
+   "modelHome": 11.0,
    "mktHome": 19.0,
-   "edge": -7.9,
+   "edge": -8.0,
    "edgeTier": "big",
    "modelSide": "Old Dominion",
-   "homeWinProb": 0.847,
+   "homeWinProb": 0.845,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1182,14 +1183,14 @@
    "home": "Georgia Tech",
    "away": "Tennessee",
    "neutral": false,
-   "homeRating": 1.53,
-   "awayRating": 10.35,
-   "modelHome": -6.2,
+   "homeRating": 2.42,
+   "awayRating": 10.87,
+   "modelHome": -5.8,
    "mktHome": -12.5,
-   "edge": 6.3,
+   "edge": 6.7,
    "edgeTier": "mid",
    "modelSide": "Georgia Tech",
-   "homeWinProb": 0.278,
+   "homeWinProb": 0.291,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1206,14 +1207,14 @@
    "home": "Boise State",
    "away": "Memphis",
    "neutral": false,
-   "homeRating": -0.05,
-   "awayRating": 0.12,
-   "modelHome": 3.5,
+   "homeRating": 3.53,
+   "awayRating": 1.5,
+   "modelHome": 6.0,
    "mktHome": 8.5,
-   "edge": -5.0,
-   "edgeTier": "mid",
+   "edge": -2.5,
+   "edgeTier": "small",
    "modelSide": "Memphis",
-   "homeWinProb": 0.631,
+   "homeWinProb": 0.714,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1230,14 +1231,14 @@
    "home": "BYU",
    "away": "Arizona",
    "neutral": false,
-   "homeRating": 10.77,
-   "awayRating": 8.9,
-   "modelHome": 5.8,
+   "homeRating": 11.4,
+   "awayRating": 9.11,
+   "modelHome": 6.3,
    "mktHome": 7.5,
-   "edge": -1.7,
+   "edge": -1.2,
    "edgeTier": "small",
    "modelSide": "Arizona",
-   "homeWinProb": 0.709,
+   "homeWinProb": 0.723,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1254,14 +1255,14 @@
    "home": "Kentucky",
    "away": "Alabama",
    "neutral": false,
-   "homeRating": 4.87,
-   "awayRating": 13.57,
-   "modelHome": -6.1,
+   "homeRating": 4.17,
+   "awayRating": 16.56,
+   "modelHome": -10.2,
    "mktHome": -10.0,
-   "edge": 3.9,
-   "edgeTier": "mid",
-   "modelSide": "Kentucky",
-   "homeWinProb": 0.282,
+   "edge": -0.2,
+   "edgeTier": "small",
+   "modelSide": "Alabama",
+   "homeWinProb": 0.173,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1278,14 +1279,14 @@
    "home": "UCLA",
    "away": "San Diego State",
    "neutral": false,
-   "homeRating": 5.67,
-   "awayRating": 4.29,
-   "modelHome": 5.2,
+   "homeRating": 8.25,
+   "awayRating": 3.45,
+   "modelHome": 9.1,
    "mktHome": 11.5,
-   "edge": -6.3,
-   "edgeTier": "mid",
+   "edge": -2.4,
+   "edgeTier": "small",
    "modelSide": "San Diego State",
-   "homeWinProb": 0.691,
+   "homeWinProb": 0.801,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1302,14 +1303,14 @@
    "home": "Texas State",
    "away": "UTSA",
    "neutral": false,
-   "homeRating": -3.85,
-   "awayRating": 2.2,
-   "modelHome": -3.1,
+   "homeRating": -2.01,
+   "awayRating": 0.89,
+   "modelHome": 0.4,
    "mktHome": 1.5,
-   "edge": -4.6,
-   "edgeTier": "mid",
+   "edge": -1.1,
+   "edgeTier": "small",
    "modelSide": "UTSA",
-   "homeWinProb": 0.383,
+   "homeWinProb": 0.517,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1326,14 +1327,14 @@
    "home": "Illinois",
    "away": "Duke",
    "neutral": false,
-   "homeRating": 6.61,
-   "awayRating": 2.86,
-   "modelHome": 7.9,
+   "homeRating": 7.64,
+   "awayRating": 4.4,
+   "modelHome": 7.3,
    "mktHome": 6.0,
-   "edge": 1.9,
+   "edge": 1.3,
    "edgeTier": "small",
    "modelSide": "Illinois",
-   "homeWinProb": 0.771,
+   "homeWinProb": 0.755,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1350,14 +1351,14 @@
    "home": "Pittsburgh",
    "away": "UCF",
    "neutral": false,
-   "homeRating": 6.19,
-   "awayRating": 1.7,
-   "modelHome": 8.7,
+   "homeRating": 7.9,
+   "awayRating": 0.27,
+   "modelHome": 12.2,
    "mktHome": 7.0,
-   "edge": 1.7,
-   "edgeTier": "small",
+   "edge": 5.2,
+   "edgeTier": "mid",
    "modelSide": "Pittsburgh",
-   "homeWinProb": 0.792,
+   "homeWinProb": 0.868,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1374,14 +1375,14 @@
    "home": "Washington",
    "away": "Utah State",
    "neutral": false,
-   "homeRating": 9.9,
-   "awayRating": -7.42,
-   "modelHome": 23.1,
+   "homeRating": 12.15,
+   "awayRating": -8.92,
+   "modelHome": 27.3,
    "mktHome": 26.5,
-   "edge": -3.4,
-   "edgeTier": "mid",
-   "modelSide": "Utah State",
-   "homeWinProb": 0.972,
+   "edge": 0.8,
+   "edgeTier": "small",
+   "modelSide": "Washington",
+   "homeWinProb": 0.985,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1398,14 +1399,14 @@
    "home": "Temple",
    "away": "Penn State",
    "neutral": false,
-   "homeRating": -3.15,
-   "awayRating": 7.7,
-   "modelHome": -8.5,
+   "homeRating": -4.77,
+   "awayRating": 10.33,
+   "modelHome": -13.3,
    "mktHome": -23.5,
-   "edge": 15.0,
+   "edge": 10.2,
    "edgeTier": "big",
    "modelSide": "Temple",
-   "homeWinProb": 0.214,
+   "homeWinProb": 0.116,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1422,14 +1423,14 @@
    "home": "Syracuse",
    "away": "California",
    "neutral": false,
-   "homeRating": -0.32,
-   "awayRating": -2.2,
-   "modelHome": 5.8,
+   "homeRating": -2.2,
+   "awayRating": -1.61,
+   "modelHome": 3.0,
    "mktHome": 3.8,
-   "edge": 2.0,
+   "edge": -0.8,
    "edgeTier": "small",
-   "modelSide": "Syracuse",
-   "homeWinProb": 0.709,
+   "modelSide": "California",
+   "homeWinProb": 0.614,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1446,14 +1447,14 @@
    "home": "Army",
    "away": "South Florida",
    "neutral": false,
-   "homeRating": -2.57,
-   "awayRating": 1.7,
-   "modelHome": -1.1,
+   "homeRating": -4.96,
+   "awayRating": 1.65,
+   "modelHome": -3.7,
    "mktHome": 3.5,
-   "edge": -4.6,
-   "edgeTier": "mid",
+   "edge": -7.2,
+   "edgeTier": "big",
    "modelSide": "South Florida",
-   "homeWinProb": 0.458,
+   "homeWinProb": 0.361,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1470,14 +1471,14 @@
    "home": "Michigan State",
    "away": "Eastern Michigan",
    "neutral": false,
-   "homeRating": -0.96,
-   "awayRating": -4.6,
-   "modelHome": 7.8,
+   "homeRating": 0.0,
+   "awayRating": -10.23,
+   "modelHome": 15.2,
    "mktHome": 17.5,
-   "edge": -9.7,
-   "edgeTier": "big",
+   "edge": -2.3,
+   "edgeTier": "small",
    "modelSide": "Eastern Michigan",
-   "homeWinProb": 0.767,
+   "homeWinProb": 0.911,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1494,14 +1495,14 @@
    "home": "UAB",
    "away": "UL Monroe",
    "neutral": false,
-   "homeRating": -9.09,
-   "awayRating": -14.07,
-   "modelHome": 9.3,
+   "homeRating": -8.56,
+   "awayRating": -15.07,
+   "modelHome": 11.0,
    "mktHome": 10.2,
-   "edge": -0.9,
+   "edge": 0.8,
    "edgeTier": "small",
-   "modelSide": "UL Monroe",
-   "homeWinProb": 0.806,
+   "modelSide": "UAB",
+   "homeWinProb": 0.844,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1518,14 +1519,14 @@
    "home": "Marshall",
    "away": "Middle Tennessee",
    "neutral": false,
-   "homeRating": -5.08,
-   "awayRating": -10.39,
-   "modelHome": 9.6,
+   "homeRating": -4.77,
+   "awayRating": -13.64,
+   "modelHome": 13.6,
    "mktHome": 13.8,
-   "edge": -4.2,
-   "edgeTier": "mid",
+   "edge": -0.2,
+   "edgeTier": "small",
    "modelSide": "Middle Tennessee",
-   "homeWinProb": 0.815,
+   "homeWinProb": 0.89,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1542,14 +1543,14 @@
    "home": "USC",
    "away": "Louisiana",
    "neutral": false,
-   "homeRating": 19.53,
-   "awayRating": -1.8,
-   "modelHome": 27.6,
+   "homeRating": 14.27,
+   "awayRating": -4.01,
+   "modelHome": 24.2,
    "mktHome": 31.2,
-   "edge": -3.6,
-   "edgeTier": "mid",
+   "edge": -7.0,
+   "edgeTier": "big",
    "modelSide": "Louisiana",
-   "homeWinProb": 0.986,
+   "homeWinProb": 0.976,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1566,14 +1567,14 @@
    "home": "Georgia",
    "away": "Western Kentucky",
    "neutral": false,
-   "homeRating": 17.2,
-   "awayRating": -6.42,
-   "modelHome": 30.2,
+   "homeRating": 19.28,
+   "awayRating": -9.12,
+   "modelHome": 35.6,
    "mktHome": 40.0,
-   "edge": -9.8,
-   "edgeTier": "big",
+   "edge": -4.4,
+   "edgeTier": "mid",
    "modelSide": "Western Kentucky",
-   "homeWinProb": 0.99,
+   "homeWinProb": 0.996,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1590,14 +1591,14 @@
    "home": "Notre Dame",
    "away": "Rice",
    "neutral": false,
-   "homeRating": 17.05,
-   "awayRating": -5.4,
-   "modelHome": 28.9,
+   "homeRating": 21.11,
+   "awayRating": -8.42,
+   "modelHome": 36.8,
    "mktHome": 44.5,
-   "edge": -15.6,
+   "edge": -7.7,
    "edgeTier": "big",
    "modelSide": "Rice",
-   "homeWinProb": 0.988,
+   "homeWinProb": 0.997,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1614,14 +1615,14 @@
    "home": "Ohio",
    "away": "Jacksonville State",
    "neutral": false,
-   "homeRating": -7.44,
-   "awayRating": -4.02,
-   "modelHome": -0.1,
+   "homeRating": -7.85,
+   "awayRating": -8.9,
+   "modelHome": 4.9,
    "mktHome": 2.5,
-   "edge": -2.6,
+   "edge": 2.4,
    "edgeTier": "small",
-   "modelSide": "Jacksonville State",
-   "homeWinProb": 0.494,
+   "modelSide": "Ohio",
+   "homeWinProb": 0.679,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1638,14 +1639,14 @@
    "home": "Kansas State",
    "away": "Washington State",
    "neutral": false,
-   "homeRating": 6.33,
-   "awayRating": -2.44,
-   "modelHome": 13.5,
+   "homeRating": 5.95,
+   "awayRating": -0.44,
+   "modelHome": 10.9,
    "mktHome": 19.0,
-   "edge": -5.5,
-   "edgeTier": "mid",
+   "edge": -8.1,
+   "edgeTier": "big",
    "modelSide": "Washington State",
-   "homeWinProb": 0.889,
+   "homeWinProb": 0.841,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1662,14 +1663,14 @@
    "home": "Tulane",
    "away": "South Alabama",
    "neutral": false,
-   "homeRating": -3.8,
-   "awayRating": -5.42,
-   "modelHome": 5.5,
+   "homeRating": -3.38,
+   "awayRating": -7.77,
+   "modelHome": 8.6,
    "mktHome": 9.5,
-   "edge": -4.0,
-   "edgeTier": "mid",
+   "edge": -0.9,
+   "edgeTier": "small",
    "modelSide": "South Alabama",
-   "homeWinProb": 0.7,
+   "homeWinProb": 0.79,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1686,14 +1687,14 @@
    "home": "Nebraska",
    "away": "Bowling Green",
    "neutral": false,
-   "homeRating": 4.98,
-   "awayRating": -16.16,
-   "modelHome": 27.4,
+   "homeRating": 6.94,
+   "awayRating": -16.63,
+   "modelHome": 30.1,
    "mktHome": 28.8,
-   "edge": -1.4,
+   "edge": 1.3,
    "edgeTier": "small",
-   "modelSide": "Bowling Green",
-   "homeWinProb": 0.985,
+   "modelSide": "Nebraska",
+   "homeWinProb": 0.99,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1710,14 +1711,14 @@
    "home": "Oregon State",
    "away": "Texas Tech",
    "neutral": false,
-   "homeRating": -7.86,
-   "awayRating": 12.66,
-   "modelHome": -19.3,
+   "homeRating": -6.8,
+   "awayRating": 13.5,
+   "modelHome": -19.1,
    "mktHome": -26.0,
-   "edge": 6.7,
+   "edge": 6.9,
    "edgeTier": "mid",
    "modelSide": "Oregon State",
-   "homeWinProb": 0.049,
+   "homeWinProb": 0.051,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1734,14 +1735,14 @@
    "home": "East Carolina",
    "away": "App State",
    "neutral": false,
-   "homeRating": -5.04,
-   "awayRating": -4.45,
-   "modelHome": 3.0,
+   "homeRating": -3.48,
+   "awayRating": -7.26,
+   "modelHome": 7.9,
    "mktHome": 8.0,
-   "edge": -5.0,
-   "edgeTier": "mid",
+   "edge": -0.1,
+   "edgeTier": "small",
    "modelSide": "App State",
-   "homeWinProb": 0.614,
+   "homeWinProb": 0.772,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1758,14 +1759,14 @@
    "home": "North Texas",
    "away": "UNLV",
    "neutral": false,
-   "homeRating": -5.9,
-   "awayRating": -2.79,
+   "homeRating": -4.32,
+   "awayRating": -1.17,
    "modelHome": 0.2,
    "mktHome": -3.5,
    "edge": 3.7,
    "edgeTier": "mid",
    "modelSide": "North Texas",
-   "homeWinProb": 0.508,
+   "homeWinProb": 0.506,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1782,14 +1783,14 @@
    "home": "UConn",
    "away": "Maryland",
    "neutral": false,
-   "homeRating": -0.87,
-   "awayRating": 4.82,
-   "modelHome": -2.7,
+   "homeRating": -2.87,
+   "awayRating": 4.1,
+   "modelHome": -4.1,
    "mktHome": -12.5,
-   "edge": 9.8,
+   "edge": 8.4,
    "edgeTier": "big",
    "modelSide": "UConn",
-   "homeWinProb": 0.398,
+   "homeWinProb": 0.347,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1806,14 +1807,14 @@
    "home": "Clemson",
    "away": "Georgia Southern",
    "neutral": false,
-   "homeRating": 2.27,
-   "awayRating": -4.92,
-   "modelHome": 11.8,
+   "homeRating": 3.75,
+   "awayRating": -7.84,
+   "modelHome": 16.7,
    "mktHome": 21.0,
-   "edge": -9.2,
-   "edgeTier": "big",
+   "edge": -4.3,
+   "edgeTier": "mid",
    "modelSide": "Georgia Southern",
-   "homeWinProb": 0.859,
+   "homeWinProb": 0.928,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1830,14 +1831,14 @@
    "home": "Hawai'i",
    "away": "New Mexico State",
    "neutral": false,
-   "homeRating": -5.09,
-   "awayRating": -8.56,
-   "modelHome": 7.6,
+   "homeRating": -5.9,
+   "awayRating": -12.36,
+   "modelHome": 10.9,
    "mktHome": 9.5,
-   "edge": -1.9,
+   "edge": 1.4,
    "edgeTier": "small",
-   "modelSide": "New Mexico State",
-   "homeWinProb": 0.762,
+   "modelSide": "Hawai'i",
+   "homeWinProb": 0.843,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1854,14 +1855,14 @@
    "home": "Ole Miss",
    "away": "Charlotte",
    "neutral": false,
-   "homeRating": 10.2,
-   "awayRating": -15.71,
-   "modelHome": 32.8,
+   "homeRating": 12.89,
+   "awayRating": -15.83,
+   "modelHome": 35.9,
    "mktHome": 47.5,
-   "edge": -14.7,
+   "edge": -11.6,
    "edgeTier": "big",
    "modelSide": "Charlotte",
-   "homeWinProb": 0.993,
+   "homeWinProb": 0.996,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1878,14 +1879,14 @@
    "home": "Boston College",
    "away": "Rutgers",
    "neutral": false,
-   "homeRating": -5.12,
-   "awayRating": 0.32,
-   "modelHome": -2.4,
+   "homeRating": -5.25,
+   "awayRating": -3.53,
+   "modelHome": 1.8,
    "mktHome": 3.2,
-   "edge": -5.6,
-   "edgeTier": "mid",
+   "edge": -1.4,
+   "edgeTier": "small",
    "modelSide": "Rutgers",
-   "homeWinProb": 0.408,
+   "homeWinProb": 0.567,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1902,14 +1903,14 @@
    "home": "Minnesota",
    "away": "Mississippi State",
    "neutral": false,
-   "homeRating": 6.38,
-   "awayRating": 4.0,
-   "modelHome": 6.4,
+   "homeRating": 6.02,
+   "awayRating": 4.5,
+   "modelHome": 5.4,
    "mktHome": -1.5,
-   "edge": 7.9,
-   "edgeTier": "big",
+   "edge": 6.9,
+   "edgeTier": "mid",
    "modelSide": "Minnesota",
-   "homeWinProb": 0.726,
+   "homeWinProb": 0.696,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1926,14 +1927,14 @@
    "home": "Vanderbilt",
    "away": "Delaware",
    "neutral": false,
-   "homeRating": 6.98,
-   "awayRating": -3.01,
-   "modelHome": 14.9,
+   "homeRating": 7.83,
+   "awayRating": -5.5,
+   "modelHome": 18.6,
    "mktHome": 20.5,
-   "edge": -5.6,
-   "edgeTier": "mid",
+   "edge": -1.9,
+   "edgeTier": "small",
    "modelSide": "Delaware",
-   "homeWinProb": 0.908,
+   "homeWinProb": 0.946,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1950,14 +1951,14 @@
    "home": "Purdue",
    "away": "Wake Forest",
    "neutral": false,
-   "homeRating": 2.69,
-   "awayRating": 3.55,
-   "modelHome": 2.7,
+   "homeRating": 2.17,
+   "awayRating": 4.1,
+   "modelHome": 1.5,
    "mktHome": -4.0,
-   "edge": 6.7,
+   "edge": 5.5,
    "edgeTier": "mid",
    "modelSide": "Purdue",
-   "homeWinProb": 0.603,
+   "homeWinProb": 0.558,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1974,14 +1975,14 @@
    "home": "Sam Houston",
    "away": "Tulsa",
    "neutral": false,
-   "homeRating": -12.17,
-   "awayRating": -4.14,
-   "modelHome": -5.3,
+   "homeRating": -13.32,
+   "awayRating": -3.48,
+   "modelHome": -7.4,
    "mktHome": -13.5,
-   "edge": 8.2,
-   "edgeTier": "big",
+   "edge": 6.1,
+   "edgeTier": "mid",
    "modelSide": "Sam Houston",
-   "homeWinProb": 0.306,
+   "homeWinProb": 0.244,
    "books": [
     "DraftKings",
     "Bovada"
@@ -1998,14 +1999,14 @@
    "home": "Florida International",
    "away": "Buffalo",
    "neutral": false,
-   "homeRating": -9.57,
-   "awayRating": -12.04,
-   "modelHome": 6.5,
+   "homeRating": -9.43,
+   "awayRating": -11.4,
+   "modelHome": 5.9,
    "mktHome": 10.2,
-   "edge": -3.7,
+   "edge": -4.3,
    "edgeTier": "mid",
    "modelSide": "Buffalo",
-   "homeWinProb": 0.729,
+   "homeWinProb": 0.712,
    "books": [
     "DraftKings",
     "Bovada"
@@ -2022,14 +2023,14 @@
    "home": "Air Force",
    "away": "North Dakota State",
    "neutral": false,
-   "homeRating": -3.73,
-   "awayRating": -1.37,
-   "modelHome": 1.0,
+   "homeRating": -6.38,
+   "awayRating": -1.31,
+   "modelHome": -2.0,
    "mktHome": -2.5,
-   "edge": 3.5,
-   "edgeTier": "mid",
+   "edge": 0.5,
+   "edgeTier": "small",
    "modelSide": "Air Force",
-   "homeWinProb": 0.54,
+   "homeWinProb": 0.424,
    "books": [
     "DraftKings",
     "Bovada"
@@ -2046,14 +2047,14 @@
    "home": "Fresno State",
    "away": "Sacramento State",
    "neutral": false,
-   "homeRating": 1.68,
-   "awayRating": -7.56,
-   "modelHome": 14.1,
+   "homeRating": -3.87,
+   "awayRating": -13.03,
+   "modelHome": 14.0,
    "mktHome": 18.2,
-   "edge": -4.1,
+   "edge": -4.2,
    "edgeTier": "mid",
    "modelSide": "Sacramento State",
-   "homeWinProb": 0.896,
+   "homeWinProb": 0.895,
    "books": [
     "DraftKings",
     "Bovada"
@@ -2070,14 +2071,14 @@
    "home": "LSU",
    "away": "Louisiana Tech",
    "neutral": false,
-   "homeRating": 11.18,
-   "awayRating": -2.68,
-   "modelHome": 19.2,
+   "homeRating": 15.57,
+   "awayRating": -5.1,
+   "modelHome": 26.9,
    "mktHome": 36.0,
-   "edge": -16.8,
+   "edge": -9.1,
    "edgeTier": "big",
    "modelSide": "Louisiana Tech",
-   "homeWinProb": 0.95,
+   "homeWinProb": 0.984,
    "books": [
     "DraftKings",
     "Bovada"
@@ -2094,14 +2095,14 @@
    "home": "Kennesaw State",
    "away": "Georgia State",
    "neutral": false,
-   "homeRating": -3.82,
-   "awayRating": -8.39,
-   "modelHome": 8.8,
+   "homeRating": -6.49,
+   "awayRating": -12.09,
+   "modelHome": 10.0,
    "mktHome": 9.5,
-   "edge": -0.7,
+   "edge": 0.5,
    "edgeTier": "small",
-   "modelSide": "Georgia State",
-   "homeWinProb": 0.795,
+   "modelSide": "Kennesaw State",
+   "homeWinProb": 0.822,
    "books": [
     "DraftKings",
     "Bovada"
@@ -2118,14 +2119,14 @@
    "home": "Auburn",
    "away": "Southern Miss",
    "neutral": false,
-   "homeRating": 4.22,
-   "awayRating": -1.63,
-   "modelHome": 10.3,
+   "homeRating": 6.03,
+   "awayRating": -3.8,
+   "modelHome": 14.7,
    "mktHome": 33.0,
-   "edge": -22.7,
+   "edge": -18.3,
    "edgeTier": "big",
    "modelSide": "Southern Miss",
-   "homeWinProb": 0.828,
+   "homeWinProb": 0.905,
    "books": [
     "DraftKings",
     "Bovada"
@@ -2142,14 +2143,14 @@
    "home": "Florida Atlantic",
    "away": "Navy",
    "neutral": false,
-   "homeRating": -8.79,
-   "awayRating": -2.08,
-   "modelHome": -3.8,
+   "homeRating": -8.36,
+   "awayRating": -4.13,
+   "modelHome": -1.1,
    "mktHome": -5.0,
-   "edge": 1.2,
-   "edgeTier": "small",
+   "edge": 3.9,
+   "edgeTier": "mid",
    "modelSide": "Florida Atlantic",
-   "homeWinProb": 0.357,
+   "homeWinProb": 0.459,
    "books": [
     "DraftKings",
     "Bovada"
@@ -2166,14 +2167,14 @@
    "home": "Virginia",
    "away": "Norfolk State",
    "neutral": false,
-   "homeRating": 5.41,
+   "homeRating": 8.98,
    "awayRating": -22.93,
-   "modelHome": 35.5,
+   "modelHome": 39.5,
    "mktHome": 44.5,
-   "edge": -9.0,
-   "edgeTier": "big",
+   "edge": -5.0,
+   "edgeTier": "mid",
    "modelSide": "Norfolk State",
-   "homeWinProb": 0.996,
+   "homeWinProb": 0.998,
    "books": [
     "DraftKings"
    ],
@@ -2189,11 +2190,11 @@
    "home": "Miami",
    "away": "Florida A&M",
    "neutral": false,
-   "homeRating": 15.89,
+   "homeRating": 16.83,
    "awayRating": -22.93,
-   "modelHome": 47.2,
+   "modelHome": 48.3,
    "mktHome": 55.5,
-   "edge": -8.3,
+   "edge": -7.2,
    "edgeTier": "big",
    "modelSide": "Florida A&M",
    "homeWinProb": 0.999,
@@ -2212,14 +2213,14 @@
    "home": "Louisville",
    "away": "Villanova",
    "neutral": false,
-   "homeRating": 3.47,
+   "homeRating": 6.73,
    "awayRating": -22.93,
-   "modelHome": 33.3,
+   "modelHome": 37.0,
    "mktHome": 36.5,
-   "edge": -3.2,
-   "edgeTier": "mid",
-   "modelSide": "Villanova",
-   "homeWinProb": 0.994,
+   "edge": 0.5,
+   "edgeTier": "small",
+   "modelSide": "Louisville",
+   "homeWinProb": 0.997,
    "books": [
     "DraftKings"
    ],
@@ -2235,14 +2236,14 @@
    "home": "NC State",
    "away": "Richmond",
    "neutral": false,
-   "homeRating": 0.73,
+   "homeRating": 1.05,
    "awayRating": -22.93,
-   "modelHome": 30.2,
+   "modelHome": 30.6,
    "mktHome": 30.5,
-   "edge": -0.3,
+   "edge": 0.1,
    "edgeTier": "small",
-   "modelSide": "Richmond",
-   "homeWinProb": 0.99,
+   "modelSide": "NC State",
+   "homeWinProb": 0.991,
    "books": [
     "DraftKings"
    ],

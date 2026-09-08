@@ -6,7 +6,6 @@
   const root = (document.currentScript.dataset.root || '.').replace(/\/$/, '');
   const SECTIONS = [
     ['index', 'W²-Index'],
-    ['top25', 'ESPN Top 25'],
     ['teams', 'Teams'],
     ['schedule', 'Schedule'],
     ['bracket', 'Playoff Bracket'],

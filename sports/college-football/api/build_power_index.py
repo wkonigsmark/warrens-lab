@@ -57,6 +57,11 @@ OFFSEASON_BLEND = 0.5       # v1 = 50% results-based base + 50% offseason compos
 PRIOR_STRENGTH = 4.0        # preseason prior worth ~4 weeks of results
 MIN_INSEASON_GAMES = 15     # below this the SRS is noise — stay on the prior
 
+# --- FBS vs FCS games carry asymmetric information (see fcs_game_weight) ---
+FCS_FLOOR_W = 0.15          # an expected blowout barely counts
+FCS_FULL_AT = 21.0          # points short of expectation at which it counts fully
+FCS_LOSS_W = 1.5            # losing to an FCS team counts MORE than a normal game
+
 
 def fetch_season_results(api_key, year):
     """Completed-season results (regular + postseason), cached per year."""
@@ -126,6 +131,94 @@ def srs_from_games(games, cap=MARGIN_CAP, damping=0.5):
     return ratings
 
 
+def fcs_game_weight(fbs_prior, fcs_prior, fbs_margin):
+    """How much should an FBS team's game against an FCS opponent count?
+
+    The information in these games is ASYMMETRIC. Winning by 40 when you were
+    expected to win by 42 tells you essentially nothing — the blowout is the assumed
+    outcome, and the scoreboard stops carrying signal once the starters sit. Worse,
+    scoring it at full weight actively PUNISHES good teams, because the best possible
+    credit (margin cap + the pooled FCS rating ≈ +5) sits below every elite team's
+    rating: Georgia beat Tennessee State 63-3 and fell from #2 to #9.
+
+    But a CLOSE win — or a loss — is one of the loudest signals in the sport, and must
+    hurt. So the weight ramps: near-zero when the team meets or beats expectation,
+    rising to full as it falls short, and above full if it actually loses. The credit
+    itself already handles the direction (a 10-point win over the pool scores −13, a
+    loss scores −26); this decides how loudly that credit is heard."""
+    if fbs_margin < 0:
+        return FCS_LOSS_W
+    expected = fbs_prior - fcs_prior            # margin the prior implies, in SRS frame
+    shortfall = expected - fbs_margin
+    if shortfall <= 0:
+        return FCS_FLOOR_W
+    return min(1.0, FCS_FLOOR_W + (1.0 - FCS_FLOOR_W) * shortfall / FCS_FULL_AT)
+
+
+def anchored_ratings(games, prior, fcs_prior, prior_strength, cap=MARGIN_CAP,
+                     iterations=SRS_ITERATIONS, damping=0.5):
+    """Ridge ('Bayesian') SRS anchored on the frozen preseason prior.
+
+    Plain SRS is effectively unbounded on a sparse early-season graph: with one or two
+    games per team the system is barely constrained, and feedback between under-played
+    teams inflates it. Week 1 of 2026 handed USC +41 on two G5 wins — a FULL season of
+    SRS spans roughly ±25 — because San José State had itself ballooned to +25, so USC
+    got credit for beating a phantom. Blending a global 21% of that made USC #1.
+
+    Anchoring shrinks every team toward its own preseason rating in proportion to how
+    little it has played:
+
+        rating[t] = ( Σ(capped margin + rating[opponent]) + k·prior[t] ) / (n_games + k)
+
+    That gives per-team confidence instead of one global weight — a 1-game team sits
+    ~20% on results, 2 games ~33%, a full 12-game season ~75% — and because the
+    opponent terms are shrunk too, an extreme value can no longer propagate through
+    the network. No mean-centering: the prior already fixes the scale."""
+    playable = [g for g in games if g["completed"] and g["homePoints"] is not None]
+    results = defaultdict(list)
+    for g in playable:
+        home_fbs = g.get("homeClass") == "fbs"
+        away_fbs = g.get("awayClass") == "fbs"
+        home = g["homeTeam"] if home_fbs else "FCS"
+        away = g["awayTeam"] if away_fbs else "FCS"
+        raw = g["homePoints"] - g["awayPoints"]
+        margin = max(-cap, min(cap, raw))
+        weight = 1.0
+        if home_fbs != away_fbs:                    # exactly one side is FBS
+            team, tm = (home, raw) if home_fbs else (away, -raw)
+            weight = fcs_game_weight(prior.get(team, fcs_prior), fcs_prior, tm)
+        # one observation, one weight — applied to both sides of the game
+        results[home].append((margin, away, weight))
+        results[away].append((-margin, home, weight))
+
+    def anchor(t):
+        return fcs_prior if t == "FCS" else prior.get(t, fcs_prior)
+
+    ratings = {t: anchor(t) for t in results}
+    for _ in range(iterations):
+        new = {}
+        for team, tg in results.items():
+            total = sum(w * (m + ratings[o]) for m, o, w in tg)
+            wsum = sum(w for _, _, w in tg)
+            new[team] = (total + prior_strength * anchor(team)) / (wsum + prior_strength)
+        ratings = {t: (1 - damping) * ratings[t] + damping * new[t] for t in new}
+    counts = {t: (len(v), sum(w for _, _, w in v)) for t, v in results.items()}
+    return ratings, counts
+
+
+def load_polls():
+    """Live AP / Coaches ranks from polls-<year>.json (fetch_polls.py).
+    Comparison only — the human polls are never an input to the W² rating."""
+    path = DATA_DIR / "polls-2026.json"
+    if not path.exists():
+        print("⚠️  data/polls-2026.json missing — run fetch_polls.py (poll columns will be blank)")
+        return {}, {}, None
+    d = json.loads(path.read_text())
+    grab = lambda name: {x["school"]: x["rank"]
+                         for x in d.get("latest", {}).get(name, {}).get("ranks", [])}
+    return grab("AP Top 25"), grab("Coaches Poll"), d.get("latestWeek")
+
+
 def load_top25():
     src = (DATA_DIR / "teams.js").read_text()
     return {
@@ -164,6 +257,7 @@ def main():
                   if g["completed"] and g["homePoints"] is not None]
     games_2026 = json.loads((DATA_DIR / "games-2026.json").read_text())["games"]
     top25 = load_top25()
+    ap_rank, coaches_rank, poll_week = load_polls()
 
     # --- 1. SRS ratings from 2025 results ---
     ratings = srs_from_games(games_2025)
@@ -249,20 +343,20 @@ def main():
     # backtest's prior-strength was calibrated against (weeks elapsed ≈ games each
     # team has played). Do NOT use games-completed/games-total: game counts per week
     # are lopsided (wk1 ran 99 vs a ~59 average) and that over-credits early weeks.
-    played_count = defaultdict(int)
-    for g in done_2026:
-        if g.get("homeClass") == "fbs" and g["homeTeam"] in fbs_2026:
-            played_count[g["homeTeam"]] += 1
-        if g.get("awayClass") == "fbs" and g["awayTeam"] in fbs_2026:
-            played_count[g["awayTeam"]] += 1
-    weeks_played = sum(played_count.values()) / len(fbs_2026) if fbs_2026 else 0.0
-    iw = weeks_played / (weeks_played + PRIOR_STRENGTH) if len(done_2026) >= MIN_INSEASON_GAMES else 0.0
-    srs_2026 = srs_from_games(done_2026) if iw > 0 else {}
+    fcs_prior = ratings.get("FCS", -25.0)
+    use_results = len(done_2026) >= MIN_INSEASON_GAMES
+    blended, gp = (anchored_ratings(done_2026, prior, fcs_prior, PRIOR_STRENGTH)
+                   if use_results else ({}, {}))
     inseason = {}
     for school in projected:
-        p, s = prior[school], srs_2026.get(school)
-        projected[school] = p if s is None else (1 - iw) * p + iw * s
-        inseason[school] = {"prior": p, "srs2026": s}
+        p = prior[school]
+        n, wsum = gp.get(school, (0, 0.0))
+        projected[school] = blended.get(school, p)
+        inseason[school] = {"prior": p, "games": n, "evidence": round(wsum, 2),
+                            "weight": round(wsum / (wsum + PRIOR_STRENGTH), 3) if wsum else 0.0}
+    played = sum(gp.get(s, (0, 0.0))[0] for s in projected)
+    weeks_played = played / len(fbs_2026) if fbs_2026 else 0.0
+    iw = weeks_played / (weeks_played + PRIOR_STRENGTH) if use_results else 0.0
 
     # --- 5. 2026 SoS from projected ratings ---
     opponents_2026 = defaultdict(list)
@@ -286,11 +380,21 @@ def main():
             conf_wins[g["homeTeam"]][0 if hw else 1] += 1
             conf_wins[g["awayTeam"]][1 if hw else 0] += 1
 
+    # --- 6b. actual 2026 record so far ---
+    rec_2026 = defaultdict(lambda: [0, 0])
+    for g in done_2026:
+        hw = g["homePoints"] > g["awayPoints"]
+        if g.get("homeClass") == "fbs":
+            rec_2026[g["homeTeam"]][0 if hw else 1] += 1
+        if g.get("awayClass") == "fbs":
+            rec_2026[g["awayTeam"]][1 if hw else 0] += 1
+
     rows = []
     for school, rating in projected.items():
         t = fbs_2026[school]
         opps = opponents_2026.get(school, [])
         w, l = conf_wins.get(school, (0, 0))
+        rw, rl = rec_2026.get(school, (0, 0))
         d = detail[school]
         rows.append(
             {
@@ -305,10 +409,15 @@ def main():
                 "compositeZ": round(d["compositeZ"], 2) if d["compositeZ"] is not None else None,
                 "srs2025": round(ratings[school], 2) if school in ratings else None,
                 "preseasonRating": round(inseason[school]["prior"], 2),
-                "inseasonSrs": round(inseason[school]["srs2026"], 2) if inseason[school]["srs2026"] is not None else None,
+                "gamesPlayed": inseason[school]["games"],
+                "resultsEvidence": inseason[school]["evidence"],
+                "resultsWeight": inseason[school]["weight"],
                 "confStrength2026": round(conf_strength_2026.get(t["conference"], 0), 2),
                 "confRecord2025": f"{w}-{l}" if (w or l) else None,
+                "record": f"{rw}-{rl}" if (rw or rl) else None,
                 "pollRank": top25.get(school),
+                "apRank": ap_rank.get(school),
+                "coachesRank": coaches_rank.get(school),
                 "sos2026": round(sum(opps) / len(opps), 2) if opps else None,
             }
         )
@@ -348,12 +457,15 @@ def main():
         "confMatrix2025": {c: dict(v) for c, v in matrix.items()},
         "confStrength": conf_table,
         "fcsPoolRating": round(ratings.get("FCS", 0), 2),
+        "pollWeek": poll_week,
         "inseason": {
             "gamesUsed": len(done_2026),
             "weeksPlayed": round(weeks_played, 2),
             "blendWeight": round(iw, 3),
             "priorStrengthWeeks": PRIOR_STRENGTH,
             "priorFrozen": anchor_path.exists(),
+            "method": ("anchored ridge SRS — each team shrinks to its frozen preseason "
+                       "rating by games played: w = n/(n+k), k=%g" % PRIOR_STRENGTH),
         },
         "teams": rows,
     }
@@ -361,8 +473,9 @@ def main():
     out_path.write_text(json.dumps(out, indent=1))
     print(f"✅ Power index built → {out_path}")
     if iw > 0:
-        print(f"   In-season: {len(done_2026)} results onboarded ≈ {weeks_played:.2f} weeks → "
-              f"{iw:.1%} weight on 2026 results, {1 - iw:.1%} on the frozen preseason prior")
+        print(f"   In-season: {len(done_2026)} results onboarded ≈ {weeks_played:.2f} games/team → "
+              f"anchored ridge SRS, ~{iw:.1%} avg weight on 2026 results "
+              f"(per-team: n/(n+{PRIOR_STRENGTH:g}))")
     else:
         print(f"   Preseason mode: {len(done_2026)} results (< {MIN_INSEASON_GAMES}) — rating = frozen prior")
     print(f"   FBS vs FCS in 2025: {fbs_vs_fcs['w']}-{fbs_vs_fcs['l']}")

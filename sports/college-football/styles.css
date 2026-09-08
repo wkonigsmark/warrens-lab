@@ -952,9 +952,25 @@ body {
   gap: 5px;
 }
 
+/* played-game rows + poll comparison cells */
+.sched-played { background: rgba(242, 196, 100, 0.045); }
+.sched-score { font-weight: 700; font-size: 0.84rem; white-space: nowrap; text-align: right; }
+.sched-score b { font-family: 'Oswald', sans-serif; margin-right: 3px; }
+.sched-margin { font-weight: 800; font-size: 0.8rem; text-align: right; font-variant-numeric: tabular-nums; }
+.res-w { color: #7ddf8f; }
+.res-l { color: #e0707e; }
+.tpr-dim { color: rgba(245, 233, 208, 0.45); font-weight: 400; font-size: 0.82rem; }
+.index-rec {
+  font-family: 'Oswald', sans-serif; font-size: 0.68rem; font-weight: 600;
+  color: rgba(245, 233, 208, 0.55); margin-left: 5px;
+}
+.poll-cell small { display: block; font-size: 0.6rem; line-height: 1; opacity: 0.75; font-weight: 600; }
+.poll-under { color: #7ddf8f; }   /* polls rank them lower than we do → we're higher on them */
+.poll-over { color: #e0707e; }    /* polls rank them higher than we do */
+
 .index-row {
   display: grid;
-  grid-template-columns: 34px 26px 1fr 46px 52px 52px 52px;
+  grid-template-columns: 34px 26px 1fr 46px 52px 44px 44px 52px;
   align-items: center;
   gap: 8px;
   background: var(--glass-bg);
@@ -1080,7 +1096,7 @@ body {
 
 .index-list-head {
   display: grid;
-  grid-template-columns: 34px 26px 1fr 46px 52px 52px 52px;
+  grid-template-columns: 34px 26px 1fr 46px 52px 44px 44px 52px;
   gap: 8px;
   padding: 0 12px 6px;
   font-family: 'Oswald', 'Outfit', sans-serif;
