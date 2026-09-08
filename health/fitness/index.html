@@ -510,6 +510,15 @@
     /* Kill the emoji on the preset-workout day cards */
     .dc-emoji{display:none}
 
+    /* Exercise reorder controls (slide up/down within a block) */
+    .ex-reorder{display:flex;flex-direction:column;gap:3px;flex-shrink:0;margin-top:1px}
+    .ex-reorder button{background:rgba(255,255,255,.02);border:1px solid var(--border);color:var(--muted);width:24px;height:19px;border-radius:2px;cursor:pointer;font-size:.55rem;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit;transition:border-color .15s,color .15s,background .15s}
+    .ex-reorder button:hover:not(:disabled){border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+    .ex-reorder button:disabled{opacity:.2;cursor:default}
+    .reorder-reset{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.3);color:var(--accent);font-family:inherit;font-size:.54rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:2px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .15s}
+    .reorder-reset:hover{background:rgba(249,115,22,.18)}
+    .reorder-reset[hidden]{display:none}
+
     /* Drop the candy out of the muscle tags, keep the semantic hue */
     .tag{filter:saturate(.65)}
   </style>
@@ -863,6 +872,89 @@ const STRETCH_POOL = {
     {name:'Supine Twist',               detail:'Hold 30 sec each side', muscles:[['core','Obliques'],['back','Spine']], tip:'Lie on back, guide knee across — both shoulders stay grounded', video_url:'https://www.youtube.com/results?search_query=supine+spinal+twist'},
   ],
 };
+
+// Dynamic warm-up drills keyed by muscle — mobility/activation to prime the
+// exact muscles the main block will load. Consumed by buildWarmup().
+const WARMUP_POOL = {
+  chest:[
+    {name:'Scapular Push-Ups',        detail:'12 reps',        muscles:[['upper','Chest']], tip:'Arms straight — pinch and spread the shoulder blades to wake the chest', video_url:'https://www.youtube.com/results?search_query=scapular+push+up'},
+    {name:'Cross-Body Arm Swings',    detail:'12 each',        muscles:[['upper','Chest'],['upper','Shoulders']], tip:'Open the chest wide on each swing', video_url:'https://www.youtube.com/results?search_query=arm+swings+warmup'},
+  ],
+  shoulders:[
+    {name:'Arm Circles',              detail:'10 each direction', muscles:[['upper','Shoulders']], tip:'Small to large — get blood into the delts', video_url:'https://www.youtube.com/results?search_query=arm+circles+shoulder+warmup'},
+    {name:'Towel Pass-Through',       detail:'10 reps',        muscles:[['upper','Shoulders']], tip:'Wide grip on a towel, pass overhead and behind — opens the shoulders', video_url:'https://www.youtube.com/results?search_query=shoulder+pass+through+warmup'},
+  ],
+  triceps:[
+    {name:'Overhead Reach + Extend',  detail:'10 reps',        muscles:[['upper','Triceps']], tip:'Reach tall, bend and extend the elbows to prime the triceps', video_url:'https://www.youtube.com/results?search_query=overhead+tricep+warmup'},
+  ],
+  back:[
+    {name:'Cat-Cow',                  detail:'10 slow reps',   muscles:[['back','Spine'],['core','Core']], tip:'Inhale to arch, exhale to round — warm the posterior chain', video_url:'https://www.youtube.com/results?search_query=cat+cow+warmup'},
+    {name:'Scapular Retractions',     detail:'12 reps',        muscles:[['back','Back']], tip:'Squeeze the shoulder blades together, hold 1s — switch the back on', video_url:'https://www.youtube.com/results?search_query=scapular+retraction+warmup'},
+  ],
+  lats:[
+    {name:'Overhead Lat Reach',       detail:'8 each side',    muscles:[['back','Lats']], tip:'Reach tall and lean away — lengthen the lats before pulling', video_url:'https://www.youtube.com/results?search_query=lat+reach+warmup'},
+  ],
+  biceps:[
+    {name:'Arm Swings + Elbow Bends', detail:'12 reps',        muscles:[['upper','Biceps']], tip:'Loosen the elbows and biceps with light curls in the air', video_url:'https://www.youtube.com/results?search_query=arm+swings+warmup'},
+  ],
+  quads:[
+    {name:'Bodyweight Squats',        detail:'15 reps',        muscles:[['lower','Quads'],['lower','Glutes']], tip:'Full depth, controlled — grease the knees and quads', video_url:'https://www.youtube.com/watch?v=aclHkVaku9U'},
+    {name:'Walking Knee Hugs',        detail:'8 each leg',     muscles:[['lower','Quads'],['other','Hips']], tip:'Pull knee to chest each step — open the hips and quads', video_url:'https://www.youtube.com/results?search_query=walking+knee+hugs+warmup'},
+  ],
+  hamstrings:[
+    {name:'Leg Swings (Front-Back)',  detail:'12 each leg',    muscles:[['lower','Hamstrings'],['lower','Glutes']], tip:'Hold something for balance — loosen the hamstrings', video_url:'https://www.youtube.com/results?search_query=leg+swings+warmup'},
+    {name:'Inchworm Walkouts',        detail:'6 reps',         muscles:[['lower','Hamstrings'],['core','Core']], tip:'Walk hands out to a plank and back — dynamic hamstring stretch', video_url:'https://www.youtube.com/results?search_query=inchworm+warmup'},
+  ],
+  glutes:[
+    {name:'Glute Bridges',            detail:'15 reps',        muscles:[['lower','Glutes'],['lower','Hamstrings']], tip:'Squeeze hard at the top — fire up the glutes', video_url:'https://www.youtube.com/results?search_query=glute+bridge'},
+    {name:'Hip Circles',              detail:'8 each direction', muscles:[['lower','Glutes'],['other','Hips']], tip:'Big slow circles — open the hips', video_url:'https://www.youtube.com/results?search_query=hip+circles+warmup'},
+  ],
+  calves:[
+    {name:'Ankle Bounces',            detail:'30 sec',         muscles:[['lower','Calves']], tip:'Light springy hops on the balls of your feet', video_url:'https://www.youtube.com/results?search_query=ankle+bounces+warmup'},
+    {name:'Ankle Circles',            detail:'10 each direction', muscles:[['lower','Calves']], tip:'Loosen the ankles and calves', video_url:'https://www.youtube.com/results?search_query=ankle+circles+warmup'},
+  ],
+  core:[
+    {name:'Torso Twists',             detail:'12 each side',   muscles:[['core','Core'],['core','Obliques']], tip:'Rotate from the ribs — wake up the trunk', video_url:'https://www.youtube.com/results?search_query=torso+twists+warmup'},
+    {name:'Bird-Dog',                 detail:'8 each side',    muscles:[['core','Core'],['back','Lower Back']], tip:'Opposite arm + leg, brace and hold 1s — switch the core on', video_url:'https://www.youtube.com/results?search_query=bird+dog+warmup'},
+  ],
+  obliques:[
+    {name:'Standing Side Bends',      detail:'10 each side',   muscles:[['core','Obliques']], tip:'Light and controlled — loosen the obliques', video_url:'https://www.youtube.com/results?search_query=standing+side+bend+warmup'},
+  ],
+};
+
+// A light full-body opener that always leads the warm-up.
+const WARMUP_GENERAL = {name:'Jumping Jacks', detail:'45 sec', muscles:[['other','Full Body']], tip:'Raise the heart rate and warm the whole body', video_url:'https://www.youtube.com/results?search_query=jumping+jacks+warmup'};
+
+// Build a warm-up tailored to the muscles the workout will load.
+// `muscles` in priority order (primary movers first). Caps at a general
+// opener + 5 targeted drills, deduped by name.
+function buildWarmup(muscles) {
+  const out = [{...WARMUP_GENERAL, id:'w1', sets:1}];
+  const used = new Set();
+  for(const m of muscles) {
+    if(out.length >= 6) break;
+    for(const d of (WARMUP_POOL[m]||[])) {
+      if(!used.has(d.name)) { out.push({...d, id:`w${out.length+1}`, sets:1}); used.add(d.name); break; }
+    }
+  }
+  return out;
+}
+
+// Swap a fixed workout's static warm-up for one tailored to its working muscles.
+// Idempotent: muscles are read from the non-warm-up sections, which never change.
+function tailorWarmup(wo) {
+  if(!wo || !wo.sections) return;
+  const warmIdx = wo.sections.findIndex(s => /warm/i.test(s.id) || /warm/i.test(s.name));
+  if(warmIdx < 0) return; // cardio or no warm-up section — leave alone
+  const muscles = [];
+  wo.sections.forEach((s, i) => {
+    if(i === warmIdx || /cool/i.test(s.id) || /cool/i.test(s.name)) return;
+    s.exercises.forEach(e => canonMuscles(e.muscles.map(([, n]) => n)).forEach(m => muscles.push(m)));
+  });
+  if(!muscles.length) return;
+  wo.sections[warmIdx] = {...wo.sections[warmIdx], exercises: buildWarmup(muscles)};
+  wo.totalSets = wo.sections.reduce((a, s) => a + s.exercises.reduce((x, e) => x + e.sets, 0), 0);
+}
 
 const SMART_POOL_BW = {
   chest:[
@@ -1412,6 +1504,7 @@ function loadWorkout(id) {
   if (id === currentWorkoutId && state.checks && Object.keys(state.checks).length) return;
   currentWorkoutId = id;
   WORKOUT = WORKOUTS[id];
+  tailorWarmup(WORKOUT);   // prime the warm-up to the muscles this workout loads
   state = loadStateForWorkout(id);
   document.getElementById('restScreen').classList.remove('visible');
   document.getElementById('workoutContent').classList.remove('hidden');
@@ -1803,6 +1896,10 @@ function buildSections() {
     const totalSets=sec.exercises.reduce((a,e)=>a+e.sets,0);
     const el=document.createElement('div');
     el.className='section'; el.id='sec-'+sec.id;
+    // Reorder controls on working blocks only — warm-up/cool-down keep their intentional order
+    const reorderable = !/warm|cool/i.test(sec.id) && !/warm|cool/i.test(sec.name);
+    // Snapshot the default order once (page-load = source order), so we can detect changes & reset
+    if(reorderable && !sec._defaultIds) sec._defaultIds = sec.exercises.map(e=>e.id);
 
     const exRows=sec.exercises.map(ex=>{
       const done=state.checks[ex.id]||0;
@@ -1818,7 +1915,12 @@ function buildSections() {
       const holdSecs=parseExerciseDuration(ex.detail);
       const timerBtn=holdSecs?`<button class="ex-timer-btn" onclick="startExerciseTimer(${holdSecs},this)">⏱ ${holdSecs}s</button>`:'';
       const rowDone=done>=ex.sets;
+      const reorder=reorderable?`<div class="ex-reorder">
+          <button onclick="moveExercise('${sec.id}','${ex.id}',-1)" title="Move up">▲</button>
+          <button onclick="moveExercise('${sec.id}','${ex.id}',1)" title="Move down">▼</button>
+        </div>`:'';
       return `<div class="exercise-row${rowDone?' row-done':''}" id="row-${ex.id}">
+        ${reorder}
         <div class="exercise-info">
           <div class="ex-name">${ex.name}${videoBtn}</div>
           <div class="ex-detail">${ex.detail}</div>${tip}
@@ -1832,16 +1934,69 @@ function buildSections() {
       </div>`;
     }).join('');
 
+    const resetChip = reorderable ? `<button class="reorder-reset" id="reset-${sec.id}" onclick="event.stopPropagation();resetSectionOrder('${sec.id}')" hidden>↺ Reset order</button>` : '';
     el.innerHTML=`<div class="section-header" onclick="toggleSection('${sec.id}')">
       <span class="section-emoji">${sec.emoji}</span>
       <div class="section-info"><div class="section-name">${sec.name}</div><div class="section-meta">${sec.meta}</div></div>
+      ${resetChip}
       <div class="section-prog" id="sprog-${sec.id}">0 / ${totalSets}</div>
       <div class="chevron">▼</div>
     </div>
     <div class="section-body">${exRows}</div>`;
     container.appendChild(el);
     updateSectionProgress(sec.id);
+    if(reorderable){ refreshReorderButtons(sec.id); updateReorderHint(sec.id); }
   });
+}
+
+// Move an exercise up (-1) or down (+1) within its section — live, without
+// re-rendering (checked sets, weights and timers stay intact).
+function moveExercise(secId, exId, dir) {
+  const sec=WORKOUT.sections.find(s=>s.id===secId); if(!sec) return;
+  const arr=sec.exercises;
+  const i=arr.findIndex(e=>e.id===exId), j=i+dir;
+  if(i<0 || j<0 || j>=arr.length) return;
+  const rowA=document.getElementById('row-'+arr[i].id);
+  const rowB=document.getElementById('row-'+arr[j].id);
+  if(!rowA||!rowB) return;
+  const body=rowA.parentNode;
+  [arr[i],arr[j]]=[arr[j],arr[i]];               // swap in data
+  if(dir<0) body.insertBefore(rowA,rowB);        // up: A before B
+  else body.insertBefore(rowB,rowA);             // down: A after B
+  refreshReorderButtons(secId);
+  updateReorderHint(secId);
+}
+
+function refreshReorderButtons(secId) {
+  const body=document.getElementById('sec-'+secId)?.querySelector('.section-body');
+  if(!body) return;
+  const ctrls=[...body.querySelectorAll('.ex-reorder')];
+  ctrls.forEach((c,idx)=>{
+    const btns=c.querySelectorAll('button');
+    btns[0].disabled=idx===0;
+    btns[1].disabled=idx===ctrls.length-1;
+  });
+}
+
+// Show the "↺ Reset order" chip only when the block differs from its default order
+function updateReorderHint(secId) {
+  const sec=WORKOUT.sections.find(s=>s.id===secId);
+  const btn=document.getElementById('reset-'+secId);
+  if(!sec||!btn) return;
+  const changed = sec._defaultIds && sec.exercises.some((e,i)=>e.id!==sec._defaultIds[i]);
+  btn.hidden = !changed;
+}
+
+// Restore a block to its default order — moves rows only, so sets/weights/timers survive
+function resetSectionOrder(secId) {
+  const sec=WORKOUT.sections.find(s=>s.id===secId);
+  if(!sec||!sec._defaultIds) return;
+  const order=sec._defaultIds;
+  sec.exercises.sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id));
+  const body=document.getElementById('sec-'+secId)?.querySelector('.section-body');
+  if(body) order.forEach(id=>{ const row=document.getElementById('row-'+id); if(row) body.appendChild(row); });
+  refreshReorderButtons(secId);
+  updateReorderHint(secId);
 }
 
 function updateSectionProgress(secId) {
@@ -2695,11 +2850,8 @@ function buildSmartWorkout(targetMuscles) {
     }
   }
   const shuffled = exercises.sort(()=>Math.random()-.5);
-  const warmup = [
-    {id:'sb-w1',name:'Jumping Jacks',              detail:'30 sec',           sets:1, muscles:[['other','Full Body']], tip:null, video_url:'https://www.youtube.com/results?search_query=jumping+jacks+warmup'},
-    {id:'sb-w2',name:'Arm Circles + Shoulder Rolls',detail:'10 each direction',sets:1, muscles:[['upper','Shoulders']], tip:null, video_url:'https://www.youtube.com/results?search_query=arm+circles+shoulder+warmup'},
-    {id:'sb-w3',name:'Hip Circles + Leg Swings',   detail:'10 each side',     sets:1, muscles:[['other','Hips'],['lower','Glutes']], tip:null, video_url:'https://www.youtube.com/results?search_query=hip+circles+leg+swings+warmup'},
-  ];
+  // Warm-up tailored to the exact muscles this build targets
+  const warmup = buildWarmup(targetMuscles).map(w => ({...w, id:`sb-${w.id}`}));
   // Build cooldown from the muscles actually worked — one targeted stretch per muscle group
   const usedStretches = new Set();
   const cooldown = [];

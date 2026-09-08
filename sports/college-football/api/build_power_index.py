@@ -94,10 +94,19 @@ def fetch_season_results(api_key, year):
     return games
 
 
-def srs_from_games(games, cap=MARGIN_CAP):
+def srs_from_games(games, cap=MARGIN_CAP, damping=0.5):
     """Margin-capped iterative SRS; non-FBS opponents pooled as one 'FCS' team.
     `cap` is exposed so a looser cap can be used for spread-setting while the
-    default (28) still governs strength/ranking."""
+    default (28) still governs strength/ranking.
+
+    `damping` matters early in a season. A raw sweep (damping=1.0) OSCILLATES on a
+    sparse schedule graph — when most teams have played one game the system is
+    underdetermined, ratings flip between ±margin and 0 on alternating passes, and
+    after an even number of iterations entire components collapse to one identical
+    value (wk1 2026: LSU, Clemson, Michigan and Oregon all landed on the same number).
+    Averaging each sweep with the previous estimate converges to the minimum-norm
+    solution instead — a 1-game pair splits to ±half its margin. On a dense
+    full-season graph the damped and undamped fixed points are the same."""
     playable = [g for g in games if g["completed"] and g["homePoints"] is not None]
     results = defaultdict(list)
     for g in playable:
@@ -113,7 +122,7 @@ def srs_from_games(games, cap=MARGIN_CAP):
         for team, tgames in results.items():
             new[team] = sum(m + ratings[o] for m, o in tgames) / len(tgames)
         mean = sum(new.values()) / len(new)
-        ratings = {t: v - mean for t, v in new.items()}
+        ratings = {t: (1 - damping) * ratings[t] + damping * (new[t] - mean) for t in new}
     return ratings
 
 
@@ -236,9 +245,17 @@ def main():
                 prior[t["school"]] = t["rating"]
     fbs_involved = [g for g in games_2026 if "fbs" in (g.get("homeClass"), g.get("awayClass"))]
     done_2026 = [g for g in fbs_involved if g.get("completed") and g.get("homePoints") is not None]
-    max_week = max((g["week"] or 0) for g in fbs_involved) if fbs_involved else 14
-    # fraction of the season played × season length → handles partial weeks smoothly
-    weeks_played = len(done_2026) / len(fbs_involved) * max_week if fbs_involved else 0.0
+    # "Weeks played" = average completed games per FBS team. This is what the 2025
+    # backtest's prior-strength was calibrated against (weeks elapsed ≈ games each
+    # team has played). Do NOT use games-completed/games-total: game counts per week
+    # are lopsided (wk1 ran 99 vs a ~59 average) and that over-credits early weeks.
+    played_count = defaultdict(int)
+    for g in done_2026:
+        if g.get("homeClass") == "fbs" and g["homeTeam"] in fbs_2026:
+            played_count[g["homeTeam"]] += 1
+        if g.get("awayClass") == "fbs" and g["awayTeam"] in fbs_2026:
+            played_count[g["awayTeam"]] += 1
+    weeks_played = sum(played_count.values()) / len(fbs_2026) if fbs_2026 else 0.0
     iw = weeks_played / (weeks_played + PRIOR_STRENGTH) if len(done_2026) >= MIN_INSEASON_GAMES else 0.0
     srs_2026 = srs_from_games(done_2026) if iw > 0 else {}
     inseason = {}

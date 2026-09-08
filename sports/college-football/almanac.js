@@ -98,6 +98,14 @@ function liveLedger(L) {
       ${(s.byWeek || []).map(w => `<tr><td style="text-align:left">Wk ${w.week}</td><td>${w.n}</td><td>${w.pending}</td>
         <td>${rec(w)}${w.atsPct == null ? '' : ` (${pct(w.atsPct)})`}</td><td>${w.modelMae ?? '—'}</td><td>${w.mktMae ?? '—'}</td></tr>`).join('')}
     </table></div>
+    ${weeks.some(w => (w.notes || []).length) ? `
+    <div class="index-section-title" style="margin-top:14px">📝 Analyst Log
+      <span>what we believed at the time, kept next to what the numbers did</span></div>
+    ${weeks.filter(w => (w.notes || []).length).map(w => `
+      <div class="lg-notes"><div class="lg-notes-wk">Week ${w.week}</div>
+        ${w.notes.map(n => `<div class="lg-note"><span class="lg-note-at">${n.at.slice(0, 10)}</span>${n.text}</div>`).join('')}
+      </div>`).join('')}` : ''}
+
     ${latest ? `
     <div class="index-section-title" style="margin-top:14px">Week ${latest.week} · frozen picks
       <span>playable only (FBS vs FBS, market ≤ 21) · ${skipped} blowout / FCS lines logged, not played · frozen ${latest.snapshotAt}</span></div>

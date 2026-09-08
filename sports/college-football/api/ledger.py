@@ -9,6 +9,7 @@ snapshot — never the live index — so nothing can be quietly revised.
 
     python3 ledger.py snapshot <week> [--force]   freeze rankings + every lined pick (pre-kickoff)
     python3 ledger.py grade <week>                 grade the completed games against the snapshot
+    python3 ledger.py note <week> "..."            add a dated analyst note to the week's record
     python3 ledger.py status                       season-to-date scorecard
 
 Files: data/ledger/snapshots/week-NN.json (immutable freezes, full rankings)
@@ -142,6 +143,18 @@ def snapshot(week, force=False):
 
 # --------------------------------------------------------------------- grade
 
+def note(week, text):
+    """Attach a dated analyst note to a week — the qualitative half of the record.
+    What you believed at the time, kept next to what the numbers actually did."""
+    L = load_ledger()
+    wk = L["weeks"].get(str(week))
+    if not wk:
+        sys.exit(f"No snapshot for week {week} — freeze it first.")
+    wk.setdefault("notes", []).append({"at": now(), "text": text})
+    save_ledger(L)
+    print(f"📝 Week {week} note added ({len(wk['notes'])} total)")
+
+
 def grade(week):
     L = load_ledger()
     wk = L["weeks"].get(str(week))
@@ -244,6 +257,8 @@ if __name__ == "__main__":
         snapshot(int(args[1]), force="--force" in args)
     elif cmd == "grade" and len(args) >= 2:
         grade(int(args[1]))
+    elif cmd == "note" and len(args) >= 3:
+        note(int(args[1]), " ".join(args[2:]))
     elif cmd == "status":
         status()
     else:

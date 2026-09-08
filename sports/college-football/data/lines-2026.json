@@ -2,22 +2,27 @@
  "year": 2026,
  "games": [
   {
-   "id": 401862701,
+   "id": 401856666,
    "week": 1,
-   "homeTeam": "Army",
-   "awayTeam": "Bryant",
-   "marketSpread": -37.2,
-   "overUnder": 50.5,
+   "homeTeam": "Tennessee",
+   "awayTeam": "Furman",
+   "marketSpread": -49.5,
+   "overUnder": 66.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -37.5,
-     "overUnder": 50.5
+     "spread": -49.5,
+     "overUnder": 66.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -49.5,
+     "overUnder": 66.5
     },
     {
      "book": "Bovada",
-     "spread": -37,
-     "overUnder": 50.5
+     "spread": -49,
+     "overUnder": 66.5
     }
    ]
   },
@@ -27,7 +32,7 @@
    "homeTeam": "Temple",
    "awayTeam": "Rhode Island",
    "marketSpread": -14.5,
-   "overUnder": 51.2,
+   "overUnder": 51.5,
    "books": [
     {
      "book": "DraftKings",
@@ -38,6 +43,11 @@
      "book": "Bovada",
      "spread": -14.5,
      "overUnder": 51
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -14.5,
+     "overUnder": 51.5
     }
    ]
   },
@@ -47,10 +57,15 @@
    "homeTeam": "Arkansas",
    "awayTeam": "North Alabama",
    "marketSpread": -40.5,
-   "overUnder": 63.2,
+   "overUnder": 63.5,
    "books": [
     {
      "book": "DraftKings",
+     "spread": -40.5,
+     "overUnder": 63.5
+    },
+    {
+     "book": "Draft Kings",
      "spread": -40.5,
      "overUnder": 63.5
     },
@@ -62,22 +77,27 @@
    ]
   },
   {
-   "id": 401858208,
+   "id": 401856777,
    "week": 1,
-   "homeTeam": "Syracuse",
-   "awayTeam": "New Hampshire",
-   "marketSpread": -35.0,
-   "overUnder": 55.5,
+   "homeTeam": "Cincinnati",
+   "awayTeam": "Boston College",
+   "marketSpread": -7,
+   "overUnder": 51.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -35.5,
-     "overUnder": 55.5
+     "spread": -7,
+     "overUnder": 51.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -7,
+     "overUnder": 51.5
     },
     {
      "book": "Bovada",
-     "spread": -34.5,
-     "overUnder": 55.5
+     "spread": -7,
+     "overUnder": 51
     }
    ]
   },
@@ -86,7 +106,7 @@
    "week": 1,
    "homeTeam": "James Madison",
    "awayTeam": "Liberty",
-   "marketSpread": -6.0,
+   "marketSpread": -6,
    "overUnder": 50.5,
    "books": [
     {
@@ -98,26 +118,11 @@
      "book": "Bovada",
      "spread": -6,
      "overUnder": 50.5
-    }
-   ]
-  },
-  {
-   "id": 401866410,
-   "week": 1,
-   "homeTeam": "Bowling Green",
-   "awayTeam": "Tarleton State",
-   "marketSpread": -1.8,
-   "overUnder": 48.2,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -1.5,
-     "overUnder": 48.5
     },
     {
-     "book": "Bovada",
-     "spread": -2,
-     "overUnder": 48
+     "book": "Draft Kings",
+     "spread": -6,
+     "overUnder": 50.5
     }
    ]
   },
@@ -126,13 +131,43 @@
    "week": 1,
    "homeTeam": "Iowa State",
    "awayTeam": "Southeast Missouri State",
-   "marketSpread": -30.5,
-   "overUnder": 53.5,
+   "marketSpread": -29.5,
+   "overUnder": 52.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -30.5,
-     "overUnder": 53.5
+     "spread": -29.5,
+     "overUnder": 52.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -29.5,
+     "overUnder": 52.5
+    }
+   ]
+  },
+  {
+   "id": 401858208,
+   "week": 1,
+   "homeTeam": "Syracuse",
+   "awayTeam": "New Hampshire",
+   "marketSpread": -35.5,
+   "overUnder": 56.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -35.5,
+     "overUnder": 56.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -34.5,
+     "overUnder": 55.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -35.5,
+     "overUnder": 56.5
     }
    ]
   },
@@ -157,42 +192,77 @@
    ]
   },
   {
-   "id": 401861962,
+   "id": 401856658,
    "week": 1,
-   "homeTeam": "UConn",
-   "awayTeam": "Lafayette",
-   "marketSpread": -19.5,
+   "homeTeam": "Georgia",
+   "awayTeam": "Tennessee State",
+   "marketSpread": -49.5,
+   "overUnder": 55.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -49.5,
+     "overUnder": 55.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -49.5,
+     "overUnder": 55.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -49,
+     "overUnder": 55
+    }
+   ]
+  },
+  {
+   "id": 401862701,
+   "week": 1,
+   "homeTeam": "Army",
+   "awayTeam": "Bryant",
+   "marketSpread": -37.5,
    "overUnder": 51.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -19.5,
+     "spread": -37.5,
      "overUnder": 51.5
     },
     {
      "book": "Bovada",
-     "spread": -19.5,
+     "spread": -37,
+     "overUnder": 50.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -37.5,
      "overUnder": 51.5
     }
    ]
   },
   {
-   "id": 401856777,
+   "id": 401861962,
    "week": 1,
-   "homeTeam": "Cincinnati",
-   "awayTeam": "Boston College",
-   "marketSpread": -7.5,
-   "overUnder": 50.2,
+   "homeTeam": "UConn",
+   "awayTeam": "Lafayette",
+   "marketSpread": -21.5,
+   "overUnder": 51.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -7.5,
-     "overUnder": 50.5
+     "spread": -21.5,
+     "overUnder": 51.5
     },
     {
      "book": "Bovada",
-     "spread": -7.5,
-     "overUnder": 50
+     "spread": -19.5,
+     "overUnder": 51.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -21.5,
+     "overUnder": 51.5
     }
    ]
   },
@@ -201,78 +271,48 @@
    "week": 1,
    "homeTeam": "Kentucky",
    "awayTeam": "Youngstown State",
-   "marketSpread": -22.2,
-   "overUnder": 62.5,
+   "marketSpread": -22.5,
+   "overUnder": 61.5,
    "books": [
     {
      "book": "DraftKings",
      "spread": -22.5,
-     "overUnder": 62.5
+     "overUnder": 61.5
     },
     {
      "book": "Bovada",
      "spread": -22,
      "overUnder": 62.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -22.5,
+     "overUnder": 61.5
     }
    ]
   },
   {
-   "id": 401864496,
+   "id": 401866410,
    "week": 1,
-   "homeTeam": "Air Force",
-   "awayTeam": "Duquesne",
-   "marketSpread": -29.0,
-   "overUnder": 57.5,
+   "homeTeam": "Bowling Green",
+   "awayTeam": "Tarleton State",
+   "marketSpread": -1.5,
+   "overUnder": 49.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -29.5,
-     "overUnder": 57.5
+     "spread": -1.5,
+     "overUnder": 49.5
     },
     {
      "book": "Bovada",
-     "spread": -28.5,
-     "overUnder": 57.5
-    }
-   ]
-  },
-  {
-   "id": 401856658,
-   "week": 1,
-   "homeTeam": "Georgia",
-   "awayTeam": "Tennessee State",
-   "marketSpread": -46.5,
-   "overUnder": 54.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -46.5,
-     "overUnder": 54.5
+     "spread": -2,
+     "overUnder": 48
     },
     {
-     "book": "Bovada",
-     "spread": -46.5,
-     "overUnder": 54.5
-    }
-   ]
-  },
-  {
-   "id": 401856666,
-   "week": 1,
-   "homeTeam": "Tennessee",
-   "awayTeam": "Furman",
-   "marketSpread": -48.2,
-   "overUnder": 66.8,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -48.5,
-     "overUnder": 66.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -48,
-     "overUnder": 67
+     "book": "Draft Kings",
+     "spread": -1.5,
+     "overUnder": 49.5
     }
    ]
   },
@@ -297,22 +337,27 @@
    ]
   },
   {
-   "id": 401862696,
+   "id": 401862694,
    "week": 1,
-   "homeTeam": "Navy",
-   "awayTeam": "Towson",
-   "marketSpread": -30.5,
-   "overUnder": 50.5,
+   "homeTeam": "Charlotte",
+   "awayTeam": "The Citadel",
+   "marketSpread": -20.5,
+   "overUnder": 49.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -30.5,
-     "overUnder": 50.5
+     "spread": -20.5,
+     "overUnder": 49.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -20.5,
+     "overUnder": 49.5
     },
     {
      "book": "Bovada",
-     "spread": -30.5,
-     "overUnder": 50.5
+     "spread": -20.5,
+     "overUnder": 49
     }
    ]
   },
@@ -452,26 +497,6 @@
    ]
   },
   {
-   "id": 401862694,
-   "week": 1,
-   "homeTeam": "Charlotte",
-   "awayTeam": "The Citadel",
-   "marketSpread": -20.2,
-   "overUnder": 46.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -20.5,
-     "overUnder": 46.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -20,
-     "overUnder": 46.5
-    }
-   ]
-  },
-  {
    "id": 401864425,
    "week": 1,
    "homeTeam": "Kennesaw State",
@@ -492,6 +517,56 @@
    ]
   },
   {
+   "id": 401862696,
+   "week": 1,
+   "homeTeam": "Navy",
+   "awayTeam": "Towson",
+   "marketSpread": -31.5,
+   "overUnder": 50.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -31.5,
+     "overUnder": 50.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -31.5,
+     "overUnder": 50.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -30.5,
+     "overUnder": 50.5
+    }
+   ]
+  },
+  {
+   "id": 401864499,
+   "week": 1,
+   "homeTeam": "North Dakota State",
+   "awayTeam": "Fordham",
+   "marketSpread": -41.5,
+   "overUnder": 54.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -41.5,
+     "overUnder": 54.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -41.5,
+     "overUnder": 54
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -41.5,
+     "overUnder": 54.5
+    }
+   ]
+  },
+  {
    "id": 401862700,
    "week": 1,
    "homeTeam": "UTSA",
@@ -505,29 +580,14 @@
      "overUnder": 59.5
     },
     {
-     "book": "Bovada",
+     "book": "Draft Kings",
      "spread": -28.5,
      "overUnder": 59.5
-    }
-   ]
-  },
-  {
-   "id": 401864499,
-   "week": 1,
-   "homeTeam": "North Dakota State",
-   "awayTeam": "Fordham",
-   "marketSpread": -41.5,
-   "overUnder": 56.2,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -41.5,
-     "overUnder": 56.5
     },
     {
      "book": "Bovada",
-     "spread": -41.5,
-     "overUnder": 56
+     "spread": -28.5,
+     "overUnder": 59.5
     }
    ]
   },
@@ -536,38 +596,23 @@
    "week": 1,
    "homeTeam": "App State",
    "awayTeam": "Maine",
-   "marketSpread": -19.5,
+   "marketSpread": -21,
    "overUnder": 53.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -19.5,
+     "spread": -20.5,
+     "overUnder": 53.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -21,
      "overUnder": 53.5
     },
     {
      "book": "Bovada",
-     "spread": -19.5,
-     "overUnder": 53.5
-    }
-   ]
-  },
-  {
-   "id": 401856770,
-   "week": 1,
-   "homeTeam": "Texas Tech",
-   "awayTeam": "Abilene Christian",
-   "marketSpread": -42.5,
-   "overUnder": 59.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -42.5,
-     "overUnder": 59.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -42.5,
-     "overUnder": 59.5
+     "spread": -21,
+     "overUnder": 54
     }
    ]
   },
@@ -602,92 +647,42 @@
    ]
   },
   {
-   "id": 401856670,
+   "id": 401856788,
    "week": 2,
-   "homeTeam": "Utah",
-   "awayTeam": "Arkansas",
-   "marketSpread": -9.5,
-   "overUnder": 56.5,
+   "homeTeam": "Iowa",
+   "awayTeam": "Iowa State",
+   "marketSpread": -15.0,
+   "overUnder": 41.2,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -9.5,
-     "overUnder": 56.5
+     "spread": -14.5,
+     "overUnder": 41.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -15.5,
+     "overUnder": 41
     }
    ]
   },
   {
-   "id": 401856782,
+   "id": 401856678,
    "week": 2,
-   "homeTeam": "Oklahoma State",
-   "awayTeam": "Oregon",
-   "marketSpread": 19.5,
-   "overUnder": 60.5,
+   "homeTeam": "Kansas",
+   "awayTeam": "Missouri",
+   "marketSpread": 5.0,
+   "overUnder": 50.2,
    "books": [
     {
      "book": "DraftKings",
-     "spread": 19.5,
-     "overUnder": 60.5
-    }
-   ]
-  },
-  {
-   "id": 401856775,
-   "week": 1,
-   "homeTeam": "BYU",
-   "awayTeam": "Utah Tech",
-   "marketSpread": -51.5,
-   "overUnder": 61.2,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -51.5,
-     "overUnder": 61.5
+     "spread": 5.5,
+     "overUnder": 50.5
     },
     {
      "book": "Bovada",
-     "spread": -51.5,
-     "overUnder": 61
-    }
-   ]
-  },
-  {
-   "id": 401868140,
-   "week": 1,
-   "homeTeam": "Jacksonville State",
-   "awayTeam": "Eastern Kentucky",
-   "marketSpread": -20.8,
-   "overUnder": 53.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -20.5,
-     "overUnder": 53.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -21,
-     "overUnder": 53.5
-    }
-   ]
-  },
-  {
-   "id": 401856771,
-   "week": 1,
-   "homeTeam": "Kansas State",
-   "awayTeam": "Nicholls",
-   "marketSpread": -41.0,
-   "overUnder": 54.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -41.5,
-     "overUnder": 54.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -40.5,
-     "overUnder": 54.5
+     "spread": 4.5,
+     "overUnder": 50
     }
    ]
   },
@@ -696,13 +691,188 @@
    "week": 1,
    "homeTeam": "Sacramento State",
    "awayTeam": "Mississippi Valley State",
-   "marketSpread": -37.5,
+   "marketSpread": -38.0,
    "overUnder": 56.5,
    "books": [
     {
      "book": "DraftKings",
      "spread": -37.5,
      "overUnder": 56.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -38.5,
+     "overUnder": 56.5
+    }
+   ]
+  },
+  {
+   "id": 401856775,
+   "week": 1,
+   "homeTeam": "BYU",
+   "awayTeam": "Utah Tech",
+   "marketSpread": -50.5,
+   "overUnder": 61.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -50.5,
+     "overUnder": 61.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -49.5,
+     "overUnder": 61
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -50.5,
+     "overUnder": 61.5
+    }
+   ]
+  },
+  {
+   "id": 401868140,
+   "week": 1,
+   "homeTeam": "Jacksonville State",
+   "awayTeam": "Eastern Kentucky",
+   "marketSpread": -22.5,
+   "overUnder": 51.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -22.5,
+     "overUnder": 51.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -22.5,
+     "overUnder": 51.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -22,
+     "overUnder": 53
+    }
+   ]
+  },
+  {
+   "id": 401856669,
+   "week": 1,
+   "homeTeam": "Vanderbilt",
+   "awayTeam": "Austin Peay",
+   "marketSpread": -29,
+   "overUnder": 57.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -28.5,
+     "overUnder": 57.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -29.5,
+     "overUnder": 57.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -29,
+     "overUnder": 59
+    }
+   ]
+  },
+  {
+   "id": 401858431,
+   "week": 1,
+   "homeTeam": "Northwestern",
+   "awayTeam": "South Dakota State",
+   "marketSpread": -14,
+   "overUnder": 49.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -14,
+     "overUnder": 49.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -12.5,
+     "overUnder": 48.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -14,
+     "overUnder": 49.5
+    }
+   ]
+  },
+  {
+   "id": 401856782,
+   "week": 2,
+   "homeTeam": "Oklahoma State",
+   "awayTeam": "Oregon",
+   "marketSpread": 22.5,
+   "overUnder": 57.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": 22.5,
+     "overUnder": 57.5
+    },
+    {
+     "book": "Bovada",
+     "spread": 22.5,
+     "overUnder": 57.5
+    }
+   ]
+  },
+  {
+   "id": 401856770,
+   "week": 1,
+   "homeTeam": "Texas Tech",
+   "awayTeam": "Abilene Christian",
+   "marketSpread": -45.5,
+   "overUnder": 60.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -45.5,
+     "overUnder": 60.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -45.5,
+     "overUnder": 61.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -44.5,
+     "overUnder": 60.5
+    }
+   ]
+  },
+  {
+   "id": 401856773,
+   "week": 1,
+   "homeTeam": "Arizona",
+   "awayTeam": "Northern Arizona",
+   "marketSpread": -32.5,
+   "overUnder": 59.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -32.5,
+     "overUnder": 59.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -31.5,
+     "overUnder": 58.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -33.5,
+     "overUnder": 59.5
     }
    ]
   },
@@ -720,129 +890,14 @@
      "overUnder": 47.5
     },
     {
-     "book": "Bovada",
+     "book": "Draft Kings",
      "spread": -22.5,
      "overUnder": 47.5
-    }
-   ]
-  },
-  {
-   "id": 401860879,
-   "week": 1,
-   "homeTeam": "San Diego State",
-   "awayTeam": "Portland State",
-   "marketSpread": -40.5,
-   "overUnder": 62.2,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -40.5,
-     "overUnder": 62.5
     },
     {
      "book": "Bovada",
-     "spread": -40.5,
-     "overUnder": 62
-    }
-   ]
-  },
-  {
-   "id": 401856773,
-   "week": 1,
-   "homeTeam": "Arizona",
-   "awayTeam": "Northern Arizona",
-   "marketSpread": -31.5,
-   "overUnder": 58.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -31.5,
-     "overUnder": 58.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -31.5,
-     "overUnder": 58.5
-    }
-   ]
-  },
-  {
-   "id": 401858211,
-   "week": 1,
-   "homeTeam": "Virginia Tech",
-   "awayTeam": "VMI",
-   "marketSpread": -55.5,
-   "overUnder": 61.8,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -55.5,
-     "overUnder": 61.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -55.5,
-     "overUnder": 62
-    }
-   ]
-  },
-  {
-   "id": 401868356,
-   "week": 1,
-   "homeTeam": "Southern Miss",
-   "awayTeam": "Alcorn State",
-   "marketSpread": -18.8,
-   "overUnder": 50.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -17.5,
-     "overUnder": 50.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -20,
-     "overUnder": 50.5
-    }
-   ]
-  },
-  {
-   "id": 401858431,
-   "week": 1,
-   "homeTeam": "Northwestern",
-   "awayTeam": "South Dakota State",
-   "marketSpread": -12.5,
-   "overUnder": 46.2,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -12.5,
-     "overUnder": 46.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -12.5,
-     "overUnder": 46
-    }
-   ]
-  },
-  {
-   "id": 401867866,
-   "week": 1,
-   "homeTeam": "Middle Tennessee",
-   "awayTeam": "Murray State",
-   "marketSpread": -21.2,
-   "overUnder": 57.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -21.5,
-     "overUnder": 57.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -21,
-     "overUnder": 57.5
+     "spread": -23,
+     "overUnder": 47.5
     }
    ]
   },
@@ -851,38 +906,168 @@
    "week": 1,
    "homeTeam": "Georgia Southern",
    "awayTeam": "Charleston Southern",
-   "marketSpread": -26.0,
+   "marketSpread": -28.5,
    "overUnder": 51.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -26.5,
+     "spread": -28.5,
+     "overUnder": 51.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -28.5,
      "overUnder": 51.5
     },
     {
      "book": "Bovada",
-     "spread": -25.5,
-     "overUnder": 51.5
+     "spread": -28,
+     "overUnder": 52.5
     }
    ]
   },
   {
-   "id": 401867973,
+   "id": 401856771,
    "week": 1,
-   "homeTeam": "Old Dominion",
-   "awayTeam": "Norfolk State",
-   "marketSpread": -40.8,
-   "overUnder": 52.5,
+   "homeTeam": "Kansas State",
+   "awayTeam": "Nicholls",
+   "marketSpread": -41.5,
+   "overUnder": 55.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -40.5,
-     "overUnder": 52.5
+     "spread": -41.5,
+     "overUnder": 55.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -41.5,
+     "overUnder": 55.5
     },
     {
      "book": "Bovada",
      "spread": -41,
-     "overUnder": 52.5
+     "overUnder": 55
+    }
+   ]
+  },
+  {
+   "id": 401860880,
+   "week": 1,
+   "homeTeam": "Utah State",
+   "awayTeam": "Idaho State",
+   "marketSpread": -15.5,
+   "overUnder": 59.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -15.5,
+     "overUnder": 59.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -15.5,
+     "overUnder": 59.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -14.5,
+     "overUnder": 60
+    }
+   ]
+  },
+  {
+   "id": 401860879,
+   "week": 1,
+   "homeTeam": "San Diego State",
+   "awayTeam": "Portland State",
+   "marketSpread": -38.5,
+   "overUnder": 62,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -38.5,
+     "overUnder": 62.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -40.5,
+     "overUnder": 62
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -38.5,
+     "overUnder": 61.5
+    }
+   ]
+  },
+  {
+   "id": 401856670,
+   "week": 2,
+   "homeTeam": "Utah",
+   "awayTeam": "Arkansas",
+   "marketSpread": -12.0,
+   "overUnder": 56.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -12.5,
+     "overUnder": 56.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -11.5,
+     "overUnder": 56.5
+    }
+   ]
+  },
+  {
+   "id": 401869129,
+   "week": 1,
+   "homeTeam": "Louisiana Tech",
+   "awayTeam": "Northwestern State",
+   "marketSpread": -44.5,
+   "overUnder": 56.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -44.5,
+     "overUnder": 56.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -44.5,
+     "overUnder": 56.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -44.5,
+     "overUnder": 56.5
+    }
+   ]
+  },
+  {
+   "id": 401858211,
+   "week": 1,
+   "homeTeam": "Virginia Tech",
+   "awayTeam": "VMI",
+   "marketSpread": -54.5,
+   "overUnder": 60.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -54.5,
+     "overUnder": 60.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -54.5,
+     "overUnder": 62
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -54.5,
+     "overUnder": 60.5
     }
    ]
   },
@@ -898,26 +1083,6 @@
      "book": "DraftKings",
      "spread": -1.5,
      "overUnder": 57.5
-    }
-   ]
-  },
-  {
-   "id": 401869129,
-   "week": 1,
-   "homeTeam": "Louisiana Tech",
-   "awayTeam": "Northwestern State",
-   "marketSpread": -44.5,
-   "overUnder": 55.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -44.5,
-     "overUnder": 55.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -44.5,
-     "overUnder": 55.5
     }
    ]
   },
@@ -952,77 +1117,72 @@
    ]
   },
   {
-   "id": 401856682,
-   "week": 2,
-   "homeTeam": "Texas",
-   "awayTeam": "Ohio State",
-   "marketSpread": -1.5,
-   "overUnder": 47.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -1.5,
-     "overUnder": 47.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -1.5,
-     "overUnder": 47.5
-    }
-   ]
-  },
-  {
    "id": 401858427,
    "week": 1,
    "homeTeam": "Maryland",
    "awayTeam": "Hampton",
    "marketSpread": -45.5,
-   "overUnder": 55.5,
+   "overUnder": 56.5,
    "books": [
     {
      "book": "DraftKings",
      "spread": -45.5,
-     "overUnder": 55.5
+     "overUnder": 56.5
     },
     {
      "book": "Bovada",
      "spread": -45.5,
-     "overUnder": 55.5
+     "overUnder": 56
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -45.5,
+     "overUnder": 56.5
     }
    ]
   },
   {
-   "id": 401856679,
+   "id": 401856682,
    "week": 2,
-   "homeTeam": "Michigan",
-   "awayTeam": "Oklahoma",
-   "marketSpread": -0.5,
-   "overUnder": 46.0,
+   "homeTeam": "Texas",
+   "awayTeam": "Ohio State",
+   "marketSpread": -1.8,
+   "overUnder": 48.8,
    "books": [
     {
      "book": "DraftKings",
-     "spread": 1.5,
-     "overUnder": 46.5
+     "spread": -1.5,
+     "overUnder": 48.5
     },
     {
      "book": "Bovada",
-     "spread": -2.5,
-     "overUnder": 45.5
+     "spread": -2,
+     "overUnder": 49
     }
    ]
   },
   {
-   "id": 401856678,
-   "week": 2,
-   "homeTeam": "Kansas",
-   "awayTeam": "Missouri",
-   "marketSpread": 6.5,
-   "overUnder": 51.5,
+   "id": 401867973,
+   "week": 1,
+   "homeTeam": "Old Dominion",
+   "awayTeam": "Norfolk State",
+   "marketSpread": -41.5,
+   "overUnder": 52.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": 6.5,
-     "overUnder": 51.5
+     "spread": -41.5,
+     "overUnder": 52.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -41.5,
+     "overUnder": 52.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -41,
+     "overUnder": 52
     }
    ]
   },
@@ -1031,33 +1191,48 @@
    "week": 1,
    "homeTeam": "Arizona State",
    "awayTeam": "Morgan State",
-   "marketSpread": -44.8,
+   "marketSpread": -43.5,
    "overUnder": 52.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -44.5,
+     "spread": -43.5,
      "overUnder": 52.5
     },
     {
      "book": "Bovada",
      "spread": -45,
      "overUnder": 52.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -43.5,
+     "overUnder": 52.5
     }
    ]
   },
   {
-   "id": 401856788,
-   "week": 2,
-   "homeTeam": "Iowa",
-   "awayTeam": "Iowa State",
-   "marketSpread": -12.5,
-   "overUnder": 41.5,
+   "id": 401868356,
+   "week": 1,
+   "homeTeam": "Southern Miss",
+   "awayTeam": "Alcorn State",
+   "marketSpread": -19.5,
+   "overUnder": 51.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -12.5,
-     "overUnder": 41.5
+     "spread": -19.5,
+     "overUnder": 51.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -20.5,
+     "overUnder": 51.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -19.5,
+     "overUnder": 51
     }
    ]
   },
@@ -1073,21 +1248,6 @@
      "book": "DraftKings",
      "spread": -1.5,
      "overUnder": 56.5
-    }
-   ]
-  },
-  {
-   "id": 401856683,
-   "week": 2,
-   "homeTeam": "Texas A&M",
-   "awayTeam": "Arizona State",
-   "marketSpread": -14.5,
-   "overUnder": 50.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -14.5,
-     "overUnder": 50.5
     }
    ]
   },
@@ -1111,7 +1271,7 @@
    "week": 1,
    "homeTeam": "Louisiana",
    "awayTeam": "Lamar",
-   "marketSpread": -20.2,
+   "marketSpread": -20.5,
    "overUnder": 48.5,
    "books": [
     {
@@ -1123,26 +1283,36 @@
      "book": "Bovada",
      "spread": -20,
      "overUnder": 48.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -20.5,
+     "overUnder": 48.5
     }
    ]
   },
   {
-   "id": 401856669,
+   "id": 401868316,
    "week": 1,
-   "homeTeam": "Vanderbilt",
-   "awayTeam": "Austin Peay",
-   "marketSpread": -28.8,
-   "overUnder": 60.2,
+   "homeTeam": "South Alabama",
+   "awayTeam": "SE Louisiana",
+   "marketSpread": -13.5,
+   "overUnder": 53.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -28.5,
-     "overUnder": 60.5
+     "spread": -13.5,
+     "overUnder": 53.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -13.5,
+     "overUnder": 53.5
     },
     {
      "book": "Bovada",
-     "spread": -29,
-     "overUnder": 60
+     "spread": -14,
+     "overUnder": 53.5
     }
    ]
   },
@@ -1162,77 +1332,67 @@
    ]
   },
   {
-   "id": 401860880,
+   "id": 401867866,
    "week": 1,
-   "homeTeam": "Utah State",
-   "awayTeam": "Idaho State",
-   "marketSpread": -14.0,
-   "overUnder": 62.2,
+   "homeTeam": "Middle Tennessee",
+   "awayTeam": "Murray State",
+   "marketSpread": -22.5,
+   "overUnder": 55.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -14,
-     "overUnder": 62.5
+     "spread": -22.5,
+     "overUnder": 55.5
     },
-    {
-     "book": "Bovada",
-     "spread": -14,
-     "overUnder": 62
-    }
-   ]
-  },
-  {
-   "id": 401868316,
-   "week": 1,
-   "homeTeam": "South Alabama",
-   "awayTeam": "SE Louisiana",
-   "marketSpread": -13.0,
-   "overUnder": 52.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -13.5,
-     "overUnder": 52.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -12.5,
-     "overUnder": 52.5
-    }
-   ]
-  },
-  {
-   "id": 401867894,
-   "week": 1,
-   "homeTeam": "Youngstown State",
-   "awayTeam": "Mercyhurst",
-   "marketSpread": -30.5,
-   "overUnder": 57.5,
-   "books": [
     {
      "book": "Draft Kings",
-     "spread": -30.5,
-     "overUnder": 57.5
+     "spread": -22.5,
+     "overUnder": 55.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -22.5,
+     "overUnder": 56
     }
    ]
   },
   {
-   "id": 401870790,
-   "week": 1,
-   "homeTeam": "New Mexico State",
-   "awayTeam": "Mercyhurst",
-   "marketSpread": -28.5,
-   "overUnder": 52.2,
+   "id": 401856679,
+   "week": 2,
+   "homeTeam": "Michigan",
+   "awayTeam": "Oklahoma",
+   "marketSpread": 5.0,
+   "overUnder": 43.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -28.5,
-     "overUnder": 52.5
+     "spread": 5.5,
+     "overUnder": 43.5
     },
     {
      "book": "Bovada",
-     "spread": -28.5,
-     "overUnder": 52
+     "spread": 4.5,
+     "overUnder": 43.5
+    }
+   ]
+  },
+  {
+   "id": 401856683,
+   "week": 2,
+   "homeTeam": "Texas A&M",
+   "awayTeam": "Arizona State",
+   "marketSpread": -15.0,
+   "overUnder": 51.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -14.5,
+     "overUnder": 51.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -15.5,
+     "overUnder": 51.5
     }
    ]
   },
@@ -1278,6 +1438,46 @@
      "book": "Draft Kings",
      "spread": -38.5,
      "overUnder": 60.5
+    }
+   ]
+  },
+  {
+   "id": 401870790,
+   "week": 1,
+   "homeTeam": "New Mexico State",
+   "awayTeam": "Mercyhurst",
+   "marketSpread": -29.5,
+   "overUnder": 52.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -29.5,
+     "overUnder": 52.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -28.5,
+     "overUnder": 52
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -29.5,
+     "overUnder": 52.5
+    }
+   ]
+  },
+  {
+   "id": 401867894,
+   "week": 1,
+   "homeTeam": "Youngstown State",
+   "awayTeam": "Mercyhurst",
+   "marketSpread": -30.5,
+   "overUnder": 57.5,
+   "books": [
+    {
+     "book": "Draft Kings",
+     "spread": -30.5,
+     "overUnder": 57.5
     }
    ]
   },
@@ -1621,18 +1821,23 @@
    "week": 1,
    "homeTeam": "Florida State",
    "awayTeam": "SMU",
-   "marketSpread": 3.0,
-   "overUnder": 53.2,
+   "marketSpread": 3,
+   "overUnder": 54.5,
    "books": [
     {
      "book": "DraftKings",
      "spread": 3,
-     "overUnder": 53.5
+     "overUnder": 54.5
     },
     {
      "book": "Bovada",
      "spread": 3,
-     "overUnder": 53
+     "overUnder": 54.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": 3,
+     "overUnder": 52.5
     }
    ]
   },
@@ -2302,17 +2507,47 @@
    ]
   },
   {
+   "id": 401858425,
+   "week": 1,
+   "homeTeam": "Indiana",
+   "awayTeam": "North Texas",
+   "marketSpread": -39.5,
+   "overUnder": 56.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -39.5,
+     "overUnder": 56.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -39.5,
+     "overUnder": 57.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -40.5,
+     "overUnder": 56
+    }
+   ]
+  },
+  {
    "id": 401856667,
    "week": 1,
    "homeTeam": "Texas",
    "awayTeam": "Texas State",
    "marketSpread": -29.5,
-   "overUnder": 59.8,
+   "overUnder": 60.5,
    "books": [
     {
      "book": "DraftKings",
      "spread": -29.5,
-     "overUnder": 59.5
+     "overUnder": 60.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -29.5,
+     "overUnder": 61.5
     },
     {
      "book": "Bovada",
@@ -2386,8 +2621,8 @@
    "week": 1,
    "homeTeam": "Washington",
    "awayTeam": "Washington State",
-   "marketSpread": -23.2,
-   "overUnder": 51.2,
+   "marketSpread": -23.5,
+   "overUnder": 51.5,
    "books": [
     {
      "book": "DraftKings",
@@ -2398,26 +2633,11 @@
      "book": "Bovada",
      "spread": -23,
      "overUnder": 51
-    }
-   ]
-  },
-  {
-   "id": 401858425,
-   "week": 1,
-   "homeTeam": "Indiana",
-   "awayTeam": "North Texas",
-   "marketSpread": -40.5,
-   "overUnder": 56.2,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -40.5,
-     "overUnder": 56.5
     },
     {
-     "book": "Bovada",
-     "spread": -40.5,
-     "overUnder": 56
+     "book": "Draft Kings",
+     "spread": -23.5,
+     "overUnder": 51.5
     }
    ]
   },
@@ -2492,17 +2712,22 @@
    "homeTeam": "Tulsa",
    "awayTeam": "Oklahoma State",
    "marketSpread": 13.5,
-   "overUnder": 59.2,
+   "overUnder": 57.5,
    "books": [
     {
      "book": "DraftKings",
      "spread": 13.5,
-     "overUnder": 59.5
+     "overUnder": 57.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": 13.5,
+     "overUnder": 57.5
     },
     {
      "book": "Bovada",
-     "spread": 13.5,
-     "overUnder": 59
+     "spread": 13,
+     "overUnder": 57.5
     }
    ]
   },
@@ -2511,18 +2736,23 @@
    "week": 1,
    "homeTeam": "Duke",
    "awayTeam": "Tulane",
-   "marketSpread": -7.5,
-   "overUnder": 51.0,
+   "marketSpread": -9.5,
+   "overUnder": 51.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -7.5,
+     "spread": -9.5,
      "overUnder": 51.5
     },
     {
      "book": "Bovada",
-     "spread": -7.5,
+     "spread": -8,
      "overUnder": 50.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -9.5,
+     "overUnder": 51.5
     }
    ]
   },
@@ -3022,6 +3252,56 @@
    ]
   },
   {
+   "id": 401864570,
+   "week": 1,
+   "homeTeam": "Florida State",
+   "awayTeam": "New Mexico State",
+   "marketSpread": -31,
+   "overUnder": 53.5,
+   "books": [
+    {
+     "book": "Draft Kings",
+     "spread": -30.5,
+     "overUnder": 53.5
+    },
+    {
+     "book": "DraftKings",
+     "spread": -31.5,
+     "overUnder": 53.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -31,
+     "overUnder": 53.5
+    }
+   ]
+  },
+  {
+   "id": 401866408,
+   "week": 1,
+   "homeTeam": "Eastern Michigan",
+   "awayTeam": "Sacramento State",
+   "marketSpread": -9,
+   "overUnder": 52.5,
+   "books": [
+    {
+     "book": "Draft Kings",
+     "spread": -9.5,
+     "overUnder": 52.5
+    },
+    {
+     "book": "DraftKings",
+     "spread": -8.5,
+     "overUnder": 52.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -9,
+     "overUnder": 53
+    }
+   ]
+  },
+  {
    "id": 401864577,
    "week": 1,
    "homeTeam": "North Dakota State",
@@ -3093,56 +3373,6 @@
      "book": "Bovada",
      "spread": -37,
      "overUnder": 60.5
-    }
-   ]
-  },
-  {
-   "id": 401866408,
-   "week": 1,
-   "homeTeam": "Eastern Michigan",
-   "awayTeam": "Sacramento State",
-   "marketSpread": -9,
-   "overUnder": 52.5,
-   "books": [
-    {
-     "book": "Draft Kings",
-     "spread": -9.5,
-     "overUnder": 52.5
-    },
-    {
-     "book": "DraftKings",
-     "spread": -8.5,
-     "overUnder": 52.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -9,
-     "overUnder": 53
-    }
-   ]
-  },
-  {
-   "id": 401864570,
-   "week": 1,
-   "homeTeam": "Florida State",
-   "awayTeam": "New Mexico State",
-   "marketSpread": -31,
-   "overUnder": 53.5,
-   "books": [
-    {
-     "book": "Draft Kings",
-     "spread": -30.5,
-     "overUnder": 53.5
-    },
-    {
-     "book": "DraftKings",
-     "spread": -31.5,
-     "overUnder": 53.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -31,
-     "overUnder": 53.5
     }
    ]
   },
@@ -3312,22 +3542,22 @@
    ]
   },
   {
-   "id": 401856636,
-   "week": 1,
-   "homeTeam": "Auburn",
-   "awayTeam": "Baylor",
-   "marketSpread": -7.5,
-   "overUnder": 59.5,
+   "id": 401858221,
+   "week": 2,
+   "homeTeam": "Virginia Tech",
+   "awayTeam": "Old Dominion",
+   "marketSpread": -19.0,
+   "overUnder": 51.2,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -7.5,
-     "overUnder": 59.5
+     "spread": -18.5,
+     "overUnder": 51.5
     },
     {
      "book": "Bovada",
-     "spread": -7.5,
-     "overUnder": 59.5
+     "spread": -19.5,
+     "overUnder": 51
     }
    ]
   },
@@ -3348,6 +3578,11 @@
      "book": "DraftKings",
      "spread": -27.5,
      "overUnder": 49.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -27.5,
+     "overUnder": 50.5
     }
    ]
   },
@@ -3381,13 +3616,43 @@
    "week": 2,
    "homeTeam": "Georgia Tech",
    "awayTeam": "Tennessee",
-   "marketSpread": 10.5,
-   "overUnder": 56.5,
+   "marketSpread": 12.5,
+   "overUnder": 55.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": 10.5,
-     "overUnder": 56.5
+     "spread": 12.5,
+     "overUnder": 55.5
+    },
+    {
+     "book": "Bovada",
+     "spread": 12.5,
+     "overUnder": 55.5
+    }
+   ]
+  },
+  {
+   "id": 401864498,
+   "week": 1,
+   "homeTeam": "New Mexico",
+   "awayTeam": "Central Michigan",
+   "marketSpread": -11,
+   "overUnder": 47.5,
+   "books": [
+    {
+     "book": "Bovada",
+     "spread": -11,
+     "overUnder": 47
+    },
+    {
+     "book": "DraftKings",
+     "spread": -10.5,
+     "overUnder": 47.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -11.5,
+     "overUnder": 47.5
     }
    ]
   },
@@ -3396,13 +3661,18 @@
    "week": 1,
    "homeTeam": "Nebraska",
    "awayTeam": "Ohio",
-   "marketSpread": -23.8,
-   "overUnder": 46.5,
+   "marketSpread": -23.5,
+   "overUnder": 47.5,
    "books": [
     {
      "book": "DraftKings",
      "spread": -23.5,
-     "overUnder": 46.5
+     "overUnder": 47.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -23.5,
+     "overUnder": 47.5
     },
     {
      "book": "Bovada",
@@ -3432,32 +3702,92 @@
    ]
   },
   {
-   "id": 401858221,
+   "id": 401860881,
    "week": 2,
-   "homeTeam": "Virginia Tech",
-   "awayTeam": "Old Dominion",
-   "marketSpread": -14.5,
-   "overUnder": 51.5,
+   "homeTeam": "Boise State",
+   "awayTeam": "Memphis",
+   "marketSpread": -8.5,
+   "overUnder": 54.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -14.5,
-     "overUnder": 51.5
+     "spread": -8.5,
+     "overUnder": 54.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -8.5,
+     "overUnder": 54.5
     }
    ]
   },
   {
-   "id": 401856674,
-   "week": 2,
-   "homeTeam": "Kentucky",
-   "awayTeam": "Alabama",
-   "marketSpread": 10.5,
-   "overUnder": 48.5,
+   "id": 401856636,
+   "week": 1,
+   "homeTeam": "Auburn",
+   "awayTeam": "Baylor",
+   "marketSpread": -6.5,
+   "overUnder": 58.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": 10.5,
-     "overUnder": 48.5
+     "spread": -6.5,
+     "overUnder": 58.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -6.5,
+     "overUnder": 58.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -6.5,
+     "overUnder": 58.5
+    }
+   ]
+  },
+  {
+   "id": 401856810,
+   "week": 2,
+   "homeTeam": "BYU",
+   "awayTeam": "Arizona",
+   "marketSpread": -7.5,
+   "overUnder": 50.2,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -7.5,
+     "overUnder": 50.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -7.5,
+     "overUnder": 50
+    }
+   ]
+  },
+  {
+   "id": 401858433,
+   "week": 1,
+   "homeTeam": "Oregon",
+   "awayTeam": "Boise State",
+   "marketSpread": -24.5,
+   "overUnder": 52.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -24.5,
+     "overUnder": 52.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -25,
+     "overUnder": 51.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -24.5,
+     "overUnder": 53.5
     }
    ]
   },
@@ -3478,6 +3808,26 @@
      "book": "Draft Kings",
      "spread": -4,
      "overUnder": 50.5
+    }
+   ]
+  },
+  {
+   "id": 401856674,
+   "week": 2,
+   "homeTeam": "Kentucky",
+   "awayTeam": "Alabama",
+   "marketSpread": 10.0,
+   "overUnder": 49.2,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": 10.5,
+     "overUnder": 49.5
+    },
+    {
+     "book": "Bovada",
+     "spread": 9.5,
+     "overUnder": 49
     }
    ]
   },
@@ -3507,87 +3857,22 @@
    ]
   },
   {
-   "id": 401864498,
-   "week": 1,
-   "homeTeam": "New Mexico",
-   "awayTeam": "Central Michigan",
-   "marketSpread": -10.5,
-   "overUnder": 46.8,
-   "books": [
-    {
-     "book": "Bovada",
-     "spread": -10.5,
-     "overUnder": 47
-    },
-    {
-     "book": "DraftKings",
-     "spread": -10.5,
-     "overUnder": 46.5
-    }
-   ]
-  },
-  {
    "id": 401858443,
    "week": 2,
    "homeTeam": "UCLA",
    "awayTeam": "San Diego State",
-   "marketSpread": -10,
-   "overUnder": 48.5,
+   "marketSpread": -11.5,
+   "overUnder": 53.2,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -10,
-     "overUnder": 48.5
-    }
-   ]
-  },
-  {
-   "id": 401856810,
-   "week": 2,
-   "homeTeam": "BYU",
-   "awayTeam": "Arizona",
-   "marketSpread": -7,
-   "overUnder": 51.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -7,
-     "overUnder": 51.5
-    }
-   ]
-  },
-  {
-   "id": 401858433,
-   "week": 1,
-   "homeTeam": "Oregon",
-   "awayTeam": "Boise State",
-   "marketSpread": -24.8,
-   "overUnder": 51.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -24.5,
-     "overUnder": 51.5
+     "spread": -11.5,
+     "overUnder": 53.5
     },
     {
      "book": "Bovada",
-     "spread": -25,
-     "overUnder": 51.5
-    }
-   ]
-  },
-  {
-   "id": 401860881,
-   "week": 2,
-   "homeTeam": "Boise State",
-   "awayTeam": "Memphis",
-   "marketSpread": -6.5,
-   "overUnder": 52.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -6.5,
-     "overUnder": 52.5
+     "spread": -11.5,
+     "overUnder": 53
     }
    ]
   },
@@ -3596,7 +3881,7 @@
    "week": 1,
    "homeTeam": "Hawai'i",
    "awayTeam": "UNLV",
-   "marketSpread": 3.0,
+   "marketSpread": 3,
    "overUnder": 55.5,
    "books": [
     {
@@ -3608,6 +3893,11 @@
      "book": "DraftKings",
      "spread": 3,
      "overUnder": 55.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": 2.5,
+     "overUnder": 55.5
     }
    ]
   },
@@ -3616,12 +3906,17 @@
    "week": 1,
    "homeTeam": "Iowa",
    "awayTeam": "Northern Illinois",
-   "marketSpread": -31.8,
+   "marketSpread": -31.5,
    "overUnder": 44.5,
    "books": [
     {
      "book": "Bovada",
      "spread": -32,
+     "overUnder": 44.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -31.5,
      "overUnder": 44.5
     },
     {
@@ -3636,13 +3931,18 @@
    "week": 1,
    "homeTeam": "South Carolina",
    "awayTeam": "Kent State",
-   "marketSpread": -36.0,
+   "marketSpread": -35.5,
    "overUnder": 53.5,
    "books": [
     {
      "book": "Bovada",
      "spread": -36.5,
      "overUnder": 53.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -35.5,
+     "overUnder": 52.5
     },
     {
      "book": "DraftKings",
@@ -3656,7 +3956,7 @@
    "week": 1,
    "homeTeam": "Notre Dame",
    "awayTeam": "Wisconsin",
-   "marketSpread": -20.5,
+   "marketSpread": -21,
    "overUnder": 46.5,
    "books": [
     {
@@ -3665,9 +3965,34 @@
      "overUnder": 46.5
     },
     {
+     "book": "Draft Kings",
+     "spread": -21,
+     "overUnder": 45.5
+    },
+    {
      "book": "DraftKings",
-     "spread": -20.5,
+     "spread": -21,
      "overUnder": 46.5
+    }
+   ]
+  },
+  {
+   "id": 401860884,
+   "week": 2,
+   "homeTeam": "Texas State",
+   "awayTeam": "UTSA",
+   "marketSpread": -1.5,
+   "overUnder": 64.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -1.5,
+     "overUnder": 64.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -1.5,
+     "overUnder": 64.5
     }
    ]
   },
@@ -3677,17 +4002,72 @@
    "homeTeam": "South Florida",
    "awayTeam": "Florida International",
    "marketSpread": -14.5,
-   "overUnder": 51.8,
+   "overUnder": 53.5,
    "books": [
     {
      "book": "Bovada",
      "spread": -14.5,
-     "overUnder": 52
+     "overUnder": 53
     },
     {
      "book": "DraftKings",
      "spread": -14.5,
-     "overUnder": 51.5
+     "overUnder": 53.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -14.5,
+     "overUnder": 53.5
+    }
+   ]
+  },
+  {
+   "id": 401870763,
+   "week": 1,
+   "homeTeam": "Troy",
+   "awayTeam": "Sam Houston",
+   "marketSpread": -16.5,
+   "overUnder": 52.5,
+   "books": [
+    {
+     "book": "Bovada",
+     "spread": -16.5,
+     "overUnder": 53
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -15.5,
+     "overUnder": 52.5
+    },
+    {
+     "book": "DraftKings",
+     "spread": -16.5,
+     "overUnder": 52.5
+    }
+   ]
+  },
+  {
+   "id": 401860878,
+   "week": 1,
+   "homeTeam": "Colorado State",
+   "awayTeam": "Wyoming",
+   "marketSpread": -2.5,
+   "overUnder": 46.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -2.5,
+     "overUnder": 46.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -2.5,
+     "overUnder": 45.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -3,
+     "overUnder": 46.5
     }
    ]
   },
@@ -3705,6 +4085,11 @@
      "overUnder": 53.5
     },
     {
+     "book": "Draft Kings",
+     "spread": 2.5,
+     "overUnder": 53.5
+    },
+    {
      "book": "DraftKings",
      "spread": 2.5,
      "overUnder": 53.5
@@ -3716,7 +4101,7 @@
    "week": 1,
    "homeTeam": "Alabama",
    "awayTeam": "East Carolina",
-   "marketSpread": -27.8,
+   "marketSpread": -28,
    "overUnder": 52.5,
    "books": [
     {
@@ -3727,6 +4112,11 @@
     {
      "book": "DraftKings",
      "spread": -27.5,
+     "overUnder": 52.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -28.5,
      "overUnder": 52.5
     }
    ]
@@ -3745,79 +4135,14 @@
      "overUnder": 59.5
     },
     {
-     "book": "DraftKings",
+     "book": "Draft Kings",
      "spread": -26.5,
      "overUnder": 59.5
-    }
-   ]
-  },
-  {
-   "id": 401860884,
-   "week": 2,
-   "homeTeam": "Texas State",
-   "awayTeam": "UTSA",
-   "marketSpread": -1.5,
-   "overUnder": 64.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -1.5,
-     "overUnder": 64.5
-    }
-   ]
-  },
-  {
-   "id": 401860878,
-   "week": 1,
-   "homeTeam": "Colorado State",
-   "awayTeam": "Wyoming",
-   "marketSpread": -3.0,
-   "overUnder": 46.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -3,
-     "overUnder": 46.5
-    },
-    {
-     "book": "Bovada",
-     "spread": -3,
-     "overUnder": 46.5
-    }
-   ]
-  },
-  {
-   "id": 401858217,
-   "week": 2,
-   "homeTeam": "Illinois",
-   "awayTeam": "Duke",
-   "marketSpread": -8.5,
-   "overUnder": 56.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -8.5,
-     "overUnder": 56.5
-    }
-   ]
-  },
-  {
-   "id": 401870763,
-   "week": 1,
-   "homeTeam": "Troy",
-   "awayTeam": "Sam Houston",
-   "marketSpread": -16.5,
-   "overUnder": 53.8,
-   "books": [
-    {
-     "book": "Bovada",
-     "spread": -16.5,
-     "overUnder": 54
     },
     {
      "book": "DraftKings",
-     "spread": -16.5,
-     "overUnder": 53.5
+     "spread": -25.5,
+     "overUnder": 59.5
     }
    ]
   },
@@ -3826,7 +4151,7 @@
    "week": 1,
    "homeTeam": "Houston",
    "awayTeam": "Oregon State",
-   "marketSpread": -20.8,
+   "marketSpread": -21,
    "overUnder": 50.5,
    "books": [
     {
@@ -3838,6 +4163,11 @@
      "book": "DraftKings",
      "spread": -21,
      "overUnder": 50.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -21,
+     "overUnder": 50.5
     }
    ]
   },
@@ -3846,8 +4176,8 @@
    "week": 1,
    "homeTeam": "Penn State",
    "awayTeam": "Marshall",
-   "marketSpread": -23.2,
-   "overUnder": 52.2,
+   "marketSpread": -23.5,
+   "overUnder": 53.5,
    "books": [
     {
      "book": "Bovada",
@@ -3855,129 +4185,34 @@
      "overUnder": 52
     },
     {
+     "book": "Draft Kings",
+     "spread": -23.5,
+     "overUnder": 53.5
+    },
+    {
      "book": "DraftKings",
      "spread": -23.5,
-     "overUnder": 52.5
+     "overUnder": 53.5
     }
    ]
   },
   {
-   "id": 401867924,
-   "week": 1,
-   "homeTeam": "New Haven",
-   "awayTeam": "Stonehill",
-   "marketSpread": -7,
-   "overUnder": 41.5,
+   "id": 401858217,
+   "week": 2,
+   "homeTeam": "Illinois",
+   "awayTeam": "Duke",
+   "marketSpread": -6.0,
+   "overUnder": 53.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -7,
-     "overUnder": 41.5
-    }
-   ]
-  },
-  {
-   "id": 401866624,
-   "week": 1,
-   "homeTeam": "Monmouth",
-   "awayTeam": "Sacred Heart",
-   "marketSpread": -15.5,
-   "overUnder": 58.5,
-   "books": [
+     "spread": -6,
+     "overUnder": 53.5
+    },
     {
-     "book": "DraftKings",
-     "spread": -15.5,
-     "overUnder": 58.5
-    }
-   ]
-  },
-  {
-   "id": 401867875,
-   "week": 1,
-   "homeTeam": "North Dakota",
-   "awayTeam": "St. Thomas (MN)",
-   "marketSpread": -27.5,
-   "overUnder": 52.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -27.5,
-     "overUnder": 52.5
-    }
-   ]
-  },
-  {
-   "id": 401868000,
-   "week": 1,
-   "homeTeam": "Colgate",
-   "awayTeam": "Holy Cross",
-   "marketSpread": -4.5,
-   "overUnder": 47.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -4.5,
-     "overUnder": 47.5
-    }
-   ]
-  },
-  {
-   "id": 401868336,
-   "week": 1,
-   "homeTeam": "Chattanooga",
-   "awayTeam": "Tennessee Tech",
-   "marketSpread": 10.5,
-   "overUnder": 49.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": 10.5,
-     "overUnder": 49.5
-    }
-   ]
-  },
-  {
-   "id": 401869127,
-   "week": 1,
-   "homeTeam": "Howard",
-   "awayTeam": "Richmond",
-   "marketSpread": 14.5,
-   "overUnder": 45.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": 14.5,
-     "overUnder": 45.5
-    }
-   ]
-  },
-  {
-   "id": 401867684,
-   "week": 1,
-   "homeTeam": "UT Martin",
-   "awayTeam": "Chicago State",
-   "marketSpread": -44.5,
-   "overUnder": 61.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -44.5,
-     "overUnder": 61.5
-    }
-   ]
-  },
-  {
-   "id": 401868085,
-   "week": 1,
-   "homeTeam": "Eastern Washington",
-   "awayTeam": "Northern Iowa",
-   "marketSpread": -6.5,
-   "overUnder": 52.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -6.5,
-     "overUnder": 52.5
+     "book": "Bovada",
+     "spread": -6,
+     "overUnder": 53.5
     }
    ]
   },
@@ -3991,6 +4226,11 @@
    "books": [
     {
      "book": "DraftKings",
+     "spread": 20.5,
+     "overUnder": 56.5
+    },
+    {
+     "book": "Draft Kings",
      "spread": 20.5,
      "overUnder": 56.5
     }
@@ -4008,6 +4248,11 @@
      "book": "DraftKings",
      "spread": -14.5,
      "overUnder": 58.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -14.5,
+     "overUnder": 58.5
     }
    ]
   },
@@ -4023,50 +4268,30 @@
      "book": "DraftKings",
      "spread": -45.5,
      "overUnder": 59.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -45.5,
+     "overUnder": 59.5
     }
    ]
   },
   {
-   "id": 401868163,
-   "week": 1,
-   "homeTeam": "San Diego",
-   "awayTeam": "UC Davis",
-   "marketSpread": 15.5,
+   "id": 401856790,
+   "week": 2,
+   "homeTeam": "Pittsburgh",
+   "awayTeam": "UCF",
+   "marketSpread": -7.0,
    "overUnder": 57.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": 15.5,
+     "spread": -7,
      "overUnder": 57.5
-    }
-   ]
-  },
-  {
-   "id": 401868306,
-   "week": 1,
-   "homeTeam": "Stephen F. Austin",
-   "awayTeam": "East Texas A&M",
-   "marketSpread": -25.5,
-   "overUnder": 56.5,
-   "books": [
+    },
     {
-     "book": "DraftKings",
-     "spread": -25.5,
-     "overUnder": 56.5
-    }
-   ]
-  },
-  {
-   "id": 401868111,
-   "week": 1,
-   "homeTeam": "Montana",
-   "awayTeam": "Drake",
-   "marketSpread": -35.5,
-   "overUnder": 57.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -35.5,
+     "book": "Bovada",
+     "spread": -7,
      "overUnder": 57.5
     }
    ]
@@ -4081,6 +4306,11 @@
    "books": [
     {
      "book": "DraftKings",
+     "spread": -10.5,
+     "overUnder": 54.5
+    },
+    {
+     "book": "Draft Kings",
      "spread": -10.5,
      "overUnder": 54.5
     }
@@ -4098,36 +4328,31 @@
      "book": "DraftKings",
      "spread": 32.5,
      "overUnder": 58.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": 32.5,
+     "overUnder": 58.5
     }
    ]
   },
   {
-   "id": 401867989,
+   "id": 401868000,
    "week": 1,
-   "homeTeam": "Bucknell",
-   "awayTeam": "Villanova",
-   "marketSpread": 26.5,
-   "overUnder": 56.5,
+   "homeTeam": "Colgate",
+   "awayTeam": "Holy Cross",
+   "marketSpread": -4.5,
+   "overUnder": 49.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": 26.5,
-     "overUnder": 56.5
-    }
-   ]
-  },
-  {
-   "id": 401858442,
-   "week": 2,
-   "homeTeam": "Temple",
-   "awayTeam": "Penn State",
-   "marketSpread": 21.5,
-   "overUnder": 51.5,
-   "books": [
+     "spread": -4.5,
+     "overUnder": 49.5
+    },
     {
-     "book": "DraftKings",
-     "spread": 21.5,
-     "overUnder": 51.5
+     "book": "Draft Kings",
+     "spread": -4.5,
+     "overUnder": 49.5
     }
    ]
   },
@@ -4143,6 +4368,171 @@
      "book": "DraftKings",
      "spread": -7.5,
      "overUnder": 55.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -7.5,
+     "overUnder": 55.5
+    }
+   ]
+  },
+  {
+   "id": 401866624,
+   "week": 1,
+   "homeTeam": "Monmouth",
+   "awayTeam": "Sacred Heart",
+   "marketSpread": -12.0,
+   "overUnder": 58.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -12.5,
+     "overUnder": 58.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -11.5,
+     "overUnder": 58.5
+    }
+   ]
+  },
+  {
+   "id": 401868336,
+   "week": 1,
+   "homeTeam": "Chattanooga",
+   "awayTeam": "Tennessee Tech",
+   "marketSpread": 10.5,
+   "overUnder": 48.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": 10.5,
+     "overUnder": 48.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": 10.5,
+     "overUnder": 48.5
+    }
+   ]
+  },
+  {
+   "id": 401868163,
+   "week": 1,
+   "homeTeam": "San Diego",
+   "awayTeam": "UC Davis",
+   "marketSpread": 14.5,
+   "overUnder": 54.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": 14.5,
+     "overUnder": 54.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": 14.5,
+     "overUnder": 54.5
+    }
+   ]
+  },
+  {
+   "id": 401867924,
+   "week": 1,
+   "homeTeam": "New Haven",
+   "awayTeam": "Stonehill",
+   "marketSpread": -6.5,
+   "overUnder": 42.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -6.5,
+     "overUnder": 42.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -6.5,
+     "overUnder": 42.5
+    }
+   ]
+  },
+  {
+   "id": 401868085,
+   "week": 1,
+   "homeTeam": "Eastern Washington",
+   "awayTeam": "Northern Iowa",
+   "marketSpread": -7.0,
+   "overUnder": 52.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -7,
+     "overUnder": 52.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -7,
+     "overUnder": 52.5
+    }
+   ]
+  },
+  {
+   "id": 401868306,
+   "week": 1,
+   "homeTeam": "Stephen F. Austin",
+   "awayTeam": "East Texas A&M",
+   "marketSpread": -23.5,
+   "overUnder": 55.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -23.5,
+     "overUnder": 55.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -23.5,
+     "overUnder": 55.5
+    }
+   ]
+  },
+  {
+   "id": 401867989,
+   "week": 1,
+   "homeTeam": "Bucknell",
+   "awayTeam": "Villanova",
+   "marketSpread": 22.5,
+   "overUnder": 54.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": 22.5,
+     "overUnder": 54.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": 22.5,
+     "overUnder": 54.5
+    }
+   ]
+  },
+  {
+   "id": 401868111,
+   "week": 1,
+   "homeTeam": "Montana",
+   "awayTeam": "Drake",
+   "marketSpread": -35.5,
+   "overUnder": 60.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -35.5,
+     "overUnder": 60.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -35.5,
+     "overUnder": 60.5
     }
    ]
   },
@@ -4151,42 +4541,77 @@
    "week": 1,
    "homeTeam": "Campbell",
    "awayTeam": "Western Carolina",
-   "marketSpread": 4,
-   "overUnder": 67.5,
+   "marketSpread": 4.0,
+   "overUnder": 68.5,
    "books": [
     {
      "book": "DraftKings",
      "spread": 4,
-     "overUnder": 67.5
+     "overUnder": 68.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": 4,
+     "overUnder": 68.5
     }
    ]
   },
   {
-   "id": 401858224,
-   "week": 2,
-   "homeTeam": "Purdue",
-   "awayTeam": "Wake Forest",
-   "marketSpread": 3.5,
-   "overUnder": 49.5,
+   "id": 401867684,
+   "week": 1,
+   "homeTeam": "UT Martin",
+   "awayTeam": "Chicago State",
+   "marketSpread": -45.5,
+   "overUnder": 61.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": 3.5,
-     "overUnder": 49.5
+     "spread": -45.5,
+     "overUnder": 61.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -45.5,
+     "overUnder": 61.5
     }
    ]
   },
   {
-   "id": 401862702,
-   "week": 2,
-   "homeTeam": "Army",
-   "awayTeam": "South Florida",
-   "marketSpread": -1.5,
-   "overUnder": 52.5,
+   "id": 401869127,
+   "week": 1,
+   "homeTeam": "Howard",
+   "awayTeam": "Richmond",
+   "marketSpread": 14.0,
+   "overUnder": 43.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -1.5,
+     "spread": 14,
+     "overUnder": 43.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": 14,
+     "overUnder": 43.5
+    }
+   ]
+  },
+  {
+   "id": 401867939,
+   "week": 1,
+   "homeTeam": "Florida A&M",
+   "awayTeam": "South Carolina State",
+   "marketSpread": 19.5,
+   "overUnder": 53.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": 19.5,
+     "overUnder": 54.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": 19.5,
      "overUnder": 52.5
     }
    ]
@@ -4196,28 +4621,38 @@
    "week": 2,
    "homeTeam": "Washington",
    "awayTeam": "Utah State",
-   "marketSpread": -24.5,
-   "overUnder": 56.5,
+   "marketSpread": -26.5,
+   "overUnder": 55.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -24.5,
-     "overUnder": 56.5
+     "spread": -26.5,
+     "overUnder": 55.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -26.5,
+     "overUnder": 55.5
     }
    ]
   },
   {
-   "id": 401856790,
+   "id": 401858442,
    "week": 2,
-   "homeTeam": "Pittsburgh",
-   "awayTeam": "UCF",
-   "marketSpread": -8.5,
-   "overUnder": 51.5,
+   "homeTeam": "Temple",
+   "awayTeam": "Penn State",
+   "marketSpread": 23.5,
+   "overUnder": 49.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -8.5,
-     "overUnder": 51.5
+     "spread": 23.5,
+     "overUnder": 49.5
+    },
+    {
+     "book": "Bovada",
+     "spread": 23.5,
+     "overUnder": 49.5
     }
    ]
   },
@@ -4226,28 +4661,78 @@
    "week": 2,
    "homeTeam": "Syracuse",
    "awayTeam": "California",
-   "marketSpread": 1.5,
-   "overUnder": 52.5,
+   "marketSpread": -3.8,
+   "overUnder": 56.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": 1.5,
-     "overUnder": 52.5
+     "spread": -3,
+     "overUnder": 56.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -4.5,
+     "overUnder": 56.5
     }
    ]
   },
   {
-   "id": 401867939,
-   "week": 1,
-   "homeTeam": "Florida A&M",
-   "awayTeam": "South Carolina State",
-   "marketSpread": 17.5,
-   "overUnder": 55.5,
+   "id": 401862702,
+   "week": 2,
+   "homeTeam": "Army",
+   "awayTeam": "South Florida",
+   "marketSpread": -3.5,
+   "overUnder": 47.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": 17.5,
-     "overUnder": 55.5
+     "spread": -3.5,
+     "overUnder": 47.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -3.5,
+     "overUnder": 47.5
+    }
+   ]
+  },
+  {
+   "id": 401868186,
+   "week": 1,
+   "homeTeam": "Wofford",
+   "awayTeam": "Gardner-Webb",
+   "marketSpread": -8.5,
+   "overUnder": 50.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -8.5,
+     "overUnder": 50.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -8.5,
+     "overUnder": 50.5
+    }
+   ]
+  },
+  {
+   "id": 401867692,
+   "week": 1,
+   "homeTeam": "William & Mary",
+   "awayTeam": "Delaware State",
+   "marketSpread": -9.5,
+   "overUnder": 54.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -9.5,
+     "overUnder": 54.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -9.5,
+     "overUnder": 54.5
     }
    ]
   },
@@ -4256,7 +4741,7 @@
    "week": 1,
    "homeTeam": "Nevada",
    "awayTeam": "Western Kentucky",
-   "marketSpread": 0.2,
+   "marketSpread": 1.5,
    "overUnder": 51.5,
    "books": [
     {
@@ -4268,36 +4753,11 @@
      "book": "Bovada",
      "spread": -1,
      "overUnder": 51.5
-    }
-   ]
-  },
-  {
-   "id": 401868186,
-   "week": 1,
-   "homeTeam": "Wofford",
-   "awayTeam": "Gardner-Webb",
-   "marketSpread": -7,
-   "overUnder": 47.5,
-   "books": [
+    },
     {
-     "book": "DraftKings",
-     "spread": -7,
-     "overUnder": 47.5
-    }
-   ]
-  },
-  {
-   "id": 401867692,
-   "week": 1,
-   "homeTeam": "William & Mary",
-   "awayTeam": "Delaware State",
-   "marketSpread": -10,
-   "overUnder": 56.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -10,
-     "overUnder": 56.5
+     "book": "Draft Kings",
+     "spread": 1.5,
+     "overUnder": 51.5
     }
    ]
   },
@@ -4331,13 +4791,18 @@
    "week": 1,
    "homeTeam": "Pittsburgh",
    "awayTeam": "Miami (OH)",
-   "marketSpread": -16.2,
-   "overUnder": 47.2,
+   "marketSpread": -16.5,
+   "overUnder": 47.5,
    "books": [
     {
      "book": "Bovada",
      "spread": -16,
      "overUnder": 47
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -16.5,
+     "overUnder": 47.5
     },
     {
      "book": "DraftKings",
@@ -4347,26 +4812,11 @@
    ]
   },
   {
-   "id": 401867845,
-   "week": 1,
-   "homeTeam": "Western Illinois",
-   "awayTeam": "Illinois State",
-   "marketSpread": 23.5,
-   "overUnder": 59.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": 23.5,
-     "overUnder": 59.5
-    }
-   ]
-  },
-  {
    "id": 401856780,
    "week": 1,
    "homeTeam": "West Virginia",
    "awayTeam": "Coastal Carolina",
-   "marketSpread": -21.0,
+   "marketSpread": -21,
    "overUnder": 54.5,
    "books": [
     {
@@ -4375,9 +4825,34 @@
      "overUnder": 54.5
     },
     {
+     "book": "Draft Kings",
+     "spread": -21,
+     "overUnder": 54.5
+    },
+    {
      "book": "DraftKings",
      "spread": -21,
      "overUnder": 54.5
+    }
+   ]
+  },
+  {
+   "id": 401867845,
+   "week": 1,
+   "homeTeam": "Western Illinois",
+   "awayTeam": "Illinois State",
+   "marketSpread": 20.5,
+   "overUnder": 58.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": 20.5,
+     "overUnder": 58.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": 20.5,
+     "overUnder": 58.5
     }
    ]
   },
@@ -4397,242 +4872,47 @@
    ]
   },
   {
-   "id": 401858444,
-   "week": 2,
-   "homeTeam": "UConn",
-   "awayTeam": "Maryland",
-   "marketSpread": 12.5,
-   "overUnder": 53.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": 12.5,
-     "overUnder": 53.5
-    }
-   ]
-  },
-  {
-   "id": 401856677,
-   "week": 2,
-   "homeTeam": "Minnesota",
-   "awayTeam": "Mississippi State",
-   "marketSpread": -2.5,
-   "overUnder": 53.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -2.5,
-     "overUnder": 53.5
-    }
-   ]
-  },
-  {
-   "id": 401862708,
-   "week": 2,
-   "homeTeam": "UAB",
-   "awayTeam": "UL Monroe",
-   "marketSpread": -7.5,
-   "overUnder": 54.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -7.5,
-     "overUnder": 54.5
-    }
-   ]
-  },
-  {
-   "id": 401862705,
-   "week": 2,
-   "homeTeam": "North Texas",
-   "awayTeam": "UNLV",
-   "marketSpread": 6.5,
-   "overUnder": 61.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": 6.5,
-     "overUnder": 61.5
-    }
-   ]
-  },
-  {
-   "id": 401856684,
-   "week": 2,
-   "homeTeam": "Vanderbilt",
-   "awayTeam": "Delaware",
-   "marketSpread": -21.5,
-   "overUnder": 55.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -21.5,
-     "overUnder": 55.5
-    }
-   ]
-  },
-  {
-   "id": 401866418,
-   "week": 2,
-   "homeTeam": "Ohio",
-   "awayTeam": "Jacksonville State",
-   "marketSpread": -2.5,
-   "overUnder": 48.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -2.5,
-     "overUnder": 48.5
-    }
-   ]
-  },
-  {
-   "id": 401862707,
-   "week": 2,
-   "homeTeam": "Sam Houston",
-   "awayTeam": "Tulsa",
-   "marketSpread": 10.5,
-   "overUnder": 53.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": 10.5,
-     "overUnder": 53.5
-    }
-   ]
-  },
-  {
-   "id": 401856783,
-   "week": 2,
-   "homeTeam": "Oregon State",
-   "awayTeam": "Texas Tech",
-   "marketSpread": 27.5,
-   "overUnder": 49.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": 27.5,
-     "overUnder": 49.5
-    }
-   ]
-  },
-  {
-   "id": 401856781,
-   "week": 2,
-   "homeTeam": "Kansas State",
-   "awayTeam": "Washington State",
-   "marketSpread": -16.5,
-   "overUnder": 51.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -16.5,
-     "overUnder": 51.5
-    }
-   ]
-  },
-  {
-   "id": 401856673,
-   "week": 2,
-   "homeTeam": "Georgia",
-   "awayTeam": "Western Kentucky",
-   "marketSpread": -35.5,
-   "overUnder": 52.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -35.5,
-     "overUnder": 52.5
-    }
-   ]
-  },
-  {
-   "id": 401864575,
-   "week": 2,
-   "homeTeam": "Tulane",
-   "awayTeam": "South Alabama",
-   "marketSpread": -10,
-   "overUnder": 55.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -10,
-     "overUnder": 55.5
-    }
-   ]
-  },
-  {
-   "id": 401871045,
-   "week": 2,
-   "homeTeam": "Marshall",
-   "awayTeam": "Middle Tennessee",
-   "marketSpread": -17.5,
-   "overUnder": 57.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -17.5,
-     "overUnder": 57.5
-    }
-   ]
-  },
-  {
-   "id": 401859184,
-   "week": 2,
-   "homeTeam": "Notre Dame",
-   "awayTeam": "Rice",
-   "marketSpread": -44.5,
-   "overUnder": 52.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -44.5,
-     "overUnder": 52.5
-    }
-   ]
-  },
-  {
-   "id": 401858219,
-   "week": 2,
-   "homeTeam": "Clemson",
-   "awayTeam": "Georgia Southern",
-   "marketSpread": -26.5,
-   "overUnder": 57.5,
-   "books": [
-    {
-     "book": "DraftKings",
-     "spread": -26.5,
-     "overUnder": 57.5
-    }
-   ]
-  },
-  {
-   "id": 401858445,
-   "week": 2,
-   "homeTeam": "USC",
-   "awayTeam": "Louisiana",
+   "id": 401867875,
+   "week": 1,
+   "homeTeam": "North Dakota",
+   "awayTeam": "St. Thomas (MN)",
    "marketSpread": -28.5,
-   "overUnder": 63.5,
+   "overUnder": 53.5,
    "books": [
     {
      "book": "DraftKings",
      "spread": -28.5,
-     "overUnder": 63.5
+     "overUnder": 53.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -28.5,
+     "overUnder": 53.5
     }
    ]
   },
   {
-   "id": 401864578,
-   "week": 2,
-   "homeTeam": "Hawai'i",
-   "awayTeam": "New Mexico State",
-   "marketSpread": -11.5,
-   "overUnder": 51.5,
+   "id": 401864496,
+   "week": 1,
+   "homeTeam": "Air Force",
+   "awayTeam": "Duquesne",
+   "marketSpread": -31.5,
+   "overUnder": 55.5,
    "books": [
     {
+     "book": "Bovada",
+     "spread": -28.5,
+     "overUnder": 57.5
+    },
+    {
      "book": "DraftKings",
-     "spread": -11.5,
-     "overUnder": 51.5
+     "spread": -31.5,
+     "overUnder": 55.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -31.5,
+     "overUnder": 55.5
     }
    ]
   },
@@ -4641,28 +4921,98 @@
    "week": 1,
    "homeTeam": "Georgetown",
    "awayTeam": "Lehigh",
-   "marketSpread": 21.5,
-   "overUnder": 49.5,
+   "marketSpread": 22.5,
+   "overUnder": 46.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": 21.5,
-     "overUnder": 49.5
+     "spread": 22.5,
+     "overUnder": 46.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": 22.5,
+     "overUnder": 46.5
     }
    ]
   },
   {
-   "id": 401864571,
+   "id": 401868274,
+   "week": 1,
+   "homeTeam": "Mercer",
+   "awayTeam": "Presbyterian",
+   "marketSpread": -22.5,
+   "overUnder": 54.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -22.5,
+     "overUnder": 54.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -22.5,
+     "overUnder": 54.5
+    }
+   ]
+  },
+  {
+   "id": 401858440,
    "week": 2,
-   "homeTeam": "East Carolina",
-   "awayTeam": "App State",
-   "marketSpread": -10,
-   "overUnder": 56.5,
+   "homeTeam": "Michigan State",
+   "awayTeam": "Eastern Michigan",
+   "marketSpread": -17.5,
+   "overUnder": 50.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -17.5,
+     "overUnder": 50.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -17.5,
+     "overUnder": 50.5
+    }
+   ]
+  },
+  {
+   "id": 401862708,
+   "week": 2,
+   "homeTeam": "UAB",
+   "awayTeam": "UL Monroe",
+   "marketSpread": -10.2,
+   "overUnder": 55.8,
    "books": [
     {
      "book": "DraftKings",
      "spread": -10,
-     "overUnder": 56.5
+     "overUnder": 55.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -10.5,
+     "overUnder": 56
+    }
+   ]
+  },
+  {
+   "id": 401871045,
+   "week": 2,
+   "homeTeam": "Marshall",
+   "awayTeam": "Middle Tennessee",
+   "marketSpread": -13.8,
+   "overUnder": 58.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -14,
+     "overUnder": 58.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -13.5,
+     "overUnder": 58.5
     }
    ]
   },
@@ -4692,6 +5042,31 @@
    ]
   },
   {
+   "id": 401858432,
+   "week": 1,
+   "homeTeam": "Ohio State",
+   "awayTeam": "Ball State",
+   "marketSpread": -50.5,
+   "overUnder": 55.5,
+   "books": [
+    {
+     "book": "Draft Kings",
+     "spread": -50.5,
+     "overUnder": 55.5
+    },
+    {
+     "book": "DraftKings",
+     "spread": -49.5,
+     "overUnder": 55.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -51,
+     "overUnder": 56.5
+    }
+   ]
+  },
+  {
    "id": 401858429,
    "week": 1,
    "homeTeam": "Michigan State",
@@ -4717,47 +5092,262 @@
    ]
   },
   {
-   "id": 401858441,
+   "id": 401858445,
    "week": 2,
-   "homeTeam": "Nebraska",
-   "awayTeam": "Bowling Green",
-   "marketSpread": -25.5,
-   "overUnder": 48.5,
+   "homeTeam": "USC",
+   "awayTeam": "Louisiana",
+   "marketSpread": -31.2,
+   "overUnder": 60.2,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -25.5,
-     "overUnder": 48.5
+     "spread": -31.5,
+     "overUnder": 60.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -31,
+     "overUnder": 60
     }
    ]
   },
   {
-   "id": 401868274,
-   "week": 1,
-   "homeTeam": "Mercer",
-   "awayTeam": "Presbyterian",
-   "marketSpread": -21,
+   "id": 401856673,
+   "week": 2,
+   "homeTeam": "Georgia",
+   "awayTeam": "Western Kentucky",
+   "marketSpread": -40.0,
+   "overUnder": 54.2,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -40.5,
+     "overUnder": 54.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -39.5,
+     "overUnder": 54
+    }
+   ]
+  },
+  {
+   "id": 401859184,
+   "week": 2,
+   "homeTeam": "Notre Dame",
+   "awayTeam": "Rice",
+   "marketSpread": -44.5,
+   "overUnder": 54.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -44.5,
+     "overUnder": 54.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -44.5,
+     "overUnder": 54.5
+    }
+   ]
+  },
+  {
+   "id": 401866418,
+   "week": 2,
+   "homeTeam": "Ohio",
+   "awayTeam": "Jacksonville State",
+   "marketSpread": -2.5,
+   "overUnder": 51.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -2.5,
+     "overUnder": 51.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -2.5,
+     "overUnder": 51.5
+    }
+   ]
+  },
+  {
+   "id": 401856781,
+   "week": 2,
+   "homeTeam": "Kansas State",
+   "awayTeam": "Washington State",
+   "marketSpread": -19.0,
+   "overUnder": 49.2,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -18.5,
+     "overUnder": 49.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -19.5,
+     "overUnder": 49
+    }
+   ]
+  },
+  {
+   "id": 401864575,
+   "week": 2,
+   "homeTeam": "Tulane",
+   "awayTeam": "South Alabama",
+   "marketSpread": -9.5,
+   "overUnder": 49.8,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -9.5,
+     "overUnder": 49.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -9.5,
+     "overUnder": 50
+    }
+   ]
+  },
+  {
+   "id": 401858441,
+   "week": 2,
+   "homeTeam": "Nebraska",
+   "awayTeam": "Bowling Green",
+   "marketSpread": -28.8,
+   "overUnder": 51.8,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -28.5,
+     "overUnder": 51.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -29,
+     "overUnder": 52
+    }
+   ]
+  },
+  {
+   "id": 401856783,
+   "week": 2,
+   "homeTeam": "Oregon State",
+   "awayTeam": "Texas Tech",
+   "marketSpread": 26.0,
+   "overUnder": 51.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": 26.5,
+     "overUnder": 51.5
+    },
+    {
+     "book": "Bovada",
+     "spread": 25.5,
+     "overUnder": 51.5
+    }
+   ]
+  },
+  {
+   "id": 401864571,
+   "week": 2,
+   "homeTeam": "East Carolina",
+   "awayTeam": "App State",
+   "marketSpread": -8.0,
    "overUnder": 56.5,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -21,
+     "spread": -7.5,
+     "overUnder": 56.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -8.5,
      "overUnder": 56.5
     }
    ]
   },
   {
-   "id": 401858440,
+   "id": 401862705,
    "week": 2,
-   "homeTeam": "Michigan State",
-   "awayTeam": "Eastern Michigan",
-   "marketSpread": -16.5,
-   "overUnder": 51.5,
+   "homeTeam": "North Texas",
+   "awayTeam": "UNLV",
+   "marketSpread": 3.5,
+   "overUnder": 56.8,
    "books": [
     {
      "book": "DraftKings",
-     "spread": -16.5,
-     "overUnder": 51.5
+     "spread": 3.5,
+     "overUnder": 56.5
+    },
+    {
+     "book": "Bovada",
+     "spread": 3.5,
+     "overUnder": 57
+    }
+   ]
+  },
+  {
+   "id": 401858444,
+   "week": 2,
+   "homeTeam": "UConn",
+   "awayTeam": "Maryland",
+   "marketSpread": 12.5,
+   "overUnder": 52.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": 12.5,
+     "overUnder": 52.5
+    },
+    {
+     "book": "Bovada",
+     "spread": 12.5,
+     "overUnder": 52.5
+    }
+   ]
+  },
+  {
+   "id": 401858219,
+   "week": 2,
+   "homeTeam": "Clemson",
+   "awayTeam": "Georgia Southern",
+   "marketSpread": -21.0,
+   "overUnder": 55.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -20.5,
+     "overUnder": 55.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -21.5,
+     "overUnder": 55.5
+    }
+   ]
+  },
+  {
+   "id": 401864578,
+   "week": 2,
+   "homeTeam": "Hawai'i",
+   "awayTeam": "New Mexico State",
+   "marketSpread": -9.5,
+   "overUnder": 50.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -9.5,
+     "overUnder": 50.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -9.5,
+     "overUnder": 50.5
     }
    ]
   },
@@ -4766,18 +5356,48 @@
    "week": 1,
    "homeTeam": "Memphis",
    "awayTeam": "Arkansas State",
-   "marketSpread": -11.2,
-   "overUnder": 53.2,
+   "marketSpread": -10.5,
+   "overUnder": 52.5,
    "books": [
     {
      "book": "Bovada",
-     "spread": -11,
-     "overUnder": 53
+     "spread": -10.5,
+     "overUnder": 52
     },
     {
      "book": "DraftKings",
-     "spread": -11.5,
-     "overUnder": 53.5
+     "spread": -10.5,
+     "overUnder": 52.5
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -10.5,
+     "overUnder": 52.5
+    }
+   ]
+  },
+  {
+   "id": 401856660,
+   "week": 1,
+   "homeTeam": "LSU",
+   "awayTeam": "Clemson",
+   "marketSpread": -10,
+   "overUnder": 48.5,
+   "books": [
+    {
+     "book": "Bovada",
+     "spread": -10,
+     "overUnder": 50
+    },
+    {
+     "book": "Draft Kings",
+     "spread": -10,
+     "overUnder": 48.5
+    },
+    {
+     "book": "DraftKings",
+     "spread": -10,
+     "overUnder": 48.5
     }
    ]
   },
@@ -4787,7 +5407,7 @@
    "homeTeam": "Mississippi State",
    "awayTeam": "UL Monroe",
    "marketSpread": -28.5,
-   "overUnder": 54.8,
+   "overUnder": 54.5,
    "books": [
     {
      "book": "Bovada",
@@ -4798,46 +5418,11 @@
      "book": "DraftKings",
      "spread": -28.5,
      "overUnder": 54.5
-    }
-   ]
-  },
-  {
-   "id": 401858432,
-   "week": 1,
-   "homeTeam": "Ohio State",
-   "awayTeam": "Ball State",
-   "marketSpread": -50.2,
-   "overUnder": 56.5,
-   "books": [
-    {
-     "book": "Bovada",
-     "spread": -51,
-     "overUnder": 56.5
     },
     {
-     "book": "DraftKings",
-     "spread": -49.5,
-     "overUnder": 56.5
-    }
-   ]
-  },
-  {
-   "id": 401856660,
-   "week": 1,
-   "homeTeam": "LSU",
-   "awayTeam": "Clemson",
-   "marketSpread": -9.8,
-   "overUnder": 50.5,
-   "books": [
-    {
-     "book": "Bovada",
-     "spread": -9.5,
-     "overUnder": 50.5
-    },
-    {
-     "book": "DraftKings",
-     "spread": -10,
-     "overUnder": 50.5
+     "book": "Draft Kings",
+     "spread": -28.5,
+     "overUnder": 54.5
     }
    ]
   },
@@ -4846,7 +5431,7 @@
    "week": 1,
    "homeTeam": "Texas A&M",
    "awayTeam": "Missouri State",
-   "marketSpread": -40.5,
+   "marketSpread": -38.5,
    "overUnder": 53.5,
    "books": [
     {
@@ -4855,9 +5440,34 @@
      "overUnder": 53.5
     },
     {
-     "book": "DraftKings",
-     "spread": -40.5,
+     "book": "Draft Kings",
+     "spread": -38.5,
      "overUnder": 53.5
+    },
+    {
+     "book": "DraftKings",
+     "spread": -38.5,
+     "overUnder": 53.5
+    }
+   ]
+  },
+  {
+   "id": 401856676,
+   "week": 2,
+   "homeTeam": "Ole Miss",
+   "awayTeam": "Charlotte",
+   "marketSpread": -47.5,
+   "overUnder": 61.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -47.5,
+     "overUnder": 61.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -47.5,
+     "overUnder": 61.5
     }
    ]
   },
@@ -4867,7 +5477,7 @@
    "homeTeam": "Ole Miss",
    "awayTeam": "Louisville",
    "marketSpread": -6.5,
-   "overUnder": 54.8,
+   "overUnder": 55,
    "books": [
     {
      "book": "Bovada",
@@ -4875,9 +5485,314 @@
      "overUnder": 55
     },
     {
-     "book": "DraftKings",
+     "book": "Draft Kings",
      "spread": -6.5,
      "overUnder": 54.5
+    },
+    {
+     "book": "DraftKings",
+     "spread": -6.5,
+     "overUnder": 55.5
+    }
+   ]
+  },
+  {
+   "id": 401858214,
+   "week": 2,
+   "homeTeam": "Boston College",
+   "awayTeam": "Rutgers",
+   "marketSpread": -3.2,
+   "overUnder": 54.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -3,
+     "overUnder": 54.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -3.5,
+     "overUnder": 54.5
+    }
+   ]
+  },
+  {
+   "id": 401856677,
+   "week": 2,
+   "homeTeam": "Minnesota",
+   "awayTeam": "Mississippi State",
+   "marketSpread": 1.5,
+   "overUnder": 55.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": 1.5,
+     "overUnder": 55.5
+    },
+    {
+     "book": "Bovada",
+     "spread": 1.5,
+     "overUnder": 55.5
+    }
+   ]
+  },
+  {
+   "id": 401856684,
+   "week": 2,
+   "homeTeam": "Vanderbilt",
+   "awayTeam": "Delaware",
+   "marketSpread": -20.5,
+   "overUnder": 54.0,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -20.5,
+     "overUnder": 53.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -20.5,
+     "overUnder": 54.5
+    }
+   ]
+  },
+  {
+   "id": 401858224,
+   "week": 2,
+   "homeTeam": "Purdue",
+   "awayTeam": "Wake Forest",
+   "marketSpread": 4.0,
+   "overUnder": 49.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": 4,
+     "overUnder": 49.5
+    },
+    {
+     "book": "Bovada",
+     "spread": 4,
+     "overUnder": 49.5
+    }
+   ]
+  },
+  {
+   "id": 401862707,
+   "week": 2,
+   "homeTeam": "Sam Houston",
+   "awayTeam": "Tulsa",
+   "marketSpread": 13.5,
+   "overUnder": 51.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": 13.5,
+     "overUnder": 51.5
+    },
+    {
+     "book": "Bovada",
+     "spread": 13.5,
+     "overUnder": 51.5
+    }
+   ]
+  },
+  {
+   "id": 401866414,
+   "week": 2,
+   "homeTeam": "Florida International",
+   "awayTeam": "Buffalo",
+   "marketSpread": -10.2,
+   "overUnder": 47.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -10.5,
+     "overUnder": 47.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -10,
+     "overUnder": 47.5
+    }
+   ]
+  },
+  {
+   "id": 401864502,
+   "week": 2,
+   "homeTeam": "Air Force",
+   "awayTeam": "North Dakota State",
+   "marketSpread": 2.5,
+   "overUnder": 47.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": 2.5,
+     "overUnder": 47.5
+    },
+    {
+     "book": "Bovada",
+     "spread": 2.5,
+     "overUnder": 47.5
+    }
+   ]
+  },
+  {
+   "id": 401860883,
+   "week": 2,
+   "homeTeam": "Fresno State",
+   "awayTeam": "Sacramento State",
+   "marketSpread": -18.2,
+   "overUnder": 45.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -18.5,
+     "overUnder": 45.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -18,
+     "overUnder": 45.5
+    }
+   ]
+  },
+  {
+   "id": 401867796,
+   "week": 2,
+   "homeTeam": "LSU",
+   "awayTeam": "Louisiana Tech",
+   "marketSpread": -36.0,
+   "overUnder": 55.8,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -35.5,
+     "overUnder": 55.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -36.5,
+     "overUnder": 56
+    }
+   ]
+  },
+  {
+   "id": 401869955,
+   "week": 2,
+   "homeTeam": "Kennesaw State",
+   "awayTeam": "Georgia State",
+   "marketSpread": -9.5,
+   "overUnder": 54.2,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -9.5,
+     "overUnder": 54.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -9.5,
+     "overUnder": 54
+    }
+   ]
+  },
+  {
+   "id": 401856671,
+   "week": 2,
+   "homeTeam": "Auburn",
+   "awayTeam": "Southern Miss",
+   "marketSpread": -33.0,
+   "overUnder": 54.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -33.5,
+     "overUnder": 54.5
+    },
+    {
+     "book": "Bovada",
+     "spread": -32.5,
+     "overUnder": 54.5
+    }
+   ]
+  },
+  {
+   "id": 401862703,
+   "week": 2,
+   "homeTeam": "Florida Atlantic",
+   "awayTeam": "Navy",
+   "marketSpread": 5.0,
+   "overUnder": 59.2,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": 4.5,
+     "overUnder": 59.5
+    },
+    {
+     "book": "Bovada",
+     "spread": 5.5,
+     "overUnder": 59
+    }
+   ]
+  },
+  {
+   "id": 401858220,
+   "week": 2,
+   "homeTeam": "Virginia",
+   "awayTeam": "Norfolk State",
+   "marketSpread": -44.5,
+   "overUnder": 54.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -44.5,
+     "overUnder": 54.5
+    }
+   ]
+  },
+  {
+   "id": 401858213,
+   "week": 2,
+   "homeTeam": "Miami",
+   "awayTeam": "Florida A&M",
+   "marketSpread": -55.5,
+   "overUnder": 61.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -55.5,
+     "overUnder": 61.5
+    }
+   ]
+  },
+  {
+   "id": 401858215,
+   "week": 2,
+   "homeTeam": "Louisville",
+   "awayTeam": "Villanova",
+   "marketSpread": -36.5,
+   "overUnder": 56.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -36.5,
+     "overUnder": 56.5
+    }
+   ]
+  },
+  {
+   "id": 401858222,
+   "week": 2,
+   "homeTeam": "NC State",
+   "awayTeam": "Richmond",
+   "marketSpread": -30.5,
+   "overUnder": 48.5,
+   "books": [
+    {
+     "book": "DraftKings",
+     "spread": -30.5,
+     "overUnder": 48.5
     }
    ]
   }
