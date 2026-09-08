@@ -1,0 +1,74 @@
+/* Dynasty Soccer — club themes. Keyed by <body data-club="…"> (slug minus the season). */
+/* Crests are original monogram badges in club colours, not official club marks. */
+
+/* Crest shows only for clubs that have a badge; others fall back to the ⚽ glyph. */
+body[data-club] .crest { display: inline-block; margin-right: 12px; }
+body[data-club="arsenal"] .crest, body[data-club="cardiff-city"] .crest {
+  width: 44px; height: 44px; vertical-align: middle; margin-right: 12px;
+  border-radius: 50%; background-size: cover; box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  color: transparent; font-size: 0; overflow: hidden;
+}
+/* Neutral band for teams without a club theme. */
+body { --club-band: linear-gradient(135deg, #1a1e26 0%, #0c0e12 100%); --club-primary: rgba(255,255,255,0.12); --club-secondary: var(--text-dim); }
+.team-band {
+  margin: -48px calc(50% - 50vw) 28px; padding: 42px 0 30px;
+  background: var(--club-band); border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+.team-band .wrap-inner { width: min(960px, 100% - 48px); margin: 0 auto; }
+body[data-club] .team-band .crumbs, body[data-club] .team-band .crumbs a { color: rgba(255,255,255,0.7); }
+body[data-club] .team-band h1 { color: #fff; }
+body[data-club] .team-band .meta { color: rgba(255,255,255,0.75); }
+body[data-club] .team-band .status.ok { color: #fff; border-color: rgba(255,255,255,0.5); box-shadow: none; }
+body[data-club] .team-band .coach-badge { color: #fff; }
+body[data-club] .team-band .chip { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.35); }
+body[data-club] .team-band .chip.on { color: #fff; background: rgba(255,255,255,0.15); border-color: #fff; }
+body[data-club] .card { border-top: 3px solid var(--club-primary); }
+body[data-club] .card h2 { color: var(--club-secondary); }
+body[data-club] .big-btn.go, body[data-club] .big-btn.goal.us { background: var(--club-primary); border-color: var(--club-primary); color: var(--club-on-primary); box-shadow: 0 6px 20px var(--accent-glow); }
+body[data-club] .scoreboard .side.us .big { color: var(--club-secondary); text-shadow: 0 0 18px var(--accent-glow); }
+body[data-club] .scoreboard .clock.running { color: var(--club-secondary); }
+body[data-club] .pill.game { color: var(--club-secondary); border-color: var(--accent-border); }
+body[data-club] table.schedule tr.next td.date { color: var(--club-secondary); }
+body[data-club] .team-card { border-left: 4px solid var(--club-primary); }
+
+/* Hub cards: a club stripe + crest even without a themed body. */
+.team-card[data-club="arsenal"]      { --club-primary: #EF0107; border-left: 4px solid var(--club-primary); }
+.team-card[data-club="cardiff-city"] { --club-primary: #0070B5; border-left: 4px solid var(--club-primary); }
+.team-card .crest { width: 28px; height: 28px; margin: 0 8px 0 0; }
+.team-card[data-club="arsenal"] .crest, body[data-club="arsenal"] .crest {
+  display: inline-block; border-radius: 50%; background-size: cover; color: transparent; font-size: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23EF0107'/><circle cx='50' cy='50' r='40' fill='none' stroke='%23fff' stroke-width='3'/><circle cx='50' cy='50' r='34' fill='%23063672'/><text x='50' y='59' font-family='Arial,Helvetica,sans-serif' font-size='26' font-weight='700' fill='%23fff' text-anchor='middle'>AFC</text><rect x='24' y='66' width='52' height='3' fill='%239C824A'/></svg>");
+}
+.team-card[data-club="cardiff-city"] .crest, body[data-club="cardiff-city"] .crest {
+  display: inline-block; border-radius: 50%; background-size: cover; color: transparent; font-size: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%230070B5'/><circle cx='50' cy='50' r='40' fill='none' stroke='%23F4C20D' stroke-width='3'/><path d='M28 58c8-14 22-20 44-18-6 2-10 6-12 10 6-1 10 1 12 4-8 1-14 4-18 9-6 6-16 8-26 6 6-2 10-6 12-10-6 1-10 0-12-1z' fill='%23fff'/><text x='50' y='84' font-family='Arial,Helvetica,sans-serif' font-size='13' font-weight='700' fill='%23F4C20D' text-anchor='middle' letter-spacing='1'>CCFC</text></svg>");
+}
+
+/* ---- Arsenal: red / white / navy / gold */
+body[data-club="arsenal"] {
+  --club-primary: #EF0107; --club-secondary: #ffffff; --club-on-primary: #fff;
+  --club-band: linear-gradient(135deg, #063672 0%, #EF0107 100%);
+  --accent: #EF0107; --accent-glow: rgba(239,1,7,0.35); --accent-border: rgba(239,1,7,0.55); --accent-soft: rgba(239,1,7,0.08);
+}
+body[data-club="arsenal"] .card h2 { color: #f7c6c7; }
+body[data-club="arsenal"] .chip.on { color: #fff; background: rgba(239,1,7,0.2); border-color: #EF0107; }
+body[data-club="arsenal"] .status.ok { color: #ff6a6d; border-color: rgba(239,1,7,0.6); }
+body[data-club="arsenal"] .score.final.W, body[data-club="arsenal"] .record, body[data-club="arsenal"] .score-link.start,
+body[data-club="arsenal"] .team-card .count, body[data-club="arsenal"] .saved, body[data-club="arsenal"] .note-list .when { color: #ff6a6d; }
+body[data-club="arsenal"] .scoreboard .side.us .big { color: #fff; text-shadow: 0 0 22px rgba(239,1,7,0.7); }
+
+/* ---- Cardiff City: bluebird blue / yellow */
+body[data-club="cardiff-city"] {
+  --club-primary: #0070B5; --club-secondary: #F4C20D; --club-on-primary: #fff;
+  --club-band: linear-gradient(135deg, #003B71 0%, #0070B5 100%);
+  --accent: #F4C20D; --accent-glow: rgba(0,112,181,0.4); --accent-border: rgba(0,112,181,0.6); --accent-soft: rgba(0,112,181,0.1);
+}
+body[data-club="cardiff-city"] .chip.on { color: #F4C20D; background: rgba(0,112,181,0.2); border-color: #0070B5; }
+body[data-club="cardiff-city"] .status.ok { color: #F4C20D; border-color: rgba(244,194,13,0.5); }
+body[data-club="cardiff-city"] .score.final.W, body[data-club="cardiff-city"] .record { color: #F4C20D; }
+.team-card .crest { display: none; }
+.team-card[data-club="arsenal"] .crest, .team-card[data-club="cardiff-city"] .crest { display: inline-block; }
+
+/* club-tinted chips (drill library team shortcuts) */
+.chip[data-club="arsenal"] { color: #ff6a6d; border-color: rgba(239,1,7,0.5); }
+.chip[data-club="cardiff-city"] { color: #F4C20D; border-color: rgba(0,112,181,0.6); }

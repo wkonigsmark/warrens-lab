@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match — Dynasty Soccer</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style-lab.css">
+  <link rel="stylesheet" href="../shared/soccer.css">
+  <link rel="stylesheet" href="../shared/themes.css">
+</head>
+<body>
+  <main class="wrap match">
+    <header class="team-band"><div class="wrap-inner">
+      <div class="crumbs"><a href="../index.html">Dynasty Soccer</a> / <a id="team-link" href="../index.html">Team</a> / Match</div>
+      <div class="head">
+        <h1><span class="crest">⚽</span><span id="title">Loading…</span></h1>
+        <div class="head-right"><div id="coach-slot" class="coach-slot"></div><div id="status" class="status">Connecting…</div></div>
+      </div>
+      <p id="meta" class="meta"></p>
+    </div></header>
+
+    <section class="card scoreboard">
+      <div class="teams">
+        <div class="side us"><div id="us-name" class="tname">—</div><div id="us-score" class="big">0</div></div>
+        <div class="clock-wrap">
+          <div id="period" class="period">Not started</div>
+          <div id="clock" class="clock">00:00</div>
+          <div id="state" class="dim"></div>
+        </div>
+        <div class="side them"><div id="them-name" class="tname">—</div><div id="them-score" class="big">0</div></div>
+      </div>
+      <div id="controls" class="controls" hidden></div>
+    </section>
+
+    <section id="goal-sheet" class="card sheet" hidden>
+      <h2 id="sheet-title">Goal</h2>
+      <form id="goal-form">
+        <div class="field-row">
+          <label id="scorer-label">Scorer <select id="scorer"><option value="">— unknown —</option></select></label>
+          <label id="assist-label">Assist <select id="assist"><option value="">— none —</option></select></label>
+        </div>
+        <label class="toggle" id="og-label"><input type="checkbox" id="own-goal"> <span id="og-text">Own goal</span></label>
+        <div class="filters">
+          <button class="chip on" type="submit">Add goal</button>
+          <button class="chip" type="button" id="sheet-cancel">Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Goals</h2>
+      <ul id="goals" class="goal-list"><li class="empty">No goals yet.</li></ul>
+    </section>
+
+    <a class="back" id="back" href="../index.html">← Back</a>
+  </main>
+
+  <script type="module" src="../shared/match-page.js"></script>
+</body>
+</html>

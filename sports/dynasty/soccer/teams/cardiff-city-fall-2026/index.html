@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team — Dynasty Soccer</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../../style-lab.css">
+  <link rel="stylesheet" href="../../shared/soccer.css">
+  <link rel="stylesheet" href="../../shared/themes.css">
+</head>
+<!-- data-team must match the team's slug in the Supabase `teams` table -->
+<body data-team="cardiff-city-fall-2026">
+  <main class="wrap">
+    <header class="team-band"><div class="wrap-inner">
+      <div class="crumbs"><a href="../../index.html">Dynasty Soccer</a> / Team</div>
+      <div class="head">
+        <h1><span class="crest">⚽</span><span id="team-name">Loading…</span></h1>
+        <div class="head-right"><div id="coach-slot" class="coach-slot"></div><div id="status" class="status">Connecting…</div></div>
+      </div>
+      <p id="team-meta" class="meta"></p>
+    </div></header>
+
+    <section class="card">
+      <h2>Roster</h2>
+      <div class="table-scroll">
+        <table class="roster">
+          <thead id="roster-head"><tr><th>#</th><th>Player</th></tr></thead>
+          <tbody id="roster"><tr><td colspan="2" class="empty">Loading…</td></tr></tbody>
+        </table>
+      </div>
+      <p id="count" class="meta"></p>
+    </section>
+
+    <section class="card">
+      <h2>Schedule</h2>
+      <div class="filters">
+        <span class="spacer"></span>
+        <label class="toggle"><input type="checkbox" id="hide-past" checked> Hide past</label>
+      </div>
+      <div class="table-scroll">
+        <table class="schedule">
+          <thead><tr><th>Date</th><th>Time</th><th>Event</th><th>Location</th><th>Notes</th></tr></thead>
+          <tbody id="events"><tr><td colspan="5" class="empty">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Results <span id="record" class="record"></span></h2>
+      <ul id="results" class="results"><li class="empty">Loading…</li></ul>
+    </section>
+
+    <section class="card">
+      <h2>Practice Planner</h2>
+      <p class="hint">Pull drills from the shared library to build a session. Quick picks:</p>
+      <div class="filters practice-links">
+        <a class="chip on" href="../../drills/index.html">All drills</a>
+        <a class="chip" href="../../drills/index.html?specialty=warm_up">Warm up</a>
+        <a class="chip" href="../../drills/index.html?specialty=dribbling">Dribbling</a>
+        <a class="chip" href="../../drills/index.html?specialty=passing">Passing</a>
+        <a class="chip" href="../../drills/index.html?specialty=shooting">Shooting</a>
+        <a class="chip" href="../../drills/index.html?specialty=defense">Defense</a>
+        <a class="chip" href="../../drills/index.html?specialty=offense">Offense</a>
+      </div>
+    </section>
+
+    <a class="back" href="../../index.html">← All teams</a>
+  </main>
+
+  <script type="module" src="../../shared/team-page.js"></script>
+</body>
+</html>
