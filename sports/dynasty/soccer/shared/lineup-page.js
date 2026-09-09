@@ -3,18 +3,22 @@ import { sb, esc, setStatus, isConfigured, applyClub } from './db.js';
 import { fmtDate } from './schedule.js';
 import { mountCoachToggle, isUnlocked, onChange, coachCall } from './coach.js';
 import { FORMATIONS, getFormation, autoAssign, remapFormation, initials, POSITIONS } from './positions.js';
+import { pitchMarkings, PITCH_VIEWBOX } from './pitch.js';
 
 const $ = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
 const teamSlug = params.get('team');
 
 let team = null, roster = [], events = [], saved = [];
+let unavailable = {};              // player_id -> 'out' | 'maybe', for the selected game
 let formation = getFormation(FORMATIONS[0].code);
 let assignments = {};              // slotCode -> player_id
 let picked = null;                 // player_id currently selected from the bench
 let currentLineupId = params.get('lineup') || null;
 
 const player = id => roster.find(p => p.player_id === id);
+const isOut = id => unavailable[id] === 'out';
+const availableRoster = () => roster.filter(p => !isOut(p.player_id));
 const nameOf = id => { const p = player(id); return p ? `${p.first_name} ${p.last_name}` : '?'; };
 
 /** First name alone, unless the roster has more than one — then add the last initial. */
@@ -42,19 +46,8 @@ function pitchSvg() {
   }).join('');
 
   return `
-  <svg viewBox="-6 -8 112 124" class="pitch-svg" xmlns="http://www.w3.org/2000/svg">
-    <rect x="0" y="0" width="100" height="100" rx="1" class="turf"/>
-    ${[...Array(6)].map((_, i) => `<rect x="0" y="${i * 16.67}" width="100" height="8.33" class="stripe"/>`).join('')}
-    <rect x="0" y="0" width="100" height="100" class="line-box"/>
-    <line x1="0" y1="50" x2="100" y2="50" class="line"/>
-    <circle cx="50" cy="50" r="12" class="line"/>
-    <circle cx="50" cy="50" r="0.9" class="dot"/>
-    <rect x="21" y="82" width="58" height="18" class="line"/>
-    <rect x="36" y="93.5" width="28" height="6.5" class="line"/>
-    <rect x="21" y="0"  width="58" height="18" class="line"/>
-    <rect x="36" y="0"  width="28" height="6.5" class="line"/>
-    <path d="M 44 82 A 8 8 0 0 0 56 82" class="line"/>
-    <path d="M 44 18 A 8 8 0 0 1 56 18" class="line"/>
+  <svg viewBox="${PITCH_VIEWBOX}" class="pitch-svg" xmlns="http://www.w3.org/2000/svg">
+    ${pitchMarkings()}
     <text x="50" y="-2.6" class="goal-label">attacking</text>
     ${slots}
   </svg>`;
@@ -68,10 +61,19 @@ function drawPitch() {
 
 function drawBench() {
   const onField = new Set(Object.values(assignments));
-  const bench = roster.filter(p => !onField.has(p.player_id));
+  const bench = availableRoster().filter(p => !onField.has(p.player_id));
+  const out = roster.filter(p => isOut(p.player_id));
   $('bench-count').textContent = bench.length ? `${bench.length}` : '';
+
+  const outHtml = out.length ? `
+    <div class="out-strip">
+      <span class="out-label">Unavailable</span>
+      ${out.map(p => `<span class="chip player-chip out">${esc(initials(p))} · ${esc(p.first_name)}</span>`).join('')}
+      ${eventSel() ? `<a class="chip small" href="../attendance/index.html?event=${encodeURIComponent(eventSel())}">Edit check-in</a>` : ''}
+    </div>` : '';
+
   if (!roster.length) { $('bench').innerHTML = '<p class="empty">No players on this roster.</p>'; return; }
-  if (!bench.length) { $('bench').innerHTML = '<p class="empty">Everyone is on the pitch.</p>'; return; }
+  if (!bench.length) { $('bench').innerHTML = `<p class="empty">Everyone available is on the pitch.</p>${outHtml}`; return; }
 
   $('bench').innerHTML = bench.map(p => {
     const pos = [p.position_1, p.position_2].filter(Boolean).join(' / ');
@@ -80,9 +82,24 @@ function drawBench() {
         <span class="ini-badge">${esc(initials(p))}</span>
         <span class="pc-name">${esc(p.first_name)} ${esc((p.last_name || '')[0] || '')}.</span>
         ${pos ? `<span class="pc-pos">${esc(pos)}</span>` : ''}
+        ${unavailable[p.player_id] === 'maybe' ? '<span class="pc-maybe">maybe</span>' : ''}
         ${p.skill ? `<span class="pc-skill">${p.skill}</span>` : ''}
       </button>`;
-  }).join('');
+  }).join('') + outHtml;
+}
+
+const eventSel = () => $('event').value || null;
+
+/** Pull availability for the selected game and drop anyone marked out. */
+async function loadAvailability() {
+  unavailable = {};
+  const id = eventSel();
+  if (id) {
+    try { unavailable = await coachCall('coach_attendance_out', { p_event_id: id }); }
+    catch (err) { console.warn('attendance unavailable:', err.message); }
+  }
+  for (const [slot, pid] of Object.entries(assignments)) if (isOut(pid)) delete assignments[slot];
+  draw();
 }
 
 function draw() { drawPitch(); drawBench(); }
@@ -111,16 +128,35 @@ $('bench').addEventListener('click', e => {
   draw();
 });
 
+function syncPrintLink() {
+  const l = $('print-link');
+  if (!l || !team) return;
+  const u = new URL(l.href, location.href);
+  u.searchParams.set('formation', formation.code);
+  l.href = u.pathname + u.search;
+}
+
+$('event').addEventListener('change', () => { loadAvailability(); syncCheckinLink(); });
+
+function syncCheckinLink() {
+  const a = $('checkin-link');
+  if (!a) return;
+  const id = eventSel();
+  a.hidden = !id;
+  if (id) a.href = `../attendance/index.html?event=${encodeURIComponent(id)}`;
+}
+
 $('formation').addEventListener('change', () => {
   const next = getFormation($('formation').value);
-  const res = remapFormation(roster, assignments, next);   // carry players across the shape change
+  const res = remapFormation(availableRoster(), assignments, next);   // carry players across the shape change
   formation = next;
   assignments = res.assignments;
   picked = null;
   draw();
+  syncPrintLink();
 });
 $('autofill').addEventListener('click', () => {
-  assignments = autoAssign(roster, formation).assignments;
+  assignments = autoAssign(availableRoster(), formation).assignments;
   picked = null;
   draw();
 });
@@ -191,6 +227,8 @@ async function loadLineup(id) {
     $('event').value = l.event_id || '';
     $('lname').value = l.name;
     picked = null;
+    syncCheckinLink();
+    await loadAvailability();
     draw(); loadSaved();
     $('pitch').scrollIntoView({ behavior: 'smooth', block: 'center' });
   } catch (err) { alert(err.message); }
@@ -207,7 +245,9 @@ function showGate() {
 async function refreshCoachData() {
   try {
     roster = await coachCall('coach_get_roster', { p_team_id: team.id });
-    if (!Object.keys(assignments).length) assignments = autoAssign(roster, formation).assignments;
+    await loadAvailability();
+    syncCheckinLink();
+    if (!Object.keys(assignments).length) assignments = autoAssign(availableRoster(), formation).assignments;
     draw();
     await loadSaved();
     if (currentLineupId) await loadLineup(currentLineupId);
@@ -234,6 +274,7 @@ async function init() {
     $('meta').textContent = [team.season, team.age_group].filter(Boolean).join(' · ');
     $('team-link').textContent = team.name;
     $('team-link').href = $('back').href = `../teams/${encodeURIComponent(team.slug)}/index.html`;
+    $('print-link').href = `print.html?team=${encodeURIComponent(team.slug)}&heading=${encodeURIComponent([team.name, team.age_group].filter(Boolean).join(' · '))}`;
 
     events = await sb(`events?team_id=eq.${team.id}&event_type=in.(game,training_game)&select=id,event_date,opponent&order=event_date.asc`);
     $('event').innerHTML = '<option value="">— no game (general lineup) —</option>' + events.map(e =>

@@ -15,11 +15,16 @@ soccer/
 │   ├── schedule.js            # events fetch + table renderer (hub + team pages)
 │   ├── coach.js               # PIN gate (sessionStorage) + coachCall() wrapper
 │   ├── positions.js           # position taxonomy, formations, lineup-matching engine
+│   ├── pitch.js               # pitch geometry, shared by the builder and print sheet
+│   ├── drills.js              # drill loading + filtering, shared by library and planner
+│   ├── practice-page.js       # practice plan builder
 │   ├── lineup-page.js         # interactive pitch / lineup builder
 │   ├── team-page.js           # team page: roster, coach edit mode, schedule, results
 │   └── match-page.js          # live scoring page
 ├── match/index.html           # ?event=<uuid> — scoreboard for anyone, controls in coach mode
 ├── lineup/index.html          # ?team=<slug>[&event=&lineup=] — formation builder (coach only)
+├── lineup/print.html          # printable blank pitch (no login needed)
+├── practice/index.html        # ?team=<slug>[&event=&plan=] — practice plan builder (coach only)
 ├── drills/index.html          # drill library (reads data/drills.json); ?specialty=&difficulty=&q= deep links
 ├── shared/themes.css          # club colours + monogram crests keyed by <body data-club>
 ├── teams/
@@ -32,6 +37,7 @@ soccer/
     ├── migrate-2026-09-08-events.sql      # adds events to a DB created before 9/8
     ├── migrate-2026-09-08-coach-mode.sql  # PIN, evals, notes, matches, goals + RPCs
     ├── migrate-2026-09-09-lineups.sql     # saved lineups + RPCs
+    ├── migrate-2026-09-09-practice.sql    # saved practice plans + RPCs
     ├── seed.sql               # sports + Fall 2026 teams + all three rosters (idempotent)
     ├── seed-events.sql        # Fall 2026 DSL schedule, all three teams (idempotent)
     └── seed-rosters-cardiff-fortgreen.sql  # the two other Fall 2026 rosters
@@ -78,6 +84,7 @@ next to its `index.html`.
 | `coach_settings`  | bcrypt hash of the coach PIN                        | **none**    |
 | `lineups`         | a saved formation for a team, optionally a game     | **none**    |
 | `lineup_slots`    | which player sits in which slot code                | **none**    |
+| `practice_plans`  | a session: name, date, notes, ordered `items` jsonb | **none**    |
 | `guardians`       | parent contacts (empty for now)                     | **none**    |
 | `player_guardians`| links kids to parents                               | **none**    |
 
@@ -97,6 +104,24 @@ season (`arsenal-fall-2026` → `arsenal`). Arsenal and Cardiff City have colour
 gradient header bands and inline-SVG monogram crests (original badges in club colours, not
 official club marks). Any team without a theme falls back to the neutral lab look
 automatically — add a new club by appending one `body[data-club="…"]` block.
+
+## Practice planner
+
+`practice/index.html?team=<slug>` builds a session. The drill library sits beside the plan; press
+**+** on any drill to append it, and drills already used show an "in plan" badge. Blocks are
+reordered with the arrow controls, each carries an editable duration and your own coaching note,
+and **+ Text block** inserts free text for anything that is not a library drill (scrimmage, team
+talk, water break). The running total updates as you type, so you can fit a session to the time
+you actually have.
+
+A plan is stored as an ordered `items` array in jsonb, each entry either
+`{type:"drill", drill_id, title, minutes, note}` or `{type:"text", title, body, minutes}`.
+Reordering is therefore just array order, with no position columns to renumber. The drill title is
+snapshotted alongside its id so editing `drills.json` can never blank out a saved plan; if an id
+disappears the block still renders, flagged "not in library".
+
+**Print / PDF** renders a separate clean document — numbered blocks with times, drill summaries,
+your notes, coaching cues, equipment and a tick box per block — rather than printing the editor.
 
 ## Drill library
 
@@ -127,6 +152,11 @@ Keeper is treated as a specialist in both directions, and skill is a small tiebr
 `remapFormation` keeps anyone whose slot still exists and re-matches the rest — so a center back
 in a 3-3 lands at left or right center back in a 4-2 without you touching anything.
 
+**Printable blank pitch.** `lineup/print.html` renders the same field on white paper for drawing
+tactics by hand — 1, 2 or 4 pitches per sheet, an optional faint formation guide, and blank
+date / opponent / notes lines. It needs no PIN, since an empty field is not private. Both pages
+draw from `shared/pitch.js`, so the geometry never drifts between screen and paper.
+
 The builder itself lives at `lineup/index.html?team=<slug>`. Tap a player, tap a spot; tap a
 filled spot to bench that player. Lineups can be tied to a game and saved. They are coach-only,
 since who is benched is not public information.
@@ -153,6 +183,6 @@ update public.coach_settings set value = extensions.crypt('NEWPIN', extensions.g
 
 ## Phase 2 ideas (not started)
 
-- Substitution planning across periods; practice sessions saved from the drill library
+- Substitution planning across periods
 - Upgrade the PIN gate to Supabase Auth if notes ever get sensitive
 - Load parent contacts into `guardians` behind a coach-only login

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice Plan — Dynasty Soccer</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style-lab.css">
+  <link rel="stylesheet" href="../shared/soccer.css">
+  <link rel="stylesheet" href="../shared/themes.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="team-band no-print"><div class="wrap-inner">
+      <div class="crumbs"><a href="../index.html">Dynasty Soccer</a> / <a id="team-link" href="../index.html">Team</a> / Practice Plan</div>
+      <div class="head">
+        <h1><span class="crest">⚽</span><span id="title">Practice Plan</span></h1>
+        <div class="head-right"><div id="coach-slot" class="coach-slot"></div><div id="status" class="status">Connecting…</div></div>
+      </div>
+      <p id="meta" class="meta"></p>
+    </div></header>
+
+    <section id="gate" class="card no-print" hidden>
+      <h2>Coach mode required</h2>
+      <p class="hint">Practice plans are coach-only. Unlock coach mode above to build or load one.</p>
+    </section>
+
+    <div id="builder" hidden>
+      <section class="card no-print">
+        <h2>Plan</h2>
+        <div class="setup-row">
+          <label>Name <input id="pname" type="text" placeholder="e.g. Tuesday — first touch"></label>
+          <label>Date <input id="pdate" type="date"></label>
+          <label>Practice session
+            <select id="event"><option value="">— not tied to a session —</option></select>
+          </label>
+        </div>
+        <label class="block-label">Overall notes
+          <textarea id="pnotes" rows="2" placeholder="Focus for the session, reminders, equipment to bring…"></textarea>
+        </label>
+        <div class="filters">
+          <button class="chip" type="button" id="add-text">+ Text block</button>
+          <button class="chip" type="button" id="add-break">+ Water break</button>
+          <span class="spacer"></span>
+          <span id="total" class="record"></span>
+          <button class="chip on" type="button" id="save">Save plan</button>
+          <button class="chip" type="button" id="print">🖨️ Print / PDF</button>
+          <span id="save-msg" class="dim"></span>
+        </div>
+      </section>
+
+      <div class="planner-cols">
+        <section class="card plan-col">
+          <h2>Session <span id="block-count" class="record"></span></h2>
+          <ol id="plan" class="plan-list"><li class="empty">Nothing added yet. Browse drills on the right and press + to build the session.</li></ol>
+        </section>
+
+        <section class="card browse-col no-print">
+          <h2>Drill library</h2>
+          <div class="tools-mini">
+            <input id="search" type="search" placeholder="Search drills…">
+            <select id="difficulty">
+              <option value="">All levels</option>
+              <option value="beginner">Beginner</option>
+              <option value="advanced">Advanced</option>
+              <option value="expert">Expert</option>
+            </select>
+          </div>
+          <div id="quick" class="filters quick-mini"></div>
+          <p id="browse-count" class="meta"></p>
+          <div id="browse" class="browse-list"><p class="empty">Loading drills…</p></div>
+        </section>
+      </div>
+
+      <section class="card no-print">
+        <h2>Saved plans</h2>
+        <ul id="saved" class="results"><li class="empty">Loading…</li></ul>
+      </section>
+    </div>
+
+    <!-- Rendered only when printing -->
+    <div id="print-doc" class="print-doc"></div>
+
+    <a class="back no-print" id="back" href="../index.html">← Back</a>
+  </main>
+
+  <script type="module" src="../shared/practice-page.js"></script>
+</body>
+</html>

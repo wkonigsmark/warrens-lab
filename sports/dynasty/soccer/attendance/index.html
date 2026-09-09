@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Check-in — Dynasty Soccer</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style-lab.css">
+  <link rel="stylesheet" href="../shared/soccer.css">
+  <link rel="stylesheet" href="../shared/themes.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="team-band"><div class="wrap-inner">
+      <div class="crumbs"><a href="../index.html">Dynasty Soccer</a> / <a id="team-link" href="../index.html">Team</a> / Check-in</div>
+      <div class="head">
+        <h1><span class="crest">⚽</span><span id="title">Roster Check-in</span></h1>
+        <div class="head-right"><div id="coach-slot" class="coach-slot"></div><div id="status" class="status">Connecting…</div></div>
+      </div>
+      <p id="meta" class="meta"></p>
+    </div></header>
+
+    <section id="gate" class="card" hidden>
+      <h2>Coach mode required</h2>
+      <p class="hint">Availability is coach-only. Unlock coach mode above to check players in and out.</p>
+    </section>
+
+    <div id="panel" hidden>
+      <section class="card">
+        <h2>Availability <span id="tally" class="record"></span></h2>
+        <p class="hint">Everyone starts available. Tap a player to cycle <strong>In → Out → Maybe</strong>.
+          Players marked out are left off auto-filled lineups.</p>
+        <div class="filters">
+          <button class="chip" type="button" id="all-in">Reset all to In</button>
+          <span class="spacer"></span>
+          <span id="save-msg" class="dim"></span>
+        </div>
+        <ul id="roll" class="roll"><li class="empty">Loading…</li></ul>
+      </section>
+
+      <section class="card">
+        <h2>Other sessions</h2>
+        <p class="hint">Check a different game or practice for this team.</p>
+        <div class="setup-row">
+          <label>Session <select id="event"></select></label>
+        </div>
+      </section>
+    </div>
+
+    <a class="back" id="back" href="../index.html">← Back</a>
+  </main>
+
+  <script type="module" src="../shared/attendance-page.js"></script>
+</body>
+</html>

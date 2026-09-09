@@ -12,7 +12,7 @@ const rosterHead = $('roster-head'), rosterEl = $('roster'), countEl = $('count'
 const eventsEl = $('events'), hidePastEl = $('hide-past');
 const resultsEl = $('results'), recordEl = $('record');
 
-let team = null, publicRoster = [], events = [], matches = {};
+let team = null, publicRoster = [], events = [], matches = {}, attendance = {};
 
 function fail(err) {
   console.error(err);
@@ -142,6 +142,8 @@ function drawSchedule() {
   renderEvents(eventsEl, events, {
     hidePast: hidePastEl?.checked, matches, matchUrl: '../../match/index.html?event=',
     canStart: isUnlocked() && team.live_scoring,
+    checkinUrl: isUnlocked() ? '../../attendance/index.html?event=' : '',
+    attendance,
   });
 }
 
@@ -174,6 +176,10 @@ async function loadSchedule() {
       sb(`matches?team_id=eq.${team.id}&select=id,event_id,status,our_score,their_score,events(event_date,opponent),goals(side,scorer_id)`).catch(() => []),
     ]);
     events = evs; matches = Object.fromEntries(ms.map(m => [m.event_id, m]));
+    if (isUnlocked()) {
+      try { attendance = await coachCall('coach_attendance_summary', { p_team_id: team.id }); }
+      catch (err) { console.warn('attendance summary:', err.message); }
+    }
     drawSchedule(); drawResults();
     hidePastEl?.addEventListener('change', drawSchedule);
   } catch (err) {
@@ -202,7 +208,7 @@ async function init() {
     publicRoster.sort((a, b) => byName(a.players, b.players));
     countEl.textContent = publicRoster.length ? `${publicRoster.length} player${publicRoster.length === 1 ? '' : 's'}` : '';
     drawRoster();
-    onChange(() => { drawRoster(); drawSchedule(); });
+    onChange(() => { drawRoster(); loadSchedule(); });
     loadSchedule();
   } catch (err) { fail(err); }
 }

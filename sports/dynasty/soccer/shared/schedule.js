@@ -44,6 +44,8 @@ function fmtRange(e) {
  *   matches   — map event_id -> {status, our_score, their_score}
  *   matchUrl  — path prefix for the scoring page (event id appended)
  *   canStart  — show "Score" links for games without a match (coach mode)
+ *   checkinUrl — when set (coach mode), each row links to roster check-in
+ *   attendance — map event_id -> {out, maybe} counts, shown as a badge
  */
 export function scoreBadge(m) {
   if (!m) return '';
@@ -53,7 +55,7 @@ export function scoreBadge(m) {
     : `<span class="score live">Live ${m.our_score}–${m.their_score}</span>`;
 }
 
-export function renderEvents(tbody, events, { showTeam = false, hidePast = false, matches = {}, matchUrl = '', canStart = false } = {}) {
+export function renderEvents(tbody, events, { showTeam = false, hidePast = false, matches = {}, matchUrl = '', canStart = false, checkinUrl = '', attendance = {} } = {}) {
   const today = todayISO();
   const cols = showTeam ? 6 : 5;
   const list = hidePast ? events.filter(e => e.event_date >= today) : events;
@@ -84,7 +86,13 @@ export function renderEvents(tbody, events, { showTeam = false, hidePast = false
         ${showTeam ? `<td class="team"><a href="teams/${encodeURIComponent(e.teams.slug)}/index.html">${esc(e.teams.name)}</a></td>` : ''}
         <td class="what"><span class="pill ${e.event_type}">${TYPE_LABEL[e.event_type]}</span>${e.opponent ? ` <span class="opp">vs ${esc(e.opponent)}</span>` : ''}${score}</td>
         <td class="loc">${esc(e.location || '')}</td>
-        <td class="notes">${esc(e.notes || '')}</td>
+        <td class="notes">${esc(e.notes || '')}${(() => {
+          if (!checkinUrl || e.event_type === 'bye') return '';
+          const a = attendance[e.id];
+          const n = a ? (a.out || 0) + (a.maybe || 0) : 0;
+          return `${e.notes ? ' ' : ''}<a class="att-link" href="${checkinUrl}${e.id}">check-in</a>${
+            n ? ` <span class="att-badge">${a.out ? `${a.out} out` : ''}${a.out && a.maybe ? ', ' : ''}${a.maybe ? `${a.maybe} maybe` : ''}</span>` : ''}`;
+        })()}</td>
       </tr>`;
   }).join('');
   return list.length;

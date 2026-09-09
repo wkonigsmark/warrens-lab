@@ -496,3 +496,168 @@ begin
   perform public.coach_check(pin);
   delete from public.lineups where id = p_lineup_id;
 end $$;
+
+-- ===============================================================
+-- Practice plans (coach-only)
+-- ===============================================================
+
+create table if not exists public.practice_plans (
+  id uuid primary key default gen_random_uuid(),
+  team_id uuid not null references public.teams(id) on delete cascade,
+  event_id uuid references public.events(id) on delete set null,
+  name text not null,
+  plan_date date,
+  notes text,
+  items jsonb not null default '[]'::jsonb,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create index if not exists practice_plans_team_idx on public.practice_plans (team_id, updated_at desc);
+
+alter table public.practice_plans enable row level security;
+revoke all on public.practice_plans from anon, authenticated;
+
+-- ---------------------------------------------------------------- RPCs
+create or replace function public.coach_practice_list(pin text, p_team_id uuid)
+returns jsonb language plpgsql security definer set search_path = public as $$
+begin
+  perform public.coach_check(pin);
+  return coalesce((
+    select jsonb_agg(row_to_json(r) order by r.updated_at desc) from (
+      select p.id, p.name, p.plan_date, p.event_id, p.updated_at,
+             jsonb_array_length(p.items) as block_count,
+             coalesce((select sum((i->>'minutes')::int) from jsonb_array_elements(p.items) i
+                       where i->>'minutes' ~ '^[0-9]+$'), 0) as minutes,
+             e.event_date, e.location
+      from public.practice_plans p
+      left join public.events e on e.id = p.event_id
+      where p.team_id = p_team_id
+      order by p.updated_at desc
+    ) r
+  ), '[]'::jsonb);
+end $$;
+
+create or replace function public.coach_practice_get(pin text, p_plan_id uuid)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare p public.practice_plans;
+begin
+  perform public.coach_check(pin);
+  select * into p from public.practice_plans where id = p_plan_id;
+  if p.id is null then raise exception 'no_such_plan'; end if;
+  return to_jsonb(p);
+end $$;
+
+create or replace function public.coach_practice_save(pin text, p_plan_id uuid, p_team_id uuid,
+                                                      p_event_id uuid, p_name text, p_plan_date date,
+                                                      p_notes text, p_items jsonb)
+returns uuid language plpgsql security definer set search_path = public as $$
+declare pid uuid;
+begin
+  perform public.coach_check(pin);
+  if trim(coalesce(p_name, '')) = '' then raise exception 'name_required'; end if;
+  if jsonb_typeof(coalesce(p_items, '[]'::jsonb)) <> 'array' then raise exception 'items_must_be_array'; end if;
+
+  if p_plan_id is null then
+    insert into public.practice_plans (team_id, event_id, name, plan_date, notes, items)
+    values (p_team_id, p_event_id, trim(p_name), p_plan_date, p_notes, coalesce(p_items, '[]'::jsonb))
+    returning id into pid;
+  else
+    update public.practice_plans
+      set event_id = p_event_id, name = trim(p_name), plan_date = p_plan_date,
+          notes = p_notes, items = coalesce(p_items, '[]'::jsonb), updated_at = now()
+      where id = p_plan_id returning id into pid;
+    if pid is null then raise exception 'no_such_plan'; end if;
+  end if;
+  return pid;
+end $$;
+
+create or replace function public.coach_practice_delete(pin text, p_plan_id uuid)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  perform public.coach_check(pin);
+  delete from public.practice_plans where id = p_plan_id;
+end $$;
+
+-- ===============================================================
+-- Attendance / roster check-in (coach-only)
+-- ===============================================================
+
+create table if not exists public.attendance (
+  event_id uuid not null references public.events(id) on delete cascade,
+  player_id uuid not null references public.players(id) on delete cascade,
+  status text not null default 'out' check (status in ('in', 'out', 'maybe')),
+  note text,
+  updated_at timestamptz not null default now(),
+  primary key (event_id, player_id)
+);
+create index if not exists attendance_event_idx on public.attendance (event_id);
+
+alter table public.attendance enable row level security;
+revoke all on public.attendance from anon, authenticated;
+
+-- ---------------------------------------------------------------- RPCs
+-- Every player on the team for this event, with their status (default 'in').
+create or replace function public.coach_attendance_get(pin text, p_event_id uuid)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare ev public.events;
+begin
+  perform public.coach_check(pin);
+  select * into ev from public.events where id = p_event_id;
+  if ev.id is null then raise exception 'no_such_event'; end if;
+  return coalesce((
+    select jsonb_agg(row_to_json(r) order by r.last_name, r.first_name) from (
+      select p.id as player_id, p.first_name, p.last_name, tp.jersey_number,
+             coalesce(a.status, 'in') as status, a.note
+      from public.team_players tp
+      join public.players p on p.id = tp.player_id
+      left join public.attendance a on a.event_id = p_event_id and a.player_id = p.id
+      where tp.team_id = ev.team_id
+      order by p.last_name, p.first_name
+    ) r
+  ), '[]'::jsonb);
+end $$;
+
+-- 'in' clears the row; anything else upserts it.
+create or replace function public.coach_attendance_set(pin text, p_event_id uuid, p_player_id uuid,
+                                                       p_status text, p_note text)
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  perform public.coach_check(pin);
+  if p_status = 'in' and coalesce(trim(p_note), '') = '' then
+    delete from public.attendance where event_id = p_event_id and player_id = p_player_id;
+  else
+    insert into public.attendance (event_id, player_id, status, note, updated_at)
+    values (p_event_id, p_player_id, p_status, nullif(trim(p_note), ''), now())
+    on conflict (event_id, player_id) do update
+      set status = excluded.status, note = excluded.note, updated_at = now();
+  end if;
+end $$;
+
+-- Player ids that are NOT available for an event — what the lineup builder filters on.
+create or replace function public.coach_attendance_out(pin text, p_event_id uuid)
+returns jsonb language plpgsql security definer set search_path = public as $$
+begin
+  perform public.coach_check(pin);
+  return coalesce((
+    select jsonb_object_agg(player_id, status) from public.attendance
+    where event_id = p_event_id and status <> 'in'
+  ), '{}'::jsonb);
+end $$;
+
+-- Counts per event for a team, so the schedule can show "9 in · 2 out" at a glance.
+create or replace function public.coach_attendance_summary(pin text, p_team_id uuid)
+returns jsonb language plpgsql security definer set search_path = public as $$
+begin
+  perform public.coach_check(pin);
+  return coalesce((
+    select jsonb_object_agg(event_id, counts) from (
+      select a.event_id, jsonb_build_object(
+               'out',   count(*) filter (where a.status = 'out'),
+               'maybe', count(*) filter (where a.status = 'maybe')) as counts
+      from public.attendance a
+      join public.events e on e.id = a.event_id
+      where e.team_id = p_team_id and a.status <> 'in'
+      group by a.event_id
+    ) s
+  ), '{}'::jsonb);
+end $$;

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blank Pitch — Dynasty Soccer</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style-lab.css">
+  <link rel="stylesheet" href="../shared/soccer.css">
+  <style>
+    /* On screen this previews as paper so what you see is what prints. */
+    .paper {
+      background: #fff; color: #111; border-radius: 10px; padding: 14mm 12mm;
+      width: min(210mm, 100%); margin: 0 auto 28px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .sheet-head { display: flex; gap: 10mm; align-items: flex-end; margin-bottom: 6mm; }
+    .sheet-head .t { font-size: 15pt; font-weight: 700; color: #111; flex: 1; }
+    .sheet-head .f { flex: 1; border-bottom: 1px solid #999; min-height: 8mm; font-size: 9pt; color: #666; padding-bottom: 1mm; }
+
+    .boards { display: grid; gap: 8mm; justify-items: center; }
+    .boards[data-n="1"] { grid-template-columns: 1fr; }
+    .boards[data-n="2"] { grid-template-columns: 1fr; }
+    .boards[data-n="4"] { grid-template-columns: 1fr 1fr; }
+    .board { width: 100%; }
+    .board .cap { font-size: 8pt; color: #666; border-bottom: 1px solid #bbb; padding-bottom: 1mm; margin-bottom: 2mm; min-height: 6mm; }
+    /* Width drives the size; aspect-ratio gives the height, so the <svg> box hugs the
+       drawing instead of letterboxing it. Widths are derived from the page height budget. */
+    .board svg { width: 100%; height: auto; aspect-ratio: 112 / 124; display: block; }
+    .boards[data-n="1"] .board { max-width: 178mm; }
+    .boards[data-n="2"] .board { max-width: 103mm; }
+    .boards[data-n="4"] .board { max-width: 86mm; }
+
+    /* Ink-friendly pitch: white ground, dark lines, no mown bands. */
+    .paper .pitch-svg .turf { fill: #fff; }
+    .paper .pitch-svg .stripe { display: none; }
+    .paper .pitch-svg .line, .paper .pitch-svg .line-box { stroke: #333; stroke-width: 0.55; fill: none; }
+    .paper .pitch-svg .dot { fill: #333; }
+    .paper .pitch-svg .guide { fill: #fff; stroke: #b6b6b6; stroke-width: 0.45; stroke-dasharray: 1.8 1.4; }
+    .paper .pitch-svg .guide-txt { fill: #999; font-size: 3.6px; font-weight: 600; text-anchor: middle; }
+    .paper .pitch-svg .arrow { fill: #999; font-size: 3.4px; text-anchor: middle; letter-spacing: 0.5px; }
+
+    .notes-lines { margin-top: 5mm; }
+    .notes-lines div { border-bottom: 1px solid #ccc; height: 8mm; }
+
+    @media print {
+      @page { size: A4 portrait; margin: 10mm; }
+      html, body { background: #fff !important; }
+      body { display: block; }
+      .no-print { display: none !important; }
+      .wrap { width: 100%; margin: 0; padding: 0; }
+      .paper { box-shadow: none; border-radius: 0; padding: 0; width: 100%; margin: 0; page-break-after: always; }
+      .paper:last-of-type { page-break-after: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="no-print">
+      <div class="crumbs"><a href="../index.html">Dynasty Soccer</a> / <a id="builder-link" href="index.html">Lineup</a> / Print</div>
+      <div class="head">
+        <h1><span>🖨️</span>Blank Pitch</h1>
+      </div>
+      <p class="meta">A clean field diagram to draw tactics on by hand.</p>
+
+      <section class="card">
+        <h2>Sheet options</h2>
+        <div class="setup-row">
+          <label>Pitches per page
+            <select id="per-page">
+              <option value="1">1 — full page</option>
+              <option value="2">2 — stacked (halves, scenarios)</option>
+              <option value="4">4 — quarters, small cards</option>
+            </select>
+          </label>
+          <label>Position guide
+            <select id="guide"><option value="">None — completely blank</option></select>
+          </label>
+          <label>Heading
+            <input id="heading" type="text" placeholder="e.g. Arsenal · Co-Ed 7">
+          </label>
+        </div>
+        <div class="filters">
+          <label class="toggle"><input type="checkbox" id="show-notes" checked> Notes lines (1-up only)</label>
+          <label class="toggle"><input type="checkbox" id="show-arrow" checked> Mark attacking direction</label>
+          <span class="spacer"></span>
+          <button class="chip on" type="button" id="print">Print / Save as PDF</button>
+        </div>
+        <p class="hint">Tip: in the print dialog choose <strong>Save as PDF</strong> to keep a reusable copy, and turn on
+          background graphics only if you want the field fill — the diagram is designed to print fine without it.</p>
+      </section>
+    </div>
+
+    <div id="sheets"></div>
+    <a class="back no-print" id="back" href="index.html">← Back to lineup builder</a>
+  </main>
+
+  <script type="module">
+    import { pitchMarkings, PITCH_VIEWBOX } from '../shared/pitch.js';
+    import { FORMATIONS, getFormation } from '../shared/positions.js';
+    import { esc } from '../shared/db.js';
+
+    const $ = id => document.getElementById(id);
+    const params = new URLSearchParams(location.search);
+    const teamSlug = params.get('team');
+    if (teamSlug) {
+      $('builder-link').href = `index.html?team=${encodeURIComponent(teamSlug)}`;
+      $('back').href = `index.html?team=${encodeURIComponent(teamSlug)}`;
+    }
+
+    $('guide').innerHTML = '<option value="">None — completely blank</option>' +
+      FORMATIONS.map(f => `<option value="${f.code}">${esc(f.name)} — ${esc(f.note)}</option>`).join('');
+    if (params.get('formation')) $('guide').value = params.get('formation');
+    if (params.get('heading')) $('heading').value = params.get('heading');
+
+    function boardSvg() {
+      const code = $('guide').value;
+      let guide = '';
+      if (code) {
+        guide = getFormation(code).slots.map(s => {
+          const cx = s.x * 100, cy = (1 - s.y) * 100;
+          return `<g transform="translate(${cx} ${cy})">
+            <circle class="guide" r="6.6"></circle>
+            <text class="guide-txt" y="1.3">${esc(s.code)}</text>
+          </g>`;
+        }).join('');
+      }
+      const arrow = $('show-arrow').checked
+        ? '<text x="50" y="-2.4" class="arrow">▲  ATTACKING</text>' : '';
+      return `<svg viewBox="${PITCH_VIEWBOX}" class="pitch-svg" xmlns="http://www.w3.org/2000/svg">
+        ${pitchMarkings({ stripes: false })}${arrow}${guide}
+      </svg>`;
+    }
+
+    function render() {
+      const n = Number($('per-page').value);
+      const heading = $('heading').value.trim();
+      const svg = boardSvg();
+      const caption = n > 1;
+      const notes = n === 1 && $('show-notes').checked;
+
+      $('sheets').innerHTML = `
+        <div class="paper">
+          <div class="sheet-head">
+            <div class="t">${heading ? esc(heading) : 'Tactics'}</div>
+            <div class="f">Date</div>
+            <div class="f">Opponent</div>
+          </div>
+          <div class="boards" data-n="${n}">
+            ${[...Array(n)].map(() => `
+              <div class="board">
+                ${caption ? '<div class="cap"></div>' : ''}
+                ${svg}
+              </div>`).join('')}
+          </div>
+          ${notes ? `<div class="notes-lines">${'<div></div>'.repeat(4)}</div>` : ''}
+        </div>`;
+    }
+
+    for (const el of ['per-page', 'guide', 'heading', 'show-notes', 'show-arrow']) {
+      $(el).addEventListener('input', render);
+      $(el).addEventListener('change', render);
+    }
+    $('print').addEventListener('click', () => window.print());
+    render();
+  </script>
+</body>
+</html>

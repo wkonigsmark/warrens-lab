@@ -109,6 +109,7 @@
 
   <script type="module">
     import { esc, sb, clubKey } from '../shared/db.js';
+    import { loadDrills, filterDrills, label, QUICK_SPECIALTIES } from '../shared/drills.js';
 
     const searchEl = document.getElementById('search');
     const difficultyEl = document.getElementById('difficulty');
@@ -119,35 +120,14 @@
     const countEl = document.getElementById('count');
     const referenceEl = document.getElementById('reference');
 
-    const quickSpecialties = ['dribbling', 'passing', 'shooting', 'defense', 'offense', 'throw_in', 'corner_kick'];
+    const quickSpecialties = QUICK_SPECIALTIES;
     let db;
     let activeQuick = '';
 
-    const label = value => value.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-
-    function drillText(drill) {
-      return [
-        drill.title,
-        drill.source,
-        drill.summary,
-        drill.whyUseIt,
-        drill.difficulty,
-        drill.specialties.join(' '),
-        drill.equipment.join(' '),
-        drill.coachingCues.join(' ')
-      ].join(' ').toLowerCase();
-    }
-
-    function matches(drill) {
-      const q = searchEl.value.trim().toLowerCase();
-      const specialty = specialtyEl.value || activeQuick;
-      return (!q || drillText(drill).includes(q)) &&
-        (!difficultyEl.value || drill.difficulty === difficultyEl.value) &&
-        (!specialty || drill.specialties.includes(specialty));
-    }
-
     function render() {
-      const filtered = db.drills.filter(matches);
+      const filtered = filterDrills(db.drills, {
+        q: searchEl.value, difficulty: difficultyEl.value, specialty: specialtyEl.value || activeQuick,
+      });
       drillsEl.innerHTML = filtered.map(drill => `
         <article class="card drill-card">
           <div>
@@ -180,8 +160,7 @@
     }
 
     async function init() {
-      const res = await fetch('../data/drills.json');
-      db = await res.json();
+      db = await loadDrills('..');
 
       for (const specialty of db.specialties) {
         const option = document.createElement('option');
