@@ -92,15 +92,18 @@ export const FORMATIONS = [
 export const getFormation = code => FORMATIONS.find(f => f.code === code) || FORMATIONS[0];
 
 // ---------------------------------------------------------------- the engine
-/**
- * How well a player's stated preferences fit one slot. 0–100 plus a small skill nudge.
- * Exact code wins; then same line, nearest side; then a neighbouring line.
- * Keeper is treated as a specialist in both directions.
- */
-export function fitScore(player, slotCode) {
+// How much a skill point is worth. Skill SCALES positional fit rather than adding to it,
+// so the better player wins whenever two players fit a spot comparably well — a skill-4
+// CS beats a skill-1 CF for the CF slot — while a big positional mismatch still loses
+// (a skill-4 striker never displaces the keeper). Raise it to favour skill, lower it to
+// favour strict position matching.
+export const SKILL_WEIGHT = 0.18;
+
+/** Positional fit alone, 0–100. Exact code wins; then same line by side distance; then a neighbouring line. */
+export function positionFit(player, slotCode) {
   const S = POSITIONS[slotCode];
   if (!S) return 0;
-  const prefs = [[player.position_1, 1], [player.position_2, 0.8]];
+  const prefs = [[player.position_1, 1], [player.position_2, 0.7]];  // backup position counts for less
   let best = 0;
 
   for (const [code, weight] of prefs) {
@@ -120,8 +123,12 @@ export function fitScore(player, slotCode) {
     if (code === 'GK' && slotCode !== 'GK') s *= 0.45;
     best = Math.max(best, s * weight);
   }
-  if (!best) best = 12;                               // no preference set: neutral
-  return best + (player.skill || 0) * 1.5;
+  return best || 12;                                  // no preference set: neutral
+}
+
+/** Fit scaled by skill — the number autoAssign ranks on. */
+export function fitScore(player, slotCode) {
+  return positionFit(player, slotCode) * (1 + (player.skill || 0) * SKILL_WEIGHT);
 }
 
 /**
@@ -150,7 +157,9 @@ export function autoAssign(players, formation, locked = {}) {
       pairs.push({ slot: slot.code, pid: p.player_id, score: fitScore(p, slot.code) });
     }
   }
-  pairs.sort((a, b) => b.score - a.score);
+  const skillOf = id => players.find(p => p.player_id === id)?.skill || 0;
+  const nameOf = id => { const p = players.find(x => x.player_id === id); return p ? `${p.last_name} ${p.first_name}` : ''; };
+  pairs.sort((a, b) => b.score - a.score || skillOf(b.pid) - skillOf(a.pid) || nameOf(a.pid).localeCompare(nameOf(b.pid)));
 
   for (const { slot, pid } of pairs) {
     if (assignments[slot] || usedPlayers.has(pid)) continue;
