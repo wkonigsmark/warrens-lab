@@ -110,6 +110,7 @@
   <script type="module">
     import { esc, sb, clubKey } from '../shared/db.js';
     import { loadDrills, filterDrills, label, QUICK_SPECIALTIES } from '../shared/drills.js';
+    import { mountNav } from '../shared/nav.js';
 
     const searchEl = document.getElementById('search');
     const difficultyEl = document.getElementById('difficulty');
@@ -160,6 +161,7 @@
     }
 
     async function init() {
+      mountNav({ active: 'drills' });
       db = await loadDrills('..');
 
       for (const specialty of db.specialties) {

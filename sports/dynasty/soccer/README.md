@@ -16,7 +16,9 @@ soccer/
 │   ├── coach.js               # PIN gate (sessionStorage) + coachCall() wrapper
 │   ├── positions.js           # position taxonomy, formations, lineup-matching engine
 │   ├── pitch.js               # pitch geometry, shared by the builder and print sheet
+│   ├── nav.js                 # floating pill nav + live-match badge (every page)
 │   ├── drills.js              # drill loading + filtering, shared by library and planner
+│   ├── stopwatch-page.js      # per-player timing, localStorage only
 │   ├── practice-page.js       # practice plan builder
 │   ├── lineup-page.js         # interactive pitch / lineup builder
 │   ├── team-page.js           # team page: roster, coach edit mode, schedule, results
@@ -25,6 +27,7 @@ soccer/
 ├── lineup/index.html          # ?team=<slug>[&event=&lineup=] — formation builder (coach only)
 ├── lineup/print.html          # printable blank pitch (no login needed)
 ├── practice/index.html        # ?team=<slug>[&event=&plan=] — practice plan builder (coach only)
+├── stopwatch/index.html       # ?team=<slug>[&event=] — sprint timing (coach only)
 ├── drills/index.html          # drill library (reads data/drills.json); ?specialty=&difficulty=&q= deep links
 ├── shared/themes.css          # club colours + monogram crests keyed by <body data-club>
 ├── teams/
@@ -129,6 +132,29 @@ your notes, coaching cues, equipment and a tick box per block — rather than pr
 difficulty and specialty). It accepts deep links — `?specialty=dribbling`, `?difficulty=beginner`,
 `?q=cones` — which is how the Practice Planner quick picks on each team page work. The
 library links back to every active team.
+
+## Navigation
+
+`shared/nav.js` renders one floating pill nav on every page. It is sticky at the top, collapses
+to just the current section once you scroll, and re-expands on hover (desktop) or a tap on the
+active pill (mobile). Class names are prefixed `an-` because `style-lab.css` already defines its
+own `.nav-item` menu with a fade-in animation.
+
+**Live match badge.** Whenever any match has `status = 'live'`, a pulsing `LIVE 2–1` chip appears
+at the left of the nav on every page and links straight back to the scoreboard. It never
+collapses. Nothing is lost by navigating away mid-game: goals are written to the database the
+moment you tap, and the clock is derived from the stored `period_started_at` timestamp rather
+than a JavaScript counter, so it keeps running while you are on another page, on a locked phone,
+or offline.
+
+## Stopwatch
+
+`stopwatch/index.html?team=<slug>` times players one at a time. Pick a session and the squad is
+filtered to whoever is checked in. Each player gets a tile: Start, Stop, then "Run again" for
+another attempt. Every attempt is kept and the best is used for ranking, with the fastest player
+flagged. Times live in `localStorage` under `dynasty-soccer:stopwatch:<slug>` — they are never
+written to the database, and they survive a refresh or a locked phone. **Print / PDF** produces
+a ranked results sheet with every attempt.
 
 ## Positions, formations and lineups
 

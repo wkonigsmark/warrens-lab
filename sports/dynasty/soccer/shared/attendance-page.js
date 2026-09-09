@@ -3,6 +3,7 @@
 import { sb, esc, setStatus, isConfigured, applyClub } from './db.js';
 import { fmtDate, fmtTime, TYPE_LABEL } from './schedule.js';
 import { mountCoachToggle, isUnlocked, onChange, coachCall } from './coach.js';
+import { mountNav } from './nav.js';
 
 const $ = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
@@ -95,6 +96,7 @@ async function init() {
     if (!event) throw new Error('No such session.');
     team = event.teams;
     applyClub(team.slug);
+    mountNav({ active: 'checkin', teamSlug: team.slug, eventId });
     setStatus($('status'), 'Connected', 'ok');
     const what = event.opponent ? `${TYPE_LABEL[event.event_type]} vs ${event.opponent}` : TYPE_LABEL[event.event_type];
     $('title').textContent = `${team.name} — ${what}`;

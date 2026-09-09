@@ -4,6 +4,7 @@ import { sb, esc, setStatus, isConfigured, applyClub } from './db.js';
 import { fetchEvents, renderEvents, isMissingTable, fmtDate, fmtTime, TYPE_LABEL, todayISO } from './schedule.js';
 import { mountCoachToggle, isUnlocked, onChange, coachCall } from './coach.js';
 import { positionOptions, POSITIONS } from './positions.js';
+import { mountNav } from './nav.js';
 
 const slug = document.body.dataset.team;
 const $ = id => document.getElementById(id);
@@ -228,6 +229,7 @@ async function loadSchedule() {
 async function init() {
   mountCoachToggle($('coach-slot'));
   applyClub(slug);
+  mountNav({ active: 'team', teamSlug: slug });
   if (!slug) return fail(new Error('This page is missing data-team on <body>.'));
   if (!isConfigured) { setStatus(statusEl, 'Not configured', 'err'); return; }
   try {

@@ -41,6 +41,11 @@
           <div class="sub">Build a timed session from the drill library</div>
           <div class="count">Coach only</div>
         </a>
+        <a class="team-card" id="stopwatch-card" href="#">
+          <p class="name">⏱️ Stopwatch</p>
+          <div class="sub">Time sprints per player, print the results</div>
+          <div class="count">Coach only</div>
+        </a>
         <a class="team-card" id="lineup-card" href="#">
           <p class="name">🧩 Lineup Builder</p>
           <div class="sub">Formations on an interactive pitch</div>
@@ -79,6 +84,7 @@
     import { sb, esc, setStatus, isConfigured, seasonRank, clubKey } from './shared/db.js';
     import { fetchEvents, renderEvents, isMissingTable, fmtDate, fmtTime, TYPE_LABEL, todayISO } from './shared/schedule.js';
     import { mountCoachToggle, onChange } from './shared/coach.js';
+    import { mountNav } from './shared/nav.js';
 
     const statusEl = document.getElementById('status');
     const seasonsEl = document.getElementById('seasons');
@@ -173,6 +179,7 @@
 
     async function init() {
       mountCoachToggle(document.getElementById('coach-slot'));
+      mountNav({ active: 'hub' });
       onChange(() => { if (allEvents.length) drawEvents(); });
       if (!isConfigured) {
         setStatus(statusEl, 'Not configured', 'err');
@@ -222,6 +229,7 @@
         if (firstActive) {
           document.getElementById('lineup-card').href = `lineup/index.html?team=${encodeURIComponent(firstActive.slug)}`;
           document.getElementById('practice-card').href = `practice/index.html?team=${encodeURIComponent(firstActive.slug)}`;
+          document.getElementById('stopwatch-card').href = `stopwatch/index.html?team=${encodeURIComponent(firstActive.slug)}`;
         }
 
         await loadSchedule(teams);

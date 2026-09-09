@@ -3,6 +3,7 @@
 import { sb, esc, setStatus, isConfigured, applyClub } from './db.js';
 import { fmtDate, fmtTime } from './schedule.js';
 import { mountCoachToggle, isUnlocked, onChange, coachCall } from './coach.js';
+import { mountNav } from './nav.js';
 
 const $ = id => document.getElementById(id);
 const eventId = new URLSearchParams(location.search).get('event');
@@ -188,6 +189,7 @@ async function init() {
     if (!event) throw new Error('No such event.');
     team = event.teams; team.live_scoring = team.live_scoring ?? true;
     applyClub(team.slug);
+    mountNav({ active: '', teamSlug: team.slug, eventId });
     setStatus($('status'), 'Connected', 'ok');
     $('title').textContent = `${team.name} vs ${event.opponent || 'TBD'}`;
     document.title = `${team.name} vs ${event.opponent || 'TBD'} — Dynasty Soccer`;

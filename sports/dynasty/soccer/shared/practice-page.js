@@ -4,6 +4,7 @@ import { sb, esc, setStatus, isConfigured, applyClub } from './db.js';
 import { fmtDate } from './schedule.js';
 import { mountCoachToggle, isUnlocked, onChange, coachCall } from './coach.js';
 import { loadDrills, filterDrills, label, QUICK_SPECIALTIES, findDrill } from './drills.js';
+import { mountNav } from './nav.js';
 
 const $ = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
@@ -249,6 +250,7 @@ async function init() {
     [team] = await sb(`teams?slug=eq.${encodeURIComponent(teamSlug)}&select=*`);
     if (!team) throw new Error(`No team with slug "${teamSlug}".`);
     applyClub(team.slug);
+    mountNav({ active: 'practice', teamSlug: team.slug });
     setStatus($('status'), 'Connected', 'ok');
     $('title').textContent = `${team.name} Practice`;
     document.title = `${team.name} Practice Plan — Dynasty Soccer`;

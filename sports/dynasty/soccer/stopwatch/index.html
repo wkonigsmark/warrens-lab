@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stopwatch — Dynasty Soccer</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style-lab.css">
+  <link rel="stylesheet" href="../shared/soccer.css">
+  <link rel="stylesheet" href="../shared/themes.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="team-band no-print"><div class="wrap-inner">
+      <div class="crumbs"><a href="../index.html">Dynasty Soccer</a> / <a id="team-link" href="../index.html">Team</a> / Stopwatch</div>
+      <div class="head">
+        <h1><span class="crest">⏱</span><span id="title">Stopwatch</span></h1>
+        <div class="head-right"><div id="coach-slot" class="coach-slot"></div><div id="status" class="status">Connecting…</div></div>
+      </div>
+      <p id="meta" class="meta"></p>
+    </div></header>
+
+    <section id="gate" class="card no-print" hidden>
+      <h2>Coach mode required</h2>
+      <p class="hint">Unlock coach mode above to time the squad.</p>
+    </section>
+
+    <div id="panel" hidden>
+      <section class="card no-print">
+        <h2>Setup</h2>
+        <div class="setup-row">
+          <label>Session (who's checked in)
+            <select id="event"><option value="">— whole roster —</option></select>
+          </label>
+          <label>Drill / test name
+            <input id="test-name" type="text" placeholder="e.g. 20m sprint">
+          </label>
+          <label>Sort
+            <select id="sort">
+              <option value="name">Name</option>
+              <option value="fastest">Fastest first</option>
+              <option value="slowest">Slowest first</option>
+              <option value="untimed">Untimed first</option>
+            </select>
+          </label>
+        </div>
+        <div class="filters">
+          <span id="done-count" class="record"></span>
+          <span class="spacer"></span>
+          <button class="chip" type="button" id="print">🖨️ Print / PDF</button>
+          <button class="chip danger" type="button" id="reset-all">Reset all times</button>
+        </div>
+        <p class="hint">Times are kept in this browser, so they survive a refresh or a locked phone.
+          Each player keeps every attempt; the best one is used for ranking.</p>
+      </section>
+
+      <section class="card no-print">
+        <h2>Squad <span id="squad-count" class="record"></span></h2>
+        <div id="grid" class="sw-grid"><p class="empty">Loading…</p></div>
+      </section>
+    </div>
+
+    <div id="print-doc" class="print-doc"></div>
+    <a class="back no-print" id="back" href="../index.html">← Back</a>
+  </main>
+
+  <script type="module" src="../shared/stopwatch-page.js"></script>
+</body>
+</html>

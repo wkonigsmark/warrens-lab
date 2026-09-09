@@ -4,6 +4,7 @@ import { fmtDate } from './schedule.js';
 import { mountCoachToggle, isUnlocked, onChange, coachCall } from './coach.js';
 import { FORMATIONS, getFormation, autoAssign, remapFormation, initials, POSITIONS } from './positions.js';
 import { pitchMarkings, PITCH_VIEWBOX } from './pitch.js';
+import { mountNav } from './nav.js';
 
 const $ = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
@@ -268,6 +269,7 @@ async function init() {
     [team] = await sb(`teams?slug=eq.${encodeURIComponent(teamSlug)}&select=*`);
     if (!team) throw new Error(`No team with slug "${teamSlug}".`);
     applyClub(team.slug);
+    mountNav({ active: 'lineup', teamSlug: team.slug, eventId: params.get('event') || '' });
     setStatus($('status'), 'Connected', 'ok');
     $('title').textContent = `${team.name} Lineup`;
     document.title = `${team.name} Lineup — Dynasty Soccer`;
