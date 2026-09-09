@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lineup — Dynasty Soccer</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style-lab.css">
+  <link rel="stylesheet" href="../shared/soccer.css">
+  <link rel="stylesheet" href="../shared/themes.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="team-band"><div class="wrap-inner">
+      <div class="crumbs"><a href="../index.html">Dynasty Soccer</a> / <a id="team-link" href="../index.html">Team</a> / Lineup</div>
+      <div class="head">
+        <h1><span class="crest">⚽</span><span id="title">Lineup Builder</span></h1>
+        <div class="head-right"><div id="coach-slot" class="coach-slot"></div><div id="status" class="status">Connecting…</div></div>
+      </div>
+      <p id="meta" class="meta"></p>
+    </div></header>
+
+    <section id="gate" class="card" hidden>
+      <h2>Coach mode required</h2>
+      <p class="hint">Lineups are coach-only. Unlock coach mode above to build or load one.</p>
+    </section>
+
+    <div id="builder" hidden>
+      <section class="card">
+        <h2>Setup</h2>
+        <div class="setup-row">
+          <label>Formation
+            <select id="formation"></select>
+          </label>
+          <label>Game
+            <select id="event"><option value="">— no game (general lineup) —</option></select>
+          </label>
+          <label>Name
+            <input id="lname" type="text" placeholder="e.g. Starting 7">
+          </label>
+        </div>
+        <p id="fnote" class="hint"></p>
+        <div class="filters">
+          <button class="chip on" type="button" id="autofill">Auto-fill by position</button>
+          <button class="chip" type="button" id="clear">Clear pitch</button>
+          <span class="spacer"></span>
+          <button class="chip on" type="button" id="save">Save lineup</button>
+          <span id="save-msg" class="dim"></span>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Pitch <span id="shape" class="record"></span></h2>
+        <p class="hint" id="howto">Tap a player below, then tap a spot. Tap a filled spot to send that player back to the bench.</p>
+        <div class="pitch-wrap"><div id="pitch" class="pitch"></div></div>
+      </section>
+
+      <section class="card">
+        <h2>Bench <span id="bench-count" class="record"></span></h2>
+        <div id="bench" class="bench"></div>
+      </section>
+
+      <section class="card">
+        <h2>Saved lineups</h2>
+        <ul id="saved" class="results"><li class="empty">Loading…</li></ul>
+      </section>
+    </div>
+
+    <a class="back" id="back" href="../index.html">← Back</a>
+  </main>
+
+  <script type="module" src="../shared/lineup-page.js"></script>
+</body>
+</html>

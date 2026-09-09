@@ -31,6 +31,11 @@
           <div class="sub">Searchable U6–U8 drills by skill and difficulty</div>
           <div class="count">Practice planner</div>
         </a>
+        <a class="team-card" id="lineup-card" href="#">
+          <p class="name">🧩 Lineup Builder</p>
+          <div class="sub">Formations on an interactive pitch</div>
+          <div class="count">Coach only</div>
+        </a>
       </div>
     </section>
 
@@ -162,6 +167,9 @@
               }).join('')}
             </div>
           </section>`).join('');
+
+        const firstActive = teams.find(t => t.active) || teams[0];
+        if (firstActive) document.getElementById('lineup-card').href = `lineup/index.html?team=${encodeURIComponent(firstActive.slug)}`;
 
         await loadSchedule(teams);
       } catch (err) {

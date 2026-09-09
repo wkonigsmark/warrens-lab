@@ -964,7 +964,21 @@ body {
   font-family: 'Oswald', sans-serif; font-size: 0.68rem; font-weight: 600;
   color: rgba(245, 233, 208, 0.55); margin-left: 5px;
 }
-.poll-cell small { display: block; font-size: 0.6rem; line-height: 1; opacity: 0.75; font-weight: 600; }
+/* Reserve two lines whether or not this cell carries a delta, so a row with
+   "4 / +3" is exactly as tall as one where the poll agrees. Otherwise row
+   heights jitter down the list and it reads as ragged. */
+.poll-cell {
+  /* rem, not em: the no-rank cell also carries .dim (a smaller font), so an
+     em-relative floor resolved shorter there and rows came out uneven */
+  min-height: 1.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.05;
+}
+
+.poll-cell small { font-size: 0.6rem; line-height: 1; opacity: 0.75; font-weight: 600; }
 .poll-under { color: #7ddf8f; }   /* polls rank them lower than we do → we're higher on them */
 .poll-over { color: #e0707e; }    /* polls rank them higher than we do */
 
@@ -1098,7 +1112,9 @@ body {
   display: grid;
   grid-template-columns: 34px 26px 1fr 46px 52px 44px 44px 52px;
   gap: 8px;
-  padding: 0 12px 6px;
+  /* rows carry a 3px team-colour left border + 1px box border; pad the header to
+     match so every label sits directly over its column */
+  padding: 0 13px 6px 15px;
   font-family: 'Oswald', 'Outfit', sans-serif;
   font-size: 0.65rem;
   letter-spacing: 1.5px;
@@ -1116,12 +1132,42 @@ body {
   cursor: default;
 }
 
-@media (max-width: 560px) {
+/* Index list, responsive.
+   The rows and the header MUST declare the same grid at every breakpoint or the
+   labels drift off the values beneath them. (They previously did not: this block
+   used to restyle only .index-list-head, so the header showed five columns while
+   rows still drew seven.) At full width the eight fixed columns + gaps + padding
+   need ~383px before the team name gets a single pixel, which overflows any phone —
+   so columns drop least-important-first: SoS and conference go at 620px, the
+   Coaches poll (which tracks AP within a spot or two anyway) goes at 400px. */
+@media (max-width: 620px) {
+  .index-row,
   .index-list-head {
-    grid-template-columns: 30px 22px 1fr 40px 48px;
+    grid-template-columns: 28px 22px 1fr 46px 34px 34px;
+    gap: 6px;
   }
 
-  .index-list-head span:nth-last-child(-n+2) {
+  .index-row { padding: 7px 10px; }
+  .index-list-head { padding: 0 11px 6px 13px; }
+  .index-list-head .col-ap,
+  .index-list-head .col-coa { text-align: center; }
+
+  .index-row .col-conf,
+  .index-list-head .col-conf,
+  .index-row .col-sos,
+  .index-list-head .col-sos {
+    display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .index-row,
+  .index-list-head {
+    grid-template-columns: 26px 20px 1fr 42px 32px;
+  }
+
+  .index-row .col-coa,
+  .index-list-head .col-coa {
     display: none;
   }
 }
@@ -1262,12 +1308,9 @@ body {
   }
 
   .conf-bar-track, .conf-cross { display: none; }
-
-  .index-row {
-    grid-template-columns: 30px 22px 1fr 40px 48px;
-  }
-
-  .index-stat.dim:last-child, .index-stat.dim:nth-last-child(2) { display: none; }
+  /* .index-row/.index-list-head columns live in ONE place (the responsive block
+     above) so header and rows can never disagree. They used to be set here too,
+     at a different column count, which is what knocked the labels out of line. */
 }
 
 /* Playoff bracket */

@@ -3,6 +3,7 @@
 import { sb, esc, setStatus, isConfigured, applyClub } from './db.js';
 import { fetchEvents, renderEvents, isMissingTable, fmtDate } from './schedule.js';
 import { mountCoachToggle, isUnlocked, onChange, coachCall } from './coach.js';
+import { positionOptions, POSITIONS } from './positions.js';
 
 const slug = document.body.dataset.team;
 const $ = id => document.getElementById(id);
@@ -33,6 +34,17 @@ function renderPublicRoster() {
 }
 
 // ---------------------------------------------------------------- roster (coach)
+/** Grouped position dropdown; keeps an unrecognised saved value as its own option. */
+function posSelect(field, value) {
+  const groups = positionOptions().map(g =>
+    `<optgroup label="${esc(g.label)}">${g.options.map(o =>
+      `<option value="${o.code}"${o.code === value ? ' selected' : ''}>${esc(o.name)}</option>`).join('')}</optgroup>`).join('');
+  const stray = value && !POSITIONS[value]
+    ? `<option value="${esc(value)}" selected>${esc(value)} (unknown)</option>` : '';
+  return `<select class="pos" data-f="${field}" aria-label="Position ${field === 'p1' ? '1' : '2'}">
+    <option value="">–</option>${stray}${groups}</select>`;
+}
+
 async function renderCoachRoster() {
   rosterHead.innerHTML = '<tr><th>#</th><th>Player</th><th>Skill</th><th>Pos 1</th><th>Pos 2</th><th>Latest note</th></tr>';
   rosterEl.innerHTML = '<tr><td colspan="6" class="empty">Loading coach view…</td></tr>';
@@ -49,8 +61,8 @@ async function renderCoachRoster() {
         <option value="">–</option>
         ${[1, 2, 3, 4].map(n => `<option value="${n}"${r.skill === n ? ' selected' : ''}>${n}</option>`).join('')}
       </select></td>
-      <td><input class="pos" data-f="p1" value="${esc(r.position_1 || '')}" placeholder="e.g. GK" aria-label="Position 1"></td>
-      <td><input class="pos" data-f="p2" value="${esc(r.position_2 || '')}" placeholder="e.g. CM" aria-label="Position 2"></td>
+      <td>${posSelect('p1', r.position_1)}</td>
+      <td>${posSelect('p2', r.position_2)}</td>
       <td class="note-cell">
         <span class="latest">${r.latest_note ? esc(r.latest_note) : '<span class="dim">—</span>'}</span>
         <button class="chip small notes-btn" type="button">Notes${r.note_count ? ` (${r.note_count})` : ''}</button>
@@ -94,9 +106,6 @@ async function loadNotes(tr) {
 rosterEl.addEventListener('change', e => {
   const tr = e.target.closest('tr.edit-row');
   if (tr && e.target.matches('.skill, .pos')) saveEval(tr);
-});
-rosterEl.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && e.target.matches('.pos')) { e.preventDefault(); e.target.blur(); }
 });
 rosterEl.addEventListener('click', async e => {
   const btn = e.target.closest('.notes-btn');

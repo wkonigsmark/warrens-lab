@@ -144,3 +144,48 @@ tr.notes-row > td { padding: 0 8px 14px; background: rgba(255,255,255,0.02); }
 .practice-links a { text-decoration: none; }
 .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-bottom: 32px; }
 .team-card .name .crest { vertical-align: -6px; }
+
+/* ---------------------------------------------------------------- lineup builder */
+.setup-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+.setup-row label { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; color: var(--text-dim); flex: 1; min-width: 200px; }
+.setup-row select, .setup-row input { padding: 9px 11px; border-radius: 8px; border: 1px solid var(--glass-border); background: #12151b; color: var(--text-main); font: inherit; }
+
+.pitch-wrap { display: flex; justify-content: center; }
+.pitch { width: 100%; max-width: 520px; }
+.pitch-svg { width: 100%; height: auto; display: block; overflow: visible; }
+.pitch-svg .turf { fill: #12341c; }
+.pitch-svg .stripe { fill: rgba(255,255,255,0.022); }
+.pitch-svg .line, .pitch-svg .line-box { fill: none; stroke: rgba(255,255,255,0.32); stroke-width: 0.5; }
+.pitch-svg .dot { fill: rgba(255,255,255,0.32); }
+.pitch-svg .goal-label { fill: var(--text-dim); font-size: 3.4px; text-anchor: middle; text-transform: uppercase; letter-spacing: 0.6px; }
+
+.pitch-svg .slot { cursor: pointer; }
+.pitch-svg .slot .bubble { fill: #0c0e12; stroke: rgba(255,255,255,0.35); stroke-width: 0.6; transition: all .15s; }
+.pitch-svg .slot.filled .bubble { fill: var(--accent); stroke: #fff; stroke-width: 0.7; }
+.pitch-svg .slot.open .bubble { stroke-dasharray: 1.6 1.4; }
+.pitch-svg .slot .ini { fill: var(--text-dim); font-size: 5.4px; font-weight: 700; text-anchor: middle; dominant-baseline: middle; }
+.pitch-svg .slot.filled .ini { fill: var(--accent-ink, #0c0e12); }
+.pitch-svg .slot .pos { fill: rgba(255,255,255,0.8); font-size: 3.6px; font-weight: 600; text-anchor: middle; letter-spacing: 0.4px; }
+.pitch-svg .slot .who { fill: #fff; font-size: 3.5px; text-anchor: middle; }
+/* dark halo so labels stay readable over pitch markings */
+.pitch-svg .slot .pos, .pitch-svg .slot .who {
+  paint-order: stroke; stroke: rgba(0,0,0,0.8); stroke-width: 1.3px; stroke-linejoin: round;
+}
+.pitch-svg .slot:hover .bubble, .pitch-svg .slot:focus .bubble { stroke: #fff; r: 8.1; }
+.pitch-svg .slot.targetable.open .bubble { stroke: var(--accent); stroke-dasharray: none; }
+.pitch-svg .slot:focus { outline: none; }
+
+.bench { display: flex; flex-wrap: wrap; gap: 8px; }
+.player-chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; cursor: pointer; }
+.player-chip .ini-badge { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.08); color: var(--text-main); font-size: 0.75rem; font-weight: 700; }
+.player-chip .pc-name { color: var(--text-main); }
+.player-chip .pc-pos { font-size: 0.72rem; letter-spacing: 1px; color: var(--accent); }
+.player-chip .pc-skill { font-size: 0.7rem; color: var(--text-dim); border: 1px solid var(--glass-border); border-radius: 4px; padding: 1px 5px; }
+.player-chip.picked { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 14px var(--accent-glow); }
+.player-chip.picked .ini-badge { background: var(--accent); color: var(--accent-ink, #0c0e12); }
+
+table.roster select.pos { width: 92px; }
+@media (max-width: 600px) {
+  .setup-row label { min-width: 100%; }
+  .pitch-svg .slot .who { display: none; }
+}

@@ -14,9 +14,12 @@ soccer/
 │   ├── db.js                  # Supabase REST helper
 │   ├── schedule.js            # events fetch + table renderer (hub + team pages)
 │   ├── coach.js               # PIN gate (sessionStorage) + coachCall() wrapper
+│   ├── positions.js           # position taxonomy, formations, lineup-matching engine
+│   ├── lineup-page.js         # interactive pitch / lineup builder
 │   ├── team-page.js           # team page: roster, coach edit mode, schedule, results
 │   └── match-page.js          # live scoring page
 ├── match/index.html           # ?event=<uuid> — scoreboard for anyone, controls in coach mode
+├── lineup/index.html          # ?team=<slug>[&event=&lineup=] — formation builder (coach only)
 ├── drills/index.html          # drill library (reads data/drills.json); ?specialty=&difficulty=&q= deep links
 ├── shared/themes.css          # club colours + monogram crests keyed by <body data-club>
 ├── teams/
@@ -28,6 +31,7 @@ soccer/
     ├── schema.sql             # full schema incl. events (fresh installs)
     ├── migrate-2026-09-08-events.sql      # adds events to a DB created before 9/8
     ├── migrate-2026-09-08-coach-mode.sql  # PIN, evals, notes, matches, goals + RPCs
+    ├── migrate-2026-09-09-lineups.sql     # saved lineups + RPCs
     ├── seed.sql               # sports + Fall 2026 teams + all three rosters (idempotent)
     ├── seed-events.sql        # Fall 2026 DSL schedule, all three teams (idempotent)
     └── seed-rosters-cardiff-fortgreen.sql  # the two other Fall 2026 rosters
@@ -72,6 +76,8 @@ next to its `index.html`.
 | `player_evals`    | skill 1–4, pos 1/2 per roster row (coach only)      | **none**    |
 | `player_notes`    | dated coaching notes per roster row (coach only)    | **none**    |
 | `coach_settings`  | bcrypt hash of the coach PIN                        | **none**    |
+| `lineups`         | a saved formation for a team, optionally a game     | **none**    |
+| `lineup_slots`    | which player sits in which slot code                | **none**    |
 | `guardians`       | parent contacts (empty for now)                     | **none**    |
 | `player_guardians`| links kids to parents                               | **none**    |
 
@@ -99,6 +105,32 @@ difficulty and specialty). It accepts deep links — `?specialty=dribbling`, `?d
 `?q=cones` — which is how the Practice Planner quick picks on each team page work. The
 library links back to every active team.
 
+## Positions, formations and lineups
+
+`shared/positions.js` is the source of truth and holds three things.
+
+**A position taxonomy.** Every code (GK, LB, LCB, CB, RCB, RB, SW, STP, LM, LCM, CM, RCM, RM,
+LW, LF, CF, CS, RF, RW) is a point in a two-axis space: `line` (0 keeper → 3 attack, fractional
+for in-between roles like sweeper and stopper) and `side` (-1 left → +1 right). This is what
+makes positions portable: nothing is defined relative to one formation. The roster dropdowns on
+each team page are generated from this list, grouped by line.
+
+**Formations.** Each is a set of slots carrying a position code plus x/y for drawing
+(x 0–1 left to right, y 0 own goal → 1 opponent's). Shipping with 3-3, 4-2, 2-3-1 and 3-2-1 at
+7v7, plus 3-3-2 and 3-2-3 at 9v9. Adding one is a single array entry — no migration, because a
+formation is geometry, not a record.
+
+**The matching engine.** `fitScore(player, slotCode)` rates a player against a slot: an exact
+code match wins, then same line scaled by how far the side differs, then a neighbouring line.
+Keeper is treated as a specialist in both directions, and skill is a small tiebreak.
+`autoAssign` greedily takes the best remaining pair, honouring any locked slots.
+`remapFormation` keeps anyone whose slot still exists and re-matches the rest — so a center back
+in a 3-3 lands at left or right center back in a 4-2 without you touching anything.
+
+The builder itself lives at `lineup/index.html?team=<slug>`. Tap a player, tap a spot; tap a
+filled spot to bench that player. Lineups can be tied to a game and saved. They are coach-only,
+since who is benched is not public information.
+
 ## Coach mode
 
 Click **Coach mode** on a team or match page and enter the PIN. The PIN is never in the
@@ -121,6 +153,6 @@ update public.coach_settings set value = extensions.crypt('NEWPIN', extensions.g
 
 ## Phase 2 ideas (not started)
 
-- Lineups per team; practice sessions saved from the drill library
+- Substitution planning across periods; practice sessions saved from the drill library
 - Upgrade the PIN gate to Supabase Auth if notes ever get sensitive
 - Load parent contacts into `guardians` behind a coach-only login

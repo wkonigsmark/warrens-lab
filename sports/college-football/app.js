@@ -544,19 +544,23 @@ function confMatrix(data) {
 
 // A poll cell: the human rank, plus how far it sits from our own — the whole point
 // of showing them side by side is spotting where we disagree with the room.
-function pollCell(pollRank, w2Rank, label) {
-  if (!pollRank) return '<span class="index-stat dim poll-cell">—</span>';
+function pollCell(pollRank, w2Rank, label, col) {
+  if (!pollRank) return `<span class="index-stat dim poll-cell ${col}">—</span>`;
   const d = pollRank - w2Rank;                     // + → poll is lower on them than we are
   const cls = d >= 5 ? 'poll-under' : d <= -5 ? 'poll-over' : '';
   const tip = d === 0 ? `${label} agrees: #${pollRank}`
     : `${label} #${pollRank} · ${Math.abs(d)} spot${Math.abs(d) === 1 ? '' : 's'} ` +
       `${d > 0 ? 'lower than' : 'higher than'} W²`;
-  return `<span class="index-stat poll-cell ${cls}" title="${tip}">${pollRank}${
+  return `<span class="index-stat poll-cell ${col} ${cls}" title="${tip}">${pollRank}${
     d ? `<small>${d > 0 ? '+' : ''}${d}</small>` : ''}</span>`;
 }
 
 function indexTeamRow(t) {
-  const logo = t.logo ? `<img class="index-logo" src="${t.logo}" alt="" loading="lazy">` : '';
+  // Always emit a logo cell, even when a team has no crest — an omitted grid child
+  // would shift every following column out from under its header label.
+  const logo = t.logo
+    ? `<img class="index-logo" src="${t.logo}" alt="" loading="lazy">`
+    : '<span class="index-logo"></span>';
   const sos = t.sos2026 === null ? '—' : (t.sos2026 > 0 ? '+' : '') + t.sos2026.toFixed(1);
   const rec = t.record ? `<span class="index-rec">${t.record}</span>` : '';
   return `
@@ -564,11 +568,11 @@ function indexTeamRow(t) {
       <span class="index-rank">${t.rank}</span>
       ${logo}
       <span class="index-school">${t.school} ${rec}</span>
-      <span class="index-conf">${CONF_ACRO[t.conference] || t.conference}</span>
+      <span class="index-conf col-conf">${CONF_ACRO[t.conference] || t.conference}</span>
       <span class="index-stat" title="projected rating">${(t.rating > 0 ? '+' : '') + t.rating.toFixed(1)}</span>
-      ${pollCell(t.apRank, t.rank, 'AP')}
-      ${pollCell(t.coachesRank, t.rank, 'Coaches')}
-      <span class="index-stat dim" title="2026 strength of schedule">${sos}</span>
+      ${pollCell(t.apRank, t.rank, 'AP', 'col-ap')}
+      ${pollCell(t.coachesRank, t.rank, 'Coaches', 'col-coa')}
+      <span class="index-stat dim col-sos" title="2026 strength of schedule">${sos}</span>
     </div>
   `;
 }
@@ -628,11 +632,11 @@ function renderIndexUI(data) {
       <span class="teams-count" id="w2-count"></span>
     </div>
     <div class="index-list-head">
-      <span>#</span><span></span><span>Team</span><span>Conf</span>
+      <span>#</span><span></span><span>Team</span><span class="col-conf">Conf</span>
       <span title="Projected 2026 strength vs an average FBS team — rating gaps read like point spreads">Rating</span>
-      <span title="AP Top 25 rank, with its gap vs our W² rank. Comparison only — polls never feed the index.">AP</span>
-      <span title="Coaches Poll rank, with its gap vs our W² rank. Comparison only — polls never feed the index.">Coa</span>
-      <span title="Average projected rating of 2026 opponents — higher = harder schedule">'26 SoS</span>
+      <span class="col-ap" title="AP Top 25 rank, with its gap vs our W² rank. Comparison only — polls never feed the index.">AP</span>
+      <span class="col-coa" title="Coaches Poll rank, with its gap vs our W² rank. Comparison only — polls never feed the index.">Coa</span>
+      <span class="col-sos" title="Average projected rating of 2026 opponents — higher = harder schedule">'26 SoS</span>
     </div>
     <div class="index-list"></div>
     ${confStrengthTable(data)}
