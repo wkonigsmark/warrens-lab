@@ -1,4 +1,4 @@
--- Cardiff City + Fort Green rosters, Fall 2026. Idempotent.
+-- Cardiff City + Fort Greene rosters, Fall 2026. Idempotent.
 
 -- cardiff-city-fall-2026
 insert into public.players (first_name, last_name) values
@@ -37,7 +37,7 @@ where t.slug = 'cardiff-city-fall-2026'
   )
 on conflict do nothing;
 
--- fort-green-fall-2026
+-- fort-greene-fall-2026
 insert into public.players (first_name, last_name) values
     ('Bowen', 'Makavy'),
     ('Dylan', 'Bernstein'),
@@ -57,7 +57,7 @@ insert into public.team_players (team_id, player_id)
 select t.id, p.id
 from public.teams t
 cross join public.players p
-where t.slug = 'fort-green-fall-2026'
+where t.slug = 'fort-greene-fall-2026'
   and (p.first_name, p.last_name) in (
     ('Bowen', 'Makavy'),
     ('Dylan', 'Bernstein'),

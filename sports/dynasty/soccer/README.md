@@ -31,7 +31,7 @@ soccer/
 │   ├── _template/index.html   # copy for a new team
 │   ├── arsenal-fall-2026/
 │   ├── cardiff-city-fall-2026/
-│   └── fort-green-fall-2026/
+│   └── fort-greene-fall-2026/
 └── supabase/
     ├── schema.sql             # full schema incl. events (fresh installs)
     ├── migrate-2026-09-08-events.sql      # adds events to a DB created before 9/8
@@ -40,7 +40,7 @@ soccer/
     ├── migrate-2026-09-09-practice.sql    # saved practice plans + RPCs
     ├── seed.sql               # sports + Fall 2026 teams + all three rosters (idempotent)
     ├── seed-events.sql        # Fall 2026 DSL schedule, all three teams (idempotent)
-    └── seed-rosters-cardiff-fortgreen.sql  # the two other Fall 2026 rosters
+    └── seed-rosters-cardiff-fortgreene.sql  # the two other Fall 2026 rosters
 ```
 
 ## Adding a team (new season, new club)
@@ -179,7 +179,7 @@ update public.coach_settings set value = extensions.crypt('NEWPIN', extensions.g
   (scorer / assist / own goal) → End half → … → Finalize. The clock is derived from a stored
   kickoff timestamp, so refreshes and locked phones don't lose time. Spectators without the
   PIN see a read-only board that refreshes every 10 s. Teams with `live_scoring = false`
-  (Fort Green) get no scoring controls.
+  (Fort Greene) get no scoring controls.
 
 ## Phase 2 ideas (not started)
 

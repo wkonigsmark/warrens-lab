@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="../../shared/themes.css">
 </head>
 <!-- data-team must match the team's slug in the Supabase `teams` table -->
-<body data-team="fort-green-fall-2026">
+<body data-team="fort-greene-fall-2026">
   <main class="wrap">
     <header class="team-band"><div class="wrap-inner">
       <div class="crumbs"><a href="../../index.html">Dynasty Soccer</a> / Team</div>
@@ -24,6 +24,11 @@
       </div>
       <p id="team-meta" class="meta"></p>
     </div></header>
+
+    <section class="card gameday" id="next-up" hidden>
+      <h2><span id="next-label">Next up</span> <span id="next-when" class="record"></span></h2>
+      <div id="next-list" class="gameday-list"></div>
+    </section>
 
     <section class="card">
       <h2>Roster</h2>
@@ -59,7 +64,7 @@
       <h2>Lineups</h2>
       <p class="hint">Build a formation on an interactive pitch, auto-filled from each player's positions.</p>
       <div class="filters practice-links">
-        <a class="chip on" id="lineup-link" href="../../lineup/index.html?team=fort-green-fall-2026">Open lineup builder</a>
+        <a class="chip on" id="lineup-link" href="../../lineup/index.html?team=fort-greene-fall-2026">Open lineup builder</a>
       </div>
     </section>
 
@@ -67,7 +72,7 @@
       <h2>Practice Planner</h2>
       <p class="hint">Build a timed session from the drill library, then print it. Or browse drills directly:</p>
       <div class="filters practice-links">
-        <a class="chip on" href="../../practice/index.html?team=fort-green-fall-2026">Practice plan builder</a>
+        <a class="chip on" href="../../practice/index.html?team=fort-greene-fall-2026">Practice plan builder</a>
         <a class="chip" href="../../drills/index.html">All drills</a>
         <a class="chip" href="../../drills/index.html?specialty=warm_up">Warm up</a>
         <a class="chip" href="../../drills/index.html?specialty=dribbling">Dribbling</a>

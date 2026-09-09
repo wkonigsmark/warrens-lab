@@ -22,7 +22,7 @@ on conflict (key) do update set value = excluded.value;
 -- ---------------------------------------------------------------
 alter table public.teams add column if not exists live_scoring boolean not null default true;
 alter table public.teams add column if not exists half_length_sec integer not null default 1200;
-update public.teams set live_scoring = false where slug = 'fort-green-fall-2026';
+update public.teams set live_scoring = false where slug = 'fort-greene-fall-2026';
 
 -- ---------------------------------------------------------------
 -- Coach-only per-roster evaluation + dated notes (private tables)

@@ -18,8 +18,13 @@
     <div class="crumbs"><a href="../../index.html">Sports</a> / Dynasty Soccer</div>
     <div class="head">
       <h1><span>⚽</span>Dynasty Soccer</h1>
-      <div id="status" class="status">Connecting…</div>
+      <div class="head-right"><div id="coach-slot" class="coach-slot"></div><div id="status" class="status">Connecting…</div></div>
     </div>
+
+    <section class="card gameday" id="next-up" hidden>
+      <h2><span id="next-label">Next up</span> <span id="next-when" class="record"></span></h2>
+      <div id="next-list" class="gameday-list"></div>
+    </section>
 
     <div id="seasons"><p class="empty">Loading teams…</p></div>
 
@@ -72,7 +77,8 @@
 
   <script type="module">
     import { sb, esc, setStatus, isConfigured, seasonRank, clubKey } from './shared/db.js';
-    import { fetchEvents, renderEvents, isMissingTable } from './shared/schedule.js';
+    import { fetchEvents, renderEvents, isMissingTable, fmtDate, fmtTime, TYPE_LABEL, todayISO } from './shared/schedule.js';
+    import { mountCoachToggle, onChange } from './shared/coach.js';
 
     const statusEl = document.getElementById('status');
     const seasonsEl = document.getElementById('seasons');
@@ -120,6 +126,7 @@
         ]);
         matchesByEvent = Object.fromEntries(allMatches.map(m => [m.event_id, m]));
         drawEvents();
+        drawGameday();
       } catch (err) {
         console.error(err);
         eventsEl.innerHTML = `<tr><td colspan="6" class="empty">${isMissingTable(err)
@@ -128,7 +135,45 @@
       }
     }
 
+    /** Today's sessions, or the next day that has any — with one-tap coach actions. */
+    function drawGameday() {
+      const today = todayISO();
+      const playable = allEvents.filter(e => e.event_type !== 'bye');
+      let day = playable.filter(e => e.event_date === today);
+      let label = 'Today';
+      if (!day.length) {
+        const next = playable.filter(e => e.event_date > today).map(e => e.event_date).sort()[0];
+        if (!next) { document.getElementById('next-up').hidden = true; return; }
+        day = playable.filter(e => e.event_date === next);
+        label = 'Next up';
+      }
+      day.sort((a, b) => (a.start_time || '').localeCompare(b.start_time || ''));
+
+      document.getElementById('next-label').textContent = label;
+      document.getElementById('next-when').textContent = fmtDate(day[0].event_date);
+      document.getElementById('next-list').innerHTML = day.map(e => {
+        const t = e.teams;
+        const scorable = e.event_type === 'game' && t.live_scoring !== false;
+        return `
+        <div class="gd-item" data-club="${esc(clubKey(t.slug))}">
+          <div class="gd-when">${esc(fmtTime(e.start_time) || 'TBD')}</div>
+          <div class="gd-what">
+            <div class="gd-team"><span class="crest"></span>${esc(t.name)} <span class="pill ${e.event_type}">${esc(TYPE_LABEL[e.event_type])}</span></div>
+            <div class="gd-sub">${e.opponent ? `vs ${esc(e.opponent)} · ` : ''}${esc(e.location || '')}</div>
+          </div>
+          <div class="gd-actions">
+            <a class="gd-btn primary" href="attendance/index.html?event=${e.id}">✓ Check-in</a>
+            <a class="gd-btn" href="lineup/index.html?team=${encodeURIComponent(t.slug)}&event=${e.id}">Lineup</a>
+            ${scorable ? `<a class="gd-btn" href="match/index.html?event=${e.id}">Score</a>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+      document.getElementById('next-up').hidden = false;
+    }
+
     async function init() {
+      mountCoachToggle(document.getElementById('coach-slot'));
+      onChange(() => { if (allEvents.length) drawEvents(); });
       if (!isConfigured) {
         setStatus(statusEl, 'Not configured', 'err');
         seasonsEl.innerHTML = '<p class="empty">Fill in <code>data/supabase-config.js</code> with the project URL and publishable key.</p>';

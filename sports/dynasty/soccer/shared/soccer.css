@@ -308,3 +308,29 @@ table.roster select.pos { width: 92px; }
 .att-link { font-size: 0.75rem; color: var(--text-dim); text-decoration: none; border-bottom: 1px dotted var(--text-dim); white-space: nowrap; }
 .att-link:hover { color: var(--text-main); }
 @media (max-width: 600px) { .rnote { width: 100%; } }
+
+/* ---------------------------------------------------------------- game day strip */
+.card.gameday { border-top-width: 3px; }
+.gameday-list { display: flex; flex-direction: column; gap: 12px; }
+.gd-item { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 12px 14px; border-radius: 12px;
+  border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03); }
+.gd-item[data-club="arsenal"] { border-left: 4px solid #EF0107; }
+.gd-item[data-club="cardiff-city"] { border-left: 4px solid #0070B5; }
+.gd-when { font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; min-width: 88px; }
+.gd-what { flex: 1; min-width: 160px; }
+.gd-team { font-weight: 600; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.gd-team .crest { width: 22px; height: 22px; margin: 0; }
+.gd-sub { color: var(--text-dim); font-size: 0.88rem; margin-top: 2px; }
+.gd-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.gd-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border-radius: 10px; white-space: nowrap;
+  border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-main); text-decoration: none;
+  font-size: 0.92rem; font-weight: 600; transition: all .15s; }
+.gd-btn:hover { border-color: rgba(255,255,255,0.35); }
+.gd-btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink, #0c0e12); box-shadow: 0 4px 16px var(--accent-glow); }
+.gd-btn.primary:hover { filter: brightness(1.08); }
+@media (max-width: 620px) {
+  .gd-item { gap: 8px; }
+  .gd-when { min-width: 0; font-size: 1rem; }
+  .gd-actions { width: 100%; }
+  .gd-actions .gd-btn { flex: 1; padding: 0 8px; font-size: 0.86rem; }
+}

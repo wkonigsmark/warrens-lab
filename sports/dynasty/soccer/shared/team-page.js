@@ -1,7 +1,7 @@
 // Dynasty Soccer — renders a team page.
 // The team is chosen by <body data-team="<slug>">; see teams/_template/index.html.
 import { sb, esc, setStatus, isConfigured, applyClub } from './db.js';
-import { fetchEvents, renderEvents, isMissingTable, fmtDate } from './schedule.js';
+import { fetchEvents, renderEvents, isMissingTable, fmtDate, fmtTime, TYPE_LABEL, todayISO } from './schedule.js';
 import { mountCoachToggle, isUnlocked, onChange, coachCall } from './coach.js';
 import { positionOptions, POSITIONS } from './positions.js';
 
@@ -147,6 +147,41 @@ function drawSchedule() {
   });
 }
 
+/** One-tap actions for today's session, or the next one. */
+function drawGameday() {
+  const box = $('next-up');
+  if (!box) return;
+  const today = todayISO();
+  const playable = events.filter(e => e.event_type !== 'bye');
+  let day = playable.filter(e => e.event_date === today);
+  let label = 'Today';
+  if (!day.length) {
+    const next = playable.filter(e => e.event_date > today).map(e => e.event_date).sort()[0];
+    if (!next) { box.hidden = true; return; }
+    day = playable.filter(e => e.event_date === next);
+    label = 'Next up';
+  }
+  $('next-label').textContent = label;
+  $('next-when').textContent = fmtDate(day[0].event_date);
+  $('next-list').innerHTML = day.map(e => {
+    const scorable = e.event_type === 'game' && team.live_scoring !== false;
+    return `
+      <div class="gd-item">
+        <div class="gd-when">${esc(fmtTime(e.start_time) || 'TBD')}</div>
+        <div class="gd-what">
+          <div class="gd-team">${esc(TYPE_LABEL[e.event_type])}${e.opponent ? ` vs ${esc(e.opponent)}` : ''}</div>
+          <div class="gd-sub">${esc(e.location || '')}</div>
+        </div>
+        <div class="gd-actions">
+          <a class="gd-btn primary" href="../../attendance/index.html?event=${e.id}">✓ Check-in</a>
+          <a class="gd-btn" href="../../lineup/index.html?team=${encodeURIComponent(team.slug)}&event=${e.id}">Lineup</a>
+          ${scorable ? `<a class="gd-btn" href="../../match/index.html?event=${e.id}">Score</a>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+  box.hidden = false;
+}
+
 function drawResults() {
   if (!resultsEl) return;
   const finals = Object.values(matches).filter(m => m.status === 'final')
@@ -180,7 +215,7 @@ async function loadSchedule() {
       try { attendance = await coachCall('coach_attendance_summary', { p_team_id: team.id }); }
       catch (err) { console.warn('attendance summary:', err.message); }
     }
-    drawSchedule(); drawResults();
+    drawSchedule(); drawResults(); drawGameday();
     hidePastEl?.addEventListener('change', drawSchedule);
   } catch (err) {
     console.error(err);

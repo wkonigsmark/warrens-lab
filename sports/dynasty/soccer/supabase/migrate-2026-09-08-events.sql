@@ -28,4 +28,4 @@ create policy "public can read events" on public.events for select to anon, auth
 grant select on public.events to anon, authenticated;
 
 update public.teams set age_group = 'Co-Ed 6' where slug = 'cardiff-city-fall-2026' and age_group is null;
-update public.teams set age_group = 'Co-Ed 5' where slug = 'fort-green-fall-2026'   and age_group is null;
+update public.teams set age_group = 'Co-Ed 5' where slug = 'fort-greene-fall-2026'   and age_group is null;
