@@ -183,6 +183,15 @@ function drawGameday() {
   box.hidden = false;
 }
 
+/** "44:10 played" — the real elapsed time of a finished match, when it was recorded. */
+function played(m) {
+  if (m.period1_sec == null && m.period2_sec == null) return '';
+  const total = (m.period1_sec || 0) + (m.period2_sec || 0);
+  const mm = String(Math.floor(total / 60)).padStart(2, '0');
+  const ss = String(total % 60).padStart(2, '0');
+  return `${mm}:${ss} played`;
+}
+
 function drawResults() {
   if (!resultsEl) return;
   const finals = Object.values(matches).filter(m => m.status === 'final')
@@ -201,7 +210,8 @@ function drawResults() {
       <span class="score final ${r}">${r} ${m.our_score}–${m.their_score}</span>
       <span class="opp">vs ${esc(m.events?.opponent || '')}</span>
       <span class="dim">${m.events ? fmtDate(m.events.event_date) : ''}</span>
-      ${scorers ? `<span class="scorers">${scorers}</span>` : ''}</a></li>`;
+      ${scorers ? `<span class="scorers">${scorers}</span>` : ''}
+      ${played(m) ? `<span class="played">${played(m)}</span>` : ''}</a></li>`;
   }).join('');
 }
 
@@ -209,7 +219,7 @@ async function loadSchedule() {
   try {
     const [evs, ms] = await Promise.all([
       fetchEvents(team.id),
-      sb(`matches?team_id=eq.${team.id}&select=id,event_id,status,our_score,their_score,events(event_date,opponent),goals(side,scorer_id)`).catch(() => []),
+      sb(`matches?team_id=eq.${team.id}&select=id,event_id,status,our_score,their_score,period1_sec,period2_sec,events(event_date,opponent),goals(side,scorer_id)`).catch(() => sb(`matches?team_id=eq.${team.id}&select=id,event_id,status,our_score,their_score,events(event_date,opponent),goals(side,scorer_id)`)).catch(() => []),
     ]);
     events = evs; matches = Object.fromEntries(ms.map(m => [m.event_id, m]));
     if (isUnlocked()) {

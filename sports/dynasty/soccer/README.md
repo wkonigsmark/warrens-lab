@@ -80,7 +80,7 @@ next to its `index.html`.
 | `players`         | a kid exists once, across sports and seasons        | read        |
 | `team_players`    | roster membership + jersey number / position        | read        |
 | `events`          | games / practices / byes per team (`event_type`)    | read        |
-| `matches`         | one per scored game: clock state, score, status     | read        |
+| `matches`         | clock state, score, status, actual half durations   | read        |
 | `goals`           | per goal: half, seconds, side, scorer, assist, OG   | read        |
 | `player_evals`    | skill 1–4, pos 1/2 per roster row (coach only)      | **none**    |
 | `player_notes`    | dated coaching notes per roster row (coach only)    | **none**    |
@@ -209,7 +209,15 @@ update public.coach_settings set value = extensions.crypt('NEWPIN', extensions.g
 
 - **Roster edit** — skill dropdown, free-text Pos 1 / Pos 2, saved on change. "Notes" opens a
   dated log per player; the table shows only the latest entry.
-- **Live scoring** — tap ⚽ Score in the nav, or a game row's *Score* link. Open match → Start 1st half → Goal buttons
+- **Half timing.** Goal minutes use the *nominal* half length, the way real football does: the
+second half always starts at 20:00 even if the first ran to 23. Separately, ending a half records
+how long it actually ran (`period1_sec`, `period2_sec`), so the scoreboard can show
+"1st half 23:12 +3:12" and the results list can show total time played. Finalising straight from a
+running half still captures that half. Set the half length in 5-minute steps from the match
+controls — before a match opens it sets the team default, after it opens it applies to that match
+only, so adjusting it never rewrites a game already played.
+
+**Live scoring** — tap ⚽ Score in the nav, or a game row's *Score* link. Open match → Start 1st half → Goal buttons
   (scorer / assist / own goal) → End half → … → Finalize. The clock is derived from a stored
   kickoff timestamp, so refreshes and locked phones don't lose time. Spectators without the
   PIN see a read-only board that refreshes every 10 s. Teams with `live_scoring = false`

@@ -470,3 +470,14 @@ table.roster select.pos { width: 92px; }
 .half-pick select { padding: 8px 10px; border-radius: 8px; border: 1px solid var(--glass-border);
   background: #12151b; color: var(--text-main); font: inherit; font-size: 0.88rem; }
 .half-pick.dim { opacity: 0.55; }
+
+/* actual half durations */
+.timing { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: center;
+  margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--glass-border); }
+.half-stat { font-size: 0.84rem; color: var(--text-dim); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.half-stat b { font-weight: 600; color: var(--text-main); margin-right: 5px; font-size: 0.72rem;
+  text-transform: uppercase; letter-spacing: 1px; }
+.half-stat em { font-style: normal; margin-left: 5px; font-size: 0.78rem; }
+.half-stat em.ok { color: var(--accent); }
+.half-stat em.off { color: #ffd166; }
+.results .played { color: var(--text-dim); font-size: 0.8rem; font-variant-numeric: tabular-nums; }

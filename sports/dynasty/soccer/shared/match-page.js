@@ -44,6 +44,28 @@ function drawClock() {
   $('clock').classList.toggle('running', running);
 }
 
+/** "23:12 (+3:12)" — actual length of a half, and how far over or under the scheduled one. */
+function halfLine(label, sec) {
+  if (sec == null) return '';
+  const diff = sec - (match?.half_length_sec ?? 1200);
+  const sign = diff === 0 ? '' : diff > 0 ? '+' : '−';
+  const drift = diff === 0 ? 'on time' : `${sign}${mmss(Math.abs(diff))}`;
+  const cls = Math.abs(diff) <= 60 ? 'ok' : 'off';
+  return `<span class="half-stat"><b>${label}</b> ${mmss(sec)} <em class="${cls}">${drift}</em></span>`;
+}
+
+function drawTiming() {
+  const el = $('timing');
+  if (!el) return;
+  const parts = [halfLine('1st half', match?.period1_sec), halfLine('2nd half', match?.period2_sec)]
+    .filter(Boolean);
+  if (match?.period1_sec != null && match?.period2_sec != null) {
+    parts.push(`<span class="half-stat"><b>Played</b> ${mmss(match.period1_sec + match.period2_sec)}</span>`);
+  }
+  el.innerHTML = parts.join('');
+  el.hidden = !parts.length;
+}
+
 function draw() {
   $('us-name').textContent = team.name;
   $('them-name').textContent = event.opponent || 'Opponent';
@@ -53,6 +75,7 @@ function draw() {
   $('period').textContent = status;
   $('state').textContent = !match ? '' : match.status === 'final' ? '' : match.period_started_at ? 'clock running' : match.period < 3 ? 'paused' : '';
   drawClock();
+  drawTiming();
   drawGoals();
   drawControls();
   clearInterval(tick);
