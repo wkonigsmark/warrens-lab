@@ -13,6 +13,11 @@ const HALF = { 1: '1st half', 2: '2nd half', 3: 'Full time' };
 const pad = n => String(n).padStart(2, '0');
 const mmss = s => `${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
 const fullName = p => `${p.first_name} ${p.last_name}`;
+const initials = p => `${(p.first_name || '?')[0]}${(p.last_name || '')[0] || ''}`.toUpperCase();
+const shortName = p => {
+  const dupes = roster.filter(o => o.players.first_name === p.first_name).length > 1;
+  return dupes ? `${p.first_name} ${(p.last_name || '')[0] || ''}.` : p.first_name;
+};
 const nameOf = id => { const p = roster.find(r => r.players.id === id); return p ? fullName(p.players) : '?'; };
 
 /** Seconds elapsed inside the current half. */
@@ -94,7 +99,8 @@ function drawGoals() {
       <span class="gtime">${g.period === 2 ? '2H' : '1H'} ${mmss(goalMinute(g))}</span>
       <span class="gside">${g.side === 'us' ? esc(team.name) : esc(event.opponent || 'Opponent')}</span>
       <span class="gwho">${who}</span> ${assist}
-      ${isUnlocked() && match.status !== 'final' ? '<button class="del" type="button" title="Delete goal" aria-label="Delete goal">×</button>' : ''}
+      ${isUnlocked() && match.status !== 'final' ? `<button class="g-edit" type="button" data-edit="${g.id}" title="Edit scorer or assist" aria-label="Edit goal">✎</button>
+         <button class="del" type="button" title="Delete goal" aria-label="Delete goal">×</button>` : ''}
     </li>`;
   }).join('');
 }
@@ -144,43 +150,98 @@ function drawControls() {
     </div>`;
 }
 
-// ---------------------------------------------------------------- goal sheet
-function openSheet(side) {
-  sheetSide = side;
-  const opts = roster.map(r => `<option value="${r.players.id}">${esc(fullName(r.players))}</option>`).join('');
-  $('scorer').innerHTML = `<option value="">— unknown —</option>${opts}`;
-  $('assist').innerHTML = `<option value="">— none —</option>${opts}`;
-  $('own-goal').checked = false;
-  $('sheet-title').textContent = side === 'us' ? `Goal · ${team.name}` : `Goal · ${event.opponent || 'Opponent'}`;
-  $('og-text').textContent = side === 'us' ? `Own goal by ${event.opponent || 'opponent'} (no scorer)` : `Own goal by one of our players`;
-  syncSheet();
+// ---------------------------------------------------------------- goal entry
+// The goal row is written the instant the button is tapped, so the score is right
+// immediately and nothing can be stranded half-entered. Picking a scorer amends
+// that row; walking away leaves a valid, saved goal with an unknown scorer.
+let pendingGoalId = null;      // the goal currently offered for naming
+let editingGoalId = null;      // an older goal being amended
+
+function playerTiles(extra = []) {
+  return roster.map(r => `<button type="button" class="pick-tile" data-pick="${r.players.id}">
+      <span class="pick-ini">${esc(initials(r.players))}</span>
+      <span class="pick-nm">${esc(shortName(r.players))}</span>
+    </button>`).join('') +
+    extra.map(x => `<button type="button" class="pick-tile alt" data-pick="${x.v}">
+      <span class="pick-ini">${x.icon}</span><span class="pick-nm">${esc(x.label)}</span></button>`).join('');
+}
+
+function openScorerSheet(goalId, { editing = false } = {}) {
+  pendingGoalId = editing ? null : goalId;
+  editingGoalId = editing ? goalId : null;
+  const g = (match.goals || []).find(x => x.id === goalId);
+  $('sheet-title').textContent = editing ? 'Change scorer' : `Goal · ${team.name} — who scored?`;
+  $('sheet-body').innerHTML = `
+    <div class="pick-grid">${playerTiles([
+      { v: '', icon: '?', label: 'Unknown' },
+      { v: 'og', icon: '⚽', label: 'Own goal' },
+    ])}</div>
+    ${editing ? `<div class="pick-assist">
+      <label>Assist
+        <select id="assist-sel">
+          <option value="">— none —</option>
+          ${roster.map(r => `<option value="${r.players.id}"${g?.assist_id === r.players.id ? ' selected' : ''}>${esc(fullName(r.players))}</option>`).join('')}
+        </select>
+      </label>
+      <button class="chip on" type="button" id="save-assist">Save assist</button>
+    </div>` : `<p class="hint">Tap a name to log it. The goal is already counted — you can add an assist later.</p>`}`;
   $('goal-sheet').hidden = false;
   $('goal-sheet').scrollIntoView({ behavior: 'smooth', block: 'center' });
-  $('scorer').focus({ preventScroll: true });
 }
-function syncSheet() {
-  const og = $('own-goal').checked;
-  if (sheetSide === 'us') {
-    $('scorer-label').hidden = og; $('assist-label').hidden = og;
-  } else {
-    $('scorer-label').hidden = !og; $('assist-label').hidden = true;
-    $('scorer-label').firstChild.textContent = 'Own goal by ';
+
+function closeSheet() {
+  $('goal-sheet').hidden = true;
+  pendingGoalId = null;
+  editingGoalId = null;
+}
+$('sheet-cancel').addEventListener('click', closeSheet);
+
+$('goal-sheet').addEventListener('click', async e => {
+  const pick = e.target.closest('[data-pick]');
+  if (pick) {
+    const v = pick.dataset.pick;
+    const id = pendingGoalId || editingGoalId;
+    if (!id) return closeSheet();
+    const g = (match.goals || []).find(x => x.id === id);
+    try {
+      await coachCall('coach_goal_update', {
+        p_goal_id: id,
+        p_scorer_id: v && v !== 'og' ? v : null,
+        p_assist_id: g?.assist_id || null,
+        p_own_goal: v === 'og',
+      });
+      closeSheet();
+      await refresh();
+    } catch (err) { alert(err.message); }
+    return;
   }
-  if (sheetSide === 'us') $('scorer-label').firstChild.textContent = 'Scorer ';
-}
-$('own-goal').addEventListener('change', syncSheet);
-$('sheet-cancel').addEventListener('click', () => { $('goal-sheet').hidden = true; });
-$('goal-form').addEventListener('submit', async e => {
-  e.preventDefault();
-  const og = $('own-goal').checked;
-  const scorer = $('scorer-label').hidden ? null : ($('scorer').value || null);
-  const assist = $('assist-label').hidden ? null : ($('assist').value || null);
-  try {
-    await coachCall('coach_goal_add', { p_match_id: match.id, p_side: sheetSide, p_scorer_id: scorer, p_assist_id: assist, p_own_goal: og });
-    $('goal-sheet').hidden = true;
-    await refresh();
-  } catch (err) { alert(err.message); }
+  if (e.target.id === 'save-assist') {
+    const g = (match.goals || []).find(x => x.id === editingGoalId);
+    try {
+      await coachCall('coach_goal_update', {
+        p_goal_id: editingGoalId,
+        p_scorer_id: g?.scorer_id || null,
+        p_assist_id: $('assist-sel').value || null,
+        p_own_goal: !!g?.own_goal,
+      });
+      closeSheet();
+      await refresh();
+    } catch (err) { alert(err.message); }
+  }
 });
+
+/** Record a goal straight away, then offer the scorer picker for our own goals. */
+async function addGoal(side) {
+  closeSheet();                       // moving on: never leave a stale picker open
+  try {
+    const g = await coachCall('coach_goal_add', {
+      p_match_id: match.id, p_side: side,
+      p_scorer_id: null, p_assist_id: null, p_own_goal: false,
+    });
+    await refresh();
+    if (side === 'us') openScorerSheet(g.id);
+  } catch (err) { alert(err.message); }
+}
 
 // ---------------------------------------------------------------- actions
 $('controls').addEventListener('change', async e => {
@@ -211,8 +272,8 @@ $('controls').addEventListener('click', async e => {
       if (!confirm(`End the ${HALF[match.period]}?`)) return;
       await coachCall('coach_match_clock', { p_match_id: match.id, p_action: 'end_period' });
     }
-    else if (act === 'goal-us') { openSheet('us'); return; }
-    else if (act === 'goal-them') { openSheet('them'); return; }
+    else if (act === 'goal-us') { await addGoal('us'); return; }
+    else if (act === 'goal-them') { await addGoal('them'); return; }
     else if (act === 'finalize') {
       if (!confirm(`Finalize ${team.name} ${match.our_score}–${match.their_score} ${event.opponent || ''}? This records the result.`)) return;
       await coachCall('coach_match_finalize', { p_match_id: match.id });
@@ -227,6 +288,8 @@ $('controls').addEventListener('click', async e => {
   } catch (err) { alert(err.message); }
 });
 $('goals').addEventListener('click', async e => {
+  const ed = e.target.closest('[data-edit]');
+  if (ed) { openScorerSheet(ed.dataset.edit, { editing: true }); return; }
   const del = e.target.closest('.del');
   if (!del) return;
   if (!confirm('Delete this goal?')) return;
@@ -246,6 +309,7 @@ async function refresh() {
   }
   match = match || null;
   draw();
+  window.dispatchEvent(new CustomEvent('dynasty:match-changed'));   // keep the live banner in step
 }
 function drawScore() {
   $('us-name').textContent = team.name;
@@ -271,7 +335,7 @@ async function init() {
     roster = await sb(`team_players?team_id=eq.${team.id}&select=players(id,first_name,last_name)`);
     roster.sort((a, b) => `${a.players.last_name} ${a.players.first_name}`.localeCompare(`${b.players.last_name} ${b.players.first_name}`));
     await refresh();
-    onChange(() => { $('goal-sheet').hidden = true; draw(); });
+    onChange(() => { closeSheet(); draw(); });
     // Spectators: poll so the scoreboard follows the coach's phone.
     poll = setInterval(() => { if (!isUnlocked() && document.visibilityState === 'visible') refresh().catch(() => {}); }, 10000);
   } catch (err) {

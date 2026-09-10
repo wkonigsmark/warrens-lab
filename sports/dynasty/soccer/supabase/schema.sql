@@ -748,3 +748,28 @@ begin
     status = 'final', period = 3, period_started_at = null, finalized_at = now()
   where id = m.id;
 end $$;
+
+-- ===============================================================
+-- Amend a recorded goal
+-- ===============================================================
+
+create or replace function public.coach_goal_update(pin text, p_goal_id uuid,
+                                                    p_scorer_id uuid, p_assist_id uuid,
+                                                    p_own_goal boolean)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare g public.goals; m public.matches;
+begin
+  perform public.coach_check(pin);
+  select * into g from public.goals where id = p_goal_id;
+  if g.id is null then raise exception 'no_such_goal'; end if;
+  select * into m from public.matches where id = g.match_id;
+  if m.status = 'final' then raise exception 'match_final'; end if;
+
+  update public.goals
+    set scorer_id = p_scorer_id,
+        assist_id = p_assist_id,
+        own_goal  = coalesce(p_own_goal, false)
+  where id = p_goal_id
+  returning * into g;
+  return to_jsonb(g);
+end $$;

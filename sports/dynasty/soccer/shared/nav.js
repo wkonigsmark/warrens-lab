@@ -73,9 +73,6 @@ export async function mountNav({ active = '', teamSlug = '', eventId = '' } = {}
   function draw(live) {
     if (live) scoreEv = live.event_id;              // a running match always wins
     nav.innerHTML = `
-      ${live ? `<a class="an-live" href="${base}match/index.html?event=${live.event_id}">
-          <span class="an-dot"></span><span class="an-txt">LIVE ${live.our_score}–${live.their_score}</span>
-        </a>` : ''}
       ${PRIMARY.map(i => `
         <a class="an-item${i.key === active ? ' active' : ''}" href="${base}${i.href(slug, ev, scoreEv)}">
           <span class="an-icon">${i.icon}</span><span class="an-label">${esc(i.label)}</span>
@@ -90,19 +87,73 @@ export async function mountNav({ active = '', teamSlug = '', eventId = '' } = {}
         </div>
       </div>`;
   }
+
+  // ---- live banner: its own centred bar under the nav, with half and running clock
+  const banner = document.createElement('div');
+  banner.className = 'live-bar';
+  banner.hidden = true;
+  nav.after(banner);
+
+  let liveMatch = null, tick = null;
+  const HALF = { 1: '1st half', 2: '2nd half', 3: 'Full time' };
+  const pad = n => String(n).padStart(2, '0');
+  const mmss = t => `${pad(Math.floor(t / 60))}:${pad(t % 60)}`;
+
+  function liveClock(m) {
+    let el = m.period_elapsed_before || 0;
+    if (m.period_started_at) el += Math.max(0, Math.floor((Date.now() - new Date(m.period_started_at)) / 1000));
+    const offset = Math.min(Math.max(m.period - 1, 0), 2) * (m.half_length_sec || 1200);
+    return mmss(offset + el);
+  }
+
+  function paintBanner() {
+    if (!liveMatch) { banner.hidden = true; clearInterval(tick); tick = null; return; }
+    banner.hidden = false;
+    banner.innerHTML = `
+      <a class="an-live" href="${base}match/index.html?event=${liveMatch.event_id}">
+        <span class="an-dot"></span>
+        <span class="lb-tag">LIVE</span>
+        <span class="lb-score">${liveMatch.our_score}–${liveMatch.their_score}</span>
+        <span class="lb-sep"></span>
+        <span class="lb-half">${HALF[liveMatch.period] || ''}</span>
+        <span class="lb-clock">${liveClock(liveMatch)}</span>
+      </a>`;
+  }
+  function retimeBanner() {
+    clearInterval(tick);
+    if (liveMatch?.period_started_at) tick = setInterval(() => {
+      const c = banner.querySelector('.lb-clock');
+      if (c) c.textContent = liveClock(liveMatch);
+    }, 1000);
+  }
+
   draw(null);
 
   // Keep a running match reachable from every page.
   async function pollLive() {
     try {
-      const [m] = await sb('matches?status=eq.live&select=event_id,our_score,their_score&order=created_at.desc&limit=1');
+      const rows = await sb('matches?status=eq.live&select=event_id,our_score,their_score,period,' +
+        'period_started_at,period_elapsed_before,half_length_sec&order=created_at.desc&limit=5');
+      // If this page is a match, always show that one — otherwise the most recent.
+      const m = (eventId && rows.find(r => r.event_id === eventId)) || rows[0];
+      const wasLive = !!liveMatch;
+      liveMatch = m || null;
+      if (liveMatch) scoreEv = liveMatch.event_id;
       const openMenu = nav.querySelector('.an-more.open');
-      if (!openMenu) draw(m || null);
+      if (!!liveMatch !== wasLive && !openMenu) draw(liveMatch);   // only rebuild the nav when it flips
+      paintBanner();
+      retimeBanner();
     } catch { /* leave the nav as it is */ }
   }
   pollLive();
   clearInterval(liveTimer);
   liveTimer = setInterval(() => { if (document.visibilityState === 'visible') pollLive(); }, 15000);
+  // Refresh the moment the match page changes something, and whenever the tab
+  // comes back to the foreground — a 15-second poll is too slow to trust mid-game.
+  window.addEventListener('dynasty:match-changed', pollLive);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') pollLive();
+  });
 
   nav.addEventListener('click', e => {
     const btn = e.target.closest('.an-more-btn');

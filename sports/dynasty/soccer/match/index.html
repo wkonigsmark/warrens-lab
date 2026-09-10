@@ -40,17 +40,8 @@
 
     <section id="goal-sheet" class="card sheet" hidden>
       <h2 id="sheet-title">Goal</h2>
-      <form id="goal-form">
-        <div class="field-row">
-          <label id="scorer-label">Scorer <select id="scorer"><option value="">— unknown —</option></select></label>
-          <label id="assist-label">Assist <select id="assist"><option value="">— none —</option></select></label>
-        </div>
-        <label class="toggle" id="og-label"><input type="checkbox" id="own-goal"> <span id="og-text">Own goal</span></label>
-        <div class="filters">
-          <button class="chip on" type="submit">Add goal</button>
-          <button class="chip" type="button" id="sheet-cancel">Cancel</button>
-        </div>
-      </form>
+      <div id="sheet-body"></div>
+      <div class="filters"><button class="chip" type="button" id="sheet-cancel">Done</button></div>
     </section>
 
     <section class="card">

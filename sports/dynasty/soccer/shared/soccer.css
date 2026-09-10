@@ -398,14 +398,23 @@ table.roster select.pos { width: 92px; }
 .an-menu-item:hover { color: var(--text-main); background: rgba(255,255,255,0.07); }
 .an-menu-item.active { color: var(--accent); background: var(--accent-soft); }
 
-/* live match badge */
+/* live match banner — its own centred bar under the nav, on every page */
+.live-bar { position: sticky; top: 66px; z-index: 999; display: flex; justify-content: center;
+  margin: 8px auto 0; width: fit-content; max-width: calc(100vw - 20px); }
 .an-live {
-  display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; text-decoration: none;
-  min-height: 44px; padding: 0 15px; border-radius: 50px;
-  background: rgba(255,107,107,0.16); border: 1px solid rgba(255,107,107,0.6); color: #ff9b9b;
-  font-size: 0.85rem; font-weight: 700; letter-spacing: 0.5px;
+  display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; text-decoration: none;
+  min-height: 44px; padding: 0 18px; border-radius: 50px;
+  background: rgba(255,107,107,0.16); border: 1px solid rgba(255,107,107,0.65); color: #ff9b9b;
+  font-size: 0.9rem; font-weight: 700; letter-spacing: 0.4px;
+  backdrop-filter: blur(16px); box-shadow: 0 6px 22px rgba(255,107,107,0.18);
 }
 .an-live:hover { background: rgba(255,107,107,0.26); color: #fff; }
+.lb-tag { font-size: 0.72rem; letter-spacing: 1.5px; }
+.lb-score { font-size: 1.05rem; color: #fff; font-variant-numeric: tabular-nums; }
+.lb-sep { width: 1px; height: 16px; background: rgba(255,255,255,0.25); }
+.lb-half { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85; }
+.lb-clock { font-family: "Perfect DOS VGA 437", ui-monospace, monospace; font-size: 1rem;
+  color: #fff; font-variant-numeric: tabular-nums; letter-spacing: 1px; }
 .an-dot { width: 8px; height: 8px; border-radius: 50%; background: #ff6b6b; animation: livepulse 1.3s infinite; }
 @keyframes livepulse { 50% { opacity: 0.25; } }
 
@@ -413,7 +422,10 @@ table.roster select.pos { width: 92px; }
   .app-nav { top: 8px; padding: 5px; gap: 3px; max-width: calc(100vw - 12px); }
   .app-nav .an-item { padding: 0 11px; font-size: 0.8rem; gap: 5px; }
   .app-nav .an-icon { font-size: 1rem; }
-  .an-live { padding: 0 11px; font-size: 0.78rem; }
+  .live-bar { top: 60px; }
+  .an-live { padding: 0 13px; font-size: 0.8rem; gap: 7px; }
+  .lb-score { font-size: 0.95rem; }
+  .lb-clock { font-size: 0.9rem; }
   .an-menu { right: -4px; }
 }
 @media (max-width: 400px) {
@@ -481,3 +493,22 @@ table.roster select.pos { width: 92px; }
 .half-stat em.ok { color: var(--accent); }
 .half-stat em.off { color: #ffd166; }
 .results .played { color: var(--text-dim); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+
+/* scorer picker (tap a name to log the goal) */
+.pick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; margin-bottom: 12px; }
+.pick-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  min-height: 76px; padding: 8px 4px; border-radius: 12px; cursor: pointer;
+  border: 1px solid var(--glass-border); background: rgba(255,255,255,0.04); color: var(--text-main); font: inherit;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: all .15s; }
+.pick-tile:hover { border-color: var(--accent-border); background: var(--accent-soft); }
+.pick-tile:active { transform: scale(0.95); }
+.pick-tile.alt { opacity: 0.75; }
+.pick-ini { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255,255,255,0.09); font-size: 0.8rem; font-weight: 700; }
+.pick-nm { font-size: 0.74rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.pick-assist { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.pick-assist label { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; color: var(--text-dim); }
+.pick-assist select { padding: 8px 10px; border-radius: 8px; border: 1px solid var(--glass-border);
+  background: #12151b; color: var(--text-main); font: inherit; min-width: 200px; }
+.g-edit { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 0.95rem; padding: 0 4px; }
+.g-edit:hover { color: var(--accent); }
