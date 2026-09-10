@@ -135,10 +135,18 @@ library links back to every active team.
 
 ## Navigation
 
-`shared/nav.js` renders one floating pill nav on every page. It is sticky at the top, collapses
-to just the current section once you scroll, and re-expands on hover (desktop) or a tap on the
-active pill (mobile). Class names are prefixed `an-` because `style-lab.css` already defines its
-own `.nav-item` menu with a fade-in animation.
+`shared/nav.js` renders one floating pill nav on every page, sticky at the top. Three game-day
+utilities are always visible and never collapse — **⚽ Score**, **📋 Lineup**, **👦👧 Check-in** —
+because on a Saturday those are the only things that matter. Everything else (team roster,
+stopwatch, practice plan, drill library, all teams) sits behind the **⋯** menu. Class names are
+prefixed `an-` because `style-lab.css` already defines its own `.nav-item` menu with a fade-in.
+
+**Where the links point.** The nav resolves the session *nearest to today* — today's if there is
+one, otherwise whichever is closest in either direction — so Check-in and Lineup always land on
+the right session without being told. **Score** resolves separately to the nearest *scoreable
+game* (skipping practices and teams with `live_scoring = false`), and a running match overrides
+everything. From there **▶ Start match** opens the match and starts the clock in one tap, so it
+is two taps from any page to a live scoreboard.
 
 **Live match badge.** Whenever any match has `status = 'live'`, a pulsing `LIVE 2–1` chip appears
 at the left of the nav on every page and links straight back to the scoreboard. It never
@@ -201,7 +209,7 @@ update public.coach_settings set value = extensions.crypt('NEWPIN', extensions.g
 
 - **Roster edit** — skill dropdown, free-text Pos 1 / Pos 2, saved on change. "Notes" opens a
   dated log per player; the table shows only the latest entry.
-- **Live scoring** — from a game row click *Score*. Open match → Start 1st half → Goal buttons
+- **Live scoring** — tap ⚽ Score in the nav, or a game row's *Score* link. Open match → Start 1st half → Goal buttons
   (scorer / assist / own goal) → End half → … → Finalize. The clock is derived from a stored
   kickoff timestamp, so refreshes and locked phones don't lose time. Spectators without the
   PIN see a read-only board that refreshes every 10 s. Teams with `live_scoring = false`

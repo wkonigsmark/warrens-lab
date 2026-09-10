@@ -15,6 +15,7 @@ const mmss = s => `${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
 const fullName = p => `${p.first_name} ${p.last_name}`;
 const nameOf = id => { const p = roster.find(r => r.players.id === id); return p ? fullName(p.players) : '?'; };
 
+/** Seconds elapsed inside the current half. */
 function elapsedNow() {
   if (!match) return 0;
   let s = match.period_elapsed_before;
@@ -22,11 +23,23 @@ function elapsedNow() {
   return s;
 }
 
+/**
+ * Seconds since kickoff, the way a real match clock reads: the second half
+ * continues from the end of the first (20:00 → 40:00 on 20-minute halves)
+ * rather than restarting at zero. Goals are still STORED as elapsed-within-half,
+ * which stays correct even if the half length is ever changed.
+ */
+function halfOffset(period) {
+  return Math.min(Math.max(period - 1, 0), 2) * (match?.half_length_sec ?? 1200);
+}
+const matchClockNow = () => halfOffset(match?.period ?? 1) + elapsedNow();
+const goalMinute = g => halfOffset(g.period) + g.elapsed_sec;
+
 // ---------------------------------------------------------------- render
 function drawClock() {
   const running = !!match?.period_started_at;
   const s = elapsedNow();
-  $('clock').textContent = mmss(s);
+  $('clock').textContent = mmss(matchClockNow());
   $('clock').classList.toggle('over', !!match && match.period < 3 && s >= match.half_length_sec);
   $('clock').classList.toggle('running', running);
 }
@@ -55,7 +68,7 @@ function drawGoals() {
       : (g.own_goal ? `Own goal${g.scorer_id ? ` by ${esc(nameOf(g.scorer_id))}` : ''}` : esc(event.opponent || 'Opponent'));
     const assist = g.side === 'us' && g.assist_id ? `<span class="dim">assist ${esc(nameOf(g.assist_id))}</span>` : '';
     return `<li class="${g.side}" data-goal="${g.id}">
-      <span class="gtime">${g.period === 2 ? '2H' : '1H'} ${mmss(g.elapsed_sec)}</span>
+      <span class="gtime">${g.period === 2 ? '2H' : '1H'} ${mmss(goalMinute(g))}</span>
       <span class="gside">${g.side === 'us' ? esc(team.name) : esc(event.opponent || 'Opponent')}</span>
       <span class="gwho">${who}</span> ${assist}
       ${isUnlocked() && match.status !== 'final' ? '<button class="del" type="button" title="Delete goal" aria-label="Delete goal">×</button>' : ''}
@@ -63,12 +76,29 @@ function drawGoals() {
   }).join('');
 }
 
+/** 5 … 60 minutes in 5-minute steps. */
+function halfPicker(currentSec, disabled) {
+  const opts = [];
+  for (let m = 5; m <= 60; m += 5) {
+    opts.push(`<option value="${m * 60}"${m * 60 === currentSec ? ' selected' : ''}>${m} min</option>`);
+  }
+  return `<label class="half-pick${disabled ? ' dim' : ''}">Half length
+    <select id="half-len" ${disabled ? 'disabled' : ''}>${opts.join('')}</select>
+  </label>`;
+}
+
 function drawControls() {
   const c = $('controls');
   if (!isUnlocked()) { c.hidden = true; return; }
   c.hidden = false;
   if (!team.live_scoring) { c.innerHTML = '<p class="hint">Live scoring is turned off for this team.</p>'; return; }
-  if (!match) { c.innerHTML = '<button class="big-btn" data-act="open">Open match</button>'; return; }
+  if (!match) {
+    // One tap from a nav jump to a running clock — the whistle does not wait.
+    c.innerHTML = `<div class="btn-row">${halfPicker(team.half_length_sec ?? 1200, false)}
+      <button class="big-btn go" data-act="kickoff">▶ Start match</button>
+      <button class="chip" data-act="open">Open without starting</button></div>`;
+    return;
+  }
   if (match.status === 'final') {
     c.innerHTML = `<button class="chip" data-act="reopen">Reopen match</button>`;
     return;
@@ -85,6 +115,7 @@ function drawControls() {
     </div>
     <div class="btn-row">
       <button class="chip on" data-act="finalize">Finalize result</button>
+      ${halfPicker(match.half_length_sec, false)}
       <span class="spacer"></span>
       <button class="chip danger" data-act="reset">Reset match</button>
     </div>`;
@@ -129,11 +160,29 @@ $('goal-form').addEventListener('submit', async e => {
 });
 
 // ---------------------------------------------------------------- actions
+$('controls').addEventListener('change', async e => {
+  if (e.target.id !== 'half-len') return;
+  const seconds = Number(e.target.value);
+  try {
+    await coachCall('coach_set_half_length', {
+      p_match_id: match ? match.id : null,
+      p_team_id: match ? null : team.id,
+      p_seconds: seconds,
+    });
+    if (match) match.half_length_sec = seconds; else team.half_length_sec = seconds;
+    draw();
+  } catch (err) { alert(err.message); e.target.value = (match ? match.half_length_sec : team.half_length_sec); }
+});
+
 $('controls').addEventListener('click', async e => {
   const act = e.target.closest('[data-act]')?.dataset.act;
   if (!act) return;
   try {
     if (act === 'open') { await coachCall('coach_match_open', { p_event_id: eventId }); }
+    else if (act === 'kickoff') {
+      const id = await coachCall('coach_match_open', { p_event_id: eventId });
+      await coachCall('coach_match_clock', { p_match_id: id, p_action: 'start' });
+    }
     else if (act === 'start' || act === 'pause') { await coachCall('coach_match_clock', { p_match_id: match.id, p_action: act }); }
     else if (act === 'end_period') {
       if (!confirm(`End the ${HALF[match.period]}?`)) return;
@@ -189,7 +238,7 @@ async function init() {
     if (!event) throw new Error('No such event.');
     team = event.teams; team.live_scoring = team.live_scoring ?? true;
     applyClub(team.slug);
-    mountNav({ active: '', teamSlug: team.slug, eventId });
+    mountNav({ active: 'score', teamSlug: team.slug, eventId });
     setStatus($('status'), 'Connected', 'ok');
     $('title').textContent = `${team.name} vs ${event.opponent || 'TBD'}`;
     document.title = `${team.name} vs ${event.opponent || 'TBD'} — Dynasty Soccer`;
