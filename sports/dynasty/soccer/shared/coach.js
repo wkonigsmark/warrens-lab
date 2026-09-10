@@ -3,6 +3,7 @@
 import { rpc } from './db.js';
 
 const KEY = 'dynasty-soccer:pin';
+const PIN_LENGTH = 4;          // auto-submits once this many digits are entered
 const listeners = new Set();
 
 export function getPin() { try { return sessionStorage.getItem(KEY) || ''; } catch { return ''; } }
@@ -45,8 +46,8 @@ export function mountCoachToggle(el) {
     if (act === 'open') {
       el.innerHTML = `
         <form class="pin-form">
-          <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="PIN" aria-label="Coach PIN" autofocus>
-          <button class="chip on" type="submit">Unlock</button>
+          <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="${PIN_LENGTH}"
+                 autocomplete="off" placeholder="PIN" aria-label="Coach PIN" autofocus>
           <button class="chip" type="button" data-act="cancel">Cancel</button>
           <span class="pin-msg"></span>
         </form>`;
@@ -54,13 +55,40 @@ export function mountCoachToggle(el) {
     }
     if (act === 'cancel') draw();
   });
-  el.addEventListener('submit', async e => {
-    e.preventDefault();
-    const input = el.querySelector('input'), msg = el.querySelector('.pin-msg');
-    msg.textContent = '…';
-    try { await unlock(input.value.trim()); draw(); }
-    catch (err) { msg.textContent = err.message === 'invalid_pin' ? 'Wrong PIN' : err.message; input.select(); }
+  let checking = false;
+  async function trySubmit() {
+    const input = el.querySelector('input');
+    const msg = el.querySelector('.pin-msg');
+    if (!input || checking) return;
+    checking = true;
+    input.disabled = true;
+    msg.textContent = 'Checking…';
+    msg.classList.remove('bad');
+    try {
+      await unlock(input.value.trim());
+      draw();                                  // unlocked: the form is replaced
+    } catch (err) {
+      msg.textContent = err.message === 'invalid_pin' ? 'Wrong PIN' : err.message;
+      msg.classList.add('bad');
+      input.disabled = false;
+      input.value = '';                        // clear so the next digit starts fresh
+      input.focus();
+    } finally {
+      checking = false;
+    }
+  }
+
+  // Digits only, and unlock the moment the PIN is complete — no second tap.
+  el.addEventListener('input', e => {
+    if (!e.target.matches('.pin-form input')) return;
+    const digits = e.target.value.replace(/\D/g, '').slice(0, PIN_LENGTH);
+    if (digits !== e.target.value) e.target.value = digits;
+    const msg = el.querySelector('.pin-msg');
+    if (msg && msg.classList.contains('bad')) { msg.textContent = ''; msg.classList.remove('bad'); }
+    if (digits.length === PIN_LENGTH) trySubmit();
   });
+
+  el.addEventListener('submit', e => { e.preventDefault(); trySubmit(); });
   onChange(draw);
   draw();
 }

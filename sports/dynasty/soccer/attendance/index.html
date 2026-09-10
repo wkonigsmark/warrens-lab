@@ -32,14 +32,14 @@
     <div id="panel" hidden>
       <section class="card">
         <h2>Availability <span id="tally" class="record"></span></h2>
-        <p class="hint">Everyone starts available. Tap a player to cycle <strong>In → Out → Maybe</strong>.
-          Players marked out are left off auto-filled lineups.</p>
+        <p class="hint">Tap a player to cycle <strong>In → Out → Maybe</strong>. Anyone out drops to the
+          bottom and is left off auto-filled lineups.</p>
         <div class="filters">
           <button class="chip" type="button" id="all-in">Reset all to In</button>
           <span class="spacer"></span>
           <span id="save-msg" class="dim"></span>
         </div>
-        <ul id="roll" class="roll"><li class="empty">Loading…</li></ul>
+        <div id="roll" class="att-grid"><p class="empty">Loading…</p></div>
       </section>
 
       <section class="card">

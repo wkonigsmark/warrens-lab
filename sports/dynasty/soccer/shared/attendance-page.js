@@ -12,6 +12,23 @@ let event = null, team = null, roll = [];
 
 const NEXT = { in: 'out', out: 'maybe', maybe: 'in' };
 const LABEL = { in: 'In', out: 'Out', maybe: 'Maybe' };
+const RANK = { in: 0, maybe: 1, out: 2 };      // available first, absent to the bottom-right
+
+let order = [];                 // display order, re-sorted only when tapping settles
+let resortTimer = null;
+
+const initials = p => `${(p.first_name || '?')[0]}${(p.last_name || '')[0] || ''}`.toUpperCase();
+const shortName = p => {
+  const dupes = roll.filter(o => o.first_name === p.first_name).length > 1;
+  return dupes ? `${p.first_name} ${(p.last_name || '')[0] || ''}.` : p.first_name;
+};
+
+function resort() {
+  order = [...roll].sort((a, b) =>
+    RANK[a.status] - RANK[b.status] ||
+    `${a.last_name} ${a.first_name}`.localeCompare(`${b.last_name} ${b.first_name}`)
+  ).map(r => r.player_id);
+}
 
 function render() {
   const n = { in: 0, out: 0, maybe: 0 };
@@ -20,26 +37,39 @@ function render() {
     ? `${n.in} in${n.out ? ` · ${n.out} out` : ''}${n.maybe ? ` · ${n.maybe} maybe` : ''}`
     : '';
 
-  $('roll').innerHTML = roll.length ? roll.map(r => `
-    <li class="roll-item ${r.status}" data-player="${r.player_id}">
-      <button type="button" class="roll-btn" aria-label="${esc(r.first_name)} ${esc(r.last_name)}: ${LABEL[r.status]}, tap to change">
-        <span class="dot-${r.status}"></span>
-        <span class="rn">${esc(r.first_name)} ${esc(r.last_name)}</span>
-        <span class="rs">${LABEL[r.status]}</span>
-      </button>
-      <input class="rnote" data-note value="${esc(r.note || '')}" placeholder="reason (optional)" aria-label="Note">
-    </li>`).join('') : '<li class="empty">No players on this roster.</li>';
+  if (!roll.length) { $('roll').innerHTML = '<p class="empty">No players on this roster.</p>'; return; }
+  if (order.length !== roll.length) resort();
+
+  $('roll').innerHTML = order.map(id => {
+    const r = roll.find(x => x.player_id === id);
+    if (!r) return '';
+    return `
+      <button type="button" class="att-tile ${r.status}" data-player="${r.player_id}"
+              aria-pressed="${r.status !== 'in'}"
+              aria-label="${esc(r.first_name)} ${esc(r.last_name)}: ${LABEL[r.status]}. Tap to change.">
+        <span class="att-ini">${esc(initials(r))}</span>
+        <span class="att-nm">${esc(shortName(r))}</span>
+        <span class="att-state">${LABEL[r.status]}</span>
+      </button>`;
+  }).join('');
 }
 
-async function setStatusFor(playerId, status, note) {
+/** Re-sort a moment after tapping stops, so a tile never slides out from under a finger. */
+function scheduleResort() {
+  clearTimeout(resortTimer);
+  resortTimer = setTimeout(() => { resort(); render(); }, 1400);
+}
+
+async function setStatusFor(playerId, status) {
   const row = roll.find(r => r.player_id === playerId);
-  const prev = { status: row.status, note: row.note };
-  row.status = status; row.note = note ?? row.note;
+  const prev = { status: row.status };
+  row.status = status;
   render();
+  scheduleResort();
   $('save-msg').textContent = 'Saving…';
   try {
     await coachCall('coach_attendance_set', {
-      p_event_id: eventId, p_player_id: playerId, p_status: row.status, p_note: row.note || null,
+      p_event_id: eventId, p_player_id: playerId, p_status: row.status, p_note: null,
     });
     $('save-msg').textContent = 'Saved';
     setTimeout(() => { if ($('save-msg').textContent === 'Saved') $('save-msg').textContent = ''; }, 1500);
@@ -50,22 +80,16 @@ async function setStatusFor(playerId, status, note) {
 }
 
 $('roll').addEventListener('click', e => {
-  const li = e.target.closest('[data-player]');
-  if (!li || !e.target.closest('.roll-btn')) return;
-  const row = roll.find(r => r.player_id === li.dataset.player);
-  setStatusFor(row.player_id, NEXT[row.status]);
-});
-$('roll').addEventListener('change', e => {
-  if (!e.target.matches('[data-note]')) return;
-  const li = e.target.closest('[data-player]');
-  const row = roll.find(r => r.player_id === li.dataset.player);
-  setStatusFor(row.player_id, row.status, e.target.value);
+  const tile = e.target.closest('.att-tile');
+  if (!tile) return;
+  const row = roll.find(r => r.player_id === tile.dataset.player);
+  if (row) setStatusFor(row.player_id, NEXT[row.status]);
 });
 $('all-in').addEventListener('click', async () => {
-  const changed = roll.filter(r => r.status !== 'in' || r.note);
+  const changed = roll.filter(r => r.status !== 'in');
   if (!changed.length) return;
   if (!confirm(`Reset ${changed.length} player${changed.length === 1 ? '' : 's'} to available?`)) return;
-  for (const r of changed) await setStatusFor(r.player_id, 'in', '');
+  for (const r of changed) await setStatusFor(r.player_id, 'in');
 });
 
 $('event').addEventListener('change', () => {
@@ -76,8 +100,9 @@ $('event').addEventListener('change', () => {
 async function load() {
   try {
     roll = await coachCall('coach_attendance_get', { p_event_id: eventId });
+    resort();
     render();
-  } catch (err) { $('roll').innerHTML = `<li class="empty">${esc(err.message)}</li>`; }
+  } catch (err) { $('roll').innerHTML = `<p class="empty">${esc(err.message)}</p>`; }
 }
 
 function showGate() {

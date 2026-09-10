@@ -279,26 +279,48 @@ table.roster select.pos { width: 92px; }
 .in-badge { margin-left: 8px; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent);
   border: 1px solid var(--accent-border); border-radius: 5px; padding: 1px 6px; vertical-align: middle; font-weight: 600; }
 
-/* ---------------------------------------------------------------- attendance */
-.roll { list-style: none; margin: 0; padding: 0; }
-.roll-item { display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--glass-border); padding: 4px 0; flex-wrap: wrap; }
-.roll-item:first-child { border-top: none; }
-.roll-btn { flex: 1; min-width: 200px; display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 10px;
-  border: 1px solid transparent; background: transparent; color: var(--text-main); font: inherit; cursor: pointer; text-align: left; transition: all .12s; }
-.roll-btn:hover { border-color: var(--glass-border); background: rgba(255,255,255,0.03); }
-.roll-btn .rn { flex: 1; }
-.roll-btn .rs { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--glass-border); }
-.roll-btn [class^="dot-"] { width: 12px; height: 12px; border-radius: 50%; flex: none; }
-.dot-in { background: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
-.dot-out { background: #ff6b6b; }
-.dot-maybe { background: #ffd166; }
-.roll-item.in .rs { color: var(--accent); border-color: var(--accent-border); }
-.roll-item.out .rs { color: #ff6b6b; border-color: rgba(255,107,107,0.45); }
-.roll-item.out .rn { text-decoration: line-through; opacity: 0.6; }
-.roll-item.maybe .rs { color: #ffd166; border-color: rgba(255,209,102,0.45); }
-.rnote { width: 190px; padding: 7px 9px; border-radius: 7px; border: 1px solid var(--glass-border);
-  background: #12151b; color: var(--text-dim); font: inherit; font-size: 0.82rem; }
-.rnote:focus { color: var(--text-main); }
+/* ---------------------------------------------------------------- attendance grid */
+/* Tiles are 4-up on a phone and never smaller than Apple's 44pt minimum target;
+   at 375px wide that lands each tile around 82x92, comfortable with a glove on. */
+.att-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.att-tile {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  min-height: 92px; padding: 10px 4px; border-radius: 14px; cursor: pointer;
+  border: 1px solid var(--glass-border); background: rgba(255,255,255,0.04);
+  color: var(--text-main); font: inherit;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation; user-select: none;
+  transition: background .18s, border-color .18s, opacity .18s, transform .12s;
+}
+.att-tile:active { transform: scale(0.95); }
+.att-ini {
+  display: flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; border-radius: 50%; flex: none;
+  font-size: 0.86rem; font-weight: 700; letter-spacing: 0.5px;
+  background: rgba(255,255,255,0.08); color: var(--text-main);
+}
+.att-nm { font-size: 0.74rem; line-height: 1.15; text-align: center; max-width: 100%;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.att-state { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); }
+
+.att-tile.in { border-color: var(--accent-border); background: var(--accent-soft); }
+.att-tile.in .att-ini { background: var(--accent); color: var(--accent-ink, #0c0e12); }
+.att-tile.in .att-state { color: var(--accent); }
+
+.att-tile.maybe { border-color: rgba(255,209,102,0.5); background: rgba(255,209,102,0.08); }
+.att-tile.maybe .att-ini { background: #ffd166; color: #0c0e12; }
+.att-tile.maybe .att-state { color: #ffd166; }
+
+.att-tile.out { opacity: 0.45; border-color: rgba(255,107,107,0.35); background: transparent; }
+.att-tile.out .att-ini { background: rgba(255,107,107,0.18); color: #ff9b9b; }
+.att-tile.out .att-nm { text-decoration: line-through; }
+.att-tile.out .att-state { color: #ff6b6b; }
+
+@media (min-width: 700px) {
+  .att-grid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 10px; }
+  .att-tile { min-height: 104px; }
+  .att-ini { width: 44px; height: 44px; font-size: 0.95rem; }
+  .att-nm { font-size: 0.8rem; }
+}
 
 .out-strip { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--glass-border); }
 .out-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: #ff6b6b; }
@@ -307,7 +329,6 @@ table.roster select.pos { width: 92px; }
 .att-badge { font-size: 0.7rem; padding: 1px 7px; border-radius: 5px; border: 1px solid rgba(255,107,107,0.45); color: #ff6b6b; white-space: nowrap; }
 .att-link { font-size: 0.75rem; color: var(--text-dim); text-decoration: none; border-bottom: 1px dotted var(--text-dim); white-space: nowrap; }
 .att-link:hover { color: var(--text-main); }
-@media (max-width: 600px) { .rnote { width: 100%; } }
 
 /* ---------------------------------------------------------------- game day strip */
 .card.gameday { border-top-width: 3px; }
@@ -417,3 +438,20 @@ table.roster select.pos { width: 92px; }
 .sw-tries span.b { color: var(--accent); border-color: var(--accent-border); }
 .sw-clear { margin-left: auto; background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 1rem; line-height: 1; }
 .sw-clear:hover { color: #ff6b6b; }
+.pin-msg { color: var(--text-dim); }
+.pin-msg.bad { color: #ff6b6b; }
+.pin-form input:disabled { opacity: 0.6; }
+
+/* Tighter headers on a phone so the working area is above the fold —
+   it matters most on check-in, where the grid should be reachable without scrolling. */
+@media (max-width: 620px) {
+  .team-band { padding: 24px 0 16px; margin-bottom: 18px; }
+  .team-band h1 { font-size: 1.35rem; }
+  .team-band h1 .crest { width: 32px; height: 32px; margin-right: 8px; }
+  .team-band .crumbs { font-size: 0.78rem; margin-bottom: 6px; }
+  .team-band .meta { font-size: 0.82rem; }
+  .head { gap: 10px; margin-bottom: 12px; }
+  .wrap { margin: 20px auto; }
+  .card { padding: 16px 15px; }
+  .card h2 { margin-bottom: 10px; }
+}
