@@ -248,10 +248,15 @@ repo: every `coach_*` Postgres function checks it against a bcrypt hash in `coac
 (wrong PIN sleeps 300 ms then errors). The public key has no write access to any table.
 The PIN is kept in `sessionStorage` until the tab closes.
 
-Change the PIN:
+**Setting or changing the PIN.** The schema seeds a placeholder and the real PIN is never stored
+in the repo — set it directly against the database:
 ```sql
-update public.coach_settings set value = extensions.crypt('NEWPIN', extensions.gen_salt('bf')) where key = 'coach_pin';
+update public.coach_settings
+set value = extensions.crypt('NEWPIN', extensions.gen_salt('bf'))
+where key = 'coach_pin';
 ```
+`PIN_LENGTH` in `shared/coach.js` (currently 4) must match the number of digits, since the form
+auto-submits when it is reached.
 
 - **Roster edit** — skill dropdown, free-text Pos 1 / Pos 2, saved on change. "Notes" opens a
   dated log per player; the table shows only the latest entry.

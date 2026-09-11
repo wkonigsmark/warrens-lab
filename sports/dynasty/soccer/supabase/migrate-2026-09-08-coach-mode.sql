@@ -14,8 +14,10 @@ alter table public.coach_settings enable row level security;
 revoke all on public.coach_settings from anon, authenticated;
 
 insert into public.coach_settings (key, value)
-values ('coach_pin', extensions.crypt('2019', extensions.gen_salt('bf')))
-on conflict (key) do update set value = excluded.value;
+-- Placeholder only. Set the real PIN with the statement in README.md after running this;
+-- the working PIN is deliberately not kept in the repo.
+values ('coach_pin', extensions.crypt('0000', extensions.gen_salt('bf')))
+on conflict (key) do nothing;
 
 -- ---------------------------------------------------------------
 -- Team flags for scoring
