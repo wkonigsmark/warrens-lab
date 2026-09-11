@@ -1,0 +1,452 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-09-11",
+  "source": {
+    "name": "IFAB Laws of the Game",
+    "url": "https://www.theifab.com/laws-of-the-game-documents/",
+    "note": "The Laws of the Game are written and published by the International Football Association Board (IFAB), not FIFA, and the official text is copyrighted. Everything here is an original plain-language explanation written for this app. Always check the official document for exact wording, and your league's rulebook for small-sided modifications."
+  },
+  "levels": [
+    {
+      "key": "basics",
+      "name": "Plain language",
+      "note": "Short and concrete — what you would say out loud on the sideline."
+    },
+    {
+      "key": "detail",
+      "name": "Full detail",
+      "note": "Closer to exam depth, for anyone studying toward a referee badge."
+    }
+  ],
+  "laws": [
+    {
+      "number": 1,
+      "title": "The Field of Play",
+      "tags": [
+        "setup",
+        "field"
+      ],
+      "detail": "The field must be rectangular and marked with continuous lines: touchlines down the long sides, goal lines across the ends, a halfway line, a centre circle, penalty and goal areas, corner arcs and a penalty mark. All lines belong to the area they bound, so a ball on the line is still in play. Goals sit centred on each goal line and must be anchored.",
+      "youth": "Small-sided fields are much smaller and often use pop-up or futsal-sized goals. Many 7v7 leagues replace the penalty area with a smaller 'no-keeper-handling' zone, and some use build-out lines instead of a halfway line.",
+      "situations": [
+        {
+          "q": "The ball is resting exactly on the touchline. In or out?",
+          "a": "In. A ball is only out when it has fully crossed the outside edge of the line."
+        }
+      ],
+      "basics": "The field is a rectangle with lines painted on the grass. The lines are part of the field — if the ball is sitting on top of a line, it is still in.",
+      "stage": "sideline",
+      "prompt": {
+        "ask": "Point at a line and ask: if the ball sits right on top of this line, is it in or out?",
+        "expect": "In. The lines are part of the field."
+      }
+    },
+    {
+      "number": 2,
+      "title": "The Ball",
+      "tags": [
+        "setup",
+        "equipment"
+      ],
+      "detail": "The ball must be spherical, of approved material, of the correct circumference and pressure for the competition. If it becomes defective during play, the referee stops play and restarts with a dropped ball at the position where it became defective. If it becomes defective during a restart that has not yet been taken, the restart is retaken.",
+      "youth": "Size 3 is typical up to about U8, size 4 through roughly U12, size 5 from U13. Check your league — the age cut-offs vary.",
+      "situations": [
+        {
+          "q": "The ball deflates as a goal is being scored.",
+          "a": "If it was already defective before crossing the line, the goal does not count and play restarts with a dropped ball."
+        }
+      ],
+      "basics": "The ball has to be round, the right size for your age, and pumped up properly. If it pops, the referee stops play and you start again with a drop ball.",
+      "stage": "sideline",
+      "prompt": {
+        "ask": "Ask: what happens if the ball pops in the middle of a game?",
+        "expect": "The referee stops play and restarts with a dropped ball."
+      }
+    },
+    {
+      "number": 3,
+      "title": "The Players",
+      "tags": [
+        "players",
+        "substitutions"
+      ],
+      "detail": "A match is played by two teams of no more than eleven, one of whom is the goalkeeper. A match may not start or continue if either team has fewer than seven players. Substitution procedure: the referee is informed, play is stopped, the outgoing player leaves before the incoming player enters at the halfway line. A substitute who enters without permission is cautioned and play restarts with an indirect free kick.",
+      "youth": "Small-sided games use rolling or unlimited substitutions, usually at any stoppage. Many youth leagues also require equal playing time — that is a league rule, not a Law.",
+      "situations": [
+        {
+          "q": "A substitute runs on while the ball is in play and stops a shot.",
+          "a": "Play is stopped, the substitute is cautioned, and if they denied a goal the offence is punished with a direct free kick or penalty."
+        }
+      ],
+      "basics": "Each team has players on the field and substitutes waiting. You can only come on when the referee lets you, and the player you are replacing has to come off first.",
+      "stage": "playing",
+      "prompt": {
+        "ask": "Ask: can you run onto the field as soon as your coach calls your name?",
+        "expect": "No. You wait for the referee, and the player you are replacing comes off first."
+      },
+      "nfhs": "Free substitution at most stoppages, with rules on which team may substitute and when. Far more permissive than the Laws."
+    },
+    {
+      "number": 4,
+      "title": "The Players' Equipment",
+      "tags": [
+        "players",
+        "equipment",
+        "safety"
+      ],
+      "detail": "Compulsory equipment is a shirt with sleeves, shorts, socks, shinguards made of suitable material offering reasonable protection and covered by the socks, and footwear. A player must not use equipment that is dangerous. All jewellery is forbidden and must be removed; taping over it is not permitted. Goalkeepers must wear colours distinguishing them from other players and the officials.",
+      "youth": "This is the Law youth referees enforce most often. Check shinguards and jewellery before kickoff, not after — it saves stopping the game.",
+      "situations": [
+        {
+          "q": "A player arrives wearing a thin bracelet they cannot remove.",
+          "a": "They cannot play until it is removed. There is no allowance for taping it."
+        }
+      ],
+      "basics": "You need a shirt, shorts, socks, shin guards covered by your socks, and shoes. No jewellery at all — not even a watch or earrings you have taped over.",
+      "stage": "sideline",
+      "prompt": {
+        "ask": "Before you leave the house, ask: shin guards on, socks over them, and nothing on your wrists or ears?",
+        "expect": "Shin guards must be fully covered by the socks, and all jewellery comes off."
+      },
+      "nfhs": "Uniform and equipment requirements are stricter and specified in detail, including numbering and what the goalkeeper may wear."
+    },
+    {
+      "number": 5,
+      "title": "The Referee",
+      "tags": [
+        "officials"
+      ],
+      "detail": "The referee enforces the Laws, controls the match in cooperation with the other officials, acts as timekeeper, stops play for offences and for injuries, and has authority to caution or send off. Decisions on facts connected with play are final. The referee may change a decision only on realising it is incorrect or on advice from another official, provided play has not restarted or the match been ended.",
+      "youth": "In small-sided youth games the referee is often a teenager. Modelling respect toward them is part of coaching.",
+      "situations": [
+        {
+          "q": "The referee awards a goal, then the assistant signals offside before the restart.",
+          "a": "The referee may change the decision, because play has not restarted."
+        }
+      ],
+      "basics": "The referee is in charge. Their decision is final, even when you disagree. Talking back can get you a card.",
+      "stage": "sideline",
+      "prompt": {
+        "ask": "Ask: what do you do when you think the referee got it wrong?",
+        "expect": "Nothing. You play on. Arguing can get you a card."
+      },
+      "nfhs": "Many states use a dual or double-dual referee system rather than the single referee with two assistants."
+    },
+    {
+      "number": 6,
+      "title": "The Other Match Officials",
+      "tags": [
+        "officials"
+      ],
+      "detail": "Assistant referees indicate when the ball leaves the field and which team restarts, when a player may be penalised for offside, and when substitutions are requested. The fourth official assists with administrative duties and manages the technical area. All officials operate under the referee's direction, and the referee retains final authority.",
+      "youth": "Most youth small-sided matches use a single referee with no assistants, so throw-in and goal-kick decisions are made from a distance. Expect imperfection and coach accordingly.",
+      "situations": [
+        {
+          "q": "The assistant flags for offside but the referee waves play on.",
+          "a": "The referee's decision stands. The flag is advice, not a ruling."
+        }
+      ],
+      "basics": "Assistant referees run the sidelines with flags. They help decide throw-ins, corners, goal kicks and offside.",
+      "stage": "assistant",
+      "prompt": {
+        "ask": "Ask: what is the person with the flag actually watching for?",
+        "expect": "Ball out of play, who it came off, offside, and substitutions."
+      }
+    },
+    {
+      "number": 7,
+      "title": "The Duration of the Match",
+      "tags": [
+        "timing"
+      ],
+      "detail": "A match lasts two equal halves, reduced only by agreement before kickoff and within competition rules. Players are entitled to a half-time interval, normally not exceeding fifteen minutes. The referee allows for time lost through substitutions, injuries, time-wasting, disciplinary sanctions and celebrations. Time is not deducted for an incorrectly taken restart.",
+      "youth": "Small-sided halves are short — often 20 to 25 minutes — and many leagues run a stopped clock or a horn. Added time is usually not played.",
+      "situations": [
+        {
+          "q": "Time expires as a penalty kick is about to be taken.",
+          "a": "The half is extended to allow the penalty to be completed."
+        }
+      ],
+      "basics": "A game is two halves of the same length with a rest in between. The referee adds time at the end of each half to make up for stoppages.",
+      "stage": "playing",
+      "prompt": {
+        "ask": "Ask: why does the referee sometimes play past the time on the clock?",
+        "expect": "To make up for time lost to injuries, substitutions and stoppages."
+      },
+      "nfhs": "Two 40-minute halves for varsity with a clock that stops on certain events, rather than a running clock with added time. Overtime is two shorter periods, and state associations vary on whether it ends on a golden goal."
+    },
+    {
+      "number": 8,
+      "title": "The Start and Restart of Play",
+      "tags": [
+        "restarts"
+      ],
+      "detail": "A coin toss decides ends or kick-off. At kick-off all players are in their own half, opponents are outside the centre circle, and the ball is stationary on the centre mark; it is in play once it is kicked and clearly moves. A goal may be scored directly. The kicker may not touch it again until someone else has. A dropped ball is awarded to the goalkeeper in their own penalty area, otherwise to one player of the team that last touched it, with all other players at least 4.5m away.",
+      "youth": "Since 2019 the ball no longer has to go forward at kick-off, and dropped balls are no longer contested — a detail many long-time coaches still get wrong.",
+      "situations": [
+        {
+          "q": "A player scores directly from kick-off without anyone touching it.",
+          "a": "Goal. It is allowed."
+        }
+      ],
+      "basics": "Kick-off starts each half and restarts after a goal. The ball can go in any direction and you can score straight from it. If the referee stops play for something that is nobody's fault, the game restarts with a drop ball.",
+      "stage": "playing",
+      "prompt": {
+        "ask": "Ask: at kick-off, can you score straight from the centre circle?",
+        "expect": "Yes. And the ball no longer has to go forward."
+      }
+    },
+    {
+      "number": 9,
+      "title": "The Ball In and Out of Play",
+      "tags": [
+        "basics"
+      ],
+      "detail": "The ball is out of play when it has wholly crossed the goal line or touchline on the ground or in the air, or when the referee stops play. It remains in play at all other times, including rebounds off a goalpost, crossbar, corner flag or match official who is on the field. If it strikes a match official and a team starts a promising attack, a goal is scored directly, or possession changes, play restarts with a dropped ball.",
+      "youth": "The 'whole ball over the whole line' idea is the single most useful thing to teach young players. Most of them stop playing far too early.",
+      "situations": [
+        {
+          "q": "The ball hits the corner flag and stays on the field.",
+          "a": "Still in play. The corner flag is not out."
+        }
+      ],
+      "basics": "The ball is out only when the whole ball crosses the whole line. If it bounces off the referee and stays on the field, it is usually still in play.",
+      "stage": "sideline",
+      "prompt": {
+        "ask": "Roll a ball so it hangs over the line and ask: out yet?",
+        "expect": "Not until the whole ball crosses the whole line."
+      }
+    },
+    {
+      "number": 10,
+      "title": "Determining the Outcome of a Match",
+      "tags": [
+        "basics",
+        "scoring"
+      ],
+      "detail": "A goal is scored when the whole of the ball passes over the goal line between the posts and beneath the crossbar, provided no offence has been committed by the scoring team. If a goalkeeper throws the ball directly into the opponents' goal, a goal kick is awarded. Competition rules may provide for extra time, away goals or kicks from the penalty mark to determine a winner.",
+      "youth": "Most small-sided leagues do not record standings at all at U8 and below, deliberately. Scores can still be tracked privately for your own coaching purposes.",
+      "situations": [
+        {
+          "q": "The ball crosses the line and spins back out before anyone notices.",
+          "a": "If the whole ball crossed the whole line, it is a goal, whether or not it stayed in the net."
+        }
+      ],
+      "basics": "A goal counts when the whole ball crosses the whole goal line between the posts and under the bar. The team with more goals wins.",
+      "stage": "sideline",
+      "prompt": {
+        "ask": "Ask: the ball crosses the line and spins back out. Goal or not?",
+        "expect": "Goal, if the whole ball crossed the whole line."
+      },
+      "nfhs": "Tie-breaking procedures are set by the state association, not by competition rules under the Laws."
+    },
+    {
+      "number": 11,
+      "title": "Offside",
+      "tags": [
+        "offside",
+        "advanced"
+      ],
+      "detail": "A player is in an offside position if any part of the head, body or feet is in the opponents' half and nearer to the opponents' goal line than both the ball and the second-last opponent. Hands and arms are excluded. Being in an offside position is not an offence; it becomes one only if, at the moment a teammate plays the ball, the player becomes involved by interfering with play, interfering with an opponent, or gaining an advantage. There is no offence directly from a throw-in, goal kick or corner kick. The restart is an indirect free kick where the offence occurred.",
+      "youth": "Most 7v7 leagues either do not play offside at all or apply it only inside a build-out area. Confirm before the season, because it changes how you coach shape.",
+      "situations": [
+        {
+          "q": "A player stands offside but never touches the ball or blocks anyone.",
+          "a": "No offence. Position alone is not punished."
+        },
+        {
+          "q": "A player runs onto a rebound off the goalkeeper from an offside position.",
+          "a": "Offside. Gaining an advantage from a rebound counts as involvement."
+        }
+      ],
+      "basics": "You are offside if you are closer to the other team's goal than both the ball and the second-last defender when a teammate passes it to you. You are never offside in your own half, from a throw-in, a goal kick or a corner.",
+      "stage": "club",
+      "prompt": {
+        "ask": "Ask: is it against the rules to stand in an offside position?",
+        "expect": "No. It only becomes an offence when you get involved in the play."
+      }
+    },
+    {
+      "number": 12,
+      "title": "Fouls and Misconduct",
+      "tags": [
+        "fouls",
+        "discipline"
+      ],
+      "detail": "A direct free kick is awarded for charging, jumping at, kicking, pushing, striking, tackling, tripping or holding an opponent in a manner that is careless, reckless or with excessive force, and for handling the ball deliberately. An indirect free kick is awarded for dangerous play, impeding without contact, and specific goalkeeper offences. Careless means a lack of attention; reckless means disregard for danger and is cautioned; excessive force means endangering safety and is sent off. Handball considerations include whether the arm made the body unnaturally bigger and whether the arm was above shoulder height.",
+      "youth": "At young ages almost every contact foul is careless rather than reckless. Cards are rare and usually unnecessary; a quiet word does more.",
+      "situations": [
+        {
+          "q": "The ball strikes a player's arm which is tucked against their side.",
+          "a": "Usually no offence. A natural arm position that does not make the body unnaturally bigger is not handball."
+        },
+        {
+          "q": "A defender denies an obvious goal-scoring opportunity by handling.",
+          "a": "Send off, and a penalty kick if it happened in the penalty area."
+        }
+      ],
+      "basics": "Kicking, tripping, pushing, holding or charging someone carelessly is a foul. Handling the ball on purpose is a foul. Yellow card is a warning, red card means you leave and your team plays short.",
+      "stage": "club",
+      "prompt": {
+        "ask": "Ask: the ball hits your arm while it is tucked against your side. Handball?",
+        "expect": "Usually not. It is about whether the arm made your body unnaturally bigger."
+      },
+      "nfhs": "Cards work differently: a cautioned player must leave the field and may be replaced, and an ejected player's team plays short. Coaches can be carded too."
+    },
+    {
+      "number": 13,
+      "title": "Free Kicks",
+      "tags": [
+        "restarts",
+        "fouls"
+      ],
+      "detail": "Free kicks are direct or indirect. For an indirect free kick the referee raises an arm until the kick is taken and the ball touches another player or goes out of play. The ball must be stationary and opponents at least 9.15m away until it is in play, unless they are on their own goal line between the posts. If three or more defenders form a wall, attackers must remain at least 1m from it. The kicker may not touch the ball again until another player has.",
+      "youth": "The required distance is scaled down in small-sided play, commonly to 5 or 6 metres. Teaching young players to restart quickly is worth more than teaching wall discipline.",
+      "situations": [
+        {
+          "q": "An indirect free kick is struck straight into the goal untouched.",
+          "a": "No goal. A goal kick is awarded to the defending team."
+        }
+      ],
+      "basics": "Direct free kicks can score straight away. Indirect ones must touch another player first — the referee holds an arm up to show which it is. Defenders must stand back until you kick it.",
+      "stage": "playing",
+      "prompt": {
+        "ask": "Ask: how do you know if a free kick can go straight in?",
+        "expect": "Watch the referee's arm. Arm up means it has to touch someone else first."
+      }
+    },
+    {
+      "number": 14,
+      "title": "The Penalty Kick",
+      "tags": [
+        "restarts",
+        "scoring"
+      ],
+      "detail": "A penalty kick is awarded when a player commits a direct-free-kick offence inside their own penalty area or off the field as part of play. The ball is placed on the penalty mark, the kicker is identified, and the goalkeeper remains on the goal line facing the kicker with at least part of one foot on or in line with it until the ball is kicked. All other players must be inside the field, outside the penalty area, behind the penalty mark and at least 9.15m from it. Feinting in the run-up is permitted; feinting after completing the run-up is not.",
+      "youth": "Many small-sided leagues do not use penalty kicks at all, substituting an indirect free kick from the top of the area.",
+      "situations": [
+        {
+          "q": "The kicker slips and touches the ball twice.",
+          "a": "An indirect free kick to the defending team for a second touch, unless the double touch was accidental in the same motion."
+        }
+      ],
+      "basics": "A penalty is a free shot from the spot with only the goalkeeper to beat. Everyone else waits outside the box until the kick is taken.",
+      "stage": "club",
+      "prompt": {
+        "ask": "Ask: where does everyone stand for a penalty?",
+        "expect": "Outside the box, behind the ball, and back from the spot. Only the keeper and the kicker are involved."
+      }
+    },
+    {
+      "number": 15,
+      "title": "The Throw-in",
+      "tags": [
+        "restarts"
+      ],
+      "detail": "A throw-in is awarded to the opponents of the player who last touched the ball before it wholly crossed the touchline. The thrower faces the field, has part of each foot on the touchline or on the ground outside it, and delivers the ball with both hands from behind and over the head from the point where it left the field. All opponents must stand at least 2m from the point of the throw. A goal cannot be scored directly. The thrower may not touch the ball again until it has touched another player.",
+      "youth": "Some leagues allow a retake after an illegal throw at the youngest ages rather than turning the ball over. Ask your referee at the start.",
+      "situations": [
+        {
+          "q": "A throw-in goes directly into the opponents' goal.",
+          "a": "No goal. A goal kick is awarded."
+        },
+        {
+          "q": "A throw-in goes directly into the thrower's own goal.",
+          "a": "No goal. A corner kick is awarded to the opponents."
+        }
+      ],
+      "basics": "Both feet stay on the ground, part of each foot on or behind the line. Bring the ball back over your head and throw with both hands. You cannot score directly from a throw-in.",
+      "stage": "sideline",
+      "prompt": {
+        "ask": "Ask: what are the three things that make a throw-in legal?",
+        "expect": "Both feet down on or behind the line, both hands, and from behind and over the head."
+      }
+    },
+    {
+      "number": 16,
+      "title": "The Goal Kick",
+      "tags": [
+        "restarts"
+      ],
+      "detail": "A goal kick is awarded when the whole ball passes over the goal line, on the ground or in the air, having last touched a player of the attacking team, and a goal is not scored. The ball is placed anywhere in the goal area and is in play once kicked and clearly moving; it no longer has to leave the penalty area. Opponents must remain outside the penalty area until the ball is in play. A goal may be scored directly against the opponents.",
+      "youth": "This 2019 change matters enormously in youth soccer, and build-out lines extend it: opponents retreat to a marked line and cannot press until the ball is played. It is the single biggest lever for teaching playing out from the back.",
+      "situations": [
+        {
+          "q": "An attacker stands inside the penalty area as the goal kick is taken.",
+          "a": "The kick is retaken. Opponents must be out of the area until the ball is in play."
+        }
+      ],
+      "basics": "A goal kick happens when the other team kicks the ball over your goal line. The ball is in play as soon as it is kicked — it does not have to leave the box any more.",
+      "stage": "playing",
+      "prompt": {
+        "ask": "Ask: on a goal kick, when can you touch the ball?",
+        "expect": "As soon as it is kicked and moving. It no longer has to leave the box."
+      }
+    },
+    {
+      "number": 17,
+      "title": "The Corner Kick",
+      "tags": [
+        "restarts",
+        "scoring"
+      ],
+      "detail": "A corner kick is awarded when the whole ball passes over the goal line, on the ground or in the air, having last touched a defending player, and a goal is not scored. The ball is placed inside the corner arc nearest the point where it crossed and must be stationary; it is in play once kicked and clearly moving. The corner flag must not be moved. Opponents remain at least 9.15m from the arc until the ball is in play. A goal may be scored directly against the opponents, and the kicker may not touch it again until another player has.",
+      "youth": "Distance requirements shrink in small-sided play. At the youngest ages a short corner played to a teammate is almost always more productive than a cross.",
+      "situations": [
+        {
+          "q": "A corner kick goes directly into the kicker's own goal.",
+          "a": "Not possible to award as an own goal from a corner; a corner kick to the opponents is awarded instead."
+        }
+      ],
+      "basics": "A corner happens when the other team puts the ball over their own goal line. You place it in the corner arc and you can score straight from it.",
+      "stage": "playing",
+      "prompt": {
+        "ask": "Ask: can you score straight from a corner?",
+        "expect": "Yes, directly against the other team."
+      }
+    }
+  ],
+  "audience": "Written for adults. A parent or coach reads this and prompts the player — the app is not intended to be handed to a young child.",
+  "highSchoolNote": {
+    "heading": "High school soccer does not use these Laws",
+    "body": "In the United States, high school matches are played under NFHS rules, not the IFAB Laws. The two agree on most of how the game is played — offside, restarts, what a goal is — but differ sharply on timing, substitutions, and how cards work. Stage 5 below marks every Law where the difference matters. The usual path is to earn a USSF grassroots badge first (typically from age 13), then register with your state high school association, which is what actually licenses you for varsity matches.",
+    "url": "https://www.nfhs.org/activities-sports/soccer/"
+  },
+  "stages": [
+    {
+      "key": "sideline",
+      "name": "Stage 1 · Sideline basics",
+      "short": "Sideline",
+      "target": "A parent or coach can answer the questions that come up every Saturday at U6–U8.",
+      "who": "You, prompting a 5–8 year old."
+    },
+    {
+      "key": "playing",
+      "name": "Stage 2 · Playing the game",
+      "short": "Playing",
+      "target": "A player understands every restart and why play stopped.",
+      "who": "Rec players roughly U9–U12, prompted by an adult."
+    },
+    {
+      "key": "club",
+      "name": "Stage 3 · Competitive play",
+      "short": "Club",
+      "target": "Comfortable with offside, handball judgement and the difference between direct and indirect.",
+      "who": "Club players and coaches."
+    },
+    {
+      "key": "assistant",
+      "name": "Stage 4 · Small-sided referee",
+      "short": "Referee",
+      "target": "Can referee a youth small-sided match alone, or run a line.",
+      "who": "A young referee taking their first matches, typically 12–15."
+    },
+    {
+      "key": "hs",
+      "name": "Stage 5 · High school referee",
+      "short": "High school",
+      "target": "Ready to study for a USSF grassroots badge and work under NFHS rules.",
+      "who": "The target: a teenager refereeing high school matches."
+    }
+  ]
+}

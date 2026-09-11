@@ -28,6 +28,7 @@ soccer/
 ├── lineup/print.html          # printable blank pitch (no login needed)
 ├── practice/index.html        # ?team=<slug>[&event=&plan=] — practice plan builder (coach only)
 ├── stopwatch/index.html       # ?team=<slug>[&event=] — sprint timing (coach only)
+├── rules/index.html           # Laws of the Game library (open to everyone)
 ├── drills/index.html          # drill library (reads data/drills.json); ?specialty=&difficulty=&q= deep links
 ├── shared/themes.css          # club colours + monogram crests keyed by <body data-club>
 ├── teams/
@@ -125,6 +126,32 @@ disappears the block still renders, flagged "not in library".
 
 **Print / PDF** renders a separate clean document — numbered blocks with times, drill summaries,
 your notes, coaching cues, equipment and a tick box per block — rather than printing the editor.
+
+## Laws of the Game
+
+`rules/index.html` is a team-agnostic reference for all 17 Laws, reachable from the ⋯ menu and a
+hub card. Content lives in `data/rules.json`.
+
+**Written for adults.** The app is not meant to be handed to a young child. Each Law carries an
+"Ask your player" prompt — a question to put to them and the answer to listen for — so a parent or
+coach drives the conversation. Two depths are available: plain language, and full detail for
+anyone studying toward a badge.
+
+**Five stages, each with a stated target**, from sideline basics up to high school refereeing.
+Picking a stage shows every Law needed at or before it, so the list grows as the reader does.
+
+**The Laws are not high school rules.** US high school soccer is played under NFHS rules, which
+differ on timing, substitutions and cards. Laws 3, 4, 5, 7, 10 and 12 carry an explicit NFHS
+callout and a "NFHS differs" badge.
+
+**Copyright.** The Laws are published by IFAB and the official text is copyrighted. Everything in
+`rules.json` is original plain-language writing with a link to the official document — never
+reproduced text. Keep it that way when adding content.
+
+**Printables:** the full Laws at the current stage, or a cut-up sheet of ask/answer prompt cards.
+
+**Quiz-ready shape.** Each Law has a stable `number`, `tags` and a `stage`, so a future
+`questions` array can attach to a Law and a stage without reshaping the file.
 
 ## Drill library
 

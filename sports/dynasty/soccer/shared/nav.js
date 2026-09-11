@@ -16,6 +16,7 @@ const MORE = [
   { key: 'stopwatch', label: 'Stopwatch',   icon: '⏱',  href: (t, e) => `stopwatch/index.html?team=${t}${e ? `&event=${e}` : ''}` },
   { key: 'practice',  label: 'Practice plan', icon: '📝', href: t => `practice/index.html?team=${t}` },
   { key: 'drills',    label: 'Drill library', icon: '📚', href: () => `drills/index.html` },
+  { key: 'rules',     label: 'Laws of the Game', icon: '📖', href: () => `rules/index.html` },
   { key: 'hub',       label: 'All teams',   icon: '🏠', href: () => `index.html` },
 ];
 

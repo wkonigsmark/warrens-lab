@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laws of the Game — Dynasty Soccer</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style-lab.css">
+  <link rel="stylesheet" href="../shared/soccer.css">
+  <link rel="stylesheet" href="../shared/themes.css">
+</head>
+<body>
+  <main class="wrap">
+    <div class="crumbs no-print"><a href="../../../index.html">Sports</a> / <a href="../index.html">Dynasty Soccer</a> / Laws of the Game</div>
+    <div class="head no-print">
+      <div>
+        <h1><span>📖</span>Laws of the Game</h1>
+        <p class="meta" id="audience"></p>
+      </div>
+      <div id="count" class="status">Loading…</div>
+    </div>
+
+    <section class="card no-print" id="hs-card">
+      <h2 id="hs-heading"></h2>
+      <p class="hint" id="hs-body"></p>
+    </section>
+
+    <section class="card no-print">
+      <h2>Learning stages</h2>
+      <div class="stage-rail" id="stages"></div>
+      <p id="stage-target" class="stage-target"></p>
+    </section>
+
+    <section class="card no-print">
+      <h2>Find a Law</h2>
+      <div class="tools-mini">
+        <input id="search" type="search" placeholder="Search: offside, handball, throw-in, goal kick…">
+        <select id="tag"><option value="">All topics</option></select>
+      </div>
+      <div class="filters">
+        <button class="chip on" type="button" data-level="basics">Plain language</button>
+        <button class="chip" type="button" data-level="detail">Full detail</button>
+        <span class="spacer"></span>
+        <button class="chip" type="button" id="expand">Expand all</button>
+        <button class="chip" type="button" id="print">🖨️ Print Laws</button>
+        <button class="chip" type="button" id="print-cards">🃏 Print prompt cards</button>
+      </div>
+      <p id="level-note" class="hint"></p>
+    </section>
+
+    <p id="stage-hint" class="hint stage-hint" hidden>
+      The six Laws where NFHS rules depart from the IFAB Laws are listed first. Those are the ones
+      that will catch you out on a high school pitch.
+    </p>
+    <div id="laws" class="law-list"></div>
+    <div id="print-doc" class="print-doc"></div>
+    <p id="empty" class="empty" hidden>No Law matches that search.</p>
+
+    <section class="card" id="source-card">
+      <h2>Source &amp; accuracy</h2>
+      <p class="hint" id="source-note"></p>
+    </section>
+
+    <a class="back no-print" href="../index.html">← Back to Dynasty Soccer</a>
+  </main>
+
+  <script type="module">
+    import { esc } from '../shared/db.js';
+    import { mountNav } from '../shared/nav.js';
+
+    const $ = id => document.getElementById(id);
+    let db = null, level = 'basics', stage = '', expanded = false;
+
+    const label = v => String(v).replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+    const STAGE_ORDER = ['sideline', 'playing', 'club', 'assistant', 'hs'];
+    const rank = k => STAGE_ORDER.indexOf(k);
+
+    function matches(law) {
+      const q = $('search').value.trim().toLowerCase();
+      const tag = $('tag').value;
+      const hay = [law.number, law.title, law.basics, law.detail, law.youth, law.nfhs,
+                   law.prompt?.ask, law.prompt?.expect,
+                   (law.tags || []).join(' '),
+                   (law.situations || []).map(s => `${s.q} ${s.a}`).join(' ')].join(' ').toLowerCase();
+      // A stage includes everything needed at or before it; Stage 5 shows all Laws.
+      const stageOk = !stage || rank(law.stage) <= rank(stage);
+      return stageOk && (!q || hay.includes(q)) && (!tag || (law.tags || []).includes(tag));
+    }
+
+    function render() {
+      let list = db.laws.filter(matches);
+      // At the high-school stage the NFHS departures are the whole point — lead with them.
+      if (stage === 'hs') list = [...list].sort((a, b) => (b.nfhs ? 1 : 0) - (a.nfhs ? 1 : 0) || a.number - b.number);
+      $('count').textContent = `${list.length} of ${db.laws.length}`;
+      $('stage-hint').hidden = stage !== 'hs';
+      $('empty').hidden = list.length > 0;
+      $('laws').innerHTML = list.map(law => `
+        <details class="law" ${expanded ? 'open' : ''}>
+          <summary>
+            <span class="law-no">${law.number}</span>
+            <span class="law-title">${esc(law.title)}</span>
+            <span class="law-tags">${law.nfhs ? '<span class="mini hs">NFHS differs</span>' : ''}${(law.tags || []).map(t => `<span class="mini">${esc(label(t))}</span>`).join('')}</span>
+          </summary>
+          <div class="law-body">
+            <p class="law-main">${esc(level === 'basics' ? law.basics : law.detail)}</p>
+            ${law.prompt ? `<div class="law-prompt">
+                <h4>Ask your player</h4>
+                <p class="pr-ask">${esc(law.prompt.ask)}</p>
+                <p class="pr-exp">${esc(law.prompt.expect)}</p>
+              </div>` : ''}
+            ${law.youth ? `<p class="law-youth"><strong>In small-sided youth soccer:</strong> ${esc(law.youth)}</p>` : ''}
+            ${law.nfhs ? `<p class="law-nfhs"><strong>High school (NFHS) differs:</strong> ${esc(law.nfhs)}</p>` : ''}
+            ${(law.situations || []).length ? `
+              <div class="law-sits">
+                <h4>Situations</h4>
+                ${law.situations.map(s => `
+                  <div class="sit"><p class="sit-q">${esc(s.q)}</p><p class="sit-a">${esc(s.a)}</p></div>`).join('')}
+              </div>` : ''}
+          </div>
+        </details>`).join('');
+    }
+
+    for (const el of ['search', 'tag']) $(el).addEventListener('input', render);
+    document.querySelector('.filters').addEventListener('click', e => {
+      const b = e.target.closest('[data-level]');
+      if (!b) return;
+      level = b.dataset.level;
+      for (const x of document.querySelectorAll('[data-level]')) x.classList.toggle('on', x.dataset.level === level);
+      $('level-note').textContent = db.levels.find(l => l.key === level)?.note || '';
+      render();
+    });
+    $('expand').addEventListener('click', () => {
+      expanded = !expanded;
+      $('expand').textContent = expanded ? 'Collapse all' : 'Expand all';
+      render();
+    });
+    $('print').addEventListener('click', () => { $('print-doc').innerHTML = ''; expanded = true; render(); window.print(); });
+
+    /** A cut-up sheet of ask/answer cards — the printable for advanced readers. */
+    $('print-cards').addEventListener('click', () => {
+      const list = db.laws.filter(matches).filter(l => l.prompt);
+      $('print-doc').innerHTML = `
+        <div class="paper">
+          <div class="doc-head">
+            <div class="doc-title">Laws of the Game — prompt cards</div>
+            <div class="doc-sub">${esc(db.stages.find(s => s.key === stage)?.name || 'All stages')} · ${list.length} cards · cut along the lines</div>
+          </div>
+          <div class="card-sheet">
+            ${list.map(l => `<div class="cut-card">
+              <div class="cc-law">Law ${l.number} · ${esc(l.title)}</div>
+              <div class="cc-ask">${esc(l.prompt.ask)}</div>
+              <div class="cc-exp">${esc(l.prompt.expect)}</div>
+            </div>`).join('')}
+          </div>
+        </div>`;
+      window.print();
+    });
+
+    function drawStages() {
+      $('stages').innerHTML = db.stages.map(st => `
+        <button type="button" class="stage-btn${st.key === stage ? ' on' : ''}" data-stage="${esc(st.key)}">
+          <span class="st-name">${esc(st.short)}</span>
+          <span class="st-who">${esc(st.who)}</span>
+        </button>`).join('') +
+        `<button type="button" class="stage-btn${stage ? '' : ' on'}" data-stage="">
+          <span class="st-name">All</span><span class="st-who">Every Law</span></button>`;
+      const st = db.stages.find(s => s.key === stage);
+      $('stage-target').innerHTML = st
+        ? `<strong>Target:</strong> ${esc(st.target)}`
+        : `<strong>Showing all 17 Laws.</strong> Pick a stage to narrow to what matters at that level.`;
+    }
+
+    $('stages').addEventListener('click', e => {
+      const b = e.target.closest('[data-stage]');
+      if (!b) return;
+      stage = b.dataset.stage;
+      drawStages();
+      render();
+    });
+
+    async function init() {
+      mountNav({ active: 'rules' });
+      try {
+        const res = await fetch('../data/rules.json');
+        if (!res.ok) throw new Error(`Could not load rules.json (${res.status})`);
+        db = await res.json();
+
+        const tags = [...new Set(db.laws.flatMap(l => l.tags || []))].sort();
+        $('tag').innerHTML = '<option value="">All topics</option>' +
+          tags.map(t => `<option value="${esc(t)}">${esc(label(t))}</option>`).join('');
+        $('audience').textContent = db.audience;
+        $('hs-heading').textContent = db.highSchoolNote.heading;
+        $('hs-body').innerHTML = `${esc(db.highSchoolNote.body)} <a href="${esc(db.highSchoolNote.url)}" target="_blank" rel="noopener">NFHS soccer</a>.`;
+        $('level-note').textContent = db.levels.find(l => l.key === level)?.note || '';
+        drawStages();
+        $('source-note').innerHTML =
+          `${esc(db.source.note)} <a href="${esc(db.source.url)}" target="_blank" rel="noopener">Read the official ${esc(db.source.name)}</a>.`;
+        render();
+      } catch (err) {
+        console.error(err);
+        $('count').textContent = 'Error';
+        $('count').classList.add('err');
+        $('laws').innerHTML = `<section class="card"><p class="empty">${esc(err.message)}</p></section>`;
+      }
+    }
+    init();
+  </script>
+</body>
+</html>

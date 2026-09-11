@@ -512,3 +512,70 @@ table.roster select.pos { width: 92px; }
   background: #12151b; color: var(--text-main); font: inherit; min-width: 200px; }
 .g-edit { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 0.95rem; padding: 0 4px; }
 .g-edit:hover { color: var(--accent); }
+
+/* ---------------------------------------------------------------- laws of the game */
+.law-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.law { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 14px; overflow: hidden; }
+.law summary { display: flex; align-items: center; gap: 12px; padding: 15px 18px; cursor: pointer; list-style: none;
+  flex-wrap: wrap; -webkit-tap-highlight-color: transparent; }
+.law summary::-webkit-details-marker { display: none; }
+.law summary:hover { background: rgba(255,255,255,0.03); }
+.law-no { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; flex: none;
+  border-radius: 9px; background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 0.92rem; }
+.law-title { font-weight: 600; font-size: 1.02rem; flex: 1; min-width: 140px; }
+.law-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.law[open] .law-no { background: var(--accent); color: var(--accent-ink, #0c0e12); }
+.law-body { padding: 0 18px 18px; border-top: 1px solid var(--glass-border); }
+.law-main { margin: 14px 0 0; line-height: 1.6; font-size: 0.97rem; }
+.law-youth { margin: 12px 0 0; padding: 11px 13px; border-radius: 10px; background: rgba(255,255,255,0.035);
+  border-left: 3px solid var(--accent); color: var(--text-dim); font-size: 0.9rem; line-height: 1.55; }
+.law-youth strong { color: var(--text-main); }
+.law-sits { margin-top: 14px; }
+.law-sits h4 { margin: 0 0 8px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); font-weight: 600; }
+.sit { border-top: 1px solid var(--glass-border); padding: 9px 0; }
+.sit-q { margin: 0 0 3px; font-size: 0.92rem; }
+.sit-q::before { content: '›'; color: var(--accent); margin-right: 7px; font-weight: 700; }
+.sit-a { margin: 0; color: var(--text-dim); font-size: 0.9rem; line-height: 1.5; padding-left: 16px; }
+@media print {
+  .law { break-inside: avoid; border-color: #ccc; background: #fff; }
+  .law-body { border-color: #ddd; }
+  .law-no { background: #eee; color: #111; }
+  body, .law-main, .sit-q { color: #111 !important; }
+}
+
+/* learning stages */
+.stage-rail { display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 8px; }
+.stage-btn { display: flex; flex-direction: column; gap: 4px; text-align: left; padding: 11px 13px; cursor: pointer;
+  border-radius: 11px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03);
+  color: var(--text-main); font: inherit; min-height: 60px; transition: all .15s; }
+.stage-btn:hover { border-color: rgba(255,255,255,0.28); }
+.stage-btn.on { border-color: var(--accent-border); background: var(--accent-soft); }
+.st-name { font-weight: 700; font-size: 0.88rem; }
+.stage-btn.on .st-name { color: var(--accent); }
+.st-who { font-size: 0.72rem; color: var(--text-dim); line-height: 1.35; }
+.stage-target { margin: 12px 0 0; font-size: 0.9rem; color: var(--text-dim); line-height: 1.5; }
+.stage-target strong { color: var(--text-main); }
+
+/* per-law prompt + high-school callouts */
+.law-prompt { margin-top: 14px; padding: 12px 14px; border-radius: 11px;
+  background: var(--accent-soft); border: 1px solid var(--accent-border); }
+.law-prompt h4 { margin: 0 0 6px; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 2px;
+  color: var(--accent); font-weight: 700; }
+.pr-ask { margin: 0 0 5px; font-size: 0.94rem; }
+.pr-exp { margin: 0; font-size: 0.9rem; color: var(--text-dim); }
+.pr-exp::before { content: '→ '; color: var(--accent); }
+.law-nfhs { margin: 12px 0 0; padding: 11px 13px; border-radius: 10px; background: rgba(122,208,255,0.06);
+  border-left: 3px solid #7ad0ff; color: var(--text-dim); font-size: 0.9rem; line-height: 1.55; }
+.law-nfhs strong { color: #7ad0ff; }
+.mini.hs { color: #7ad0ff; border-color: rgba(122,208,255,0.45); }
+#hs-card { border-left: 3px solid #7ad0ff; }
+
+/* printable prompt cards */
+.card-sheet { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.cut-card { border: 1px dashed #999; padding: 5mm; min-height: 34mm; page-break-inside: avoid; }
+.cut-card .cc-law { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 2mm; }
+.cut-card .cc-ask { font-size: 10pt; font-weight: 600; margin-bottom: 2.5mm; line-height: 1.35; }
+.cut-card .cc-exp { font-size: 9pt; color: #333; line-height: 1.35; }
+.cut-card .cc-exp::before { content: '→ '; color: #888; }
+.stage-hint { margin: 0 0 12px; padding: 10px 13px; border-radius: 10px;
+  background: rgba(122,208,255,0.06); border-left: 3px solid #7ad0ff; }
