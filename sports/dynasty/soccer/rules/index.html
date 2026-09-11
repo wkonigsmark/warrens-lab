@@ -48,6 +48,7 @@
         <button class="chip" type="button" id="expand">Expand all</button>
         <button class="chip" type="button" id="print">🖨️ Print Laws</button>
         <button class="chip" type="button" id="print-cards">🃏 Print prompt cards</button>
+        <a class="chip on" href="quiz/index.html">🎯 Take the quiz</a>
       </div>
       <p id="level-note" class="hint"></p>
     </section>
@@ -77,7 +78,7 @@
 
     const label = v => String(v).replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
-    const STAGE_ORDER = ['sideline', 'playing', 'club', 'assistant', 'hs'];
+    const STAGE_ORDER = ['sideline', 'playing', 'club', 'referee', 'hs'];
     const rank = k => STAGE_ORDER.indexOf(k);
 
     function matches(law) {

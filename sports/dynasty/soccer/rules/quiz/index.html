@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laws Quiz — Dynasty Soccer</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../../style-lab.css">
+  <link rel="stylesheet" href="../../shared/soccer.css">
+  <link rel="stylesheet" href="../../shared/themes.css">
+</head>
+<body>
+  <main class="wrap">
+    <div class="crumbs"><a href="../../index.html">Dynasty Soccer</a> / <a href="../index.html">Laws of the Game</a> / Quiz</div>
+    <div class="head">
+      <div>
+        <h1><span>🎯</span>Laws Quiz</h1>
+        <p class="meta">Three choices, adaptive. Get them right and it moves you up. Get them wrong and they come back.</p>
+      </div>
+      <div id="status" class="status">Loading…</div>
+    </div>
+
+    <!-- setup -->
+    <section class="card" id="setup">
+      <h2>Start</h2>
+      <div class="setup-row">
+        <label>Who is answering?
+          <input id="learner" type="text" placeholder="Name (keeps their progress separate)" maxlength="24">
+        </label>
+      </div>
+      <p class="hint">Pick a starting level. You can always move up — the quiz unlocks the next level once this one is solid.</p>
+      <div class="stage-rail" id="buckets"></div>
+      <div class="filters">
+        <button class="chip on" type="button" id="begin">Start quiz</button>
+        <span id="resume-note" class="dim"></span>
+      </div>
+    </section>
+
+    <!-- quiz -->
+    <section class="card" id="quiz" hidden>
+      <div class="q-top">
+        <span class="q-stage" id="q-stage"></span>
+        <span class="spacer"></span>
+        <span class="q-stat" id="q-stats"></span>
+      </div>
+      <div class="q-bar"><div id="q-bar-fill"></div></div>
+
+      <p class="q-prompt" id="q-prompt"></p>
+      <div class="q-choices" id="q-choices"></div>
+
+      <div class="q-feedback" id="q-feedback" hidden>
+        <p class="qf-verdict" id="qf-verdict"></p>
+        <p class="qf-why" id="qf-why"></p>
+        <a class="qf-law" id="qf-law" href="../index.html"></a>
+        <button class="big-btn go" type="button" id="next">Next question →</button>
+      </div>
+    </section>
+
+    <section class="card" id="grad" hidden>
+      <h2>Level up</h2>
+      <p class="grad-msg" id="grad-msg"></p>
+      <button class="big-btn go" type="button" id="grad-next">Keep going →</button>
+    </section>
+
+    <section class="card" id="progress" hidden>
+      <h2>Progress</h2>
+      <div id="progress-body"></div>
+      <div class="filters">
+        <span class="spacer"></span>
+        <button class="chip" type="button" id="switch">Change level</button>
+        <button class="chip danger" type="button" id="reset">Reset progress</button>
+      </div>
+    </section>
+
+    <a class="back" href="../index.html">← Back to the Laws</a>
+  </main>
+
+  <script type="module">
+    import { esc } from '../../shared/db.js';
+    import { mountNav } from '../../shared/nav.js';
+    import { newState, nextQuestion, record, stats, maybeGraduate, STAGES, stageRank, inScope }
+      from '../../shared/quiz-engine.js';
+
+    const $ = id => document.getElementById(id);
+    let bank = [], laws = null, stagesMeta = [], state = null, current = null, lastId = null, bucket = 'sideline';
+
+    const keyFor = name => `dynasty-soccer:quiz:${(name || 'default').trim().toLowerCase() || 'default'}`;
+    const load = name => { try { const r = localStorage.getItem(keyFor(name)); return r ? JSON.parse(r) : null; } catch { return null; } };
+    const save = () => { try { localStorage.setItem(keyFor($('learner').value), JSON.stringify(state)); } catch {} };
+    const stageName = k => stagesMeta.find(s => s.key === k)?.short || k;
+
+    // ---- setup
+    function drawBuckets() {
+      $('buckets').innerHTML = stagesMeta.map(st => `
+        <button type="button" class="stage-btn${st.key === bucket ? ' on' : ''}" data-b="${esc(st.key)}">
+          <span class="st-name">${esc(st.short)}</span>
+          <span class="st-who">${esc(st.who)}</span>
+        </button>`).join('');
+    }
+    $('buckets').addEventListener('click', e => {
+      const b = e.target.closest('[data-b]');
+      if (!b) return;
+      bucket = b.dataset.b;
+      drawBuckets();
+    });
+    $('learner').addEventListener('input', () => {
+      const saved = load($('learner').value);
+      $('resume-note').textContent = saved
+        ? `Saved progress found — ${stats(bank, saved).mastered} mastered at ${stageName(STAGES[saved.unlocked - 1])}.`
+        : '';
+    });
+
+    $('begin').addEventListener('click', () => {
+      const saved = load($('learner').value);
+      state = saved && stageRank(STAGES[saved.unlocked - 1]) >= stageRank(bucket) ? saved : newState(bucket);
+      $('setup').hidden = true;
+      $('quiz').hidden = false;
+      $('progress').hidden = false;
+      ask();
+    });
+
+    // ---- asking
+    function ask() {
+      $('grad').hidden = true;
+      $('q-feedback').hidden = true;
+      current = nextQuestion(bank, state, lastId);
+      if (!current) {
+        $('q-prompt').textContent = 'Nothing left in scope — reset progress or move up a level.';
+        $('q-choices').innerHTML = '';
+        return;
+      }
+      const s = stats(bank, state);
+      $('q-stage').textContent = stageName(STAGES[state.unlocked - 1]);
+      $('q-stats').textContent = `${s.mastered}/${s.inScope} mastered` +
+        (s.accuracy !== null ? ` · ${s.accuracy}%` : '') + (s.streak > 2 ? ` · ${s.streak} in a row` : '');
+      $('q-bar-fill').style.width = `${Math.round(s.mastered / Math.max(1, s.inScope) * 100)}%`;
+      $('q-prompt').textContent = current.q;
+      $('q-choices').innerHTML = current.choices.map((c, i) =>
+        `<button type="button" class="q-choice" data-i="${i}">${esc(c)}</button>`).join('');
+      drawProgress();
+    }
+
+    $('q-choices').addEventListener('click', e => {
+      const b = e.target.closest('[data-i]');
+      if (!b || !current) return;
+      const chosen = Number(b.dataset.i);
+      const { correct } = record(state, current, chosen);
+      save();
+
+      for (const el of $('q-choices').querySelectorAll('.q-choice')) {
+        const i = Number(el.dataset.i);
+        el.disabled = true;
+        if (i === current.answer) el.classList.add('right');
+        else if (i === chosen) el.classList.add('wrong');
+      }
+      $('qf-verdict').textContent = correct ? 'Correct' : 'Not quite';
+      $('qf-verdict').className = `qf-verdict ${correct ? 'ok' : 'no'}`;
+      $('qf-why').textContent = current.why;
+      const law = laws.find(l => l.number === current.law);
+      $('qf-law').textContent = `Law ${current.law} · ${law ? law.title : ''} →`;
+      $('qf-law').href = `../index.html?law=${current.law}`;
+      $('q-feedback').hidden = false;
+      lastId = current.id;
+      drawProgress();
+    });
+
+    $('next').addEventListener('click', () => {
+      const grad = maybeGraduate(bank, state);
+      save();
+      if (grad) {
+        const st = stagesMeta.find(s => s.key === grad);
+        $('grad-msg').innerHTML = `That level is solid. Unlocked <strong>${esc(st?.name || grad)}</strong>.<br>
+          <span class="dim">${esc(st?.target || '')}</span>`;
+        $('quiz').hidden = true;
+        $('grad').hidden = false;
+        return;
+      }
+      ask();
+    });
+    $('grad-next').addEventListener('click', () => { $('quiz').hidden = false; ask(); });
+
+    // ---- progress
+    function drawProgress() {
+      const rows = stagesMeta.map(st => {
+        const qs = bank.filter(q => q.stage === st.key);
+        const unlocked = stageRank(st.key) < state.unlocked;
+        const mastered = qs.filter(q => (state.cards[q.id]?.box || 0) >= 4).length;
+        const pct = qs.length ? Math.round(mastered / qs.length * 100) : 0;
+        return `<div class="pg-row${unlocked ? '' : ' locked'}">
+          <span class="pg-name">${unlocked ? '' : '🔒 '}${esc(st.short)}</span>
+          <span class="pg-bar"><span style="width:${unlocked ? pct : 0}%"></span></span>
+          <span class="pg-num">${unlocked ? `${mastered}/${qs.length}` : '—'}</span>
+        </div>`;
+      }).join('');
+      const weak = Object.entries(state.cards).filter(([, c]) => c.wrong > c.right)
+        .map(([id]) => bank.find(q => q.id === id)).filter(Boolean);
+      const byLaw = [...new Set(weak.map(q => q.law))].sort((a, b) => a - b);
+      $('progress-body').innerHTML = rows + (byLaw.length
+        ? `<p class="hint pg-weak">Coming back around: ${byLaw.map(n =>
+            `<a href="../index.html?law=${n}">Law ${n}</a>`).join(', ')}</p>` : '');
+    }
+
+    $('switch').addEventListener('click', () => {
+      $('setup').hidden = false; $('quiz').hidden = true; $('grad').hidden = true; $('progress').hidden = true;
+    });
+    $('reset').addEventListener('click', () => {
+      if (!confirm('Clear this learner’s progress and start over?')) return;
+      state = newState(bucket);
+      lastId = null;
+      save();
+      ask();
+    });
+
+    async function init() {
+      mountNav({ active: 'rules' });
+      try {
+        const [qres, rres] = await Promise.all([fetch('../../data/quiz.json'), fetch('../../data/rules.json')]);
+        if (!qres.ok) throw new Error(`Could not load quiz.json (${qres.status})`);
+        bank = (await qres.json()).questions;
+        const rules = await rres.json();
+        laws = rules.laws;
+        stagesMeta = rules.stages;
+        $('status').textContent = `${bank.length} questions`;
+        $('status').classList.add('ok');
+        drawBuckets();
+        $('learner').dispatchEvent(new Event('input'));
+      } catch (err) {
+        console.error(err);
+        $('status').textContent = 'Error';
+        $('status').classList.add('err');
+        $('setup').innerHTML = `<p class="empty">${esc(err.message)}</p>`;
+      }
+    }
+    init();
+  </script>
+</body>
+</html>

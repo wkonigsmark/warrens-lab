@@ -1,0 +1,683 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-09-11",
+  "note": "Original questions written for this app. They follow the IFAB Laws of the Game; questions tagged 'hs' cover where NFHS high school rules differ.",
+  "questions": [
+    {
+      "id": "q001",
+      "law": 1,
+      "stage": "sideline",
+      "q": "The ball is sitting exactly on top of the touchline. Is it in or out?",
+      "choices": [
+        "In — the line is part of the field",
+        "Out — it touched the line",
+        "Only in if a player is also on the line"
+      ],
+      "answer": 0,
+      "why": "Lines belong to the area they bound. The ball is out only once the whole ball has crossed the whole line."
+    },
+    {
+      "id": "q002",
+      "law": 1,
+      "stage": "playing",
+      "q": "Which of these is NOT marked on a full field?",
+      "choices": [
+        "A second penalty spot at the halfway line",
+        "The corner arcs",
+        "The goal area"
+      ],
+      "answer": 0,
+      "why": "There is one penalty mark per penalty area. The halfway line has a centre mark, not a penalty spot."
+    },
+    {
+      "id": "q003",
+      "law": 1,
+      "stage": "club",
+      "q": "A goal is scored but the corner flag had fallen over earlier. What now?",
+      "choices": [
+        "The goal stands; a missing flag does not void play",
+        "Retake from the corner",
+        "No goal, restart with a dropped ball"
+      ],
+      "answer": 0,
+      "why": "A fallen flag is fixed at the next stoppage. It does not invalidate play."
+    },
+    {
+      "id": "q004",
+      "law": 2,
+      "stage": "sideline",
+      "q": "The ball goes soft in the middle of play. What does the referee do?",
+      "choices": [
+        "Stop play and restart with a dropped ball",
+        "Let play finish and swap it at half-time",
+        "Award a free kick to whoever asked"
+      ],
+      "answer": 0,
+      "why": "A defective ball means play stops and restarts with a dropped ball where it became defective."
+    },
+    {
+      "id": "q005",
+      "law": 2,
+      "stage": "playing",
+      "q": "Which ball size do most U8 leagues use?",
+      "choices": [
+        "Size 3",
+        "Size 5",
+        "Size 4"
+      ],
+      "answer": 0,
+      "why": "Size 3 is typical up to about U8, size 4 through roughly U12, size 5 from U13. Check your league."
+    },
+    {
+      "id": "q006",
+      "law": 2,
+      "stage": "referee",
+      "q": "The ball bursts as it crosses the goal line for a goal. What is the decision?",
+      "choices": [
+        "No goal if it was already defective before crossing",
+        "Goal, because it crossed the line",
+        "Retake the previous restart"
+      ],
+      "answer": 0,
+      "why": "If the ball was defective before it crossed, no goal. Restart with a dropped ball."
+    },
+    {
+      "id": "q007",
+      "law": 3,
+      "stage": "playing",
+      "q": "When may a substitute enter the field?",
+      "choices": [
+        "Only with the referee's permission, after the outgoing player leaves",
+        "As soon as the ball goes out",
+        "Any time, as long as they enter at the halfway line"
+      ],
+      "answer": 0,
+      "why": "The referee must be informed, play stopped, and the outgoing player off before the substitute enters."
+    },
+    {
+      "id": "q008",
+      "law": 3,
+      "stage": "club",
+      "q": "How few players can a team have before a match cannot continue?",
+      "choices": [
+        "Fewer than seven",
+        "Fewer than five",
+        "Fewer than nine"
+      ],
+      "answer": 0,
+      "why": "A match may not start or continue if either team has fewer than seven players."
+    },
+    {
+      "id": "q009",
+      "law": 3,
+      "stage": "hs",
+      "q": "Under NFHS high school rules, substitutions are:",
+      "choices": [
+        "Much freer than the Laws, allowed at many stoppages",
+        "Limited to three per match",
+        "Only permitted at half-time"
+      ],
+      "answer": 0,
+      "why": "NFHS allows free substitution at many stoppages, with rules on which team may substitute and when."
+    },
+    {
+      "id": "q010",
+      "law": 4,
+      "stage": "sideline",
+      "q": "A player arrives wearing a thin bracelet they cannot get off. What happens?",
+      "choices": [
+        "They cannot play until it is removed",
+        "They may play if it is taped over",
+        "They may play if the referee did not see it"
+      ],
+      "answer": 0,
+      "why": "All jewellery is forbidden and must be removed. Taping over it is not permitted."
+    },
+    {
+      "id": "q011",
+      "law": 4,
+      "stage": "sideline",
+      "q": "Shin guards must be:",
+      "choices": [
+        "Completely covered by the socks",
+        "Worn outside the socks so they can be seen",
+        "Optional in small-sided games"
+      ],
+      "answer": 0,
+      "why": "Shin guards are compulsory and must be covered entirely by the socks."
+    },
+    {
+      "id": "q012",
+      "law": 4,
+      "stage": "referee",
+      "q": "A goalkeeper's shirt is the same colour as the opponents' shirts. What must happen?",
+      "choices": [
+        "The keeper must change to a distinguishing colour",
+        "Play on; only outfield shirts matter",
+        "The opponents change"
+      ],
+      "answer": 0,
+      "why": "Goalkeepers must wear colours distinguishing them from the other players and the match officials."
+    },
+    {
+      "id": "q013",
+      "law": 5,
+      "stage": "sideline",
+      "q": "You disagree strongly with a decision. What is the correct response?",
+      "choices": [
+        "Accept it and play on",
+        "Ask the referee to explain it right away",
+        "Appeal to the other coach"
+      ],
+      "answer": 0,
+      "why": "Decisions on facts connected with play are final. Dissent can be cautioned."
+    },
+    {
+      "id": "q014",
+      "law": 5,
+      "stage": "club",
+      "q": "The referee awards a goal, then the assistant flags for offside before the restart. Can it change?",
+      "choices": [
+        "Yes, because play has not restarted",
+        "No, the whistle is final",
+        "Only with both coaches' agreement"
+      ],
+      "answer": 0,
+      "why": "A referee may change a decision on realising it is wrong, provided play has not restarted."
+    },
+    {
+      "id": "q015",
+      "law": 5,
+      "stage": "hs",
+      "q": "Under NFHS rules, the officiating crew often uses:",
+      "choices": [
+        "A dual or double-dual system",
+        "Always one referee and two assistants",
+        "Video review"
+      ],
+      "answer": 0,
+      "why": "Many states use dual or double-dual systems rather than the single-referee diagonal."
+    },
+    {
+      "id": "q016",
+      "law": 6,
+      "stage": "referee",
+      "q": "An assistant referee flags for offside but the referee waves play on. What stands?",
+      "choices": [
+        "The referee's decision",
+        "The flag, because the assistant is closer",
+        "Play stops for a dropped ball"
+      ],
+      "answer": 0,
+      "why": "Assistants advise. The referee holds final authority."
+    },
+    {
+      "id": "q017",
+      "law": 6,
+      "stage": "referee",
+      "q": "Which is NOT a duty of the assistant referee?",
+      "choices": [
+        "Issuing cards",
+        "Signalling the ball out of play",
+        "Signalling substitution requests"
+      ],
+      "answer": 0,
+      "why": "Only the referee issues cards. Assistants indicate but do not sanction."
+    },
+    {
+      "id": "q018",
+      "law": 7,
+      "stage": "playing",
+      "q": "Why does the referee play past the scheduled time?",
+      "choices": [
+        "To make up for time lost to stoppages",
+        "To let the losing team equalise",
+        "Because the clock is decorative"
+      ],
+      "answer": 0,
+      "why": "Allowance is made for substitutions, injuries, time-wasting, sanctions and celebrations."
+    },
+    {
+      "id": "q019",
+      "law": 7,
+      "stage": "club",
+      "q": "Time expires while a penalty kick is about to be taken. What happens?",
+      "choices": [
+        "The half is extended so the penalty can be completed",
+        "The penalty is cancelled",
+        "It carries over to the second half"
+      ],
+      "answer": 0,
+      "why": "The half is extended to allow a penalty kick to be taken and completed."
+    },
+    {
+      "id": "q020",
+      "law": 7,
+      "stage": "hs",
+      "q": "A varsity NFHS match is normally:",
+      "choices": [
+        "Two 40-minute halves on a clock that stops",
+        "Two 45-minute halves with added time",
+        "Four 20-minute quarters"
+      ],
+      "answer": 0,
+      "why": "NFHS varsity is two 40-minute halves with a stopping clock, not a running clock with added time."
+    },
+    {
+      "id": "q021",
+      "law": 8,
+      "stage": "playing",
+      "q": "Can a goal be scored directly from kick-off?",
+      "choices": [
+        "Yes",
+        "No, it must touch another player",
+        "Only in the second half"
+      ],
+      "answer": 0,
+      "why": "A goal may be scored directly from kick-off against the opponents."
+    },
+    {
+      "id": "q022",
+      "law": 8,
+      "stage": "playing",
+      "q": "At kick-off, which way must the ball be played?",
+      "choices": [
+        "Any direction",
+        "Forward only",
+        "Backward only"
+      ],
+      "answer": 0,
+      "why": "Since 2019 the ball may be played in any direction at kick-off."
+    },
+    {
+      "id": "q023",
+      "law": 8,
+      "stage": "club",
+      "q": "How is a modern dropped ball taken?",
+      "choices": [
+        "Dropped for one player, everyone else 4.5m away",
+        "Contested between two players",
+        "Thrown in by the referee"
+      ],
+      "answer": 0,
+      "why": "Dropped balls are no longer contested. It goes to one player, or the keeper if in their own penalty area."
+    },
+    {
+      "id": "q024",
+      "law": 9,
+      "stage": "sideline",
+      "q": "When is the ball out of play?",
+      "choices": [
+        "Only when the whole ball crosses the whole line",
+        "As soon as it touches the line",
+        "When the referee loses sight of it"
+      ],
+      "answer": 0,
+      "why": "The whole ball must wholly cross the line, on the ground or in the air."
+    },
+    {
+      "id": "q025",
+      "law": 9,
+      "stage": "playing",
+      "q": "The ball rebounds off the corner flag and stays on the field. What now?",
+      "choices": [
+        "Play on, it is still in play",
+        "Corner kick",
+        "Throw-in"
+      ],
+      "answer": 0,
+      "why": "Rebounds off the flag, posts, bar or an official on the field leave the ball in play."
+    },
+    {
+      "id": "q026",
+      "law": 9,
+      "stage": "referee",
+      "q": "The ball strikes the referee and a goal is scored directly as a result. The restart is:",
+      "choices": [
+        "A dropped ball",
+        "A goal",
+        "An indirect free kick"
+      ],
+      "answer": 0,
+      "why": "If contact with an official leads directly to a goal, a promising attack or a change of possession, play restarts with a dropped ball."
+    },
+    {
+      "id": "q027",
+      "law": 10,
+      "stage": "sideline",
+      "q": "What makes a goal?",
+      "choices": [
+        "The whole ball crosses the whole goal line between the posts and under the bar",
+        "Any part of the ball crosses the line",
+        "The ball hits the net"
+      ],
+      "answer": 0,
+      "why": "The whole of the ball must pass over the line between the posts and beneath the crossbar."
+    },
+    {
+      "id": "q028",
+      "law": 10,
+      "stage": "playing",
+      "q": "The goalkeeper throws the ball directly into the opponents' goal. Decision?",
+      "choices": [
+        "No goal — goal kick to the opponents",
+        "Goal",
+        "Corner kick"
+      ],
+      "answer": 0,
+      "why": "A goal cannot be scored directly from a goalkeeper's throw. A goal kick is awarded."
+    },
+    {
+      "id": "q029",
+      "law": 11,
+      "stage": "club",
+      "q": "Is standing in an offside position an offence?",
+      "choices": [
+        "No, not until you get involved in play",
+        "Yes, always",
+        "Only in the second half"
+      ],
+      "answer": 0,
+      "why": "Position alone is not punished. It becomes an offence only on involvement."
+    },
+    {
+      "id": "q030",
+      "law": 11,
+      "stage": "club",
+      "q": "From which restart can a player NOT be penalised for offside?",
+      "choices": [
+        "A throw-in",
+        "A free kick",
+        "A dropped ball"
+      ],
+      "answer": 0,
+      "why": "There is no offside offence directly from a throw-in, goal kick or corner kick."
+    },
+    {
+      "id": "q031",
+      "law": 11,
+      "stage": "club",
+      "q": "A player in an offside position runs onto a rebound off the goalkeeper. Decision?",
+      "choices": [
+        "Offside — gaining an advantage",
+        "Play on, the keeper touched it",
+        "Play on, rebounds reset everything"
+      ],
+      "answer": 0,
+      "why": "Gaining an advantage from a rebound or deflection counts as involvement."
+    },
+    {
+      "id": "q032",
+      "law": 11,
+      "stage": "referee",
+      "q": "Which body parts count when judging offside position?",
+      "choices": [
+        "Head, body and feet — not the arms",
+        "The whole body including arms",
+        "Only the feet"
+      ],
+      "answer": 0,
+      "why": "Arms and hands are excluded, because you cannot score with them."
+    },
+    {
+      "id": "q033",
+      "law": 11,
+      "stage": "referee",
+      "q": "The restart for an offside offence is:",
+      "choices": [
+        "An indirect free kick where the offence occurred",
+        "A direct free kick",
+        "A dropped ball"
+      ],
+      "answer": 0,
+      "why": "Offside is punished with an indirect free kick from the position of the offence."
+    },
+    {
+      "id": "q034",
+      "law": 12,
+      "stage": "club",
+      "q": "The ball hits a defender's arm which is tucked against their side. Handball?",
+      "choices": [
+        "Usually not",
+        "Always, any arm contact is handball",
+        "Only if it goes in the goal"
+      ],
+      "answer": 0,
+      "why": "A natural position that does not make the body unnaturally bigger is generally not an offence."
+    },
+    {
+      "id": "q035",
+      "law": 12,
+      "stage": "club",
+      "q": "Which offence brings an INDIRECT free kick?",
+      "choices": [
+        "Playing in a dangerous manner with no contact",
+        "Tripping an opponent",
+        "Pushing an opponent"
+      ],
+      "answer": 0,
+      "why": "Dangerous play without contact and impeding without contact are indirect. Contact fouls are direct."
+    },
+    {
+      "id": "q036",
+      "law": 12,
+      "stage": "club",
+      "q": "'Reckless' means the player:",
+      "choices": [
+        "Acted with disregard for danger — caution",
+        "Simply mistimed it — no card",
+        "Endangered safety — send off"
+      ],
+      "answer": 0,
+      "why": "Careless means no card, reckless means a caution, excessive force means a sending off."
+    },
+    {
+      "id": "q037",
+      "law": 12,
+      "stage": "referee",
+      "q": "A defender handles the ball to deny an obvious goal-scoring opportunity in their own area. Decision?",
+      "choices": [
+        "Penalty kick and a sending off",
+        "Penalty and a caution",
+        "Indirect free kick"
+      ],
+      "answer": 0,
+      "why": "Denying an obvious goal-scoring opportunity by handling is a sending-off offence."
+    },
+    {
+      "id": "q038",
+      "law": 12,
+      "stage": "hs",
+      "q": "Under NFHS rules, a player shown a yellow card:",
+      "choices": [
+        "Must leave the field and may be substituted",
+        "Stays on with a warning",
+        "Is ejected"
+      ],
+      "answer": 0,
+      "why": "This is one of the biggest NFHS departures. A cautioned player leaves and may be replaced."
+    },
+    {
+      "id": "q039",
+      "law": 13,
+      "stage": "playing",
+      "q": "How do you know a free kick is indirect?",
+      "choices": [
+        "The referee holds an arm up until it is taken",
+        "The referee blows twice",
+        "The kick is taken from the touchline"
+      ],
+      "answer": 0,
+      "why": "The raised arm stays up until the ball touches another player or leaves play."
+    },
+    {
+      "id": "q040",
+      "law": 13,
+      "stage": "playing",
+      "q": "An indirect free kick is struck straight into the goal without anyone touching it. Decision?",
+      "choices": [
+        "No goal — goal kick to the defending team",
+        "Goal",
+        "Retake"
+      ],
+      "answer": 0,
+      "why": "An indirect free kick must touch another player before it can count as a goal."
+    },
+    {
+      "id": "q041",
+      "law": 13,
+      "stage": "referee",
+      "q": "At a free kick, how far must opponents retreat in the full-sized game?",
+      "choices": [
+        "9.15 metres (10 yards)",
+        "5 metres",
+        "4.5 metres"
+      ],
+      "answer": 0,
+      "why": "9.15m, though small-sided leagues scale it down, commonly to 5 or 6 metres."
+    },
+    {
+      "id": "q042",
+      "law": 14,
+      "stage": "club",
+      "q": "Where must the goalkeeper be when a penalty is struck?",
+      "choices": [
+        "On or in line with the goal line, part of one foot touching",
+        "Anywhere in the six-yard box",
+        "On the penalty spot"
+      ],
+      "answer": 0,
+      "why": "At least part of one foot must be on, above or behind the goal line when the ball is kicked."
+    },
+    {
+      "id": "q043",
+      "law": 14,
+      "stage": "referee",
+      "q": "Feinting in the run-up to a penalty is:",
+      "choices": [
+        "Permitted",
+        "Always an offence",
+        "Only allowed in extra time"
+      ],
+      "answer": 0,
+      "why": "Feinting during the run-up is allowed. Feinting after completing the run-up is not."
+    },
+    {
+      "id": "q044",
+      "law": 15,
+      "stage": "sideline",
+      "q": "Which makes a throw-in legal?",
+      "choices": [
+        "Both feet down, both hands, from behind and over the head",
+        "One foot may lift if you are quick",
+        "Either hand, as long as it is overhead"
+      ],
+      "answer": 0,
+      "why": "Part of each foot on the line or ground outside it, both hands, delivered from behind and over the head."
+    },
+    {
+      "id": "q045",
+      "law": 15,
+      "stage": "playing",
+      "q": "A throw-in goes straight into the opponents' goal without touching anyone. Decision?",
+      "choices": [
+        "No goal — goal kick",
+        "Goal",
+        "Corner kick"
+      ],
+      "answer": 0,
+      "why": "A goal cannot be scored directly from a throw-in."
+    },
+    {
+      "id": "q046",
+      "law": 15,
+      "stage": "referee",
+      "q": "A throw-in goes straight into the thrower's OWN goal. Decision?",
+      "choices": [
+        "Corner kick to the opponents",
+        "Own goal",
+        "Goal kick"
+      ],
+      "answer": 0,
+      "why": "No goal can be scored directly from a throw-in, so a corner is awarded to the opponents."
+    },
+    {
+      "id": "q047",
+      "law": 16,
+      "stage": "playing",
+      "q": "On a goal kick, when is the ball in play?",
+      "choices": [
+        "As soon as it is kicked and clearly moves",
+        "Once it leaves the penalty area",
+        "Once an outfield player touches it"
+      ],
+      "answer": 0,
+      "why": "Since 2019 the ball no longer has to leave the penalty area."
+    },
+    {
+      "id": "q048",
+      "law": 16,
+      "stage": "playing",
+      "q": "An attacker is standing inside the penalty area when the goal kick is taken. Decision?",
+      "choices": [
+        "Retake the goal kick",
+        "Play on",
+        "Indirect free kick to the defence"
+      ],
+      "answer": 0,
+      "why": "Opponents must be outside the penalty area until the ball is in play."
+    },
+    {
+      "id": "q049",
+      "law": 16,
+      "stage": "club",
+      "q": "Can a goal be scored directly from a goal kick against the opponents?",
+      "choices": [
+        "Yes",
+        "No",
+        "Only after it leaves the box"
+      ],
+      "answer": 0,
+      "why": "A goal may be scored directly against the opponents from a goal kick."
+    },
+    {
+      "id": "q050",
+      "law": 17,
+      "stage": "playing",
+      "q": "Can you score directly from a corner kick?",
+      "choices": [
+        "Yes, against the opponents",
+        "No",
+        "Only if it is touched first"
+      ],
+      "answer": 0,
+      "why": "A goal may be scored directly from a corner against the opponents."
+    },
+    {
+      "id": "q051",
+      "law": 17,
+      "stage": "playing",
+      "q": "A corner kick is awarded when the ball crosses the goal line last touched by:",
+      "choices": [
+        "A defending player",
+        "An attacking player",
+        "The referee"
+      ],
+      "answer": 0,
+      "why": "Last touch by a defender gives a corner; last touch by an attacker gives a goal kick."
+    },
+    {
+      "id": "q052",
+      "law": 17,
+      "stage": "referee",
+      "q": "May the corner flag be moved to make the kick easier?",
+      "choices": [
+        "No",
+        "Yes, if it is in the way",
+        "Only for younger age groups"
+      ],
+      "answer": 0,
+      "why": "The corner flag must not be moved."
+    }
+  ]
+}

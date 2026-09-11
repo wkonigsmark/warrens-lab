@@ -18,6 +18,7 @@ soccer/
 │   ├── pitch.js               # pitch geometry, shared by the builder and print sheet
 │   ├── nav.js                 # floating pill nav + live-match badge (every page)
 │   ├── drills.js              # drill loading + filtering, shared by library and planner
+│   ├── quiz-engine.js         # Leitner-box scheduling for the Laws quiz
 │   ├── stopwatch-page.js      # per-player timing, localStorage only
 │   ├── practice-page.js       # practice plan builder
 │   ├── lineup-page.js         # interactive pitch / lineup builder
@@ -29,6 +30,7 @@ soccer/
 ├── practice/index.html        # ?team=<slug>[&event=&plan=] — practice plan builder (coach only)
 ├── stopwatch/index.html       # ?team=<slug>[&event=] — sprint timing (coach only)
 ├── rules/index.html           # Laws of the Game library (open to everyone)
+├── rules/quiz/index.html      # adaptive 3-choice quiz over the Laws
 ├── drills/index.html          # drill library (reads data/drills.json); ?specialty=&difficulty=&q= deep links
 ├── shared/themes.css          # club colours + monogram crests keyed by <body data-club>
 ├── teams/
@@ -150,8 +152,25 @@ reproduced text. Keep it that way when adding content.
 
 **Printables:** the full Laws at the current stage, or a cut-up sheet of ask/answer prompt cards.
 
-**Quiz-ready shape.** Each Law has a stable `number`, `tags` and a `stage`, so a future
-`questions` array can attach to a Law and a stage without reshaping the file.
+## Laws quiz
+
+`rules/quiz/index.html` drills the Laws with three-choice questions from `data/quiz.json`
+(52 questions, all 17 Laws). Pick a starting bucket and a learner name — progress is stored per
+learner in `localStorage` under `dynasty-soccer:quiz:<name>`, so several kids can share a device.
+
+**Scheduling** lives in `shared/quiz-engine.js` and is a Leitner box system. A right answer
+promotes a question and pushes it further out; a wrong answer drops it to box 1 so it returns
+within about three questions. "Due" is counted in questions answered rather than wall-clock time,
+so a session behaves the same however long it runs. A `WORKING_SET` cap keeps roughly nine
+questions in circulation — without it, box-1 cards come due so often that new material never gets
+introduced.
+
+**Graduation** needs all four of: at least 8 recent answers, 80%+ recent accuracy, every question
+in the band seen, and 60%+ mastered (box 4 or higher). Unlocking a stage resets the rolling
+accuracy window so the next band is judged on its own.
+
+**Stage keys must match across three places** — `data/rules.json` stages, `data/quiz.json`
+question tags, and `STAGES` in `quiz-engine.js`. They are `sideline, playing, club, referee, hs`.
 
 ## Drill library
 

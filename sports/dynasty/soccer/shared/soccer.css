@@ -579,3 +579,41 @@ table.roster select.pos { width: 92px; }
 .cut-card .cc-exp::before { content: '→ '; color: #888; }
 .stage-hint { margin: 0 0 12px; padding: 10px 13px; border-radius: 10px;
   background: rgba(122,208,255,0.06); border-left: 3px solid #7ad0ff; }
+
+/* ---------------------------------------------------------------- laws quiz */
+.q-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.q-stage { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); font-weight: 700; }
+.q-stat { font-size: 0.78rem; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.q-bar { height: 4px; border-radius: 3px; background: rgba(255,255,255,0.07); overflow: hidden; margin-bottom: 20px; }
+.q-bar > div { height: 100%; background: var(--accent); border-radius: 3px; transition: width .4s ease; }
+.q-prompt { font-size: 1.18rem; line-height: 1.45; margin: 0 0 18px; font-weight: 600; }
+.q-choices { display: flex; flex-direction: column; gap: 10px; }
+.q-choice { text-align: left; padding: 16px 18px; border-radius: 12px; cursor: pointer; font: inherit; font-size: 1rem;
+  border: 1px solid var(--glass-border); background: rgba(255,255,255,0.04); color: var(--text-main);
+  min-height: 56px; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: all .15s; }
+.q-choice:hover:not(:disabled) { border-color: var(--accent-border); background: var(--accent-soft); }
+.q-choice:active:not(:disabled) { transform: scale(0.985); }
+.q-choice:disabled { cursor: default; opacity: 0.6; }
+.q-choice.right { border-color: var(--accent); background: var(--accent-soft); color: var(--text-main); opacity: 1; }
+.q-choice.right::after { content: ' ✓'; color: var(--accent); font-weight: 700; }
+.q-choice.wrong { border-color: rgba(255,107,107,0.6); background: rgba(255,107,107,0.1); opacity: 1; }
+.q-choice.wrong::after { content: ' ✕'; color: #ff6b6b; font-weight: 700; }
+
+.q-feedback { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--glass-border); }
+.qf-verdict { margin: 0 0 6px; font-weight: 700; font-size: 1.05rem; }
+.qf-verdict.ok { color: var(--accent); }
+.qf-verdict.no { color: #ff6b6b; }
+.qf-why { margin: 0 0 10px; color: var(--text-dim); line-height: 1.55; }
+.qf-law { display: inline-block; margin-bottom: 14px; font-size: 0.85rem; color: var(--accent); text-decoration: none;
+  border-bottom: 1px dotted var(--accent-border); }
+.grad-msg { font-size: 1.05rem; line-height: 1.6; margin: 0 0 16px; }
+
+.pg-row { display: flex; align-items: center; gap: 12px; padding: 7px 0; }
+.pg-row.locked { opacity: 0.4; }
+.pg-name { font-size: 0.86rem; min-width: 92px; }
+.pg-bar { flex: 1; height: 7px; border-radius: 4px; background: rgba(255,255,255,0.07); overflow: hidden; }
+.pg-bar > span { display: block; height: 100%; background: var(--accent); border-radius: 4px; transition: width .4s ease; }
+.pg-num { font-size: 0.78rem; color: var(--text-dim); font-variant-numeric: tabular-nums; min-width: 44px; text-align: right; }
+.pg-weak { margin-top: 12px; }
+.pg-weak a { color: var(--accent); }
+@media (max-width: 600px) { .q-prompt { font-size: 1.06rem; } .pg-name { min-width: 74px; font-size: 0.8rem; } }

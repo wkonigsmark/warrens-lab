@@ -147,7 +147,7 @@
         }
       ],
       "basics": "Assistant referees run the sidelines with flags. They help decide throw-ins, corners, goal kicks and offside.",
-      "stage": "assistant",
+      "stage": "referee",
       "prompt": {
         "ask": "Ask: what is the person with the flag actually watching for?",
         "expect": "Ball out of play, who it came off, offside, and substitutions."
@@ -435,7 +435,7 @@
       "who": "Club players and coaches."
     },
     {
-      "key": "assistant",
+      "key": "referee",
       "name": "Stage 4 · Small-sided referee",
       "short": "Referee",
       "target": "Can referee a youth small-sided match alone, or run a line.",
