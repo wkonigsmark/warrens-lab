@@ -8,6 +8,7 @@ import { mountNav } from './nav.js';
 const $ = id => document.getElementById(id);
 const eventId = new URLSearchParams(location.search).get('event');
 let event = null, team = null, match = null, roster = [], sheetSide = null, tick = null, poll = null;
+let squad = null;              // { elapsed, running, players[] } from coach_stints_get
 
 const HALF = { 1: '1st half', 2: '2nd half', 3: 'Full time' };
 const pad = n => String(n).padStart(2, '0');
@@ -84,7 +85,7 @@ function draw() {
   drawGoals();
   drawControls();
   clearInterval(tick);
-  if (match?.period_started_at) tick = setInterval(drawClock, 500);
+  if (match?.period_started_at) tick = setInterval(() => { drawClock(); tickSquad(); }, 500);
 }
 
 function drawGoals() {
@@ -149,6 +150,134 @@ function drawControls() {
       <button class="chip danger" data-act="reset">Reset match</button>
     </div>`;
 }
+
+// ---------------------------------------------------------------- squad & playing time
+// Stints are stamped in real elapsed match seconds by the database. The page only
+// mirrors them and ticks the display forward while the clock is running.
+let squadBase = 0, squadAt = 0;
+
+const liveElapsed = () =>
+  squad ? squadBase + (squad.running ? Math.floor((Date.now() - squadAt) / 1000) : 0) : 0;
+
+async function loadSquad() {
+  if (!match || !isUnlocked()) { $('squad-card').hidden = true; return; }
+  try {
+    squad = await coachCall('coach_stints_get', { p_match_id: match.id });
+    squadBase = squad.elapsed; squadAt = Date.now();
+    drawSquad();
+  } catch (err) {
+    $('squad-card').hidden = /coach_stints_get/.test(err.message) ? true : false;
+    if (!$('squad-card').hidden) $('on-field').innerHTML = `<p class="empty">${esc(err.message)}</p>`;
+  }
+}
+
+async function setOnField(ids) {
+  try {
+    squad = await coachCall('coach_stint_set', { p_match_id: match.id, p_on_field: ids });
+    squadBase = squad.elapsed; squadAt = Date.now();
+    drawSquad();
+  } catch (err) { alert(err.message); }
+}
+
+function toggleSquad(pid) {
+  if (!squad) return;
+  const on = squad.players.filter(p => p.on_field).map(p => p.player_id);
+  const next = on.includes(pid) ? on.filter(x => x !== pid) : [...on, pid];
+  setOnField(next);
+}
+
+function squadTile(p, benchSec) {
+  const nm = roster.find(r => r.players.id === p.player_id);
+  const label = nm ? shortName(nm.players) : p.first_name;
+  return `<button type="button" class="sq-tile${p.on_field ? ' on' : ''}" data-sq="${p.player_id}">
+      <span class="sq-num">${p.jersey_number ?? '–'}</span>
+      <span class="sq-name">${esc(label)}</span>
+      <span class="sq-time">${p.on_field ? mmss(p.played_sec) : `<em>${mmss(benchSec)}</em>`}</span>
+    </button>`;
+}
+
+function drawSquad() {
+  if (!squad || !isUnlocked()) { $('squad-card').hidden = true; return; }
+  $('squad-card').hidden = false;
+  const t = liveElapsed();
+  const onField = squad.players.filter(p => p.on_field);
+  const bench = squad.players.filter(p => !p.on_field);
+  const size = team.squad_size || 7;
+
+  $('squad-count').textContent = `${onField.length} of ${size}`;
+  $('squad-count').className = `record ${onField.length === size ? '' : 'warn'}`;
+  $('on-field').innerHTML = onField.length
+    ? onField.map(p => squadTile(p, 0)).join('')
+    : '<p class="empty">Nobody on the field yet — tap players below to start them.</p>';
+
+  const longest = bench.length ? Math.max(...bench.map(p => t - (p.stints ? p.last_off_sec : 0))) : 0;
+  $('bench-note').textContent = bench.length && squad.running
+    ? `longest out ${mmss(longest)}`
+    : (bench.length ? `${bench.length} waiting` : '');
+  $('bench-row').innerHTML = bench.length
+    ? bench.sort((a, b) => (t - (b.stints ? b.last_off_sec : 0)) - (t - (a.stints ? a.last_off_sec : 0)))
+           .map(p => squadTile(p, t - (p.stints ? p.last_off_sec : 0))).join('')
+    : '<p class="empty">Everyone is on.</p>';
+}
+
+/** Repaint just the numbers each second so timers move without rebuilding the DOM. */
+function tickSquad() {
+  if (!squad) return;
+  const t = liveElapsed();
+  for (const p of squad.players) {
+    const el = document.querySelector(`.sq-tile[data-sq="${p.player_id}"] .sq-time`);
+    if (!el) continue;
+    if (p.on_field) el.textContent = mmss(p.played_sec + (squad.running ? t - squad.elapsed : 0));
+    else el.innerHTML = `<em>${mmss(t - (p.stints ? p.last_off_sec : 0))}</em>`;
+  }
+}
+
+$('on-field').addEventListener('click', e => {
+  const b = e.target.closest('[data-sq]'); if (b) toggleSquad(b.dataset.sq);
+});
+$('bench-row').addEventListener('click', e => {
+  const b = e.target.closest('[data-sq]'); if (b) toggleSquad(b.dataset.sq);
+});
+
+$('playtime-print').addEventListener('click', () => {
+  if (!squad) return;
+  const t = liveElapsed();
+  const rows = [...squad.players]
+    .map(p => ({ ...p, total: p.played_sec + (p.on_field && squad.running ? t - squad.elapsed : 0) }))
+    .sort((a, b) => b.total - a.total);
+  const goals = [...(match.goals || [])].sort((a, b) => a.period - b.period || a.elapsed_sec - b.elapsed_sec);
+  $('print-doc').innerHTML = `
+    <div class="paper">
+      <div class="doc-head">
+        <div class="doc-title">${esc(team.name)} vs ${esc(event.opponent || '')}</div>
+        <div class="doc-sub">${esc(fmtDate(event.event_date))} · ${match.our_score}–${match.their_score}${
+          match.period1_sec != null ? ` · halves ${mmss(match.period1_sec)}${match.period2_sec != null ? ` / ${mmss(match.period2_sec)}` : ''}` : ''}</div>
+      </div>
+      <h3 class="doc-h3">Playing time</h3>
+      <table class="doc-table">
+        <thead><tr><th class="pn">#</th><th class="pd">Player</th><th class="pm">Played</th><th class="pm">Share</th><th>Spells</th></tr></thead>
+        <tbody>${rows.map(p => `<tr>
+          <td class="pn">${p.jersey_number ?? ''}</td>
+          <td class="pd">${esc(p.first_name)} ${esc(p.last_name)}</td>
+          <td class="pm">${mmss(p.total)}</td>
+          <td class="pm">${t ? Math.round(p.total / t * 100) : 0}%</td>
+          <td>${p.stints || 0}</td></tr>`).join('')}</tbody>
+      </table>
+      <h3 class="doc-h3">Goals</h3>
+      <table class="doc-table">
+        <thead><tr><th class="pm">Time</th><th class="pd">Team</th><th>Scorer</th></tr></thead>
+        <tbody>${goals.length ? goals.map(g => `<tr>
+          <td class="pm">${g.period === 2 ? '2H' : '1H'} ${mmss(goalMinute(g))}</td>
+          <td class="pd">${g.side === 'us' ? esc(team.name) : esc(event.opponent || 'Opponent')}</td>
+          <td>${g.side === 'us'
+              ? (g.own_goal ? 'Own goal' : g.scorer_id ? esc(nameOf(g.scorer_id)) : 'Unknown')
+              : (g.own_goal && g.scorer_id ? `Own goal by ${esc(nameOf(g.scorer_id))}` : '—')}${
+              g.assist_id ? ` <span class="pmeta">(assist ${esc(nameOf(g.assist_id))})</span>` : ''}</td></tr>`).join('')
+          : '<tr><td colspan="3">No goals.</td></tr>'}</tbody>
+      </table>
+    </div>`;
+  window.print();
+});
 
 // ---------------------------------------------------------------- goal entry
 // The goal row is written the instant the button is tapped, so the score is right
@@ -309,6 +438,7 @@ async function refresh() {
   }
   match = match || null;
   draw();
+  loadSquad();
   window.dispatchEvent(new CustomEvent('dynasty:match-changed'));   // keep the live banner in step
 }
 function drawScore() {
@@ -335,7 +465,7 @@ async function init() {
     roster = await sb(`team_players?team_id=eq.${team.id}&select=players(id,first_name,last_name)`);
     roster.sort((a, b) => `${a.players.last_name} ${a.players.first_name}`.localeCompare(`${b.players.last_name} ${b.players.first_name}`));
     await refresh();
-    onChange(() => { closeSheet(); draw(); });
+    onChange(() => { closeSheet(); draw(); loadSquad(); });
     // Spectators: poll so the scoreboard follows the coach's phone.
     poll = setInterval(() => { if (!isUnlocked() && document.visibilityState === 'visible') refresh().catch(() => {}); }, 10000);
   } catch (err) {

@@ -44,6 +44,18 @@
       <div class="filters"><button class="chip" type="button" id="sheet-cancel">Done</button></div>
     </section>
 
+    <section class="card" id="squad-card" hidden>
+      <h2>On the field <span id="squad-count" class="record"></span></h2>
+      <p class="hint" id="squad-hint">Tap a player to move them between the field and the bench. Bench timers run while the clock does.</p>
+      <div id="on-field" class="squad-row"></div>
+      <div class="bench-head"><span>Bench</span><span id="bench-note" class="dim"></span></div>
+      <div id="bench-row" class="squad-row bench"></div>
+      <div class="filters">
+        <span class="spacer"></span>
+        <button class="chip" type="button" id="playtime-print">🖨️ Playing time report</button>
+      </div>
+    </section>
+
     <section class="card">
       <h2>Goals</h2>
       <ul id="goals" class="goal-list"><li class="empty">No goals yet.</li></ul>

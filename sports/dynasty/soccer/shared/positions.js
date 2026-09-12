@@ -52,6 +52,22 @@ export function positionOptions() {
 const F = (code, name, size, note, slots) => ({ code, name, size, note, slots });
 
 export const FORMATIONS = [
+  F('2-3', '2-3', 6, '6v6 · two back, three forward', [
+    { code: 'GK', x: 0.50, y: 0.07 },
+    { code: 'LB', x: 0.30, y: 0.32 }, { code: 'RB', x: 0.70, y: 0.32 },
+    { code: 'LF', x: 0.22, y: 0.70 }, { code: 'CF', x: 0.50, y: 0.76 }, { code: 'RF', x: 0.78, y: 0.70 },
+  ]),
+  F('3-2', '3-2', 6, '6v6 · three back, two forward', [
+    { code: 'GK', x: 0.50, y: 0.07 },
+    { code: 'LB', x: 0.22, y: 0.33 }, { code: 'CB', x: 0.50, y: 0.27 }, { code: 'RB', x: 0.78, y: 0.33 },
+    { code: 'LF', x: 0.35, y: 0.72 }, { code: 'RF', x: 0.65, y: 0.72 },
+  ]),
+  F('2-1-2', '2-1-2', 6, '6v6 · two back, one mid, two forward', [
+    { code: 'GK', x: 0.50, y: 0.07 },
+    { code: 'LB', x: 0.30, y: 0.28 }, { code: 'RB', x: 0.70, y: 0.28 },
+    { code: 'CM', x: 0.50, y: 0.50 },
+    { code: 'LF', x: 0.33, y: 0.76 }, { code: 'RF', x: 0.67, y: 0.76 },
+  ]),
   F('3-3', '3-3', 7, '7v7 · three back, three forward', [
     { code: 'GK', x: 0.50, y: 0.07 },
     { code: 'LB', x: 0.22, y: 0.33 }, { code: 'CB', x: 0.50, y: 0.29 }, { code: 'RB', x: 0.78, y: 0.33 },
@@ -90,6 +106,9 @@ export const FORMATIONS = [
 ];
 
 export const getFormation = code => FORMATIONS.find(f => f.code === code) || FORMATIONS[0];
+/** Formations for a given squad size (players on the field, keeper included). */
+export const formationsForSize = size => FORMATIONS.filter(f => f.size === size);
+export const SQUAD_SIZES = [...new Set(FORMATIONS.map(f => f.size))].sort((a, b) => a - b);
 
 // ---------------------------------------------------------------- the engine
 // How much a skill point is worth. Skill SCALES positional fit rather than adding to it,

@@ -56,7 +56,8 @@ async function renderCoachRoster() {
 
   rosterEl.innerHTML = rows.map(r => `
     <tr class="edit-row" data-player="${r.player_id}">
-      <td class="num">${r.jersey_number ?? '—'}</td>
+      <td class="num"><input class="jersey" type="number" min="0" max="99" inputmode="numeric"
+           value="${r.jersey_number ?? ''}" placeholder="–" aria-label="Shirt number for ${esc(fullName(r))}"></td>
       <td class="pname">${esc(fullName(r))}<span class="saved"></span></td>
       <td><select class="skill" aria-label="Skill">
         <option value="">–</option>
@@ -89,6 +90,27 @@ async function saveEval(tr) {
   } catch (err) { flash.textContent = err.message; }
 }
 
+/** Shirt numbers live on team_players, so they save separately from the eval. */
+async function saveJersey(tr, input) {
+  const flash = tr.querySelector('.saved');
+  const raw = input.value.trim();
+  const num = raw === '' ? null : Number(raw);
+  if (num !== null && (!Number.isInteger(num) || num < 0 || num > 99)) {
+    flash.textContent = '0–99 only';
+    return;
+  }
+  const clash = [...rosterEl.querySelectorAll('.jersey')]
+    .some(o => o !== input && o.value.trim() !== '' && Number(o.value) === num);
+  flash.textContent = '…';
+  try {
+    await coachCall('coach_set_jersey', { p_team_id: team.id, p_player_id: tr.dataset.player, p_number: num });
+    flash.textContent = clash ? 'saved — number shared' : 'saved';
+    setTimeout(() => { if (flash.textContent.startsWith('saved')) flash.textContent = ''; }, 2000);
+    const row = publicRoster.find(p => p.players.id === tr.dataset.player);
+    if (row) row.jersey_number = num;
+  } catch (err) { flash.textContent = err.message; }
+}
+
 async function loadNotes(tr) {
   const panel = tr.nextElementSibling, list = panel.querySelector('.note-list');
   try {
@@ -106,7 +128,9 @@ async function loadNotes(tr) {
 
 rosterEl.addEventListener('change', e => {
   const tr = e.target.closest('tr.edit-row');
-  if (tr && e.target.matches('.skill, .pos')) saveEval(tr);
+  if (!tr) return;
+  if (e.target.matches('.skill, .pos')) saveEval(tr);
+  if (e.target.matches('.jersey')) saveJersey(tr, e.target);
 });
 rosterEl.addEventListener('click', async e => {
   const btn = e.target.closest('.notes-btn');

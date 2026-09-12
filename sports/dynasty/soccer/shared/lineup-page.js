@@ -2,7 +2,7 @@
 import { sb, esc, setStatus, isConfigured, applyClub } from './db.js';
 import { fmtDate } from './schedule.js';
 import { mountCoachToggle, isUnlocked, onChange, coachCall } from './coach.js';
-import { FORMATIONS, getFormation, autoAssign, remapFormation, initials, POSITIONS } from './positions.js';
+import { FORMATIONS, getFormation, autoAssign, remapFormation, initials, POSITIONS, formationsForSize, SQUAD_SIZES } from './positions.js';
 import { pitchMarkings, PITCH_VIEWBOX } from './pitch.js';
 import { mountNav } from './nav.js';
 
@@ -127,6 +127,37 @@ $('bench').addEventListener('click', e => {
   if (!b) return;
   picked = picked === b.dataset.player ? null : b.dataset.player;
   draw();
+});
+
+/** Squad size decides which formations are even offered. */
+function drawSizes() {
+  const size = team.squad_size || 7;
+  $('squad-size').innerHTML = SQUAD_SIZES.map(n =>
+    `<option value="${n}"${n === size ? ' selected' : ''}>${n} a side</option>`).join('');
+  drawFormationOptions(size);
+}
+
+function drawFormationOptions(size) {
+  const list = formationsForSize(size);
+  $('formation').innerHTML = list.map(f =>
+    `<option value="${f.code}">${esc(f.name)} — ${esc(f.note)}</option>`).join('');
+  if (!list.some(f => f.code === formation.code)) {
+    const next = list[0];
+    const res = remapFormation(availableRoster(), assignments, next);
+    formation = next;
+    assignments = res.assignments;
+  }
+  $('formation').value = formation.code;
+}
+
+$('squad-size').addEventListener('change', async () => {
+  const size = Number($('squad-size').value);
+  drawFormationOptions(size);
+  picked = null;
+  draw();
+  syncPrintLink();
+  try { await coachCall('coach_set_squad_size', { p_team_id: team.id, p_size: size }); team.squad_size = size; }
+  catch (err) { console.warn('squad size not saved:', err.message); }
 });
 
 function syncPrintLink() {
@@ -262,13 +293,12 @@ async function init() {
   if (!isConfigured) { setStatus($('status'), 'Not configured', 'err'); return; }
   if (!teamSlug) { setStatus($('status'), 'No team', 'err'); $('title').textContent = 'Missing ?team= in the URL'; return; }
 
-  $('formation').innerHTML = FORMATIONS.map(f =>
-    `<option value="${f.code}">${esc(f.name)} — ${esc(f.note)}</option>`).join('');
 
   try {
     [team] = await sb(`teams?slug=eq.${encodeURIComponent(teamSlug)}&select=*`);
     if (!team) throw new Error(`No team with slug "${teamSlug}".`);
     applyClub(team.slug);
+    drawSizes();
     mountNav({ active: 'lineup', teamSlug: team.slug, eventId: params.get('event') || '' });
     setStatus($('status'), 'Connected', 'ok');
     $('title').textContent = `${team.name} Lineup`;
