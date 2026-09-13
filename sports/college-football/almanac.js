@@ -61,6 +61,8 @@ async function loadAlmanac() {
 function liveLedger(L) {
   const s = L.summary || {};
   const pl = s.playable || {}, all = s.all || {};
+  const act = s.action || {}, obs = s.observation || {};
+  const rule = L.actionRule || { minEdge: 3 };
   const c = (big, lbl, cls = '') => `<div class="verdict-card"><div class="big ${cls}">${big}</div><div class="lbl">${lbl}</div></div>`;
   const rec = a => a && a.n ? `${a.w}–${a.l}${a.p ? `–${a.p}` : ''}` : '—';
   const winCls = v => v == null ? '' : v >= 52.4 ? 'good' : 'bad';
@@ -77,26 +79,37 @@ function liveLedger(L) {
   const pending = (s.totalPicks || 0) - (all.n || 0);
   return `
     <div class="index-section-title">📓 2026 Live Ledger
-      <span>the forward test — frozen before kickoff, graded after · ${s.totalPicks || 0} picks · weeks frozen: ${(s.weeksFrozen || []).join(', ') || '—'}</span></div>
+      <span>the forward test — frozen before kickoff, graded after · ${s.actionPicks || 0} in play of
+        ${s.totalPicks || 0} logged · weeks frozen: ${(s.weeksFrozen || []).join(', ') || '—'}</span></div>
     <div class="verdict-grid" style="margin-bottom:10px">
-      ${c(rec(pl), 'playable ATS record')}
-      ${c(pl.atsPct == null ? '—' : pct(pl.atsPct), 'playable win %', winCls(pl.atsPct))}
-      ${c(pl.roi == null ? '—' : signed(pl.roi) + '%', 'ROI at -110', roiCls(pl.roi))}
-      ${c(pl.modelMae == null ? '—' : `${pl.modelMae} <span style="font-size:1rem;color:rgba(245,233,208,.4)">/</span> ${pl.mktMae}`,
-          'W² miss / market miss', pl.modelMae == null ? '' : pl.modelMae <= pl.mktMae ? 'good' : 'bad')}
-      ${c(`${all.n || 0}<span style="font-size:.9rem;color:rgba(245,233,208,.45)"> / ${pending}</span>`, 'graded / pending')}
+      ${c(rec(act), 'in-play ATS record')}
+      ${c(act.atsPct == null ? '—' : pct(act.atsPct), 'in-play win %', winCls(act.atsPct))}
+      ${c(act.pnl == null ? '—' : `${signed(act.pnl)}u`, `P&L on ${act.units || 0}u risked`, roiCls(act.pnl))}
+      ${c(act.unitRoi == null ? '—' : signed(act.unitRoi) + '%', 'unit ROI at -110', roiCls(act.unitRoi))}
+      ${c(act.modelMae == null ? '—' : `${act.modelMae} <span style="font-size:1rem;color:rgba(245,233,208,.4)">/</span> ${act.mktMae}`,
+          'W² miss / market miss', act.modelMae == null ? '' : act.modelMae <= act.mktMae ? 'good' : 'bad')}
     </div>
+    <p class="index-footnote" style="margin-top:-2px">
+      <strong>What goes in play:</strong> a playable game becomes a bet only when we disagree with the
+      market by ${rule.minEdge}+ points — <strong>1 unit</strong> at ${rule.minEdge}–7, <strong>2 units</strong> at 7+.
+      Below that we're essentially agreeing with Vegas, so it's logged as an <em>observation</em>
+      (currently ${rec(obs)}${obs.atsPct == null ? '' : `, ${pct(obs.atsPct)}`}) and never staked.
+      No manual overrides — the model's picks stand as generated.
+    </p>
     <div class="matrix-wrap"><table class="conf-matrix">
-      <tr><th style="text-align:left">Edge size (playable)</th><th>Record</th><th>Win %</th><th>ROI (-110)</th></tr>
+      <tr><th style="text-align:left">Edge size</th><th>Record</th><th>Win %</th><th>ROI (-110)</th></tr>
       ${['small', 'mid', 'big'].map(t => { const a = (s.byEdgeTier || {})[t] || {}; return `<tr>
-        <td style="text-align:left">${tierLabel[t]}</td><td>${rec(a)}</td>
+        <td style="text-align:left">${tierLabel[t]} <span style="color:rgba(245,233,208,.4);font-size:.72rem">${
+          t === 'small' ? 'observation' : t === 'mid' ? '1 unit' : '2 units'}</span></td><td>${rec(a)}</td>
         <td class="${a.atsPct == null ? '' : a.atsPct >= 52.4 ? 'mx-win' : 'mx-loss'}">${a.atsPct == null ? '—' : pct(a.atsPct)}</td>
         <td class="${a.roi == null ? '' : a.roi > 0 ? 'mx-win' : 'mx-loss'}">${a.roi == null ? '—' : signed(a.roi) + '%'}</td></tr>`; }).join('')}
     </table></div>
     <div class="matrix-wrap" style="margin-top:8px"><table class="conf-matrix">
-      <tr><th style="text-align:left">Week</th><th>Graded</th><th>Pending</th><th>ATS · all lined</th><th>W² miss</th><th>Mkt miss</th></tr>
-      ${(s.byWeek || []).map(w => `<tr><td style="text-align:left">Wk ${w.week}</td><td>${w.n}</td><td>${w.pending}</td>
-        <td>${rec(w)}${w.atsPct == null ? '' : ` (${pct(w.atsPct)})`}</td><td>${w.modelMae ?? '—'}</td><td>${w.mktMae ?? '—'}</td></tr>`).join('')}
+      <tr><th style="text-align:left">Week</th><th>In play</th><th>Graded</th><th>Pending</th><th>ATS</th><th>P&L</th></tr>
+      ${(s.byWeek || []).map(w => `<tr><td style="text-align:left">Wk ${w.week}</td><td>${w.actionPicks ?? '—'}</td>
+        <td>${w.n}</td><td>${w.pending}</td>
+        <td>${rec(w)}${w.atsPct == null ? '' : ` (${pct(w.atsPct)})`}</td>
+        <td class="${w.pnl == null ? '' : w.pnl > 0 ? 'mx-win' : w.pnl < 0 ? 'mx-loss' : ''}">${w.pnl == null || !w.n ? '—' : signed(w.pnl) + 'u'}</td></tr>`).join('')}
     </table></div>
     ${weeks.some(w => (w.notes || []).length) ? `
     <div class="index-section-title" style="margin-top:14px">📝 Analyst Log
@@ -115,6 +128,7 @@ function liveLedger(L) {
         <span class="lg-game">${p.away} @ ${p.home}${p.neutral ? ' <em>(N)</em>' : ''}</span>
         <span class="lg-line">W² <b>${lineStr(p, p.modelHome)}</b><br>mkt ${lineStr(p, p.mktHome)}</span>
         <span class="lg-edge ${Math.abs(p.edge) >= 7 ? 'e-big' : Math.abs(p.edge) >= 3 ? 'e-mid' : ''}">+${Math.abs(p.edge).toFixed(1)}<small>${p.modelSide}</small></span>
+        <span class="lg-stake">${p.stake ? `${p.stake}u` : '<span class="lg-obs">obs</span>'}</span>
         <span class="lg-score">${p.grade ? `${p.grade.awayPts}–${p.grade.homePts}` : ''}</span>
       </div>`).join('')}
     </div>` : ''}

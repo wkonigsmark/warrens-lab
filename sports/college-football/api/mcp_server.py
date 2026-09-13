@@ -298,25 +298,34 @@ def ledger_status() -> str:
     if not s.get("totalPicks"):
         return "Ledger is empty."
     rec = lambda a: f"{a['w']}-{a['l']}-{a['p']}" if a.get("n") else "—"
-    a, pl = s["all"], s["playable"]
-    out = [f"2026 Live Ledger · weeks frozen {s['weeksFrozen']} · {s['totalPicks']} picks "
-           f"({a['n']} graded, {s['totalPicks'] - a['n']} pending)", ""]
-    if pl["n"]:
-        out.append(f"PLAYABLE (competitive lines): {rec(pl)} ATS = {pl['atsPct']}% · ROI {pl['roi']:+}% at -110")
-        out.append(f"  W² miss {pl['modelMae']} vs market miss {pl['mktMae']} · W² closer in {pl['modelCloserPct']}% of games")
-        for t in ("small", "mid", "big"):
-            e = s["byEdgeTier"][t]
-            if e["n"]:
-                out.append(f"  edge {t:<5} {rec(e)} ({e['atsPct']}%) ROI {e['roi']:+}%")
+    a, act, obs = s["all"], s.get("action", {}), s.get("observation", {})
+    rule = L.get("actionRule", {}).get("minEdge", 3)
+    out = [f"2026 Live Ledger · weeks frozen {s['weeksFrozen']} · "
+           f"{s.get('actionPicks', 0)} picks IN PLAY of {s['totalPicks']} logged", ""]
+    if act.get("n"):
+        out.append(f"IN PLAY: {rec(act)} ATS = {act['atsPct']}% · "
+                   f"{act['pnl']:+.2f} units on {act['units']:g} risked = {act['unitRoi']:+}% ROI")
+        out.append(f"  W² miss {act['modelMae']} vs market {act['mktMae']} · W² closer in {act['modelCloserPct']}% of games")
+    else:
+        out.append("IN PLAY: nothing graded yet")
+    if obs.get("n"):
+        out.append(f"  (observations, sub-{rule}pt, NOT bet: {rec(obs)} / {obs['atsPct']}%)")
+    for t in ("small", "mid", "big"):
+        e = s["byEdgeTier"][t]
+        if e["n"]:
+            tag = {"small": "observation", "mid": "1 unit", "big": "2 units"}[t]
+            out.append(f"  edge {t:<5} ({tag}): {rec(e)} ({e['atsPct']}%) flat ROI {e['roi']:+}%")
     if a["n"]:
-        out.append(f"ALL lined games (incl. blowout lines): {rec(a)} ({a['atsPct']}%) · miss {a['modelMae']} vs {a['mktMae']}")
+        out.append(f"  (all {a['n']} lined incl. FCS/blowouts: {rec(a)}, miss {a['modelMae']} vs {a['mktMae']})")
     out.append("")
     for w in s["byWeek"]:
-        out.append(f"  wk{w['week']}: {w['n']} graded / {w['pending']} pending"
-                   + (f" · {rec(w)} ({w['atsPct']}%)" if w["n"] and w.get("atsPct") is not None else ""))
-    out.append("\nBreak-even at -110 is 52.4%. Playable = FBS-vs-FBS, market ≤21, no mislabel. "
-               "Blowout lines (margin-cap artifact) and FBS-vs-FCS games (all FCS share one pooled "
-               "rating) are logged for the record, not bet.")
+        out.append(f"  wk{w['week']}: {w.get('actionPicks', 0)} in play — {w['n']} graded / {w['pending']} pending"
+                   + (f" · {rec(w)} · {w['pnl']:+.2f}u" if w["n"] else ""))
+    out.append(f"\nSTAKING: a playable game is only bet when the model disagrees with the market by "
+               f"{rule}+ pts — 1 unit at {rule}-7, 2 units at 7+. Smaller edges are logged as "
+               "observations (we effectively agree with Vegas) and never staked. No manual overrides. "
+               "Break-even at -110 is 52.4%. Playable = FBS-vs-FBS, market ≤21, no mislabel; "
+               "FBS-vs-FCS and blowout lines are logged, never bet.")
     return "\n".join(out)
 
 

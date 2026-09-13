@@ -35,6 +35,27 @@ RELIABLE_MKT = 21
 EDGE_TIERS = [("small", 0, 3), ("mid", 3, 7), ("big", 7, 999)]
 VIG_WIN = 100 / 110        # units returned on a win at -110
 
+# --- what actually goes in play ---
+# A playable game is one the model is ALLOWED to price. It only becomes a live play
+# if we meaningfully disagree with the market: under 3 points we're essentially
+# agreeing with Vegas, and counting those as bets both pads the sample and pollutes
+# the record (wk2 opened 0-2 on edges of 1.2 and 0.9 — never real convictions).
+# Sub-threshold picks are still graded and kept, as OBSERVATIONS.
+ACTION_MIN = 3.0
+STAKE_TIERS = [(7.0, 2), (ACTION_MIN, 1)]   # |edge| ≥7 → 2 units, ≥3 → 1 unit, else 0
+
+
+def stake_for(pick):
+    """Units risked on a pick. Derived from the frozen edge, never stored at freeze
+    time — so the action rule can be re-tuned without touching the immutable record."""
+    if not pick.get("playable"):
+        return 0
+    e = abs(pick["edge"])
+    for lo, units in STAKE_TIERS:
+        if e >= lo:
+            return units
+    return 0
+
 
 def load(name):
     return json.loads((DATA / name).read_text())
@@ -71,6 +92,13 @@ def load_ledger():
 
 def save_ledger(L):
     LEDGER_DIR.mkdir(parents=True, exist_ok=True)
+    L["updatedAt"] = now()
+    # re-stamp stakes every save so the action rule stays consistent across all weeks
+    for wk in L["weeks"].values():
+        for p in wk["picks"]:
+            p["stake"] = stake_for(p)
+    L["actionRule"] = {"minEdge": ACTION_MIN, "tiers": STAKE_TIERS,
+                       "note": "units risked per pick; <%g pts = observation only" % ACTION_MIN}
     L["updatedAt"] = now()
     L["summary"] = summarize(L)
     LEDGER.write_text(json.dumps(L, indent=1))
@@ -191,10 +219,18 @@ def agg(picks):
     w = sum(p["grade"]["ats"] == "W" for p in g)
     l = sum(p["grade"]["ats"] == "L" for p in g)
     dec = w + l
+    # unit-weighted P&L: a 2-unit win pays 2×(100/110), a 2-unit loss costs 2
+    risked = sum(p.get("stake", 0) for p in g)
+    pnl = sum((p.get("stake", 0) * VIG_WIN) if p["grade"]["ats"] == "W"
+              else (-p.get("stake", 0)) if p["grade"]["ats"] == "L" else 0.0
+              for p in g)
     return {
         "n": len(g), "w": w, "l": l, "p": len(g) - dec,
         "atsPct": round(100 * w / dec, 1) if dec else None,
         "roi": round(100 * (w * VIG_WIN - l) / dec, 1) if dec else None,
+        "units": round(risked, 1),
+        "pnl": round(pnl, 2),
+        "unitRoi": round(100 * pnl / risked, 1) if risked else None,
         "modelMae": round(sum(p["grade"]["modelErr"] for p in g) / len(g), 2) if g else None,
         "mktMae": round(sum(p["grade"]["mktErr"] for p in g) / len(g), 2) if g else None,
         "modelCloserPct": round(100 * sum(p["grade"]["modelCloser"] for p in g) / len(g), 1) if g else None,
@@ -205,14 +241,23 @@ def summarize(L):
     weeks = sorted(L["weeks"].values(), key=lambda w: w["week"])
     allp = [p for w in weeks for p in w["picks"]]
     playable = [p for p in allp if p["playable"]]
+    action = [p for p in playable if p.get("stake", 0) > 0]
+    observation = [p for p in playable if p.get("stake", 0) == 0]
     return {
         "all": agg(allp),
         "playable": agg(playable),
+        "action": agg(action),              # ← the real betting record
+        "observation": agg(observation),    # sub-threshold: we agreed with the market
         "byEdgeTier": {t: agg([p for p in playable if p["edgeTier"] == t]) for t, _, _ in EDGE_TIERS},
-        "byWeek": [{"week": w["week"], **agg(w["picks"]),
-                    "pending": sum(1 for p in w["picks"] if not p["grade"])} for w in weeks],
+        "byWeek": [{"week": w["week"],
+                    **agg([p for p in w["picks"] if p.get("stake", 0) > 0]),
+                    "actionPicks": sum(1 for p in w["picks"] if p.get("stake", 0) > 0),
+                    "pending": sum(1 for p in w["picks"]
+                                   if p.get("stake", 0) > 0 and not p["grade"])}
+                   for w in weeks],
         "weeksFrozen": [w["week"] for w in weeks],
         "totalPicks": len(allp),
+        "actionPicks": len(action),
     }
 
 
@@ -221,7 +266,8 @@ def print_week(wk):
         gr = p["grade"]
         mark = {"W": "✅", "L": "❌", "P": "➖"}.get(gr["ats"], "") if gr else "⏳"
         score = f"{gr['awayPts']}-{gr['homePts']}" if gr else "—"
-        flag = "" if p["playable"] else " (not playable)"
+        st = stake_for(p)
+        flag = f" [{st}u]" if st else (" (observation)" if p["playable"] else " (not playable)")
         print(f"  {mark} {p['away']} @ {p['home']:<20} model {p['home']} {p['modelHome']:+.1f} · "
               f"mkt {p['mktHome']:+.1f} · edge {p['edge']:+.1f} → {p['modelSide']}{flag}  [{score}]")
 
@@ -232,20 +278,31 @@ def status():
     if not s or not s["totalPicks"]:
         print("Ledger is empty — freeze a week first: ledger.py snapshot <week>")
         return
-    a, pl = s["all"], s["playable"]
-    print(f"📓 The Ledger · 2026 · weeks frozen: {s['weeksFrozen']} · {s['totalPicks']} picks")
-    print(f"   All lined games : {a['w']}-{a['l']}-{a['p']} ATS ({a['atsPct']}%) · ROI {a['roi']:+}% · "
-          f"model miss {a['modelMae']} vs market {a['mktMae']}" if a["n"] else "   nothing graded yet")
+    a, pl, act, obs = s["all"], s["playable"], s["action"], s["observation"]
+    print(f"📓 The Ledger · 2026 · weeks frozen: {s['weeksFrozen']} · "
+          f"{s['totalPicks']} picks logged, {s['actionPicks']} in play "
+          f"(edge ≥{ACTION_MIN:g}: 1u, ≥7: 2u)")
+    if act["n"]:
+        print(f"   ▶ IN PLAY      : {act['w']}-{act['l']}-{act['p']} ATS ({act['atsPct']}%) · "
+              f"{act['pnl']:+.2f}u on {act['units']:g}u risked = {act['unitRoi']:+}% · "
+              f"model miss {act['modelMae']} vs market {act['mktMae']}")
+    else:
+        print("   ▶ IN PLAY      : nothing graded yet")
+    if obs["n"]:
+        print(f"     observation  : {obs['w']}-{obs['l']}-{obs['p']} ({obs['atsPct']}%) "
+              f"— sub-{ACTION_MIN:g}pt, we agreed with the market (not bet)")
     if pl["n"]:
-        print(f"   Playable only   : {pl['w']}-{pl['l']}-{pl['p']} ATS ({pl['atsPct']}%) · ROI {pl['roi']:+}% · "
-              f"model closer {pl['modelCloserPct']}% of games")
         for t, _, _ in EDGE_TIERS:
             e = s["byEdgeTier"][t]
             if e["n"]:
-                print(f"     edge {t:<5}: {e['w']}-{e['l']}-{e['p']} ({e['atsPct']}%)  ROI {e['roi']:+}%")
+                tag = "obs " if t == "small" else f"{2 if t == 'big' else 1}u  "
+                print(f"     edge {t:<5} {tag}: {e['w']}-{e['l']}-{e['p']} ({e['atsPct']}%)  flat ROI {e['roi']:+}%")
+    if a["n"]:
+        print(f"   (all {a['n']} lined incl. FCS/blowouts: {a['w']}-{a['l']}-{a['p']}, "
+              f"miss {a['modelMae']} vs {a['mktMae']})")
     for w in s["byWeek"]:
-        print(f"   wk{w['week']:>2}: {w['n']} graded, {w['pending']} pending"
-              + (f" · {w['w']}-{w['l']}-{w['p']} · miss {w['modelMae']} vs {w['mktMae']}" if w["n"] else ""))
+        print(f"   wk{w['week']:>2}: {w['actionPicks']} in play — {w['n']} graded, {w['pending']} pending"
+              + (f" · {w['w']}-{w['l']}-{w['p']} · {w['pnl']:+.2f}u" if w["n"] else ""))
 
 
 if __name__ == "__main__":

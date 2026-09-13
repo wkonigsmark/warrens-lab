@@ -1,0 +1,1425 @@
+{
+ "season": 2026,
+ "week": 3,
+ "snapshotAt": "2026-09-13T13:58Z",
+ "indexVersion": "v1",
+ "inseason": {
+  "gamesUsed": 185,
+  "weeksPlayed": 2.07,
+  "blendWeight": 0.341,
+  "priorStrengthWeeks": 4.0,
+  "priorFrozen": true,
+  "method": "anchored ridge SRS \u2014 each team shrinks to its frozen preseason rating by games played: w = n/(n+k), k=4"
+ },
+ "spreadCal": {
+  "b": 1.122,
+  "h": 3.688
+ },
+ "rankings": [
+  {
+   "school": "Notre Dame",
+   "rank": 1,
+   "rating": 20.94,
+   "preseasonRating": 18.99,
+   "conference": "FBS Independents"
+  },
+  {
+   "school": "Ohio State",
+   "rank": 2,
+   "rating": 19.56,
+   "preseasonRating": 20.51,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Georgia",
+   "rank": 3,
+   "rating": 19.06,
+   "preseasonRating": 19.65,
+   "conference": "SEC"
+  },
+  {
+   "school": "Texas A&M",
+   "rank": 4,
+   "rating": 18.78,
+   "preseasonRating": 16.62,
+   "conference": "SEC"
+  },
+  {
+   "school": "Alabama",
+   "rank": 5,
+   "rating": 18.55,
+   "preseasonRating": 14.57,
+   "conference": "SEC"
+  },
+  {
+   "school": "Texas",
+   "rank": 6,
+   "rating": 17.55,
+   "preseasonRating": 15.83,
+   "conference": "SEC"
+  },
+  {
+   "school": "Indiana",
+   "rank": 7,
+   "rating": 17.51,
+   "preseasonRating": 15.03,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "LSU",
+   "rank": 8,
+   "rating": 16.53,
+   "preseasonRating": 11.53,
+   "conference": "SEC"
+  },
+  {
+   "school": "Miami",
+   "rank": 9,
+   "rating": 16.53,
+   "preseasonRating": 14.61,
+   "conference": "ACC"
+  },
+  {
+   "school": "Utah",
+   "rank": 10,
+   "rating": 14.56,
+   "preseasonRating": 11.34,
+   "conference": "Big 12"
+  },
+  {
+   "school": "USC",
+   "rank": 11,
+   "rating": 13.86,
+   "preseasonRating": 13.69,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Tennessee",
+   "rank": 12,
+   "rating": 13.56,
+   "preseasonRating": 10.93,
+   "conference": "SEC"
+  },
+  {
+   "school": "Ole Miss",
+   "rank": 13,
+   "rating": 12.76,
+   "preseasonRating": 13.68,
+   "conference": "SEC"
+  },
+  {
+   "school": "Oregon",
+   "rank": 14,
+   "rating": 12.4,
+   "preseasonRating": 18.19,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Texas Tech",
+   "rank": 15,
+   "rating": 12.35,
+   "preseasonRating": 15.23,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Missouri",
+   "rank": 16,
+   "rating": 12.31,
+   "preseasonRating": 10.09,
+   "conference": "SEC"
+  },
+  {
+   "school": "BYU",
+   "rank": 17,
+   "rating": 12.28,
+   "preseasonRating": 11.47,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Florida",
+   "rank": 18,
+   "rating": 11.48,
+   "preseasonRating": 9.12,
+   "conference": "SEC"
+  },
+  {
+   "school": "South Carolina",
+   "rank": 19,
+   "rating": 11.43,
+   "preseasonRating": 10.31,
+   "conference": "SEC"
+  },
+  {
+   "school": "Oklahoma",
+   "rank": 20,
+   "rating": 11.35,
+   "preseasonRating": 11.51,
+   "conference": "SEC"
+  },
+  {
+   "school": "Penn State",
+   "rank": 21,
+   "rating": 11.0,
+   "preseasonRating": 7.1,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Michigan",
+   "rank": 22,
+   "rating": 10.42,
+   "preseasonRating": 12.08,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "UCLA",
+   "rank": 23,
+   "rating": 10.32,
+   "preseasonRating": 5.47,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Iowa",
+   "rank": 24,
+   "rating": 10.27,
+   "preseasonRating": 11.79,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Mississippi State",
+   "rank": 25,
+   "rating": 8.85,
+   "preseasonRating": 2.4,
+   "conference": "SEC"
+  },
+  {
+   "school": "Kansas State",
+   "rank": 26,
+   "rating": 8.83,
+   "preseasonRating": 5.82,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Auburn",
+   "rank": 27,
+   "rating": 8.69,
+   "preseasonRating": 6.34,
+   "conference": "SEC"
+  },
+  {
+   "school": "Virginia",
+   "rank": 28,
+   "rating": 8.53,
+   "preseasonRating": 4.46,
+   "conference": "ACC"
+  },
+  {
+   "school": "Arizona",
+   "rank": 29,
+   "rating": 8.26,
+   "preseasonRating": 9.09,
+   "conference": "Big 12"
+  },
+  {
+   "school": "SMU",
+   "rank": 30,
+   "rating": 8.16,
+   "preseasonRating": 7.56,
+   "conference": "ACC"
+  },
+  {
+   "school": "Washington",
+   "rank": 31,
+   "rating": 7.76,
+   "preseasonRating": 11.8,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Maryland",
+   "rank": 32,
+   "rating": 7.56,
+   "preseasonRating": 3.9,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Houston",
+   "rank": 33,
+   "rating": 7.11,
+   "preseasonRating": 7.75,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Pittsburgh",
+   "rank": 34,
+   "rating": 7.11,
+   "preseasonRating": 5.18,
+   "conference": "ACC"
+  },
+  {
+   "school": "Nebraska",
+   "rank": 35,
+   "rating": 6.97,
+   "preseasonRating": 3.64,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Louisville",
+   "rank": 36,
+   "rating": 6.85,
+   "preseasonRating": 5.94,
+   "conference": "ACC"
+  },
+  {
+   "school": "Vanderbilt",
+   "rank": 37,
+   "rating": 6.32,
+   "preseasonRating": 9.09,
+   "conference": "SEC"
+  },
+  {
+   "school": "Northwestern",
+   "rank": 38,
+   "rating": 6.03,
+   "preseasonRating": 8.28,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Illinois",
+   "rank": 39,
+   "rating": 5.31,
+   "preseasonRating": 6.94,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Duke",
+   "rank": 40,
+   "rating": 5.26,
+   "preseasonRating": 2.85,
+   "conference": "ACC"
+  },
+  {
+   "school": "Boise State",
+   "rank": 41,
+   "rating": 5.15,
+   "preseasonRating": 2.0,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Virginia Tech",
+   "rank": 42,
+   "rating": 5.09,
+   "preseasonRating": 2.69,
+   "conference": "ACC"
+  },
+  {
+   "school": "Baylor",
+   "rank": 43,
+   "rating": 4.55,
+   "preseasonRating": 3.49,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Wake Forest",
+   "rank": 44,
+   "rating": 4.24,
+   "preseasonRating": 2.64,
+   "conference": "ACC"
+  },
+  {
+   "school": "Clemson",
+   "rank": 45,
+   "rating": 3.89,
+   "preseasonRating": 7.8,
+   "conference": "ACC"
+  },
+  {
+   "school": "TCU",
+   "rank": 46,
+   "rating": 3.87,
+   "preseasonRating": 5.4,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Cincinnati",
+   "rank": 47,
+   "rating": 3.79,
+   "preseasonRating": 1.61,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Florida State",
+   "rank": 48,
+   "rating": 3.32,
+   "preseasonRating": 4.27,
+   "conference": "ACC"
+  },
+  {
+   "school": "Iowa State",
+   "rank": 49,
+   "rating": 3.17,
+   "preseasonRating": 1.03,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Arizona State",
+   "rank": 50,
+   "rating": 2.27,
+   "preseasonRating": 3.86,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Western Michigan",
+   "rank": 51,
+   "rating": 2.22,
+   "preseasonRating": -0.86,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "San Diego State",
+   "rank": 52,
+   "rating": 2.08,
+   "preseasonRating": 3.23,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "New Mexico",
+   "rank": 53,
+   "rating": 2.03,
+   "preseasonRating": -1.61,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "NC State",
+   "rank": 54,
+   "rating": 2.0,
+   "preseasonRating": 5.57,
+   "conference": "ACC"
+  },
+  {
+   "school": "Wisconsin",
+   "rank": 55,
+   "rating": 1.87,
+   "preseasonRating": 3.72,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "UTSA",
+   "rank": 56,
+   "rating": 1.84,
+   "preseasonRating": 0.57,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Kentucky",
+   "rank": 57,
+   "rating": 1.59,
+   "preseasonRating": 3.97,
+   "conference": "SEC"
+  },
+  {
+   "school": "North Carolina",
+   "rank": 58,
+   "rating": 1.57,
+   "preseasonRating": -0.64,
+   "conference": "ACC"
+  },
+  {
+   "school": "Purdue",
+   "rank": 59,
+   "rating": 1.53,
+   "preseasonRating": 2.01,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Michigan State",
+   "rank": 60,
+   "rating": 1.46,
+   "preseasonRating": -1.47,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "South Florida",
+   "rank": 61,
+   "rating": 1.45,
+   "preseasonRating": 1.92,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "UCF",
+   "rank": 62,
+   "rating": 1.42,
+   "preseasonRating": -0.07,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Minnesota",
+   "rank": 63,
+   "rating": 1.2,
+   "preseasonRating": 5.89,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Colorado",
+   "rank": 64,
+   "rating": 0.81,
+   "preseasonRating": -0.46,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Kansas",
+   "rank": 65,
+   "rating": 0.58,
+   "preseasonRating": 2.39,
+   "conference": "Big 12"
+  },
+  {
+   "school": "North Texas",
+   "rank": 66,
+   "rating": 0.3,
+   "preseasonRating": -2.59,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "James Madison",
+   "rank": 67,
+   "rating": 0.19,
+   "preseasonRating": 0.83,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Arkansas",
+   "rank": 68,
+   "rating": -0.17,
+   "preseasonRating": 3.61,
+   "conference": "SEC"
+  },
+  {
+   "school": "Georgia Tech",
+   "rank": 69,
+   "rating": -0.38,
+   "preseasonRating": 3.19,
+   "conference": "ACC"
+  },
+  {
+   "school": "Memphis",
+   "rank": 70,
+   "rating": -0.48,
+   "preseasonRating": -0.82,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "California",
+   "rank": 71,
+   "rating": -1.03,
+   "preseasonRating": 1.17,
+   "conference": "ACC"
+  },
+  {
+   "school": "North Dakota State",
+   "rank": 72,
+   "rating": -1.03,
+   "preseasonRating": -6.32,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Fresno State",
+   "rank": 73,
+   "rating": -1.21,
+   "preseasonRating": -1.4,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Oklahoma State",
+   "rank": 74,
+   "rating": -2.54,
+   "preseasonRating": -4.6,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Toledo",
+   "rank": 75,
+   "rating": -2.65,
+   "preseasonRating": -2.64,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "West Virginia",
+   "rank": 76,
+   "rating": -2.75,
+   "preseasonRating": -2.46,
+   "conference": "Big 12"
+  },
+  {
+   "school": "Texas State",
+   "rank": 77,
+   "rating": -2.87,
+   "preseasonRating": 0.02,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Washington State",
+   "rank": 78,
+   "rating": -2.9,
+   "preseasonRating": -0.09,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Stanford",
+   "rank": 79,
+   "rating": -3.07,
+   "preseasonRating": -1.68,
+   "conference": "ACC"
+  },
+  {
+   "school": "Tulane",
+   "rank": 80,
+   "rating": -3.17,
+   "preseasonRating": -1.82,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Syracuse",
+   "rank": 81,
+   "rating": -3.2,
+   "preseasonRating": -2.64,
+   "conference": "ACC"
+  },
+  {
+   "school": "Tulsa",
+   "rank": 82,
+   "rating": -3.24,
+   "preseasonRating": -6.05,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Louisiana",
+   "rank": 83,
+   "rating": -3.46,
+   "preseasonRating": -4.51,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Boston College",
+   "rank": 84,
+   "rating": -4.01,
+   "preseasonRating": -2.82,
+   "conference": "ACC"
+  },
+  {
+   "school": "Delaware",
+   "rank": 85,
+   "rating": -4.17,
+   "preseasonRating": -6.06,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "East Carolina",
+   "rank": 86,
+   "rating": -4.58,
+   "preseasonRating": -1.49,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Rutgers",
+   "rank": 87,
+   "rating": -4.58,
+   "preseasonRating": 3.7,
+   "conference": "Big Ten"
+  },
+  {
+   "school": "Colorado State",
+   "rank": 88,
+   "rating": -4.77,
+   "preseasonRating": -8.29,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Army",
+   "rank": 89,
+   "rating": -5.14,
+   "preseasonRating": -5.5,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "UNLV",
+   "rank": 90,
+   "rating": -5.34,
+   "preseasonRating": -2.9,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "App State",
+   "rank": 91,
+   "rating": -5.37,
+   "preseasonRating": -7.88,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Oregon State",
+   "rank": 92,
+   "rating": -5.5,
+   "preseasonRating": -7.11,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Navy",
+   "rank": 93,
+   "rating": -5.59,
+   "preseasonRating": -4.6,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Old Dominion",
+   "rank": 94,
+   "rating": -5.61,
+   "preseasonRating": -3.84,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Temple",
+   "rank": 95,
+   "rating": -5.95,
+   "preseasonRating": -5.15,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Marshall",
+   "rank": 96,
+   "rating": -6.12,
+   "preseasonRating": -1.54,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Louisiana Tech",
+   "rank": 97,
+   "rating": -6.13,
+   "preseasonRating": -5.64,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "UConn",
+   "rank": 98,
+   "rating": -6.15,
+   "preseasonRating": -3.33,
+   "conference": "FBS Independents"
+  },
+  {
+   "school": "Utah State",
+   "rank": 99,
+   "rating": -6.38,
+   "preseasonRating": -0.79,
+   "conference": "Pac-12"
+  },
+  {
+   "school": "Hawai'i",
+   "rank": 100,
+   "rating": -6.57,
+   "preseasonRating": -1.74,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Southern Miss",
+   "rank": 101,
+   "rating": -6.74,
+   "preseasonRating": -4.3,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "South Alabama",
+   "rank": 102,
+   "rating": -6.97,
+   "preseasonRating": -8.3,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Florida Atlantic",
+   "rank": 103,
+   "rating": -7.14,
+   "preseasonRating": -6.26,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Air Force",
+   "rank": 104,
+   "rating": -7.15,
+   "preseasonRating": -6.97,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Liberty",
+   "rank": 105,
+   "rating": -7.41,
+   "preseasonRating": -5.76,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Ohio",
+   "rank": 106,
+   "rating": -7.49,
+   "preseasonRating": -4.55,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Jacksonville State",
+   "rank": 107,
+   "rating": -7.69,
+   "preseasonRating": -4.98,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Georgia Southern",
+   "rank": 108,
+   "rating": -7.71,
+   "preseasonRating": -8.49,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Florida International",
+   "rank": 109,
+   "rating": -7.83,
+   "preseasonRating": -9.7,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Troy",
+   "rank": 110,
+   "rating": -8.14,
+   "preseasonRating": -7.16,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Rice",
+   "rank": 111,
+   "rating": -8.19,
+   "preseasonRating": -9.09,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Georgia State",
+   "rank": 112,
+   "rating": -8.22,
+   "preseasonRating": -12.9,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Missouri State",
+   "rank": 113,
+   "rating": -8.36,
+   "preseasonRating": -8.9,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "San Jos\u00e9 State",
+   "rank": 114,
+   "rating": -8.67,
+   "preseasonRating": -12.38,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Miami (OH)",
+   "rank": 115,
+   "rating": -8.77,
+   "preseasonRating": -6.52,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "UAB",
+   "rank": 116,
+   "rating": -8.8,
+   "preseasonRating": -7.86,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Coastal Carolina",
+   "rank": 117,
+   "rating": -9.4,
+   "preseasonRating": -11.03,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Arkansas State",
+   "rank": 118,
+   "rating": -9.58,
+   "preseasonRating": -9.08,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Kennesaw State",
+   "rank": 119,
+   "rating": -10.19,
+   "preseasonRating": -7.09,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Western Kentucky",
+   "rank": 120,
+   "rating": -10.2,
+   "preseasonRating": -3.25,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Akron",
+   "rank": 121,
+   "rating": -10.63,
+   "preseasonRating": -10.61,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Nevada",
+   "rank": 122,
+   "rating": -11.28,
+   "preseasonRating": -10.46,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Wyoming",
+   "rank": 123,
+   "rating": -11.48,
+   "preseasonRating": -8.53,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Middle Tennessee",
+   "rank": 124,
+   "rating": -11.89,
+   "preseasonRating": -14.35,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "New Mexico State",
+   "rank": 125,
+   "rating": -11.96,
+   "preseasonRating": -13.11,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Kent State",
+   "rank": 126,
+   "rating": -12.15,
+   "preseasonRating": -11.55,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Central Michigan",
+   "rank": 127,
+   "rating": -12.18,
+   "preseasonRating": -7.99,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Buffalo",
+   "rank": 128,
+   "rating": -12.64,
+   "preseasonRating": -11.02,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Sam Houston",
+   "rank": 129,
+   "rating": -12.7,
+   "preseasonRating": -13.95,
+   "conference": "Conference USA"
+  },
+  {
+   "school": "Ball State",
+   "rank": 130,
+   "rating": -12.91,
+   "preseasonRating": -14.67,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "UTEP",
+   "rank": 131,
+   "rating": -13.07,
+   "preseasonRating": -13.11,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Eastern Michigan",
+   "rank": 132,
+   "rating": -13.36,
+   "preseasonRating": -11.03,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "UL Monroe",
+   "rank": 133,
+   "rating": -13.69,
+   "preseasonRating": -12.97,
+   "conference": "Sun Belt"
+  },
+  {
+   "school": "Massachusetts",
+   "rank": 134,
+   "rating": -15.24,
+   "preseasonRating": -23.67,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Sacramento State",
+   "rank": 135,
+   "rating": -15.51,
+   "preseasonRating": -11.82,
+   "conference": "Mid-American"
+  },
+  {
+   "school": "Northern Illinois",
+   "rank": 136,
+   "rating": -16.01,
+   "preseasonRating": -12.64,
+   "conference": "Mountain West"
+  },
+  {
+   "school": "Charlotte",
+   "rank": 137,
+   "rating": -16.03,
+   "preseasonRating": -14.05,
+   "conference": "American Athletic"
+  },
+  {
+   "school": "Bowling Green",
+   "rank": 138,
+   "rating": -17.59,
+   "preseasonRating": -13.27,
+   "conference": "Mid-American"
+  }
+ ],
+ "picks": [
+  {
+   "id": 401856685,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Alabama",
+   "away": "Florida State",
+   "neutral": false,
+   "homeRating": 18.55,
+   "awayRating": 3.32,
+   "modelHome": 20.8,
+   "mktHome": 17.5,
+   "edge": 3.3,
+   "edgeTier": "mid",
+   "modelSide": "Alabama",
+   "homeWinProb": 0.96,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858230,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Louisville",
+   "away": "SMU",
+   "neutral": false,
+   "homeRating": 6.85,
+   "awayRating": 8.16,
+   "modelHome": 2.2,
+   "mktHome": 1.5,
+   "edge": 0.7,
+   "edgeTier": "small",
+   "modelSide": "Louisville",
+   "homeWinProb": 0.584,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856811,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Texas Tech",
+   "away": "Houston",
+   "neutral": false,
+   "homeRating": 12.35,
+   "awayRating": 7.11,
+   "modelHome": 9.6,
+   "mktHome": 10,
+   "edge": -0.4,
+   "edgeTier": "small",
+   "modelSide": "Houston",
+   "homeWinProb": 0.813,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856688,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Ole Miss",
+   "away": "LSU",
+   "neutral": false,
+   "homeRating": 12.76,
+   "awayRating": 16.53,
+   "modelHome": -0.5,
+   "mktHome": -2.5,
+   "edge": 2.0,
+   "edgeTier": "small",
+   "modelSide": "Ole Miss",
+   "homeWinProb": 0.479,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856687,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Auburn",
+   "away": "Florida",
+   "neutral": false,
+   "homeRating": 8.69,
+   "awayRating": 11.48,
+   "modelHome": 0.6,
+   "mktHome": -2.5,
+   "edge": 3.1,
+   "edgeTier": "mid",
+   "modelSide": "Auburn",
+   "homeWinProb": 0.521,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856686,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Arkansas",
+   "away": "Georgia",
+   "neutral": false,
+   "homeRating": -0.17,
+   "awayRating": 19.06,
+   "modelHome": -17.9,
+   "mktHome": -17.5,
+   "edge": -0.4,
+   "edgeTier": "small",
+   "modelSide": "Georgia",
+   "homeWinProb": 0.06,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858232,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Maryland",
+   "away": "Virginia Tech",
+   "neutral": false,
+   "homeRating": 7.56,
+   "awayRating": 5.09,
+   "modelHome": 6.5,
+   "mktHome": -3,
+   "edge": 9.5,
+   "edgeTier": "big",
+   "modelSide": "Maryland",
+   "homeWinProb": 0.729,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856802,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Virginia",
+   "away": "West Virginia",
+   "neutral": true,
+   "homeRating": 8.53,
+   "awayRating": -2.75,
+   "modelHome": 12.7,
+   "mktHome": 9.5,
+   "edge": 3.2,
+   "edgeTier": "mid",
+   "modelSide": "Virginia",
+   "homeWinProb": 0.875,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858229,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Clemson",
+   "away": "North Carolina",
+   "neutral": false,
+   "homeRating": 3.89,
+   "awayRating": 1.57,
+   "modelHome": 6.3,
+   "mktHome": 8.5,
+   "edge": -2.2,
+   "edgeTier": "small",
+   "modelSide": "North Carolina",
+   "homeWinProb": 0.724,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858225,
+   "week": 3,
+   "date": "2026-09-17",
+   "home": "Pittsburgh",
+   "away": "Syracuse",
+   "neutral": false,
+   "homeRating": 7.11,
+   "awayRating": -3.2,
+   "modelHome": 15.3,
+   "mktHome": 10.5,
+   "edge": 4.8,
+   "edgeTier": "mid",
+   "modelSide": "Pittsburgh",
+   "homeWinProb": 0.912,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856691,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "South Carolina",
+   "away": "Mississippi State",
+   "neutral": false,
+   "homeRating": 11.43,
+   "awayRating": 8.85,
+   "modelHome": 6.6,
+   "mktHome": 5.5,
+   "edge": 1.1,
+   "edgeTier": "small",
+   "modelSide": "South Carolina",
+   "homeWinProb": 0.733,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858453,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Notre Dame",
+   "away": "Michigan State",
+   "neutral": false,
+   "homeRating": 20.94,
+   "awayRating": 1.46,
+   "modelHome": 25.5,
+   "mktHome": 29.5,
+   "edge": -4.0,
+   "edgeTier": "mid",
+   "modelSide": "Michigan State",
+   "homeWinProb": 0.981,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858226,
+   "week": 3,
+   "date": "2026-09-18",
+   "home": "Wake Forest",
+   "away": "Miami",
+   "neutral": false,
+   "homeRating": 4.24,
+   "awayRating": 16.53,
+   "modelHome": -10.1,
+   "mktHome": -22.5,
+   "edge": 12.4,
+   "edgeTier": "big",
+   "modelSide": "Wake Forest",
+   "homeWinProb": 0.175,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858449,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Indiana",
+   "away": "Western Kentucky",
+   "neutral": false,
+   "homeRating": 17.51,
+   "awayRating": -10.2,
+   "modelHome": 34.8,
+   "mktHome": 44.5,
+   "edge": -9.7,
+   "edgeTier": "big",
+   "modelSide": "Western Kentucky",
+   "homeWinProb": 0.995,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856812,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Kansas",
+   "away": "Arizona State",
+   "neutral": true,
+   "homeRating": 0.58,
+   "awayRating": 2.27,
+   "modelHome": -1.9,
+   "mktHome": -5.5,
+   "edge": 3.6,
+   "edgeTier": "mid",
+   "modelSide": "Kansas",
+   "homeWinProb": 0.428,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401858454,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Ohio State",
+   "away": "Kent State",
+   "neutral": false,
+   "homeRating": 19.56,
+   "awayRating": -12.15,
+   "modelHome": 39.3,
+   "mktHome": 52.5,
+   "edge": -13.2,
+   "edgeTier": "big",
+   "modelSide": "Kent State",
+   "homeWinProb": 0.998,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856796,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Northwestern",
+   "away": "Colorado",
+   "neutral": false,
+   "homeRating": 6.03,
+   "awayRating": 0.81,
+   "modelHome": 9.5,
+   "mktHome": 3,
+   "edge": 6.5,
+   "edgeTier": "mid",
+   "modelSide": "Northwestern",
+   "homeWinProb": 0.812,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856694,
+   "week": 3,
+   "date": "2026-09-19",
+   "home": "Texas A&M",
+   "away": "Kentucky",
+   "neutral": false,
+   "homeRating": 18.78,
+   "awayRating": 1.59,
+   "modelHome": 23.0,
+   "mktHome": 15.5,
+   "edge": 7.5,
+   "edgeTier": "big",
+   "modelSide": "Texas A&M",
+   "homeWinProb": 0.971,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": true,
+   "preGame": true,
+   "grade": null
+  },
+  {
+   "id": 401856693,
+   "week": 3,
+   "date": "2026-09-20",
+   "home": "Texas",
+   "away": "UTSA",
+   "neutral": false,
+   "homeRating": 17.55,
+   "awayRating": 1.84,
+   "modelHome": 21.3,
+   "mktHome": 29.5,
+   "edge": -8.2,
+   "edgeTier": "big",
+   "modelSide": "UTSA",
+   "homeWinProb": 0.963,
+   "books": [
+    "DraftKings"
+   ],
+   "fcsGame": false,
+   "playable": false,
+   "preGame": true,
+   "grade": null
+  }
+ ]
+}

@@ -131,7 +131,22 @@ def srs_from_games(games, cap=MARGIN_CAP, damping=0.5):
     return ratings
 
 
-def fcs_game_weight(fbs_prior, fcs_prior, fbs_margin):
+def load_home_field():
+    """Home-field margin in points, from the fitted spread head (spread-cal.json).
+
+    Only applied to the IN-SEASON ratings, deliberately. Over a full season each team
+    plays roughly the same number of home and away games, so the home-field term nets
+    out and an unadjusted SRS is close to unbiased. Early in a season the home/away
+    split is lopsided — a team two games in may have played both at home — and every
+    one of those results carries unearned credit. That's exactly where we are, and
+    it's part of why the model prices games short and keeps landing on underdogs."""
+    try:
+        return float(json.loads((DATA_DIR / "spread-cal.json").read_text())["h"])
+    except Exception:
+        return 2.5
+
+
+def fcs_game_weight(fbs_prior, fcs_prior, fbs_margin, raw_margin=None):
     """How much should an FBS team's game against an FCS opponent count?
 
     The information in these games is ASYMMETRIC. Winning by 40 when you were
@@ -146,7 +161,9 @@ def fcs_game_weight(fbs_prior, fcs_prior, fbs_margin):
     rising to full as it falls short, and above full if it actually loses. The credit
     itself already handles the direction (a 10-point win over the pool scores −13, a
     loss scores −26); this decides how loudly that credit is heard."""
-    if fbs_margin < 0:
+    # "Did we lose" is a real-world fact — judge it on the actual scoreboard, not the
+    # venue-adjusted margin. Everything else compares to expectation on neutral terms.
+    if (raw_margin if raw_margin is not None else fbs_margin) < 0:
         return FCS_LOSS_W
     expected = fbs_prior - fcs_prior            # margin the prior implies, in SRS frame
     shortfall = expected - fbs_margin
@@ -156,7 +173,7 @@ def fcs_game_weight(fbs_prior, fcs_prior, fbs_margin):
 
 
 def anchored_ratings(games, prior, fcs_prior, prior_strength, cap=MARGIN_CAP,
-                     iterations=SRS_ITERATIONS, damping=0.5):
+                     iterations=SRS_ITERATIONS, damping=0.5, home_field=0.0):
     """Ridge ('Bayesian') SRS anchored on the frozen preseason prior.
 
     Plain SRS is effectively unbounded on a sparse early-season graph: with one or two
@@ -181,12 +198,17 @@ def anchored_ratings(games, prior, fcs_prior, prior_strength, cap=MARGIN_CAP,
         away_fbs = g.get("awayClass") == "fbs"
         home = g["homeTeam"] if home_fbs else "FCS"
         away = g["awayTeam"] if away_fbs else "FCS"
-        raw = g["homePoints"] - g["awayPoints"]
-        margin = max(-cap, min(cap, raw))
+        actual = g["homePoints"] - g["awayPoints"]          # raw, home perspective
+        # Credit the neutral-field equivalent: winning by 1 at home is NOT evidence you
+        # are better, it's evidence you are about a field-goal worse.
+        hfa = 0.0 if g.get("neutralSite") else home_field
+        neutral = actual - hfa
+        margin = max(-cap, min(cap, neutral))
         weight = 1.0
         if home_fbs != away_fbs:                    # exactly one side is FBS
-            team, tm = (home, raw) if home_fbs else (away, -raw)
-            weight = fcs_game_weight(prior.get(team, fcs_prior), fcs_prior, tm)
+            team, raw_tm, adj_tm = ((home, actual, neutral) if home_fbs
+                                    else (away, -actual, -neutral))
+            weight = fcs_game_weight(prior.get(team, fcs_prior), fcs_prior, adj_tm, raw_tm)
         # one observation, one weight — applied to both sides of the game
         results[home].append((margin, away, weight))
         results[away].append((-margin, home, weight))
@@ -345,7 +367,9 @@ def main():
     # are lopsided (wk1 ran 99 vs a ~59 average) and that over-credits early weeks.
     fcs_prior = ratings.get("FCS", -25.0)
     use_results = len(done_2026) >= MIN_INSEASON_GAMES
-    blended, gp = (anchored_ratings(done_2026, prior, fcs_prior, PRIOR_STRENGTH)
+    home_field = load_home_field()
+    blended, gp = (anchored_ratings(done_2026, prior, fcs_prior, PRIOR_STRENGTH,
+                                    home_field=home_field)
                    if use_results else ({}, {}))
     inseason = {}
     for school in projected:
